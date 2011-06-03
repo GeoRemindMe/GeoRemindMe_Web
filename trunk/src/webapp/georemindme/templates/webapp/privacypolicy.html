@@ -1,0 +1,150 @@
+{% extends "webapp/base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Privacy policy - GeoRemindMe" %}{%endblock%}
+
+{% block extra_js %}
+<script type="text/javascript" src="/static/webapp/js/static.js"></script> 
+
+<!-- Loading lightbox plugin--> 
+<script type="text/javascript" src="/static/webapp/js/jquery.lightbox-0.5.js"></script> 
+<link rel="stylesheet" type="text/css" href="/static/webapp/style/jquery.lightbox-0.5.css" media="screen" /> 
+ <script type="text/javascript"> 
+    $(function() {
+        $('.screenshots a').lightBox();
+    });
+ </script> 
+{%endblock%}
+
+{%block section%}id="privacy"{%endblock%}
+
+{%block breadcumb%}
+   <nav> 
+      <a href="/">{% trans "Home" %}</a> 
+      <span class="maqnav">></span> 
+      <h1>{% trans "Privacy policy" %}</h1> 
+   </nav>
+{%endblock%}
+   
+
+{%block content%}
+
+   <div id="col-left">
+      <!-- Content index with animated scroll-->
+      <ul id="content-index">
+         <li><a href="#privacy" class="anchor separator" id="back-to-top">Volver arriba</a></li>
+         <li><a href="#get-and-use-information" class="anchor separator">Reunión y uso de Información</a></li>
+         <li><a href="#share-information" class="anchor separator">Compartir y revelar información</a></li>
+         <li><a href="#cookies" class="anchor separator">Cookies</a></li>
+         <li><a href="#delete-or-update-information" class="anchor separator">Acerca de borrar o actualizar información</a></li>
+         <li><a href="#privacy-and-security" class="anchor separator">Privacidad y Seguridad</a></li>
+         <li><a href="#modification-of-this-policy" class="anchor separator">Modificaciones a esta Política de privacidad</a></li>
+         <li><a href="#doubts-or-suggestions" class="anchor separator">Dudas o sugerencias</a></li>
+      </ul>
+      <!-- En content index-->
+   </div>
+   <section id="col-right" class="terms">
+      
+      
+      <p class="intro">GeoRemindMe! está comprometido a garantizar la Privacidad de sus servicios en línea. Por favor lee lo siguiente para conocer más acerca de nuestra Política de privacidad.</p>
+      <article class="content-box"  id="get-and-use-information">
+         <div>
+         <h2>Reunión y uso de Información</h2>
+         <ul>
+            <li>GeoRemindMe! recoge información personal de usuarios cuando éstos se registran para obtener una cuenta de GeoRemindMe!, cuando utilizas ciertos productos o servicios de GeoRemindMe!, cuando visitas sitios dentro de GeoRemindMe! o sitios de socios de GeoRemindMe! y cuando participas en promociones. GeoRemindMe! puede combinar datos personales tuyos que obtuvimos de cualquiera de las maneras aquí mencionadas, con datos que nuestros socios, proveedores u otras empresas nos proporcionan</li>
+            <li>Cuando te registras para obtener una cuenta de GeoRemindMe!, te solicitamos una cuenta de correo y una contraseña. Al finalizar tu registro y cuando comienzas a utilizar nuestros servicios, ya eres una persona identificable para nosotros.</li>
+            <li>GeoRemindMe! recoge información sobre como utilizas nuestra plataforma, las alertas que localizas y las posiciones geográficas que detecta la versión móvil con el objetivo de ofrecer una mejor experiencia de usuario y mejorar los algoritmos que ofrece el servicio.</li>
+            <li>Los datos almacenados por GeoRemindMe! se encuentran en los servidores de Google ya que la aplicación está desarrollada usando <a href="http://code.google.com/intl/es/appengine/terms.html">Google App Engine</a>.</li>
+            <li>GeoRemindMe! recibe (y posteriormente registra) automáticamente información en sus servidores que nos proporciona tu navegador, por ejemplo la que nos envía el navegador que usas, incluyendo tu Dirección IP (Protocolo de Internet) y las cookies de GeoRemindMe!, así como la página que solicitas.</li>
+         </ul>
+         <p><a href="#privacy" class="back-to-top">Volver arriba</a></p>
+         </div>
+      </article>
+      
+      <article class="content-box" id="share-information">
+         <div>
+         <h2>Compartir y revelar información</h2>
+         <ul>
+            <li>
+               GeoRemindMe! no vende ni renta a nadie información personal de sus usuarios; a ninguna empresa ni entidad externas de GeoRemindMe!, <span style="font-weight:bold">salvo en el caso</span> que sea estrictamente necesario para proporcionarte servicios o productos que tú nos solicites (previa autorización tuya) o bajo estas circunstancias:
+               <ul>
+                  <li>Proporcionamos la información a socios de confianza de GeoRemindMe! (que trabajan en nombre de GeoRemindMe! o junto con GeoRemindMe!) bajo acuerdos de privacidad. Esos socios pueden usar tu información personal para ayudar a GeoRemindMe! a comunicarte ofertas de GeoRemindMe! y de nuestros clientes comerciales. Sin embargo, estos socios no tienen el derecho de compartir con alguien más tu información.</li>
+                  <li>Tenemos la autorización de padres o tutores de un menor de 13 años para compartir la información personal de éste. Los padres o tutores tienen la opción de permitir que GeoRemindMe! reúna y utilice información del niño, sin que ello implique el que GeoRemindMe! pueda compartir dicha información con otras personas o compañías que puedan hacer uso de esos datos en su propio beneficio.</li>
+                  <li>Nos veamos en la necesidad de responder a citaciones jurídicas o a procesos legales (o a ambos).</li>
+                  <li>Consideramos que es necesario compartir tus datos para investigar, prevenir o hacer algo contra actividades ilegales, posibles fraudes, situaciones que potencialmente pongan en riesgo la integridad física de cualquier persona; cuando infringes las <a href="/tos/">Condiciones del servicio de GeoRemindMe!</a> o en caso de que la ley nos lo solicite.</li>
+                  <li>Transferiríamos tu información personal si GeoRemindMe! fuera adquirido por otra compañía o se fusione con ella. Si esto sucediera, GeoRemindMe! te notificará que compartirá tu información personal antes de transferirla o regirla por otra política de privacidad distinta a la presente.</li>
+               </ul>
+               </li>
+            <li>
+               GeoRemindMe! muestra anuncios publicitarios dirigidos a ciertos usuarios, los cuales son determinados de acuerdo a la información personal que los mismos usuarios nos proporcionan; así los anunciantes (incluyendo las redes de anunciantes externos) pueden asumir que los usuarios que ven su publicidad, que interactúan o hacen clic en sus anuncios cumplen con los criterios del público al que va dirigida la campaña publicitaria. Por ejemplo: mujeres de edades entre los 18 y los 24 que viven en determinada área.
+               <ul>
+                  <li>GeoRemindMe! no proporciona ninguna información personal al anunciante cuando interactúas o miras un anuncio dirigido a cierto sector determinado. Sin embargo, al interactuar o mirar uno de estos anuncios, estás dando cierta información personal a ese anunciante, pues aceptas que eres un usuario que entra en el rango de criterio del público a quien el anuncio va dirigido.</li> 
+                  <li>Los anunciantes de GeoRemindMe! incluyen proveedores de servicios financieros (como bancos, agentes de seguros, corredores de bolsa y empresas que ofrecen hipotecas) y compañías no financieras (como tiendas, líneas aéreas y compañías de software).</li>  
+               </ul>
+            </li>
+            <li>GeoRemindMe! trabaja con proveedores, socios, anunciantes y otros proveedores de servicios de ramas comerciales distintas a la que pertenece GeoRemindMe!. Para más información acerca de proveedores de productos o servicios que tu hayas solicitado, por favor consulta nuestros enlaces de referencia.</li>
+         </ul>
+         <p><a href="#privacy" class="back-to-top">Volver arriba</a></p>
+         </div>
+      </article>
+      
+      <article class="content-box" id="cookies">
+         <div>
+         <h2>Cookies</h2>
+         <ul>
+            <li>GeoRemindMe! puede colocar cookies en tu computadora y también tener acceso a ellas.</li>
+            <li>GeoRemindMe! permite a sus anunciantes colocar cookies en las computadoras de quienes usan GeoRemindMe!. El uso que dichas compañías den a tales cookies está sujeto a sus respectivas políticas de confidencialidad y no a la presente Política de privacidad de GeoRemindMe!. Ni los anunciantes, ni otras compañías tienen acceso a las cookies de GeoRemindMe!.</li>
+            <li>GeoRemindMe! utiliza imágenes GIF de un píxel para poder tener acceso a las cookies dentro de nuestra red y en conexión con nuestros diversos productos y servicios.</li>
+         </ul>
+         <p><a href="#privacy" class="back-to-top">Volver arriba</a></p>
+         </div>
+      </article>
+      
+      <article class="content-box" id="delete-or-update-information">
+         <div>
+         <h2>Acerca de borrar o actualizar información</h2>
+         <ul>
+            <li>GeoRemindMe! te permite modificar tu Información de cuenta GeoRemindMe!, incluyendo tus preferencias de mercadeo, en el momento que quieras.</li>
+            <li>Es posible que, ocasionalmente, se agreguen nuevas categorías de mensajes de mercadeo a la página de Preferencias de mercadeo. Los usuarios que visiten esa página pueden decidir si desean recibir, o no, futuros mensajes de mercadeo de esas categorías nuevas o pueden cancelar su suscripción siguiendo las indicaciones que aparecen en el mensaje que ellos reciban.</li>
+            <li>Nos reservamos el derecho de enviarte ciertos comunicados relacionados con el servicio de GeoRemindMe!, por ejemplo notificaciones de servicio, mensajes administrativos y el boletín de la Red GeoRemindMe!, los cuales se consideran parte de la membresía GeoRemindMe! y no puedes optar por no recibirlos.</li>
+            <li>También puedes solicitar que se elimine tu cuenta de GeoRemindMe!. Basta con ir a nuestra página de Cancelación de tu cuenta GeoRemindMe!. Haz clic aquí para que sepas qué datos quedarán en nuestros registros una vez que hayas eliminado tu cuenta de GeoRemindMe!.</li>
+         </ul>
+         <p><a href="#privacy" class="back-to-top">Volver arriba</a></p>
+         </div>
+      </article>
+      
+      <article class="content-box" id="privacy-and-security">
+         <div>
+         <h2>Privacidad y Seguridad</h2>
+         <ul>
+            <li>El acceso a tu información personal está limitada sólo a aquellos empleados de GeoRemindMe! quienes consideramos necesitan tener contacto con esos datos para proporcionarte los productos y el servicio que nos solicitas.</li>
+            <li>Contamos con medidas de protección físicas, electrónicas y de procedimiento, las cuáles cumplen con lo que las reglas federales exigen para proteger la información personal de nuestros usuarios.</li>
+            <li>Para conocer más acerca de la seguridad, incluyendo los pasos que hemos tomado para tener más seguridad y los pasos que puedes tomar para porteger mejor tus datos, por favor mira la sección de seguridad en GeoRemindMe!.</li>
+         </ul>
+         <p><a href="#privacy" class="back-to-top">Volver arriba</a></p>
+         </div>
+      </article>
+   
+      <article class="content-box" id="modification-of-this-policy">
+         <div>
+         <h2>Modificaciones a esta Política de privacidad</h2>
+         <ul>
+            <li>GeoRemindMe! puede realizar enmiendas a esta política. Si los cambios que realizamos son importantes y afectan directamente al uso que le damos a la información personal de nuestros usuarios, se los haremos saber mediante un mensaje enviado a la dirección principal de correo electrónico que especificaste en tu registro a GeoRemindMe! o colocando en nuestras páginas avisos destacados al respecto.</li>
+         </ul>
+         <p><a href="#privacy" class="back-to-top">Volver arriba</a></p>
+         </div>
+      </article>
+      
+      <article class="content-box" id="doubts-or-suggestions">
+         <div>
+         <h2>Dudas o sugerencias</h2>
+         <ul>
+            <li>Si tienes dudas o sugerencias respecto a nuestra Política de privacidad, llena el Formulario de comentarios.</li>
+         </ul>
+         <p><a href="#privacy" class="back-to-top">Volver arriba</a></p>
+         </div>
+      </article>
+         
+   </section>
+{%endblock%}
