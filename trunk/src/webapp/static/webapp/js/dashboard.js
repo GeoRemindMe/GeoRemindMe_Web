@@ -84,15 +84,18 @@ function loadTasks()
 
                 var undone = [];
                 var done = [];
-                
-                for (var i=0;i<data.length;i++)
+                data = data["result"]
+                for (var i in data)
                 {
-                    data[i]['task'] = data[i]['id'];
-                    
-                    if (data[i].done)
-                        done.push(data[i]);
-                    else
-                        undone.push(data[i]);
+                    if (typeof(data[i].done)!="undefined")
+                    {
+                        data[i]['task'] = data[i]['id'];
+                        
+                        if (data[i].done)
+                            done.push(data[i]);
+                        else
+                            undone.push(data[i]);
+                    }
                 }
 
                 $( "#taskTemplate" ).tmpl( undone ).appendTo( "#task-list" );
@@ -361,7 +364,8 @@ function saveNotSaved()
 
     //tosend = [];
     //todel = []
-    for (var i=0;i<notsaved.length;i++)
+    var saved = [];
+    for (var i in notsaved)
     {
         var task = notsaved[i];
         
@@ -377,9 +381,6 @@ function saveNotSaved()
             
             if (typeof(tasks[task].id) != "undefined")
                 data['id'] = tasks[task].id;
-                
-            if (tasks[task].done)
-                data['done'] = true;
             
             // ajax
             $.ajax({
@@ -393,7 +394,7 @@ function saveNotSaved()
                     // save the id, new or not
                     tasks[task]['id'] = data.id;
                     
-                    delete notsaved[i];
+                    saved.push(task);
                     
                  }
             });
@@ -412,22 +413,18 @@ function saveNotSaved()
                     // save the id, new or not
                     //tasks[task]['id'] = data.id;
                     
-                    delete notsaved[i];
+                    saved.push(task);
                  }
             });
     }
+    
 
-    // clean notsaved vector
-    _notsaved = [];
-    for (var i=0;i<notsaved.length;i++)
+    // remove the saved tasks
+    for (var i in saved)
     {
-        if (typeof(notsaved[i])!="undefined")
-        {
-            _notsaved.push(notsaved[i]);
-            
-        }
+        delete notsaved[saved[i]];
     }
-    notsaved = _notsaved;
+    
 }
 
 function removeTask(task)

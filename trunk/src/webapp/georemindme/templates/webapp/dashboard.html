@@ -21,7 +21,7 @@
    <script type="text/javascript" src="/static/webapp/js/jquery-ui.min.js"></script> 
    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
-   
+   <script type="text/javascript" src="/static/webapp/js/common.js"></script>
    <!-- i18n -->
    <script type="text/javascript">
    
@@ -53,6 +53,32 @@
         else
             return text;
     }
+    
+    function addMessage(text, extra_tags) {
+        var message = $('<li class="'+extra_tags+'">'+text+'</li>').hide();
+        $("#messages").append(message);
+        message.fadeIn(500);
+     
+        setTimeout(function() {
+            message.fadeOut(500, function() {
+                message.remove();
+            });
+        }, 3000);
+    }
+     
+    $(document).ready(function() {
+        $('#messages').ajaxComplete(function(e, xhr, settings) {
+            var contentType = xhr.getResponseHeader("Content-Type");
+            if (contentType == "application/javascript" || contentType == "application/json") {
+            	var json = $.parseJSON(xhr.responseText);
+                 $.each(json.sys_messages, function (i, item) {
+                    addMessage(item.message, item.extra_tags);
+                });
+            }
+        }).ajaxError(function(e, xhr, settings, exception) {
+        	var json = $.parseJSON(xhr.responseText);
+            addMessage("There was an error processing your request, please try again.", "error");
+        })});
    
    </script>
  
@@ -96,10 +122,10 @@
    <div id="bg_header">&nbsp;</div>
    <!--<div id="bg_footer">&nbsp;</div>-->
    <div class="container" id="main-container">
-      
+           
       <div id="header">
          <img src="/static/webapp/img/logo_min.png" alt="GeoRemindMe" id="logo">
-         <div id="logged-menu"><span>{% blocktrans with user.email as email %}Hello {{ email }}! {% endblocktrans %}</span>{%comment%}<a href="#" id="profile" class="icon-menu-bar" title="{% trans "My profile" %}">{% trans "My account" %}</a> {%endcomment%}<a href="#" class="icon-menu-bar" title="{% trans "Help" %}" id="help" accesskey="h">{% trans "Show help" %}</a> <a href="{% url georemindme.views.logout %}" class="icon-menu-bar" title="{% trans "Logout" %}" id="logout" accesskey="l">{% trans "Logout" %}</a></div>
+         <div id="logged-menu"><span>{% blocktrans with user.email as email %}Hello {{ email }}! {% endblocktrans %}</span>{%comment%}<a href="#" id="profile" class="icon-menu-bar" title="{% trans "My profile" %}">{% trans "My account" %}</a> {%endcomment%}<a href="#" class="icon-menu-bar" title="{% trans "Help" %}" id="help" accesskey="h">{% trans "Show help" %}</a> <a href="{% url geouser.views.logout %}" class="icon-menu-bar" title="{% trans "Logout" %}" id="logout" accesskey="l">{% trans "Logout" %}</a></div>
       </div>
          <div class="col-right">
             <h1>{% trans "Pending tasks" %}</h1>

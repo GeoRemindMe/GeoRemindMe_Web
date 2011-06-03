@@ -17,8 +17,12 @@ function login(e)
 	
 	var data = {
 		"user_login-email":$('#username').val(),
-		"user_login-password":$('#password').val()
+		"user_login-password":$('#password').val(),
+		"user_login-remember_me":$('#remember').val(),
 		};
+	if ($('#next').val() != "") {
+		data["next"] = $('#next').val();
+	}
 	
 	$("#wait-mask").show();
 	

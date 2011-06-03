@@ -1,21 +1,5 @@
 # coding=utf-8
-"""
-This file is part of GeoRemindMe.
 
-GeoRemindMe is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-GeoRemindMe is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GeoRemindMe.  If not, see < http: // www.gnu.org / licenses /> .
-
-"""
 from datetime import timedelta, datetime
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -26,51 +10,53 @@ from django.views.decorators.cache import never_cache
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from google.appengine.api import users
-from funcs import getAlertsJSON, init_user_session, login_func
-from georemindme.decorators import login_required, ajax_request
-from georemindme.forms import *
-from georemindme.models import User, GeoUser, GoogleUser
-from django.utils import simplejson
+
+from funcs import getAlertsJSON
+from decorators import ajax_request
+from geouser.models import User
+import geouser.views as geouser
+from geouser.funcs import init_user_session, login_func
+from geoalert.forms import *
+from geoalert.models import *
+import geoalert.views as geoalert
+
 
 @ajax_request
 def exists(request):
     
     if not request.POST.get('email'):
         return HttpResponseBadRequest()
-
     user = User.objects.get_by_email( request.POST.get('email') )
-
     if user:
         return HttpResponse('{"result":"exists"}',mimetype="application/json")
     else:
         return HttpResponse('{"result":""}',mimetype="application/json")
 
+
 @ajax_request
 def register(request):
-    f = RegisterForm(request.POST, prefix='user_register')
+    from geouser.views import register
+    user, f = register(request)
     data = {}
-    if f.is_valid():
-        user = f.save()
-        if user:
-            messages.success(request, _("User registration complete, a confirmation email have been sent to %s. Redirecting to dashboard...") % user.email)
-            init_user_session(request, user)
-            data['_redirect'] = reverse('georemindme.views.dashboard')
-            return HttpResponse(simplejson.dumps(data), mimetype='application/json')
+    if user:  # user registrado, iniciamos sesion
+        data['error'], data['_redirect'] = login_func(request, user = user)
+        return HttpResponse(simplejson.dumps(data), mimetype='application/json')
     data['errors'] = f.errors
     return HttpResponse(simplejson.dumps(data), mimetype='application/json')
 
+
 @ajax_request
 def contact(request):
-    
-    from georemindme.mails import send_contact_email
+    from georemindme.geomail import send_contact_email
     send_contact_email(request.POST.get('userEmail',''),request.POST.get('msg',''))
     
-    return HttpResponse('')
+    return HttpResponse()
+
 
 @ajax_request
 def keepuptodate(request):
     
-    from georemindme.mails import send_keepuptodate
+    from georemindme.geomail import send_keepuptodate
     
     data = ''
     for k in request.POST.keys():
@@ -79,85 +65,159 @@ def keepuptodate(request):
 
     send_keepuptodate(request.POST.get('user-email',''),data)
     
-    return HttpResponse('')
+    return HttpResponse()
 
 
 @ajax_request
 @never_cache
 def login(request):
-    f = LoginForm(request.POST, prefix='user_login')    
-    error = ''
-    redirect = ''
-    if f.is_valid():
-        error, redirect = login_func(request, f)
-    else:
-        error = _("The email/password you entered is incorrect<br/>Please make sure your caps lock is off and try again")
-    return HttpResponse(simplejson.dumps(dict(error=error, _redirect=redirect)), mimetype="application/json")
+    from geouser.views import login
+    data = {}
+    data['error'], data['_redirect'] = login(request)
+    return HttpResponse(simplejson.dumps(data), mimetype="application/json")
 
 
+#===============================================================================
+# FUNCIONES AJAX PARA OBTENER, MODIFICAR, BORRAR ALERTAS
+#===============================================================================
 @ajax_request
-@login_required
 def add_reminder(request):
-    
     form = RemindForm(request.POST)
     if form.is_valid():
-        
-        id = request.POST.get('id')
-        
+        id = request.POST.get('id', None)
         if id:
-            new = form.save(user=request.session['user'], address=request.POST['address'],id=int(id))
-        else:
-            new = form.save(user=request.session['user'], address=request.POST['address'])
-            
-        return HttpResponse(simplejson.dumps(dict(id=new.id)), mimetype="application/json")
+            alert = geoalert.edit_alert(request, request.POST.get('id'), form, request.POST['address'])
+        else: 
+            alert = geoalert.add_alert(request, form, address=request.POST['address'])
+        return HttpResponse(simplejson.dumps(dict(id=alert.id)), mimetype="application/json")
     else:
         return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
 @ajax_request
-@login_required
-def edit_reminder(request):
-    form = RemindForm(request.POST)
-    if form.is_valid():
-        alert = form.save(id=request.POST.get('id'), user=request.session['user'], address=request.POST['address'])
-        
-        if alert is None:
-            return HttpResponseBadRequest()
-        else:
-            return HttpResponse()
-    else:
-        return HttpResponseBadRequest(form.errors, mimetype="application/json")
-        
-@ajax_request
-@login_required
 def get_reminder(request):
     id = request.POST.get('id', None)
     done = request.POST.get('done', None)
-    if id:
-        alerts = [ Alert.objects.get_by_id_user(id, request.session['user']) ]
-    else:
-        if not done:
-            alerts = Alert.objects.get_by_user(request.session['user'])
-        elif done.lower() == 'true':
-            alerts = Alert.objects.get_by_user_done(request.session['user'])
-        else:
-            alerts = Alert.objects.get_by_user_undone(request.session['user'])
-    if len(alerts) == 0:
-            return HttpResponse('[]', mimetype="application/json")
-            #return HttpResponseBadRequest('Doesnt exist the alert or forbidden', mimetype="application/json")
-    print getAlertsJSON(alerts)
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    alerts = geoalert.get_alert(request, id, done, page, query_id)
     return HttpResponse(getAlertsJSON(alerts), mimetype="application/json")
 
 @ajax_request
-@login_required
 def delete_reminder(request):
-    id = request.POST.get('id')
-    if not id:
-        return HttpResponseBadRequest("No key provided", mimetype="text/plain")
-    
-    alert = Alert.objects.get_by_id_user(int(id), request.session['user'])
-    
-    if not alert:
-            return HttpResponseBadRequest('Doesnt exist the alert or forbidden', mimetype="text/plain")
-    alert.delete()    
+    id = request.POST.get('id', None)
+    geoalert.del_alert(request, id)    
     return HttpResponse()
+
+
+#===============================================================================
+# FUNCIONES AJAX PARA OBTENER FOLLOWERS Y FOLLOWINGS
+#===============================================================================
+@ajax_request
+def get_followers(request):
+    '''
+        Devuelve la lista de followers de un usuario
+        Parametros en POST
+            userid : el id del usuario a buscar (opcional)
+            username : el username del usuario a buscar (opcional)
+            page : pagina a mostrar
+            query_id: id de la consulta de pagina
+        
+        :returns: lista de la forma (id, username)
+    ''' 
+    page = request.POST.get('page', 1)
+    query_id = request.POST.get('query_id', None)
+    userid = request.POST.get('id', None)
+    username = request.POST.get('username', None)
+    followers = geouser.get_followers(request, userid, username, page, query_id)
+    return HttpResponse(simplejson(followers), mimetype="application/json")  # los None se parsean como null
+
+@ajax_request
+def get_followings(request):
+    '''
+        Devuelve la lista de followings de un usuario
+        Parametros en POST
+            userid : el id del usuario a buscar (opcional)
+            username : el username del usuario a buscar (opcional)
+            page : pagina a mostrar
+            query_id: id de la consulta de pagina
+        
+        :returns: lista de la forma (id, username)
+    ''' 
+    page = request.POST.get('page', 1)
+    query_id = request.POST.get('query_id', None)
+    userid = request.POST.get('id', None)
+    username = request.POST.get('username', None)
+    followings = geouser.get_followings(request, userid, username, page, query_id)
+    return HttpResponse(simplejson.dumps(followings), mimetype="application/json")
+
+@ajax_request
+def add_following(request):
+    '''
+        Añade a la lista de de followings de un usuario
+        Parametros en POST
+            userid : el id del usuario a seguir
+            username : el username del usuario a seguir
+       
+            :returns: boolean
+    ''' 
+    userid = request.POST.get('id', None)
+    username = request.POST.get('username', None)
+    added = geouser.add_following(request, userid=userid, username=username)
+    return HttpResponse(simplejson(added), mimetype="application/json")
+    
+@ajax_request
+def del_following(request):
+    '''
+        Borra de la lista de de followings de un usuario
+        Parametros en POST
+            userid : el id del usuario a borrar
+            username : el username del usuario a borrar
+       
+            :returns: boolean
+    '''
+    userid = request.POST.get('id', None)
+    username = request.POST.get('username', None)
+    deleted = geouser.del_following(request, userid=userid, username=username)
+    return HttpResponse(simplejson(deleted), mimetype="application/json")
+
+#===============================================================================
+# FUNCIONES PARA TIMELINEs
+#===============================================================================
+@ajax_request
+def get_timeline(request):
+    '''
+        Devuelve la lista de timeline de un usuario.
+        Si no se especifica userid o username, se devuelve el timeline completo del usuario
+        Parametros en POST
+            userid : el id del usuario a buscar (opcional)
+            username : el username del usuario a buscar (opcional)
+            page : pagina a mostrar
+            query_id: id de la consulta de pagina
+        
+        :returns: lista de la forma [query_id, [(id, username, avatar)]]
+    ''' 
+    userid = request.POST.get('id', None)
+    username = request.POST.get('username', None)
+    page = request.POST.get('page', 1)
+    query_id = request.POST.get('query_id', None)
+    timeline = geouser.get_timeline(request, userid, username, page=page, query_id=query_id)
+    return HttpResponse(simplejson.dumps(timeline), mimetype="application/json")
+
+@ajax_request
+def get_chronology(request):
+    '''
+        Devuelve la lista de timeline de los followings del usuario logueado.
+        Parametros en POST
+            page : pagina a mostrar
+            query_id: id de la consulta de pagina
+        
+        :returns: lista de la forma [query_id, [(id, username, avatar)]]
+    ''' 
+    page = request.POST.get('page', 1)
+    query_id = request.POST.get('query_id', None)
+    chronology = geouser.get_chronology(request, page=page, query_id=query_id)
+    return HttpResponse(simplejson.dumps(chronology), mimetype="application/json")
+    
+
+    
 

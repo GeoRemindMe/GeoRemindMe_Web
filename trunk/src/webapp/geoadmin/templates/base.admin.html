@@ -42,7 +42,7 @@ media="screen, projection" />
          <div class="span-18"><a href="/"><img src="/static/images/logo_v2.png" style="float:left;margin-left:50px;height:70px;margin-bottom:20px;" title="Go home" alt="Logo GeoRemindMe"/></a></div>
       <div id="links" class="span-6 last">
          {% if user.is_authenticated %}
-         <a href="{% url georemindme.views.dashboard %}">Account <img src="/static/images/arrow3.png"></a>
+         <a href="{% url geouser.views.dashboard %}">Account <img src="/static/images/arrow3.png"></a>
          {% if user.is_admin %}
           <a href="{% url geoadmin.views.index %}">Administration <img src="/static/images/arrow3.png"></a>
          {% endif %}

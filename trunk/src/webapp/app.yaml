@@ -1,5 +1,5 @@
 application: georemindme
-version: 4
+version: 2
 runtime: python
 api_version: 1
 
@@ -14,7 +14,6 @@ handlers:
 
 - url: /static
   static_dir: static
-  secure: optional
   
 - url: /ajax/login/
   script: main.py
@@ -40,12 +39,19 @@ handlers:
   script: main.py
   secure: always
 
+- url: /admin(.*)
+  script: appengine_admin/main.py
+  secure: always
+  
+- url: /appengine_admin_media
+  static_dir: appengine_admin/media
+  secure: always
+
 - url: /.*
   script: main.py
   secure: optional
 
 
-
 builtins:
 - datastore_admin: on
-  
+- appstats: on

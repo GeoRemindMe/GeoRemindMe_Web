@@ -19,29 +19,23 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from django.conf.urls.defaults import *
-from django.views.generic.simple import direct_to_template,redirect_to
+from django.views.generic.simple import direct_to_template, redirect_to
 
 urlpatterns = patterns('georemindme.views',
-    url(r'login/$', 'private_home', {'login':True} ),
+    url(r'^$', 'private_home'),
     url(r'timonholandes/$', 'home' ),
     #url(r'^private/', 'homeprivate'),
-    url(r'^dashboard/$', 'dashboard'),
-    url(r'^logout/$', 'logout'),
     #url(r'^team/$',direct_to_template, {'template': 'team.html', 'extra_context': {'active': 'team',}}, 'georemindme.team'),
     url(r'^m/$', direct_to_template, {'template': 'mobile/index.html'}, 'georemindme.mobile'),
     url(r'^contact/$', direct_to_template, {'template': 'webapp/contact.html'}, 'contact'),
     url(r'^privacy/$', direct_to_template, {'template': 'webapp/privacypolicy.html'}, 'privacy'),
     url(r'^tos/$', direct_to_template, {'template': 'webapp/tos.html'}, 'tos'),
     url(r'^knowmore/$', direct_to_template, {'template': 'webapp/knowmore.html'}, 'knowmore'),
-    url(r'^sitemap.xml', direct_to_template, {'template': 'webapp/sitemap.xml'}, 'sitemap'),
-    url(r'^confirm/(?P<user>[^/]*)/(?P<code>[^/]*)/$', 'confirm', {}, 'georemidme.confirm'),
     url(r'^lang/$', 'set_language'),
-    url(r'^demo/$', 'demo'),
-    url(r'^$', 'private_home'),
-    #url(r'^login/google/$','login_google', {}, 'georemidme.login_google'),
-    #url(r'^remindpass/$','remind_user', {}, 'georemidme.remind_user'),
-    #url(r'^remindpass/(?P<user>[^/]*)/(?P<code>[^/]*)/$','remind_user_pass', {}, 'georemidme.remind_pass'),
-    #url(r'^json/$', 'json'),
+    url(r'^stats/daily/$', 'stats_daily'),
+    url(r'^tasks/email/$', 'email_worker'),
+    url(r'^tasks/notify/timeline/$', 'timelinefollowers_worker'),
+    url(r'^tasks/notify/list/$', 'list_notify_worker'),
 )
 
 

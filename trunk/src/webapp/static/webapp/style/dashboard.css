@@ -3,7 +3,6 @@
 body {
    background: url(../img/bg.png) repeat-x;
     background-attachment: fixed;
-   overflow:hidden;
    overflow-y:scroll;
 }
 
@@ -20,11 +19,11 @@ fieldset {
          padding:0;
 }
 
-#main_container #header img {
+#main_container header img {
    
 }
 
-#header {
+header {
    position: fixed;
    /*background: url(../img/bg.png) repeat-x;*/
    width:960px;
@@ -38,7 +37,7 @@ h1{
     line-height:2em;
    }
 
-#header,#footer,.col-left h1 {
+header,footer,.col-left h1 {
    
 }
 
@@ -64,7 +63,7 @@ select {
 }
 
 
-#footer div ul li a{
+footer div ul li a{
    line-height: 23px;
 }
 
@@ -93,7 +92,7 @@ float: right;
    margin:0;
 }
 
-#footer { 
+footer { 
    background-color: white;
    bottom: 10px;
    display: block;
@@ -103,10 +102,9 @@ float: right;
    position: fixed;
    z-index: 0;
    margin-bottom:10px;
-   text-align:center;
 }
 
-#footer div {
+footer div {
    background-color: white;
     display: block;
     float: left;
@@ -147,7 +145,7 @@ span#icon_split{
    display: none;
 }
 
-#footer #support li {
+footer #support li {
    list-style: none;
    display: inline;
    float: left;
@@ -156,7 +154,7 @@ span#icon_split{
    line-height: 55px;
 }
 
-#footer div li {
+footer div li {
    list-style: none;
    display: block;
    float: left;
@@ -185,7 +183,7 @@ span#icon_split{
 }
 
 /*
-#footer div{
+footer div{
    float: left;
     width: 25%;
     height:120px;
@@ -234,7 +232,6 @@ span#icon_split{
     margin-bottom: 120px;
 */
     width: 100%;
-    overflow:hidden;
 }
 
 #task-list li:hover {
@@ -242,19 +239,21 @@ span#icon_split{
 }
 
 .task {
-   display: inline-block;
+   display: block;
    line-height: 30px;
    padding-left:5px;
-    width:360px;
+   /*
+  width:450px;
+*/
 }
 
-#task-list .li-tarea {
+#task-list li {
    list-style: none;
    clear: both;
    /*padding-left: 40px;*/
 }
 
-#task-list .li-tarea div {
+#task-list li div {
    list-style: none;
    float: left;
 }
@@ -288,11 +287,10 @@ ol {
 textarea {
    height: 80px;
    width:434px;
-   margin:0;
 }
 
 .task-details {
-   /*padding: 5px 0;*/
+   padding: 5px 0;
    width: 400px;
    cursor:pointer;
 }
@@ -355,7 +353,6 @@ textarea {
 
 .task-done {
    margin-top: 13px;
-   display:inline;
 }
 
 .location {
@@ -364,10 +361,9 @@ textarea {
 
 .task-name {
    width: 398px;
-   display:inline;
 }
 
-#contact #header,#support #header,#language #header {
+#contact header,#support header,#language header {
    background-color: white;
    background-image: none;
    padding: 0;
@@ -406,23 +402,23 @@ textarea {
    }
 /*
 
-#footer div{
+footer div{
    border-top:1px solid #ccc;
    background: url(../img/bg.png) repeat-x;
    }
-#footer div #header {
+footer div header {
    font-size: 1.2em;
     margin-left: 75px;
     padding-top: 5px;
     position: relative;
 }
 
-#footer div ul li {
+footer div ul li {
    float:left;
    width:50%;
    list-style:none;
 }
-#footer div ul{
+footer div ul{
    margin: 7px;
    padding:0;
    line-height:2em;
@@ -442,7 +438,7 @@ textarea {
 #help ul{
     background: url("../img/icon_help.png") no-repeat scroll left
     }
-#footer #header{
+footer header{
    background: none;
    }
 
@@ -526,11 +522,8 @@ margin-left: 0px;
     cursor: pointer;
     float: right;
 }
-
 #show-all input{
-    margin: 0;
-    margin-right: 3px;
-    float:right;
+margin: 3px 3px 0 0;
 }
 
 #show-all span
@@ -565,13 +558,13 @@ margin-right:5px;
 }
 
 
-#footer h3{
+footer h3{
    color: #777777;
    font-size: 11px;
    margin: 0;
 }
 
-#footer #support li {
+footer #support li {
    list-style:none;
    display:inline;
    float:left;
@@ -580,7 +573,7 @@ margin-right:5px;
    line-height:43px;
 }
 
-#footer #contact li {
+footer #contact li {
    list-style:none;
    display:block;
    float:left;
@@ -623,12 +616,3 @@ margin-right:5px;
     line-height:1em;
 }
 
-.ui-autocomplete
-{
-    text-align:left;
-}
-
-::-webkit-input-placeholder, input:-moz-placeholder
-{
-    font-style:italic;
-}

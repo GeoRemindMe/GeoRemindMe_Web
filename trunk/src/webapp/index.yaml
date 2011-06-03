@@ -36,7 +36,57 @@ indexes:
   - name: modified
     direction: desc
 
+- kind: Event
+  properties:
+  - name: class
+  - name: user
+  - name: modified
+    direction: desc
+
+- kind: POI
+  properties:
+  - name: __searchable_text_index
+  - name: modified
+    direction: desc
+
+- kind: Reminder
+  properties:
+  - name: user
+  - name: modified
+    direction: desc
+
 - kind: User
   properties:
   - name: class
   - name: created
+
+- kind: UserFollowingIndex
+  ancestor: yes
+  properties:
+  - name: created
+    direction: desc
+
+- kind: UserTimeline
+  ancestor: yes
+  properties:
+  - name: created
+    direction: desc
+
+- kind: UserTimelineBase
+  properties:
+  - name: class
+  - name: user
+  - name: created
+    direction: desc
+
+- kind: UserTimelineBase
+  properties:
+  - name: user
+  - name: created
+    direction: desc
+
+- kind: UserTimelineFollowersIndex
+  ancestor: yes
+  properties:
+  - name: created
+    direction: desc

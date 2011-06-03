@@ -9,9 +9,9 @@ from google.appengine.ext.db import BadValueError, Key
 from django.conf import settings
 from django.utils.hashcompat import md5_constructor
 
-from georemindme.models import User
+from geouser.models import User
 
-from georemindme.memcache import *
+from memcache import *
 
 MAX_SESSION_KEY = 18446744073709551616L
 

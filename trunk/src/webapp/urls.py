@@ -16,9 +16,9 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 from django.conf.urls.defaults import *
-import geoadmin
+import appengine_admin
 
-geoadmin.autodiscover()
+#geoadmin.autodiscover()
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -27,16 +27,12 @@ geoadmin.autodiscover()
 urlpatterns = patterns('',
     # Example:
     (r'^blog/(?P<path>.*)$', 'django.views.generic.simple.redirect_to', {'url': 'http://blog.georemindme.com/%(path)s', 'permanent': True}),
-    #(r'^oauth/', include('geoauth.urls')),
-    (r'^admin/', include('geoadmin.urls')),
+    (r'^oauth/', include('geoauth.urls')),
+    #(r'^admin/', include('geoadmin.urls')),
+    ##(r'^admin/$', appengine_admin.Admin),
     (r'^ajax/', include('geoajax.urls')),
-    url(r'^stats/daily/$', 'stats.stats_daily'),
     (r'', include('georemindme.urls')),
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # (r'^admin/', include(admin.site.urls)),
+    (r'', include('geouser.urls')),
 )
 
 jsonrpc_urlpatterns = patterns('',

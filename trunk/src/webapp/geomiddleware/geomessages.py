@@ -26,7 +26,7 @@ from django.contrib import messages
 
 class AJAXMessage(object):
     def process_response(self, request, response):
-        if all([request.is_ajax(), response['Content-Type'] in ["application/javascript", "application/json"]]):
+        if request.is_ajax() and response['Content-Type'] in ["application/javascript", "application/json"]:
             try:
                 content = dict(simplejson.loads(response.content))
             except:

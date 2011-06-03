@@ -111,18 +111,12 @@ class UserTimelineSystem(UserTimelineBase):
         _msg_ids = {
                 0: _('Welcome to GeoRemindMe!'),
                 100: _('%s is now following you!') % self.instance,
-                150: _('New user list created: %s') % self.instance,
-                151: _('Users list modified: %s') % self.instance,
-                152: _('Users list removed: %s') % self.instance,
                 200: _('New alert: %s') % self.instance,
-                250: _('New alert list created: %s') % self.instance,
-                251: _('Alerts list modified: %s') % self.instance,
-                252: _('Alerts list removed: %s') % self.instance,
                 300: _('New suggestion: %s') % self.instance,
                 350: _('New suggestions list created: %s') % self.instance,
                 351: _('Suggestions list modified: %s') % self.instance,
-                352: _('Suggestions list removed: %s') % self.instance,
-                353: _('You stopped following a list: %s') % self.instance,
+                352: _('Suggestion list removed: %s') % self.instance,
+                353: _('Unfollow list: %s') % self.instance,
                 }
         return _msg_ids[self.msg_id]
 

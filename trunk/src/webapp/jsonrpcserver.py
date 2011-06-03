@@ -113,7 +113,7 @@ class JSONSerializer:
     def serialize(self, obj):
         return AugmentedJSONEncoder().encode(obj)
     def deserialize(self, string):
-        return json.JSONDecoder("utf-8").decode(string)
+        return json.JSONDecoder().decode(string)
 
 
 class FunctionDispatcher(object):

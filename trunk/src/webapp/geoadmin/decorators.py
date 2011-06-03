@@ -4,7 +4,6 @@ def admin_required(func):
         if session.get('user'):
             if session['user'].is_admin():
                 return func(*args, **kwargs)
-
         from django.core.exceptions import PermissionDenied
         raise PermissionDenied()
     return _wrapper

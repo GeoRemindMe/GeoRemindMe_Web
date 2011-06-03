@@ -20,6 +20,7 @@
 <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
 <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
 <script type="text/javascript" src="/static/webapp/js/jquery.preload-1.0.8-min.js"></script> 
+<script type="text/javascript" src="/static/webapp/js/common.js"></script>
 
 {% block extra_js %}{%endblock%}
 
@@ -71,7 +72,7 @@ media="screen, projection" />
             
 
                  <p class="loginPassword">                 
-                  <input type="password" tabindex="5" title="password" value="password" name="user_loginPassword" id="password" placeholder="{% trans "Password" %}" accesskey="r"/>
+                  <input type="password" tabindex="5" title="password" value="password" name="user_login-password" id="password" placeholder="{% trans "Password" %}" accesskey="r"/>
               
                  </p>
 
@@ -84,9 +85,10 @@ media="screen, projection" />
                  -->
              <p>
                   <span class="remember">
-              <input type="checkbox" tabindex="6" value="1" name="remember_me" id="remember"/>
+              <input type="checkbox" tabindex="6" value="1" name="user_login-remember_me" id="remember"/>
                   <label for="remember">{% trans "Remember me on this computer" %}</label>
               </span>
+              <input type="hidden" name="next" value="{{ next }}" id="next" />
               <input type="submit" tabindex="7" value="{% trans "Sign in" %}" id="signin_submit" accesskey="b"/>
                  </p>
                  <input type="hidden" value="" id="signin_q" name="q"/>
@@ -112,7 +114,7 @@ media="screen, projection" />
              <div id="networks">
          <p>{% trans "Follow us on"%}:</p>
          <ul>
-          <li><a href="http://blog.georemindme.com/{{LANGUAGE_CODE}}/" title="{% trans "Visit our Blog"%}" accesskey="j"><img src="/static/webapp/img/wp_icon.png" title="{% trans "Visit our Blog"%}" alt="Wordpress logo"/></a></li>      
+          <li><a href="http://blog.georemindme.com" title="{% trans "Visit our Blog"%}" accesskey="j"><img src="/static/webapp/img/wp_icon.png" title="{% trans "Visit our Blog"%}" alt="Wordpress logo"/></a></li>      
           <li><a href="http://www.twitter.com/GeoRemindMe" title="{% trans "Follow us on Twitter"%}" accesskey="l"><img src="/static/webapp/img/twitter_icon.png" title="{% trans "Follow us on Twitter"%}" alt="Twitter logo"/></a></li>
           <li><a href="http://www.facebook.com/georemindme" title="{% trans "Follow us on Facebook"%}"  accesskey="k"><img src="/static/webapp/img/fb_icon.png" title="{% trans "Follow us on Facebook"%}" alt="Facebook logo"/></a></li>
           
