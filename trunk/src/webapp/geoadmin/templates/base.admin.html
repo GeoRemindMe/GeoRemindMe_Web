@@ -1,0 +1,176 @@
+{% load i18n %}
+
+{% autoescape off %}
+
+
+{% endautoescape %}
+
+<!DOCTYPE html>
+<!-- saved from url=(0054)http://dl.dropbox.com/u/5941332/georemindme/index.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8" /> 
+<title>{% block title %}{% endblock %}</title>
+
+{% block extra_js %} {% endblock %}
+
+<link rel="stylesheet" href="/static/css/screen.css" type="text/css" media="screen, projection">
+<link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen, projection">
+<link rel="stylesheet" href="/static/css/print.css" type="text/css" media="print">
+
+<!--[if IE]>
+<link rel="stylesheet" href="style/ie.css" type="text/css"
+media="screen, projection" />
+<![endif]-->
+
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+<![endif]-->
+
+</head>
+
+<body onload="{% block on_load %}{% endblock %}">
+   <div id="strip"></div>
+   <div class="container">
+   <ul id="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+      {% block header %}
+         <!--Header-->
+         <header id="pageheader" class="span-24 last">
+         <div class="span-18"><a href="/"><img src="/static/images/logo_v2.png" style="float:left;margin-left:50px;height:70px;margin-bottom:20px;" title="Go home" alt="Logo GeoRemindMe"/></a></div>
+      <div id="links" class="span-6 last">
+         {% if user.is_authenticated %}
+         <a href="{% url georemindme.views.dashboard %}">Account <img src="/static/images/arrow3.png"></a>
+         {% if user.is_admin %}
+          <a href="{% url geoadmin.views.index %}">Administration <img src="/static/images/arrow3.png"></a>
+         {% endif %}
+         {% else %}
+            <a href="{% url georemindme.views.login %}">Login <img src="/static/images/arrow3.png"></a>
+         <a href="{% url georemindme.views.register %}">Register <img src="/static/images/arrow3.png"></a>
+         {% endif %}
+         </div>
+
+            <!--Nav Menu-->
+            <nav class="span-24 last">
+            
+               <div {% ifequal active "home" %} id="menu-active"{% endifequal %} class="span-4 append-1"><a href="{% url georemindme.home %}">Home</a></div>
+               <div {% ifequal active "more" %} id="menu-active"{% endifequal %} class="span-4 append-1"><a href="/more/">GeoRe...what?</a></div>
+               <div {% ifequal active "team" %} id="menu-active"{% endifequal %} class="span-4 append-1"><a href="/team/">Team</a></div>
+               <div {% ifequal active "contact" %} id="menu-active"{% endifequal %} class="span-4 append-1"><a href="/contact/">Contact us</a></div>
+               <div {% ifequal active "faq" %} id="menu-active"{% endifequal %} class="span-4 last"><a href="/faq/">F.A.Q.</a></div>
+            </nav> 
+         </header>
+      {% endblock %}
+      
+      {% block content %}{% endblock %}
+      
+   
+      {% block footer %}
+         <!--Footer-->
+         <footer id="pagefooter" class="span-24 last">
+         <aside class="span-6">
+            <header>
+               <h2>Sponsors</h2>
+               <a href="http://codeko.com/"><img alt="Codeko&#39;s logo" desc="Codeko Sponsor GeoRemindMe" src="/static/images/codeko_logo.png" title="Codeko informática"></a>
+            </header>
+            
+         </aside>
+         <aside class="span-6">
+            <header id="logos">
+               <h2>Technologies</h2>
+               <p><em>Proudly developed using:</em></p>
+               
+               
+               
+               <a href="http://www.djangoproject.com/"><img alt="A Django Site" src="/static/images/djangosite80x15.gif" title="Django"></a><br>
+               <a href="http://www.w3.org/TR/html5/"><img src="http://www.cambesfootball.fr/wp-content/themes/twentyten_cambes/images/html5valid.png" alt="HTML 5" title="HTML5"/></a><br>
+               <a href="http://www.w3.org/TR/css3-roadmap/"><img src="http://sigterm.us/badges/valid_css3_blue.png" alt="CSS3" title="CSS3"/></a><br/>
+               <a href="http://www.blueprintcss.org/"><img src="http://www.bitrepository.com/wp-content/uploads/2009/08/icon-blueprint-css-framework.png" alt="Blueprint" title="Blueprint"/></a>
+               
+            </header>
+            
+         </aside>
+         <aside class="span-6">
+            <header>
+               <h2>Related Content</h2>
+               
+            </header>
+            <article>
+               <ul id="related-logos">
+                  <li><p><a href="https://forja.rediris.es/projects/cusl5-georemind/"  title="Rediris Forge"><img src="https://forja.rediris.es/themes/gforge/images/logo.png" alt="Rediris Forge" title="Rediris Forge" /></a></p></li>
+                  <li><a href="http://www.concursosoftwarelibre.org/"  title="Concurso Universitario de Software Libre"><img src="http://www.yud-project.org/blog/wp-content/uploads/2010/10/logoCUSL.png" alt="CUSL" title="Concurso Universitario de Software Libre"/></a></li>
+                  <li class="vertical-margin"><a href="http://www.innovact.com/en/" title="Innovact Campus"><img alt="Logo Innovact" src="http://profile.ak.fbcdn.net/hprofile-ak-snc4/41486_100000181523040_1191_n.jpg"></a></li>
+               </ul>
+            </article>
+         </aside>
+         <aside class="span-6 last">
+            <header>
+               <h2>Contact</h2>
+            </header>
+            <article id="contactformhome">
+               <form action="{%url georemindme.contact %}" method="POST" name="" novalidate="false">
+                  {{contactForm.as_p}}
+                  <input id="send" type="submit" value="Send">
+               </form>
+               
+            </article>
+         </aside>
+         <div id="language">
+         {% get_available_languages as LANGUAGES %}
+         {% get_current_language as LANGUAGE_CODE %}
+            <header>Idioma:</header>
+            <form>
+               <fieldset>
+                  <select>
+                  {% for code, name in LANGUAGES %}
+                     <option {%if LANGUAGE_CODE == code %}SELECTED{% endif %} value="{{code}}" >{{name}}</option>
+                    {% endfor %}
+                  </select>
+               </fieldset>
+               {% csrf_token %} 
+               <input type="hidden" name="next" value="{{ request.path }}" />
+            </form>
+         </div>
+         
+         </footer>
+      {% endblock %}
+   
+   </div> <!--Container end-->
+    
+
+<script type="text/javascript" charset="utf-8">
+  var is_ssl = ("https:" == document.location.protocol);
+  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript" charset="utf-8">
+  var feedback_widget_options = {};
+
+  feedback_widget_options.display = "overlay";  
+  feedback_widget_options.company = "georemindme";
+  feedback_widget_options.placement = "left";
+  feedback_widget_options.color = "#222";
+  feedback_widget_options.style = "idea";
+
+  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+</script>    
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19272923-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

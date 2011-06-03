@@ -1,0 +1,7 @@
+Place the statics files in a order tree, i.e:
+
+webapp/			For the webapp
+mobileweb/		For the webapp mobile
+promoweb/		For the promoweb
+
+Cheers!

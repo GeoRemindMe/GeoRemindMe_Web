@@ -1,0 +1,268 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST RAUL JIMENEZ ORTEGA <RAUL@GEOREMINDME.COM>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GeoRemindMe v1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-25 13:47+0100\n"
+"PO-Revision-Date: 2011-04-15 02:38+0100\n"
+"Last-Translator: Raul Jimenez Ortega <raul@georemindme.com>\n"
+"Language-Team: Community <community@georemindme.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+"X-Poedit-Language: Français\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: settings.py:132
+msgid "English"
+msgstr "En anglais"
+
+#: settings.py:133
+msgid "Spanish"
+msgstr "Espagnole"
+
+#: georemindme/admin.py:32
+#: georemindme/forms.py:73
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+#: georemindme/admin.py:33
+#: georemindme/forms.py:74
+msgid "Repeat new password"
+msgstr "Répéter mot de passe nouveau"
+
+#: georemindme/admin.py:34
+msgid "Is active"
+msgstr "Est actif"
+
+#: georemindme/admin.py:35
+msgid "Is confirmed"
+msgstr "Est confirmée"
+
+#: georemindme/admin.py:36
+msgid "Is admin"
+msgstr "Est-admin"
+
+#: georemindme/admin.py:68
+#: georemindme/forms.py:58
+#: georemindme/forms.py:90
+msgid "Passwords can't have white spaces"
+msgstr "Les mots de passe ne peut pas avoir des espaces blancs"
+
+#: georemindme/admin.py:72
+#: georemindme/forms.py:62
+#: georemindme/forms.py:93
+msgid "Passwords must be the same."
+msgstr "Les mots de passe doivent être les mêmes."
+
+#: georemindme/forms.py:46
+msgid "Repeat password"
+msgstr "Répéter mot de passe"
+
+#: georemindme/forms.py:72
+msgid "Actual password"
+msgstr "mot de passe réel"
+
+#: georemindme/forms.py:96
+msgid "Old password needed."
+msgstr "Ancien mot de passe nécessaire."
+
+#: georemindme/forms.py:121
+msgid "Alert distance (meters)"
+msgstr "Alerte à distance (en mètres)"
+
+#: georemindme/forms.py:143
+msgid "Distance must be a number"
+msgstr "Distance doit être un nombre"
+
+#: georemindme/forms.py:152
+msgid "Wrong dates"
+msgstr "dates Wrong"
+
+#: georemindme/mails.py:31
+#, python-format
+msgid "<a href=\"%s\">Confirm link</a>"
+msgstr "<a href=\"%s\">lien Confirmer</a>"
+
+#: georemindme/mails.py:55
+msgid "Confirm your registration at GeoRemindMe"
+msgstr "Confirmez votre inscription à GeoRemindMe"
+
+#: georemindme/mails.py:56
+#, python-format
+msgid ""
+"Confirm your registration at GeoRemindMe\n"
+"                    %(link)s\n"
+"                    If you don't see the link, copy and paste this url:\n"
+"                    %(url)s\n"
+"                    "
+msgstr "Confirmez votre inscription à GeoRemindMe %(link)s Si vous ne voyez pas le lien, copier et coller cette URL: %(url)s"
+
+#: georemindme/models.py:183
+#, python-format
+msgid "Unique email constraint exception: %s "
+msgstr "Unique exception contrainte e-mail:%s"
+
+#: georemindme/properties.py:37
+#: georemindme/properties.py:46
+msgid "Password can't be empty"
+msgstr "Mot de passe ne peut pas être vide"
+
+#: georemindme/properties.py:48
+msgid "Password can't have white spaces"
+msgstr "Mot de passe ne peut pas avoir des espaces blancs"
+
+#: georemindme/views.py:90
+#, python-format
+msgid "%s attemp to be banned for 5min"
+msgstr "%s essayer d&#39;être interdit pendant 5 minutes"
+
+#: georemindme/views.py:91
+msgid "Password wrong."
+msgstr "Mot de passe erroné."
+
+#: georemindme/views.py:97
+msgid "Email not confirmed, a new confirm email have been sent"
+msgstr "Email pas confirmé, une nouvelle confirmation par courrier électronique ont été envoyés"
+
+#: georemindme/views.py:100
+msgid "Email wrong"
+msgstr "E-mail erronée"
+
+#: georemindme/views.py:136
+#, python-format
+msgid "User registration complete, a confirmation email have been sent to %s"
+msgstr "Enregistrement de l&#39;utilisateur complète, un courriel de confirmation ont été envoyées à%s"
+
+#: georemindme/views.py:165
+msgid "Sorry me, you are not an identified Google User"
+msgstr "Désolé moi, vous n&#39;êtes pas un utilisateur identifié Google"
+
+#: georemindme/views.py:238
+#: georemindme/views.py:245
+msgid "User modified"
+msgstr "Modifiable par l&#39;utilisateur"
+
+#: georemindme/views.py:241
+msgid "Wrong old password"
+msgstr "Wrong ancien mot de passe"
+
+#: georemindme/views.py:248
+msgid "Email already in use."
+msgstr "Courrier électronique déjà en cours d&#39;utilisation."
+
+#: georemindme/views.py:251
+msgid "A error ocurred, try again later"
+msgstr "Une erreur s&#39;est produite, réessayez plus tard"
+
+#: georemindme/views.py:271
+#, python-format
+msgid "User %s confirmed. Please log in."
+msgstr "L&#39;utilisateur%s confirmé. S&#39;il vous plaît connecter!"
+
+#: georemindme/views.py:273
+msgid "Invalid user"
+msgstr "utilisateur non valide"
+
+#: georemindme/views.py:341
+msgid "Latest done reminders"
+msgstr "Derniers rappels faits"
+
+#: georemindme/views.py:351
+msgid "All your reminders"
+msgstr "Tous vos rappels"
+
+#: georemindme/views.py:365
+msgid "Near alerts:"
+msgstr "Proche des alertes:"
+
+#: georemindme/templates/base.html:53
+msgid "Home"
+msgstr "Accueil"
+
+#: georemindme/templates/base.html:54
+msgid "GeoRe...what?"
+msgstr "GeoRe ... quoi?"
+
+#: georemindme/templates/base.html:55
+msgid "Team"
+msgstr "Team"
+
+#: georemindme/templates/base.html:56
+msgid "Contact us"
+msgstr "Contactez-nous"
+
+#: georemindme/templates/base.html:57
+msgid "F.A.Q."
+msgstr "FAQ"
+
+#: georemindme/templates/base_user.html:15
+#: georemindme/templates/base_user.html:23
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: georemindme/templates/base_user.html:16
+msgid "My account"
+msgstr "Mon compte"
+
+#: georemindme/templates/base_user.html:17
+msgid "List all reminders"
+msgstr "Liste tous les rappels"
+
+#: georemindme/templates/base_user.html:18
+msgid "List latest done reminders"
+msgstr "Liste des rappels plus tard fait"
+
+#: georemindme/templates/base_user.html:19
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: georemindme/templates/confirm.html:11
+#, python-format
+msgid ""
+"<p>You are logged in Google Accounts like %(email)s but <strong>you have not</strong>  a GeoRemindMe account, if you continue you are accepting the terms and conditions.</p>\n"
+"     <p>So, are you sure you want to continue?:"
+msgstr "<p> Vous êtes inscrit dans les comptes Google comme %(email)s, mais <strong>vous n&#39;avez pas</strong> un compte GeoRemindMe, si vous continuez, vous acceptez les termes et conditions. </p><p> Alors, êtes-vous sûr de vouloir continuer?:"
+
+#: georemindme/templates/confirm.html:14
+msgid "Yes proceed, I understand | Or... OUUUUUH! YES!"
+msgstr "Oui procéder, je comprends | Ou ... OUUUUUH! OUI!"
+
+#: georemindme/templates/confirm.html:16
+msgid "No I don't"
+msgstr "Non, je ne"
+
+#: georemindme/templates/contact.html:10
+msgid "Contact"
+msgstr "Contact"
+
+#: georemindme/templates/know_more.html:10
+msgid ""
+"\n"
+"        <h2>Know more</h2>\n"
+"        <p>This history begins when we detected a necessity that we have.<strong> Don’t you ever happens that a few minutes after when you have been in some place you remember that you forgot something to do there?</strong>, And then didn’t you had a feeling that you are not managing your time well because you are going to come back to such that place to do such thing?</p>\n"
+"        <p>Well, that use to happens quite often to as, so Geo-Remind-Me means to be a really lightweight application that allow you to add special alerts to your smartphone. Alerts that notice you when you are near of a location where you have something to do.</p>\n"
+"        <p>The discussion about adding more features is open, but we need to remind that one of the main goals is to get a <strong>really fast and light application</strong>.</p>\n"
+"        <p>So, we have just join to a University Free Software Contest in Spain, and here you have the presentation we did to introduce the APP to the other attendees:</p>\n"
+"        \n"
+"        <div style=\"text-align: center;\">\n"
+"           <iframe width=\"410\" height=\"342\" frameborder=\"0\" src=\"https://docs.google.com/present/embed?id=dfn99qkm_637jj5m4783\">\n"
+"           </iframe>\n"
+"        </div>\n"
+"        <p><a href=\"http://www.georemindme.com/blog/\">Visit our blog</a></p>\n"
+"     "
+msgstr ""
+"\n"
+"<h2> En savoir plus </h2><p> Cette histoire commence lorsque nous avons détecté une nécessité que nous avons. <strong>N&#39;avez-vous jamais arrive que quelques minutes après quand vous avez été en quelque endroit que vous rappeler que vous avez oublié quelque chose à faire là-bas?,</strong> Et puis ne vous ai pas eu le sentiment que vous ne gérez pas bien votre temps parce que vous allez revenir à de telle sorte que lieu de faire une telle chose? </p><p> Eh bien, cette utilisation arrive assez souvent que, si Geo-Remind-Me signifie d&#39;être une application très légère qui vous permettent d&#39;ajouter des alertes spéciales sur votre smartphone. Alertes que vous remarquez quand vous êtes près d&#39;un endroit où vous avez quelque chose à faire. </p><p> La discussion sur l&#39;ajout de plus de fonctionnalités est ouvert, mais nous devons rappeler que l&#39;un des principaux objectifs est d&#39;obtenir une <strong>application rapide et léger vraiment.</strong> </p><p> Donc, nous venons d&#39;adhérer à un concours de l&#39;Université du Logiciel Libre en Espagne, et ici vous avez la présentation que nous avons fait d&#39;introduire l&#39;APP aux autres participants: </p><div style=\"text-align: center;\"><iframe width=\"410\" height=\"342\" frameborder=\"0\" src=\"https://docs.google.com/present/embed?id=dfn99qkm_637jj5m4783\"></iframe></div><p> <a href=\"http://www.georemindme.com/blog/\">Visitez notre blog</a> </p>"
+
+#: georemindme/templates/login.html:9
+msgid "Login using your Google account"
+msgstr "Connectez-vous en utilisant votre compte Google"
+
