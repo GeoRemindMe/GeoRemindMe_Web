@@ -1,0 +1,55 @@
+﻿{% extends "admin_base.html" %}
+
+{% block content %}
+<h2>Admin :: {{ moduleTitle }}</h2>
+{% if item %}
+<p class="createNew"><a href="{{ urlPrefix }}/{{ moduleTitle }}/new/">Create new</a>
+    {% if item.get_absolute_url %}
+         | <a href="{{ item.get_absolute_url }}">Preview in page &raquo;</a>
+    {% endif %}
+</p>
+{% endif %}
+<!-- Editable properties -->
+<form name="adminEditForm" method="post"
+    action="{{ urlPrefix }}/{{ moduleTitle }}/{% if item %}edit/{{ item.key }}{% else %}new{% endif %}/"
+    {% if editForm.enctype %}enctype="{{ editForm.enctype }}"{% endif %}>
+<table class="editForm">
+    <tr>
+        <td colspan="2"><h3>Editable properties</h3></td>
+    </tr>
+    {{ editForm }}
+    <tr>
+        <td>&nbsp;</td>
+        <td>
+            <div style="float:left; clear:left;" class="okButton">
+                <input type="submit" value="OK"/>
+            </div>
+            {% if item %}
+            <div style="float:right; clear:right;" class="deleteButton">
+                <a href="{{ urlPrefix }}/{{ moduleTitle }}/delete/{{ item.key }}/" onclick='return confirm("Are you sure?");'>Delete</a>
+            </div>
+            {% endif %}
+        </td>
+    </tr>
+    {% if item %}
+    <!-- Readonly properties -->
+    {% for field in readonlyProperties %}
+        <tr>
+            <td>{{ field.verbose_name }}:</td>
+            <td>
+            {% ifequal field.typeName "BlobProperty" %}
+                {% if field.value %}
+                <a href="{{urlPrefix}}/{{moduleTitle}}/get_blob_contents/{{field.name}}/{{ item.key }}/">File uploaded: {{field.meta.File_Name}}</a>
+                {% else %}
+                None
+                {% endif %}
+            {% else %}
+            {{ field.value }}
+            {% endifequal %}
+            </td>
+        </tr>
+    {% endfor %}
+    {% endif %}
+</table>
+</form>
+{% endblock %}
