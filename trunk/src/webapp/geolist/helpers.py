@@ -8,7 +8,35 @@ class ListHelper(object):
     _klass = List
     
     def get_by_id(self, id):
+        '''
+        Devuelve la lista con ese ID y el usuario. 
+        Si usuario es None y la lista es publica, tambien devuelve la lista
+        
+            :param id: identificador de la lista
+            :type id: :class:`Integer`
+            :returns: None o :class:`geolist.models.List`
+        '''
         return self._klass.get_by_id(id)
+    
+    def get_by_id_user(self, id, user = None):
+        '''
+        Devuelve la lista con ese ID y el usuario. 
+        Si usuario es None y la lista es publica, tambien devuelve la lista
+        
+            :param id: identificador de la lista
+            :type id: :class:`Integer`
+            :param user: usuario
+            :type user: :class:`geouser.models.User`
+            :returns: None o :class:`geolist.models.List`
+        '''
+        # TODO : si la lista es 'shared', mirar si el usuario tiene visibilidad
+        list = self._klass.get_by_id(id)
+        if list is not None:
+            if list.user == user:
+                return list
+            if list._is_public():
+                return list
+        return None
     
     def get_list_user_following(self, user):
         '''
@@ -24,10 +52,22 @@ class ListHelper(object):
 class ListSuggestionHelper(object):
     _klass = ListSuggestion
     
+    def get_by_name_user(self, name, user):
+        list = self._klass.all().filter('user =', user).filter('name =', name).get()
+        return list
+    
 
 class ListAlertHelper(object):
     _klass = ListAlert
     
+    def get_by_name_user(self, name, user):
+        list = self._klass.all().filter('user =', user).filter('name =', name).get()
+        return list
+    
 
 class ListUserHelper(object):
     _klass = ListUser
+    
+    def get_by_name_user(self, name, user):
+        list = self._klass.all().filter('user =', user).filter('name =', name).get()
+        return list

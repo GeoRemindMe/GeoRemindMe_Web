@@ -18,6 +18,7 @@ class List(polymodel.PolyModel):
     description = db.TextProperty()
     keys = db.ListProperty(db.Key)
     created = db.DateTimeProperty(auto_now_add = True)
+    count = db.IntegerProperty()
     
     @property
     def id(self):
@@ -83,6 +84,30 @@ class List(polymodel.PolyModel):
         index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
         db.run_in_transaction(index.key(), user_key)
         
+    def _pre_put(self):
+        self.count = len(self.keys)
+
+    def _post_put(self):
+        pass
+    
+    def put(self, *kwargs):
+        self._pre_put()
+        super(List, self).put(*kwargs)
+        self._post_put()
+
+#  from http://blog.notdot.net/2010/04/Pre--and-post--put-hooks-for-Datastore-models
+old_put = db.put
+
+def hooked_put(models, **kwargs):
+  for model in models:
+    if isinstance(model, List):
+      model._pre_put()
+  old_put(models, **kwargs)
+  for model in models:
+    if isinstance(model, List):
+      model._post_put()
+
+db.put = hooked_put
 
 class ListSuggestion(List, Visibility):
     '''
@@ -151,8 +176,6 @@ class ListAlert(List):
         keys= set([instance.key() for instance in instances])
         list = ListAlert(name=name, user=user, description=description, keys=[k for k in keys])
         list.put()
-        timeline = UserTimelineSystem(user=user.key(), msg_id=250, instance=list)
-        timeline.put()
         return list
     
     def update(self, name=None, description=None, instances_add=[], instances_del=[]):
@@ -184,6 +207,13 @@ class ListAlert(List):
         put = db.put_async(timeline, self)
         put.get_result()
         
+    def put(self):
+        if not self.is_saved():
+            super(ListAlert, self).put()
+            timeline = UserTimelineSystem(user=user.key(), msg_id=250, instance=list)
+            timeline.put()
+        else:
+            super(ListAlert, self).put()
         
 class ListUser(List):
     '''
@@ -219,8 +249,7 @@ class ListUser(List):
             list.keys = [k for k in keys]
         list = ListUser(name=name, user=user, description=description, keys=[k for k in keys])
         list.put()
-        timeline = UserTimelineSystem(user=user.key(), msg_id=150, instance=list)
-        timeline.put()
+
         return list
     
     def update(self, name=None, description=None, instances_add=None, instances_del=None):
@@ -251,5 +280,13 @@ class ListUser(List):
         timeline = UserTimelineSystem(user=self.user.key(), msg_id=151, instance=list)
         put = db.put_async(timeline, self)
         put.get_result()
+        
+    def put(self):
+        if not self.is_saved():
+            super(ListAlert, self).put()
+            timeline = UserTimelineSystem(user=user.key(), msg_id=150, instance=list)
+            timeline.put()
+        else:
+            super(ListAlert, self).put()
         
 from helpers import *
