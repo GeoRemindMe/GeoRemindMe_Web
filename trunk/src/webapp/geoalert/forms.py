@@ -72,8 +72,9 @@ class RemindForm(forms.Form):
         lat, long = self.cleaned_data['location'].split(',')
         poi = PrivatePlace.get_or_insert(id = self.cleaned_data['poi_id'],
                                          name = '',
-                                         point = GeoPt(float(lat), float(long)),
-                                         address = kwargs.get('address', ''),)
+                                         location = GeoPt(float(lat), float(long)),
+                                         address = kwargs.get('address', ''),
+                                         user = kwargs['user'])
         alert = Alert.update_or_insert(
                          id = kwargs.get('id', None), name = self.cleaned_data['name'],
                          description = self.cleaned_data['description'], 

@@ -31,6 +31,8 @@ class ListHelper(object):
         '''
         # TODO : si la lista es 'shared', mirar si el usuario tiene visibilidad
         list = self._klass.get_by_id(id)
+        if not list.active:
+            return None
         if list is not None:
             if list.user == user:
                 return list
@@ -54,6 +56,8 @@ class ListSuggestionHelper(object):
     
     def get_by_name_user(self, name, user):
         list = self._klass.all().filter('user =', user).filter('name =', name).get()
+        if not list.active:
+            return None
         return list
     
 
@@ -62,6 +66,8 @@ class ListAlertHelper(object):
     
     def get_by_name_user(self, name, user):
         list = self._klass.all().filter('user =', user).filter('name =', name).get()
+        if not list.active:
+            return None
         return list
     
 
@@ -70,4 +76,6 @@ class ListUserHelper(object):
     
     def get_by_name_user(self, name, user):
         list = self._klass.all().filter('user =', user).filter('name =', name).get()
+        if not list.active:
+            return None
         return list

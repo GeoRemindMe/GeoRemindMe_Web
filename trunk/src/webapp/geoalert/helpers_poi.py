@@ -34,14 +34,14 @@ class PrivatePlaceHelper(POIHelper):
     def get_by_business_user(self, business, user, page=1, query_id=None):
         if not isinstance(business, Business):
             raise TypeError()
-        q = self._klass.gql('WHERE business = :1 AND user = :2', business, user)
+        q = self._klass.gql('WHERE business = :1 AND user = :2 ORDER BY created DESC', business, user)
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
     
-    def get_by_address_or_point_user(self, address, user, point = None):
+    def get_by_address_or_point_user(self, address, user, location = None):
         if address != '' or address is not None:
-            return self._klass.gql('WHERE address = :1 AND user = :2', address, user).get()
-        return self._klass.gql('WHERE point = :1 AND user = :2', point, user).get()
+            return self._klass.gql('WHERE address = :1 AND user = :2 ORDER BY created DESC', address, user).get()
+        return self._klass.gql('WHERE location = :1 AND user = :2 ORDER BY created DESC', location, user).get()
     
 class PlaceHelper(POIHelper):
     pass

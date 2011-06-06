@@ -375,8 +375,9 @@ class User(polymodel.PolyModel):
         added = self._add_follows(following_result, following)
         if added:
             counter_result = counter_result.next()  # sumamos uno al contador de following
+            follow_result = follow_result.next()
             counter_result.set_followings(+1)
-            follow_result = follow_result.next()  # sumamos uno al contador de followers del otro usuario
+            # sumamos uno al contador de followers del otro usuario
             follow_result.set_followers(+1)
             settings_follow_result.next().notify_follower(self)  # mandar email de notificacion
         return True

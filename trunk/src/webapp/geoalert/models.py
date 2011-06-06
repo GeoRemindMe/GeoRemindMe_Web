@@ -189,8 +189,8 @@ class Alert(Event):
                     'name': self.name,
                     'description': self.description,
                     'poi_id': self.poi.key().id(),
-                    'x': self.poi.point.lat,
-                    'y': self.poi.point.lon,
+                    'x': self.poi.location.lat,
+                    'y': self.poi.location.lon,
                     'address': unicode(self.poi.address),
                     'starts': unicode(self.date_starts.strftime("%d%b")) if self.date_starts else '',
                     'ends': unicode(self.date_ends.strftime("%d%b")) if self.date_ends else '',
@@ -211,7 +211,46 @@ class Suggestion(Event, Visibility):
         Recomendaciones de los usuarios que otros pueden
         convertir en Alert
     '''
-    pass
+    @classproperty
+    def objects(self):
+        return SuggestionHelper()
+    
+    @classmethod
+    def update_or_insert(cls, id = None, name = None, description = None,
+                         date_starts = None, date_ends = None, poi = None,
+                         user = None, done = False, active = True, vis = 'public'):
+        '''
+            Crea una sugerencia nueva, si recibe un id, la busca y actualiza.
+            
+            :returns: :class:`geoalert.models.Suggestion`
+            :raises: :class:`geoalert.exceptions.ForbiddenAccess`, :class:`TypeError`
+        '''
+        if not isinstance(user, User):
+            raise TypeError()
+        if poi is None:
+            raise TypeError()
+        if id is not None:  # como se ha pasado un id, queremos modificar una alerta existente
+            sugg = cls.objects.get_by_id_user(id, user)
+            if sugg is None:
+                return None
+            sugg.name = name if name is not None else sugg.name
+            sugg.description = description if description is not None else sugg.description
+            sugg.date_starts = date_starts if date_starts is not None else sugg.date_starts
+            sugg.date_ends = date_ends if date_ends is not None else sugg.date_ends
+            sugg.poi = poi if poi is not None else sugg.poi
+            if sugg.is_active() != active:
+                sugg.toggle_active()
+            sugg.put()
+            return sugg
+        else:
+            sugg = Suggestion(name = name, description = description, date_starts = date_starts,
+                          date_ends = date_ends, poi = poi, user = user)
+            if not active:
+                sugg.toggle_active()
+            sugg.put()
+            timeline = UserTimelineSystem(user = user, instance = sugg, msg_id=300)
+            timeline.put()
+            return sugg
 
 class AlertSuggestion(Taggable):
     '''

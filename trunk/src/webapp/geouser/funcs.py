@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from datetime import datetime, timedelta
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -42,7 +44,6 @@ def init_user_session(request, user, remember=True):
     request.session['LANGUAGE_CODE'] = user.settings.language
     request.session['user'] = user
 
-from models import User
 def login_func(request, email = None, password = None, remember_me = True, user = None):
     """Login function
 

@@ -64,7 +64,7 @@ class UserHelper(object):
             userkey = self.get_by_username(username, keys_only=True)
         elif userid is not None:
             userkey = db.Key.from_path(User.kind(), userid)
-        followers = UserFollowingIndex.gql('WHERE following = :1', userkey)
+        followers = UserFollowingIndex.gql('WHERE following = :1 ORDER BY created DESC', userkey)
         p = PagedQuery(followers, id = query_id)
         ##users = [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]
         return [p.id, [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]]

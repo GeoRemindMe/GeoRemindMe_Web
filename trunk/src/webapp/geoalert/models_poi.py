@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from google.appengine.ext import db, search
 from google.appengine.ext.db import polymodel
 
-from geobox import generate_geoboxes
+from geomodel.geomodel import GeoModel
 from georemindme.decorators import classproperty
 from georemindme.models_utils import Visibility
 from geouser.models import User
@@ -24,7 +24,7 @@ class Business(db.Model):
     
 
 
-class POI(polymodel.PolyModel, search.SearchableModel):
+class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
     ''' Puntos de interes '''
     name = db.StringProperty()
     bookmark = db.BooleanProperty(default=False)
@@ -55,8 +55,6 @@ class PrivatePlace(POI):
     address = db.StringProperty()
     business = db.ReferenceProperty(Business)
     google_places_id = db.StringProperty(default=None) 
-    point = db.GeoPtProperty()
-    geoboxes = db.StringListProperty()
     
     @classmethod
     def SearchableProperties(cls):
@@ -72,22 +70,22 @@ class PrivatePlace(POI):
     
     @classmethod
     def get_or_insert(cls, id = None, name = None, bookmark = False, address = None,
-                         business = None, google_places_id = None, point = None, user = None):
+                         business = None, google_places_id = None, location = None, user = None):
         if id:
             place = cls.objects.get_by_id(id, user)
         else:
-            place = cls.objects.get_by_address_or_point_user(address, user, point = point)
+            place = cls.objects.get_by_address_or_point_user(address, user, location = location)
             if place is None:
                 place = PrivatePlace(name = name, bookmark = bookmark,
                                  address = address, business = business,
                                  google_places_id = google_places_id,
-                                 point = point, user = user)
+                                 location = location, user = user)
                 place.put()
         return place
             
     
     def put(self):
-        self.geoboxes = generate_geoboxes(self.point.lat, self.point.lon)
+        self.update_location()
         super(self.__class__, self).put()
 
     

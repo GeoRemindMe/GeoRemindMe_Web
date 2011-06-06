@@ -19,6 +19,7 @@ from geouser.funcs import init_user_session, login_func
 from geoalert.forms import *
 from geoalert.models import *
 import geoalert.views as geoalert
+import geolist.views as geolist
 
 
 @ajax_request
@@ -219,5 +220,142 @@ def get_chronology(request):
     return HttpResponse(simplejson.dumps(chronology), mimetype="application/json")
     
 
-    
+#===============================================================================
+# FUNCIONES PARA LISTAS
+#===============================================================================
+@ajax_request
+def get_list_id(request):
+    '''
+    Devuelve la lista buscada por ID
+    Parametros en POST
+        list_id : lista a buscar
+        
+        :returns: (list_id, list_name, list_description, list_created
+    '''
+    list_id = request.POST.get('list_id', None)
+    list = geolist.get_list_id(request, list_id)
+    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
+@ajax_request
+def get_list_user(request):
+    '''
+    Devuelve la lista buscada por ID
+    Parametros en POST
+        list_id : lista a buscar
+        
+        :returns: (list_id, list_name, list_description, list_created
+    '''
+    list_id = request.POST.get('list_id', None)
+    list_name = request.POST.get('list_name', None)
+    if list_id is not None:
+        list = geolist.get_list_user_id(request, list_id)
+    elif list_name is not None and list_name != '':
+        list = geolist.get_list_user_name(request, list_name)
+    else:
+        list = None
+    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
+@ajax_request
+def get_list_alert(request):
+    '''
+    Devuelve la lista buscada por ID
+    Parametros en POST
+        list_id : lista a buscar
+        
+        :returns: (list_id, list_name, list_description, list_created
+    '''
+    list_id = request.POST.get('list_id', None)
+    list_name = request.POST.get('list_name', None)
+    if list_id is not None:
+        list = geolist.get_list_alert_id(request, list_id)
+    elif list_name is not None and list_name != '':
+        list = geolist.get_list_alert_name(request, list_name)
+    else:
+        list = None
+    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
+@ajax_request
+def new_list_user(request):
+    '''
+    Crea una nueva lista de usuarios
+    Parametros en POST    
+        :param name: nombre para la lista (el nombre es unico)
+        :type name: :class:`string`
+        :param description: descripcion de la lista (opcional)
+        :type description: :class:`string`
+        :param instances: lista de usuarios iniciales (opcional)
+        :type instances: :class:`list`
+        :returns: id de la lista creada o modificada si ya existia
+    '''
+    list_name = request.POST.get('list_name', None)
+    list_description = request.POST.get('list_description', None)
+    list_instances = request.POST.get('list_instances', [])
+    
+    list = geolist.add_list_user(name = list_name, description = list_description, instances = list_instances)
+    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
+@ajax_request
+def new_list_alert(request):
+    '''
+    Crea una nueva lista de alertas
+    Parametros en POST    
+        :param name: nombre para la lista (el nombre es unico)
+        :type name: :class:`string`
+        :param description: descripcion de la lista (opcional)
+        :type description: :class:`string`
+        :param instances: lista de usuarios iniciales (opcional)
+        :type instances: :class:`list`
+        :returns: id de la lista creada o modificada si ya existia
+    '''
+    list_name = request.POST.get('list_name', None)
+    list_description = request.POST.get('list_description', None)
+    list_instances = request.POST.get('list_instances', [])
+    
+    list = geolist.add_list_alert(name = list_name, description = list_description, instances = list_instances)
+    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
+@ajax_request
+def mod_list_user(request):
+    '''
+    Modifica una lista de usuarios
+    Parametros en POST    
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        :param name: nombre para la lista (el nombre es unico)
+        :type name: :class:`string`
+        :param description: descripcion de la lista (opcional)
+        :type description: :class:`string`
+        :param instances: lista de alertas iniciales (opcional)
+        :type instances: :class:`list`
+        :returns: id de la lista modificada
+    '''
+    list_id = request.POST.get('list_id', None)
+    list_name = request.POST.get('list_name', None)
+    list_description = request.POST.get('list_description', None)
+    list_instances = request.POST.get('list_instances', [])
+    
+    list = geolist.mod_list_user(id = list_id, name = list_name, description = list_description, instances = list_instances)
+    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
+@ajax_request
+def mod_list_alert(request):
+    '''
+    Modifica una lista de alertas
+    Parametros en POST    
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        :param name: nombre para la lista (el nombre es unico)
+        :type name: :class:`string`
+        :param description: descripcion de la lista (opcional)
+        :type description: :class:`string`
+        :param instances: lista de alertas iniciales (opcional)
+        :type instances: :class:`list`
+        :returns: id de la lista modificada
+    '''
+    list_id = request.POST.get('list_id', None)
+    list_name = request.POST.get('list_name', None)
+    list_description = request.POST.get('list_description', None)
+    list_instances = request.POST.get('list_instances', [])
+    
+    list = geolist.mod_list_alert(id = list_id, name = list_name, description = list_description, instances = list_instances)
+    return HttpResponse(simplejson.dumps(list), mimetype="application/json")

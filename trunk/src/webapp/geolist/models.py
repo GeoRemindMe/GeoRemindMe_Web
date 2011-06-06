@@ -5,12 +5,12 @@ from google.appengine.ext.db import polymodel
 
 from geouser.models import User
 from geouser.models_acc import UserTimelineSystem
-from georemindme.models_utils import Visibility
+from georemindme.models_utils import Visibility, HookedModel
 from georemindme.decorators import classproperty
 from models_indexes import ListFollowersIndex
 
 
-class List(polymodel.PolyModel):
+class List(polymodel.PolyModel, HookedModel):
     '''
         NO USAR ESTA LISTA, USAR LOS MODELOS ESPECIFICOS :D
     '''
@@ -18,6 +18,7 @@ class List(polymodel.PolyModel):
     description = db.TextProperty()
     keys = db.ListProperty(db.Key)
     created = db.DateTimeProperty(auto_now_add = True)
+    active = db.BooleanProperty(default=True)
     count = db.IntegerProperty()
     
     @property
@@ -86,28 +87,11 @@ class List(polymodel.PolyModel):
         
     def _pre_put(self):
         self.count = len(self.keys)
-
-    def _post_put(self):
-        pass
     
     def put(self, *kwargs):
         self._pre_put()
         super(List, self).put(*kwargs)
         self._post_put()
-
-#  from http://blog.notdot.net/2010/04/Pre--and-post--put-hooks-for-Datastore-models
-old_put = db.put
-
-def hooked_put(models, **kwargs):
-  for model in models:
-    if isinstance(model, List):
-      model._pre_put()
-  old_put(models, **kwargs)
-  for model in models:
-    if isinstance(model, List):
-      model._post_put()
-
-db.put = hooked_put
 
 class ListSuggestion(List, Visibility):
     '''
@@ -132,9 +116,18 @@ class ListSuggestion(List, Visibility):
                 return True
             for list in ListFollowersIndex.all().ancestor(self.key()):
                 for key in list.users:
-                    timeline = UserTimelineSystem(user=key, msg_id=352, instance=self)
+                    timeline = UserTimelineSystem(user=self.user, msg_id=351, instance=self)
                     timeline.put()
             return True
+        
+    def _pre_put(self):
+        if self.is_saved():
+            if not self.active:
+                timeline = UserTimelineSystem(user=self.user, msg_id=352, instance=self)
+                timeline.put()
+            else:
+                from georemindme.tasks import NotificationHandler
+                NotificationHandler().list_followers_notify(self)
 
 
 class ListAlert(List):
@@ -203,14 +196,17 @@ class ListAlert(List):
         keys = set(self.keys)
         keys |= set([instance.key() for instance in instances_add])
         self.keys = [k for k in keys]
-        timeline = UserTimelineSystem(user=self.user.key(), msg_id=251, instance=list)
+        timeline = UserTimelineSystem(user=self.user.key(), msg_id=251, instance=self)
         put = db.put_async(timeline, self)
         put.get_result()
         
     def put(self):
+        if not self.active:
+                timeline = UserTimelineSystem(user=self.user, msg_id=252, instance=self)
+                timeline.put()
         if not self.is_saved():
             super(ListAlert, self).put()
-            timeline = UserTimelineSystem(user=user.key(), msg_id=250, instance=list)
+            timeline = UserTimelineSystem(user=self.user.key(), msg_id=250, instance=self)
             timeline.put()
         else:
             super(ListAlert, self).put()
@@ -277,14 +273,17 @@ class ListUser(List):
         keys = set(self.keys)
         keys |= set([instance.key() for instance in instances_add])
         self.keys = [k for k in keys]
-        timeline = UserTimelineSystem(user=self.user.key(), msg_id=151, instance=list)
+        timeline = UserTimelineSystem(user=self.user.key(), msg_id=151, instance=self)
         put = db.put_async(timeline, self)
         put.get_result()
         
     def put(self):
+        if not self.active:
+                timeline = UserTimelineSystem(user=self.user, msg_id=152, instance=self)
+                timeline.put()
         if not self.is_saved():
             super(ListAlert, self).put()
-            timeline = UserTimelineSystem(user=user.key(), msg_id=150, instance=list)
+            timeline = UserTimelineSystem(user=self.user.key(), msg_id=150, instance=list)
             timeline.put()
         else:
             super(ListAlert, self).put()

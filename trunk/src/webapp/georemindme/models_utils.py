@@ -44,3 +44,30 @@ class Visibility(db.Model):
         if self._vis == 'shared':
             return True
         return False
+
+#  from http://blog.notdot.net/2010/04/Pre--and-post--put-hooks-for-Datastore-models
+
+class HookedModel(db.Model):
+    def _pre_put(self):
+        pass
+    
+    def put(self, *kwargs):
+        self._pre_put()
+        super(List, self).put(*kwargs)
+        self._post_put()
+        
+    def _post_put(self):
+        pass
+
+old_put = db.put
+
+def hooked_put(models, **kwargs):
+  for model in models:
+    if isinstance(model, HookedModel):
+      model._pre_put()
+  old_put(models, **kwargs)
+  for model in models:
+    if isinstance(model, HookedModel):
+      model._post_put()
+
+db.put = hooked_put

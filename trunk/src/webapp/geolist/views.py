@@ -141,3 +141,13 @@ def get_list_alert(request, id = None, name = None):
         raise TypeError()
     
     return list
+
+@login_required
+def del_list(request, id):
+    user = request.session['user']
+    list = List.objects.get_by_id_user(id, user = user)
+    if list.user == user:
+        list.active = False
+        list.put()
+        return True
+    return False
