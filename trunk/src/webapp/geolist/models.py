@@ -18,6 +18,7 @@ class List(polymodel.PolyModel, HookedModel):
     description = db.TextProperty()
     keys = db.ListProperty(db.Key)
     created = db.DateTimeProperty(auto_now_add = True)
+    modified = db.DateTimeProperty(auto_now=True)
     active = db.BooleanProperty(default=True)
     count = db.IntegerProperty()
     
@@ -92,6 +93,19 @@ class List(polymodel.PolyModel, HookedModel):
         self._pre_put()
         super(List, self).put(*kwargs)
         self._post_put()
+        
+    def to_dict(self):
+            return {'id': self.id,
+                    'name': self.name,
+                    'description': self.description,
+                    'user': self.user.username,
+                    'modified': unicode(self.modified.strftime("%d%b")),
+                    'created': unicode(self.created.strftime("%d%b")),
+                    'instances': [i.id() for i in self.instances], 
+                    }
+            
+    def to_json(self):
+        return simplejson.dumps(self.to_dict())
 
 class ListSuggestion(List, Visibility):
     '''
@@ -120,6 +134,100 @@ class ListSuggestion(List, Visibility):
                     timeline.put()
             return True
         
+    @classmethod
+    def insert_list(cls, user, name, description = None, instances=[], vis='public'):
+        '''
+        Crea una nueva lista, en el caso de que exista una con ese nombre,
+        se añaden las alertas
+        
+            :param user: usuario
+            :type user: :class:`geouser.models.User`
+            :param name: nombre de la lista
+            :type name: :class:`string`
+            :param description: descripcion de la lista
+            :type description: :class:`string`
+            :param instances: objetos a añadir a la lista
+            :type instances: :class:`geoalert.models.Alert`
+            :param vis: Visibilidad de la lista
+            :type vis: :class:`string`
+        '''
+        list = user.listsuggestion_set.filter('name =', name).get()
+        if list is not None:  # la lista con ese nombre ya existe, la editamos
+            if description is not None:
+                list.description = description
+            keys = set(list.keys)
+            keys |= set([instance.key() for instance in instances])
+            list.keys = [k for k in keys]
+            list._vis = vis
+            list.put()
+            return list
+        # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
+        keys= set([instance.key() for instance in instances])
+        list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
+        list.put()
+        return list
+    
+    def update(self, name=None, description=None, instances_add=[], instances_del=[], vis='public'):
+        '''
+        Actualiza una lista de alertas
+        
+            :param user: usuario
+            :type user: :class:`geouser.models.User`
+            :param name: nombre de la lista
+            :type name: :class:`string`
+            :param description: descripcion de la lista
+            :type description: :class:`string`
+            :param instances: objetos a añadir a la lista
+            :type instances: :class:`geoalert.models.Alert`
+            :param vis: Visibilidad de la lista
+            :type vis: :class:`string`
+        '''
+        if name is not None:
+            self.name = name
+        if description is not None:
+                self.description = description
+        for instance in instances_del:
+            try:
+                self.keys.remove(instance.key())
+            except ValueError:
+                pass
+        keys = set(self.keys)
+        keys |= set([instance.key() for instance in instances_add])
+        self.keys = [k for k in keys]
+        self._vis = vis
+        timeline = UserTimelineSystem(user=self.user.key(), msg_id=351, instance=self)
+        put = db.put_async(timeline, self)
+        put.get_result()
+        
+    def add_follower(self, user):
+        '''
+        Añade un usuario a los seguidores de una lista
+        
+            :param user: Usuario que quiere apuntarse a una sugerencia
+            :type user: :class:`geouser.models.User`
+            
+            :returns: True si se añadio, False en caso contrario    
+        '''
+        if self._is_private():
+            return False
+        elif self._is_shared() and not self.user_invited():
+            return False   
+        def _tx(sug_key, user_key):
+            # TODO : cambiar a contador con sharding
+            list = db.get(key)
+            if ListFollowersIndex.all().ancestor(list).filter('keys =', user_key).count() != 0:
+                return  # el usuario ya sigue la lista
+            list += 1
+            # indice con personas que siguen la sugerencia
+            index = ListFollowersIndex.all().ancestor(list).filter('count < 80').get()
+            if index is None:
+                index = ListFollowersIndex(parent=list)
+            index.keys.append(user_key)
+            index.count += 1
+            db.put_async([list, index])
+        db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
+        return True
+            
     def _pre_put(self):
         if self.is_saved():
             if not self.active:
@@ -128,6 +236,17 @@ class ListSuggestion(List, Visibility):
             else:
                 from georemindme.tasks import NotificationHandler
                 NotificationHandler().list_followers_notify(self)
+                
+    def user_invited(self, user):
+        '''
+        Comprueba que un usuario ha sido invitado a la sugerencia
+            
+            :param user: Usuario que debe estar invitado
+            :type user: :class:`geouser.models.User`
+            
+            :returns: True si esta invitado, False en caso contrario
+        '''
+        return Invitation.objects.get_user_invited(self, user)
 
 
 class ListAlert(List):

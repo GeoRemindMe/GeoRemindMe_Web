@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from google.appengine.api import users
 
-from funcs import getAlertsJSON
+from funcs import getAlertsJSON, getListsJSON
 from decorators import ajax_request
 from geouser.models import User
 import geouser.views as geouser
@@ -130,7 +130,7 @@ def get_followers(request):
     userid = request.POST.get('id', None)
     username = request.POST.get('username', None)
     followers = geouser.get_followers(request, userid, username, page, query_id)
-    return HttpResponse(simplejson(followers), mimetype="application/json")  # los None se parsean como null
+    return HttpResponse(simplejson.dumps(followers), mimetype="application/json")  # los None se parsean como null
 
 @ajax_request
 def get_followings(request):
@@ -164,7 +164,7 @@ def add_following(request):
     userid = request.POST.get('id', None)
     username = request.POST.get('username', None)
     added = geouser.add_following(request, userid=userid, username=username)
-    return HttpResponse(simplejson(added), mimetype="application/json")
+    return HttpResponse(simplejson.dumps(added), mimetype="application/json")
     
 @ajax_request
 def del_following(request):
@@ -179,7 +179,7 @@ def del_following(request):
     userid = request.POST.get('id', None)
     username = request.POST.get('username', None)
     deleted = geouser.del_following(request, userid=userid, username=username)
-    return HttpResponse(simplejson(deleted), mimetype="application/json")
+    return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
 
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
@@ -362,6 +362,64 @@ def mod_list_alert(request):
 
 @ajax_request
 def del_list(request):
+    '''
+    Borra una lista
+    Parametros POST
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        
+        :returns: True si se borro la lista
+    '''
     list_id = request.POST.get('list_id', None)
     list = geolist.del_list(request, id = list_id)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
+@ajax_request
+def get_all_list_user(request):
+    '''
+    Obtiene las listas de usuario de un usuario
+    Parametros POST
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        page: pagina a mostrar
+        query_id: id de la consulta de pagina
+    '''
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    lists = geolist.get_all_list_user(request, page = page, query_id = query_id)
+    
+    return HttpResponse(getListsJSON(lists), mimetype="application/json")
+
+@ajax_request
+def get_all_list_alert(request):
+    '''
+    Obtiene las listas de alertas de un usuario
+    Parametros POST
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        page: pagina a mostrar
+        query_id: id de la consulta de pagina
+    '''
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    lists = geolist.get_all_list_alert(request, page = page, query_id = query_id)
+    
+    return HttpResponse(getListsJSON(lists), mimetype="application/json")
+
+@ajax_request
+def get_all_list_suggestion(request):
+    '''
+    Obtiene las listas de sugerencias de un usuario
+    Parametros POST
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        page: pagina a mostrar
+        query_id: id de la consulta de pagina
+    '''
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    lists = geolist.get_all_list_suggestion(request, query_id=query_id, page=page)
+    
+    return HttpResponse(getListsJSON(lists), mimetype="application/json")
+    
+    

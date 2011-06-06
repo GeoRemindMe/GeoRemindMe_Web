@@ -146,10 +146,9 @@ def get_list_alert(request, id = None, name = None):
 def del_list(request, id):
     '''
     Borra una lista
-    Parametros POST
+        
         :param id: identificador de la lista
         :type id: :class:`integer`
-        
         :returns: True si se borro la lista
     '''
     user = request.session['user']
@@ -159,3 +158,64 @@ def del_list(request, id):
         list.put()
         return True
     return False
+
+@login_required
+def get_all_list_user(request, query_id=None, page=1):
+    '''
+    Devuelve todas las listas de usuarios del usuario ¡PAGINADA!
+    Si usuario es None y la lista es publica, tambien devuelve la lista
+    
+        :param user: identificador de la lista
+        :type user: :class:`geouser.models.User`
+        :returns: [query_id, [:class:`geolist.models.ListUser`]
+    '''
+    user = request.session['user']
+    lists = UserList.objects.get_by_user(user, query_id=query_id, page=page)
+    
+    return lists
+
+@login_required
+def get_all_list_alert(request, query_id=None, page=1):
+    '''
+    Devuelve todas las listas de alertas del usuario ¡PAGINADA!
+    Si usuario es None y la lista es publica, tambien devuelve la lista
+    
+        :param user: identificador de la lista
+        :type user: :class:`geouser.models.User`
+        :returns: [query_id, [:class:`geolist.models.ListAlert`]
+    '''
+    user = request.session['user']
+    lists = AlertList.objects.get_by_user(user, query_id=query_id, page=page)
+    
+    return lists
+
+@login_required
+def get_all_list_suggestion(request, query_id=None, page=1):
+    '''
+    Devuelve todas las listas de sugerencias del usuario ¡PAGINADA!
+    Si usuario es None y la lista es publica, tambien devuelve la lista
+    
+        :param user: identificador de la lista
+        :type user: :class:`geouser.models.User`
+        :returns: [query_id, [:class:`geolist.models.ListSuggestion`]
+    '''
+    user = request.session['user']
+    lists = SuggestionList.objects.get_by_user(user, query_id=query_id, page=page)
+    
+    return lists
+
+@login_required
+def follow_list_suggestion(request, id):
+    '''
+    Añade a un usuario como seguir de una lista de sugerencias
+    
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        
+        :returns: True si se añadio, False si no tiene permisos
+    '''
+    user = request.session['user']
+    list = SuggestionList.objects.get_by_id(id)
+    follow = list.add_follower(user)
+    
+    return follow

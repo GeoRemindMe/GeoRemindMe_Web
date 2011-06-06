@@ -1,4 +1,5 @@
 from google.appengine.ext import db
+from georemindme.models_indexes import Invitation
 
 class ListFollowersIndex(db.Model):
     followers = db.ListProperty(db.Key)

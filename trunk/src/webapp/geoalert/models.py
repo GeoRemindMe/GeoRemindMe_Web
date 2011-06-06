@@ -25,7 +25,6 @@ class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
     date_starts = db.DateTimeProperty()
     date_ends = db.DateTimeProperty()
     poi = db.ReferenceProperty(POI, required=True)
-    user = db.ReferenceProperty(User, required=True, collection_name='alerts')
     modified = db.DateTimeProperty(auto_now=True)
     #in the appengine datastore, is more eficient to use stringlistproperty than some booleanProperty, its only needs one index
     #I now alert only have 2 boolean by now, but is better to learn these things.  
@@ -113,7 +112,7 @@ class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
         return None
     
     def get_absolute_url(self):
-        return '/event/view/%s' % str(self.key().id())
+        return '/event/%s' % str(self.id)
     
 
 class Alert(Event):
@@ -121,6 +120,7 @@ class Alert(Event):
         Alert son los recordatorios que el usuario crea solo
         para su uso propio y quiere que se le avise
     '''
+    user = db.ReferenceProperty(User, required=True, collection_name='alerts')
     done_when = db.DateTimeProperty()
     has = db.StringListProperty(default=[u'active:T', u'done:F', ])
     
@@ -211,6 +211,11 @@ class Suggestion(Event, Visibility):
         Recomendaciones de los usuarios que otros pueden
         convertir en Alert
     '''
+    user = db.ReferenceProperty(User, required=True, collection_name='suggestions')
+    has = db.StringListProperty(default=[u'active:T',])
+    count = db.IntegerProperty(default=0)  # lleva una lista de gente que sigue la sugerencia
+    
+    
     @classproperty
     def objects(self):
         return SuggestionHelper()
@@ -251,6 +256,46 @@ class Suggestion(Event, Visibility):
             timeline = UserTimelineSystem(user = user, instance = sugg, msg_id=300)
             timeline.put()
             return sugg
+        
+    def add_follower(self, user):
+        '''
+        Crea una alerta a partir de una sugerencia
+        
+            :param user: Usuario que quiere apuntarse a una sugerencia
+            :type user: :class:`geouser.models.User`
+            
+            :returns: :class:`geoalert.models.AlertSuggestion`    
+        '''
+        def _tx(sug_key, user_key):
+            # TODO : cambiar a contador con sharding
+            sug = db.get(key)
+            sug += 1
+            # indice con personas que siguen la sugerencia
+            index = SuggestionFollowersIndex.all().ancestor(sug).filter('count < 80').get()
+            if index is None:
+                index = SuggestionFollowersIndex(parent=sug)
+            index.keys.append(user_key)
+            index.count += 1
+            db.put_async([sug, index])
+        try:
+            alert = AlertSuggestion.update_or_insert(suggestion = self, user = user)
+            db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
+        except ForbiddenAccess():
+            return None
+        return alert
+    
+    def user_invited(self, user):
+        '''
+        Comprueba que un usuario ha sido invitado a la sugerencia
+            
+            :param user: Usuario que debe estar invitado
+            :type user: :class:`geouser.models.User`
+            
+            :returns: True si esta invitado, False en caso contrario
+        '''
+        return Invitation.objects.get_user_invited(self, user)
+        
+        
 
 class AlertSuggestion(Taggable):
     '''
@@ -286,10 +331,22 @@ class AlertSuggestion(Taggable):
     @classmethod
     def update_or_insert(cls, id = None, suggestion = None,
                          user = None, done = False, active = True):
+        '''
+            Crea una alerta de sugerencia nueva, si recibe un id, la busca y actualiza.
+            
+            :returns: :class:`geoalert.models.AlertSuggestion`
+            :raises: :class:`geoalert.exceptions.ForbiddenAccess`, :class:`TypeError`
+        '''
         if not isinstance(user, User):
             raise TypeError()
         if suggestion is None:
             raise TypeError()
+        if suggestion._is_private():
+            if suggestion.user != user:
+                raise ForbiddenAccess()
+        if suggestion._is_shared():
+            if not suggestion.user_invited(user):
+                raise ForbiddenAccess()
         if id is not None:  # como se ha pasado un id, queremos modificar una alerta existente
             alert = cls.objects.get_by_id_user(id, user)
             if alert is None:
@@ -307,7 +364,7 @@ class AlertSuggestion(Taggable):
             if not active:
                 alert.toggle_active()
             alert.put()
-            timeline = UserTimelineSystem(user = user, instance = alert, msg_id=200)
+            timeline = UserTimelineSystem(user = user, instance = self, msg_id=320)
             timeline.put()
             return alert
         

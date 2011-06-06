@@ -33,6 +33,7 @@ urlpatterns = patterns('',
     (r'^ajax/', include('geoajax.urls')),
     (r'', include('georemindme.urls')),
     (r'', include('geouser.urls')),
+    (r'', include('geoalert.urls')),
 )
 
 jsonrpc_urlpatterns = patterns('',

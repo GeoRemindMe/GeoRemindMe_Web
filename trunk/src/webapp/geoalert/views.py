@@ -1,8 +1,31 @@
 # coding=utf-8
 
-from models import Alert
+from django.http import Http404
+from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse
+
+from models import *
 from geouser.decorators import login_required
 
+#===============================================================================
+# PERFIL DE EVENTOS
+#===============================================================================
+
+def suggestion_profile(request, id):
+    user = request.session.get('user', None)
+    suggestion = Suggestion.objects.get_by_id(id)
+    
+    if suggestion is None:
+        raise Http404
+    if suggestion._is_private() and suggestion.user != user:
+        # sugerencia privada, pero de otro usuario
+        raise Http404
+    elif suggestion._is_shared() and not suggestion.user_invited(user):
+        raise Http404 
+    
+    return render_to_response('webapp/suggestionprofile.html', {'suggestion':suggestion},
+                               context_instance=RequestContext(request))
+    
 #===============================================================================
 # FUNCIONES PARA AÑADIR, EDITAR, OBTENER Y MODIFICAR ALERTAS
 #===============================================================================
