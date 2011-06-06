@@ -144,6 +144,14 @@ def get_list_alert(request, id = None, name = None):
 
 @login_required
 def del_list(request, id):
+    '''
+    Borra una lista
+    Parametros POST
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        
+        :returns: True si se borro la lista
+    '''
     user = request.session['user']
     list = List.objects.get_by_id_user(id, user = user)
     if list.user == user:

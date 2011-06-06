@@ -291,7 +291,7 @@ def new_list_user(request):
     list_description = request.POST.get('list_description', None)
     list_instances = request.POST.get('list_instances', [])
     
-    list = geolist.add_list_user(name = list_name, description = list_description, instances = list_instances)
+    list = geolist.add_list_user(request, name = list_name, description = list_description, instances = list_instances)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
 @ajax_request
@@ -311,7 +311,7 @@ def new_list_alert(request):
     list_description = request.POST.get('list_description', None)
     list_instances = request.POST.get('list_instances', [])
     
-    list = geolist.add_list_alert(name = list_name, description = list_description, instances = list_instances)
+    list = geolist.add_list_alert(request, name = list_name, description = list_description, instances = list_instances)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
 @ajax_request
@@ -334,7 +334,7 @@ def mod_list_user(request):
     list_description = request.POST.get('list_description', None)
     list_instances = request.POST.get('list_instances', [])
     
-    list = geolist.mod_list_user(id = list_id, name = list_name, description = list_description, instances = list_instances)
+    list = geolist.mod_list_user(request, id = list_id, name = list_name, description = list_description, instances = list_instances)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
 @ajax_request
@@ -357,5 +357,11 @@ def mod_list_alert(request):
     list_description = request.POST.get('list_description', None)
     list_instances = request.POST.get('list_instances', [])
     
-    list = geolist.mod_list_alert(id = list_id, name = list_name, description = list_description, instances = list_instances)
+    list = geolist.mod_list_alert(request, id = list_id, name = list_name, description = list_description, instances = list_instances)
+    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
+@ajax_request
+def del_list(request):
+    list_id = request.POST.get('list_id', None)
+    list = geolist.del_list(request, id = list_id)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
