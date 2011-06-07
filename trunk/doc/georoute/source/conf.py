@@ -15,7 +15,6 @@ import sys, os
 #Webapp route
 webapp_route='../../../../src/webapp/';
 settings_path=os.path.abspath(os.path.dirname(__file__) + webapp_route)
-print 'Settings path='+settings_path
 sys.path.append(settings_path)
 
 import settings

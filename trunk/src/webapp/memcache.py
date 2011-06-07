@@ -17,8 +17,12 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 
 
 """
-import os
-version = os.environ["CURRENT_VERSION_ID"]
+try:
+	import os
+	version = os.environ["CURRENT_VERSION_ID"]
+except KeyError:
+	version = 1
+
 #===============================================================================
 # About memcache: http://blog.notdot.net/2009/9/Efficient-model-memcaching
 #===============================================================================

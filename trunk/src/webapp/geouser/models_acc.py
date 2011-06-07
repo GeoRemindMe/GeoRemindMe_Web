@@ -10,9 +10,15 @@ from models import User
 class UserSettings(db.Model):
     """Configuracion del usuario (privacidad, etc.)"""
     notification_followers = db.BooleanProperty(indexed=False, default=True)
+    notification_list_following = db.BooleanProperty(indexed=False, default=True)
+    notification_suggestion_following = db.BooleanProperty(indexed=False, default=True)
+    notification_suggestion_following_comm = db.BooleanProperty(indexed=False, default=True)
+    notification_suggestion_comment = db.BooleanProperty(indexed=False, default=True)
     show_followers = db.BooleanProperty(indexed=False, default=True)
     show_followings = db.BooleanProperty(indexed=False, default=True)
     show_timeline = db.BooleanProperty(indexed=False, default=True)
+    show_lists = db.BooleanProperty(indexed=False, default=True)
+    show_public_profile = db.BooleanProperty(indexed=False, default=True)
     language = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
     

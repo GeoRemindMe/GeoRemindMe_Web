@@ -2,7 +2,7 @@
 
 from types import UnicodeType, StringType, ListType
 from string import split
-from google.appengine.ext import db
+from google.appengine.ext import db, search
 
 SEPARATOR = ','
 
@@ -13,7 +13,7 @@ class TagHelper(object):
     def order_by_frequency(self):
         list = Tag.gql('WHERE count > 0 ORDER BY count DESC')
 
-class Tag(db.Model):
+class Tag(search.SearchableModel):
     name = db.StringProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     count = db.IntegerProperty(default=0)

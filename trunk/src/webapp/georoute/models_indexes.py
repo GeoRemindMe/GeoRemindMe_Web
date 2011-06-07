@@ -17,7 +17,7 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 """
 from google.appengine.ext import db
 
-from georemindme.models import User
+from geouser.models import User
 
 class RoutePathIndex(db.Model):
     '''
