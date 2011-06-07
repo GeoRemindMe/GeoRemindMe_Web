@@ -12,7 +12,12 @@
 # serve to show the default.
 
 import sys, os
-sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/../../../'))
+#Webapp route
+webapp_route='../../../../src/webapp/';
+settings_path=os.path.abspath(os.path.dirname(__file__) + webapp_route)
+print 'Settings path='+settings_path
+sys.path.append(settings_path)
+
 import settings
 from django.core.management import setup_environ
  
