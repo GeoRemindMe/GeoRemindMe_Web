@@ -5,21 +5,36 @@ from google.appengine.ext import db
 from models_acc import *
 from models import User
 from georemindme.paging import *
+import memcache
 
 
 class UserSettingsHelper(object):
     def get_by_id(self, id, async=False):
-        key = db.Key.from_path(User.kind(), id, UserSettings.kind(), '%s_settings' % id)
+        settings = memcache.deserialize_instances(memcache.get('%s%s_settings' % (memcache.version, id)))
+        if settings is None:
+            key = db.Key.from_path(User.kind(), id, UserSettings.kind(), '%s_settings' % id)
+            settings = db.get(key)
+            memcache.set('%s%s_settings' % (memcache.version, id), memcache.serialize_instances(settings))
+        return settings
+        """
         if async:
             return db.get_async(key)
         return db.get(key)
+        """
     
 class UserProfileHelper(object):
     def get_by_id(self, id, async=False):
-        key = db.Key.from_path(User.kind(), id, UserProfile.kind(), '%s_profile' % id)
+        profile = memcache.deserialize_instances(memcache.get('%s%s_profile' % (memcache.version, id)))
+        if settings is None:
+            key = db.Key.from_path(User.kind(), id, UserSettings.kind(), '%s_profile' % id)
+            profile = db.get(key)
+            memcache.set('%s%s_profile' % (memcache.version, id), memcache.serialize_instances(settings))
+        return profile
+        """
         if async:
             return db.get_async(key)
         return db.get(key)
+        """
 
 class UserCounterHelper(object):
     def get_by_id(self, id, async=False):

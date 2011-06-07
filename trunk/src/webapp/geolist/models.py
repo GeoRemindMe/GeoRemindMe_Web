@@ -29,63 +29,7 @@ class List(polymodel.PolyModel, HookedModel):
     @classproperty
     def objects(self):
         return ListHelper()
-    
-    def _user_is_follower(self, user_key):
-        '''
-        Busca si un usuario ya sigue a una lista
-        
-            :param user_key: key del usuario a buscar
-            :type user_key: :class:`db.Key`
-            :returns: True si el usuario ya sigue la lista. False si no.
-        '''
-        if not self.is_saved():
-            return db.NotSavedError()
-        index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
-        if index is not None:
-            return True
-        return False
-            
-    def add_follower(self, user_key):
-        '''
-        Añade un usuario a la lista
-        
-            :param user_key: key del usuario a buscar
-            :type user_key: :class:`db.Key`
-            :returns: True si se añadio (o ya existia) el usuario. False si hubo algun error
-        '''
-        def _tx(index_key, user_key):
-            index = db.get(index_key)
-            index.keys.append(user_key)
-            index.count += 1
-            index.put()
-        if self._user_is_follower(user_key):
-            return True
-        if ListFollowersIndex.all().ancestor(self.key).count() == 0:
-            index = ListFollowersIndex(parent=self, kind=self.kind())
-            index.put()
-        else:
-            index = ListFollowersIndex.all().ancestor(self.key()).filter('count <', 80).order('created').get()
-        # TODO: en vez de cargar todo el objeto, obtener solo el key
-        db.run_in_transaction(index.key(), user_key)
-        
-    def del_follower(self, user_key):
-        '''
-        Borra un usuario de la lista
-        
-            :param user_key: key del usuario a buscar
-            :type user_key: :class:`db.Key`
-            :returns: True si se borro el usuario. False si hubo algun error o no existia
-        '''
-        def _tx(index_key, user_key):
-            index = db.get(index_key)
-            index.keys.remove(user_key)
-            index.count -= 1
-            index.put()
-        if not self._user_is_follower(user_key):
-            return False
-        index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
-        db.run_in_transaction(index.key(), user_key)
-        
+
     def _pre_put(self):
         self.count = len(self.keys)
     
@@ -119,6 +63,21 @@ class ListSuggestion(List, Visibility):
     @classproperty
     def objects(self):
         return ListSuggestionHelper()
+    
+    def _user_is_follower(self, user_key):
+        '''
+        Busca si un usuario ya sigue a una lista
+        
+            :param user_key: key del usuario a buscar
+            :type user_key: :class:`db.Key`
+            :returns: True si el usuario ya sigue la lista. False si no.
+        '''
+        if not self.is_saved():
+            return db.NotSavedError()
+        index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
+        if index is not None:
+            return True
+        return False
     
     def notify_followers(self):
         '''
@@ -199,6 +158,24 @@ class ListSuggestion(List, Visibility):
         put = db.put_async(timeline, self)
         put.get_result()
         
+    def del_follower(self, user_key):
+        '''
+        Borra un usuario de la lista
+        
+            :param user_key: key del usuario a buscar
+            :type user_key: :class:`db.Key`
+            :returns: True si se borro el usuario. False si hubo algun error o no existia
+        '''
+        def _tx(index_key, user_key):
+            index = db.get(index_key)
+            index.keys.remove(user_key)
+            index.count -= 1
+            index.put()
+        if not self._user_is_follower(user_key):
+            return False
+        index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
+        db.run_in_transaction(_tx, index.key(), user_key)
+    
     def add_follower(self, user):
         '''
         Añade un usuario a los seguidores de una lista
@@ -208,10 +185,13 @@ class ListSuggestion(List, Visibility):
             
             :returns: True si se añadio, False en caso contrario    
         '''
+        if self._user_is_follower(user_key):
+            return True
         if self._is_private():
             return False
-        elif self._is_shared() and not self.user_invited():
-            return False   
+        elif self._is_shared():
+            if self.user_invited(user) is None:
+                return False   
         def _tx(sug_key, user_key):
             # TODO : cambiar a contador con sharding
             list = db.get(key)
@@ -224,12 +204,13 @@ class ListSuggestion(List, Visibility):
                 index = ListFollowersIndex(parent=list)
             index.keys.append(user_key)
             index.count += 1
-            # TODO : cambiar estado de invitacion
             db.put_async([list, index])
         db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
+        self.user_invited(user, set_status=1)  # FIXME : mejor manera de cambiar estado invitacion
         return True
             
     def _pre_put(self):
+        super(SuggestionList, self)._pre_put()
         if self.is_saved():
             if not self.active:
                 timeline = UserTimelineSystem(user=self.user, msg_id=352, instance=self)
@@ -238,16 +219,22 @@ class ListSuggestion(List, Visibility):
                 from georemindme.tasks import NotificationHandler
                 NotificationHandler().list_followers_notify(self)
                 
-    def user_invited(self, user):
+    def user_invited(self, user, set_status=None):
         '''
         Comprueba que un usuario ha sido invitado a la sugerencia
             
             :param user: Usuario que debe estar invitado
             :type user: :class:`geouser.models.User`
+            :param set_status: Nuevo estado para la invitacion
+            :type set_status: :class:`integer`
             
             :returns: True si esta invitado, False en caso contrario
         '''
-        return Invitation.objects.get_user_invited(self, user)
+        invitation = Invitation.objects.get_user_invited(self, user)
+        if invitation is not None and set_status is not None:
+            invitation.status = set_status
+            invitation.put()
+        return invitation
 
 
 class ListAlert(List):

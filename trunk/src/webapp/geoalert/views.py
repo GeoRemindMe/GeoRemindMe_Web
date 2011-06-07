@@ -14,10 +14,7 @@ import memcache
 
 def suggestion_profile(request, id):
     user = request.session.get('user', None)
-    suggestion = memcache.deserialize_instances('%sSUGGESTION%s' % (memcache.version, id))
-    if suggestion is None:
-        suggestion = Suggestion.objects.get_by_id(id)
-        memcache.set('%sSUGGESTION%s' % (memcache.version, id), serialize_instances(suggestion))
+    suggestion = Suggestion.objects.get_by_id(id)
     if suggestion is None:
         raise Http404
     if suggestion._is_private() and suggestion.user != user:

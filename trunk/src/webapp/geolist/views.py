@@ -163,10 +163,11 @@ def del_list(request, id):
 def get_all_list_user(request, query_id=None, page=1):
     '''
     Devuelve todas las listas de usuarios del usuario ¡PAGINADA!
-    Si usuario es None y la lista es publica, tambien devuelve la lista
     
-        :param user: identificador de la lista
-        :type user: :class:`geouser.models.User`
+        :param page: numero de pagina a mostrar
+        :type param: int
+        :param query_id: identificador de busqueda
+        :type query_id: int
         :returns: [query_id, [:class:`geolist.models.ListUser`]
     '''
     user = request.session['user']
@@ -178,10 +179,11 @@ def get_all_list_user(request, query_id=None, page=1):
 def get_all_list_alert(request, query_id=None, page=1):
     '''
     Devuelve todas las listas de alertas del usuario ¡PAGINADA!
-    Si usuario es None y la lista es publica, tambien devuelve la lista
     
-        :param user: identificador de la lista
-        :type user: :class:`geouser.models.User`
+        :param page: numero de pagina a mostrar
+        :type param: int
+        :param query_id: identificador de busqueda
+        :type query_id: int
         :returns: [query_id, [:class:`geolist.models.ListAlert`]
     '''
     user = request.session['user']
@@ -193,10 +195,11 @@ def get_all_list_alert(request, query_id=None, page=1):
 def get_all_list_suggestion(request, query_id=None, page=1):
     '''
     Devuelve todas las listas de sugerencias del usuario ¡PAGINADA!
-    Si usuario es None y la lista es publica, tambien devuelve la lista
     
-        :param user: identificador de la lista
-        :type user: :class:`geouser.models.User`
+        :param page: numero de pagina a mostrar
+        :type param: int
+        :param query_id: identificador de busqueda
+        :type query_id: int
         :returns: [query_id, [:class:`geolist.models.ListSuggestion`]
     '''
     user = request.session['user']
@@ -219,3 +222,28 @@ def follow_list_suggestion(request, id):
     follow = list.add_follower(user)
     
     return follow
+
+def get_all_public_list_suggestion(request, query_id=None, page=1):
+    '''
+    Devuelve todas las listas de sugerencias publicas ¡PAGINADA!
+    
+        :param page: numero de pagina a mostrar
+        :type param: int
+        :param query_id: identificador de busqueda
+        :type query_id: int
+        :returns: [query_id, [:class:`geolist.models.ListSuggestion`]
+    '''
+    lists = SuggestionList.objects.get_all_public(query_id=query_id, page=page)
+    
+    return lists
+
+@login_required
+def get_all_shared_list_suggestion(request):
+    '''
+    Devuelve todas las listas de sugerencias compartidas con el usuario
+    
+        :returns: [:class:`geolist.models.ListSuggestion`]
+    '''
+    lists = SuggestionList.objects.get_shared_list(user)
+    
+    return lists

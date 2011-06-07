@@ -3,7 +3,7 @@
 from django.conf import settings
 from google.appengine.ext import db
 
-from models import Event, Alert, AlertSuggestion
+from models import Event, Alert, AlertSuggestion, Suggestion
 from exceptions import ForbiddenAccess
 from geouser.models import User
 from georemindme.paging import *
@@ -25,7 +25,11 @@ class EventHelper(object):
         return [p.id, p.fetch_page(page)]
     
     def get_by_id(self, id):
-        return self._klass.get_by_id(int(id))        
+        event = memcache.deserialize_instances(memcache.get('%sEVENT%s' % (memcache.version, id)))
+        if event is None:
+            event = self._klass.objects.get_by_id(id)
+            memcache.set('%sEVENT%s' % (memcache.version, id), memcache.serialize_instances(suggestion))
+        return event     
     
     def get_by_key(self, key):
         '''
@@ -100,6 +104,11 @@ class AlertHelper(EventHelper):
         q = self._klass.gql('WHERE user = :1 AND has = "done:F" ORDER BY modified DESC', user)
         return [l for l in q]
     
+
+class SuggestionHelper(EventHelper):
+    _klass = Suggestion
+
+
 class AlertSuggestionHelper(AlertHelper):
     _klass = AlertSuggestion
 

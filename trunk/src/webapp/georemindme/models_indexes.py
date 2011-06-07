@@ -1,5 +1,6 @@
 # coding=utf-8
 from google.appengine.ext import db
+from geouser.models import *
 
 
 """ QUIZAS SERIA MEJOR LLEVAR LAS INVITACIONES ACEPTADAS COMO UNA LISTA Y NO CREAR UNA NUEVA INSTANCIA POR CADA LISTA
@@ -21,8 +22,8 @@ class InvitationHelper(object):
 
 class Invitation(db.Model):
     """Por cada invitacion, se crea una nueva instancia"""
-    sender = db.ReferenceProperty(User)
-    to = db.ReferenceProperty(User)
+    sender = db.ReferenceProperty(User, collection_name='senderinvitation_set')
+    to = db.ReferenceProperty(User, collection_name='toinvitation_set')
     created = db.DateTimeProperty(auto_now_add=True)
     instance = db.ReferenceProperty(None, required = True)
     status = db.IntegerProperty(default=0)

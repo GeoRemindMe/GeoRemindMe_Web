@@ -365,8 +365,8 @@ def del_list(request):
     '''
     Borra una lista
     Parametros POST
-        :param id: identificador de la lista
-        :type id: :class:`integer`
+        :param list_id: identificador de la lista
+        :type list_id: :class:`integer`
         
         :returns: True si se borro la lista
     '''
@@ -379,8 +379,6 @@ def get_all_list_user(request):
     '''
     Obtiene las listas de usuario de un usuario
     Parametros POST
-        :param id: identificador de la lista
-        :type id: :class:`integer`
         page: pagina a mostrar
         query_id: id de la consulta de pagina
     '''
@@ -395,8 +393,6 @@ def get_all_list_alert(request):
     '''
     Obtiene las listas de alertas de un usuario
     Parametros POST
-        :param id: identificador de la lista
-        :type id: :class:`integer`
         page: pagina a mostrar
         query_id: id de la consulta de pagina
     '''
@@ -411,8 +407,6 @@ def get_all_list_suggestion(request):
     '''
     Obtiene las listas de sugerencias de un usuario
     Parametros POST
-        :param id: identificador de la lista
-        :type id: :class:`integer`
         page: pagina a mostrar
         query_id: id de la consulta de pagina
     '''
@@ -422,4 +416,26 @@ def get_all_list_suggestion(request):
     
     return HttpResponse(getListsJSON(lists), mimetype="application/json")
     
+@ajax_request
+def get_all_public_list_suggestion(request):
+    '''
+    Obtiene todas las listas de sugerencias publicas
+    Parametros POST
+        page: pagina a mostrar
+        query_id: id de la consulta de pagina
+    '''
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    lists = geolist.get_all_public_list_suggestion(request, query_id=query_id, page=page)
     
+    return HttpResponse(getListsJSON(lists), mimetype="application/json") 
+
+@ajax_request
+def get_all_shared_list_suggestion(request):
+    '''
+    Obtiene todas las lista de sugerencias para las que
+    el usuario tiene invitacion
+    '''
+    lists = geolist.get_all_shared_list_suggestion(request)
+    
+    return HttpResponse(simplejson.dumps(lists), mimetype="application/json")

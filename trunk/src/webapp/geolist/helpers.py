@@ -7,12 +7,25 @@ from models_indexes import ListFollowersIndex
 class ListHelper(object):
     _klass = List
     
+    def get_all_public(self, query_id=None, page=1):
+        '''
+        Devuelve todas las listas publicas ¡PAGINADA!
+        
+            :param page: numero de pagina a mostrar
+            :type param: int
+            :param query_id: identificador de busqueda
+            :type query_id: int
+        '''            
+        q = self._klass.all().filter('_vis =', 'public').order('-modified')
+        p = PagedQuery(q, id = query_id)
+        return [p.id, p.fetch_page(page)]
+    
     def get_by_user(self, user, query_id=None, page=1):
         '''
         Devuelve todas las listas del usuario ¡PAGINADA!
         Si usuario es None y la lista es publica, tambien devuelve la lista
         
-            :param user: identificador de la lista
+            :param user: identificador del usuario
             :type user: :class:`geouser.models.User`
             :returns: [query_id, [:class:`geolist.models.ListUser`]
         '''
@@ -51,7 +64,9 @@ class ListHelper(object):
         if list is not None:
             if list.user == user:
                 return list
-            if list._is_public():
+            elif list._is_public():
+                return list
+            elif user is not None and list.user_invited(user):
                 return list
         return None
     
@@ -64,6 +79,15 @@ class ListHelper(object):
         '''
         indexes = ListFollowersIndex.all().filter('_kind =', self._klass.kind()).filter('keys =', user.key())
         return [index.parent() for index in indexes]
+    
+    def get_shared_list(self, user):
+        '''
+        Devuelve las listas que el usuario tiene invitacion
+        
+            :param user: usuario del que buscar las listas
+            :type user: :class:`geouser.models.User`
+        '''
+        lists = [inv.list for inv in user.toinvitations_set if inv.status == 1]
     
     
 class ListSuggestionHelper(object):

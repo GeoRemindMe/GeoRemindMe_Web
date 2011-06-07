@@ -60,14 +60,14 @@ class HookedModel(db.Model):
         pass
 
 old_put = db.put
-
 def hooked_put(models, **kwargs):
-  for model in models:
-    if isinstance(model, HookedModel):
-      model._pre_put()
-  old_put(models, **kwargs)
-  for model in models:
-    if isinstance(model, HookedModel):
-      model._post_put()
-
+    if type(models) != type(list()):
+        models = [models]
+    for model in models:
+        if isinstance(model, HookedModel):
+            model._pre_put()
+    old_put(models, **kwargs)
+    for model in models:
+        if isinstance(model, HookedModel):
+            model._post_put()
 db.put = hooked_put

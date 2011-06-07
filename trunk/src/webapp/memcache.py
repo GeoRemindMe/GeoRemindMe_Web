@@ -26,7 +26,8 @@ from google.appengine.api import memcache
 from google.appengine.ext import db 
 from google.appengine.datastore import entity_pb
 
-
+get = memcache.get
+set = memcache.set
 
 def serialize_instances(instances):
     """

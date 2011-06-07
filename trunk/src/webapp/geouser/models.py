@@ -14,6 +14,7 @@ from properties import PasswordProperty, UsernameProperty
 from exceptions import *
 
 from georemindme.decorators import classproperty
+import memcache
 
 TIMELINE_PAGE_SIZE = 42
 
@@ -43,13 +44,19 @@ class User(polymodel.PolyModel):
     @property
     def profile(self):
         if self._profile is None:
-            self._profile = UserProfile.all().ancestor(self.key()).get()
+            self._profile = memcache.deserialize_instances(memcache.get('%s%s_profile' % (memcache.version, id)))
+            if self._profile is None:
+                self._profile = UserProfile.all().ancestor(self.key()).get()
+                memcache.set('%s%s_profile' % (memcache.version, id), memcache.serialize_instances(self._profile))
         return self._profile
 
     @property
     def settings(self):
         if self._settings is None:
-            self._settings = UserSettings.all().ancestor(self.key()).get()
+            self._settings = memcache.deserialize_instances(memcache.get('%s%s_settings' % (memcache.version, id)))
+            if self._settings is None:
+                self._settings = UserSettings.all().ancestor(self.key()).get() 
+                memcache.set('%s%s_settings' % (memcache.version, id), memcache.serialize_instances(self._settings))
         return self._settings
         
     def get_timelineALL(self, page=1, query_id=None):
@@ -310,7 +317,6 @@ class User(polymodel.PolyModel):
         Actualiza los datos de identificacion de un usuario, el nombre de usuario tambien se guarda en UserProfile,
         por lo que hay que actualizarlo tambien
         '''
-        
         profile = None
         if 'email' in kwargs:
             if self.email != kwargs['email']:
