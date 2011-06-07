@@ -224,6 +224,7 @@ class ListSuggestion(List, Visibility):
                 index = ListFollowersIndex(parent=list)
             index.keys.append(user_key)
             index.count += 1
+            # TODO : cambiar estado de invitacion
             db.put_async([list, index])
         db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
         return True

@@ -1,0 +1,5 @@
+trunk/src/webapp/settings.py
+*.pyc
+.project
+.git
+/.settings

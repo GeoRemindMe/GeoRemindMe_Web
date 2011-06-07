@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 
 from models import *
 from geouser.decorators import login_required
+import memcache
 
 #===============================================================================
 # PERFIL DE EVENTOS
@@ -13,8 +14,10 @@ from geouser.decorators import login_required
 
 def suggestion_profile(request, id):
     user = request.session.get('user', None)
-    suggestion = Suggestion.objects.get_by_id(id)
-    
+    suggestion = memcache.deserialize_instances('%sSUGGESTION%s' % (memcache.version, id))
+    if suggestion is None:
+        suggestion = Suggestion.objects.get_by_id(id)
+        memcache.set('%sSUGGESTION%s' % (memcache.version, id), serialize_instances(suggestion))
     if suggestion is None:
         raise Http404
     if suggestion._is_private() and suggestion.user != user:
