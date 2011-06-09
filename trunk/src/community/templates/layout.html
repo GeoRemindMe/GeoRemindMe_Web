@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<title>{{ title }}</title>
+	 
+	<link rel="stylesheet" href="http://www.georemindme.com/static/webapp/style/screen.css" type="text/css" media="screen, projection" /> 
+	<link rel="stylesheet" href="http://www.georemindme.com/static/webapp/style/style.css" type="text/css" media="screen, projection" /> 
+	<link rel="stylesheet" href="http://www.georemindme.com/static/webapp/style/print.css" type="text/css" media="print" /> 
+	 
+	 
+	 
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script> 
+	<script type="text/javascript" src="http://www.georemindme.com/static/webapp/js/jquery.preload-1.0.8-min.js"></script> 
+	 
+	 
+	<script type="text/javascript" src="http://www.georemindme.com/webapp/static/webapp/js/static.js"></script> 
+	 
+	<!-- Loading lightbox plugin--> 
+	<script type="text/javascript" src="http://www.georemindme.com/webapp/static/webapp/js/jquery.lightbox-0.5.js"></script> 
+	<link rel="stylesheet" type="text/css" href="http://www.georemindme.com/webapp/static/webapp/style/jquery.lightbox-0.5.css" media="screen" /> 
+	 <script type="text/javascript"> 
+		$(function() {
+			$('.screenshots a').lightBox();
+			
+			   $('input[type=submit]').click(function(e){
+				   e.preventDefault();
+				   
+				   if (!echeck($('#user-email').val()))
+				   {
+						$("#wait-mask").hide();
+						$('#sentMsg').removeClass("msgOK").addClass("msgNoOK");$('#sentMsg span').text("Email incorrecto");
+						return;
+					}
+				   
+				   $("#wait-mask").show();
+				   $.ajax({
+					   url: AJAX_URL+"keep-up-to-date/",
+					   type: "post",
+					   data: $("#form-keep-up-to-date").serialize(),
+					   async:true,
+					   success: function(){ $("#wait-mask").hide(); $('#sentMsg').removeClass("msgNoOK").addClass("msgOK");$('#sentMsg span').text("¡El mensaje se ha enviado correctamente!");$('#msg,#userEmail').val('');},
+					   error: function(){ $("#wait-mask").hide(); $('#sentMsg').removeClass("msgOK").addClass("msgNoOK");$('#sentMsg span').text("Se ha producido un error al enviar el mensaje");}           
+					   });
+				
+			});
+		});
+	 </script> 
+	 <link rel="shortcut icon" HREF="http://georemindme.appspot.com/static/webapp/img/favicon.png">
+
+	 
+	<!--
+	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+	--> 
+	 
+	<script type="text/javascript" src="../src/webapp/static/webapp/js/base.js"></script> 
+	 
+	<!--[if IE]>
+	<link rel="stylesheet" href="../src/webapp/static/webapp/style/ie.css" type="text/css"
+	media="screen, projection" />
+	<![endif]--> 
+	 
+	<!--[if lt IE 9]>
+	<script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+	<![endif]--> 
+	 
+	<style type="text/css">
+		.content-box blockquote{
+		   color: #222222;
+		   font-style: normal;
+		   font-weight: normal;
+		   margin-bottom: 0;
+		   margin-top: 0;
+		}
+		.content-box div{
+		  font-weight: normal;
+		}
+		#main-container p {
+		  1.5em
+		}
+		.content-box ul li{
+		  display: list-item;
+		  list-style: disc outside none;
+		  margin-left: 30px;
+		}
+		td{
+		  border:0;
+		}
+		.tab1{
+		  padding-left:0px;
+		}
+		.tab2{
+		  padding-left:15px;
+		}
+		.tab3{
+		  padding-left:30px;
+		}
+		article h3{
+		  margin-top: 10px;
+		}
+		#top-menu{
+			float: right;
+			margin-top: 40px;
+		}
+		
+		#top-menu ul{
+			display: inline;
+			font-size: 1.1em;
+			padding: 10px;
+		}
+		#top-menu ul li{
+			width:75px;
+		}
+		
+		.menu-icons{
+			height: 30px;
+			padding: 5px 10px 5px 30px;
+		}
+		#Home{
+			background: url("http://static.georemindme.com/images/icons/home.png") no-repeat scroll 0 0 transparent;
+		}
+		#Jobs{
+			background: url("http://static.georemindme.com/images/icons/business_user.png") no-repeat scroll 0 0 transparent;
+		}
+		#APIs{
+			background: url("http://static.georemindme.com/images/icons/tools.png") no-repeat scroll 0 0 transparent;
+		}
+		#Community{
+			background: url("http://static.georemindme.com/images/icons/users.png") no-repeat scroll 0 0 transparent;
+		}
+		#documentation{
+		}
+		#community-content ul{
+			margin: 20px 0;
+		}
+		#community-content h3{
+			border-bottom: 1px dotted black;
+			
+		}
+		#community-content ul li{
+			display: list-item;
+			list-style-type: square;
+			margin: 0 0 10px 20px;
+		}
+		#developers{
+			background: url("http://static.georemindme.com/images/icons/tools.png") no-repeat scroll 0 0 transparent;
+		}
+		#localization{
+			background: url("http://static.georemindme.com/images/icons/world.png") no-repeat scroll 0 0 transparent;
+		}
+		#design{
+			background: url("http://static.georemindme.com/images/icons/paint_brush.png") no-repeat scroll 0 0 transparent;
+		}
+		nav h1{
+			font-size:1em;
+			display:inline;
+		}
+	</style>
+ 
+</head> 
+ 
+<body> 
+ 
+   <div id="wait-mask"></div> 
+   <div class="container" id="documentation">     
+      <header> 
+         <span id="logo"><a href="/" title="Ir volando a la página de inicio. Pio! Pio!"><img src="http://www.georemindme.com/static/webapp/img/logoHeader.png" alt="GeoRemindMe"></a></span> 
+         <div id="top-menu"> 
+
+			<ul>
+				{% for item in menu_items %}
+					<li>
+					{% if item.name == active_section %} 
+						<span class="menu-icons" id="{{ item.name }}">{{ item.name }} </span>
+					{% else %}
+						<a class="menu-icons" href="{{ item.url }}" id="{{ item.name }}">{{ item.name }}</a>  
+					{% endif %}
+					
+					
+					 
+					
+					</li>
+				{% endfor %}
+			</ul>
+					
+		</div> 
+         <nav> 
+			<h1>{{ title }}</h1>
+         </nav> 
+         
+		
+      </header> 
+ 
+   <div id="main-container">   
+      <section> 
+      
+		{% block content %} {% endblock %}
+		 
+      </section> 
+    </div> 
+ 
+	<hr class="hr-especial"/>
+     
+	<div id="footer" class="span-24 last">
+	 <div id="contact" class="vertical-ruler-big">
+		<h3>More info</h3>
+		<ul>
+		   <li class="vertical-ruler"><a href="http://georemindme.appspot.com/contact/" title="Contact"  accesskey="z">Contact us</a></li>
+		   <li class="vertical-ruler"><a href="http://georemindme.appspot.com/privacy/" title="How do we care about your data" accesskey="x">Privacy Policy</a></li>
+		   <li><a href="http://georemindme.appspot.com/tos/" title="Meet the requirements for using the application" accesskey="c">Terms of Service</a></li>
+		</ul>
+	 </div>
+	</div>
+	<script type="text/javascript"> 
+
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-19272923-2']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+	  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+
+	</script> 
+ 
+</body> 
+ 
+</html> 
