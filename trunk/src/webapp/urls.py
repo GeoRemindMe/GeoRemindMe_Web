@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 This file is part of GeoRemindMe.
 
@@ -18,11 +19,8 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 from django.conf.urls.defaults import *
 import appengine_admin
 
-#geoadmin.autodiscover()
-
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from jsonrpc import jsonrpc_site
+import georemindme.json_rpc_views
 
 urlpatterns = patterns('',
     # Example:
@@ -31,12 +29,11 @@ urlpatterns = patterns('',
     #(r'^admin/', include('geoadmin.urls')),
     ##(r'^admin/$', appengine_admin.Admin),
     (r'^ajax/', include('geoajax.urls')),
+    url(r'^service/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
+    url(r'^json/browse/', 'jsonrpc.views.browse', name="jsonrpc_browser"),
     (r'', include('georemindme.urls')),
     (r'', include('geouser.urls')),
     (r'', include('geoalert.urls')),
 )
 
-jsonrpc_urlpatterns = patterns('',
-    (r'^service/$', 'georemindme.json_rpc_views'),
-)
 

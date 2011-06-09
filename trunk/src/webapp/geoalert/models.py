@@ -9,6 +9,7 @@ from google.appengine.ext.db import polymodel
 from google.appengine.ext.db import BadValueError
 
 from models_poi import *
+from models_indexes import *
 from georemindme.models_utils import Visibility
 from georemindme.decorators import classproperty
 from exceptions import ForbiddenAccess
@@ -19,13 +20,7 @@ from geouser.models_acc import UserTimelineSystem
 
 class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
     """Informacion comun para las alertas y recomendaciones"""
-    name = db.StringProperty(required=True)
-    description = db.TextProperty()
-    created = db.DateTimeProperty(auto_now_add=True)
-    date_starts = db.DateTimeProperty()
-    date_ends = db.DateTimeProperty()
-    poi = db.ReferenceProperty(POI, required=True)
-    modified = db.DateTimeProperty(auto_now=True)
+
     #in the appengine datastore, is more eficient to use stringlistproperty than some booleanProperty, its only needs one index
     #I now alert only have 2 boolean by now, but is better to learn these things.  
     #see tip #6 and #7 -> http://googleappengine.blogspot.com/2009/06/10-things-you-probably-didnt-know-about.html
@@ -120,6 +115,13 @@ class Alert(Event):
         Alert son los recordatorios que el usuario crea solo
         para su uso propio y quiere que se le avise
     '''
+    name = db.StringProperty(required=True)
+    description = db.TextProperty()
+    created = db.DateTimeProperty(auto_now_add=True)
+    date_starts = db.DateTimeProperty()
+    date_ends = db.DateTimeProperty()
+    poi = db.ReferenceProperty(POI, required=True)
+    modified = db.DateTimeProperty(auto_now=True)
     user = db.ReferenceProperty(User, required=True, collection_name='alerts')
     done_when = db.DateTimeProperty()
     has = db.StringListProperty(default=[u'active:T', u'done:F', ])
@@ -211,10 +213,23 @@ class Suggestion(Event, Visibility):
         Recomendaciones de los usuarios que otros pueden
         convertir en Alert
     '''
+    name = db.StringProperty(required=True)
+    description = db.TextProperty()
+    created = db.DateTimeProperty(auto_now_add=True)
+    date_starts = db.DateTimeProperty()
+    date_ends = db.DateTimeProperty()
+    poi = db.ReferenceProperty(POI, required=True)
+    modified = db.DateTimeProperty(auto_now=True)
     user = db.ReferenceProperty(User, required=True, collection_name='suggestions')
     has = db.StringListProperty(default=[u'active:T',])
-    count = db.IntegerProperty(default=0)  # lleva una lista de gente que sigue la sugerencia
     
+    _counter = None
+    
+    @property
+    def counter(self):
+        if self._counter is None:
+            self._counter = SuggestionCounter.all().ancestor(self)
+        return self._counter
     
     @classproperty
     def objects(self):
@@ -253,8 +268,9 @@ class Suggestion(Event, Visibility):
             if not active:
                 sugg.toggle_active()
             sugg.put()
+            counter = SuggestionCounter(parent=sugg)
             timeline = UserTimelineSystem(user = user, instance = sugg, msg_id=300)
-            timeline.put()
+            db.put([counter, timeline])
             return sugg
         
     def add_follower(self, user):
@@ -269,7 +285,7 @@ class Suggestion(Event, Visibility):
         def _tx(sug_key, user_key):
             # TODO : cambiar a contador con sharding
             sug = db.get(key)
-            sug += 1
+            sug.counter.set_followers()
             # indice con personas que siguen la sugerencia
             index = SuggestionFollowersIndex.all().ancestor(sug).filter('count < 80').get()
             if index is None:
@@ -280,6 +296,7 @@ class Suggestion(Event, Visibility):
         try:
             alert = AlertSuggestion.update_or_insert(suggestion = self, user = user)
             db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
+            self.user_invited(user, set_status=1)  # FIXME : mejor manera de cambiar estado invitacion
         except ForbiddenAccess():
             return None
         return alert
@@ -290,14 +307,19 @@ class Suggestion(Event, Visibility):
             
             :param user: Usuario que debe estar invitado
             :type user: :class:`geouser.models.User`
+            :param set_status: Nuevo estado para la invitacion
+            :type set_status: :class:`integer`
             
             :returns: True si esta invitado, False en caso contrario
         '''
-        return Invitation.objects.get_user_invited(self, user)
-        
+        return Invitation.objects.is_user_invited(self, user)
+        if invitation is not None and set_status is not None:
+            invitation.status = set_status
+            invitation.put()
+        return invitation
         
 
-class AlertSuggestion(Taggable):
+class AlertSuggestion(Event):
     '''
         Una recomendacion puede ser convertida en una Alerta, 
         para que se le avise al usuario

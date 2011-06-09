@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from datetime import datetime, timedelta
 import time
 
@@ -9,17 +11,18 @@ from geoalert.models_poi import *
 from geouser.models import User
 
 from rpc_server.models import UserRPC
-from rpc_server.decorators import jsonrpc_function, jsonrpc_logged_function
 from rpc_server.exceptions import GeoException
 
+from jsonrpc import jsonrpc_method
 
-
-@jsonrpc_function
-def login(email, password):
-    """
-        Log a user and creates a new UserRPC session ID
+@jsonrpc_method('login', validate=False)
+def login(request, email, password):
+    '''
+        Log a user and creates a new UserRPC session ID.
         The user_id should be send with all the request.
-    """
+    '''
+    email = str(email)
+    password = str(password)
     u = User.objects.get_by_email(email=email)
     if u is not None:
         if u.check_password(password):
@@ -35,12 +38,12 @@ def login(email, password):
             return urpc.session_id
     raise Exception(GeoException.BAD_EMAIL_PASSWORD)
 
-@jsonrpc_function
-def register(email, password):
-    """
+@jsonrpc_method('register', validate=False)
+def register(request, email, password):
+    '''
         Register a user
         returns True if sucessful
-    """
+    '''
     try:
         u = User(email=email, password=password)
         u.send_confirm_code()
@@ -51,11 +54,11 @@ def register(email, password):
         pass
     raise Exception(GeoException.BAD_EMAIL_PASSWORD)
 
-@jsonrpc_function
-def sync(session_id, last_sync, modified):
-    """
+@jsonrpc_method('sync', validate=False)
+def sync(request, session_id, last_sync, modified):
+    '''
         Sync with devices
-    """    
+    '''    
     
     def parse_date(date, excep=True):
         
@@ -184,8 +187,8 @@ def sync(session_id, last_sync, modified):
 
 
 
-@jsonrpc_function
-def getProximityAlerts(session_id, lat, long):
+@jsonrpc_method('getProximityAlerts', validate=False)
+def getProximityAlerts(request, session_id, lat, long):
     '''
         Get the Alerts near to the user position
     '''

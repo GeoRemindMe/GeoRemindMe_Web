@@ -26,8 +26,8 @@ except KeyError:
 #===============================================================================
 # About memcache: http://blog.notdot.net/2009/9/Efficient-model-memcaching
 #===============================================================================
-from google.appengine.api import memcache 
-from google.appengine.ext import db 
+from google.appengine.api import memcache
+from google.appengine.ext import db, search 
 from google.appengine.datastore import entity_pb
 
 get = memcache.get
@@ -39,20 +39,25 @@ def serialize_instances(instances):
     """
     if instances is None:
         return None
+    elif isinstance(instances, search.SearchableModel):
+        return instances._populate_entity(_entity_class=search.SearchableEntity)._ToPb() 
     elif isinstance(instances, db.Model):
         return db.model_to_protobuf(instances).Encode()#instances is only one
    
     return [db.model_to_protobuf(x).Encode() for x in instances]
 
-def deserialize_instances(data):
+def deserialize_instances(data, _search_class=None):
     """
         Get and deserializes the data from the cache, return a instance of the model
     """
     if data is None:
         return None
+    elif _search_class is not None:
+        if type(data) == type(list):
+            return [search.SearchableEntity.FromPb(x) for x in data]#data contains a list of objects
+        return _search_class.from_entity(search.SearchableEntity.FromPb(data))
     elif isinstance(data, str):
         return db.model_from_protobuf(entity_pb.EntityProto(data))#just one instance in data
-    
     return [db.model_from_protobuf(entity_pb.EntityProto(x)) for x in data]#data contains a list of objects
 
     

@@ -9,6 +9,7 @@ from models import User
 
 class UserSettings(db.Model):
     """Configuracion del usuario (privacidad, etc.)"""
+    notification_invitation = db.BooleanProperty(indexed=False, default=True)
     notification_followers = db.BooleanProperty(indexed=False, default=True)
     notification_list_following = db.BooleanProperty(indexed=False, default=True)
     notification_suggestion_following = db.BooleanProperty(indexed=False, default=True)
@@ -117,7 +118,15 @@ class UserTimelineSystem(UserTimelineBase):
         _msg_ids = {
                 0: _('Welcome to GeoRemindMe!'),
                 100: _('%s is now following you!') % self.instance,
+                110: _('You invited %s to:') % self.instance,
+                111: _('%s invited you to %s') % (self.instance.sender, self.instance),
+                150: _('New user list created: %s') % self.instance,
+                151: _('User list modified: %s') % self.instance,
+                152: _('User list removed: %s') % self.instance,
                 200: _('New alert: %s') % self.instance,
+                250: _('New alert list created: %s') % self.instance,
+                251: _('Alert list modified: %s') % self.instance,
+                252: _('Alert list removed: %s') % self.instance,
                 300: _('New suggestion: %s') % self.instance,
                 350: _('New suggestions list created: %s') % self.instance,
                 351: _('Suggestions list modified: %s') % self.instance,

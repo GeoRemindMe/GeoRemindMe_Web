@@ -21,6 +21,7 @@ from google.appengine.api import mail
 
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from django.utils import translation
 
 from tasks import EmailHandler
 
@@ -56,5 +57,17 @@ def send_keepuptodate(org,msg,to=settings.CONTACT_EMAIL,):
     message.to = to
     message.subject = "[GeoRemindMe] Keep up to date"
     message.html = u"""%s<br/>%s<br/>%s" """ % (str(datetime.datetime.now()),org,msg)
+    message.push()
+    
+def send_notification_invitation(to, sender, invitation, language='en'):
+    translation.activate(language)
+    message = GeoMail()
+    message.sender = 'noreply@georemind.me'
+    message.to = to
+    message.subject = _("%s sent you a new invitation") % sender
+    message.html = _("""
+                        blababababa
+                    """)
+    translation.deactivate()
     message.push()
     

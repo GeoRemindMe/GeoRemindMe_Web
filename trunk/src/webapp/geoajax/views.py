@@ -20,6 +20,7 @@ from geoalert.forms import *
 from geoalert.models import *
 import geoalert.views as geoalert
 import geolist.views as geolist
+import geovote.views as geovote
 
 
 @ajax_request
@@ -439,3 +440,126 @@ def get_all_shared_list_suggestion(request):
     lists = geolist.get_all_shared_list_suggestion(request)
     
     return HttpResponse(simplejson.dumps(lists), mimetype="application/json")
+
+#===============================================================================
+# COMENTARIOS Y VOTOS
+#===============================================================================
+@ajax_request
+def do_comment_event(request):
+    instance_id = request.POST['instance_id']
+    msg = request.POST['msg']
+    
+    return HttpResponse(geovote.do_comment_event(request, instance_id, msg),
+                         mimetype="application/json")
+    
+@ajax_request
+def do_comment_list(request):
+    instance_id = request.POST['instance_id']
+    msg = request.POST['msg']
+    
+    return HttpResponse(geovote.do_comment_list(request, instance_id, msg),
+                         mimetype="application/json")
+    
+@ajax_request
+def get_comments_event(request):
+    '''
+    Obtiene todas los comentarios visibles de un evento
+    Parametros POST
+        instance_id: evento a mostrar
+        page: pagina a mostrar
+        query_id: id de la consulta de pagina
+    '''
+    instance_id = request.POST['instance_id']
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    comments = geovote.get_comments_event(request, instance_id, query_id, page) 
+    
+    return HttpResponse(comments, mimetype="application/json") 
+
+@ajax_request
+def get_comments_list(request):
+    '''
+    Obtiene todas los comentarios visibles de una lista
+    Parametros POST
+        instance_id: lista a mostrar
+        page: pagina a mostrar
+        query_id: id de la consulta de pagina
+    '''
+    instance_id = request.POST['instance_id']
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    comments = geovote.get_comments_list(request, instance_id, query_id, page) 
+    
+    return HttpResponse(comments, mimetype="application/json")
+
+@ajax_request
+def do_vote_suggestion(request):
+    instance_id = request.POST['instance_id']
+    msg = request.POST['msg']
+    
+    return HttpResponse(geovote.do_vote_suggestion(request, instance_id, msg),
+                         mimetype="application/json")
+    
+@ajax_request
+def do_vote_list(request):
+    instance_id = request.POST['instance_id']
+    msg = request.POST['msg']
+    
+    return HttpResponse(geovote.do_vote_list(request, instance_id, msg),
+                         mimetype="application/json")
+    
+@ajax_request
+def do_vote_comment(request):
+    instance_id = request.POST['instance_id']
+    msg = request.POST['msg']
+    
+    return HttpResponse(geovote.do_vote_comment(request, instance_id, msg),
+                         mimetype="application/json")
+    
+@ajax_request
+def get_vote_suggestion(request):
+    '''
+    Obtiene el contador de votos de una sugerencia
+    Parametros POST
+        instance_id: sugerencia a mostrar
+        page: pagina a mostrar
+        query_id: id de la consulta de pagina
+    '''
+    instance_id = request.POST['instance_id']
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    vote = geovote.get_vote_comment(request, instance_id, query_id, page) 
+    
+    return HttpResponse(simplejson.dumps(vote), mimetype="application/json")
+
+@ajax_request
+def get_vote_list(request):
+    '''
+    Obtiene el contador de votos de una lista
+    Parametros POST
+        instance_id: sugerencia a mostrar
+        page: pagina a mostrar
+        query_id: id de la consulta de pagina
+    '''
+    instance_id = request.POST['instance_id']
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    vote = geovote.get_vote_list(request, instance_id, query_id, page) 
+    
+    return HttpResponse(simplejson.dumps(vote), mimetype="application/json")
+
+@ajax_request
+def get_vote_comment(request):
+    '''
+    Obtiene el contador de votos de un comentario
+    Parametros POST
+        instance_id: sugerencia a mostrar
+        page: pagina a mostrar
+        query_id: id de la consulta de pagina
+    '''
+    instance_id = request.POST['instance_id']
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    vote = geovote.get_vote_comment(request, instance_id, query_id, page) 
+    
+    return HttpResponse(simplejson.dumps(vote), mimetype="application/json")

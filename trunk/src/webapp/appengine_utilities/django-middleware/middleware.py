@@ -32,6 +32,8 @@ class SessionMiddleware(object):
         request.session.test_cookie_worked = self.test_cookie_worked
         request.session.delete_test_cookie = self.delete_test_cookie
         request.session.save = self.save
+        if request.session.get('user', None):
+            request.user = request.session['user']
         return None
 
     def set_test_cookie(self):

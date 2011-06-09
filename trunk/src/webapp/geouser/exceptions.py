@@ -7,3 +7,7 @@ class OutdatedCode(Exception):
 
 class BadCode(Exception):
     value = "This code is invalid"
+
+    
+class RegistrationException(Exception):
+    value = "Problems with registration. Please, try again later"

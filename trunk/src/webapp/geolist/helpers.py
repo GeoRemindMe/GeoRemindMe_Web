@@ -37,14 +37,17 @@ class ListHelper(object):
     
     def get_by_id(self, id):
         '''
-        Devuelve la lista con ese ID y el usuario. 
-        Si usuario es None y la lista es publica, tambien devuelve la lista
+        Devuelve la lista publica con ese ID
         
             :param id: identificador de la lista
             :type id: :class:`Integer`
             :returns: None o :class:`geolist.models.List`
         '''
-        return self._klass.get_by_id(id)
+        list = self._klass.get_by_id(id)
+        if hasattr(list, '_vis'):
+            if list._is_public():
+                return list
+        return None
     
     def get_by_id_user(self, id, user = None):
         '''
@@ -64,10 +67,11 @@ class ListHelper(object):
         if list is not None:
             if list.user == user:
                 return list
-            elif list._is_public():
-                return list
-            elif user is not None and list.user_invited(user):
-                return list
+            elif hasattr(list, '_vis'):
+                if list._is_public():
+                    return list
+                elif user is not None and list._is_shared() and list.user_invited(user):
+                    return list
         return None
     
     def get_list_user_following(self, user):

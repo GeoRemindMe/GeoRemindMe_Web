@@ -230,7 +230,7 @@ class ListSuggestion(List, Visibility):
             
             :returns: True si esta invitado, False en caso contrario
         '''
-        invitation = Invitation.objects.get_user_invited(self, user)
+        invitation = Invitation.objects.is_user_invited(self, user)
         if invitation is not None and set_status is not None:
             invitation.status = set_status
             invitation.put()

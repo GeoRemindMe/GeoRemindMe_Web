@@ -9,8 +9,6 @@ from google.appengine.ext import db
 from google.appengine.api import mail
 
 
-
-
 def admin_required(func):
     def _wrapper(*args, **kwargs):
         if 'HTTP_X_APPENGINE_TASKNAME' in os.environ:

@@ -1,9 +1,6 @@
-from jsonrpcserver import jsonrpc_function
-
 from models import UserRPC
 
 from exceptions import *
-
 
 def jsonrpc_logged_function(func, *args, **kwargs):
 

@@ -7,6 +7,7 @@ from models import Event, Alert, AlertSuggestion, Suggestion
 from exceptions import ForbiddenAccess
 from geouser.models import User
 from georemindme.paging import *
+import memcache
 
 
 class EventHelper(object):
@@ -25,10 +26,17 @@ class EventHelper(object):
         return [p.id, p.fetch_page(page)]
     
     def get_by_id(self, id):
-        event = memcache.deserialize_instances(memcache.get('%sEVENT%s' % (memcache.version, id)))
+        '''
+        Obtiene un evento por su id, COMPRUEBA VISIBILIDAD, solo obtiene los publicos
+        '''
+        event = memcache.deserialize_instances(memcache.get('%sEVENT%s' % (memcache.version, id)), _search_class=self._klass)
         if event is None:
-            event = self._klass.objects.get_by_id(id)
-            memcache.set('%sEVENT%s' % (memcache.version, id), memcache.serialize_instances(suggestion))
+            event = self._klass.get_by_id(int(id))
+            if not hasattr(event, '_vis'):
+                return None
+            if not event._is_public():
+                return None
+            memcache.set('%sEVENT%s' % (memcache.version, id), memcache.serialize_instances(event))
         return event     
     
     def get_by_key(self, key):
@@ -49,9 +57,9 @@ class EventHelper(object):
         event = self._klass.get(key)
         if event is None:
             return None
-        if event.user.key() != user.key():
-            raise ForbiddenAccess()
-        return event
+        if event.user.key() == user.key():
+            return event
+        return None
     
     def get_by_id_user(self, id, user):
         '''
@@ -65,9 +73,14 @@ class EventHelper(object):
         event = self._klass.get_by_id(int(id))
         if event is None:
             return None
-        if event.user.key() != user.key():
-            raise ForbiddenAccess()
-        return event
+        if event.user.key() == user.key():
+            return event
+        elif hasattr(event, '_vis'):
+            if event._is_public():
+                return event
+            elif event._is_shared() and event.user_invited(user):
+                return event
+        raise None
     
     def get_by_last_sync(self, user, last_sync):
         '''
@@ -107,7 +120,6 @@ class AlertHelper(EventHelper):
 
 class SuggestionHelper(EventHelper):
     _klass = Suggestion
-
 
 class AlertSuggestionHelper(AlertHelper):
     _klass = AlertSuggestion
