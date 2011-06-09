@@ -22,7 +22,6 @@ import geoalert.views as geoalert
 import geolist.views as geolist
 import geovote.views as geovote
 
-
 @ajax_request
 def exists(request):
     

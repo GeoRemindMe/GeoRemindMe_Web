@@ -6,7 +6,7 @@ from georemindme.decorators import classproperty
 from georemindme.paging import *
 from georemindme.models_utils import Visibility
 from geoalert.models import *
-from geolist.mode import *
+from geolist.models import *
 
 class CommentHelper(object):
     def get_by_user(self, user, query_id = None, page=1):
@@ -57,11 +57,11 @@ class CommentHelper(object):
         return None        
         
     
-class Comment(db.Model, Visibility):
+class Comment(Visibility):
     '''
     Se puede comentar cualquier objeto del modelo
     '''
-    user = db.ReferenceProperty(User)
+    user = db.ReferenceProperty(User, collection_name='comments')
     instance = db.ReferenceProperty(None)
     created = db.DateTimeProperty(auto_now_add=True)
     msg = db.TextProperty(required=True)
@@ -177,7 +177,7 @@ class VoteHelper(object):
 
 class Vote(db.Model):
     
-    user = db.ReferenceProperty(User)
+    user = db.ReferenceProperty(User, collection_name='votes')
     instance = db.ReferenceProperty(None)
     created = db.DateTimeProperty(auto_now_add=True)
     count = db.IntegerProperty(default=0)
