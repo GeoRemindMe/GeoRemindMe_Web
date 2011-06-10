@@ -121,7 +121,7 @@ def client_access_request(request, provider):
                 'oauth_token' : params['oauth_token'][0],
             }
     if provider == 'twitter':
-        from clients import TwitterClient
+        from twitter import TwitterClient
         client = TwitterClient(token=oauth2.Token(token['oauth_token'], token['oauth_token_secret']))
         if 'user' in request.session:#usuario ya esta logeado, guardamos el token de su cuenta
             if client.authorize(request.session['user']):
@@ -157,3 +157,39 @@ def authenticate_request(request, provider):
         request.session[provider]['request_token']['oauth_token'], OAUTH[provider]['callback_url'])
 
     return HttpResponseRedirect(url)
+
+def facebook_authenticate_request(request):
+    OAUTH = settings.OAUTH
+    url = "%s?client_id=%s&redirect_uri=%s&scope=email,offline_access" % (OAUTH['facebook']['authorization_url'], 
+                        OAUTH['facebook']['app_key'], OAUTH['facebook']['callback_url'])
+    return HttpResponseRedirect(url)
+
+def facebook_access_request(request):
+    code = request.GET.get('code', None)
+    if code is not None:
+        OAUTH = settings.OAUTH
+        url = "%s?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s" % (OAUTH['facebook']['access_token_url'],
+                                                                            OAUTH['facebook']['app_key'],
+                                                                            OAUTH['facebook']['callback_url'],
+                                                                            OAUTH['facebook']['app_secret'],
+                                                                            code
+                                                                            )
+        response, content = oauth2.httplib2.Http().request(url)
+        if response['status'] != '200':
+            raise Exception("Invalid response from server.")
+        params = parse_qs(content, keep_blank_values=False)
+        token = {   
+                'access_token' : params['access_token'][0], 
+            }
+        from facebook import FacebookClient
+        client = FacebookClient(access_token = token['access_token'])
+        if 'user' in request.session:#usuario ya esta logeado, guardamos el token de su cuenta
+            if client.authorize(request.session['user']):
+                messages.success(request, _('Got access from Facebook'))
+        else:
+            user = client.authenticate()
+            messages.success(request, _('Logged from Facebook'))
+            init_user_session(request, user)
+    return HttpResponseRedirect(reverse('georemindme.views.home'))
+    
+    

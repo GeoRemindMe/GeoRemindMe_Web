@@ -109,7 +109,6 @@ def _get_comments(instance, query_id=None, page=1):
 #===========================================================================
 # VOTACIONES
 #===========================================================================
-
 @login_required
 def do_vote_suggestion(request, instance_id, vote):
     '''
@@ -128,6 +127,7 @@ def do_vote_suggestion(request, instance_id, vote):
     
     return vote
 
+
 @login_required
 def do_vote_list(request, instance_id, vote):
     '''
@@ -145,7 +145,8 @@ def do_vote_list(request, instance_id, vote):
     vote = Vote.do_vote(user=user, instance=list, msg=msg)
     
     return vote
-    
+
+
 @login_required
 def do_vote_comment(request, instance_id, vote):
     '''
@@ -180,6 +181,7 @@ def get_vote_suggestion(request, instance_id):
     if suggestion is None:
         return None
     return _get_vote(suggestion.key())
+
     
 def get_vote_list(request, instance_id):
     '''
@@ -196,6 +198,7 @@ def get_vote_list(request, instance_id):
     if list is None:
         return None
     return _get_vote(list.key())
+
 
 def get_vote_comment(request, instance_id):
     '''

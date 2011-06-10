@@ -103,6 +103,11 @@ class Invitation(db.Model):
     def ignore(self):
         self.status = 3
         self.put()
+        
+    def set_status(self, set_status=0):
+        self.status = set_status
+        self.put()
+        invitation_changed.send(sender=self)
          
     def put(self):
         if not self.is_saved():

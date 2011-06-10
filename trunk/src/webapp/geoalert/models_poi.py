@@ -8,6 +8,7 @@ from geomodel.geomodel import GeoModel
 from georemindme.decorators import classproperty
 from georemindme.models_utils import Visibility
 from geouser.models import User
+from signals import *
 
 
 class Business(db.Model):
@@ -86,7 +87,17 @@ class PrivatePlace(POI):
     
     def put(self):
         self.update_location()
-        super(self.__class__, self).put()
+        if self.is_saved():
+            super(self.__class__, self).put()
+            place_modified.send(sender=self)
+        else:
+            super(self.__class__, self).put()
+            place_new.send(sender=self)
+        
+        
+    def delete(self):
+        place_deleted.send(sender=self)
+        super(PrivatePlace, self).delete()
 
     
 class Place(PrivatePlace):
@@ -95,5 +106,8 @@ class Place(PrivatePlace):
     @classproperty
     def objects(self):
         return PlaceHelper()
+    
+    def delete(self):
+        pass
     
 from helpers_poi import *

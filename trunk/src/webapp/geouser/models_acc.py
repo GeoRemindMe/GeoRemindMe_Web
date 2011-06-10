@@ -117,21 +117,44 @@ class UserTimelineSystem(UserTimelineBase):
     def msg(self):
         _msg_ids = {
                 0: _('Welcome to GeoRemindMe!'),
-                100: _('%s is now following you!') % self.instance,
+                1: _('Now, you can log with your Google account'),
+                2: _('Now, you can log with your Facebook account'),
+                3: _('Now, you can log with your Twitter account'),
+                100: _('You are now following %s') % self.instance,
+                101: _('%s is now following you') % self.instance,
+                102: _('You stopped following %s') % self.instance,
                 110: _('You invited %s to:') % self.instance,
                 111: _('%s invited you to %s') % (self.instance.sender, self.instance),
                 150: _('New user list created: %s') % self.instance,
                 151: _('User list modified: %s') % self.instance,
                 152: _('User list removed: %s') % self.instance,
                 200: _('New alert: %s') % self.instance,
+                201: _('Alert modified: %s') % self.instance,
+                202: _('Alert deleted: %s') % self.instance,
+                203: _('Alert done: %s') % self.instance,
                 250: _('New alert list created: %s') % self.instance,
                 251: _('Alert list modified: %s') % self.instance,
                 252: _('Alert list removed: %s') % self.instance,
                 300: _('New suggestion: %s') % self.instance,
+                301: _('Suggestion modified: %s') % self.instance,
+                302: _('Suggestion removed: %s') % self.instance,
+                303: _('You are following: %s') % self.instance,
+                304: _('You stopped following: %s') % self.instance,
+                320: _('New alert: %s') % self.instance,
+                321: _('Alert modified: %s') % self.instance,
+                322: _('Alert deleted: %s') % self.instance,
+                323: _('Alert done: %s') % self.instance,
                 350: _('New suggestions list created: %s') % self.instance,
                 351: _('Suggestions list modified: %s') % self.instance,
                 352: _('Suggestion list removed: %s') % self.instance,
-                353: _('Unfollow list: %s') % self.instance,
+                353: _('You are following: %s') % self.instance,
+                354: _('You stopped following: %s') % self.instance,
+                400: _('New private place: %s') % self.instance,
+                401: _('Private place modified: %s') % self.instance,
+                402: _('Private place deleted: %s') % self.instance,
+                450: _('New public place: %s') % self.instance,
+                451: _('Public place modified: %s') % self.instance,
+                452: _('Public place deleted: %s') % self.instance,
                 }
         return _msg_ids[self.msg_id]
 
@@ -147,7 +170,7 @@ class UserTimeline(UserTimelineBase, Visibility):
         return '%s - %s' % (self.created.strftime("%B %d, %Y"), self.msg)
     
     def notify_followers(self):
-        if not self._is_private():
+        if self._is_public():
             if UserTimelineFollowersIndex.all().ancestor(self.key()).count() != 0:
                 return True
             followers = self.user.get_followers()
@@ -172,7 +195,6 @@ class UserTimeline(UserTimelineBase, Visibility):
             NotificationHandler().timeline_followers_notify(self)
     
 
-    
 class UserTimelineFollowersIndex(db.Model):
     followers = db.ListProperty(db.Key)
     created = db.DateTimeProperty(auto_now_add=True) 

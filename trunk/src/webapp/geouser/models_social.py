@@ -4,10 +4,10 @@ from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
 from models import User
-
+from signals import *
 
 class SocialUser(polymodel.PolyModel):
-    user = db.ReferenceProperty(User)
+    
     uid = db.StringProperty(required=False)
     email = db.EmailProperty(required=False)
     realname = db.TextProperty()
@@ -40,6 +40,7 @@ class GoogleUserHelper():
     
 class GoogleUser(SocialUser):
     """USERS FROM A GOOGLE ACCOUNT"""
+    user = db.ReferenceProperty(User)
     objects = GoogleUserHelper()
     
     def is_google(self):
@@ -53,6 +54,7 @@ class GoogleUser(SocialUser):
             ugoogle.put()
             return ugoogle
         ugoogle = db.run_in_transaction(_tx)
+        user_social_new.send(sender=ugoogle)
         return ugoogle    
     
     def update(self, email, realname):
@@ -61,11 +63,43 @@ class GoogleUser(SocialUser):
         self.put()
 
     
+class FacebookUserHelper():
+    
+    def get_by_id(self, uid):
+        """Search and returns a User object with that email"""
+        if uid is None:
+            raise db.BadValueError("Wrong id")
+        ufacebook = FacebookUser.get_by_key_name('fu%s' % uid)
+        return ufacebook
+    
 class FacebookUser(SocialUser):
     """USERS FROM FACEBOOK"""
+    user = db.ReferenceProperty(User)
+    profile_url = db.URLProperty()
+    access_token = db.TextProperty()
+    objects = FacebookUserHelper()
     
     def is_facebook(self):
         return True
+    
+    @classmethod
+    def register(cls, user, uid, email, realname, profile_url, access_token):
+        def _tx():
+            key_name = 'fu%s' % uid
+            ufacebook = FacebookUser(key_name=key_name, user=user, 
+                                   uid=str(uid), email=email, 
+                                   realname=realname, profile_url=profile_url, 
+                                   access_token=access_token)
+            ufacebook.put()
+            return ufacebook
+        ufacebook = db.run_in_transaction(_tx)
+        user_social_new.send(sender=ufacebook)
+        return ufacebook
+    
+    def update(self, realname, profile_url):
+        self.realname= realname
+        self.profile_url = profile_url
+        self.put()
 
 
 class TwitterUserHelper():
@@ -80,6 +114,7 @@ class TwitterUserHelper():
         
 class TwitterUser(SocialUser):
     """USER FROM TWITTER"""
+    user = db.ReferenceProperty(User)
     username = db.TextProperty()
     picurl = db.URLProperty()
     objects = TwitterUserHelper()
@@ -95,6 +130,7 @@ class TwitterUser(SocialUser):
             utwitter.put()
             return utwitter
         utwitter = db.run_in_transaction(_tx)
+        user_social_new.send(sender=utwitter)
         return utwitter         
     
     def update(self, username, realname, picurl):

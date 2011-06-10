@@ -23,11 +23,8 @@ from jsonrpc import jsonrpc_site
 import georemindme.json_rpc_views
 
 urlpatterns = patterns('',
-    # Example:
     (r'^blog/(?P<path>.*)$', 'django.views.generic.simple.redirect_to', {'url': 'http://blog.georemindme.com/%(path)s', 'permanent': True}),
     (r'^oauth/', include('geoauth.urls')),
-    #(r'^admin/', include('geoadmin.urls')),
-    ##(r'^admin/$', appengine_admin.Admin),
     (r'^ajax/', include('geoajax.urls')),
     url(r'^service/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
     url(r'^json/browse/', 'jsonrpc.views.browse', name="jsonrpc_browser"),

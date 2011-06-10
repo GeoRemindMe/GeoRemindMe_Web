@@ -13,7 +13,7 @@ from django.views.generic.simple import direct_to_template
 from google.appengine.api import users
 from google.appengine.ext import db
 
-from geoauth.clients import TwitterClient
+
 from georemindme.funcs import make_random_string
 from models import User
 from models_social import *
@@ -22,7 +22,7 @@ from forms import *
 from exceptions import *
 from funcs import init_user_session, get_next, login_func
 from decorators import login_required
-import facebook.facebook as facebook
+from geoauth import facebook, twitter
 
 #===============================================================================
 # REGISTER VIEW
@@ -34,10 +34,9 @@ def register(request):
         if f.is_valid():
             user = f.save(language=request.session['LANGUAGE_CODE'])
             if user:
-                user.send_confirm_code()
                 messages.success(request, _("User registration complete, a confirmation email have been sent to %s. Redirecting to dashboard...") % user)
         return user, f
-    return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('georemindme.views.home'))
 
 #===============================================================================
 # LOGIN VIEWS
@@ -74,6 +73,9 @@ def login_google(request):
     return HttpResponseRedirect(users.create_login_url(reverse('geouser.views.login_google')))
     
 def login_facebook(request):
+    from geoauth.views import facebook_authenticate_request
+    return facebook_authenticate_request(request)
+
     fbcookie = facebook.get_user_from_cookie(request.COOKIES)
     if fbcookie:
         fbuser = FacebookUser.objects.get_by_id(fbcookie['uid'])
@@ -83,7 +85,7 @@ def login_facebook(request):
             user = User.objects.get_by_email(profile['email'])
             if user:
                 fbuser = FacebookUser.register(user=user, uid=profile['uid'], 
-                                               email=profile['email'], name=profile["name"],
+                                               email=profile['email'], realname=profile["name"],
                                                profile_url=profile["link"],
                                                access_token=cookie["access_token"])
             else:

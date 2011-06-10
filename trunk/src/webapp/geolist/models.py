@@ -8,6 +8,7 @@ from geouser.models_acc import UserTimelineSystem
 from georemindme.models_utils import Visibility, HookedModel
 from georemindme.decorators import classproperty
 from models_indexes import ListFollowersIndex
+from signals import *
 
 
 class List(polymodel.PolyModel, HookedModel):
@@ -154,9 +155,7 @@ class ListSuggestion(List, Visibility):
         keys |= set([instance.key() for instance in instances_add])
         self.keys = [k for k in keys]
         self._vis = vis
-        timeline = UserTimelineSystem(user=self.user.key(), msg_id=351, instance=self)
-        put = db.put_async(timeline, self)
-        put.get_result()
+        self.put()
         
     def del_follower(self, user_key):
         '''
@@ -175,6 +174,7 @@ class ListSuggestion(List, Visibility):
             return False
         index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
         db.run_in_transaction(_tx, index.key(), user_key)
+        list_following_deleted.send(sender=self, user=db.get(user_key)) #  FIXME: recibir usuario como parametro
     
     def add_follower(self, user):
         '''
@@ -207,17 +207,20 @@ class ListSuggestion(List, Visibility):
             db.put_async([list, index])
         db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
         self.user_invited(user, set_status=1)  # FIXME : mejor manera de cambiar estado invitacion
+        list_following_new.send(sender=self, user=user)
         return True
             
-    def _pre_put(self):
-        super(SuggestionList, self)._pre_put()
+    def put(self):
         if self.is_saved():
             if not self.active:
-                timeline = UserTimelineSystem(user=self.user, msg_id=352, instance=self)
-                timeline.put()
+                super(ListSuggestion, self).put()
+                list_deleted.send(sender=self)
             else:
-                from georemindme.tasks import NotificationHandler
-                NotificationHandler().list_followers_notify(self)
+                super(ListSuggestion, self).put()
+                list_modified.send(sender=self)
+        else:
+            super(ListSuggestion, self).put()
+            list_new.send(sender=self)
                 
     def user_invited(self, user, set_status=None):
         '''
@@ -232,8 +235,7 @@ class ListSuggestion(List, Visibility):
         '''
         invitation = Invitation.objects.is_user_invited(self, user)
         if invitation is not None and set_status is not None:
-            invitation.status = set_status
-            invitation.put()
+            invitation.set_status(set_status)
         return invitation
 
 
@@ -303,20 +305,20 @@ class ListAlert(List):
         keys = set(self.keys)
         keys |= set([instance.key() for instance in instances_add])
         self.keys = [k for k in keys]
-        timeline = UserTimelineSystem(user=self.user.key(), msg_id=251, instance=self)
-        put = db.put_async(timeline, self)
-        put.get_result()
+        self.put()
         
     def put(self):
-        if not self.active:
-                timeline = UserTimelineSystem(user=self.user, msg_id=252, instance=self)
-                timeline.put()
-        if not self.is_saved():
-            super(ListAlert, self).put()
-            timeline = UserTimelineSystem(user=self.user.key(), msg_id=250, instance=self)
-            timeline.put()
+        if self.is_saved():
+            if not self.active:
+                super(ListAlert, self).put()
+                list_deleted.send(sender=self)
+            else:
+                super(ListAlert, self).put()
+                list_modified.send(sender=self)
         else:
             super(ListAlert, self).put()
+            list_new.send(sender=self)
+
         
 class ListUser(List):
     '''
@@ -380,19 +382,19 @@ class ListUser(List):
         keys = set(self.keys)
         keys |= set([instance.key() for instance in instances_add])
         self.keys = [k for k in keys]
-        timeline = UserTimelineSystem(user=self.user.key(), msg_id=151, instance=self)
-        put = db.put_async(timeline, self)
-        put.get_result()
+        self.put()
         
     def put(self):
-        if not self.active:
-                timeline = UserTimelineSystem(user=self.user, msg_id=152, instance=self)
-                timeline.put()
-        if not self.is_saved():
-            super(ListAlert, self).put()
-            timeline = UserTimelineSystem(user=self.user.key(), msg_id=150, instance=list)
-            timeline.put()
+        if self.is_saved():
+            if not self.active:
+                super(ListUser, self).put()
+                list_deleted.send(sender=self)
+            else:
+                super(ListUser, self).put()
+                list_modified.send(sender=self)
         else:
-            super(ListAlert, self).put()
-        
+            super(ListUser, self).put()
+            list_new.send(sender=self)
+
+from watchers import *    
 from helpers import *

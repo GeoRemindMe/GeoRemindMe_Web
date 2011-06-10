@@ -21,6 +21,7 @@
 <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
 <script type="text/javascript" src="/static/webapp/js/jquery.preload-1.0.8-min.js"></script> 
 <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
 
 {% block extra_js %}{%endblock%}
 
@@ -42,6 +43,23 @@ media="screen, projection" />
 </head>
 
 <body>
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({appId: '884c0d27d9bffa172e9f4b4a74bd3613', status: true, cookie: true,
+             xfbml: true});    
+     }
+     var facebook_onlogin() function() {
+         	 window.location.href = '/login/facebook';
+  }
+  (function() {
+    var e = document.createElement('script'); e.async = true;
+    e.src = document.location.protocol +
+      '//connect.facebook.net/en_US/all.js';
+    document.getElementById('fb-root').appendChild(e);
+  }());
+</script>
+<fb:login--button onlogin="facebook_onlogin();>Login with Facebook</fb:login-button>
 
     <div id="wait-mask"></div>
    <div class="container" {%block section%}{%endblock%}>

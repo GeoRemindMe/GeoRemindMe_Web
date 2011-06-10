@@ -1,5 +1,5 @@
 # coding=utf-8
-import logging
+import memcache
 
 from datetime import datetime, timedelta
 
@@ -10,11 +10,11 @@ from google.appengine.ext.db import polymodel
 
 from georemindme.models_utils import Counter
 from georemindme.funcs import make_random_string
+from georemindme.decorators import classproperty
 from properties import PasswordProperty, UsernameProperty
 from exceptions import *
+from signals import *
 
-from georemindme.decorators import classproperty
-import memcache
 
 TIMELINE_PAGE_SIZE = 42
 
@@ -32,6 +32,9 @@ class User(polymodel.PolyModel):
     
     _profile = None
     _settings = None
+    _google_user = None
+    _twitter_user = None
+    _facebook_user = None
     
     @classproperty
     def objects(self):
@@ -40,6 +43,24 @@ class User(polymodel.PolyModel):
     @property
     def id(self):
         return self.key().name()
+    
+    @property
+    def google_user(self):
+        if self._google_user is None:
+             self._google_user = self.googleuser_set.get()
+        return self._google_user
+    
+    @property
+    def facebook_user(self):
+        if self._facebook_user is None:
+            self._facebook_user = self.facebookuser_set.get()
+        return self._facebook_user
+    
+    @property
+    def twitter_user(self):
+        if self._twitter_user is None:
+            self._twitter_user = self.twitteruser_set.get()
+        return self._twitter_user
     
     @property
     def profile(self):
@@ -235,6 +256,8 @@ class User(polymodel.PolyModel):
         '''
             Envia un correo de confirmacion de direccion de correo
         '''
+        if self.email == '' or self.email is None:
+            return None
         if not self.is_confirmed():
             self.confirm_code = make_random_string(length=24)
             if commit:
@@ -254,6 +277,8 @@ class User(polymodel.PolyModel):
         '''
         Envia un correo con un codigo para iniciar la recuperacion de contraseña
         '''
+        if self.email == '' or self.email is None:
+            return None
         self.remind_code = make_random_string(length=24)
         from datetime import datetime
         self.date_remind = datetime.now()
@@ -307,14 +332,7 @@ class User(polymodel.PolyModel):
         user = User(key_name=key_name, **kwargs)
         user.put()
         trans = db.run_in_transaction(_tx, user)
-        if trans is None:
-            logging.error('Problema registrando usuario %s') % kwargs['email']
-            user.delete()
-            raise RegistrationException()
-        timeline = UserTimelineSystem(user = user, msg_id=0)
-        timeline.put()
-        logging.info('Registrado nuevo usuario %s email: %s' % (user.id, user.email))
-
+        user_new.send(sender=user, status=trans)
         return user
     
     def update(self, **kwargs):
@@ -376,22 +394,11 @@ class User(polymodel.PolyModel):
         is_following = UserFollowingIndex.all().filter('following =', following).ancestor(self.key()).count()
         if is_following != 0:  # en este caso, el usuario ya esta siguiendo al otro, no hacemos nada mas.
             return True
-        #probando las busquedas asincronas
         following_result = self.following(async=True)  # obtiene un iterador con los UserFollowingIndex
-        counter_result = self.counters(async=True) # obtiene los contadores de self
-        follow_query = UserCounter.all().ancestor(following) # obtiene los contadores del otro usuario
-        follow_result = follow_query.run()
-        settings_follow_query = UserSettings.all().ancestor(following)
-        settings_follow_result = settings_follow_query.run()
-        added = self._add_follows(following_result, following)
-        if added:
-            counter_result = counter_result.next()  # sumamos uno al contador de following
-            follow_result = follow_result.next()
-            counter_result.set_followings(+1)
-            # sumamos uno al contador de followers del otro usuario
-            follow_result.set_followers(+1)
-            settings_follow_result.next().notify_follower(self)  # mandar email de notificacion
-        return True
+        if self._add_follows(following_result, following):
+            user_follower_new.send(sender=self, following=following)
+            return True
+        return False
             
     def del_following(self, followname = None, followid = None):
         ''' 
@@ -411,15 +418,8 @@ class User(polymodel.PolyModel):
             if followid == self.id:
                 return False
             following = User.objects.get_by_id(followid, keys_only=True)
-        was_following = self._del_follows(following)
-        if was_following:
-            counter_result = self.counters(async=True) # obtiene los contadores de self
-            follow_query = UserCounter.all().ancestor(following) # obtiene los contadores del otro usuario
-            follow_result = follow_query.run()
-            counter_result = counter_result.next()  # sumamos uno al contador de following
-            follow_result = follow_result.next()  # sumamos uno al contador de followers del otro usuario
-            counter_result.set_followings(-1)
-            follow_result.set_followers(-1)
+        if self._del_follows(following):
+            user_following_deleted.send(sender=self, following=following)
             return True
         return False
         
@@ -441,9 +441,14 @@ class User(polymodel.PolyModel):
             last_follow.following.append(key)
         else:  # creamos un index nuevo
             last_follow = UserFollowingIndex(parent=self, following=[key])
-        timeline = UserTimelineSystem(user = key, instance = self, msg_id=100)
-        put = db.put_async([last_follow, timeline])
-        put.get_result()
+        last_follow.put()
+        counter_result = self.counters(async=True) # obtiene los contadores de self
+        follow_query = UserCounter.all().ancestor(key) # obtiene los contadores del otro usuario
+        follow_result = follow_query.run()
+        counter_result = counter_result.next()  
+        follow_result = follow_result.next()
+        counter_result.set_followings(+1) # sumamos uno al contador de following
+        follow_result.set_followers(+1)# sumamos uno al contador de followers del otro usuario
         return True
     
     def _del_follows(self, key):
@@ -458,6 +463,13 @@ class User(polymodel.PolyModel):
         if index is not None:
             index.following.remove(key)
             index.put()
+            counter_result = self.counters(async=True) # obtiene los contadores de self
+            follow_query = UserCounter.all().ancestor(key) # obtiene los contadores del otro usuario
+            follow_result = follow_query.run()
+            counter_result = counter_result.next()  
+            follow_result = follow_result.next()  
+            counter_result.set_followings(-1) # sumamos uno al contador de following
+            follow_result.set_followers(-1) # sumamos uno al contador de followers del otro usuario
             return True
         return False
     
@@ -479,5 +491,6 @@ class User(polymodel.PolyModel):
         def __str__(self):
             return _('Username already in use: %s') % self.value
         
-from helpers import UserHelper
+from watchers import *
 from models_acc import *
+from helpers import UserHelper

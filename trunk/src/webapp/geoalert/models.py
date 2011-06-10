@@ -8,14 +8,15 @@ from google.appengine.ext import db, search
 from google.appengine.ext.db import polymodel
 from google.appengine.ext.db import BadValueError
 
-from models_poi import *
-from models_indexes import *
 from georemindme.models_utils import Visibility
 from georemindme.decorators import classproperty
-from exceptions import ForbiddenAccess
 from geouser.models import User
 from geotags.models import Taggable
 from geouser.models_acc import UserTimelineSystem
+from models_poi import *
+from models_indexes import *
+from exceptions import ForbiddenAccess
+from signals import *
 
 
 class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
@@ -126,6 +127,8 @@ class Alert(Event):
     done_when = db.DateTimeProperty()
     has = db.StringListProperty(default=[u'active:T', u'done:F', ])
     
+    _done = False
+    
     @classproperty
     def objects(self):
         return AlertHelper()
@@ -142,6 +145,7 @@ class Alert(Event):
             return False
         self.has.remove(u'done:F')
         self.has.append(u'done:T')
+        self._done = True
         self.done_when = datetime.now()  # set done time
         return True
     
@@ -182,9 +186,22 @@ class Alert(Event):
             if not active:
                 alert.toggle_active()
             alert.put()
-            timeline = UserTimelineSystem(user = user, instance = alert, msg_id=200)
-            timeline.put()
             return alert
+        
+    def put(self):
+        if self.is_saved():
+            super(Alert, self).put()
+            if self._done:
+                alert_done.send(sender=self)
+            else:
+                alert_modified.send(sender=self)
+        else:
+            super(Alert, self).put()
+            alert_new.send(sender=self)
+            
+    def delete(self):
+        alert_deleted.send(sender=self)
+        super(Alert, self).delete()
         
     def to_dict(self):
             return {'id': self.id,
@@ -196,7 +213,7 @@ class Alert(Event):
                     'address': unicode(self.poi.address),
                     'starts': unicode(self.date_starts.strftime("%d%b")) if self.date_starts else '',
                     'ends': unicode(self.date_ends.strftime("%d%b")) if self.date_ends else '',
-                    'donedate': unicode(self.done_when.strftime("%d%b")) if self.done_when else '',
+                    'doneate': unicode(self.done_when.strftime("%d%b")) if self.done_when else '',
                     'done': self.is_done(),
                     'distance':self.get_distance() 
                     }
@@ -269,8 +286,7 @@ class Suggestion(Event, Visibility):
                 sugg.toggle_active()
             sugg.put()
             counter = SuggestionCounter(parent=sugg)
-            timeline = UserTimelineSystem(user = user, instance = sugg, msg_id=300)
-            db.put([counter, timeline])
+            counter.put()
             return sugg
         
     def add_follower(self, user):
@@ -297,9 +313,48 @@ class Suggestion(Event, Visibility):
             alert = AlertSuggestion.update_or_insert(suggestion = self, user = user)
             db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
             self.user_invited(user, set_status=1)  # FIXME : mejor manera de cambiar estado invitacion
+            suggestion_following_new.send(sender=self, user=user)
         except ForbiddenAccess():
             return None
         return alert
+    
+    def del_follower(self, user):
+        '''
+        Borra un usuario de la lista
+        
+            :param user: Usuario que quiere borrarse a una sugerencia
+            :type user: :class:`geouser.models.User`   
+        '''
+        def _tx(sug_key, index_key, user_key):
+            sug = db.get_async(sug_key)
+            index = db.get_async(index_key)
+            sug = sug.get_result()
+            index = index.get_result()
+            sug.counter.set_followers(-1)
+            index.keys.remove(user_key)
+            index.count -= 1
+            db.put_async(index, sug)
+            
+        if not self._user_is_follower(user_key):
+            return False
+        index = SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get()
+        db.run_in_transaction(_tx, self.key(), index.key(), user.key())
+        suggestion_following_deleted(sender=self, user=user)
+    
+    def put(self):
+        if self.is_saved():
+            super(Suggestion, self).put()
+            suggestion_modified.send(sender=self)
+        else:
+            super(Suggestion, self).put()
+            suggestion_new.send(sender=self)
+            
+    def delete(self):
+        children = db.query_descendants(self).fetch(10)
+        for c in children:
+            c.delete()
+        suggestion_deleted.send(sender=self)
+        super(Suggestion, self).delete()
     
     def user_invited(self, user):
         '''
@@ -314,8 +369,7 @@ class Suggestion(Event, Visibility):
         '''
         return Invitation.objects.is_user_invited(self, user)
         if invitation is not None and set_status is not None:
-            invitation.status = set_status
-            invitation.put()
+            invitation.set_status(set_status)
         return invitation
         
 
@@ -331,6 +385,7 @@ class AlertSuggestion(Event):
     user = db.ReferenceProperty(User, required=True, collection_name='alertsuggestions')
     has = db.StringListProperty(default=[u'active:T', u'done:F', ])
     
+    _done = False
     @classproperty
     def objects(self):
         return AlertSuggestionHelper()
@@ -347,6 +402,7 @@ class AlertSuggestion(Event):
             return False
         self.has.remove(u'done:F')
         self.has.append(u'done:T')
+        self._done = True
         self.done_when = datetime.now()  # set done time
         return True
     
@@ -386,12 +442,26 @@ class AlertSuggestion(Event):
             if not active:
                 alert.toggle_active()
             alert.put()
-            timeline = UserTimelineSystem(user = user, instance = self, msg_id=320)
-            timeline.put()
             return alert
+        
+    def put(self):
+        if self.is_saved():
+            super(AlertSuggestion, self).put()
+            if self._done:
+                alert_done.send(sender=self)
+            else:
+                alert_modified.send(sender=self)
+        else:
+            super(AlertSuggestion, self).put()
+            alert_new.send(sender=self)
+            
+    def delete(self):
+        alert_deleted.send(sender=self)
+        super(Alert, self).delete()
         
     def __str__(self):
         return self.suggestion.name
             
-    
+
+from watchers import *    
 from helpers import *
