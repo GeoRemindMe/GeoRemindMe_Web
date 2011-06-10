@@ -9,11 +9,6 @@ $active_section= 'APIs'; //Values= Names on ../templates/menu_sections.php
 
 $template = new H2o('../templates/'.$var_template, array(
     'cache_dir' => dirname(__FILE__),
-    'searchpath' => 'h2o',
-    
-    /*'i18n' => array(
-		'locale' => 'fr',
-	)*/
 ));
 
 echo $template->render(array(

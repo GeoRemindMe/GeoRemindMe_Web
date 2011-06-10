@@ -128,7 +128,7 @@ class H2o_I18n {
             $path = dirname($path) . DS;
 
         $this->searchpath = realpath($path).DS;
-        $this->locale_dir = $this->searchpath .'locale'.DS;
+        $this->locale_dir = '../templates/locale'.DS;
         $this->options = $options;
         
         if (isset($options['tmp_dir']))
@@ -174,6 +174,7 @@ class H2o_I18n {
 
         $this->gettext_path = realpath($this->gettext_path).DS;
 
+		
         if (!exec($this->gettext_path."xgettext -V")) {
             throw new Exception(
                 "xgettext binary cannot be found, if you are using Windows system either install through cygwin
@@ -201,7 +202,7 @@ class H2o_I18n {
             if (!is_dir($dir)) continue;
             $locale = basename($dir);
             $lc_messages = $dir . DS . 'LC_MESSAGES'. DS;
-            $pot_file = $lc_messages."messages.pot";
+            $pot_file = $lc_messages."messages.po";
             $po_file = $lc_messages."messages.po";
     
             if (!is_dir($lc_messages))
@@ -272,8 +273,9 @@ class H2o_I18n {
     function compile() {
         if (!$this->gettext_setup)
             $this->setupGettext();
-        
+        echo "aaa";
         foreach(glob($this->locale_dir.'*') as $dir) {
+			echo "bbb";
           if (!is_dir($dir)) continue;
           $locale = basename($dir);
           $lc_messages = $dir.DS.'LC_MESSAGES'.DS;
