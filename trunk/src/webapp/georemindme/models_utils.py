@@ -53,7 +53,7 @@ class HookedModel(db.Model):
     
     def put(self, *kwargs):
         self._pre_put()
-        super(List, self).put(*kwargs)
+        super(HookedModel, self).put(*kwargs)
         self._post_put()
         
     def _post_put(self):

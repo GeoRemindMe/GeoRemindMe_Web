@@ -302,10 +302,15 @@ class User(polymodel.PolyModel):
             counters = UserCounter(key_name='%s_counters' % user.key().name(), parent=user)
             sociallinks = UserSocialLinks(parent=profile)
             db.put_async([settings, profile, followings, counters, sociallinks])
+            return True
         key_name = 'u%d' % Counter.get_counter('User')
         user = User(key_name=key_name, **kwargs)
         user.put()
-        db.run_in_transaction(_tx, user)
+        trans = db.run_in_transaction(_tx, user)
+        if trans is None:
+            logging.error('Problema registrando usuario %s') % kwargs['email']
+            user.delete()
+            raise RegistrationException()
         timeline = UserTimelineSystem(user = user, msg_id=0)
         timeline.put()
         logging.info('Registrado nuevo usuario %s email: %s' % (user.id, user.email))
@@ -455,6 +460,12 @@ class User(polymodel.PolyModel):
             index.put()
             return True
         return False
+    
+    def delete(self):
+        children = db.query_descendants(self).fetch(10)
+        for c in children:
+            c.delete()
+        super(User, self).delete()
         
     class UniqueEmailConstraint(Exception):
         def __init__(self, value):
