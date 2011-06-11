@@ -9,7 +9,7 @@ from models_acc import UserFollowingIndex
 class UserHelper(object):
     '''
         Do the queries needed to get a object
-        Use ->  User.object.method()
+        Use ->  User.objects.method()
     '''
     def get_by_key(self, key):
         return User.get(db.Key(encoded=key))
@@ -22,7 +22,7 @@ class UserHelper(object):
     def get_by_id(self, userid, keys_only=False):
         if keys_only:
             return db.Key.from_path(User.kind(), userid)
-        return User.get_by_key_name(userid)
+        return User.get_by_id(userid)
     
     def get_by_email(self, email):
         '''

@@ -10,11 +10,11 @@ import memcache
 
 class UserSettingsHelper(object):
     def get_by_id(self, id, async=False):
-        settings = memcache.deserialize_instances(memcache.get('%s%s_settings' % (memcache.version, id)))
+        settings = memcache.deserialize_instances(memcache.get('%ssettings_%s' % (memcache.version, id)))
         if settings is None:
-            key = db.Key.from_path(User.kind(), id, UserSettings.kind(), '%s_settings' % id)
+            key = db.Key.from_path(User.kind(), id, UserSettings.kind(), 'settings_%s' % id)
             settings = db.get(key)
-            memcache.set('%s%s_settings' % (memcache.version, id), memcache.serialize_instances(settings))
+            memcache.set('%ssettings_%s' % (memcache.version, id), memcache.serialize_instances(settings))
         return settings
         """
         if async:
@@ -24,11 +24,11 @@ class UserSettingsHelper(object):
     
 class UserProfileHelper(object):
     def get_by_id(self, id, async=False):
-        profile = memcache.deserialize_instances(memcache.get('%s%s_profile' % (memcache.version, id)))
+        profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, id)))
         if settings is None:
-            key = db.Key.from_path(User.kind(), id, UserSettings.kind(), '%s_profile' % id)
+            key = db.Key.from_path(User.kind(), id, UserSettings.kind(), 'profile_%s' % id)
             profile = db.get(key)
-            memcache.set('%s%s_profile' % (memcache.version, id), memcache.serialize_instances(settings))
+            memcache.set('%sprofile_%s' % (memcache.version, id), memcache.serialize_instances(settings))
         return profile
         """
         if async:
@@ -38,7 +38,7 @@ class UserProfileHelper(object):
 
 class UserCounterHelper(object):
     def get_by_id(self, id, async=False):
-        key = db.Key.from_path(User.kind(), id, UserCounter.kind(), '%s_counters' % id)
+        key = db.Key.from_path(User.kind(), id, UserCounter.kind(), 'counters_%s' % id)
         if async:
             return db.get_async(key)
         return db.get(key)

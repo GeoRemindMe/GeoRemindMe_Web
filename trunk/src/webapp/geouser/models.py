@@ -42,7 +42,7 @@ class User(polymodel.PolyModel):
     
     @property
     def id(self):
-        return self.key().name()
+        return self.key().id()
     
     @property
     def google_user(self):
@@ -65,19 +65,19 @@ class User(polymodel.PolyModel):
     @property
     def profile(self):
         if self._profile is None:
-            self._profile = memcache.deserialize_instances(memcache.get('%s%s_profile' % (memcache.version, id)))
+            self._profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, id)))
             if self._profile is None:
                 self._profile = UserProfile.all().ancestor(self.key()).get()
-                memcache.set('%s%s_profile' % (memcache.version, id), memcache.serialize_instances(self._profile))
+                memcache.set('%sprofile_%s' % (memcache.version, id), memcache.serialize_instances(self._profile))
         return self._profile
 
     @property
     def settings(self):
         if self._settings is None:
-            self._settings = memcache.deserialize_instances(memcache.get('%s%s_settings' % (memcache.version, id)))
+            self._settings = memcache.deserialize_instances(memcache.get('%ssettings_%s' % (memcache.version, id)))
             if self._settings is None:
                 self._settings = UserSettings.all().ancestor(self.key()).get() 
-                memcache.set('%s%s_settings' % (memcache.version, id), memcache.serialize_instances(self._settings))
+                memcache.set('%ssettings_%s' % (memcache.version, id), memcache.serialize_instances(self._settings))
         return self._settings
         
     def get_timelineALL(self, page=1, query_id=None):
@@ -321,15 +321,14 @@ class User(polymodel.PolyModel):
             :raise: :class:`UniqueUsernameConstraint` si el username ya esta en uso
         '''
         def _tx(user):
-            settings = UserSettings(key_name='%s_settings' % user.key().name(), parent=user, language=language)
-            profile = UserProfile(key_name='%s_profile' % user.key().name(), parent=user, nickname=user.username)
+            settings = UserSettings(key_name='settings_%s' % user.id, parent=user, language=language)
+            profile = UserProfile(key_name='profile_%s' % user.id, parent=user, nickname=user.username)
             followings = UserFollowingIndex(parent=user)
-            counters = UserCounter(key_name='%s_counters' % user.key().name(), parent=user)
+            counters = UserCounter(key_name='counters_%s' % user.id, parent=user)
             sociallinks = UserSocialLinks(parent=profile)
             db.put_async([settings, profile, followings, counters, sociallinks])
             return True
-        key_name = 'u%d' % Counter.get_counter('User')
-        user = User(key_name=key_name, **kwargs)
+        user = User(**kwargs)
         user.put()
         trans = db.run_in_transaction(_tx, user)
         user_new.send(sender=user, status=trans)
