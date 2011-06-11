@@ -51,23 +51,63 @@ class HookedModel(db.Model):
     def _pre_put(self):
         pass
     
-    def put(self, *kwargs):
-        self._pre_put()
-        super(HookedModel, self).put(*kwargs)
-        self._post_put()
+    def put(self, **kwargs):
+        self.put_async().get_result()
+        return self._post_put_sync()
         
     def _post_put(self):
         pass
+    
+    def _post_put_sync(self):
+        pass
+    
+    def _pre_delete(self):
+        pass
+    
+    def delete(self):
+        return self.delete_async().get_result()
+    
+    def _post_delete(self):
+        pass
+    
+    def put_async(self,**kwargs):
+        return db.put_async(self)
+    
+    def delete_async(self):
+        return db.delete_async(self)
 
-old_put = db.put
-def hooked_put(models, **kwargs):
+old_async_put = db.put_async
+def hokked_put_async(models, **kwargs):
     if type(models) != type(list()):
         models = [models]
     for model in models:
         if isinstance(model, HookedModel):
             model._pre_put()
-    old_put(models, **kwargs)
+    async = old_async_put(models, **kwargs)
+    get_result = async.get_result
+    def get_result_with_callback():
+        for model in models:
+            if isinstance(model, HookedModel):
+                model._post_put()
+        return get_result()
+    async.get_result = get_result_with_callback
+    return async
+db.put_async = hokked_put_async
+
+old_async_delete = db.delete_async
+def hokked_delete_async(models):
+    if type(models) != type(list()):
+        models = [models]
     for model in models:
         if isinstance(model, HookedModel):
-            model._post_put()
-db.put = hooked_put
+            model._pre_delete()
+    async = old_async_delete(models)
+    get_result = async.get_result
+    def get_result_with_callback():
+        for model in models:
+            if isinstance(model, HookedModel):
+                model._post_delete()
+        return get_result()
+    async.get_result = get_result_with_callback
+    return async
+db.delete_async = hokked_delete_async

@@ -43,8 +43,7 @@ class TwitterClient(Client):
                                  picurl = twitterInfo['profile_image_url'],
                                  )
             else:
-                user.twitter_user.update(
-                             username = twitterInfo['screen_name'],
+                user.twitter_user.update(username = twitterInfo['screen_name'],
                              realname = twitterInfo['name'],
                              picurl = twitterInfo['profile_image_url']
                             )

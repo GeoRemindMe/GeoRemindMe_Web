@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
-from georemindme.models_utils import Counter
+from georemindme.models_utils import *
 from georemindme.funcs import make_random_string
 from georemindme.decorators import classproperty
 from properties import PasswordProperty, UsernameProperty
@@ -18,7 +18,7 @@ from signals import *
 
 TIMELINE_PAGE_SIZE = 42
 
-class User(polymodel.PolyModel):
+class User(polymodel.PolyModel, HookedModel):
     email = db.EmailProperty()
     username = UsernameProperty()
     password = PasswordProperty(required=True, indexed=False)
@@ -339,25 +339,23 @@ class User(polymodel.PolyModel):
         Actualiza los datos de identificacion de un usuario, el nombre de usuario tambien se guarda en UserProfile,
         por lo que hay que actualizarlo tambien
         '''
-        profile = None
         if 'email' in kwargs:
             if self.email != kwargs['email']:
                 self.email = kwargs['email']
-                self.send_confirm_code(commit=False)
         if 'username' in kwargs:
             self.username = kwargs['username']
             self.profile.username = self.username
         put = db.put_async([self, self.profile])
         put.get_result()
         return self
-    
-    def put(self):
+        
+    def _pre_put(self):
         # Ensure that email is unique
         if self.email is not None:
             self.email = self.email.lower()
             u = db.GqlQuery('SELECT __key__ FROM User WHERE email = :1', self.email).get()
             if u is not None:
-                if not self.is_saved() or u != self.key(): 
+                if not self.is_saved() or u != self.key():
                     logging.debug('Usuario %s email repetido: %s - %s' % (self.id, self.email, u))
                     raise self.UniqueEmailConstraint(self.email)               
         if self.username is not None:
@@ -367,8 +365,7 @@ class User(polymodel.PolyModel):
                 if not self.is_saved() or u != self.key(): 
                     logging.debug('Usuario %s username repetido: %s - %s' % (self.id, self.username, u))
                     raise self.UniqueUsernameConstraint(self.username)
-        super(self.__class__, self).put()
-        
+    
     def __str__(self):        
         if self.username is None:
             if self.email is None:
@@ -472,11 +469,11 @@ class User(polymodel.PolyModel):
             return True
         return False
     
-    def delete(self):
+    def delete_async(self):
         children = db.query_descendants(self).fetch(10)
         for c in children:
             c.delete()
-        super(User, self).delete()
+        return db.delete_async(self)
         
     class UniqueEmailConstraint(Exception):
         def __init__(self, value):

@@ -23,6 +23,8 @@ class List(polymodel.PolyModel, HookedModel):
     active = db.BooleanProperty(default=True)
     count = db.IntegerProperty()
     
+    _new = False
+    
     @property
     def id(self):
         return self.id()
@@ -33,12 +35,19 @@ class List(polymodel.PolyModel, HookedModel):
 
     def _pre_put(self):
         self.count = len(self.keys)
-    
-    def put(self, *kwargs):
-        self._pre_put()
-        super(List, self).put(*kwargs)
-        self._post_put()
-        
+        if not self.is_saved():
+            self._new = True
+            
+    def _post_put_sync(self):
+        if self._new:
+            list_new.send(sender=self)
+            self._new = False
+        else:
+            if not self.active:
+                list_deleted.send(sender=self)
+            else:
+                list_modified.send(sender=self)
+       
     def to_dict(self):
             return {'id': self.id,
                     'name': self.name,
@@ -209,18 +218,6 @@ class ListSuggestion(List, Visibility):
         self.user_invited(user, set_status=1)  # FIXME : mejor manera de cambiar estado invitacion
         list_following_new.send(sender=self, user=user)
         return True
-            
-    def put(self):
-        if self.is_saved():
-            if not self.active:
-                super(ListSuggestion, self).put()
-                list_deleted.send(sender=self)
-            else:
-                super(ListSuggestion, self).put()
-                list_modified.send(sender=self)
-        else:
-            super(ListSuggestion, self).put()
-            list_new.send(sender=self)
                 
     def user_invited(self, user, set_status=None):
         '''
@@ -306,18 +303,6 @@ class ListAlert(List):
         keys |= set([instance.key() for instance in instances_add])
         self.keys = [k for k in keys]
         self.put()
-        
-    def put(self):
-        if self.is_saved():
-            if not self.active:
-                super(ListAlert, self).put()
-                list_deleted.send(sender=self)
-            else:
-                super(ListAlert, self).put()
-                list_modified.send(sender=self)
-        else:
-            super(ListAlert, self).put()
-            list_new.send(sender=self)
 
         
 class ListUser(List):
@@ -331,7 +316,7 @@ class ListUser(List):
         return ListUserHelper()
     
     @classmethod
-    def insert_list(cls, user, name, description=None, instances=None):
+    def insert_list(cls, user, name, description=None, instances=[]):
         '''
         Crea una nueva lista de usuarios, en el caso de que exista una con ese nombre,
         se añaden los usuarios
@@ -345,16 +330,18 @@ class ListUser(List):
             :param instances: objetos a añadir a la lista
             :type instances: :class:`geouser.models.User`
         '''
-        list = user.listuser_set.filter('name =', name)
+        list = user.listuser_set.filter('name =', name).get()
         if list is not None:
             if  description is not None:
                 list.description = description
             keys = set(list.keys)
             keys |= set([instance.key() for instance in instances])
             list.keys = [k for k in keys]
+            list.put()
+            return list
+        keys= set([instance.key() for instance in instances])
         list = ListUser(name=name, user=user, description=description, keys=[k for k in keys])
         list.put()
-
         return list
     
     def update(self, name=None, description=None, instances_add=None, instances_del=None):
@@ -384,17 +371,7 @@ class ListUser(List):
         self.keys = [k for k in keys]
         self.put()
         
-    def put(self):
-        if self.is_saved():
-            if not self.active:
-                super(ListUser, self).put()
-                list_deleted.send(sender=self)
-            else:
-                super(ListUser, self).put()
-                list_modified.send(sender=self)
-        else:
-            super(ListUser, self).put()
-            list_new.send(sender=self)
+
 
 from watchers import *    
 from helpers import *

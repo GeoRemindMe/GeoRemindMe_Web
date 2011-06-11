@@ -99,9 +99,12 @@ class FacebookClient(object):
             user = user.user
             self.authorize(user)
         else:#no existe, creamos un nuevo usuario
-            user = User.register(email=facebookInfo['email'], password=make_random_string(length=6))
+            user = User.objects.get_by_email(facebookInfo['email'])
+            if user is None:
+                user = User.register(email=facebookInfo['email'], password=make_random_string(length=6))
             self.authorize(user)
         return user
+
 class GraphAPI(object):
     """A client for the Facebook Graph API.
 
