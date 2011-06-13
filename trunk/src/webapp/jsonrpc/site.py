@@ -149,7 +149,7 @@ class JSONRPCSite(object):
       
       encoder = json_encoder()
       if not sum(map(lambda e: isinstance(R, e), # type of `R` should be one of these or...
-         (dict, str, unicode, int, long, list, set, NoneType, bool))):
+         (dict, str, unicode, int, long, list, tuple, set, NoneType, bool))):
         try:
           rs = encoder.default(R) # ...or something this thing supports
         except TypeError, exc:

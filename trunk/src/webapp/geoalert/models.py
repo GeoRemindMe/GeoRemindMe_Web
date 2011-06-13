@@ -152,7 +152,7 @@ class Alert(Event):
     @classmethod
     def update_or_insert(cls, id = None, name = None, description = None,
                          date_starts = None, date_ends = None, poi = None,
-                         user = None, done = False, active = True):
+                         user = None, done = False, active = True, done_when=None):
         '''
             Crea una alerta nueva, si recibe un id, la busca y actualiza.
             
@@ -183,6 +183,8 @@ class Alert(Event):
                           date_ends = date_ends, poi = poi, user = user)
             if done:
                 alert.toggle_done()
+                if done_when is not None:
+                    alert.done_when = done_when
             if not active:
                 alert.toggle_active()
             alert.put()
