@@ -65,7 +65,7 @@ def new_timeline(sender, **kwargs):
     '''
     Sender ha escrito un nuevo timeline publico, notificar a los seguidores
     '''
-    timeline = UserTimeline(user=sender, instance = kwargs['following'], msg=kwargs['msg'],
+    timeline = UserTimeline(user=sender, msg=kwargs['msg'],
                             instance=kwargs['instance'], _vis=kwargs['vis'])
     timeline.put()
 user_timeline_new.connect(new_timeline)
