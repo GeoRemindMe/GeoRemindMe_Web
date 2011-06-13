@@ -1,5 +1,7 @@
 # coding=utf-8
 
+import memcache
+
 from google.appengine.ext import db
 
 from georemindme.models_utils import Visibility
@@ -33,6 +35,11 @@ class UserSettings(db.Model):
             parent= self.parent()
             from geouser.mails import send_notification_follower
             send_notification_follower(parent.email, follower=user)
+            
+    def put(self, **kwargs):
+        super(UserSettings, self).put()
+        memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self))
+        
             
 class UserProfile(db.Model):
     """Datos para el perfil del usuario"""

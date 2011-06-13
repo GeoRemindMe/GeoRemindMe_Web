@@ -36,11 +36,9 @@ def init_user_session(request, user, remember=True):
             :param remember: True if the user wants to save his session
             :type remember: boolean
     """
-    request.session.init_session(remember)
+    request.session.init_session(remember, lang=user.settings.language, user=user)
     user.last_login = datetime.now()
     user.put()
-    request.session['LANGUAGE_CODE'] = user.settings.language
-    request.session['user'] = user
 
 def login_func(request, email = None, password = None, remember_me = True, user = None):
     """Login function

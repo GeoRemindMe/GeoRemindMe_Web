@@ -23,9 +23,9 @@ class geosession(object):
         """
         if session_id is None:
             request.session = SessionStore.load(session_data=request.COOKIES.get(
-                                                         settings.COOKIE_DATA_NAME, None),
-                                                         from_cookie=False
-                                                         )
+                                             settings.COOKIE_DATA_NAME, None),
+                                             from_cookie=False
+                                             )
         else:
             request.session = SessionStore.load(session_id=session_id)
 

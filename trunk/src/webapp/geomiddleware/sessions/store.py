@@ -2,6 +2,8 @@
 
 import time
 
+from django.utils import simplejson
+
 from models import _Session_Data, _Session_Dict
 
 
@@ -43,12 +45,12 @@ class SessionStore(object):
         
     @property
     def data(self):
-        return self._session._decoded
+        return simplejson.dumps(self._session._decoded)
     
     def __init__(self, session=None, session_data=None, from_cookie=True):
         if session is None:
             if from_cookie:  # la nueva sesion es de usuario web
-                self._session = _Session_Data.new_session(session_data=session_data)
+                self._session = _Session_Data.new_session()
             else:
                 self._session = _Session_Dict.new_session(session_data=session_data)
                 self._anonymous = True
@@ -69,12 +71,14 @@ class SessionStore(object):
         # inicia una sesion nueva temporal
         return SessionStore(session_data=session_data, from_cookie=False)
     
-    def init_session(self, remember=False):
+    def init_session(self, remember=False, lang=None, user=None):
         '''
         Login de un usuario, guarda la sesion en datastore
         '''
-        self._session = _Session_Data.new_session(session_data=self.data)
+        self._session = _Session_Data.new_session(lang=lang, user=user)
         self._anonymous = False
+        self._accessed = True
+        self._modified = True
         self._remember=remember
         
     def cookie_saved(self):

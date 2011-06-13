@@ -7,6 +7,7 @@ from time import time
 
 from google.appengine.ext import db
 from django.utils.hashcompat import md5_constructor
+from django.utils import simplejson
 from django.conf import settings
 
 from properties import PickleProperty
@@ -14,8 +15,6 @@ from geouser.models import User
 
 class _Session_Dict(object):
     _decoded = dict()
-    _user = None
-    _language_code = 'en'
     
     @property
     def id(self):
@@ -25,7 +24,9 @@ class _Session_Dict(object):
     def new_session(cls, session_data=None):
         session = _Session_Dict()
         if session_data is not None:
+            session_data = simplejson.loads(session_data)
             session._decoded = session_data
+            session['LANGUAGE_CODE'] = session_data.get('LANGUAGE_CODE')
         return session
     
     def clear(self):
@@ -35,17 +36,9 @@ class _Session_Dict(object):
         self._decoded = {}
         
     def __getitem__(self, key):
-        if key.lower()=='user':
-            return self._user
-        if key.lower()=='language_code':
-            return self._language_code
         return self._decoded[key]
     
     def __setitem__(self, key, value):
-        if key.lower()=='user':
-            self._user = value
-        if key.lower()=='language_code':
-            self._language_code = value
         self._decoded[key] = value
         
     def __contains__(self, key):
@@ -88,7 +81,7 @@ class _Session_Data(_Session_Dict, db.Model):
         
 
     @classmethod        
-    def new_session(cls, session_data=None, remember=False):
+    def new_session(cls, lang=None, user=None):
         '''
             Crea una nueva sesion, generando un ID unico
         '''
@@ -113,6 +106,10 @@ class _Session_Data(_Session_Dict, db.Model):
         session = _Session_Data(key_name=_new_session_id())
         t = time() + settings.SESSION_COOKIE_AGE
         session.expires = datetime.fromtimestamp(t)
+        if lang:
+            session['LANGUAGE_CODE'] = lang
+        if user:
+            session['user'] = user
         session.put()
         return session
     
@@ -145,4 +142,19 @@ class _Session_Data(_Session_Dict, db.Model):
     def get_expiry_age(self):
         expires = self.expires - datetime.now()
         return expires.days * 86400 + expires.seconds
+    
+    def __getitem__(self, key):
+        if key.lower()=='user':
+            return self._user
+        if key.lower()=='language_code':
+            return self._language_code
+        return self._decoded[key]
+    
+    def __setitem__(self, key, value):
+        if key.lower()=='user':
+            self._user = value
+        elif key.lower()=='language_code':
+            self._language_code = value
+        else:
+            self._decoded[key] = value
            
