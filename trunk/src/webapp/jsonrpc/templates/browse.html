@@ -157,7 +157,7 @@
           'id': 'jsonrpc',
           'params': flattenArguments(arguments),
           'method': name,
-          'jsonrpc': '1.0'
+          'jsonrpc': '1.1'
         });
         writeln('Requesting ->');
         writeln(SPAN({'class': 'json_req'}, req));
@@ -397,5 +397,6 @@
     </div>
     <div class="footer">Powered by <a href="http://djangoproject.com/">Django</a>, 
       <a href="http://github.com/samuraisam/django-json-rpc">django-json-rpc</a> and <a href="http://mochikit.com/">MochiKit</a>
+      {{des}}
   </body>
 </html>

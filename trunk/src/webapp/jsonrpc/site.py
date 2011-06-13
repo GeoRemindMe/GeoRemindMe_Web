@@ -80,7 +80,7 @@ class JSONRPCSite(object):
   def __init__(self, json_encoder=DjangoJSONEncoder):
     self.urls = {}
     self.uuid = str(uuid1())
-    self.version = '1.0'
+    self.version = '1.1'
     self.name = 'django-json-rpc'
     self.register('system.describe', self.describe)
     self.set_json_encoder(json_encoder)

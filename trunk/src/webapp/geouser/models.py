@@ -18,6 +18,18 @@ from signals import *
 
 TIMELINE_PAGE_SIZE = 42
 
+
+class AnonymousUser(object):
+    email = ''
+    active = False
+   
+    def is_authenticated(self):
+        return False
+    
+    def is_admin(self):
+        return False
+
+
 class User(polymodel.PolyModel, HookedModel):
     email = db.EmailProperty()
     username = UsernameProperty()

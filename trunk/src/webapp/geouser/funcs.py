@@ -36,9 +36,7 @@ def init_user_session(request, user, remember=True):
             :param remember: True if the user wants to save his session
             :type remember: boolean
     """
-    from appengine_utilities.sessions import Session
-    request.session = Session(set_cookie_expires=remember)  # register the user with session
-    user._session = request.session.get_ds_entity()
+    request.session.init_session(remember)
     user.last_login = datetime.now()
     user.put()
     request.session['LANGUAGE_CODE'] = user.settings.language

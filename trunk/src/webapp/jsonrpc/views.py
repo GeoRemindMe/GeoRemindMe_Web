@@ -11,6 +11,7 @@ def browse(request, site=jsonrpc_site):
     return HttpResponse(mochikit.interpreter, content_type='application/x-javascript')
   desc = site.service_desc()
   return render_to_response('browse.html', {
+    'des': desc,
     'methods': desc['procs'],
     'method_names_str': dumps(
       [m['name'] for m in desc['procs']])

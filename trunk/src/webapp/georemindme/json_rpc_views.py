@@ -14,8 +14,9 @@ from rpc_server.models import UserRPC
 from rpc_server.exceptions import GeoException
 
 from jsonrpc import jsonrpc_method
+from jsonrpc.exceptions import *
 
-@jsonrpc_method('login', validate=False)
+@jsonrpc_method('login', authenticated=False)
 def login(request, email, password):
     '''
         Log a user and creates a new UserRPC session ID.
@@ -36,9 +37,9 @@ def login(request, email, password):
                 urpc = UserRPC(email=email, realuser=u)
             urpc.put()            
             return urpc.session_id
-    raise Exception(GeoException.BAD_EMAIL_PASSWORD)
+    raise InvalidCredentialsError()
 
-@jsonrpc_method('register', validate=False)
+@jsonrpc_method('register', validate=False, authenticated=False)
 def register(request, email, password):
     '''
         Register a user
@@ -52,7 +53,8 @@ def register(request, email, password):
             return True    
     except:
         pass
-    raise Exception(GeoException.BAD_EMAIL_PASSWORD)
+    
+    raise RegisterException()
 
 @jsonrpc_method('sync', validate=False)
 def sync(request, session_id, last_sync, modified):

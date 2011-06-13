@@ -1,14 +1,8 @@
 import uuid
 from jsonrpc._json import loads, dumps
 from jsonrpc.types import *
-try:
-    #raise Exception
-    import urllib2
-    from urllib2 import HTTPError
-except:
-    import urllib as urllib2
-    class HTTPError(IOError):
-        pass
+import urllib2
+from urllib2 import HTTPError
 
 class ServiceProxy(object):
   def __init__(self, service_url, service_name=None, version='1.0', timeout=None, secret=None):

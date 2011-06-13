@@ -16,22 +16,14 @@ You should have received a copy of the GNU General Public License
 along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 
 """
+from geouser.models import AnonymousUser
+from georemindme.forms import ContactForm
 
-class AnonymousUser(object):
-    email = ''
-    active = False
-   
-    def is_authenticated(self):
-        return False
-    
-    def is_admin(self):
-        return False
 
 def geoAuth(request):
     """
         Add the object user to all templates
     """
-    from georemindme.forms import ContactForm
     return {
             'user' : request.session.get('user', AnonymousUser()), #user is authenticated
             'contactForm' : ContactForm(),
