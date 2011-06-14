@@ -3,6 +3,7 @@ from django.utils.cache import patch_vary_headers
 from django.conf import settings
 
 from sessions.store import *
+from geouser.models import AnonymousUser
 
 class geosession(object):
     def process_request(self, request):
@@ -14,7 +15,8 @@ class geosession(object):
         else:
         """
         if session_id is None:
-            session_id = request.META.get('HTTP_X_GEOREMINDME', None)
+            session_id = request.META.get('HTTP_X_GEOREMINDME_SESSION', None)
+            request.session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
         """
         if session_key is None:
             # validar request
@@ -28,6 +30,11 @@ class geosession(object):
                                              )
         else:
             request.session = SessionStore.load(session_id=session_id)
+        
+        if 'user' in request.session:
+            request.user = request.session['user']
+        else:
+            request.user = AnonymousUser()
 
     def process_response(self, request, response):
         """

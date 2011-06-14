@@ -9,10 +9,9 @@ from django.http import HttpResponseRedirect
 """
 def login_required(func):
     def _wrapper(*args, **kwargs):
-        session = args[0].session  # request es el primer parametro que pasamos
+        request = args[0]  # request es el primer parametro que pasamos
         #raise Exception(session._session)
-        user = session.get('user')
-        if user and user.is_authenticated():
+        if request.user.is_authenticated():
             return func(*args, **kwargs)
         from views import login
         return login(args[0])

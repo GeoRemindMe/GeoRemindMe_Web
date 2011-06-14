@@ -25,7 +25,7 @@ def geoAuth(request):
         Add the object user to all templates
     """
     return {
-            'user' : request.session.get('user', AnonymousUser()), #user is authenticated
+            'user' : request.user,
             'contactForm' : ContactForm(),
             }
     

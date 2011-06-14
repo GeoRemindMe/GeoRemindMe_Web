@@ -4,7 +4,8 @@ import time
 
 from django.utils import simplejson
 
-from models import _Session_Data, _Session_Dict
+from models import _Session_Data, _Session_Dict, _Session_RPC
+from jsonrpc.exceptions import BadSessionException
 
 
 class SessionStore(object):
@@ -13,6 +14,7 @@ class SessionStore(object):
     _modified = False
     _anonymous = False
     _remember = False
+    _cookieless = False
     
     @property
     def session_id(self):
@@ -47,7 +49,7 @@ class SessionStore(object):
     def data(self):
         return simplejson.dumps(self._session._decoded)
     
-    def __init__(self, session=None, session_data=None, from_cookie=True):
+    def __init__(self, session=None, session_data=None, from_cookie=True, from_rpc=False):
         if session is None:
             if from_cookie:  # la nueva sesion es de usuario web
                 self._session = _Session_Data.new_session()
@@ -57,9 +59,11 @@ class SessionStore(object):
         else:
             self._session = session
             self._accessed = True
+        if from_rpc:
+            self._cookieless = True
     
     @classmethod
-    def load(cls, session_id=None, session_data=None, from_cookie=True):
+    def load(cls, session_id=None, session_data=None, from_cookie=True, from_rpc=True):
         '''
         Recupera la sesion o crea una nueva
         '''
@@ -67,7 +71,13 @@ class SessionStore(object):
             if session_id is not None:   # recupera la sesion
                 session = _Session_Data.restore_session(session_id)
                 if session is not None:  # es valida
-                    return SessionStore(session=session, from_cookie=from_cookie)
+                    return SessionStore(session=session, from_cookie=True)
+        elif from_rpc:
+            if session_id is not None:
+                session = _Session_RPC.restore_session(session_id)
+                if session is not None:
+                    return SessionStore(session=session, from_cookie=False, from_rpc=True)
+                raise BadSessionException
         # inicia una sesion nueva temporal
         return SessionStore(session_data=session_data, from_cookie=False)
     
