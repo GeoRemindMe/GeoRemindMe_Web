@@ -9,16 +9,17 @@ from django.utils.translation import ugettext as _
 from stats import *
 from tasks import *
 
-def home(request, login=False):
+def register_panel(request, login=False):
     if request.session.get('user'):
         return HttpResponseRedirect(reverse('geouser.views.dashboard'))
     
-    return render_to_response("webapp/home.html", {'login' :login}, context_instance=RequestContext(request))
+    return render_to_response("webapp/register.html", {'login' :login}, context_instance=RequestContext(request))
 
-def private_home(request,login=False):
+
+def login_panel(request,login=False):
     if request.session.get('user'):
         return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-    return render_to_response("webapp/home_private_beta.html", {'login' :login}, context_instance=RequestContext(request))
+    return render_to_response("webapp/login.html", {'login' :login}, context_instance=RequestContext(request))
 
 def set_language(request):
     if request.method == 'POST':
