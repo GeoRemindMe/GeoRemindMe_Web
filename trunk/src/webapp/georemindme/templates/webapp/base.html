@@ -135,20 +135,17 @@
 			   <li><a title="Contact us" href="http://help.georemindme.com">Support</a></li>
 			   <li><a title="Looking for some info?" href="http://www.georemindme.com/sitemap">Sitemap</a></li>
                <li>
-				 
-				 
-					<form method="post" action="/lang/">
-                        <label for="language-bar" accesskey="v">Language:</label>
-                        <div style="display: none;"><input type="hidden" value="5bc813d50b374f73e92f8b4b95e4c80d" name="csrfmiddlewaretoken"></div>
-                            <select onsubmit="this.form.submit()" onchange="this.form.submit()" id="language-bar" name="lang">
-                                
-                                    <option hreflang="en" value="en" selected="selected">English</option>
-                                
-                                    <option hreflang="es" value="es">Español</option>
-                                
-                            </select>
-						<div style="display: none;"><input type="hidden" value="5bc813d50b374f73e92f8b4b95e4c80d" name="csrfmiddlewaretoken"></div>
-					   <input type="hidden" value="/" name="next">
+               		<form method="post" action="/lang/">
+	               		{% csrf_token %}
+	                    <label for="language-bar" accesskey="v">Language:</label>
+    				 	{% get_available_languages as LANGUAGES %}
+         				{% get_current_language as LANGUAGE_CODE %}
+	                    <select onsubmit="this.form.submit()" onchange="this.form.submit()" id="language-bar" name="lang">
+								{% for code, name in LANGUAGES %}
+                     				<option {%if LANGUAGE_CODE == code %}selected="selected"{% endif %} value="{{code}}" hreflang="{{code}}">{{name}}</option>
+                    			{% endfor %}
+	                    </select>
+	                	<input type="hidden" name="next" value="{{ request.path }}" />
 					</form>
 				</li>
 		   </ul>
