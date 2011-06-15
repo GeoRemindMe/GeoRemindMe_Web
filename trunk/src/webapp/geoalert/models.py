@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from datetime import datetime
+import time
 
 from django.utils.translation import ugettext as _
 from django.utils import simplejson
@@ -185,8 +186,10 @@ class Alert(Event):
                 alert.toggle_done()
                 if done_when is not None:
                     alert.done_when = done_when
+            '''
             if not active:
                 alert.toggle_active()
+            '''
             alert.put()
             return alert
         
@@ -213,11 +216,14 @@ class Alert(Event):
                     'x': self.poi.location.lat,
                     'y': self.poi.location.lon,
                     'address': unicode(self.poi.address),
-                    'starts': unicode(self.date_starts.strftime("%d%b")) if self.date_starts else '',
-                    'ends': unicode(self.date_ends.strftime("%d%b")) if self.date_ends else '',
-                    'doneate': unicode(self.done_when.strftime("%d%b")) if self.done_when else '',
+                    'created': unicode('%d' % time.mktime(self.created.timetuple())) if self.created else '',
+                    'modified': unicode('%d' % time.mktime(self.modified.timetuple())) if self.modified else '',
+                    'starts': unicode('%d' % time.mktime(self.date_starts.timetuple())) if self.date_starts else '',
+                    'ends': unicode('%d' % time.mktime(self.date_ends.timetuple())) if self.date_ends else '',
+                    'done_when': unicode('%d' % time.mktime(self.done_when.timetuple())) if self.done_when else '',
                     'done': self.is_done(),
-                    'distance':self.get_distance() 
+                    'distance':self.get_distance(),
+                    'active': self.is_active(),
                     }
             
     def to_json(self):

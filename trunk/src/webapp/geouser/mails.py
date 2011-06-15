@@ -35,7 +35,7 @@ def send_confirm_mail(to=None, confirm_code=None, language='en'):
         import os
         host = os.environ['HTTP_HOST']
 
-        url = 'http://%s/confirm/%s/%s' % (host, base64.encodestring(to), confirm_code)
+        url = 'http://%s/confirm/%s/%s' % (host, base64.urlsafe_b64encode(to.encode("utf-8")), confirm_code)
         return url
 
     """
@@ -70,7 +70,7 @@ def send_remind_pass_mail(to=None, remind_code=None, language='en'):
         import os
         host = os.environ['HTTP_HOST']
 
-        url = 'http://%s/remind/%s/%s' % (host, base64.encodestring(to), remind_code)
+        url = 'http://%s/remind/%s/%s' % (host, base64.urlsafe_b64encode(to.encode("utf-8")), remind_code)
         return url
 
     """

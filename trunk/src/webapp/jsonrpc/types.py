@@ -1,3 +1,5 @@
+# coding=utf-8
+
 def _types_gen(T):
   yield T
   if hasattr(T, 't'):

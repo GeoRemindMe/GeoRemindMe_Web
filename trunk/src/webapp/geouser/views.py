@@ -197,7 +197,7 @@ def public_profile(request, username):
 #===============================================================================
 def confirm(request, user, code):
     """Confirms a user's email"""
-    user = base64.decodestring(user)
+    user = base64.urlsafe_b64decode(user.encode('ascii'))
     u = User.objects.get_by_email_not_confirm(user)
     if u is not None:
         if u.confirm_user(code):
@@ -230,7 +230,7 @@ def remind_user(request):
 
 def remind_user_pass(request, user, code):
     """allow to reset password link"""
-    user = base64.decodestring(user)
+    user = base64.urlsafe_b64decode(user.encode('ascii'))
     user = User.objects.get_by_email(user)
     if user is not None:
         try:

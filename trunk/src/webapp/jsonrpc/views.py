@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from _json import dumps
 from django.http import HttpResponse
 from django.shortcuts import render_to_response

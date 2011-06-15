@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import uuid
 from jsonrpc._json import loads, dumps
 from jsonrpc.types import *

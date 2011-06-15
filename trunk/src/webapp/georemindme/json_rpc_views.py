@@ -18,7 +18,7 @@ from rpc_server.exceptions import GeoException
 from jsonrpc import jsonrpc_method
 from jsonrpc.exceptions import *
 
-@jsonrpc_method('login', authenticated=False)
+@jsonrpc_method('login', authenticated=False, safe=True)
 def login(request, email, password):
     '''
         Log a user and creates a new UserRPC session ID.
@@ -39,7 +39,7 @@ def login(request, email, password):
             return urpc.session_id
     raise InvalidCredentialsError()
 
-@jsonrpc_method('register', validate=False, authenticated=False)
+@jsonrpc_method('register', validate=False, authenticated=False, safe=True)
 def register(request, email, password):
     '''
         Register a user
@@ -55,7 +55,7 @@ def register(request, email, password):
         pass
     raise RegisterException()
 
-@jsonrpc_method('sync', validate=False)
+@jsonrpc_method('sync', validate=False, authenticated=False, safe=True)
 def sync(request, session_id, last_sync, modified=[]):
     '''
         Sync with devices
@@ -105,20 +105,17 @@ def sync(request, session_id, last_sync, modified=[]):
             poi = Business( **(a['business']) )
             del a['business']
         else:
-            raise Exception( GeoException.INVALID_REQUEST )"""
-
-        # check if the input data is ok
-        if not isinstance(a.get('points'), list) or not len(a.get('points')) or not isinstance(a.get('points')[0], list) or not len(a.get('points')[0]) == 2:
-            raise InvalidRequestError    
+            raise Exception( GeoException.INVALID_REQUEST )""" 
 
         if not a.get('id'): # the alert is new
             poi = PrivatePlace.get_or_insert(name = '',
-                                             location = GeoPt(a['points'][0][0], a['points'][0][1]),
+                                             location = GeoPt(a.get('x'), a.get('y')),
                                              address = '',
                                              user = u.realuser)
             alert = Alert.update_or_insert(
-                         id = a.get('id'), name = a.get('name', u''),
+                         name = a.get('name', u''),
                          description = a.get('description', u''),
+                         poi = poi,
                          date_starts = parse_date(a.get('starts'), False),
                          date_ends = parse_date(a.get('ends'), False),
                          user = u.realuser,

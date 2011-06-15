@@ -10,4 +10,5 @@ urlpatterns = patterns('geouser.views',
     (r'^dashboard/$', 'dashboard'),
     (r'^user/(?P<username>[^/]*)/$', 'public_profile'),
     (r'^logout/$', 'logout'),
+    (r'^confirm/(?P<user>[^/]*)/(?P<code>[^/]*)/$', 'confirm')
 )

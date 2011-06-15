@@ -89,7 +89,7 @@ class EventHelper(object):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        return Alert.all().filter('user =', user).filter('modified <', last_sync).order('-modified')
+        return Alert.all().filter('user =', user).filter('modified >', last_sync).order('-modified')
 
     
 class AlertHelper(EventHelper):

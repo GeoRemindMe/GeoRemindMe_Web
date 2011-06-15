@@ -12,6 +12,7 @@ class SocialUser(polymodel.PolyModel):
     email = db.EmailProperty(required=False)
     realname = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
+    user = None
     
     def is_google(self):
         return False
