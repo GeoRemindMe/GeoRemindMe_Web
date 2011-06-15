@@ -140,7 +140,7 @@ def sync(request, session_id, last_sync, modified=[]):
             # poi data, only point considered
             
             poi = PrivatePlace.get_or_insert(name = '',
-                                             location = GeoPt(a['points'][0][0], a['points'][0][1]),
+                                             location = GeoPt(a.get('x'), a.get('y')),
                                              address = '',
                                              user = u.realuser)
             old = Alert.update_or_insert(

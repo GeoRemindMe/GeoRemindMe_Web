@@ -219,7 +219,7 @@ class JSONRPCSite(object):
                 raise RequestPostError
             else:
                 try:
-                        D = loads(request.raw_post_data.encode('utf8').decode('utf8','replace'))
+                        D = loads(u'%s' % request.raw_post_data)
                 except:
                         raise Exception('%s     %s' % (type(request.raw_post_data), repr(request.raw_post_data)))
                         raise InvalidRequestError
