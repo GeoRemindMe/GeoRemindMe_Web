@@ -22,15 +22,11 @@ from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template, redirect_to
 
 urlpatterns = patterns('georemindme.views',
-    url(r'^$', 'private_home'),
-    url(r'^(?i)timonholandes/$', 'home' ),
+    url(r'^$', 'login_panel'),
+    url(r'^(?i)timonholandes/$', 'register_panel' ),
     #url(r'^private/', 'homeprivate'),
     #url(r'^team/$',direct_to_template, {'template': 'team.html', 'extra_context': {'active': 'team',}}, 'georemindme.team'),
     url(r'^(?i)m/$', direct_to_template, {'template': 'mobile/index.html'}, 'georemindme.mobile'),
-    url(r'^(?i)contact/$', direct_to_template, {'template': 'webapp/contact.html'}, 'contact'),
-    url(r'^(?i)privacy/$', direct_to_template, {'template': 'webapp/privacypolicy.html'}, 'privacy'),
-    url(r'^(?i)tos/$', direct_to_template, {'template': 'webapp/tos.html'}, 'tos'),
-    url(r'^(?i)knowmore/$', direct_to_template, {'template': 'webapp/knowmore.html'}, 'knowmore'),
     url(r'^(?i)lang/$', 'set_language'),
     url(r'^(?i)stats/daily/$', 'stats_daily'),
     url(r'^(?i)clean/sessions/$', 'clean_sessions'),
