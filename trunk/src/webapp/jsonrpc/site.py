@@ -219,10 +219,9 @@ class JSONRPCSite(object):
                 raise RequestPostError
             else:
                 try:
-                        D = loads(request.raw_post_data.encode('utf8').decode('utf8','replace'))
+                    D = loads(request.raw_post_data.decode('utf8','replace'))
                 except:
-                        raise Exception('%s     %s' % (type(request.raw_post_data), repr(request.raw_post_data)))
-                        raise InvalidRequestError
+                    raise InvalidRequestError
             
             if type(D) is list:
                 response = [self.response_dict(request, d, is_batch=True, json_encoder=json_encoder)[0] for d in D]

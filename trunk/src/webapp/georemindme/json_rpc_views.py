@@ -70,6 +70,7 @@ def sync(request, session_id, last_sync, modified=[]):
         return datetime.fromtimestamp(date)
     session = SessionStore.load(session_id, from_cookie=False, from_rpc=True)
     u = session['user']
+    session.put()
     last_sync = parse_date(last_sync)
     # modified is sent as string
     if modified:
@@ -86,14 +87,14 @@ def sync(request, session_id, last_sync, modified=[]):
             poi = PrivatePlace.get_or_insert(name = '',
                                              location = GeoPt(a.get('x'), a.get('y')),
                                              address = '',
-                                             user = u.realuser)
+                                             user = u)
             alert = Alert.update_or_insert(
                          name = a.get('name', u''),
                          description = a.get('description', u''),
                          poi = poi,
                          date_starts = parse_date(a.get('starts'), False),
                          date_ends = parse_date(a.get('ends'), False),
-                         user = u.realuser,
+                         user = u,
                          done = True if parse_date(a.get('done_when'), False) else False,
                          done_when = parse_date(a.get('done_when'), False),
                          active = True if a.get('active', False) else False,
@@ -111,19 +112,19 @@ def sync(request, session_id, last_sync, modified=[]):
             poi = PrivatePlace.get_or_insert(name = '',
                                              location = GeoPt(a.get('x'), a.get('y')),
                                              address = '',
-                                             user = u.realuser)
+                                             user = u)
             old = Alert.update_or_insert(
                          id = a.get('id'), name = a.get('name', u''),
                          description = a.get('description', u''),
                          date_starts = parse_date(a.get('starts'), False),
                          date_ends = parse_date(a.get('ends'), False),
-                         user = u.realuser,
+                         user = u,
                          done = True if parse_date(a.get('done_when'), False) else False,
                          done_when = parse_date(a.get('done_when'), False),
                          active = True if a.get('active', False) else False,
                          )            
     # return the alerts modified after last sync
-    alerts = Alert.objects.get_by_last_sync(u.realuser, last_sync)
+    alerts = Alert.objects.get_by_last_sync(u, last_sync)
     for a in alerts:
         response.append(a.to_dict())
     return [int(time.mktime(datetime.now().timetuple())), response, deleted]
@@ -136,6 +137,7 @@ def getProximityAlerts(request, session_id, lat, long):
         Get the Alerts near to the user position
     '''
     session = SessionStore.load(session_id, from_cookie=False, from_rpc=True)
+    session.put()
     u = session['user'] 
     from geoalert.geobox import proximity_alerts
 

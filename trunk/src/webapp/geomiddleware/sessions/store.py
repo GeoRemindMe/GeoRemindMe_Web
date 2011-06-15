@@ -4,7 +4,7 @@ import time
 
 from django.utils import simplejson
 
-from models import _Session_Data, _Session_Dict, _Session_RPC
+from models import _Session_Data, _Session_Dict
 from jsonrpc.exceptions import BadSessionException
 
 

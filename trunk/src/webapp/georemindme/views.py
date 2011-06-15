@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 
-from stats import *
+from cron import *
 from tasks import *
 
 def home(request, login=False):

@@ -10,7 +10,7 @@ urlpatterns = patterns('geouser.views',
     (r'^(?i)dashboard/$', 'dashboard'),
     (r'^(?i)user/(?P<username>[^/]*)/$', 'public_profile'),
     (r'^(?i)logout/$', 'logout'),
-    (r'^(?i)confirm/(?P<user>[^/]*)/(?P<code>[^/]*)/$', 'confirm')
+    (r'^(?i)confirm/(?P<user>[^/]*)/(?P<code>[^/]*)/$', 'confirm'),
     (r'^(?i)remind/$', 'remind_user'),
-    (r'^(?i)remind/(?P<user>[^/]*)/(?P<code>[^/]*)/$', 'remind_user_code')
+    (r'^(?i)remind/(?P<user>[^/]*)/(?P<code>[^/]*)/$', 'remind_user_code'),
 )

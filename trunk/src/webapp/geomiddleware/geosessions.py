@@ -46,10 +46,13 @@ class geosession(object):
                 accessed = request.session._accessed
                 modified = request.session._modified
                 anonymous = request.session._anonymous
+                cookieless = request.session._cookieless
             except AttributeError:
                 pass
             else:
-                if anonymous:
+                if cookieless:
+                    request.session.put()
+                elif anonymous:
                     response.set_cookie(settings.COOKIE_DATA_NAME,
                                         request.session.data, max_age=None,
                                         expires=None, domain=settings.COOKIE_DOMAIN,

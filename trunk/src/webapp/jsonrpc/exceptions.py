@@ -88,7 +88,12 @@ class ServerError(Error):
     """ Internal JSON-RPC error. """
     code = -32603    
     message = _('Internal error.')
-
+    
+class InvalidHashError(Error):
+    """ Invalid or not specified md5 security hash code """
+    code = -32610
+    message = _('Invalid security hash code')
+    status = 401
 
 # -32099..-32000    Server error.     Reserved for implementation-defined server-errors.  
 class RegisterException(Error):
@@ -96,14 +101,16 @@ class RegisterException(Error):
     code = -32000
     message = _('Invalid email/password')
 
+
 class NoConfirmedException(Error):
     """ Email not confirmed """
-    code = -32000
+    code = -32001
     message = _('Account not confirmed, please, check email')    
+
     
 class BadSessionException(Error):
     """ id session is invalid """
-    code = -32003
+    code = -32002
     message = _('Invalid session')
 
 # The remainder of the space is available for application defined errors.
@@ -118,13 +125,6 @@ class InvalidCredentialsError(Error):
     """ Invalid login credentials """
     code = 401
     message = _('Invalid login credentials')
-    status = 401
-
-
-class InvalidHashError(Error):
-    """ Invalid or not specified md5 security hash code """
-    code = -32610
-    message = _('Invalid security hash code')
     status = 401
  
   
