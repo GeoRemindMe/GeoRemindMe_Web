@@ -116,7 +116,7 @@ class AlertHelper(EventHelper):
             raise TypeError()
         q = self._klass.gql('WHERE user = :1 AND has = "done:F" ORDER BY modified DESC', user)
         return [l for l in q]
-    
+      
 
 class SuggestionHelper(EventHelper):
     _klass = Suggestion

@@ -228,7 +228,7 @@ def remind_user(request):
         f = EmailForm(prefix='pass_remind')
     return render_to_response('user_pass.html', {'form': f}, context_instance=RequestContext(request))
 
-def remind_user_pass(request, user, code):
+def remind_user_code(request, user, code):
     """allow to reset password link"""
     user = base64.urlsafe_b64decode(user.encode('ascii'))
     user = User.objects.get_by_email(user)

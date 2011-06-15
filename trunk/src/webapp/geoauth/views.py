@@ -16,6 +16,10 @@ from geouser.funcs import login_func, init_user_session
 from server import OAUTH_Server
 from models import OAUTH_Access
 
+#===============================================================================
+# SERVIDOR, AUTORIZAR TOKENS A OTROS, ACCESO A RECURSOS, ETC.
+#===============================================================================
+
 @csrf_exempt
 def token_request(request):
     try:
@@ -70,7 +74,7 @@ def access_token_request(request):
     return HttpResponse(oauthToken)
 
 #------------------------------------------------------------------------------ 
-# CLIENTE
+# CLIENTE, IDENTIFICACION CON OTROS SERVIDORES, ETC.
 #------------------------------------------------------------------------------ 
 
 @login_required

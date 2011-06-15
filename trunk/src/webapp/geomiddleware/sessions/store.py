@@ -51,7 +51,7 @@ class SessionStore(object):
     
     def __init__(self, session=None, session_data=None, from_cookie=True, from_rpc=False):
         if session is None:
-            if from_cookie:  # la nueva sesion es de usuario web
+            if from_cookie or from_rpc:  # la nueva sesion es de usuario web
                 self._session = _Session_Data.new_session()
             else:
                 self._session = _Session_Dict.new_session(session_data=session_data)
@@ -63,7 +63,7 @@ class SessionStore(object):
             self._cookieless = True
     
     @classmethod
-    def load(cls, session_id=None, session_data=None, from_cookie=True, from_rpc=True):
+    def load(cls, session_id=None, session_data=None, from_cookie=True, from_rpc=False):
         '''
         Recupera la sesion o crea una nueva
         '''
@@ -74,14 +74,14 @@ class SessionStore(object):
                     return SessionStore(session=session, from_cookie=True)
         elif from_rpc:
             if session_id is not None:
-                session = _Session_RPC.restore_session(session_id)
+                session = _Session_Data.restore_session(session_id)
                 if session is not None:
                     return SessionStore(session=session, from_cookie=False, from_rpc=True)
-                raise BadSessionException
+                raise BadSessionException # no hay sesiones temporales para RPC
         # inicia una sesion nueva temporal
         return SessionStore(session_data=session_data, from_cookie=False)
     
-    def init_session(self, remember=False, lang=None, user=None):
+    def init_session(self, remember=False, lang=None, user=None, from_rpc=False):
         '''
         Login de un usuario, guarda la sesion en datastore
         '''
@@ -89,7 +89,9 @@ class SessionStore(object):
         self._anonymous = False
         self._accessed = True
         self._modified = True
-        self._remember=remember
+        self._remember = remember
+        if from_rpc:
+            self._cookieless = True
         
     def cookie_saved(self):
         return self._remember
@@ -120,7 +122,6 @@ class SessionStore(object):
             self._session.put()
             
     def delete(self):
-        # FIXME : no borra el diccionario, lo pone como datos en la cookie
         self.clear()
         if hasattr(self._session, 'delete'):
             self._session.delete()

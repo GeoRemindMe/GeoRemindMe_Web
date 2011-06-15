@@ -95,11 +95,15 @@ class RegisterException(Error):
     """ Wrong email or password """
     code = -32000
     message = _('Invalid email/password')
-    
+
+class NoConfirmedException(Error):
+    """ Email not confirmed """
+    code = -32000
+    message = _('Account not confirmed, please, check email')    
     
 class BadSessionException(Error):
     """ id session is invalid """
-    code = -32001
+    code = -32003
     message = _('Invalid session')
 
 # The remainder of the space is available for application defined errors.
