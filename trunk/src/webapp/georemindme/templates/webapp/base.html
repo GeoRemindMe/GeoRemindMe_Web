@@ -126,29 +126,35 @@
 
 	</div>
 
-<!--
-	<div id="footer" class="">
+	<div class="" id="footer">
 		<div id="footer-nav">
 			<ul>
-			   <li>
-				 {% get_available_languages as LANGUAGES %}
-				 {% get_current_language as LANGUAGE_CODE %}
-					<form action="/lang/" method="post">
-					<label accesskey="v" for="language-bar">{% trans "Language:" %}</label>
-					{% csrf_token %}
-						   <select name="lang" id="language-bar" onchange="this.form.submit()" onsubmit="this.form.submit()">
-						  {% for code, name in LANGUAGES %}
-							 <option {%if LANGUAGE_CODE == code %}selected="selected"{% endif %} value="{{code}}" hreflang="{{code}}">{{name}}</option>
-							{% endfor %}
-						  </select>
-						  {% csrf_token %}
-					   <input type="hidden" name="next" value="{{ request.path }}" />
+			   <li><a accesskey="z" title="Know what's going on" href="http://blog.georemindme.com"><strong>Blog</strong></a></li>
+			   <li><a title="Do you want to work with us?" href="http://jobs.georemindme.com">Jobs</a></li>
+			   <li><a title="Join the community now!" href="http://team.georemindme.com">Community</a></li>
+			   <li><a title="Contact us" href="http://help.georemindme.com">Support</a></li>
+			   <li><a title="Looking for some info?" href="http://www.georemindme.com/sitemap">Sitemap</a></li>
+               <li>
+				 
+				 
+					<form method="post" action="/lang/">
+                        <label for="language-bar" accesskey="v">Language:</label>
+                        <div style="display: none;"><input type="hidden" value="5bc813d50b374f73e92f8b4b95e4c80d" name="csrfmiddlewaretoken"></div>
+                            <select onsubmit="this.form.submit()" onchange="this.form.submit()" id="language-bar" name="lang">
+                                
+                                    <option hreflang="en" value="en" selected="selected">English</option>
+                                
+                                    <option hreflang="es" value="es">Español</option>
+                                
+                            </select>
+						<div style="display: none;"><input type="hidden" value="5bc813d50b374f73e92f8b4b95e4c80d" name="csrfmiddlewaretoken"></div>
+					   <input type="hidden" value="/" name="next">
 					</form>
 				</li>
-			</ul>
-			<p>{% trans "<strong>GeoRemindMe 2011</strong>,headquarters at <a href='http://maps.google.com/maps/ms?ie=UTF8&hl=en&msa=0&msid=204520629691711228427.0004a5735677747224788&ll=37.147913,-3.608596&spn=0.00289,0.004823&t=h&z=18'>PTS, Avda de la Innovación, 18100 Armilla (Granada), Spain</a>"%}</p>
+		   </ul>
+		<p><strong>GeoRemindMe 2011</strong>,headquarters at  <a href="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=204520629691711228427.0004a5735677747224788&amp;ll=37.147913,-3.608596&amp;spn=0.00289,0.004823&amp;t=h&amp;z=18">PTS, Avda de la Innovación, 18100 Armilla (Granada), Spain</a></p>
 		</div>
--->
+	</div>
 	
 	  </div>
       <script type="text/javascript"> 

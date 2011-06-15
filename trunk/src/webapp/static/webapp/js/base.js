@@ -198,31 +198,19 @@ $(document).ready(function(){
 		e.preventDefault();
 		e.stopPropagation();
 		
-		if ($('#signinMenu').is(":visible")){
-			$('#signinMenu').hide();
-			$('#signinBtn').removeClass('openedLoginBtn');
-			$('#signinBtn').addClass('closedLoginBtn');
-			
-		}
-		else{
-			
-			$('#signinMenu').show();
-			$('#signinBtn').removeClass('closedLoginBtn');
-			$('#signinBtn').addClass('openedLoginBtn');
-			$('#username').focus();
-		}
+		
 	});
     
     IN_SIGNIN = false;
     $('#signinMenu').mouseover(function(){IN_SIGNIN = true;});
     $('#signinMenu').mouseout(function(){IN_SIGNIN = false;});
         
-    $(document).children().click(function(e){
-        if (IN_SIGNIN) return;
-        $('#signinMenu').hide();
-		$('#signinBtn').removeClass('openedLoginBtn');
-		$('#signinBtn').addClass('closedLoginBtn');
-	});
+    //~ $(document).children().click(function(e){
+        //~ if (IN_SIGNIN) return;
+        //~ $('#signinMenu').hide();
+		//~ $('#signinBtn').removeClass('openedLoginBtn');
+		//~ $('#signinBtn').addClass('closedLoginBtn');
+	//~ });
     
 
 	$('#username').focus(function(){
