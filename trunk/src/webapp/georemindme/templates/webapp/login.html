@@ -1,0 +1,104 @@
+{% extends "webapp/base.html" %}
+
+{% load i18n %}
+
+{%block extra_css%}
+	<link rel="stylesheet" href="/static/webapp/style/easySlider.css" type="text/css" media="screen, projection" />
+{%endblock%}
+
+{%block extra_js%}
+	<script type="text/javascript">
+	   
+	$(document).ready(function(){
+	
+	   /*
+		* Here the triggers with animations and validations of the 
+		* register form
+	   */
+		$("input[name='registerEmail']")
+			.focus(function(){
+			 if ($(this).val()=="email") 
+				$(this).val('');
+			 $('#imgEmailLogin').attr('src','/static/webapp/img/mailActive.png');
+		  })
+			.blur(checkEmail);
+		
+	   
+		$("#userRegisterPass1,#userRegisterPass2")
+		  .blur(checkPasswords)
+		  .keyup(checkPasswords)
+		  .focus(function(){$('#imgPasswordLogin').attr('src','/static/webapp/img/passIconActive.png')})
+		  .blur(function(){$('#imgPasswordLogin').attr('src','/static/webapp/img/passIconInactive.png')});
+
+		  
+	   //With this you can check the terms making click on the text
+	   $('#textTermsCheckbox').click(function(){
+		  if(!$("#termsCheckbox").is(':checked'))
+			 $("#termsCheckbox").attr('checked',true);
+		  else
+			 $("#termsCheckbox").attr('checked',false);
+	   });
+	   
+	   
+	   {% if login%}setTimeout(function(){$('#signinBtn').click();},500);{%endif%}
+	});
+	</script>
+{%endblock%}
+
+
+{%block tooltipLogo%}{%endblock%}
+{%block section%}id="private-beta"{%endblock%}
+{% block content %}{%endblock%}
+
+{% block login %} 
+      
+      
+         <div id="signin-c">
+          <div id="signin_controls">
+        {% if not user.is_authenticated %}
+          
+        <!-- Este cÃ³digo comentado es el menÃº desplegable para el login de usuario, hay que implementarlo con un script-->
+          <div class="common-form standard-form" id="signinMenu">  
+          <p class="new_msg">{% trans "Login"%}</p>
+             <form action="." id="signin" method="post">  
+                 
+                 <p class="loginMail">        
+                  <input type="text" tabindex="4" title="username" value="email" name="user_login-email" id="username" placeholder="email" accesskey="e"/>
+                 
+             </p>
+             <span id="msgLoginEmail"><span id="txtMsgLoginEmail"></span></span>
+            
+
+                 <p class="loginPassword">                 
+                  <input type="password" tabindex="5" title="password" value="password" name="user_login-password" id="password" placeholder="{% trans "Password" %}" accesskey="r"/>
+              
+                 </p>
+
+             <span class="msgNoOK" style="display:none;"></span>
+
+                 <!--
+                  <p class="forgot">
+                  <a id="resend_password_link" href="" accesskey="o">{% trans "Forgot your password?"%}</a>
+                 </p>
+                 -->
+             <p>
+                  <span class="remember">
+              <input type="checkbox" tabindex="6" value="1" name="user_login-remember_me" id="remember"/>
+                  <label for="remember">{% trans "Remember me on this computer" %}</label>
+              </span>
+              <input type="hidden" name="next" value="{{ next }}" id="next" />
+              <input type="submit" tabindex="7" value="{% trans "Sign in" %}" id="signin_submit" accesskey="b"/>
+                 </p>
+                 <input type="hidden" value="" id="signin_q" name="q"/>
+                 <hr>
+             </form>
+         </div>
+{% else %}
+ <span id="have_an_account">
+            <span>{% blocktrans with user.email as email %}Hello {{ email }} ! {% endblocktrans %}</span><a tabindex="3" href="/dashboard/">{% trans "Go to dashboard" %}</a>
+         </span>
+       <!-- Fin del menu de login-->
+{% endif %}
+        </div>
+   {% endblock %}
+
