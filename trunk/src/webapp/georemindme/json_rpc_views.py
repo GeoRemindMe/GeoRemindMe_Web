@@ -22,8 +22,8 @@ def login(request, email, password):
         Log a user and creates a new UserRPC session ID.
         The user_id should be send with all the request.
     '''
-    email = str(email)
-    password = str(password)
+    email = unicode(email)
+    password = unicode(password)
     error, redirect = login_func(request, email=email, password=password, from_rpc=True)
     if error == 0:
         raise NoConfirmedException
@@ -40,8 +40,8 @@ def register(request, email, password):
         Register a user
         returns True if sucessful
     '''
-    email = str(email)
-    password = str(password)
+    email = unicode(email)
+    password = unicode(password)
     try:
         u = User.register(email=email, password=password)
         if u is not None:

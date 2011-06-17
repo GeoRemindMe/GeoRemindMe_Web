@@ -22,7 +22,7 @@ from forms import *
 from exceptions import *
 from funcs import init_user_session, get_next, login_func
 from decorators import login_required
-from geoauth import facebook, twitter
+from geoauth.clients import facebook, twitter
 
 #===============================================================================
 # REGISTER VIEW

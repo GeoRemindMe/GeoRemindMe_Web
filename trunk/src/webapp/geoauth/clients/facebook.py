@@ -36,27 +36,21 @@ usage of this module might look like this:
 import cgi
 import time
 import urllib
-import urllib2
 import hashlib
 import hmac
 import base64
 import logging
 from django.conf import settings
+import libs.httplib2 as httplib2
+# Find a JSON parser
+from django.utils import simplejson as json
+_parse_json = json.loads
 
-from models import OAUTH_Access
+from geoauth.models import OAUTH_Access
 from geouser.models import User
 from geouser.models_social import FacebookUser
 from georemindme.funcs import make_random_string
 
-# Find a JSON parser
-try:
-    import simplejson as json
-except ImportError:
-    try:
-        from django.utils import simplejson as json
-    except ImportError:
-        import json
-_parse_json = json.loads
 
 class FacebookClient(object):
     def __init__(self, access_token=None):
@@ -86,7 +80,7 @@ class FacebookClient(object):
             else:
                 user.facebook_user.update(
                              realname = facebookInfo['name'],
-                             profile_url=facebookInfo["link"],
+                             profile_url=facebookInfo["link"]
                             )
             return True
         return False
@@ -237,23 +231,16 @@ class GraphAPI(object):
 				  'message': message
         }
         post_args.update(kwargs)
+        
         content_type, body = self._encode_multipart_form(post_args, fxtype)
-        req = urllib2.Request("https://graph.facebook.com/%s/%s" % (object_id, fxtype), data=body)
-        req.add_header('Content-Type', content_type)
-        try:
-            data = urllib2.urlopen(req).read()
-        #For Python 3 use this:
-        #except urllib2.HTTPError as e:
-        except urllib2.HTTPError, e:
-            data = e.read() # Facebook sends OAuth errors as 400, and urllib2 throws an exception, we want a GraphAPIError
-        try:
-            response = _parse_json(data)
-            if response and isinstance(response, dict) and response.get("error"):
-                raise GraphAPIError(response["error"].get("code", 1),
-                                    response["error"]["message"])
-        except ValueError:
-            response = data
-            
+        headers = {'Content-Type' : content_type}
+        req = httplib2.Http()
+        response, content = httplib2.Http.request(self, "https://graph.facebook.com/%s/%s" % (object_id, fxtype),
+                                                  method='POST', body=body, headers=headers)
+        data = _parse_json(content)
+        if response['status'] != 200:
+            raise GraphAPIError(response["error"].get("code", 1),
+                                response["error"]["message"])
         return response
 
     # based on: http://code.activestate.com/recipes/146306/
@@ -306,28 +293,23 @@ class GraphAPI(object):
             else:
                 args["access_token"] = self.access_token
         post_data = None if post_args is None else urllib.urlencode(post_args)
-        file = urllib2.urlopen("https://graph.facebook.com/" + path + "?" +
-                              urllib.urlencode(args), post_data)
-                              
-        try:
-            fileInfo = file.info()
-            if fileInfo.maintype == 'text':
-                response = _parse_json(file.read())
-            elif fileInfo.maintype == 'image':
-                mimetype = fileInfo['content-type']
-                response = {
-                    "data": file.read(),
-                    "mime-type": mimetype,
-                    "url": file.url,
-                }
-            else:
-                raise GraphAPIError('Response Error', 'Maintype was not text or image')
-        finally:
-            file.close()
-        if response and isinstance(response, dict) and response.get("error"):
-            raise GraphAPIError(response["error"]["type"],
-                                response["error"]["message"])
-        return response
+        request = httplib2.Http()
+        response, content = request.request("https://graph.facebook.com/" + path + "?" +
+                                            urllib.urlencode(args), method='GET', body=post_data)
+        content = _parse_json(content)
+        if response['status'] != 200:
+            raise GraphAPIError(content["error"]["type"],
+                                content["error"]["message"])
+        if response['content-type'].startswith('text'):
+            return content
+        if response['content-type'].startswith('image'):
+            content = {
+                "data": content,
+                "mime-type": response['content-type'],
+                "url": response['url'],
+            }
+        raise GraphAPIError('Response Error', 'Maintype was not text or image')
+        
 
     def api_request(self, path, args=None, post_args=None):
         """Fetches the given path in the Graph API.
@@ -351,16 +333,14 @@ class GraphAPI(object):
         else:
             args["format"] = "json-strings"
         post_data = None if post_args is None else urllib.urlencode(post_args)
-        file = urllib.urlopen("https://api.facebook.com/method/" + path + "?" +
-                              urllib.urlencode(args), post_data)
-        try:
-            response = _parse_json(file.read())
-        finally:
-            file.close()
-        if response and response.get("error"):
-            raise GraphAPIError(response["error"]["type"],
-                                response["error"]["message"])
-        return response
+        request = httplib2.Http()
+        response, content = request.request("https://api.facebook.com/" + path + "?" +
+                                            urllib.urlencode(args), body=post_data)
+        content = _parse_json(content)
+        if response['status'] != 200:
+            raise GraphAPIError(content["error"]["type"],
+                                content["error"]["message"])
+        return content
         
 
     def fql(self, query, args=None, post_args=None):
@@ -381,20 +361,13 @@ class GraphAPI(object):
 
         args["query"] = query
         args["format"]="json"
-        file = urllib2.urlopen("https://api.facebook.com/method/fql.query?" +
-                              urllib.urlencode(args), post_data)
-        try:
-            content  = file.read()
-            response = _parse_json(content)
-            #Return a list if success, return a dictionary if failed
-            if type(response) is dict and "error_code" in response:
-                raise GraphAPIError(response["error_code"],response["error_msg"])
-        except Exception, e:
-            raise e
-        finally:
-            file.close()
-              
-        return response
+        request = httplib2.Http()
+        response, content = request.request("https://api.facebook.com/method/fql.query?" + 
+                                            urllib.urlencode(args), body=post_data)
+        content = _parse_json(content)
+        if response['status'] != 200:
+            raise GraphAPIError(content["error_code"],content["error_msg"])
+        return content
 
 
 class GraphAPIError(Exception):
@@ -472,12 +445,10 @@ def get_app_access_token():
             'client_id': settings.OAUTH['facebook']['app_key'],
             'client_secret':settings.OAUTH['facebook']['app_secret']}
     
-    file = urllib2.urlopen("https://graph.facebook.com/oauth/access_token?" +
-                              urllib.urlencode(args))
-              
-    try:
-        result = file.read().split("=")[1]
-    finally:
-        file.close()
-              
+    request = httplib2.Http()
+    response, content = request.request("https://graph.facebook.com/oauth/access_token?" + 
+                                            urllib.urlencode(args))
+    if response['status'] != 200:
+        raise GraphAPIError(content["error_code"],content["error_msg"])
+    result = content.split("=")[1]
     return result

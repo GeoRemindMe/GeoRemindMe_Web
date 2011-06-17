@@ -1,10 +1,10 @@
 # coding=utf-8
 from django.utils import simplejson
 from django.conf import settings
-from oauth2 import Client, Consumer
+from geoauth.oauth2 import Client, Consumer
 
 from google.appengine.ext import db
-from models import OAUTH_Access
+from geoauth.models import OAUTH_Access
 from geouser.models import User
 from geouser.models_social import TwitterUser
 from georemindme.funcs import make_random_string

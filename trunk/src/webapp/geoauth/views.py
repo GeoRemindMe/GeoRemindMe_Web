@@ -1,5 +1,5 @@
-from cgi import parse_qs
 import oauth2
+from cgi import parse_qs
 
 from django.http import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -16,12 +16,13 @@ from geouser.funcs import login_func, init_user_session
 from server import OAUTH_Server
 from models import OAUTH_Access
 
+
 #===============================================================================
 # SERVIDOR, AUTORIZAR TOKENS A OTROS, ACCESO A RECURSOS, ETC.
 #===============================================================================
-
 @csrf_exempt
 def token_request(request):
+    """Generates a new token request"""
     try:
         server = OAUTH_Server()
         oauthToken = server.token_requested(request)
@@ -29,7 +30,10 @@ def token_request(request):
         return HttpResponseBadRequest(e)
     return HttpResponse(oauthToken)
 
+
+@csrf_exempt
 def authorize_token_request(request):
+    """A consumer wants to authorize a request token"""
     if not 'oauth_token' in request.GET:
         return HttpResponseBadRequest()
     else:
@@ -64,8 +68,10 @@ def authorize_token_request(request):
                 f = LoginForm(prefix='user_login')
             return render_to_response('oauth/login.html', {'error': error, 'form':f}, context_instance=RequestContext(request))
 
+
 @csrf_exempt
 def access_token_request(request):
+    """From a authorized request token, get a new access token"""
     try:
         server = OAUTH_Server()
         oauthToken = server.access_token_requested(request)
@@ -73,18 +79,18 @@ def access_token_request(request):
         return HttpResponseBadRequest(e)
     return HttpResponse(oauthToken)
 
-#------------------------------------------------------------------------------ 
-# CLIENTE, IDENTIFICACION CON OTROS SERVIDORES, ETC.
-#------------------------------------------------------------------------------ 
 
+#=============================================================================== 
+# CLIENTE, IDENTIFICACION CON OTROS SERVIDORES, ETC.
+#=============================================================================== 
 @login_required
 def client_token_request(request, provider):
     OAUTH = settings.OAUTH
     provider = provider.lower()
     consumer = oauth2.Consumer(OAUTH[provider]['app_key'], OAUTH[provider]['app_secret'])
     client = oauth2.Client(consumer) 
-    response, content = client.request(OAUTH[provider]['request_token_url'], "GET", callback=OAUTH[provider]['callback_url'])
-    if response['status'] != '200':
+    response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=OAUTH[provider]['callback_url'])
+    if response['status'] != 200:
         raise Exception("Invalid response from server.")
 
     params = parse_qs(content, keep_blank_values=False)
@@ -99,6 +105,7 @@ def client_token_request(request, provider):
         request.session[provider]['request_token']['oauth_token'], OAUTH[provider]['callback_url'])
     
     return HttpResponseRedirect(url)
+
 
 @csrf_exempt
 def client_access_request(request, provider):
@@ -116,8 +123,8 @@ def client_access_request(request, provider):
                                settings.OAUTH[provider]['app_secret'])
     client = oauth2.Client(consumer, token) 
     #lo intercambia por un token de acceso
-    response, content = client.request(settings.OAUTH[provider]['access_token_url'], "GET")
-    if response['status'] != '200':
+    response, content = client.request(settings.OAUTH[provider]['access_token_url'], method="GET")
+    if response['status'] != 200:
         raise Exception("Invalid response from server.")
     params = parse_qs(content, keep_blank_values=False)
     token = {   
@@ -125,7 +132,7 @@ def client_access_request(request, provider):
                 'oauth_token' : params['oauth_token'][0],
             }
     if provider == 'twitter':
-        from twitter import TwitterClient
+        from clients.twitter import TwitterClient
         client = TwitterClient(token=oauth2.Token(token['oauth_token'], token['oauth_token_secret']))
         if 'user' in request.session:#usuario ya esta logeado, guardamos el token de su cuenta
             if client.authorize(request.session['user']):
@@ -137,6 +144,7 @@ def client_access_request(request, provider):
     else:
         raise Exception("Invalid server.")
     return HttpResponseRedirect(reverse('geouser.views.dashboard'))
+
     
 #===============================================================================
 # LOGIN WITH OAUTH
@@ -147,8 +155,8 @@ def authenticate_request(request, provider):
     provider = provider.lower()
     consumer = oauth2.Consumer(OAUTH[provider]['app_key'], OAUTH[provider]['app_secret'])
     client = oauth2.Client(consumer) 
-    response, content = client.request(OAUTH[provider]['request_token_url'], "GET", callback=OAUTH[provider]['callback_url'])
-    if response['status'] != '200':
+    response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=OAUTH[provider]['callback_url'])
+    if response['status'] != 200:
         raise Exception("Invalid response from server.")
     params = parse_qs(content, keep_blank_values=False)
     request.session[provider] = {'request_token' : {
@@ -162,11 +170,13 @@ def authenticate_request(request, provider):
 
     return HttpResponseRedirect(url)
 
+
 def facebook_authenticate_request(request):
     OAUTH = settings.OAUTH
     url = "%s?client_id=%s&redirect_uri=%s&scope=email,offline_access" % (OAUTH['facebook']['authorization_url'], 
                         OAUTH['facebook']['app_key'], OAUTH['facebook']['callback_url'])
     return HttpResponseRedirect(url)
+
 
 def facebook_access_request(request):
     code = request.GET.get('code', None)
@@ -179,13 +189,13 @@ def facebook_access_request(request):
                                                                             code
                                                                             )
         response, content = oauth2.httplib2.Http().request(url)
-        if response['status'] != '200':
+        if response['status'] != 200:
             raise Exception("Invalid response from server.")
         params = parse_qs(content, keep_blank_values=False)
         token = {   
                 'access_token' : params['access_token'][0], 
             }
-        from facebook import FacebookClient
+        from clients.facebook import FacebookClient
         client = FacebookClient(access_token = token['access_token'])
         if 'user' in request.session:#usuario ya esta logeado, guardamos el token de su cuenta
             if client.authorize(request.session['user']):
@@ -194,6 +204,6 @@ def facebook_access_request(request):
             user = client.authenticate()
             messages.success(request, _('Logged from Facebook'))
             init_user_session(request, user)
-    return HttpResponseRedirect(reverse('georemindme.views.home'))
+    return HttpResponseRedirect('/')
     
     

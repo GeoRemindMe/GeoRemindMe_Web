@@ -61,7 +61,7 @@
           <div class="common-form standard-form" id="signinMenu">  
           <p class="new_msg">{% trans "Login"%}</p>
              <form action="." id="signin" method="post">  
-                 
+                 {% csrf_token %}
                  <p class="loginMail">        
                   <input type="text" tabindex="4" title="username" value="email" name="user_login-email" id="username" placeholder="email" accesskey="e"/>
                  

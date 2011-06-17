@@ -26,8 +26,6 @@ class OAUTH_Client(db.Model):
             #genera una cadena de numeros aleatoria, se codifica a base64 y se limpia para URLs
             u = uuid4()
             return base64.urlsafe_b64encode(u.bytes.encode("base64")).strip('=')
-            #return ("%s%s" % (kwargs['user'], time())).encode("base64")[:21]
-            #return md5_constructor("%s%s" % (kwargs['user'].key(), time())).digest().encode("base64")
         kwargs['key_name'] = 'oclient_%s' % _generate_key()
         kwargs['client_secret'] = _generate_key()
         client = OAUTH_Client(*args, **kwargs)
@@ -49,9 +47,9 @@ class OAUTH_Token(db.Model):
     token_secret = db.TextProperty()
     token_callback = db.URLProperty(required=False)
     token_verifier = db.TextProperty(required=False)
-    access = db.BooleanProperty(default=False)
+    access = db.BooleanProperty(default=False)  # True if token is access token
     oauth_user = db.ReferenceProperty(User, required=False)
-    oauth_consumer = db.ReferenceProperty(OAUTH_Client)
+    oauth_consumer = db.ReferenceProperty(OAUTH_Client)  # the application requesting access
     created = db.DateTimeProperty(auto_now_add=True)
     
     @property
@@ -74,7 +72,7 @@ class OAUTH_Token(db.Model):
         if self.access or self.token_verifier is not None:
             raise OAUTHException('Invalid token')
         self.oauth_user = user
-        self.token_verifier = str(uuid4())
+        self.token_verifier = base64.urlsafe_b64encode(uuid4().bytes.encode("base64")).strip('=')
         self.put()
     
     @classmethod

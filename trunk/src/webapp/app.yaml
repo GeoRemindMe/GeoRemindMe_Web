@@ -43,3 +43,6 @@ handlers:
 builtins:
 - datastore_admin: on
 - appstats: on
+
+inbound_services:
+- warmup

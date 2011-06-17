@@ -3,19 +3,18 @@ from datetime import datetime
 from django.http import HttpResponse, HttpResponseForbidden
 from google.appengine.ext import db
 from geouser.models import User
-from geoalert.models import  *
-
-from geomiddleware.sessions.models import _Session_Data
 
 def admin_required(func):
+    from google.appengine.api import users
+    
     def _wrapper(*args, **kwargs):
-        if 'HTTP_X_APPENGINE_CRON' in os.environ:
+        request = args[0]
+        if 'HTTP_X_APPENGINE_CRON' in request.META:
             return func(*args, **kwargs)
-        session = args[0].session
-        user = session.get('user')
-        if user and user.is_admin():
+        user = request.session.get('user')
+        if (user and user.is_admin()) or users.is_current_user_admin():
             return func(*args, **kwargs)
-        return HttpResponseForbidden()
+        return HttpResponseForbidden("Cron only")
     return _wrapper
 
 class Stats_base(db.Model):
@@ -38,6 +37,7 @@ class Stats_alert_done(Stats_base):
 
 @admin_required
 def stats_daily(request):
+    from geoalert.models import  *
     _get_stats(model=User, model_stats=Stats_user)
     _get_stats(model=Alert, model_stats=Stats_alert_new)
     _get_stats(model=Alert, model_stats=Stats_alert_done, order_field='done_when')
@@ -67,6 +67,10 @@ def _get_stats(model=User, model_stats=Stats_user, order_field='created'):
 
 @admin_required
 def clean_sessions(request):
+    from geomiddleware.sessions.models import _Session_Data
     sessions = _Session_Data.all().filter('expires <', datetime.now())
-    db.delete([session for session in sessions])
+    try:
+        db.delete([session for session in sessions])
+    except:
+        pass
     return HttpResponse()
