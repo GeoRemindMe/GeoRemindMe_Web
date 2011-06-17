@@ -1,4 +1,6 @@
-import oauth2
+# coding=utf-8
+
+import lib.oauth2 as oauth2
 from cgi import parse_qs
 
 from django.http import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect

@@ -6,7 +6,7 @@
 .. moduleauthor:: Javier Cordero <javier@georemindme.com>
 """
 
-import oauth2
+import lib.oauth2 as oauth2
 from backend import OAUTH_Store
 from exceptions import *
 
