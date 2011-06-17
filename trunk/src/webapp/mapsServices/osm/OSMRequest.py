@@ -9,7 +9,7 @@ def _get_bbox(lat, lon):
     '''
         creates the bbox needed for the queries
     '''
-    final = [lat-0.5, lon-0.5,lat+0.5,lon+0.5]
+    final = [lat-0.2, lon-0.2,lat+0.2,lon+0.2]
     final = [('%.8f' % float(p)) for p in final]
     return ','.join(final)
 
@@ -48,14 +48,13 @@ class OSMRequest(httplib2.Http):
     '''
         encapsulates the queries
     '''
-    #_base_url = 'http://api.openstreetmap.org/'
-    #_base_url = 'http://api06.dev.openstreetmap.org/'
-    _base_url = 'http://jxapi.openstreetmap.org/xapi/api/0.6/'
+    _base_url = 'http://open.mapquestapi.com/xapi/api/0.6/'
+    #_base_url = 'http://jxapi.openstreetmap.org/xapi/api/0.6/'
     headers = { 'User-Agent' : 'Georemindme v.0.1 - georemindme.appengine.com' }
     
     def __init__(self, *args, **kwargs):
         mem = Client()
-        super(OSMRequest, self).__init__(cache=mem, timeout=10, *args, **kwargs)
+        super(OSMRequest, self).__init__(cache=mem, timeout=20, *args, **kwargs)
     
     def get_capabilities(self):
         url = self._base_url + 'capabilities'
@@ -64,23 +63,39 @@ class OSMRequest(httplib2.Http):
             raise OSMAPIError(response['status'], content)
         return content
         
+    def retrieve_id(self, id):
+        url = self._base_url + 'node/%s' % id
+        
     
-    def retrieve_shops(self, lat, lon):
-        pos = _get_bbox(lat, lon)
-        return self._retrieve_nodes(pos, type='shop')
+    def retrieve_shops(self, lat, lon, type='*'):
+        bbox = _get_bbox(lat, lon)
+        url = self._base_url + 'node[shop=*][bbox=%s]' % bbox
+        return self._retrieve_nodes(url)
     
 
     def retrieve_hospitals(self, lat, lon):
-        pos = _get_bbox(lat, lon)
-        return self._retrieve_nodes(pos, value='hospital')
+        return self._retrieve_amenity(lat, lon, 'hospital')
     
-    def _retrieve_nodes(self, pos, type='amenity', value='*'):
-        url = self._base_url + 'node[%s=%s][bbox=%s]' % (type, value, pos)
-        print url
+    
+    def retrieve_restaurants(self, lat, lon):
+        return self._retrieve_amenity(lat, lon, 'restaurant')
+               
+    
+    def _retrieve_nodes(self, url):
         response, content = self.request(url, method='GET', headers=self.headers)
         if response['status'] != 200:
             raise OSMAPIError(response['status'], content)
         return content
+    
+    
+    def _retrieve_amenity(self, lat, lon, name):
+        bbox = _get_bbox(lat, lon)
+        url = self._base_url + 'node[amenity=%s][bbox=%s]' % (name, bbox)
+        return self._retrieve_nodes(url) 
+        
+    
+
+        
     
 
     
