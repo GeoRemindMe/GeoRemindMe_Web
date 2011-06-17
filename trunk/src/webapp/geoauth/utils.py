@@ -1,6 +1,6 @@
 # coding=utf-8
 
-import lib.oauth2 as oauth2
+import libs.oauth2 as oauth2
 
 from exceptions import OAUTHException
 from models import OAUTH_Client

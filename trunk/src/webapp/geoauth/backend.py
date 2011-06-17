@@ -1,6 +1,6 @@
 # coding=utf-8
 
-import lib.oauth2 as oauth2
+import libs.oauth2 as oauth2
 from google.appengine.ext import db
 
 from models import OAUTH_Client, OAUTH_Token

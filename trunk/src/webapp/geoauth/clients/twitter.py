@@ -1,7 +1,7 @@
 # coding=utf-8
 from django.utils import simplejson
 from django.conf import settings
-from geoauth.oauth2 import Client, Consumer
+from libs.oauth2 import Client, Consumer
 
 from google.appengine.ext import db
 from geoauth.models import OAUTH_Access
