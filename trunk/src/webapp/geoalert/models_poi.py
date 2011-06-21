@@ -15,6 +15,7 @@ class Business(db.Model):
     '''Nombres genericos para un place (farmacia, supermercado, ...)'''
     name = db.StringProperty()
     
+    
     @classmethod
     def SearchableProperties(cls):
         '''
@@ -33,6 +34,8 @@ class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
     modified = db.DateTimeProperty(auto_now=True)
     users = db.ListProperty(db.Key)  #  lista con los usuarios que han modificado el POI
     user = db.ReferenceProperty(User)  # el usuario que creo el POI
+    address = db.StringProperty()
+    
     
     @classmethod
     def SearchableProperties(cls):
@@ -42,9 +45,11 @@ class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
         '''
         return [[],['name']]
     
+    
     @property
     def id(self):
         return self.key().id()
+    
     
     @classproperty
     def objects(self):
@@ -53,9 +58,8 @@ class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
 
 class PrivatePlace(POI):
     '''Lugares especificos para una alerta, solo visibles por el usuario que los crea'''
-    address = db.StringProperty()
     business = db.ReferenceProperty(Business)
-    google_places_id = db.StringProperty(default=None) 
+    
     
     @classmethod
     def SearchableProperties(cls):
@@ -65,13 +69,15 @@ class PrivatePlace(POI):
         '''
         return [ ['address'], ['business'], ['point'], ['name', 'address', 'business', 'point']]
     
+    
     @classproperty
     def objects(self):
         return PrivatePlaceHelper()
     
+    
     @classmethod
     def get_or_insert(cls, id = None, name = None, bookmark = False, address = None,
-                         business = None, google_places_id = None, location = None, user = None):
+                         business = None, location = None, user = None):
         if id:
             place = cls.objects.get_by_id(id, user)
         else:
@@ -79,7 +85,6 @@ class PrivatePlace(POI):
             if place is None:
                 place = PrivatePlace(name = name, bookmark = bookmark,
                                  address = address, business = business,
-                                 google_places_id = google_places_id,
                                  location = location, user = user)
                 place.put()
         return place
@@ -88,10 +93,10 @@ class PrivatePlace(POI):
     def put(self):
         self.update_location()
         if self.is_saved():
-            super(self.__class__, self).put()
+            super(PrivatePlace, self).put()
             place_modified.send(sender=self)
         else:
-            super(self.__class__, self).put()
+            super(PrivatePlace, self).put()
             place_new.send(sender=self)
         
         
@@ -102,12 +107,63 @@ class PrivatePlace(POI):
     
 class Place(PrivatePlace):
     '''Lugares para una alerta, visibles para todos'''
+    slug = db.StringProperty()
+    city = db.TextProperty()
+    google_places_reference = db.StringProperty()
+    google_places_id = db.StringProperty(default=None) 
+ 
     
     @classproperty
     def objects(self):
         return PlaceHelper()
+
     
     def delete(self):
         pass
+ 
     
+    def put(self):
+        """
+            Comprueba que el slug es unico
+        """
+        from georemindme.funcs import u_slugify
+        if self.slug is None:
+            self.slug = u_slugify('%s-%s'% (self.name, self.city))
+        p = Place.all().filter('slug =', self.slug).get()
+        if p is not None:
+            if not self.is_saved() or p.key() != self.key():
+                i = 1
+                while p is not None:
+                    slug = self.slug + '-%s' % i
+                    p = Place.all().filter('slug =', slug).get()
+                self.slug = self.slug + '-%s' % i
+        super(Place, self).put()
+
+        
+    def get_absolute_url(self):
+        return '/place/%s' % self.slug
+    
+    
+    @classmethod
+    def insert_or_update(cls, name, address, city, location, google_places_reference, google_places_id):
+        place = cls.objects.get_by_google_id(google_places_id)
+        if place is not None:
+            place.update(name, address, city, location, google_places_reference, google_places_id)    
+        else:
+            place = Place(name=name, address=address,
+                          city=city, location=location, 
+                          google_places_reference=google_places_reference,
+                          google_places_id=google_places_id)
+            place.put()
+        return place
+        
+    def update(self, name, address, city, location, google_places_reference, google_places_id):
+        self.name = name
+        self.address = address
+        self.city = city
+        self.location = location
+        self.google_places_reference = google_places_reference
+        self.google_places_id = google_places_id
+        self.put()
+        
 from helpers_poi import *

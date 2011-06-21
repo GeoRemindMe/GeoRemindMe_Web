@@ -44,5 +44,13 @@ class PrivatePlaceHelper(POIHelper):
         return self._klass.gql('WHERE location = :1 AND user = :2 ORDER BY created DESC', location, user).get()
     
 class PlaceHelper(POIHelper):
-    pass
+    _klass = Place
     
+    def get_by_slug(self, slug):
+        return self._klass.gql('WHERE slug = :1', slug).get()
+    
+    def get_by_google_reference(self, reference):
+        return self._klass.gql('WHERE google_places_reference = :1', reference).get()
+    
+    def get_by_google_id(self, id):
+        return self._klass.gql('WHERE google_places_id = :1', id).get()

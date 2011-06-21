@@ -25,7 +25,6 @@ if sys.getdefaultencoding() != default_encoding:
 
 from django.conf.urls.defaults import *
 import appengine_admin
-
 from jsonrpc import jsonrpc_site
 import georemindme.json_rpc_views
 

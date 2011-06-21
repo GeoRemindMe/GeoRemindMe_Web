@@ -20,10 +20,6 @@ import os, logging, sys
 from google.appengine.ext.webapp import util
 from google.appengine.dist import use_library
 
-default_encoding = 'utf-8'
-if sys.getdefaultencoding() != default_encoding:
-    reload(sys)
-    sys.setdefaultencoding(default_encoding)
 
 
 # carga version 1.2.5 de django
