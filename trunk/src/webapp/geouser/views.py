@@ -113,8 +113,8 @@ def login_twitter(request):
 #===============================================================================
 def logout(request):
     request.session.delete()
-   
-    return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
+    return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
+    ##return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
 
 #===============================================================================
 # CONFIGURACION DE LA CUENTA, PRIVACIDAD, ETC.

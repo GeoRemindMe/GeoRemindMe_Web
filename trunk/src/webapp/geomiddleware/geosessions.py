@@ -47,9 +47,12 @@ class geosession(object):
                 modified = request.session._modified
                 anonymous = request.session._anonymous
                 cookieless = request.session._cookieless
+                deleted = request.session._deleted
             except AttributeError:
                 pass
             else:
+                if deleted:
+                    response.delete_cookie(settings.COOKIE_NAME)
                 if cookieless:
                     request.session.put()
                 elif anonymous:
@@ -64,12 +67,11 @@ class geosession(object):
                     if accessed:
                         patch_vary_headers(response, ('Cookie',))
                     if modified:
+                        max_age = None
+                        expires = None
                         if request.session.cookie_saved():
                             max_age = request.session.get_expiry_age()
                             expires = request.session.get_expires()
-                        else:
-                            max_age = None
-                            expires = None# Save the session data and refresh the client cookie.
                         request.session.put()
                         response.set_cookie(settings.COOKIE_NAME,
 		                                 request.session.session_id, max_age=max_age,

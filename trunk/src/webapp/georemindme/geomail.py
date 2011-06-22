@@ -45,7 +45,15 @@ def send_contact_email(org,msg,to=settings.CONTACT_EMAIL,):
     message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = "[GeoRemindMe] Email de contacto"
-    message.html = u"""%s<br/>%s dejó el mensaje:<br/>"%s" """ % (str(datetime.datetime.now()),org,msg)
+    message.body = _("""
+            %s
+            \n %s dejó el mensaje:\n"%s" 
+        """) % (str(datetime.datetime.now()),org,msg)
+    message.html = _("""
+            <html><head></head><body>
+            %s<br/>%s dejó el mensaje:<br/>"%s" 
+            </body></html>
+        """) % (str(datetime.datetime.now()),org,msg)
     message.push()
     
 def send_keepuptodate(org,msg,to=settings.CONTACT_EMAIL,):
@@ -56,7 +64,16 @@ def send_keepuptodate(org,msg,to=settings.CONTACT_EMAIL,):
     message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = "[GeoRemindMe] Keep up to date"
-    message.html = u"""%s<br/>%s<br/>%s" """ % (str(datetime.datetime.now()),org,msg)
+    message.body = _("""
+            %s
+            \n %s
+            \n %s
+        """)  % (str(datetime.datetime.now()),org,msg)
+    message.html = _("""
+            <html><head></head><body>
+            %s<br/>%s<br/>%s"
+            </body></html>
+         """) % (str(datetime.datetime.now()),org,msg)
     message.push()
     
 def send_notification_invitation(to, sender, invitation, language='en'):
@@ -65,8 +82,13 @@ def send_notification_invitation(to, sender, invitation, language='en'):
     message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = _("%s sent you a new invitation") % sender
+    message.body = _("""
+            blababababab
+            """)
     message.html = _("""
+                        <html><head></head><body>
                         blababababa
+                        </body></html>
                     """)
     translation.deactivate()
     message.push()

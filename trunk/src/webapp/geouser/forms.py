@@ -52,9 +52,9 @@ class LoginForm(forms.Form):
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
     remember_me = forms.BooleanField(label=_("Remember me?"), required=False,
-                                     widget=forms.CheckboxInput()
+                                     widget=forms.CheckboxInput(),
+                                     initial = False
                                      )
-
 
 class RegisterForm(forms.Form):
     """

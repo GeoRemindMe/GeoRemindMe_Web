@@ -15,6 +15,7 @@ class SessionStore(object):
     _anonymous = False
     _remember = False
     _cookieless = False
+    _deleted = False
     
     @property
     def session_id(self):
@@ -51,14 +52,12 @@ class SessionStore(object):
     
     def __init__(self, session=None, session_data=None, from_cookie=True, from_rpc=False):
         if session is None:
-            if from_cookie or from_rpc:  # la nueva sesion es de usuario web
-                self._session = _Session_Data.new_session()
-            else:
-                self._session = _Session_Dict.new_session(session_data=session_data)
-                self._anonymous = True
+            self._session = _Session_Dict.new_session(session_data=session_data)
+            self._anonymous = True
         else:
             self._session = session
-            self._accessed = True
+            self._remember = session.remember
+        self._accessed = True
         if from_rpc:
             self._cookieless = True
     
@@ -85,7 +84,7 @@ class SessionStore(object):
         '''
         Login de un usuario, guarda la sesion en datastore
         '''
-        self._session = _Session_Data.new_session(lang=lang, user=user)
+        self._session = _Session_Data.new_session(lang=lang, user=user, remember=remember)
         self._anonymous = False
         self._accessed = True
         self._modified = True
@@ -113,6 +112,7 @@ class SessionStore(object):
             Borra todos los datos de la sesion
         '''
         self._session.clear()
+        self._deleted = True
         
     def put(self):
         '''

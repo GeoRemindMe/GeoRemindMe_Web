@@ -36,7 +36,8 @@ class EmailHandler(TaskHandler):
         task = Task(url='/tasks/email/', params = { 'sender': email.sender,
                                                    'to': email.to,
                                                    'subject': email.subject,
-                                                   'html': email.html
+                                                   'body' : email.body,
+                                                   'html': email.html,
                                                    },
                                         method = 'POST')
         task.add(queue_name='email')
@@ -45,7 +46,7 @@ class EmailHandler(TaskHandler):
 @csrf_exempt
 @admin_required
 def email_worker(request):
-    mail.send_mail(request.POST['sender'], request.POST['to'], request.POST['subject'], request.POST['html'])
+    mail.send_mail(sender=request.POST['sender'], to=request.POST['to'], subject=request.POST['subject'], body=request.POST['body'], html=request.POST['html'])
     return HttpResponse()
 
 #===============================================================================

@@ -25,7 +25,7 @@ def get_next(request):
         return reverse('geouser.views.dashboard')
 
 
-def init_user_session(request, user, remember=True, from_rpc=False):
+def init_user_session(request, user, remember=False, from_rpc=False):
     """when a user logs in, we need to initialize a new session,
         save session in user, and save the user in the session
 
@@ -40,7 +40,7 @@ def init_user_session(request, user, remember=True, from_rpc=False):
     user.last_login = datetime.now()
     user.put()
 
-def login_func(request, email = None, password = None, remember_me = True, user = None, from_rpc=False):
+def login_func(request, email = None, password = None, remember_me = False, user = None, from_rpc=False):
     """Login function
 
             :param request: The HTTP Request

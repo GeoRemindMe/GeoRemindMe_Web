@@ -1,4 +1,5 @@
 # coding=utf-8
+
 """
 This file is part of GeoRemindMe.
 
@@ -49,14 +50,23 @@ def send_confirm_mail(to=None, confirm_code=None, language='en'):
     message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = _("Confirm your registration at GeoRemindMe")
-    message.html = _("""Confirm your registration at GeoRemindMe
-                    %(link)s
-                    If you don't see the link, copy and paste this url:
-                    %(url)s
-                    """) % {
-                            'link': generate_confirm_link(to, confirm_code),
-                            'url': generate_confirm_url(to, confirm_code)
-                            }
+    message.body = _("""
+        Confirm your registration at GeoRemindMe, copy and paste this url:
+        %(url)s
+        """) % {
+                    'url': generate_confirm_url(to, confirm_code)
+                }
+    message.html = _("""
+        <html><head></head><body>
+        Confirm your registration at GeoRemindMe
+        %(link)s
+        If you don't see the link, copy and paste this url:
+        %(url)s
+        </body></html>
+        """) % {
+                    'link': generate_confirm_link(to, confirm_code),
+                    'url': generate_confirm_url(to, confirm_code)
+                }
     translation.deactivate()
     message.push()
 
@@ -83,14 +93,23 @@ def send_remind_pass_mail(to=None, remind_code=None, language='en'):
     message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = _("Set a new password at GeoRemindMe")
-    message.html = _("""Set a new password at GeoRemindMe
-                    %(link)s
-                    If you don't see the link, copy and paste this url:
-                    %(url)s
-                    """) % {
-                            'link': generate_remind_pass_link(to, remind_code),
-                            'url': generate_remind_pass_url(to, remind_code)
-                            }
+    message.body = _("""
+        Set a new password at GeoRemindMe, copy and paste this url:
+        %(url)s
+        """) % {
+                    'url': generate_remind_pass_url(to, remind_code)
+                }
+    message.html = _("""
+        <html><head></head><body>
+        Set a new password at GeoRemindMe
+        %(link)s
+        If you don't see the link, copy and paste this url:
+        %(url)s
+        </body></html>
+        """) % {
+                    'link': generate_remind_pass_link(to, remind_code),
+                    'url': generate_remind_pass_url(to, remind_code)
+                }
     translation.deactivate()
     message.push()
     
@@ -100,9 +119,18 @@ def send_notification_follower(to, follower, language='en'):
     message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = _("%s is now following you at Georemindme") % follower
+    message.body = _("""
+        %(username)s new follower
+        """) % {
+                    'username': follower.username,
+                }
     message.html = _("""
-                        follower
-                    """)
+        <html><head></head><body>
+        %(username)s new follower
+        </body></html>
+        """) % {
+                    'username': follower.username,
+                }
     translation.deactivate()
     message.push()
     

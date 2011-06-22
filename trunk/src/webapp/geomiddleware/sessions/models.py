@@ -55,6 +55,7 @@ class _Session_Data(_Session_Dict, db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
     _user = db.ReferenceProperty(User, collection_name='session_data')
     _language_code = db.TextProperty()
+    remember = db.BooleanProperty(default=False)
     
     @property
     def id(self):
@@ -81,7 +82,7 @@ class _Session_Data(_Session_Dict, db.Model):
         
 
     @classmethod        
-    def new_session(cls, lang=None, user=None):
+    def new_session(cls, lang=None, user=None, remember=False):
         '''
             Crea una nueva sesion, generando un ID unico
         '''
@@ -110,6 +111,7 @@ class _Session_Data(_Session_Dict, db.Model):
             session['LANGUAGE_CODE'] = lang
         if user:
             session['user'] = user
+        session.remember = remember
         session.put()
         return session
     
