@@ -1,5 +1,11 @@
 # coding=utf-8
 
+"""
+.. module:: views
+    :platform: appengine
+    :synopsis: Views for GeoAlert
+"""
+
 from django.http import Http404, HttpResponseServerError
 from django.shortcuts import render_to_response, redirect
 from django.core.urlresolvers import reverse
@@ -14,6 +20,13 @@ import memcache
 # PERFIL DE EVENTOS
 #===============================================================================
 def suggestion_profile(request, id):
+    """
+        Devuelve el perfil de una sugerencia, comprueba la
+        visibilidad de una funcion
+        
+            :param id: identificador de la sugerencia
+            :type id: :class:`ìnteger`
+    """
     user = request.session.get('user', None)
     suggestion = Suggestion.objects.get_by_id(id)
     if suggestion is None:
@@ -33,18 +46,50 @@ def suggestion_profile(request, id):
 #===============================================================================
 @login_required
 def add_alert(request, form, address):
+    """
+        Añade una alerta
+        
+            :param form: formulario con los datos
+            :type form: :class:`geoalert.forms.RemindForm`
+            :param address: direccion obtenida de la posicion
+            :type: :class:`string`
+            
+            :returns: :class:`geoalert.models.Alert`
+    """
     alert = form.save(user = request.session['user'], address = address)
     return alert
 
 
 @login_required
 def edit_alert(request, id, form, address):
+    """
+        Edita una alerta
+        
+            :param form: formulario con los datos
+            :type id: :class:`geoalert.forms.RemindForm`
+            
+            :returns: :class:`geoalert.models.Alert`
+    """
     alert = form.save(user = request.session['user'], address = address, id = id)
     return alert
 
 
 @login_required
 def get_alert(request, id, done = None, page = 1, query_id = None):
+    """
+        Obtiene alertas
+        
+            :param id: identificador de la alerta
+            :type id: :class:`integer`
+            :param done: devolver solo las realizadas
+            :type done: boolean
+            :param page: pagina a devolver
+            :type page: :class:`ìnteger`
+            :param query_id: identificador de la busqueda
+            :type query_id: :class:`integer`
+            
+            :returns: :class:`geoalert.models.Alert`
+    """
     if id:
         return [Alert.objects.get_by_id_user(id, request.session['user'])]
     if done is None:
@@ -57,6 +102,15 @@ def get_alert(request, id, done = None, page = 1, query_id = None):
 
 @login_required    
 def del_alert(request, id = None):
+    """
+        Borra una alerta
+        
+            :param id: identificador de la alerta
+            :type id: :class:`integer`
+            
+            :returns: True
+            :raises: AttributeError
+    """
     if id is None:
         raise AttributeError()
     alert = Alert.objects.get_by_id_user(int(id), request.session['user'])
@@ -68,7 +122,30 @@ def del_alert(request, id = None):
 #===============================================================================
 # AÑADIR PLACES
 #===============================================================================
+def _get_city(components):
+    for i in components:
+        if 'locality' in i['types']:
+            return i['short_name']
+            
 def search_place(pos, radius=500, types=None, language=None, name=None, sensor=False):
+    """
+        Busca lugares cercano a la posicion usando la API de Google Places
+        
+            :param pos: posicion a buscar
+            :type pos: :class:`db.GeoPt`
+            :param radius: radio a buscar
+            :type radius: :class:`integer`
+            :param types: lista de tipos de sitios (opcional)
+            :type types: list
+            :param language: idioma de los resultados (opcional)
+            :type language: string
+            :param name: Nombre que buscar (opcional)
+            :type name: string
+            :param sensor: indicar si la posicion se obtiene con GPS, etc.
+            :type sensor: boolean
+            
+            :returns: dict
+    """
     def _add_urls_to_results(search):
         gets = list()
         length = len(search['results'])
@@ -89,6 +166,13 @@ def search_place(pos, radius=500, types=None, language=None, name=None, sensor=F
 
 
 def add_from_google_reference(request, reference):
+    """
+        Añade un lugar a partir de una referencia
+        
+            :param reference: clave de referencia
+            :type reference: :class:`string`
+
+    """
     place = Place.objects.get_by_google_reference(reference)
     if place is not None:  # ya existe, hacemos una redireccion permanente
         return redirect(place.get_absolute_url(), permanent=True)
@@ -100,10 +184,7 @@ def add_from_google_reference(request, reference):
                                   context_instance=RequestContext(request))
     except:
         return HttpResponseServerError
-    def _get_city(components):
-        for i in components:
-            if 'locality' in i['types']:
-                return i['short_name']
+
     place = Place.insert_or_update(name=search['result']['name'],
                                 address=search['result']['formatted_address'], 
                                 city=_get_city(search['result']['address_components']),
@@ -116,6 +197,12 @@ def add_from_google_reference(request, reference):
 
 
 def view_place(request, slug):
+    """
+        Devuelve la vista con informacion de un lugar
+       
+           :param slug: slug identificativo del lugar
+           :type slug; string
+    """
     place = Place.objects.get_by_slug(slug)
     if place is None:
         raise Http404
@@ -126,10 +213,6 @@ def view_place(request, slug):
         return render_to_response('webapp/place.html', {'place': place},
                                   context_instance=RequestContext(request)
                                   )
-    def _get_city(components):
-        for i in components:
-            if 'locality' in i['types']:
-                return i['short_name']
     place.update(name=search['result']['name'],
                         address=search['result']['formatted_address'], 
                         city=_get_city(search['result']['address_components']),
