@@ -84,7 +84,7 @@ function loadTasks()
 
                 var undone = [];
                 var done = [];
-                data = data["result"]
+                data = data[1]
                 for (var i in data)
                 {
                     if (typeof(data[i].done)!="undefined")
@@ -326,7 +326,7 @@ function saveTask(task)
         data['done'] = true;
     
     if (typeof(tasks[task].id) != "undefined")
-        data['id'] = tasks[task].id;
+        data['eventid'] = tasks[task].id;
     
     // ajax
     $.ajax({
@@ -380,7 +380,7 @@ function saveNotSaved()
                 };
             
             if (typeof(tasks[task].id) != "undefined")
-                data['id'] = tasks[task].id;
+                data['eventid'] = tasks[task].id;
             
             // ajax
             $.ajax({
@@ -407,7 +407,7 @@ function saveNotSaved()
                 type:"post",
                 async: false,
                 dataType: "json",
-                data: {id:task},
+                data: {eventid:task},
                 success: function(data){ 
         
                     // save the id, new or not
@@ -443,7 +443,7 @@ function removeTask(task)
             type:"post",
             async: true,
             dataType: "json",
-            data: {id:tasks[task].id},
+            data: {eventid:tasks[task].id},
             error: function() { 
                 
                 // save in not saved vector
