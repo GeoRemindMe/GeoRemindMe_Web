@@ -51,75 +51,99 @@
 <body>
 
     <div id="wait-mask"></div>
-   <div class="container" {%block section%}{%endblock%}>
+    
+    <div class="container" {%block section%}{%endblock%}>
    
       
-      
-         
-         <span id="logo"><a href="/" {%block tooltipLogo%}title="{% trans "Go flying to the homepage. Tweet! Tweet!" %}"{%endblock%} accesskey="q"><img src="/static/webapp/img/logoHeader.png" alt="GeoRemindMe"/></a></span>
-      {% block login %} 
-      <div id="topnav">
-      
-         <div id="signin-c">
-          <div id="signin_controls">
-{% if not user.is_authenticated %}
-         <span id="have_an_account">
-                <span>{% trans "Do you already have an account?" %}</span><a tabindex="3" class="signin menu-open closedLoginBtn" href="#" id="signinBtn" accesskey="w">{% trans "Log in" %}</a>
-         </span>
-          
-        <!-- Este cÃ³digo comentado es el menÃº desplegable para el login de usuario, hay que implementarlo con un script-->
-          <div class="common-form standard-form" id="signinMenu" style="display:none;">  
-             <form action="." id="signin" method="post">  
-                 
-                 <p class="loginMail">        
-                  <input type="text" tabindex="4" title="username" value="email" name="user_login-email" id="username" placeholder="email" accesskey="e"/>
-                 
-             </p>
-             <span id="msgLoginEmail"><span id="txtMsgLoginEmail"></span></span>
-            
-
-                 <p class="loginPassword">                 
-                  <input type="password" tabindex="5" title="password" value="password" name="user_login-password" id="password" placeholder="{% trans "Password" %}" accesskey="r"/>
+        <span id="logo">
+            <a href="/" {%block tooltipLogo%}title="{% trans "Go flying to the homepage. Tweet! Tweet!" %}"{%endblock%} accesskey="q">
+                <img src="/static/webapp/img/logoHeader.png" alt="GeoRemindMe"/>
+            </a>
+        </span>
+        {% block login %} 
+        <div id="topnav">
+            <div id="signin-c">
+                <div id="signin_controls">
+                    {% if not user.is_authenticated %}
+                        <span id="have_an_account">
+                            <span>{% trans "Do you already have an account?" %}</span>
+                            <a tabindex="3" class="signin menu-open closedLoginBtn" href="#" id="signinBtn" accesskey="w">
+                                {% trans "Log in" %}
+                            </a>
+                        </span>
               
-                 </p>
+                        <!-- Este codigo comentado es el menu desplegable para el login de usuario, hay que implementarlo con un script-->
+                        <div class="common-form standard-form" id="signinMenu" style="display:none;">  
+                            <form action="." id="signin" method="post">  
+                     
+                                <p class="loginMail">        
+                                    <input type="text" tabindex="4" title="username" value="email" name="user_login-email" id="username" placeholder="email" accesskey="e"/>
+                                </p>
+                                <span id="msgLoginEmail"><span id="txtMsgLoginEmail"></span></span>
+                
 
-             <span class="msgNoOK" style="display:none;"></span>
+                                <p class="loginPassword">                 
+                                    <input type="password" tabindex="5" title="password" value="password" name="user_login-password" id="password" placeholder="{% trans "Password" %}" accesskey="r"/>
+                                </p>
 
-                 <!--
-                  <p class="forgot">
-                  <a id="resend_password_link" href="" accesskey="o">{% trans "Forgot your password?"%}</a>
-                 </p>
-                 -->
-             <p>
-                  <span class="remember">
-              <input type="checkbox" tabindex="6" value="1" name="user_login-remember_me" id="remember"/>
-                  <label for="remember">{% trans "Remember me on this computer" %}</label>
-              </span>
-              <input type="hidden" name="next" value="{{ next }}" id="next" />
-              <input type="submit" tabindex="7" value="{% trans "Sign in" %}" id="signin_submit" accesskey="b"/>
-                 </p>
-                 <input type="hidden" value="" id="signin_q" name="q"/>
-             </form>
-         </div>
-{% else %}
- <span id="have_an_account">
-            <span>{% blocktrans with user.email as email %}Hello {{ email }} ! {% endblocktrans %}</span><a tabindex="3" href="/dashboard/">{% trans "Go to dashboard" %}</a>
-         </span>
-       <!-- Fin del menu de login-->
-{% endif %}
+                                <span class="msgNoOK" style="display:none;"></span>
+                                 <!--
+                                  <p class="forgot">
+                                  <a id="resend_password_link" href="" accesskey="o">{% trans "Forgot your password?"%}</a>
+                                 </p>
+                                 -->
+                                <p>
+                                    <span class="remember">
+                                        <input type="checkbox" tabindex="6" value="1" name="user_login-remember_me" id="remember"/>
+                                        <label for="remember">{% trans "Remember me on this computer" %}</label>
+                                    </span>
+                                    <input type="hidden" name="next" value="{{ next }}" id="next" />
+                                    <input type="submit" tabindex="7" value="{% trans "Sign in" %}" id="signin_submit" accesskey="b"/>
+                                </p>
+                                <input type="hidden" value="" id="signin_q" name="q"/>
+                            </form>
+                        </div>
+                    {% else %}
+                        <span id="have_an_account">
+                            <span>{% blocktrans with user.email as email %}Hello {{ email }} ! {% endblocktrans %}</span>
+                            <a tabindex="3" href="/dashboard/">{% trans "Go to dashboard" %}</a>
+                        </span>
+                        <!-- Fin del menu de login-->
+                    {% endif %}
+                </div>
+            </div>
         </div>
-</div>
-   {% endblock %}
+        {% endblock %}
 
-      </div>
-       {%block breadcumb %}{%endblock%}
-       
-      </div>
+        
+        {%block breadcumb %}{%endblock%}
+<!--
+        </div>
+-->
 
-    <div id="main-container">   
-    {% block content %}{%endblock%}
-         
-    </div>
+        <div id="main-container">   
+            {% block content %}{%endblock%}
+            <div id="networks">
+                 <p>{% trans "Follow us on"%}:</p>
+                 <ul>
+                    <li>
+                        <a href="http://blog.georemindme.com" title="{% trans "Visit our Blog"%}" accesskey="j">
+                            <img src="/static/webapp/img/icons/social/wp_icon.png" title="{% trans "Visit our Blog"%}" alt="Wordpress logo"/>
+                        </a>
+                    </li>      
+                    <li>
+                        <a href="http://www.twitter.com/GeoRemindMe" title="{% trans "Follow us on Twitter"%}" accesskey="l">
+                            <img src="/static/webapp/img/icons/social/twitter_icon.png" title="{% trans "Follow us on Twitter"%}" alt="Twitter logo"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.facebook.com/georemindme" title="{% trans "Follow us on Facebook"%}"  accesskey="k">
+                            <img src="/static/webapp/img/icons/social/fb_icon.png" title="{% trans "Follow us on Facebook"%}" alt="Facebook logo"/>
+                        </a>
+                    </li>
+                 </ul>
+             </div>
+        </div>
 
       
     </div>

@@ -123,11 +123,22 @@
    <!--<div id="bg_footer">&nbsp;</div>-->
    <div class="container" id="main-container">
            
-      <div id="header">
-         <img src="/static/webapp/img/logo_min.png" alt="GeoRemindMe" id="logo">
-         <div id="logged-menu"><span>{% blocktrans with user.email as email %}Hello {{ email }}! {% endblocktrans %}</span>{%comment%}<a href="#" id="profile" class="icon-menu-bar" title="{% trans "My profile" %}">{% trans "My account" %}</a> {%endcomment%}<a href="#" class="icon-menu-bar" title="{% trans "Help" %}" id="help" accesskey="h">{% trans "Show help" %}</a> <a href="{% url geouser.views.logout %}" class="icon-menu-bar" title="{% trans "Logout" %}" id="logout" accesskey="l">{% trans "Logout" %}</a></div>
-      </div>
-         <div class="col-right">
+        <div id="header">
+            <img src="/static/webapp/img/logo_min.png" alt="GeoRemindMe" id="logo">
+            <div id="logged-menu">
+                <span>{% blocktrans with user.email as email %}Hello {{ email }}! {% endblocktrans %}</span>
+                {%comment%}
+                    <a href="#" id="profile" class="icon-menu-bar" title="{% trans "My profile" %}">{% trans "My account" %}</a> 
+                {%endcomment%}
+                <a href="#" class="icon-menu-bar" title="{% trans "Help" %}" id="help" accesskey="h">
+                    {% trans "Show help" %}
+                </a>
+                <a href="{% url geouser.views.logout %}" class="icon-menu-bar" title="{% trans "Logout" %}" id="logout" accesskey="l">
+                    {% trans "Logout" %}
+                </a>
+            </div>
+        </div>
+        <div class="col-right">
             <h1>{% trans "Pending tasks" %}</h1>
             <div id="task-filter">
             <div id="container-add-task"><span id="add-task" class="linkStyle" accesskey="a">{% trans "Add a new task" %}</span></div>
@@ -184,23 +195,23 @@
                </div>
             </div>
       </div>
-   </div>
    
-    <div id="help-toolbar">
-        <p id="closeBtn" onclick="$('#help').click()">Close</p>
-        <p>{% trans "How can we help you?" %}</p>
-        
-        <ul>
-            <li id="videos"><a href="http://youtube.com/georemindme/" onclick="window.open(this.href);return false;">{% trans "Videos" %}</a></a></li>
-            <li id="ideas"><a href="http://getsatisfaction.com/georemindme/ideas/popular" onclick="window.open(this.href);return false;">{% trans "Ideas" %}</a></li>
-            <li id="faq"><a href="http://getsatisfaction.com/georemindme/questions/popular" onclick="window.open(this.href);return false;">{% trans "FAQ" %}</a></li>
-            <li id="advices"><a href="/help#advices" onclick="return false;">{% trans "Tips" %}</a></li>
-            <li id="praises"><a href="http://getsatisfaction.com/georemindme/praise/recent" onclick="window.open(this.href);return false;">{% trans "Requests" %}</a></li>
-            <li id="problems"><a href="http://getsatisfaction.com/georemindme/problems/common" onclick="window.open(this.href);return false;">{% trans "Problems" %}</a></li>
-        </ul>
+   
+        <div id="help-toolbar">
+            <p id="closeBtn" onclick="$('#help').click()">Close</p>
+            <p>{% trans "How can we help you?" %}</p>
+            
+            <ul>
+                <li id="videos"><a href="http://youtube.com/georemindme/" onclick="window.open(this.href);return false;">{% trans "Videos" %}</a></a></li>
+                <li id="ideas"><a href="http://getsatisfaction.com/georemindme/ideas/popular" onclick="window.open(this.href);return false;">{% trans "Ideas" %}</a></li>
+                <li id="faq"><a href="http://getsatisfaction.com/georemindme/questions/popular" onclick="window.open(this.href);return false;">{% trans "FAQ" %}</a></li>
+                <li id="advices"><a href="/help#advices" onclick="return false;">{% trans "Tips" %}</a></li>
+                <li id="praises"><a href="http://getsatisfaction.com/georemindme/praise/recent" onclick="window.open(this.href);return false;">{% trans "Requests" %}</a></li>
+                <li id="problems"><a href="http://getsatisfaction.com/georemindme/problems/common" onclick="window.open(this.href);return false;">{% trans "Problems" %}</a></li>
+            </ul>
+        </div>
     </div>
-   </div>
-   </div>
+</div>
    <script type="text/javascript"> 
  
      var _gaq = _gaq || [];
