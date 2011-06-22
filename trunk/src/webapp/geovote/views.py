@@ -10,14 +10,14 @@ from geolist.models import *
 #===============================================================================
 @login_required
 def do_comment_event(request, instance_id, msg):
-    '''
+    """
     Realiza un comentario a una sugerencia
     
         :param instance_id: ID del objeto a comentar
         :type instance_id: :class:`long`
         :param msg: mensaje del comentario
         :type msg: :class:`string`
-    '''
+    """
     user = request.session['user']
     event = Event.objects.get_by_id_user(id=instance_id, user=user)
     if event is None:
@@ -29,14 +29,14 @@ def do_comment_event(request, instance_id, msg):
 
 @login_required
 def do_comment_list(request, instance_id, msg):
-    '''
+    """
     Realiza un comentario a una lista
     
         :param instance_id: ID del objeto a comentar
         :type instance_id: :class:`long`
         :param msg: mensaje del comentario
         :type msg: :class:`string`
-    '''
+    """
     user = request.session['user']
     list = List.objects.get_by_id_user(id=instance_id, user=user)
     if list is None:
@@ -47,7 +47,7 @@ def do_comment_list(request, instance_id, msg):
 
 
 def get_comments_event(request, instance_id, query_id=None, page=1):
-    '''
+    """
     Obtiene los comentarios de cualquier evento visible
     
         :param instance_id: ID del evento
@@ -56,7 +56,7 @@ def get_comments_event(request, instance_id, query_id=None, page=1):
         :type query_id: :class:`long`
         :param page: pagina a buscar
         :type page: :class:`integer`
-    '''
+    """
     user = request.session.get('user', None)
     if user is not None:
         event = Event.objects.get_by_id_user(instance_id, user)
@@ -69,7 +69,7 @@ def get_comments_event(request, instance_id, query_id=None, page=1):
 
 
 def get_comments_list(request, instance_id, query_id=None, page=1):
-    '''
+    """
     Obtiene los comentarios de cualquier lista visible
     
         :param instance_id: ID del evento
@@ -78,7 +78,7 @@ def get_comments_list(request, instance_id, query_id=None, page=1):
         :type query_id: :class:`long`
         :param page: pagina a buscar
         :type page: :class:`integer`
-    '''
+    """
     user = request.session.get('user', None)
     if user is not None:
         list = List.objects.get_by_id_user(instance_id, user)
@@ -91,7 +91,7 @@ def get_comments_list(request, instance_id, query_id=None, page=1):
 
 
 def _get_comments(instance, query_id=None, page=1):
-    '''
+    """
     Obtiene los comentarios de cualquier objeto
     
         :param instance_key: Clave del objeto
@@ -101,7 +101,7 @@ def _get_comments(instance, query_id=None, page=1):
         :param page: pagina a buscar
         :type page: :class:`integer`
         
-    '''
+    """
     comments = Comment.objects.get_by_instance(instance, query_id=query_id, page=page)
     
     return comments
@@ -111,68 +111,68 @@ def _get_comments(instance, query_id=None, page=1):
 #===========================================================================
 @login_required
 def do_vote_suggestion(request, instance_id, vote):
-    '''
-    Realiza un comentario a una sugerencia
+    """
+    Realiza un voto a una sugerencia
     
         :param instance_id: ID del objeto a comentar
         :type instance_id: :class:`long`
-        :param msg: mensaje del comentario
-        :type msg: :class:`string`
-    '''
+        :param vote: valoracion del voto (siempre positivo)
+        :type vote: :class:`integer`
+    """
     user = request.session['user']
     event = Suggestion.objects.get_by_id_user(id=instance_id, user=user)
     if event is None:
         return None
-    vote = Vote.do_vote(user=user, instance=event, msg=msg)
+    vote = Vote.do_vote(user=user, instance=event, count=vote)
     
     return vote
 
 
 @login_required
 def do_vote_list(request, instance_id, vote):
-    '''
-    Realiza un comentario a una lista
+    """
+    Realiza un voto a una lista
     
         :param instance_id: ID del objeto a comentar
         :type instance_id: :class:`long`
-        :param msg: mensaje del comentario
-        :type msg: :class:`string`
-    '''
+        :param vote: valoracion del voto (siempre positivo)
+        :type vote: :class:`integer`
+    """
     user = request.session['user']
     list = List.objects.get_by_id_user(id=instance_id, user=user)
     if list is None:
         return None
-    vote = Vote.do_vote(user=user, instance=list, msg=msg)
+    vote = Vote.do_vote(user=user, instance=list, count=vote)
     
     return vote
 
 
 @login_required
 def do_vote_comment(request, instance_id, vote):
-    '''
-    Realiza un comentario a una sugerencia
+    """
+    Realiza un voto a una lista
     
         :param instance_id: ID del objeto a comentar
         :type instance_id: :class:`long`
-        :param msg: mensaje del comentario
-        :type msg: :class:`string`
-    '''
+        :param vote: valoracion del voto (siempre positivo)
+        :type vote: :class:`integer`
+    """
     user = request.session['user']
     comment = Comment.objects.get_by_id_user(id=instance_id, user=user)
     if comment is None:
         return None
-    vote = Vote.do_vote(user=user, instance=comment, msg=msg)
+    vote = Vote.do_vote(user=user, instance=comment, count=vote)
     
     return vote
 
 
 def get_vote_suggestion(request, instance_id):
-    '''
+    """
     Obtiene el contador de votos de una sugerencia
     
         :param instance_id: ID del evento
         :type instance_key: :class:`long`
-    '''
+    """
     user = request.session['user']
     if user is not None:
         suggestion = Suggestion.objects.get_by_id_user(instance_id, user)
@@ -184,12 +184,12 @@ def get_vote_suggestion(request, instance_id):
 
     
 def get_vote_list(request, instance_id):
-    '''
+    """
     Obtiene el contador de votos de una lista
     
         :param instance_id: ID del evento
         :type instance_key: :class:`long`
-    '''
+    """
     user = request.session['user']
     if user is not None:
         list = List.objects.get_by_id_user(instance_id, user)
@@ -201,12 +201,12 @@ def get_vote_list(request, instance_id):
 
 
 def get_vote_comment(request, instance_id):
-    '''
+    """
     Obtiene el contador de votos de un comentario
     
         :param instance_id: ID del evento
         :type instance_key: :class:`long`
-    '''
+    """
     user = request.session['user']
     if user is not None:
         comment = Comment.objects.get_by_id_user(instance_id, user)

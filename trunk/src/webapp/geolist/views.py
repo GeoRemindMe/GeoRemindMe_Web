@@ -244,6 +244,6 @@ def get_all_shared_list_suggestion(request):
     
         :returns: [:class:`geolist.models.ListSuggestion`]
     '''
-    lists = SuggestionList.objects.get_shared_list(user)
+    lists = SuggestionList.objects.get_shared_list(request.user)
     
     return lists
