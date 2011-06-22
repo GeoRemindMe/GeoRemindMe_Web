@@ -126,16 +126,16 @@
         <div id="header">
             <img src="/static/webapp/img/logo_min.png" alt="GeoRemindMe" id="logo">
             <div id="logged-menu">
-                <span>{% blocktrans with user.email as email %}Hello {{ email }}! {% endblocktrans %}</span>
-                {%comment%}
-                    <a href="#" id="profile" class="icon-menu-bar" title="{% trans "My profile" %}">{% trans "My account" %}</a> 
-                {%endcomment%}
-                <a href="#" class="icon-menu-bar" title="{% trans "Help" %}" id="help" accesskey="h">
-                    {% trans "Show help" %}
-                </a>
                 <a href="{% url geouser.views.logout %}" class="icon-menu-bar" title="{% trans "Logout" %}" id="logout" accesskey="l">
                     {% trans "Logout" %}
                 </a>
+                <a href="#" class="icon-menu-bar" title="{% trans "Help" %}" id="help" accesskey="h">
+                    {% trans "Show help" %}
+                </a>
+                <span>{% blocktrans with user.email as email %}Hello {{ email }}! {% endblocktrans %}</span>
+                {%comment%}
+                    <a href="#" id="profile" class="icon-menu-bar" title="{% trans "My profile" %}">{% trans "My account" %}</a> 
+                {%endcomment%}                
             </div>
         </div>
         <div class="col-right">

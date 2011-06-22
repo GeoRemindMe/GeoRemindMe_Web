@@ -348,7 +348,7 @@ textarea {
    float: right;
    
    text-align: right;
-   
+   width:500px;
    margin-top:20px;
    z-index:5;
 }
@@ -391,10 +391,11 @@ textarea {
 #profile{
    background-image: url(../img/icon_perfil.png);
 }
-.icon-menu-bar{
+
+.icon-menu-bar,#logged-menu span{
    background-repeat: no-repeat;
    display: block;
-   float: left;
+   float: right;
    height: 20px;
    margin-right: 17px;
    padding-left: 24px;
