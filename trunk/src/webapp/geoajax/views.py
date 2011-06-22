@@ -52,7 +52,6 @@ def register(request):
         
         :returns: dict con error y _redirect
     """
-            
     from geouser.views import register
     user, f = register(request)
     data = {}
