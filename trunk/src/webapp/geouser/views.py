@@ -36,7 +36,7 @@ def register(request):
             if user:
                 messages.success(request, _("User registration complete, a confirmation email have been sent to %s. Redirecting to dashboard...") % user)
         return user, f
-    return HttpResponseRedirect(reverse('georemindme.views.home'))
+    return HttpResponseRedirect(reverse('georemindme.views.register_panel'))
 
 #===============================================================================
 # LOGIN VIEWS
@@ -51,7 +51,7 @@ def login(request):
         else:
             error = _("The email/password you entered is incorrect<br/>Please make sure your caps lock is off and try again")
         return error, redirect
-    return render_to_response('webapp/home.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
+    return render_to_response('webapp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
 
 def login_google(request):
     ugoogle = users.get_current_user()
@@ -75,34 +75,6 @@ def login_google(request):
 def login_facebook(request):
     from geoauth.views import facebook_authenticate_request
     return facebook_authenticate_request(request)
-
-    fbcookie = facebook.get_user_from_cookie(request.COOKIES)
-    if fbcookie:
-        fbuser = FacebookUser.objects.get_by_id(fbcookie['uid'])
-        graph = facebook.GraphAPI(cookie["access_token"])
-        profile = graph.get_object("me")
-        if not fbuser:
-            user = User.objects.get_by_email(profile['email'])
-            if user:
-                fbuser = FacebookUser.register(user=user, uid=profile['uid'], 
-                                               email=profile['email'], realname=profile["name"],
-                                               profile_url=profile["link"],
-                                               access_token=cookie["access_token"])
-            else:
-                user = User.register(email=profile['email'], password=make_random_string(length=6))
-                fbuser = FacebookUser.register(user=user, uid=profile['uid'], 
-                                               email=profile['email'], name=profile["name"],
-                                               profile_url=profile["link"],
-                                               access_token=cookie["access_token"])
-            init_user_session(request, user)
-        else:
-            fbuser.update(uid=profile['uid'], 
-                               email=profile['email'], name=profile["name"],
-                               profile_url=profile["link"],
-                               access_token=cookie["access_token"])
-            init_user_session(request, fbuser.user)
-            return HttpResponseRedirect(get_next(request))
-    return HttpResponseRedirect(reverse('georemindme.views.home'))
 
 def login_twitter(request):
     from geoauth.views import authenticate_request
