@@ -201,7 +201,7 @@ def view_place(request, slug):
         Devuelve la vista con informacion de un lugar
        
            :param slug: slug identificativo del lugar
-           :type slug; string
+           :type slug: string
     """
     place = Place.objects.get_by_slug(slug)
     if place is None:

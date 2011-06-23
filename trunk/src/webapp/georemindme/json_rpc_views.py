@@ -68,57 +68,38 @@ def sync(request, session_id, last_sync, modified=[]):
             else:
                 return None
         return datetime.fromtimestamp(date)
+    # cuando se envie la sesion id por cabeceras HTTP esta parte no es necesaria
+    # user estaria en request.user
     session = SessionStore.load(session_id, from_cookie=False, from_rpc=True)
     u = session['user']
     session.put()
+    
     last_sync = parse_date(last_sync)
-    # modified is sent as string
-    if modified:
-        try:
-            modified = simplejson.loads(modified)
-        except ValueError:
-            raise InvalidParamsError
-    else:
-        modified = []
     response = []
     deleted = []
     for a in modified:
-        if not a.get('id'): # the alert is new
+            if a.get('id'):
+                if not isinstance(a.get('id'), int):  # invalid type
+                    raise InvalidParamsError
+                old = Alert.objects.get_by_id_user(a.get('id'), u)
+                # sync control
+                if parse_date(a.get('modified')) <= old.modified:
+                    continue
+                if not old:  # unknow alert
+                    deleted = a.get('id')
+                    continue
             poi = PrivatePlace.get_or_insert(name = '',
                                              location = GeoPt(a.get('x'), a.get('y')),
                                              address = '',
                                              user = u)
             alert = Alert.update_or_insert(
+                         id = a.get('id', None),
                          name = a.get('name', u''),
                          description = a.get('description', u''),
+                         date_starts = parse_date(a.get('starts'), False),
+                         date_ends = parse_date(a.get('ends'), False),
+                         user = u,
                          poi = poi,
-                         date_starts = parse_date(a.get('starts'), False),
-                         date_ends = parse_date(a.get('ends'), False),
-                         user = u,
-                         done = True if parse_date(a.get('done_when'), False) else False,
-                         done_when = parse_date(a.get('done_when'), False),
-                         active = True if a.get('active', False) else False,
-                         )           
-        else: # update an old alert
-            if not isinstance(a.get('id'), int):  # invalid type
-                raise InvalidParamsError
-            old = Alert.objects.get_by_id_user(a.get('id'), u.realuser)
-            if not old:  # unknow alert
-                deleted = a.get('id')
-                continue
-            # sync control
-            if parse_date(a.get('modified')) <= old.modified:
-                continue
-            poi = PrivatePlace.get_or_insert(name = '',
-                                             location = GeoPt(a.get('x'), a.get('y')),
-                                             address = '',
-                                             user = u)
-            old = Alert.update_or_insert(
-                         id = a.get('id'), name = a.get('name', u''),
-                         description = a.get('description', u''),
-                         date_starts = parse_date(a.get('starts'), False),
-                         date_ends = parse_date(a.get('ends'), False),
-                         user = u,
                          done = True if parse_date(a.get('done_when'), False) else False,
                          done_when = parse_date(a.get('done_when'), False),
                          active = True if a.get('active', False) else False,
@@ -141,7 +122,7 @@ def getProximityAlerts(request, session_id, lat, long):
     u = session['user'] 
     from geoalert.geobox import proximity_alerts
 
-    alerts = proximity_alerts(u.realuser, lat, long)
+    alerts = proximity_alerts(u, lat, long)
     ##return simplejson.dumps( [ a.__dict__ for a in alerts ] )
     
     # now only works for Point alerts (no Business alerts)

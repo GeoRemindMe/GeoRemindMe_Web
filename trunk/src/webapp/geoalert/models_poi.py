@@ -15,6 +15,9 @@ class Business(db.Model):
     '''Nombres genericos para un place (farmacia, supermercado, ...)'''
     name = db.StringProperty()
     
+    @classproperty
+    def objects(self):
+        return BusinessHelper()
     
     @classmethod
     def SearchableProperties(cls):
@@ -23,6 +26,18 @@ class Business(db.Model):
         del modelo, asi que aqui indicamos las que realmente necesitamos
         '''
         return [['name']]
+    
+    def get_privateplaces(self, user, page=1, query_id=None):
+        """
+            Obtiene una lista de lugares privados del usuario con este negocio
+        """
+        return PrivatePlaces.objects.get_by_business_user(self, user, page=page, query_id=query_id)
+    
+    def get_places(self, page=1, query_id=None):
+        """
+            Obtiene una lista de lugares publicos con este tipo de negocio
+        """
+        return Places.objects.get_by_business(self, page=page, query_id=query_id)
     
 
 
@@ -94,23 +109,39 @@ class PrivatePlace(POI):
         self.update_location()
         if self.is_saved():
             super(PrivatePlace, self).put()
-            place_modified.send(sender=self)
+            privateplace_modified.send(sender=self)
         else:
             super(PrivatePlace, self).put()
-            place_new.send(sender=self)
+            privateplace_new.send(sender=self)
         
         
     def delete(self):
-        place_deleted.send(sender=self)
+        privateplace_deleted.send(sender=self)
         super(PrivatePlace, self).delete()
+        
+    def insert_ft(self):
+        from mapsServices.fusiontable import ftclient, sqlbuilder
+        from django.conf import settings
+
+        ftclient = ftclient.ClientLoginFTClient()
+        ftclient.query(sqlbuilder.SQL().insert(settings.FUSIONTABLES['TABLE_PLACES'],
+                                                {
+                                                 'bus_id': '',
+                                                 'location': self.location.__str__(),
+                                                 'place_id': self.key().id(),
+                                                 'modified': self.modified.__str__()
+                                                 }
+                                               )
+                       )
 
     
-class Place(PrivatePlace):
+class Place(POI):
     '''Lugares para una alerta, visibles para todos'''
     slug = db.StringProperty()
     city = db.TextProperty()
     google_places_reference = db.StringProperty()
-    google_places_id = db.StringProperty(default=None) 
+    google_places_id = db.StringProperty(default=None)
+    business = db.ReferenceProperty(Business)
  
     
     @classproperty
@@ -166,4 +197,21 @@ class Place(PrivatePlace):
         self.google_places_id = google_places_id
         self.put()
         
+    def insert_ft(self):
+        from mapsServices.fusiontable import ftclient, sqlbuilder
+        from django.conf import settings
+        try:
+            ftclient = ftclient.ClientLoginFTClient()
+            ftclient.query(sqlbuilder.SQL().insert(settings['TABLE_PLACES'], {'bus_id': self.business,
+                                                                            'location': '%s,%s' % (self.location.lat, self.location.lon),
+                                                                            'place_id': self.id,
+                                                                             }
+                                                   )
+                           )
+        except:
+            # TODO :  guardar recordatorio por si fallo añadir el sitio
+            pass
+            #__do_later(self.kind(), self.key())
+            #__do_later.put()
+
 from helpers_poi import *

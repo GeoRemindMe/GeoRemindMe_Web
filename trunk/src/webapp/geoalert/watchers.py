@@ -83,34 +83,36 @@ def deleted_following_suggestion(sender, **kwargs):
     timeline.put()
 suggestion_following_deleted.connect(deleted_following_suggestion)
 
-def new_place(sender, **kwargs):
-    if isinstance(sender, PrivatePlace):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=400)
-    elif isinstance(sender, Place):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=450)
-    else:
-        return
+def new_privateplace(sender, **kwargs):
+    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=400)
     timeline.put()
-place_new.connect(new_place)
+privateplace_new.connect(new_privateplace)
+
+def modified_privateplace(sender, **kwargs):    
+    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=401)
+    timeline.put()
+privateplace_modified.connect(modified_privateplace)
+
+def deleted_privateplace(sender, **kwargs):
+    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=402)
+    timeline.put()
+privateplace_deleted.connect(deleted_privateplace)
+
+def new_place(sender, **kwargs):
+    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=450)
+    timeline.put()
+    sender.insert_ft()
+privateplace_new.connect(new_place)
 
 def modified_place(sender, **kwargs):
-    if isinstance(sender, PrivatePlace):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=401)
-    elif isinstance(sender, Place):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=451)
-    else:
-        return
+    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=451)
     timeline.put()
-place_modified.connect(modified_place)
+privateplace_modified.connect(modified_place)
 
 def deleted_place(sender, **kwargs):
-    if isinstance(sender, PrivatePlace):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=402)
-    elif isinstance(sender, Place):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=452)
-    else:
-        return
+    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=452)
     timeline.put()
-place_deleted.connect(deleted_place)
+privateplace_deleted.connect(deleted_place)
+
 
 from models import *

@@ -7,6 +7,7 @@ from exceptions import ForbiddenAccess
 from georemindme.paging import *
 from geouser.models import User
 
+
 class POIHelper(object):
     _klass = POI
     
@@ -27,7 +28,8 @@ class POIHelper(object):
         if poi.user.key() != user.key():
             raise ForbiddenAccess()
         return poi
-    
+
+
 class PrivatePlaceHelper(POIHelper):
     _klass = PrivatePlace
     
@@ -42,7 +44,8 @@ class PrivatePlaceHelper(POIHelper):
         if address != '' or address is not None:
             return self._klass.gql('WHERE address = :1 AND user = :2 ORDER BY created DESC', address, user).get()
         return self._klass.gql('WHERE location = :1 AND user = :2 ORDER BY created DESC', location, user).get()
-    
+
+
 class PlaceHelper(POIHelper):
     _klass = Place
     
@@ -54,3 +57,9 @@ class PlaceHelper(POIHelper):
     
     def get_by_google_id(self, id):
         return self._klass.gql('WHERE google_places_id = :1', id).get()
+
+
+class BusinessHelper(object):
+    def get_by_name(self, business):
+        return Business.all().filter('name =', business).get()
+    

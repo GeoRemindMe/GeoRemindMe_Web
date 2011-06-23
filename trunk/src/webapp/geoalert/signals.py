@@ -15,6 +15,10 @@ suggestion_modified = django.dispatch.Signal(providing_args=['user'])
 suggestion_following_new = django.dispatch.Signal(providing_args=['user'])
 suggestion_following_deleted = django.dispatch.Signal(providing_args=['user'])
 
+privateplace_new = django.dispatch.Signal()
+privateplace_deleted = django.dispatch.Signal()
+privateplace_modified = django.dispatch.Signal()
+
 place_new = django.dispatch.Signal()
 place_deleted = django.dispatch.Signal()
 place_modified = django.dispatch.Signal()

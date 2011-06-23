@@ -23,7 +23,7 @@ class GPRequest(httplib2.Http):
     _search_url = 'https://maps.googleapis.com/maps/api/place/search/json?'
     _details_url = 'https://maps.googleapis.com/maps/api/place/details/json?'
     _checkin_url = 'https://maps.googleapis.com/maps/api/place/check-in/json?'
-    headers = { 'User-Agent' : 'Georemindme v.0.1 - georemindme.appengine.com' }
+    headers = { 'User-Agent' : 'Georemindme v.0.1 - georemindme.appspot.com' }
 
     
     def __init__(self, *args, **kwargs):
@@ -107,7 +107,7 @@ class GPRequest(httplib2.Http):
                 :returns: diccionario con el resultado
                 :raises: :class:`GPAPIError`
         """
-        response, content = self.request(url, method=method, body=body)
+        response, content = self.request(url, method=method, body=body, headers=self.headers)
         if response['status'] != 200:
             raise GPAPIError(response['status'], 'ERROR IN REQUEST')
         json = simplejson.loads(content)

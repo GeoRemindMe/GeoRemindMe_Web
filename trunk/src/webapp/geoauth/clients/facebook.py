@@ -235,7 +235,7 @@ class GraphAPI(object):
         content_type, body = self._encode_multipart_form(post_args, fxtype)
         headers = {'Content-Type' : content_type}
         req = httplib2.Http()
-        response, content = httplib2.Http.request(self, "https://graph.facebook.com/%s/%s" % (object_id, fxtype),
+        response, content = req.request(self, "https://graph.facebook.com/%s/%s" % (object_id, fxtype),
                                                   method='POST', body=body, headers=headers)
         data = _parse_json(content)
         if response['status'] != 200:
