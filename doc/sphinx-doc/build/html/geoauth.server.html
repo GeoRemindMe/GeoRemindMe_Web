@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoAuth server &mdash; GeoRemindMe v0.1a documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="GeoRemindMe v0.1a documentation" href="index.html" />
+    <link rel="up" title="GeoAuth" href="geoauth.html" />
+    <link rel="next" title="GeoRoute" href="georoute.html" />
+    <link rel="prev" title="GeoAuth" href="geoauth.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="georoute.html" title="GeoRoute"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="geoauth.html" title="GeoAuth"
+             accesskey="P">anterior</a> |</li>
+        <li><a href="index.html">GeoRemindMe v0.1a documentation</a> &raquo;</li>
+          <li><a href="geoauth.html" accesskey="U">GeoAuth</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-geoauth.server">
+<span id="geoauth-server"></span><h1>GeoAuth server<a class="headerlink" href="#module-geoauth.server" title="Enlazar permanentemente con este título">¶</a></h1>
+<p id="module-OAUTH_Server"><em>Plataformas:</em>appengine</p>
+<dl class="class">
+<dt id="geoauth.server.OAUTH_Server">
+<em class="property">class </em><tt class="descclassname">geoauth.server.</tt><tt class="descname">OAUTH_Server</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geoauth.server.OAUTH_Server" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Handles all the oauth requests</p>
+<dl class="method">
+<dt id="geoauth.server.OAUTH_Server.access_token_authentication">
+<tt class="descname">access_token_authentication</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#geoauth.server.OAUTH_Server.access_token_authentication" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Returns the user from a valid access token</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">http.Request</span></tt>) &#8211; A valid request</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">geouser.models.User</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">OAUTHException</span></tt> <tt class="xref py py-class docutils literal"><span class="pre">Error</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoauth.server.OAUTH_Server.access_token_requested">
+<tt class="descname">access_token_requested</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#geoauth.server.OAUTH_Server.access_token_requested" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Return the access token from a authorized token</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>Request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">http.Request</span></tt>) &#8211; A valid request</li>
+<li><strong>user</strong> (<tt class="xref py py-class docutils literal"><span class="pre">georemindme.models.User</span></tt>) &#8211; The user who authorizes</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Token</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoauth.server.OAUTH_Server.appInfo_requested">
+<tt class="descname">appInfo_requested</tt><big>(</big><em>token</em><big>)</big><a class="headerlink" href="#geoauth.server.OAUTH_Server.appInfo_requested" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Returns a dict with the application info</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>token</strong> (<tt class="xref py py-class docutils literal"><span class="pre">string</span></tt>) &#8211; A token key</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoauth.server.OAUTH_Server.authorization_token_requested">
+<tt class="descname">authorization_token_requested</tt><big>(</big><em>request</em>, <em>user</em><big>)</big><a class="headerlink" href="#geoauth.server.OAUTH_Server.authorization_token_requested" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>The user has accepted the application</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>Request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">http.Request</span></tt>) &#8211; A valid request</li>
+<li><strong>user</strong> (<tt class="xref py py-class docutils literal"><span class="pre">georemindme.models.User</span></tt>) &#8211; The user who authorizes</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Token</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoauth.server.OAUTH_Server.token_requested">
+<tt class="descname">token_requested</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#geoauth.server.OAUTH_Server.token_requested" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>The server generates a new token request for a consumer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">http.Request</span></tt>) &#8211; A valid request</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Token</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Tema anterior</h4>
+  <p class="topless"><a href="geoauth.html"
+                        title="Capítulo anterior">GeoAuth</a></p>
+  <h4>Próximo tema</h4>
+  <p class="topless"><a href="georoute.html"
+                        title="Próximo capítulo">GeoRoute</a></p>
+  <h3>Esta página</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/geoauth.server.txt"
+           rel="nofollow">Enseñar el código</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Ir a" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="georoute.html" title="GeoRoute"
+             >siguiente</a> |</li>
+        <li class="right" >
+          <a href="geoauth.html" title="GeoAuth"
+             >anterior</a> |</li>
+        <li><a href="index.html">GeoRemindMe v0.1a documentation</a> &raquo;</li>
+          <li><a href="geoauth.html" >GeoAuth</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, GeoRemindMe.
+      Creado con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

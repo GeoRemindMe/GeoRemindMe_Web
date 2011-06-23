@@ -1,0 +1,268 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API &mdash; GeoRemindMe v0.1a documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="GeoRemindMe v0.1a documentation" href="index.html" />
+    <link rel="up" title="GeoRoute" href="georoute.html" />
+    <link rel="next" title="Exceptions" href="exceptions.html" />
+    <link rel="prev" title="GeoRoute" href="georoute.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="exceptions.html" title="Exceptions"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="georoute.html" title="GeoRoute"
+             accesskey="P">anterior</a> |</li>
+        <li><a href="index.html">GeoRemindMe v0.1a documentation</a> &raquo;</li>
+          <li><a href="georoute.html" accesskey="U">GeoRoute</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-georoute.api">
+<span id="api"></span><h1>API<a class="headerlink" href="#module-georoute.api" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>This file is part of GeoRemindMe.</p>
+<p>GeoRemindMe is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+<p>GeoRemindMe is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License
+along with GeoRemindMe.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
+<dl class="data">
+<dt id="georoute.api.MIN_PATH_LENGTH">
+<tt class="descclassname">georoute.api.</tt><tt class="descname">MIN_PATH_LENGTH</tt><a class="headerlink" href="#georoute.api.MIN_PATH_LENGTH" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Minimun number of points needed to add or search a path</p>
+<p>value: 5</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="georoute.api.add_path">
+<tt class="descclassname">georoute.api.</tt><tt class="descname">add_path</tt><big>(</big><em>user</em>, <em>points</em><big>)</big><a class="headerlink" href="#georoute.api.add_path" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Add a new path for the user
+The order of the points is important, two paths with the same points but with different order, are different paths</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> (<tt class="xref py py-class docutils literal"><span class="pre">georemindme.models.User</span></tt>) &#8211; The user adding the path</li>
+<li><strong>points</strong> (<tt class="xref py py-class docutils literal"><span class="pre">db.GeoPt</span></tt>) &#8211; List of points, min. length: <a class="reference internal" href="#georoute.api.MIN_PATH_LENGTH" title="georoute.api.MIN_PATH_LENGTH"><tt class="xref py py-const docutils literal"><span class="pre">MIN_PATH_LENGTH</span></tt></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">RouteUserPath &#8211; The RouteUserPath added</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">NoPoints</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">AttributeError</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="georoute.api.add_point">
+<tt class="descclassname">georoute.api.</tt><tt class="descname">add_point</tt><big>(</big><em>user</em>, <em>point</em><big>)</big><a class="headerlink" href="#georoute.api.add_point" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Add a new RouteUserPoint for the user.
+If the user already has this point, returns it</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> (<tt class="xref py py-class docutils literal"><span class="pre">georemindme.models.User</span></tt>) &#8211; The user adding the point</li>
+<li><strong>point</strong> (<tt class="xref py py-class docutils literal"><span class="pre">db.GeoPt</span></tt>) &#8211; The point you want to add</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">RouteUserPoint &#8211; The RouteUserPoint added</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">AttributeError</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="georoute.api.get_path">
+<tt class="descclassname">georoute.api.</tt><tt class="descname">get_path</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#georoute.api.get_path" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Get the path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">db.Key</span></tt> or string) &#8211; The path&#8217;s key</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><a class="reference internal" href="models.html#georoute.models.RoutePath" title="georoute.models.RoutePath"><tt class="xref py py-class docutils literal"><span class="pre">georoute.models.RoutePath</span></tt></a> or None</td>
+</tr>
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">KindError</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="georoute.api.search_path">
+<tt class="descclassname">georoute.api.</tt><tt class="descname">search_path</tt><big>(</big><em>user=None</em>, <em>points=None</em>, <em>sort=True</em>, <em>aprox=True</em><big>)</big><a class="headerlink" href="#georoute.api.search_path" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Search all the possible paths for the user and points
+Search paths from this user and all the others system&#8217;s paths
+If user is None, search all the paths for those points</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> (<tt class="xref py py-class docutils literal"><span class="pre">georemindme.models.User</span></tt>) &#8211; The user looking for his path</li>
+<li><strong>points</strong> (<tt class="xref py py-class docutils literal"><span class="pre">db.GeoPt</span></tt>) &#8211; List of points, min. length: <a class="reference internal" href="#georoute.api.MIN_PATH_LENGTH" title="georoute.api.MIN_PATH_LENGTH"><tt class="xref py py-const docutils literal"><span class="pre">MIN_PATH_LENGTH</span></tt></a></li>
+<li><strong>sort</strong> (<em>boolean</em>) &#8211; If you want to get the paths sorted in a list or a dictionary</li>
+<li><strong>aprox</strong> (<em>boolean</em>) &#8211; If you want some points to be added</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">list of tuples (path_key, occurrences) ordered by the most probable paths</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">dictionary {path_key: occurrences}</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">NoPoints</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">AttributeError</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="s">&#39;agtnZW9yZW1pbmRtZXIhCxIJUm91dGVQYXRoIhJycGFvc2VqQXdpekVmRT9fWD8M&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;agtnZW9yZW1pbmRtZXIeCxIJUm91dGVQYXRoIg9ycGF3eWVqQXdpekVvSz8M&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="georoute.api.search_path_user">
+<tt class="descclassname">georoute.api.</tt><tt class="descname">search_path_user</tt><big>(</big><em>user</em>, <em>points</em>, <em>sort=True</em>, <em>aprox=True</em><big>)</big><a class="headerlink" href="#georoute.api.search_path_user" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Search all the possible paths from this user and points
+Only returns the paths the user has added or done</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> (<tt class="xref py py-class docutils literal"><span class="pre">georemindme.models.User</span></tt>) &#8211; The user looking for his path</li>
+<li><strong>points</strong> (<tt class="xref py py-class docutils literal"><span class="pre">db.GeoPt</span></tt>) &#8211; List of points, min. length: <a class="reference internal" href="#georoute.api.MIN_PATH_LENGTH" title="georoute.api.MIN_PATH_LENGTH"><tt class="xref py py-const docutils literal"><span class="pre">MIN_PATH_LENGTH</span></tt></a></li>
+<li><strong>aprox</strong> (<em>boolean</em>) &#8211; If you want some points to be added</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">list of tuples (path_key, occurrences) ordered by the most probable paths</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">NoPoints</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">AttributeError</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="s">&#39;agtnZW9yZW1pbmRtZXIhCxIJUm91dGVQYXRoIhJycGFvc2VqQXdpekVmRT9fWD8M&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;agtnZW9yZW1pbmRtZXIeCxIJUm91dGVQYXRoIg9ycGF3eWVqQXdpekVvSz8M&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Tema anterior</h4>
+  <p class="topless"><a href="georoute.html"
+                        title="Capítulo anterior">GeoRoute</a></p>
+  <h4>Próximo tema</h4>
+  <p class="topless"><a href="exceptions.html"
+                        title="Próximo capítulo">Exceptions</a></p>
+  <h3>Esta página</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api.txt"
+           rel="nofollow">Enseñar el código</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Ir a" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="exceptions.html" title="Exceptions"
+             >siguiente</a> |</li>
+        <li class="right" >
+          <a href="georoute.html" title="GeoRoute"
+             >anterior</a> |</li>
+        <li><a href="index.html">GeoRemindMe v0.1a documentation</a> &raquo;</li>
+          <li><a href="georoute.html" >GeoRoute</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, GeoRemindMe.
+      Creado con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

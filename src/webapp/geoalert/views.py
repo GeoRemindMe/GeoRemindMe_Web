@@ -176,7 +176,7 @@ def add_from_google_reference(request, reference):
     place = Place.objects.get_by_google_reference(reference)
     if place is not None:  # ya existe, hacemos una redireccion permanente
         return redirect(place.get_absolute_url(), permanent=True)
-    from mapsServices.places.GPRequest import *
+    from mapsServices.places.GPRequest import GPRequest,GPAPIError
     try:
         search = GPRequest().retrieve_reference(reference)
     except GPAPIError, e:
@@ -200,13 +200,14 @@ def view_place(request, slug):
     """
         Devuelve la vista con informacion de un lugar
        
-           :param slug: slug identificativo del lugar
-           :type slug; string
+            :param slug: slug identificativo del lugar
+            :type slug: string
+            
     """
     place = Place.objects.get_by_slug(slug)
     if place is None:
         raise Http404
-    from mapsServices.places.GPRequest import *
+    from mapsServices.places.GPRequest import GPRequest
     try:
         search = GPRequest().retrieve_reference(place.google_places_reference)
     except: 

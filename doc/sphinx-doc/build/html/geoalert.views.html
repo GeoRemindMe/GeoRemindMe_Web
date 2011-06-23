@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoAlert Views &mdash; GeoRemindMe v0.1a documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="GeoRemindMe v0.1a documentation" href="index.html" />
+    <link rel="up" title="GeoAlert" href="geoalert.html" />
+    <link rel="prev" title="GeoAlert" href="geoalert.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="geoalert.html" title="GeoAlert"
+             accesskey="P">anterior</a> |</li>
+        <li><a href="index.html">GeoRemindMe v0.1a documentation</a> &raquo;</li>
+          <li><a href="geoalert.html" accesskey="U">GeoAlert</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-geoalert.views">
+<span id="geoalert-views"></span><h1>GeoAlert Views<a class="headerlink" href="#module-geoalert.views" title="Enlazar permanentemente con este título">¶</a></h1>
+<p id="module-views"><em>Plataformas:</em>appengine</p>
+<dl class="function">
+<dt id="geoalert.views.add_from_google_reference">
+<tt class="descclassname">geoalert.views.</tt><tt class="descname">add_from_google_reference</tt><big>(</big><em>request</em>, <em>reference</em><big>)</big><a class="headerlink" href="#geoalert.views.add_from_google_reference" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Añade un lugar a partir de una referencia</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">param reference:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">clave de referencia</td>
+</tr>
+<tr class="field"><th class="field-name">type reference:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">string</span></tt></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoalert.views.search_place">
+<tt class="descclassname">geoalert.views.</tt><tt class="descname">search_place</tt><big>(</big><em>pos</em>, <em>radius=500</em>, <em>types=None</em>, <em>language=None</em>, <em>name=None</em>, <em>sensor=False</em><big>)</big><a class="headerlink" href="#geoalert.views.search_place" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Busca lugares cercano a la posicion usando la API de Google Places</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">param pos:</th><td class="field-body">posicion a buscar</td>
+</tr>
+<tr class="field"><th class="field-name">type pos:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">db.GeoPt</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">param radius:</th><td class="field-body">radio a buscar</td>
+</tr>
+<tr class="field"><th class="field-name">type radius:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">integer</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">param types:</th><td class="field-body">lista de tipos de sitios (opcional)</td>
+</tr>
+<tr class="field"><th class="field-name">type types:</th><td class="field-body">list</td>
+</tr>
+<tr class="field"><th class="field-name">param language:</th><td class="field-body">idioma de los resultados (opcional)</td>
+</tr>
+<tr class="field"><th class="field-name">type language:</th><td class="field-body">string</td>
+</tr>
+<tr class="field"><th class="field-name">param name:</th><td class="field-body">Nombre que buscar (opcional)</td>
+</tr>
+<tr class="field"><th class="field-name">type name:</th><td class="field-body">string</td>
+</tr>
+<tr class="field"><th class="field-name">param sensor:</th><td class="field-body">indicar si la posicion se obtiene con GPS, etc.</td>
+</tr>
+<tr class="field"><th class="field-name">type sensor:</th><td class="field-body">boolean</td>
+</tr>
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoalert.views.suggestion_profile">
+<tt class="descclassname">geoalert.views.</tt><tt class="descname">suggestion_profile</tt><big>(</big><em>request</em>, <em>id</em><big>)</big><a class="headerlink" href="#geoalert.views.suggestion_profile" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Devuelve el perfil de una sugerencia, comprueba la
+visibilidad de una funcion</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">param id:</th><td class="field-body">identificador de la sugerencia</td>
+</tr>
+<tr class="field"><th class="field-name">type id:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">ìnteger</span></tt></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoalert.views.view_place">
+<tt class="descclassname">geoalert.views.</tt><tt class="descname">view_place</tt><big>(</big><em>request</em>, <em>slug</em><big>)</big><a class="headerlink" href="#geoalert.views.view_place" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Devuelve la vista con informacion de un lugar</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">param slug:</th><td class="field-body">slug identificativo del lugar</td>
+</tr>
+<tr class="field"><th class="field-name">type slug:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Tema anterior</h4>
+  <p class="topless"><a href="geoalert.html"
+                        title="Capítulo anterior">GeoAlert</a></p>
+  <h3>Esta página</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/geoalert.views.txt"
+           rel="nofollow">Enseñar el código</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Ir a" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="geoalert.html" title="GeoAlert"
+             >anterior</a> |</li>
+        <li><a href="index.html">GeoRemindMe v0.1a documentation</a> &raquo;</li>
+          <li><a href="geoalert.html" >GeoAlert</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, GeoRemindMe.
+      Creado con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

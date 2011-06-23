@@ -24,10 +24,24 @@ from funcs import init_user_session, get_next, login_func
 from decorators import login_required
 from geoauth.clients import facebook, twitter
 
+"""
+.. module:: views
+    :platform: appengine
+    :synopsis: Views for User model
+"""
+
 #===============================================================================
 # REGISTER VIEW
 #===============================================================================
 def register(request):
+    """
+        Recibe una petición de registro vía POST e intenta crea al 
+        usuario; en caso de éxito le enviará un email para confirmar 
+        su cuenta.
+        
+            :returns: En caso de éxito un :class:`google.appengine.api.user` y un formulario de registro. En caso de que no se reciba POST redirige al panel de registro
+            
+    """
     if request.method == 'POST':
         f = RegisterForm(request.POST, prefix='user_register')
         user = None
@@ -42,6 +56,15 @@ def register(request):
 # LOGIN VIEWS
 #===============================================================================
 def login(request):
+    """
+        Recibe petición de autenticación vía POST y si los datos son correctos
+        se llama a la función login_func que inicializa, crea la sesión y 
+        devuelve un mensaje en caso de éxito.
+        
+            :returns: En caso de recibir el POST devuelve un string con posibles errores y redirect con la URL a la que habría que dirigir. En caso contrario renderiza la plantilla de login.
+            
+    """
+    
     if request.method == 'POST':
         f = LoginForm(request.POST, prefix='user_login')    
         error = ''
@@ -54,6 +77,13 @@ def login(request):
     return render_to_response('webapp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
 
 def login_google(request):
+    """
+        Comprueba si ya te has dado de alta en la App con tu cuenta de Google
+        para entrar automáticamente y sino pedirte permiso para hacerlo.
+        Además en caso de éxito inicializa la sesión para dicho usuario.
+        
+            :returns: En caso de exito redirige al panel y en caso contrario renderiza la plantilla de login.
+    """
     ugoogle = users.get_current_user()
     if ugoogle:
         guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
@@ -73,10 +103,26 @@ def login_google(request):
     return HttpResponseRedirect(users.create_login_url(reverse('geouser.views.login_google')))
     
 def login_facebook(request):
+    """
+        Utiliza el protocolo OAuth para solicitar al usuario que confirme
+        que podemos usar sus sesión de Facebook para identificarlo.
+        Así si el usuario está identificado en Facebook no necesitará
+        rellenar el formulario de login de GeoRemindMe.
+        
+            :returns: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
+    """
     from geoauth.views import facebook_authenticate_request
     return facebook_authenticate_request(request)
 
 def login_twitter(request):
+    """
+        Utiliza el protocolo OAuth para solicitar al usuario que confirme
+        que podemos usar sus sesión de Twitter para identificarlo.
+        Así si el usuario está identificado en Twitter no necesitará
+        rellenar el formulario de login de GeoRemindMe.
+        
+            :returns: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
+    """
     from geoauth.views import authenticate_request
     return authenticate_request(request, 'twitter')
 
@@ -84,6 +130,11 @@ def login_twitter(request):
 # LOGOUT VIEW
 #===============================================================================
 def logout(request):
+    """
+        Elimina la sesión de usuario y redirige al usuario.
+        
+            :returns: Redirige al usuario a donde le diga la función login_panel.
+    """
     request.session.delete()
     return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
     ##return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
@@ -93,7 +144,11 @@ def logout(request):
 #===============================================================================
 @login_required
 def update_profile(request):
-    '''para actualizar username y avatar'''
+    """
+        Actualiza el nombre de usuario y el avatar.
+        
+            :returns: Solo devuelve errores si el proceso falla.
+    """
     if request.method == 'POST':
         f = UserProfileForm(request.POST, prefix='user_settings_profile')
         if f.is_valid():
@@ -104,8 +159,11 @@ def update_profile(request):
     
 @login_required
 def update_user(request):
-    '''
-    solo para actualizar email y contraseña'''
+    """
+        Permite actualizar el email y la contraseña.
+        
+            :returns: Solo devuelve errores si el proceso falla.
+    """
     if request.method == 'POST':
         f = UserForm(request.POST, prefix='user_settings')
         if f.is_valid():
@@ -120,6 +178,11 @@ def update_user(request):
 #===============================================================================
 @login_required
 def dashboard(request):
+    """
+        Permite actualizar el email y la contraseña.
+        
+            :returns: Solo devuelve errores si el proceso falla.
+    """
     if request.session['user'].username is None or request.session['user'].email is None:
         if request.method == 'POST':
             f = SocialUserForm(request.POST, prefix='user_set_username')
