@@ -27,16 +27,15 @@ if sys.getdefaultencoding() != default_encoding:
 
 from django.conf.urls.defaults import *
 import appengine_admin
-from jsonrpc import jsonrpc_site
+from libs.jsonrpc import jsonrpc_site as jsonrpc_site
 import georemindme.json_rpc_views
 
 urlpatterns = patterns('',
     (r'^(?i)blog/(?P<path>.*)$', 'django.views.generic.simple.redirect_to', {'url': 'http://blog.georemindme.com/%(path)s', 'permanent': True}),
     (r'^(?i)oauth/', include('geoauth.urls')),
     (r'^(?i)ajax/', include('geoajax.urls')),
-    (r'^(?i)json/(?P<method>[a-zA-Z0-9.-_]+)/$', jsonrpc_site.dispatch),
     url(r'^(?i)service/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
-    url(r'^(?i)browse/', 'jsonrpc.views.browse', name="jsonrpc_browser"),
+    #url(r'^(?i)browse/', 'libs.jsonrpc.views.browse', name="jsonrpc_browser"),
     (r'', include('georemindme.urls')),
     (r'', include('geouser.urls')),
     (r'', include('geoalert.urls')),

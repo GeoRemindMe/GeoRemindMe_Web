@@ -8,11 +8,7 @@ from exceptions import *
 from types import *
 from django.core import signals
 empty_dec = lambda f: f
-try:
-    from django.views.decorators.csrf import csrf_exempt
-except (NameError, ImportError):
-    csrf_exempt = empty_dec
-
+from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
 
 NoneType = type(None)

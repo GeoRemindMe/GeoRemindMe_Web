@@ -13,8 +13,8 @@ from geouser.models import User
 from geouser.funcs import login_func
 from geomiddleware.sessions.store import SessionStore
 
-from jsonrpc import jsonrpc_method
-from jsonrpc.exceptions import *
+from libs.jsonrpc import jsonrpc_method
+from libs.jsonrpc.exceptions import *
 
 @jsonrpc_method('login', authenticated=False)
 def login(request, email, password):

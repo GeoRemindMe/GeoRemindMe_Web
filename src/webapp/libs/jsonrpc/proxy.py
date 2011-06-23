@@ -1,8 +1,8 @@
 # coding=utf-8
 
 import uuid
-from jsonrpc._json import loads, dumps
-from jsonrpc.types import *
+from _json import loads, dumps
+from types import *
 import urllib2
 from urllib2 import HTTPError
 

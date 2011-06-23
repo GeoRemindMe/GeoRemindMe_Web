@@ -1,4 +1,4 @@
-trunk/src/webapp/settings.py
+src/webapp/settings.py
 *.pyc
 .project
 .git

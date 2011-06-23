@@ -5,7 +5,6 @@ import time
 from django.utils import simplejson
 
 from models import _Session_Data, _Session_Dict
-from jsonrpc.exceptions import BadSessionException
 
 
 class SessionStore(object):
@@ -76,6 +75,7 @@ class SessionStore(object):
                 session = _Session_Data.restore_session(session_id)
                 if session is not None:
                     return SessionStore(session=session, from_cookie=False, from_rpc=True)
+                from libs.jsonrpc.exceptions import BadSessionException
                 raise BadSessionException # no hay sesiones temporales para RPC
         # inicia una sesion nueva temporal
         return SessionStore(session_data=session_data, from_cookie=False)
