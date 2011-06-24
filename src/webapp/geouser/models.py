@@ -260,6 +260,7 @@ class User(polymodel.PolyModel, HookedModel):
         '''
             Comprueba que el password es el correcto
         '''
+        raw = str(raw)
         alg, seed, passw = self.password.split('$')
         from django.utils.hashcompat import sha_constructor
         return passw == sha_constructor(seed + raw).hexdigest()
@@ -340,6 +341,9 @@ class User(polymodel.PolyModel, HookedModel):
             sociallinks = UserSocialLinks(parent=profile)
             db.put_async([settings, profile, followings, counters, sociallinks])
             return True
+        from django.core.validators import validate_email
+        if 'email' in kwargs:
+            validate_email(kwargs['email'].decode('utf8'))
         user = User(**kwargs)
         user.put()
         trans = db.run_in_transaction(_tx, user)
@@ -351,14 +355,33 @@ class User(polymodel.PolyModel, HookedModel):
         Actualiza los datos de identificacion de un usuario, el nombre de usuario tambien se guarda en UserProfile,
         por lo que hay que actualizarlo tambien
         '''
+        backemail = self.email
+        backusername = self.username
+        backpassword = self.password
         if 'email' in kwargs:
             if self.email != kwargs['email']:
+                from django.core.validators import validate_email
+                validate_email(kwargs['email'])
                 self.email = kwargs['email']
-        if 'username' in kwargs:
+        if 'username' in kwargs:            
             self.username = kwargs['username']
             self.profile.username = self.username
-        put = db.put_async([self, self.profile])
-        put.get_result()
+        if 'password' in kwargs:
+            if 'oldpassword' in kwargs:
+                if self.check_password(kwargs['oldpassword']):
+                    self.password = kwargs['password']
+                else:
+                    raise ValueError
+            else:
+                raise ValueError
+        try:
+            put = db.put_async([self, self.profile])
+            put.get_result()
+        except:
+            self.email = backemail
+            self.username = backusername
+            self.password = backpassword
+            raise
         return self
         
     def _pre_put(self):
@@ -368,14 +391,14 @@ class User(polymodel.PolyModel, HookedModel):
             u = db.GqlQuery('SELECT __key__ FROM User WHERE email = :1', self.email).get()
             if u is not None:
                 if not self.is_saved() or u != self.key():
-                    logging.debug('Usuario %s email repetido: %s - %s' % (self.id, self.email, u))
+                    logging.debug('Usuario %s email repetido: %s - %s' % (u.id, self.email, u))
                     raise self.UniqueEmailConstraint(self.email)               
         if self.username is not None:
             self.username = self.username.lower()
             u = db.GqlQuery('SELECT __key__ FROM User WHERE username = :1', self.username).get()
             if u is not None:
                 if not self.is_saved() or u != self.key(): 
-                    logging.debug('Usuario %s username repetido: %s - %s' % (self.id, self.username, u))
+                    logging.debug('Usuario %s username repetido: %s - %s' % (u.id, self.username, u))
                     raise self.UniqueUsernameConstraint(self.username)
     
     def __str__(self):        
@@ -399,13 +422,16 @@ class User(polymodel.PolyModel, HookedModel):
             following = User.objects.get_by_username(followname, keys_only=True)
         elif followid is not None:
             following = User.objects.get_by_id(followid, keys_only=True)
-        is_following = UserFollowingIndex.all().filter('following =', following).ancestor(self.key()).count()
-        if is_following != 0:  # en este caso, el usuario ya esta siguiendo al otro, no hacemos nada mas.
-            return True
-        following_result = self.following(async=True)  # obtiene un iterador con los UserFollowingIndex
-        if self._add_follows(following_result, following):
-            user_follower_new.send(sender=self, following=following)
-            return True
+        else:
+            raise AttributeError()
+        if following is not None:
+            is_following = UserFollowingIndex.all().filter('following =', following).ancestor(self.key()).count()
+            if is_following != 0:  # en este caso, el usuario ya esta siguiendo al otro, no hacemos nada mas.
+                return True
+            following_result = self.following(async=True)  # obtiene un iterador con los UserFollowingIndex
+            if self._add_follows(following_result, following):
+                user_follower_new.send(sender=self, following=following)
+                return True
         return False
             
     def del_following(self, followname = None, followid = None):
@@ -426,9 +452,12 @@ class User(polymodel.PolyModel, HookedModel):
             if followid == self.id:
                 return False
             following = User.objects.get_by_id(followid, keys_only=True)
-        if self._del_follows(following):
-            user_following_deleted.send(sender=self, following=following)
-            return True
+        else:
+            raise AttributeError()
+        if following is not None:
+            if self._del_follows(following):
+                user_following_deleted.send(sender=self, following=following)
+                return True
         return False
         
            
@@ -449,14 +478,17 @@ class User(polymodel.PolyModel, HookedModel):
             last_follow.following.append(key)
         else:  # creamos un index nuevo
             last_follow = UserFollowingIndex(parent=self, following=[key])
+        try:
+            counter_result = self.counters(async=True) # obtiene los contadores de self
+            follow_query = UserCounter.all().ancestor(key) # obtiene los contadores del otro usuario
+            follow_result = follow_query.run()
+            counter_result = counter_result.next()  
+            follow_result = follow_result.next()
+            counter_result.set_followings(+1) # sumamos uno al contador de following
+            follow_result.set_followers(+1)# sumamos uno al contador de followers del otro usuario
+        except:
+            return False
         last_follow.put()
-        counter_result = self.counters(async=True) # obtiene los contadores de self
-        follow_query = UserCounter.all().ancestor(key) # obtiene los contadores del otro usuario
-        follow_result = follow_query.run()
-        counter_result = counter_result.next()  
-        follow_result = follow_result.next()
-        counter_result.set_followings(+1) # sumamos uno al contador de following
-        follow_result.set_followers(+1)# sumamos uno al contador de followers del otro usuario
         return True
     
     def _del_follows(self, key):
@@ -470,14 +502,17 @@ class User(polymodel.PolyModel, HookedModel):
         index = UserFollowingIndex.all().ancestor(self.key()).filter('following =', key).get()
         if index is not None:
             index.following.remove(key)
+            try:
+                counter_result = self.counters(async=True) # obtiene los contadores de self
+                follow_query = UserCounter.all().ancestor(key) # obtiene los contadores del otro usuario
+                follow_result = follow_query.run()
+                counter_result = counter_result.next()  
+                follow_result = follow_result.next()  
+                counter_result.set_followings(-1) # sumamos uno al contador de following
+                follow_result.set_followers(-1) # sumamos uno al contador de followers del otro usuario
+            except:
+                return False
             index.put()
-            counter_result = self.counters(async=True) # obtiene los contadores de self
-            follow_query = UserCounter.all().ancestor(key) # obtiene los contadores del otro usuario
-            follow_result = follow_query.run()
-            counter_result = counter_result.next()  
-            follow_result = follow_result.next()  
-            counter_result.set_followings(-1) # sumamos uno al contador de following
-            follow_result.set_followers(-1) # sumamos uno al contador de followers del otro usuario
             return True
         return False
     

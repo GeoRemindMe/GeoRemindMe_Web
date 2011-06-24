@@ -20,6 +20,10 @@ import os, logging, sys
 from google.appengine.ext.webapp import util
 from google.appengine.dist import use_library
 
+# elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
+for k in [k for k in sys.modules if k.startswith('django')]: 
+    del sys.modules[k] 
+
 # carga version 1.2.5 de django
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 use_library('django', '1.2')

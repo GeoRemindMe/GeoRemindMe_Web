@@ -32,27 +32,28 @@ class PasswordProperty(db.TextProperty):
         Extract the value from a model instance and convert it to a encrypted password that goes in the datastore. 
         """
         raw = super(self.__class__, self).get_value_for_datastore(model_instance)
-        
-        if raw is None:
-            raise ValueError(_("Password can't be empty"))
-        try:
-            if len(raw) > 12:
-                alg, seed, passw = raw.split('$')
-                return raw# the password is encrypted
-        except Exception:
-            pass
-        
-        if len(raw) < 5:
-            raise ValueError(_("Invalid password"))
-        if re.search(r'[^a-zA-Z0-9]', raw):
-            raise ValueError(_("Invalid password"))
-        
-        from random import random
-        alg = "sha1"
-        seed = sha_constructor(str(random()) + str(random())).hexdigest()[:5]
-        passw = sha_constructor(seed + raw).hexdigest()
-        
-        return '%s$%s$%s' % (alg, seed, passw)
+        return str(raw)
+#        return raw
+#        if raw is None:
+#            raise ValueError(_("Password can't be empty"))
+#        try:
+#            if len(raw) > 12:
+#                alg, seed, passw = raw.split('$')
+#                return raw# the password is encrypted
+#        except Exception:
+#            pass
+#        
+#        if len(raw) < 5 or len(raw) > 12:
+#            raise ValueError(_("Invalid password"))
+#        if re.search(r'[^a-zA-Z0-9]', raw):
+#            raise ValueError(_("Invalid password"))
+#        
+#        from random import random
+#        alg = "sha1"
+#        seed = sha_constructor(str(random()) + str(random())).hexdigest()[:5]
+#        passw = sha_constructor(seed + raw).hexdigest()
+#        
+#        return '%s$%s$%s' % (alg, seed, passw)
 
     def make_value_from_datastore(self, value):
         """
@@ -61,7 +62,25 @@ class PasswordProperty(db.TextProperty):
         if value is None:
             return None
         
-        return str(value)
+        return unicode(value)
+    
+    def validate(self, value):
+        value = str(value)
+        try:
+            alg, seed, passw = value.split('$')
+            return value            
+        except:# no esta codificado el password, lo codificamos
+            if len(value) < 5 or len(value) > 12:
+                raise ValueError(_("Invalid password"))
+            if re.search(u'[^a-zA-Z0-9]', value):
+                raise ValueError(_("Invalid password"))
+            from random import random
+            alg = "sha1"
+            seed = sha_constructor(str(random()) + str(random())).hexdigest()[:5]
+            passw = sha_constructor(seed + str(value)).hexdigest()
+            return '%s$%s$%s' % (alg, seed, passw)
+        
+        
     
 class UsernameProperty(db.StringProperty):
     '''

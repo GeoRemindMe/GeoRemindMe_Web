@@ -48,7 +48,7 @@ def new_follower(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=100)
     timelineFollowing = UserTimelineSystem(user=kwargs['following'], instance=sender, msg_id=101)
     put = db.put_async([timeline, timelineFollowing])
-    settings = UserSettings.objects.get_by_id(kwargs['following'].name())
+    settings = UserSettings.objects.get_by_id(kwargs['following'].id())
     settings.notify_follower(sender)  # mandar email de notificacion
     put.get_result()
 user_follower_new.connect(new_follower)   

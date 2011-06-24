@@ -93,13 +93,15 @@ class FTClient():
 
 class ClientLoginFTClient(FTClient):
     def __init__(self):
-        from django.conf import settings
-        self.auth_token = ClientLogin().authorize(settings.FUSIONTABLES['FT_USERNAME'],
-                                                   settings.FUSIONTABLES['FT_PASSWORD'])
-        self.request_url = "https://www.google.com/fusiontables/api/query"
         from google.appengine.api.memcache import Client
         mem = Client()
         self.request = httplib2.Http(cache=mem)
+        from django.conf import settings
+        self.auth_token = self.authorize(settings.FUSIONTABLES['FT_USERNAME'],
+                                                   settings.FUSIONTABLES['FT_PASSWORD'])
+        self.request_url = "https://www.google.com/fusiontables/api/query"
+
+
 
     def _get(self, query):
         headers = {
@@ -125,20 +127,17 @@ class ClientLoginFTClient(FTClient):
             raise FTAPIError(response['status'])
         return content
     
-import urllib2
-
-class ClientLogin():
-  def authorize(self, username, password):
-    auth_uri = 'https://www.google.com/accounts/ClientLogin'
-    authreq_data = urllib.urlencode({
-        'Email': username,
-        'Passwd': password,
-        'service': 'fusiontables',
-        'accountType': 'HOSTED_OR_GOOGLE'})
-    auth_req = urllib2.Request(auth_uri, data=authreq_data)
-    auth_resp = urllib2.urlopen(auth_req)
-    auth_resp_body = auth_resp.read()
-
-    auth_resp_dict = dict(
-        x.split('=') for x in auth_resp_body.split('\n') if x)
-    return auth_resp_dict['Auth']
+    def authorize(self, username, password):
+        auth_uri = 'https://www.google.com/accounts/ClientLogin'
+        authreq_data = urllib.urlencode({
+            'Email': username,
+            'Passwd': password,
+            'service': 'fusiontables',
+            'accountType': 'HOSTED_OR_GOOGLE'})
+        response, content = self.request.request(auth_uri, method='POST', body=authreq_data)
+        if response['status'] != 200:
+            raise FTAPIError(response['status'], 'ERROR IN REQUEST')
+    
+        auth_resp_dict = dict(
+            x.split('=') for x in content.split('\n') if x)
+        return auth_resp_dict['Auth']

@@ -168,8 +168,12 @@ class Place(POI):
                     slug = self.slug + '-%s' % i
                     p = Place.all().filter('slug =', slug).get()
                 self.slug = self.slug + '-%s' % i
-        super(Place, self).put()
-
+        if self.is_saved():
+            super(Place, self).put()
+            place_modified.send(sender=self)
+        else:
+            super(Place, self).put()
+            place_new.send(sender=self)
         
     def get_absolute_url(self):
         return '/place/%s' % self.slug

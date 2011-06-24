@@ -67,6 +67,8 @@ import cgi
 import re
 import django.utils.simplejson
 
+import main
+
 from xml.sax.saxutils import unescape
 from google.appengine.ext import webapp
 from google.appengine.api import apiproxy_stub_map  
@@ -75,7 +77,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 _LOCAL_TEST_DIR = 'test'  # location of files
 _WEB_TEST_DIR = '/test'   # how you want to refer to tests on your web server
-_LOCAL_DJANGO_TEST_DIR = '../../gaeunit/test'
+_LOCAL_DJANGO_TEST_DIR = 'gaeunit/test'
 
 # or:
 # _WEB_TEST_DIR = '/u/test'
@@ -357,7 +359,7 @@ def _run_test_suite(runner, suite):
        temp_stub = datastore_file_stub.DatastoreFileStub('GAEUnitDataStore', None, None, trusted=True)  
        apiproxy_stub_map.apiproxy.RegisterStub('datastore', temp_stub)
        # Allow the other services to be used as-is for tests.
-       for name in ['user', 'urlfetch', 'mail', 'memcache', 'images']: 
+       for name in ['user', 'urlfetch', 'mail', 'memcache', 'images', 'taskqueue']: 
            apiproxy_stub_map.apiproxy.RegisterStub(name, original_apiproxy.GetStub(name))
        runner.run(suite)
     finally:

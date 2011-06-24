@@ -70,41 +70,50 @@ def sync(request, session_id, last_sync, modified=[]):
         return datetime.fromtimestamp(date)
     # cuando se envie la sesion id por cabeceras HTTP esta parte no es necesaria
     # user estaria en request.user
-    session = SessionStore.load(session_id, from_cookie=False, from_rpc=True)
-    u = session['user']
+    session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
+    try:
+        u = session['user']
+        if u is None:
+            raise
+    except:
+        raise BadSessionException
     session.put()
     
     last_sync = parse_date(last_sync)
     response = []
     deleted = []
     for a in modified:
-            if a.get('id'):
-                if not isinstance(a.get('id'), int):  # invalid type
-                    raise InvalidParamsError
-                old = Alert.objects.get_by_id_user(a.get('id'), u)
-                # sync control
-                if parse_date(a.get('modified')) <= old.modified:
-                    continue
-                if not old:  # unknow alert
-                    deleted = a.get('id')
-                    continue
-            poi = PrivatePlace.get_or_insert(name = '',
-                                             location = GeoPt(a.get('x'), a.get('y')),
-                                             address = '',
-                                             user = u)
-            alert = Alert.update_or_insert(
-                         id = a.get('id', None),
-                         name = a.get('name', u''),
-                         description = a.get('description', u''),
-                         date_starts = parse_date(a.get('starts'), False),
-                         date_ends = parse_date(a.get('ends'), False),
-                         user = u,
-                         poi = poi,
-                         done = True if parse_date(a.get('done_when'), False) else False,
-                         done_when = parse_date(a.get('done_when'), False),
-                         active = True if a.get('active', False) else False,
-                         )            
-    # return the alerts modified after last sync
+        try:
+            id = a.get('id', None)
+        except:
+            raise Exception(request.raw_post_data)
+        if id is not None:
+            if not isinstance(id, int):  # invalid type
+                raise InvalidParamsError
+            old = Alert.objects.get_by_id_user(id, u)
+            # sync control
+            if parse_date(a.get('modified')) <= old.modified:
+                continue
+            if not old:  # unknow alert
+                deleted = id
+                continue
+        poi = PrivatePlace.get_or_insert(name = '',
+                                         location = GeoPt(a.get('x'), a.get('y')),
+                                         address = '',
+                                         user = u)
+        alert = Alert.update_or_insert(
+                     id = id,
+                     name = a.get('name', u''),
+                     description = a.get('description', u''),
+                     date_starts = parse_date(a.get('starts'), False),
+                     date_ends = parse_date(a.get('ends'), False),
+                     user = u,
+                     poi = poi,
+                     done = True if parse_date(a.get('done_when'), False) else False,
+                     done_when = parse_date(a.get('done_when'), False),
+                     active = True if a.get('active', False) else False,
+                     )            
+# return the alerts modified after last sync
     alerts = Alert.objects.get_by_last_sync(u, last_sync)
     for a in alerts:
         response.append(a.to_dict())
