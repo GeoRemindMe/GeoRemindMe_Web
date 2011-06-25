@@ -235,7 +235,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'georoute', u'GeoRemindMe Documentation',
+    ('index', 'georemindme', u'GeoRemindMe Documentation',
      [u'GeoRemindMe'], 1)
 ]
 
