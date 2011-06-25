@@ -36,8 +36,8 @@ handlers:
   static_dir: appengine_admin/media
   secure: always 
   
-- url: /test.*
-  script: gaeunit/gaeunit.py
+#- url: /test.*
+#  script: gaeunit/gaeunit.py
   
 - url: /.*
   script: main.py

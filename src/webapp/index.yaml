@@ -24,3 +24,42 @@ indexes:
   - name: user
   - name: created
     direction: desc
+
+- kind: POI
+  properties:
+  - name: class
+  - name: location
+  - name: user
+  - name: created
+    direction: desc
+
+- kind: UserFollowingIndex
+  properties:
+  - name: following
+  - name: created
+    direction: desc
+
+- kind: UserFollowingIndex
+  ancestor: yes
+  properties:
+  - name: created
+    direction: desc
+
+- kind: UserTimelineBase
+  properties:
+  - name: class
+  - name: user
+  - name: created
+    direction: desc
+
+- kind: UserTimelineBase
+  properties:
+  - name: user
+  - name: created
+    direction: desc
+
+- kind: UserTimelineFollowersIndex
+  ancestor: yes
+  properties:
+  - name: created
+    direction: desc

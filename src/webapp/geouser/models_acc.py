@@ -2,10 +2,12 @@
 
 import memcache
 
+from django.utils.translation import ugettext as _
 from google.appengine.ext import db
 
 from georemindme.models_utils import Visibility
 from georemindme.decorators import classproperty
+from signals import user_timeline_new
 from models import User
 
 
@@ -73,7 +75,7 @@ class UserCounter(db.Model):
     suggested = db.IntegerProperty(default=0)
     supported = db.IntegerProperty(default=0)
     influenced = db.IntegerProperty(default=0)
-    following = db.IntegerProperty(default=0)
+    followings = db.IntegerProperty(default=0)
     followers = db.IntegerProperty(default=0)
     created = db.DateTimeProperty(auto_now_add=True)
     
@@ -101,7 +103,7 @@ class UserCounter(db.Model):
         return db.run_in_transaction(self._change_counter, 'influenced', value)
     
     def set_followings(self, value):
-        return db.run_in_transaction(self._change_counter, 'following', value)
+        return db.run_in_transaction(self._change_counter, 'followings', value)
     
     def set_followers(self, value):
         return db.run_in_transaction(self._change_counter, 'followers', value)
@@ -131,7 +133,7 @@ class UserTimelineSystem(UserTimelineBase):
                 101: _('%s is now following you') % self.instance,
                 102: _('You stopped following %s') % self.instance,
                 110: _('You invited %s to:') % self.instance,
-                111: _('%s invited you to %s') % (self.instance.sender, self.instance),
+                111: _('%s invited you to %s') % (self.instance, self.instance),
                 150: _('New user list created: %s') % self.instance,
                 151: _('User list modified: %s') % self.instance,
                 152: _('User list removed: %s') % self.instance,
@@ -193,13 +195,20 @@ class UserTimeline(UserTimelineBase, Visibility):
                 followers = self.user.get_followers(page=page, query_id=query_id)[1]
             return True
     
+    @classmethod
+    def insert(self, msg, user, instance=None):
+        if msg == '' or not isinstance(msg, basestring):
+            raise AttributeError()
+        timeline = UserTimeline(msg=msg, user=user, instance=instance)
+        timeline.put()
+        return timeline
+    
     def put(self):
         if self.is_saved():
             super(self.__class__, self).put()
         else:  # si ya estaba guardada, no hay que volver a notificar
             super(self.__class__, self).put()
-            from georemindme.tasks import NotificationHandler
-            NotificationHandler().timeline_followers_notify(self)
+            user_timeline_new.send(sender=self)
     
 
 class UserTimelineFollowersIndex(db.Model):

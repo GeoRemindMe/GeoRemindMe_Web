@@ -53,8 +53,12 @@ class Test(unittest.TestCase):
         assert u.update(password='111111', oldpassword='123456'), 'No se pudo cambiar el password'
         assert u.update(username='usertest', email='test@test.com', password=123456, oldpassword=111111), 'No se puedo volver a datos iniciales'
         assert u.check_password(123456), 'No se puedo volver a datos iniciales'
-        
+    
+    
+    def test_userhelper(self):
         #probar todas las busquedas en helper
+        User.register(email='test@test.com', password='123456', username='usertest')
+        User.register(email='test2@test.com', password='123456', username='usertest2')
         u = User.objects.get_by_email('test@test.com')
         assert User.objects.get_by_key(u.key()).id == u.id, 'Busqueda por key erronea'
         assert User.objects.get_by_key(str(u.key())).id == u.id, 'Busqueda por string de key erronea'
@@ -90,6 +94,11 @@ class Test(unittest.TestCase):
         assert User.objects.get_by_email_not_confirm(123)== None, 'Busqueda por username erronea'
         assert User.objects.get_by_email_not_confirm(None)== None, 'Busqueda por username erronea'
         
+    def test_follow(self):
+        User.register(email='test@test.com', password='123456', username='usertest')
+        User.register(email='test2@test.com', password='123456', username='usertest2')
+        u = User.objects.get_by_email('test@test.com')
+        u2 = User.objects.get_by_email('test2@test.com')
         assert User.objects.get_followers(userid=u.id)[1] == u.get_followers()[1], 'Busqueda de followers erronea'
         assert User.objects.get_followers(username=u.username)[1] == u.get_followers()[1], 'Busqueda de followers erronea'
         query_id = u.get_followers()[0]
@@ -102,9 +111,7 @@ class Test(unittest.TestCase):
         assert User.objects.get_followings(userid=u.id, query_id=query_id, page=1) == u.get_followings(query_id=query_id, page=1), 'Busqueda de followings erronea'
         assert User.objects.get_followings(username=u.username, query_id=query_id, page=1) == u.get_followings(query_id=query_id, page=1), 'Busqueda de followings erronea'
         
-        
         #ahora probamos añadir followers, etc.
-        u2 = User.objects.get_by_email('test2@test.com')
         assert u.add_following(followid=u2.id), 'Error añadiendo following'
         assert User.objects.get_followings(userid=u.id)[1] == u.get_followings()[1], 'Busqueda de followings erronea'
         assert User.objects.get_followings(userid=u.id, query_id=query_id, page=2) != u.get_followings(query_id=query_id, page=1), 'Busqueda de followings erronea'

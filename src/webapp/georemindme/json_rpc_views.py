@@ -55,6 +55,10 @@ def sync(request, session_id, last_sync, modified=[]):
     '''
         Sync with devices
     '''
+    if not isinstance(session_id, basestring):
+        raise InvalidParamsError
+    if type(modified) != type(list()):
+        raise InvalidParamsError
     last_sync= float(last_sync)
     def parse_date(date, excep=True):
         if date is None:
@@ -83,10 +87,9 @@ def sync(request, session_id, last_sync, modified=[]):
     response = []
     deleted = []
     for a in modified:
-        try:
-            id = a.get('id', None)
-        except:
-            raise Exception(request.raw_post_data)
+        if type(a) != type(dict()):
+            raise InvalidParamsError
+        id = a.get('id', None)
         if id is not None:
             if not isinstance(id, int):  # invalid type
                 raise InvalidParamsError

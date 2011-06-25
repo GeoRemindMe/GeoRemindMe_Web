@@ -65,9 +65,9 @@ def new_timeline(sender, **kwargs):
     '''
     Sender ha escrito un nuevo timeline publico, notificar a los seguidores
     '''
-    timeline = UserTimeline(user=sender, msg=kwargs['msg'],
-                            instance=kwargs['instance'], _vis=kwargs['vis'])
-    timeline.put()
+    if sender._is_public():
+        from georemindme.tasks import NotificationHandler
+        NotificationHandler().timeline_followers_notify(sender)
 user_timeline_new.connect(new_timeline)
         
         

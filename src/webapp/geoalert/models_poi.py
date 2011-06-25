@@ -31,13 +31,13 @@ class Business(db.Model):
         """
             Obtiene una lista de lugares privados del usuario con este negocio
         """
-        return PrivatePlaces.objects.get_by_business_user(self, user, page=page, query_id=query_id)
+        return PrivatePlace.objects.get_by_business_user(self, user, page=page, query_id=query_id)
     
     def get_places(self, page=1, query_id=None):
         """
             Obtiene una lista de lugares publicos con este tipo de negocio
         """
-        return Places.objects.get_by_business(self, page=page, query_id=query_id)
+        return Place.objects.get_by_business(self, page=page, query_id=query_id)
     
 
 
@@ -48,7 +48,7 @@ class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty(auto_now=True)
     users = db.ListProperty(db.Key)  #  lista con los usuarios que han modificado el POI
-    user = db.ReferenceProperty(User)  # el usuario que creo el POI
+    user = db.ReferenceProperty(User, required=True)  # el usuario que creo el POI
     address = db.StringProperty()
     
     
@@ -94,15 +94,68 @@ class PrivatePlace(POI):
     def get_or_insert(cls, id = None, name = None, bookmark = False, address = None,
                          business = None, location = None, user = None):
         if id:
-            place = cls.objects.get_by_id(id, user)
+            place = cls.objects.get_by_id_user(id, user)
         else:
+            if name is not None and not isinstance(name, basestring):
+                raise AttributeError()
+            if address is not None and not isinstance(address, basestring):
+                raise AttributeError()
+            if business is not None and not isinstance(business, Business):
+                raise AttributeError()
             place = cls.objects.get_by_address_or_point_user(address, user, location = location)
             if place is None:
+                if location is None or user is None:
+                    raise AttributeError()
                 place = PrivatePlace(name = name, bookmark = bookmark,
                                  address = address, business = business,
                                  location = location, user = user)
                 place.put()
         return place
+    
+    @classmethod
+    def insert_or_update(cls, id = None, name = None, bookmark = False, address = None,
+                         business = None, location = None, user = None):
+        if name is not None and not isinstance(name, basestring):
+            raise AttributeError()
+        if address is not None and not isinstance(address, basestring):
+            raise AttributeError()
+        if business is not None and not isinstance(business, Business):
+            raise AttributeError()
+        
+        if id:
+            place = cls.objects.get_by_id_user(id, user)
+            if place is not None:
+                place.update(name = name, bookmark = bookmark,
+                             address = address, business = business,
+                             location = location)    
+        else:
+            place = cls.objects.get_by_address_or_point_user(address, user, location = location)
+            if place is None:
+                if location is None or user is None:
+                    raise AttributeError()
+                location = db.GeoPt(location)
+                place = PrivatePlace(name = name, bookmark = bookmark,
+                                 address = address, business = business,
+                                 location = location, user = user)
+                place.put()
+        return place
+    
+    def update(self, name = None, bookmark = False, address = None, business = None, location = None):
+        if location is None:
+            raise AttributeError()
+        if name is not None and not isinstance(name, basestring):
+            raise AttributeError()
+        if address is not None and not isinstance(address, basestring):
+            raise AttributeError()
+        if business is not None and not isinstance(business, Business):
+            raise AttributeError()
+        
+        self.name = name
+        self.bookmark = bookmark
+        self.address = address
+        self.business = business
+        self.location = db.GeoPt(location)
+        self.put()
             
     
     def put(self):
@@ -118,21 +171,6 @@ class PrivatePlace(POI):
     def delete(self):
         privateplace_deleted.send(sender=self)
         super(PrivatePlace, self).delete()
-        
-    def insert_ft(self):
-        from mapsServices.fusiontable import ftclient, sqlbuilder
-        from django.conf import settings
-
-        ftclient = ftclient.ClientLoginFTClient()
-        ftclient.query(sqlbuilder.SQL().insert(settings.FUSIONTABLES['TABLE_PLACES'],
-                                                {
-                                                 'bus_id': '',
-                                                 'location': self.location.__str__(),
-                                                 'place_id': self.key().id(),
-                                                 'modified': self.modified.__str__()
-                                                 }
-                                               )
-                       )
 
     
 class Place(POI):
@@ -180,7 +218,7 @@ class Place(POI):
     
     
     @classmethod
-    def insert_or_update(cls, name, address, city, location, google_places_reference, google_places_id):
+    def insert_or_update(cls, name, address, city, location, google_places_reference, google_places_id, user):
         place = cls.objects.get_by_google_id(google_places_id)
         if place is not None:
             place.update(name, address, city, location, google_places_reference, google_places_id)    
@@ -188,7 +226,7 @@ class Place(POI):
             place = Place(name=name, address=address,
                           city=city, location=location, 
                           google_places_reference=google_places_reference,
-                          google_places_id=google_places_id)
+                          google_places_id=google_places_id, user=user)
             place.put()
         return place
         

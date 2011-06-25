@@ -78,11 +78,9 @@ class UserHelper(object):
         else:
             raise AttributeError()
         followers = UserFollowingIndex.gql('WHERE following = :1 ORDER BY created DESC', userkey)
-        if followers is not None:
-            p = PagedQuery(followers, id = query_id)
-            ##users = [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]
-            return [p.id, [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]]
-        return None
+        p = PagedQuery(followers, id = query_id)
+        ##users = [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]
+        return [p.id, [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]]
     
     def get_followings(self, userid = None, username=None, page=1, query_id=None):
         '''
@@ -105,12 +103,10 @@ class UserHelper(object):
         else: 
             raise AttributeError()
         followings = UserFollowingIndex.all().ancestor(userkey).order('-created')
-        if followings is not None:
-            p = PagedQuery(followings, id = query_id)
-            users = [db.get(index.following) for index in p.fetch_page(page)]  # devuelve una lista anidada con otra
-            users = [(item.id, item.username, item.profile.avatar) for sublist in users for item in sublist]  # obtenemos las listas anidadas como una sola
-            return [p.id, users]
-        return None
+        p = PagedQuery(followings, id = query_id)
+        users = [db.get(index.following) for index in p.fetch_page(page)]  # devuelve una lista anidada con otra
+        users = [(item.id, item.username, item.profile.avatar) for sublist in users for item in sublist]  # obtenemos las listas anidadas como una sola
+        return [p.id, users]
     
     def _get(self, string=None):
         return User.all().filter('has =', 'active:T')

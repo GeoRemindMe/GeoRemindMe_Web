@@ -161,9 +161,9 @@ class Alert(Event):
             :raises: :class:`geoalert.exceptions.ForbiddenAccess`, :class:`TypeError`
         '''
         if not isinstance(user, User):
-            raise TypeError()
-        if poi is None:
-            raise TypeError()
+            raise AttributeError()
+        if poi is None or not isinstance(poi, POI) or poi.user.key() != user.key():
+            raise AttributeError()
         if id is not None:  # como se ha pasado un id, queremos modificar una alerta existente
             alert = cls.objects.get_by_id_user(id, user)
             if alert is None:
@@ -308,7 +308,7 @@ class Suggestion(Event, Visibility):
         '''
         def _tx(sug_key, user_key):
             # TODO : cambiar a contador con sharding
-            sug = db.get(key)
+            sug = db.get(sug_key)
             sug.counter.set_followers()
             # indice con personas que siguen la sugerencia
             index = SuggestionFollowersIndex.all().ancestor(sug).filter('count < 80').get()
@@ -343,7 +343,7 @@ class Suggestion(Event, Visibility):
             index.count -= 1
             db.put_async(index, sug)
             
-        if not self._user_is_follower(user_key):
+        if not self._user_is_follower(user):# TODO : implementar
             return False
         index = SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get()
         db.run_in_transaction(_tx, self.key(), index.key(), user.key())
@@ -376,9 +376,6 @@ class Suggestion(Event, Visibility):
             :returns: True si esta invitado, False en caso contrario
         '''
         return Invitation.objects.is_user_invited(self, user)
-        if invitation is not None and set_status is not None:
-            invitation.set_status(set_status)
-        return invitation
         
 
 class AlertSuggestion(Event):

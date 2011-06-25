@@ -1,8 +1,10 @@
 # coding=utf-8
+
 from google.appengine.ext import db
 from geouser.models import *
 from geomail import *
 from exceptions import PrivateException
+from signals import *
 
 
 """ QUIZAS SERIA MEJOR LLEVAR LAS INVITACIONES ACEPTADAS COMO UNA LISTA Y NO CREAR UNA NUEVA INSTANCIA POR CADA LISTA

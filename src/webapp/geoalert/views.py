@@ -164,7 +164,7 @@ def search_place(pos, radius=500, types=None, language=None, name=None, sensor=F
     search = GPRequest().do_search(pos, radius, types, language, name, sensor)
     return _add_urls_to_results(search)
 
-
+@login_required
 def add_from_google_reference(request, reference):
     """
         Añade un lugar a partir de una referencia
@@ -190,7 +190,8 @@ def add_from_google_reference(request, reference):
                                 city=_get_city(search['result']['address_components']),
                                 location=db.GeoPt(search['result']['geometry']['location']['lat'], search['result']['geometry']['location']['lng']),
                                 google_places_reference=search['result']['reference'],
-                                google_places_id=search['result']['id']
+                                google_places_id=search['result']['id'],
+                                user = request.user
                                 )
     
     return redirect(place.get_absolute_url(), permanent=True)

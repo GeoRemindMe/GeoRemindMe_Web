@@ -158,7 +158,7 @@ class User(polymodel.PolyModel, HookedModel):
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
         timelines = [db.get(timeline.parent()) for timeline in timelines]
-        return [p.id, [(timeline.id, timeline.user.username, timeline.msg) for timeline in timelines]]
+        return [p.id, [(timeline.id, timeline.user.username, timeline.msg) for timeline in timelines if timeline is not None ]]
         
         
     def following(self, async=False):
@@ -515,6 +515,9 @@ class User(polymodel.PolyModel, HookedModel):
             index.put()
             return True
         return False
+    
+    def write_timeline(self, msg, instance=None):
+        return UserTimeline.insert(msg=msg, user=self, instance=instance)
     
     def delete_async(self):
         children = db.query_descendants(self).fetch(10)

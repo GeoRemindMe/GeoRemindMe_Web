@@ -1,11 +1,13 @@
 # coding=utf-8
 
+from django.utils import simplejson
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
 from geouser.models import User
 from geouser.models_acc import UserTimelineSystem
 from georemindme.models_utils import Visibility, HookedModel
+from georemindme.models_indexes import Invitation
 from georemindme.decorators import classproperty
 from models_indexes import ListFollowersIndex
 from signals import *
@@ -27,7 +29,7 @@ class List(polymodel.PolyModel, HookedModel):
     
     @property
     def id(self):
-        return self.id()
+        return self.key().id()
     
     @classproperty
     def objects(self):
@@ -55,7 +57,7 @@ class List(polymodel.PolyModel, HookedModel):
                     'user': self.user.username,
                     'modified': unicode(self.modified.strftime("%d%b")),
                     'created': unicode(self.created.strftime("%d%b")),
-                    'instances': [i.id() for i in self.instances], 
+                    'keys': [i.id for i in self.keys], 
                     }
             
     def to_json(self):
@@ -194,16 +196,16 @@ class ListSuggestion(List, Visibility):
             
             :returns: True si se añadio, False en caso contrario    
         '''
-        if self._user_is_follower(user_key):
+        if self._user_is_follower(user.key()):
             return True
         if self._is_private():
             return False
         elif self._is_shared():
             if self.user_invited(user) is None:
                 return False   
-        def _tx(sug_key, user_key):
+        def _tx(list_key, user_key):
             # TODO : cambiar a contador con sharding
-            list = db.get(key)
+            list = db.get(list_key)
             if ListFollowersIndex.all().ancestor(list).filter('keys =', user_key).count() != 0:
                 return  # el usuario ya sigue la lista
             list += 1
@@ -214,7 +216,7 @@ class ListSuggestion(List, Visibility):
             index.keys.append(user_key)
             index.count += 1
             db.put_async([list, index])
-        db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
+        db.run_in_transaction(_tx, list_key = self.key(), user_key = user.key())
         self.user_invited(user, set_status=1)  # FIXME : mejor manera de cambiar estado invitacion
         list_following_new.send(sender=self, user=user)
         return True
@@ -344,7 +346,7 @@ class ListUser(List):
         list.put()
         return list
     
-    def update(self, name=None, description=None, instances_add=None, instances_del=None):
+    def update(self, name=None, description=None, instances_add=[], instances_del=[]):
         '''
         Actualiza una lista de usuarios
         
@@ -360,7 +362,7 @@ class ListUser(List):
         if name is not None:
             self.name = name
         if description is not None:
-                self.description = description
+            self.description = description
         for instance in instances_del:
             try:
                 self.keys.remove(instance.key())

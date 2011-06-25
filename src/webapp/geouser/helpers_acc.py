@@ -25,10 +25,10 @@ class UserSettingsHelper(object):
 class UserProfileHelper(object):
     def get_by_id(self, id, async=False):
         profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, id)))
-        if settings is None:
+        if profile is None:
             key = db.Key.from_path(User.kind(), id, UserSettings.kind(), 'profile_%s' % id)
             profile = db.get(key)
-            memcache.set('%sprofile_%s' % (memcache.version, id), memcache.serialize_instances(settings))
+            memcache.set('%sprofile_%s' % (memcache.version, id), memcache.serialize_instances(profile))
         return profile
         """
         if async:
@@ -60,6 +60,6 @@ class UserTimelineHelper(object):
         p = PagedQuery(q, id = query_id, page_size=42)
         timelines = p.fetch_page(page)
         if vis.lower()=='public':
-            return [p.id, [(timeline.id, timeline.created, timeline.user.username, timeline.instance.key() if timeline.instance is not None else None) for timeline in timelines if timeline._is_public()]]
+            return [p.id, [(timeline.id, timeline.created, timeline.msg, timeline.user.username, timeline.instance.key() if timeline.instance is not None else None) for timeline in timelines if timeline._is_public()]]
         if vis.lower()=='shared':
-            return [p.id, [(timeline.id, timeline.created, timeline.user.username, timeline.instance.key() if timeline.instance is not None else None) for timeline in timelines if timeline._is_shared() or timeline._is_public()]]
+            return [p.id, [(timeline.id, timeline.created, timeline.msg,  timeline.user.username, timeline.instance.key() if timeline.instance is not None else None) for timeline in timelines if timeline._is_shared() or timeline._is_public()]]
