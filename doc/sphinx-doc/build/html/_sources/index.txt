@@ -14,7 +14,7 @@ siguiente modo:
 
 Cada URL de la aplicación llama a una función declarada dentro de una 
 determinada vista, y esta puede o no llamar a su vez a otras funciones 
-de la misma o de otros paquetes.
+de la misma o de las vistas de otros paquetes.
 
 Estos paquetes son:
 
