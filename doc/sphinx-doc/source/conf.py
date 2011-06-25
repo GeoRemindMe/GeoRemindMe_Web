@@ -62,7 +62,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'GeoRemindMe'
-copyright = u'2011, GeoRemindMe'
+copyright = u'GFDL 2011, GeoRemindMe'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
