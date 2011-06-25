@@ -7,10 +7,9 @@ from models_acc import UserFollowingIndex
 
 
 class UserHelper(object):
-    '''
-        Do the queries needed to get a object
+    """Do the queries needed to get a object
         Use ->  User.objects.method()
-    '''
+    """
     def get_by_key(self, key):
         try:
             return User.get(key)
@@ -34,9 +33,9 @@ class UserHelper(object):
         return User.get_by_id(userid)
     
     def get_by_email(self, email, keys_only=False):
-        '''
+        """
          Search and returns a User object with that email
-        '''
+        """
         if email is None or not isinstance(email, basestring):
             return None
         email = email.lower()
@@ -45,10 +44,9 @@ class UserHelper(object):
         return self._get().filter('email =', email).get()       
     
     def get_by_email_not_confirm(self, email, keys_only=False):
-        '''
-         Search and returns a User object with that email
+        """Search and returns a User object with that email.
          Search users with confirm True or False
-        '''
+        """
         if email is None or not isinstance(email, basestring):
             return None
         email = email.lower()
@@ -58,8 +56,7 @@ class UserHelper(object):
         
     
     def get_followers(self, userid = None, username=None, page=1, query_id=None):
-        '''
-        Obtiene la lista de followers de un usuario
+        """Obtiene la lista de followers de un usuario
             
             :param userid: id del usuario (user.id)
             :type userid: :class:`string`
@@ -70,7 +67,7 @@ class UserHelper(object):
             :param query_id: identificador de busqueda
             :type query_id: int
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
-        '''
+        """
         if username is not None:
             userkey = self.get_by_username(username, keys_only=True)
         elif userid is not None:
@@ -83,8 +80,7 @@ class UserHelper(object):
         return [p.id, [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]]
     
     def get_followings(self, userid = None, username=None, page=1, query_id=None):
-        '''
-        Obtiene la lista de personas a las que sigue el usuario
+        """Obtiene la lista de personas a las que sigue el usuario
         
             :param userid: id del usuario (user.id)
             :type userid: :class:`string`
@@ -95,7 +91,7 @@ class UserHelper(object):
             :param query_id: identificador de busqueda
             :type query_id: int
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
-        '''
+        """
         if username is not None:
             userkey = self.get_by_username(username, keys_only=True)
         elif userid is not None:

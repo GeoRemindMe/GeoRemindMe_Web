@@ -106,34 +106,34 @@ class SocialUserForm(forms.Form):
     '''
     email = forms.EmailField(label=_('email'), required=True)
     username = forms.CharField(label=_('username'), required=True)
-    '''
-    password = forms.CharField(label=_("New password"), required=False,
-                               max_length=settings.MAX_PWD_LENGTH,
-                               min_length=settings.MIN_PWD_LENGTH,
-                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
-                               )
-    password2 = forms.CharField(label=_("Repeat new password"), required=False,
-                               max_length=settings.MAX_PWD_LENGTH,
-                               min_length=settings.MIN_PWD_LENGTH,
-                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
-                               )
-    
-    def clean(self):
-        """
-         Clean data and check if the old pass is input and the two passwords are the same
-        """
-        cleaned_data = self.cleaned_data
-        password = cleaned_data.get('password')
-        password2 = cleaned_data.get('password2')
-
-        if password.find(' ') != -1:
-            msg = _("Passwords can't have white spaces")
-            self._errors['password'] = self.error_class([msg])
-        elif password != password2:
-            msg = _("Passwords must be the same.")
-            self._errors['password'] = self.error_class([msg])
-        return cleaned_data
-    '''
+    #~ '''
+    #~ password = forms.CharField(label=_("New password"), required=False,
+                               #~ max_length=settings.MAX_PWD_LENGTH,
+                               #~ min_length=settings.MIN_PWD_LENGTH,
+                               #~ widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               #~ )
+    #~ password2 = forms.CharField(label=_("Repeat new password"), required=False,
+                               #~ max_length=settings.MAX_PWD_LENGTH,
+                               #~ min_length=settings.MIN_PWD_LENGTH,
+                               #~ widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               #~ )
+    #~ 
+    #~ def clean(self):
+        #~ """
+         #~ Clean data and check if the old pass is input and the two passwords are the same
+        #~ """
+        #~ cleaned_data = self.cleaned_data
+        #~ password = cleaned_data.get('password')
+        #~ password2 = cleaned_data.get('password2')
+#~ 
+        #~ if password.find(' ') != -1:
+            #~ msg = _("Passwords can't have white spaces")
+            #~ self._errors['password'] = self.error_class([msg])
+        #~ elif password != password2:
+            #~ msg = _("Passwords must be the same.")
+            #~ self._errors['password'] = self.error_class([msg])
+        #~ return cleaned_data
+    #~ '''
     def save(self, user):
         try:
             return user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'])

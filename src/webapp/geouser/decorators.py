@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from django.http import HttpResponseRedirect
+from functools import wraps
 
 """
 .. module:: decorators
@@ -10,6 +11,7 @@ from django.http import HttpResponseRedirect
 """
 
 def login_required(func):
+    @wraps(func)
     def _wrapper(*args, **kwargs):
         request = args[0]  # request es el primer parametro que pasamos
         #raise Exception(session._session)
@@ -20,6 +22,7 @@ def login_required(func):
     return _wrapper
 
 def admin_required(func):
+    @wraps(func)
     def _wrapper(*args, **kwargs):
         session = args[0].session  # request es el primer parametro que pasamos
         user = session.get('user')

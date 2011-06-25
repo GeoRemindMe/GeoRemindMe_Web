@@ -60,28 +60,20 @@
 <dl class="function">
 <dt id="geouser.funcs.init_user_session">
 <tt class="descclassname">geouser.funcs.</tt><tt class="descname">init_user_session</tt><big>(</big><em>request</em>, <em>user</em>, <em>remember=False</em>, <em>from_rpc=False</em><big>)</big><a class="headerlink" href="#geouser.funcs.init_user_session" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>when a user logs in, we need to initialize a new session,
-save session in user, and save the user in the session</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
+<dd><p>When a user logs in, we need to initialize a new session, save session in user, and save the user in the session</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">param request:</th><td class="field-body">The HTTP Request</td>
-</tr>
-<tr class="field"><th class="field-name">type request:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">http.Request</span></tt></td>
-</tr>
-<tr class="field"><th class="field-name">param user:</th><td class="field-body">User login</td>
-</tr>
-<tr class="field"><th class="field-name">type user:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">georemindme.models.User</span></tt></td>
-</tr>
-<tr class="field"><th class="field-name">param remember:</th><td class="field-body">True if the user wants to save his session</td>
-</tr>
-<tr class="field"><th class="field-name">type remember:</th><td class="field-body">boolean</td>
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">http.Request</span></tt>) &#8211; The HTTP Request</li>
+<li><strong>user</strong> (<tt class="xref py py-class docutils literal"><span class="pre">georemindme.models.User</span></tt>) &#8211; User login</li>
+<li><strong>remember</strong> (<em>boolean</em>) &#8211; True if the user wants to save his session</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
 </dd></dl>
 
 <dl class="function">

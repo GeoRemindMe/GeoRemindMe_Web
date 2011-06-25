@@ -20,9 +20,7 @@ import memcache
 # PERFIL DE EVENTOS
 #===============================================================================
 def suggestion_profile(request, id):
-    """
-        Devuelve el perfil de una sugerencia, comprueba la
-        visibilidad de una funcion
+    """Devuelve el perfil de una sugerencia, comprueba la visibilidad de una funcion
         
             :param id: identificador de la sugerencia
             :type id: :class:`ìnteger`
@@ -46,8 +44,7 @@ def suggestion_profile(request, id):
 #===============================================================================
 @login_required
 def add_alert(request, form, address):
-    """
-        Añade una alerta
+    """ Añade una alerta
         
             :param form: formulario con los datos
             :type form: :class:`geoalert.forms.RemindForm`
@@ -62,8 +59,7 @@ def add_alert(request, form, address):
 
 @login_required
 def edit_alert(request, id, form, address):
-    """
-        Edita una alerta
+    """ Edita una alerta
         
             :param form: formulario con los datos
             :type id: :class:`geoalert.forms.RemindForm`
@@ -76,8 +72,7 @@ def edit_alert(request, id, form, address):
 
 @login_required
 def get_alert(request, id, done = None, page = 1, query_id = None):
-    """
-        Obtiene alertas
+    """ Obtiene alertas
         
             :param id: identificador de la alerta
             :type id: :class:`integer`
@@ -102,8 +97,7 @@ def get_alert(request, id, done = None, page = 1, query_id = None):
 
 @login_required    
 def del_alert(request, id = None):
-    """
-        Borra una alerta
+    """ Borra una alerta
         
             :param id: identificador de la alerta
             :type id: :class:`integer`
@@ -128,8 +122,7 @@ def _get_city(components):
             return i['short_name']
             
 def search_place(pos, radius=500, types=None, language=None, name=None, sensor=False):
-    """
-        Busca lugares cercano a la posicion usando la API de Google Places
+    """ Busca lugares cercano a la posicion usando la API de Google Places
         
             :param pos: posicion a buscar
             :type pos: :class:`db.GeoPt`
@@ -166,8 +159,7 @@ def search_place(pos, radius=500, types=None, language=None, name=None, sensor=F
 
 @login_required
 def add_from_google_reference(request, reference):
-    """
-        Añade un lugar a partir de una referencia
+    """ Añade un lugar a partir de una referencia
         
             :param reference: clave de referencia
             :type reference: :class:`string`
@@ -198,8 +190,7 @@ def add_from_google_reference(request, reference):
 
 
 def view_place(request, slug):
-    """
-        Devuelve la vista con informacion de un lugar
+    """ Devuelve la vista con informacion de un lugar
        
            :param slug: slug identificativo del lugar
            :type slug: string

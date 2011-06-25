@@ -307,9 +307,9 @@ def get_followers(request, userid=None, username=None, page=1, query_id=None):
 		:type userid: string
 		:param username: nombre del usuario (user.username)
 		:type username: string
-		:param page: numero de pagina a mostrar
+		:param page: número de página a mostrar
 		:type page: int
-		:param query_id: identificador de busqueda
+		:param query_id: identificador de búsqueda
 		:type query_id: int
 		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """
@@ -334,9 +334,9 @@ def get_followings(request, userid=None, username=None, page=1, query_id=None):
 		:type userid: string
 		:param username: nombre del usuario (user.username)
 		:type username: string
-		:param page: numero de pagina a mostrar
+		:param page: número de página a mostrar
 		:type page: int
-		:param query_id: identificador de busqueda
+		:param query_id: identificador de búsqueda
 		:type query_id: int
 		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """
@@ -359,10 +359,10 @@ def add_following(request, userid=None, username=None):
     """**Descripción**:	Añade un  nuevo usuario a la lista de following del usuario logeado
     
 		:param userid: id del usuario (user.id)
-		:type userid: :class:`string`
+		:type userid: string
 		:param username: nombre del usuario (user.username)
-		:type username: :class:`string`
-		:return: boolean con el resultado de la operacion
+		:type username: string
+		:return: booleano con el resultado de la operación
     """
     return request.session['user'].add_following(userid=userid, username=username)
 
@@ -371,9 +371,9 @@ def del_following(request, userid=None, username=None):
     """**Descripción**: Borra un usuario de la lista de following del usuario logeado
 		
 		:param userid: id del usuario (user.id)
-		:type userid: :class:`string`
+		:type userid: string
 		:param username: nombre del usuario (user.username)
-		:type username: :class:`string`
+		:type username: string
 		:return: boolean con el resultado de la operacion
     """
     return request.session['user'].del_following(userid=userid, username=username)
@@ -388,9 +388,9 @@ def get_timeline(request, userid = None, username = None, page=1, query_id=None)
 		:type userid: string
 		:param username: nombre del usuario (user.username)
 		:type username: string
-		:param page: numero de pagina a mostrar
+		:param page: número de página a mostrar
 		:type page: int
-		:param query_id: identificador de busqueda
+		:param query_id: identificador de búsqueda
 		:type query_id: int
 		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad            
     """
@@ -412,9 +412,9 @@ def get_timeline(request, userid = None, username = None, page=1, query_id=None)
 def get_chronology(request, page=1, query_id=None):
     """**Descripción**: Obtiene la lista de timeline de los followings del usuario logueado
 
-		:param page: numero de pagina a mostrar
+		:param page: número de página a mostrar
 		:type page: int
-		:param query_id: identificador de busqueda
+		:param query_id: identificador de búsqueda
 		:type query_id: int
 		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """

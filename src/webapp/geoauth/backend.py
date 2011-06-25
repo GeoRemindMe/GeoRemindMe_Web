@@ -16,8 +16,7 @@ class OAUTH_Store(object):
     """ Handle the models in the datastore (clients, tokens, etc)"""
     
     def fetch_consumer(self, oauth_request):
-        """
-            Load the consumer (key, secret) who is doing a request
+        """Load the consumer (key, secret) who is doing a request
         
                 :param oauth_request: oauth request
                 :type oauth_request: :class:`oauth2.Request`
@@ -35,8 +34,7 @@ class OAUTH_Store(object):
     
     
     def fetch_appInfo(self, key):
-        """
-            Returns a dict with the name and description of a client application
+        """Returns a dict with the name and description of a client application
             
                 :param key: App key in the datastore
                 :type key: :class:`string`
@@ -55,8 +53,7 @@ class OAUTH_Store(object):
     
     
     def generate_request_token(self, oauth_request, oauth_consumer, oauth_callback=None):
-        """
-            Load the request token in the request
+        """Load the request token in the request
         
                 :param oauth_request: oauth request
                 :type oauth_request: :class:`oauth2.Request`
@@ -86,8 +83,7 @@ class OAUTH_Store(object):
     
 
     def authorize_token(self, token, user):
-        """
-            Authorizes a request token, sets the verifier and the user in the token
+        """Authorizes a request token, sets the verifier and the user in the token
         
             :param token: Request token to be authorized
             :type token: :class:`oauth2.Token`
@@ -108,8 +104,7 @@ class OAUTH_Store(object):
     
     
     def generate_access_token(self, token, oauth_consumer):
-        """
-            Generate the new access token
+        """Generate the new access token
             
                 :param token: Request token authorized
                 :type token: :class:`oauth2.Token`
@@ -139,8 +134,7 @@ class OAUTH_Store(object):
         raise OAUTHException("Token or client key invalid")
     
     def fetch_token(self, oauth_request):
-        """
-            Get the token object in a request
+        """Get the token object in a request
         
                 :param oauth_request: oauth request
                 :type oauth_request: :class:`oauth2.Request`
@@ -163,8 +157,7 @@ class OAUTH_Store(object):
         raise OAUTHException("Token key invalid")
     
     def fetch_token_db(self, oauth_request):
-        """
-            Get the token object in a request
+        """Get the token object in a request
         
                 :param oauth_request: oauth request
                 :type oauth_request: :class:`oauth2.Request`

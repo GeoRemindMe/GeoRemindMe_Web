@@ -26,8 +26,7 @@ def get_next(request):
 
 
 def init_user_session(request, user, remember=False, from_rpc=False):
-    """when a user logs in, we need to initialize a new session,
-        save session in user, and save the user in the session
+    """When a user logs in, we need to initialize a new session, save session in user, and save the user in the session
 
             :param request: The HTTP Request
             :type request: :class:`http.Request`

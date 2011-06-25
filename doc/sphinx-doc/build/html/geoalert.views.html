@@ -50,99 +50,151 @@
 <span id="geoalert-views"></span><h1>GeoAlert Views<a class="headerlink" href="#module-geoalert.views" title="Enlazar permanentemente con este título">¶</a></h1>
 <p id="module-views"><em>Plataformas:</em>appengine</p>
 <dl class="function">
-<dt id="geoalert.views.add_from_google_reference">
-<tt class="descclassname">geoalert.views.</tt><tt class="descname">add_from_google_reference</tt><big>(</big><em>request</em>, <em>reference</em><big>)</big><a class="headerlink" href="#geoalert.views.add_from_google_reference" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Añade un lugar a partir de una referencia</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
+<dt id="geoalert.views.add_alert">
+<tt class="descclassname">geoalert.views.</tt><tt class="descname">add_alert</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geoalert.views.add_alert" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Añade una alerta</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name" colspan="2">param reference:</th></tr>
-<tr><td>&nbsp;</td><td class="field-body">clave de referencia</td>
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>form</strong> (<tt class="xref py py-class docutils literal"><span class="pre">geoalert.forms.RemindForm</span></tt>) &#8211; formulario con los datos</li>
+<li><strong>address</strong> &#8211; direccion obtenida de la posicion</li>
+</ul>
+</td>
 </tr>
-<tr class="field"><th class="field-name">type reference:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">string</span></tt></td>
+<tr class="field"><th class="field-name">Type :</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">string</span></tt></p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">geoalert.models.Alert</span></tt></p>
+</td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoalert.views.add_from_google_reference">
+<tt class="descclassname">geoalert.views.</tt><tt class="descname">add_from_google_reference</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geoalert.views.add_from_google_reference" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Añade un lugar a partir de una referencia</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>reference</strong> (<tt class="xref py py-class docutils literal"><span class="pre">string</span></tt>) &#8211; clave de referencia</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoalert.views.del_alert">
+<tt class="descclassname">geoalert.views.</tt><tt class="descname">del_alert</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geoalert.views.del_alert" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Borra una alerta</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>id</strong> (<tt class="xref py py-class docutils literal"><span class="pre">integer</span></tt>) &#8211; identificador de la alerta</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">True</td>
+</tr>
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body">AttributeError</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoalert.views.edit_alert">
+<tt class="descclassname">geoalert.views.</tt><tt class="descname">edit_alert</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geoalert.views.edit_alert" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Edita una alerta</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>form</strong> &#8211; formulario con los datos</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">geoalert.models.Alert</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoalert.views.get_alert">
+<tt class="descclassname">geoalert.views.</tt><tt class="descname">get_alert</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geoalert.views.get_alert" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtiene alertas</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<tt class="xref py py-class docutils literal"><span class="pre">integer</span></tt>) &#8211; identificador de la alerta</li>
+<li><strong>done</strong> (<em>boolean</em>) &#8211; devolver solo las realizadas</li>
+<li><strong>page</strong> (<tt class="xref py py-class docutils literal"><span class="pre">ìnteger</span></tt>) &#8211; pagina a devolver</li>
+<li><strong>query_id</strong> (<tt class="xref py py-class docutils literal"><span class="pre">integer</span></tt>) &#8211; identificador de la busqueda</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">geoalert.models.Alert</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="geoalert.views.search_place">
 <tt class="descclassname">geoalert.views.</tt><tt class="descname">search_place</tt><big>(</big><em>pos</em>, <em>radius=500</em>, <em>types=None</em>, <em>language=None</em>, <em>name=None</em>, <em>sensor=False</em><big>)</big><a class="headerlink" href="#geoalert.views.search_place" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Busca lugares cercano a la posicion usando la API de Google Places</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">param pos:</th><td class="field-body">posicion a buscar</td>
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>pos</strong> (<tt class="xref py py-class docutils literal"><span class="pre">db.GeoPt</span></tt>) &#8211; posicion a buscar</li>
+<li><strong>radius</strong> (<tt class="xref py py-class docutils literal"><span class="pre">integer</span></tt>) &#8211; radio a buscar</li>
+<li><strong>types</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; lista de tipos de sitios (opcional)</li>
+<li><strong>language</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; idioma de los resultados (opcional)</li>
+<li><strong>name</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; Nombre que buscar (opcional)</li>
+<li><strong>sensor</strong> (<em>boolean</em>) &#8211; indicar si la posicion se obtiene con GPS, etc.</li>
+</ul>
+</td>
 </tr>
-<tr class="field"><th class="field-name">type pos:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">db.GeoPt</span></tt></td>
-</tr>
-<tr class="field"><th class="field-name">param radius:</th><td class="field-body">radio a buscar</td>
-</tr>
-<tr class="field"><th class="field-name">type radius:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">integer</span></tt></td>
-</tr>
-<tr class="field"><th class="field-name">param types:</th><td class="field-body">lista de tipos de sitios (opcional)</td>
-</tr>
-<tr class="field"><th class="field-name">type types:</th><td class="field-body">list</td>
-</tr>
-<tr class="field"><th class="field-name">param language:</th><td class="field-body">idioma de los resultados (opcional)</td>
-</tr>
-<tr class="field"><th class="field-name">type language:</th><td class="field-body">string</td>
-</tr>
-<tr class="field"><th class="field-name">param name:</th><td class="field-body">Nombre que buscar (opcional)</td>
-</tr>
-<tr class="field"><th class="field-name">type name:</th><td class="field-body">string</td>
-</tr>
-<tr class="field"><th class="field-name">param sensor:</th><td class="field-body">indicar si la posicion se obtiene con GPS, etc.</td>
-</tr>
-<tr class="field"><th class="field-name">type sensor:</th><td class="field-body">boolean</td>
-</tr>
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">dict</td>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">dict</p>
+</td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
 </dd></dl>
 
 <dl class="function">
 <dt id="geoalert.views.suggestion_profile">
 <tt class="descclassname">geoalert.views.</tt><tt class="descname">suggestion_profile</tt><big>(</big><em>request</em>, <em>id</em><big>)</big><a class="headerlink" href="#geoalert.views.suggestion_profile" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Devuelve el perfil de una sugerencia, comprueba la
-visibilidad de una funcion</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
+<dd><p>Devuelve el perfil de una sugerencia, comprueba la visibilidad de una funcion</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">param id:</th><td class="field-body">identificador de la sugerencia</td>
-</tr>
-<tr class="field"><th class="field-name">type id:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">ìnteger</span></tt></td>
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>id</strong> (<tt class="xref py py-class docutils literal"><span class="pre">ìnteger</span></tt>) &#8211; identificador de la sugerencia</td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
 </dd></dl>
 
 <dl class="function">
 <dt id="geoalert.views.view_place">
 <tt class="descclassname">geoalert.views.</tt><tt class="descname">view_place</tt><big>(</big><em>request</em>, <em>slug</em><big>)</big><a class="headerlink" href="#geoalert.views.view_place" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Devuelve la vista con informacion de un lugar</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">param slug:</th><td class="field-body">slug identificativo del lugar</td>
-</tr>
-<tr class="field"><th class="field-name">type slug:</th><td class="field-body">string</td>
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>slug</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; slug identificativo del lugar</td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
 </dd></dl>
 
 </div>

@@ -52,6 +52,27 @@
   <div class="section" id="module-geouser.views">
 <span id="geouser-views"></span><h1>GeoUser Views<a class="headerlink" href="#module-geouser.views" title="Enlazar permanentemente con este título">¶</a></h1>
 <dl class="function">
+<dt id="geouser.views.add_following">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">add_following</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.add_following" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>:        Añade un  nuevo usuario a la lista de following del usuario logeado</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>userid</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; id del usuario (user.id)</li>
+<li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre del usuario (user.username)</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">booleano con el resultado de la operación</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="geouser.views.confirm">
 <tt class="descclassname">geouser.views.</tt><tt class="descname">confirm</tt><big>(</big><em>request</em>, <em>user</em>, <em>code</em><big>)</big><a class="headerlink" href="#geouser.views.confirm" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p><strong>Descripción</strong>: confirma el email de usuario</p>
@@ -73,6 +94,62 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="geouser.views.dashboard">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">dashboard</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.dashboard" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Permite actualizar el email y la contraseña.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">Solo devuelve errores si el proceso falla.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.del_following">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">del_following</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.del_following" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Borra un usuario de la lista de following del usuario logeado</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>userid</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; id del usuario (user.id)</li>
+<li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre del usuario (user.username)</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">boolean con el resultado de la operacion</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.get_chronology">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">get_chronology</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.get_chronology" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Obtiene la lista de timeline de los followings del usuario logueado</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; número de página a mostrar</li>
+<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de búsqueda</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">lista de tuplas de la forma (id, username), None si el usuario tiene privacidad</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="geouser.views.get_followers">
 <tt class="descclassname">geouser.views.</tt><tt class="descname">get_followers</tt><big>(</big><em>request</em>, <em>userid=None</em>, <em>username=None</em>, <em>page=1</em>, <em>query_id=None</em><big>)</big><a class="headerlink" href="#geouser.views.get_followers" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p><strong>Descripción</strong>: Obtiene la lista de followers de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado.</p>
@@ -83,8 +160,8 @@
 <tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
 <li><strong>userid</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; id del usuario (user.id)</li>
 <li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre del usuario (user.username)</li>
-<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; numero de pagina a mostrar</li>
-<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de busqueda</li>
+<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; número de página a mostrar</li>
+<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de búsqueda</li>
 </ul>
 </td>
 </tr>
@@ -106,8 +183,8 @@
 <tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
 <li><strong>userid</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; id del usuario (user.id)</li>
 <li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre del usuario (user.username)</li>
-<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; numero de pagina a mostrar</li>
-<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de busqueda</li>
+<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; número de página a mostrar</li>
+<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de búsqueda</li>
 </ul>
 </td>
 </tr>
@@ -129,8 +206,8 @@
 <tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
 <li><strong>userid</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; id del usuario (user.id)</li>
 <li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre del usuario (user.username)</li>
-<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; numero de pagina a mostrar</li>
-<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de busqueda</li>
+<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; número de página a mostrar</li>
+<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de búsqueda</li>
 </ul>
 </td>
 </tr>
@@ -271,6 +348,34 @@ rellenar el formulario de login de GeoRemindMe.</p>
 <li><strong>code</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; código único para recuperar contraseña</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.update_profile">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">update_profile</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.update_profile" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Actualiza el nombre de usuario y el avatar.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">Solo devuelve errores si el proceso falla.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.update_user">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">update_user</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.update_user" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Permite actualizar el email y la contraseña.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">Solo devuelve errores si el proceso falla.</td>
 </tr>
 </tbody>
 </table>
