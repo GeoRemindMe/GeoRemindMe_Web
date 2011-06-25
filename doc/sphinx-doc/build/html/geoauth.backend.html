@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoAuth Backend &mdash; GeoRemindMe v0.1a documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="GeoRemindMe v0.1a documentation" href="index.html" />
+    <link rel="up" title="GeoAuth" href="geoauth.html" />
+    <link rel="next" title="GeoAuth models" href="geoauth.models.html" />
+    <link rel="prev" title="GeoAuth" href="geoauth.html" /> 
+  </head>
+  <body>
+      <div class="header"><img class="rightlogo" src="_static/logo_doc.png" alt="Logo"/><h1 class="heading"><a href="index.html">
+          <span>GeoRemindMe v0.1a documentation</span></a></h1>
+        <h2 class="heading"><span>GeoAuth Backend</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="geoauth.html">GeoAuth</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geoauth.models.html">GeoAuth models</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="module-geoauth.backend">
+<span id="geoauth-backend"></span><h1>GeoAuth Backend<a class="headerlink" href="#module-geoauth.backend" title="Enlazar permanentemente con este título">¶</a></h1>
+<dl class="class">
+<dt id="geoauth.backend.OAUTH_Store">
+<em class="property">class </em><tt class="descclassname">geoauth.backend.</tt><tt class="descname">OAUTH_Store</tt><a class="headerlink" href="#geoauth.backend.OAUTH_Store" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Handle the models in the datastore (clients, tokens, etc)</p>
+<dl class="method">
+<dt id="geoauth.backend.OAUTH_Store.authorize_token">
+<tt class="descname">authorize_token</tt><big>(</big><em>token</em>, <em>user</em><big>)</big><a class="headerlink" href="#geoauth.backend.OAUTH_Store.authorize_token" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Authorizes a request token, sets the verifier and the user in the token</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>token</strong> (<tt class="xref py py-class docutils literal"><span class="pre">oauth2.Token</span></tt>) &#8211; Request token to be authorized</li>
+<li><strong>user</strong> (<tt class="xref py py-class docutils literal"><span class="pre">georemindme.models.User</span></tt>) &#8211; User who authorizes the token</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Token</span></tt> authorized</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">OAUTHException</span></tt> if the token key is invalid</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoauth.backend.OAUTH_Store.fetch_appInfo">
+<tt class="descname">fetch_appInfo</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#geoauth.backend.OAUTH_Store.fetch_appInfo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Returns a dict with the name and description of a client application</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">param key:</th><td class="field-body">App key in the datastore</td>
+</tr>
+<tr class="field"><th class="field-name">type key:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">string</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">dict with the info of the app</td>
+</tr>
+<tr class="field"><th class="field-name">raises:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">OAUTHException</span></tt> if token key is invalid</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoauth.backend.OAUTH_Store.fetch_consumer">
+<tt class="descname">fetch_consumer</tt><big>(</big><em>oauth_request</em><big>)</big><a class="headerlink" href="#geoauth.backend.OAUTH_Store.fetch_consumer" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Load the consumer (key, secret) who is doing a request</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">param oauth_request:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">oauth request</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">type oauth_request:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Request</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">retuns:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Consumer</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">raises:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">OAUTHException</span></tt> if the client key is invalid</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoauth.backend.OAUTH_Store.fetch_token">
+<tt class="descname">fetch_token</tt><big>(</big><em>oauth_request</em><big>)</big><a class="headerlink" href="#geoauth.backend.OAUTH_Store.fetch_token" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Get the token object in a request</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">param oauth_request:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">oauth request</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">type oauth_request:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Request</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">returns:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Token</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">raises:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">OAUTHException</span></tt> if token is invalid</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoauth.backend.OAUTH_Store.fetch_token_db">
+<tt class="descname">fetch_token_db</tt><big>(</big><em>oauth_request</em><big>)</big><a class="headerlink" href="#geoauth.backend.OAUTH_Store.fetch_token_db" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Get the token object in a request</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">param oauth_request:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">oauth request</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">type oauth_request:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Request</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">returns:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Token</span></tt> and <tt class="xref py py-class docutils literal"><span class="pre">geoauth.models.OAUTH_Access</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">raises:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">OAUTHException</span></tt> if token is invalid</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoauth.backend.OAUTH_Store.generate_access_token">
+<tt class="descname">generate_access_token</tt><big>(</big><em>token</em>, <em>oauth_consumer</em><big>)</big><a class="headerlink" href="#geoauth.backend.OAUTH_Store.generate_access_token" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Generate the new access token</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">param token:</th><td class="field-body">Request token authorized</td>
+</tr>
+<tr class="field"><th class="field-name">type token:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Token</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">param oauth_consumer:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">Application requesting the access token</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">type oauth_consumer:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Consumer</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">param user:</th><td class="field-body">User for the authorized token</td>
+</tr>
+<tr class="field"><th class="field-name">type user:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">georemindme.models.User</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">returns:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Token</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">raises:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">OAUTHException</span></tt> if the token key or consumer key are invalid</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoauth.backend.OAUTH_Store.generate_request_token">
+<tt class="descname">generate_request_token</tt><big>(</big><em>oauth_request</em>, <em>oauth_consumer</em>, <em>oauth_callback=None</em><big>)</big><a class="headerlink" href="#geoauth.backend.OAUTH_Store.generate_request_token" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Load the request token in the request</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">param oauth_request:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">oauth request</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">type oauth_request:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Request</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">param oauth_consumer:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">oauth consumer</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">type oauth_consumer:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Consumer</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">param oauth_callback:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">callback URL</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">type oauth_callback:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">string</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">returns:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">oauth2.Token</span></tt> with the new key and secret</td>
+</tr>
+<tr class="field"><th class="field-name">raises:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">OAUTHException</span></tt> if client key is invalid</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="geoauth.html">GeoAuth</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geoauth.models.html">GeoAuth models</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright GFDL 2011, GeoRemindMe.
+      Creado con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+    
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-19272923-1']);
+	  _gaq.push(['_setDomainName', '.georemindme.com']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+  </body>
+</html>

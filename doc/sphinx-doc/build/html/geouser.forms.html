@@ -1,0 +1,162 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoUser forms &mdash; GeoRemindMe v0.1a documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="GeoRemindMe v0.1a documentation" href="index.html" />
+    <link rel="up" title="GeoUser" href="geouser.html" />
+    <link rel="next" title="GeoUser funcs" href="geouser.funcs.html" />
+    <link rel="prev" title="GeoUser exceptions" href="geouser.exceptions.html" /> 
+  </head>
+  <body>
+      <div class="header"><img class="rightlogo" src="_static/logo_doc.png" alt="Logo"/><h1 class="heading"><a href="index.html">
+          <span>GeoRemindMe v0.1a documentation</span></a></h1>
+        <h2 class="heading"><span>GeoUser forms</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="geouser.exceptions.html">GeoUser exceptions</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geouser.funcs.html">GeoUser funcs</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="module-geouser.forms">
+<span id="geouser-forms"></span><h1>GeoUser forms<a class="headerlink" href="#module-geouser.forms" title="Enlazar permanentemente con este título">¶</a></h1>
+<dl class="class">
+<dt id="geouser.forms.LoginForm">
+<em class="property">class </em><tt class="descclassname">geouser.forms.</tt><tt class="descname">LoginForm</tt><big>(</big><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.util.ErrorList'&gt;</em>, <em>label_suffix=':'</em>, <em>empty_permitted=False</em><big>)</big><a class="headerlink" href="#geouser.forms.LoginForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Form for the login process</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="geouser.forms.RegisterForm">
+<em class="property">class </em><tt class="descclassname">geouser.forms.</tt><tt class="descname">RegisterForm</tt><big>(</big><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.util.ErrorList'&gt;</em>, <em>label_suffix=':'</em>, <em>empty_permitted=False</em><big>)</big><a class="headerlink" href="#geouser.forms.RegisterForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Form for the register process</p>
+<dl class="method">
+<dt id="geouser.forms.RegisterForm.clean">
+<tt class="descname">clean</tt><big>(</big><big>)</big><a class="headerlink" href="#geouser.forms.RegisterForm.clean" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clean data and check if the two passwords are the same</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geouser.forms.SocialUserForm">
+<em class="property">class </em><tt class="descclassname">geouser.forms.</tt><tt class="descname">SocialUserForm</tt><big>(</big><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.util.ErrorList'&gt;</em>, <em>label_suffix=':'</em>, <em>empty_permitted=False</em><big>)</big><a class="headerlink" href="#geouser.forms.SocialUserForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Formulario para pedir un correo y username a los usuarios que entran desde una red social</p>
+<dl class="attribute">
+<dt id="geouser.forms.SocialUserForm.username">
+<tt class="descname">username</tt><a class="headerlink" href="#geouser.forms.SocialUserForm.username" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><dl class="docutils">
+<dt>password = forms.CharField(label=_(&#8220;New password&#8221;), required=False,</dt>
+<dd>max_length=settings.MAX_PWD_LENGTH,
+min_length=settings.MIN_PWD_LENGTH,
+widget=forms.PasswordInput(attrs={&#8216;size&#8217;: settings.MAX_PWD_LENGTH+2})
+)</dd>
+<dt>password2 = forms.CharField(label=_(&#8220;Repeat new password&#8221;), required=False,</dt>
+<dd>max_length=settings.MAX_PWD_LENGTH,
+min_length=settings.MIN_PWD_LENGTH,
+widget=forms.PasswordInput(attrs={&#8216;size&#8217;: settings.MAX_PWD_LENGTH+2})
+)</dd>
+<dt>def clean(self):</dt>
+<dd><dl class="first docutils">
+<dt>&#8220;&#8221;&#8220;</dt>
+<dd>Clean data and check if the old pass is input and the two passwords are the same</dd>
+</dl>
+<p>&#8220;&#8221;&#8221;
+cleaned_data = self.cleaned_data
+password = cleaned_data.get(&#8216;password&#8217;)
+password2 = cleaned_data.get(&#8216;password2&#8217;)</p>
+<dl class="docutils">
+<dt>if password.find(&#8216; &#8216;) != -1:</dt>
+<dd>msg = _(&#8220;Passwords can&#8217;t have white spaces&#8221;)
+self._errors[&#8216;password&#8217;] = self.error_class([msg])</dd>
+<dt>elif password != password2:</dt>
+<dd>msg = _(&#8220;Passwords must be the same.&#8221;)
+self._errors[&#8216;password&#8217;] = self.error_class([msg])</dd>
+</dl>
+<p class="last">return cleaned_data</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geouser.forms.UserForm">
+<em class="property">class </em><tt class="descclassname">geouser.forms.</tt><tt class="descname">UserForm</tt><big>(</big><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.util.ErrorList'&gt;</em>, <em>label_suffix=':'</em>, <em>empty_permitted=False</em><big>)</big><a class="headerlink" href="#geouser.forms.UserForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Allow the user to change somo info of his account</p>
+<dl class="method">
+<dt id="geouser.forms.UserForm.clean">
+<tt class="descname">clean</tt><big>(</big><big>)</big><a class="headerlink" href="#geouser.forms.UserForm.clean" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clean data and check if the old pass is input and the two passwords are the same</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="geouser.exceptions.html">GeoUser exceptions</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geouser.funcs.html">GeoUser funcs</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright GFDL 2011, GeoRemindMe.
+      Creado con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+    
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-19272923-1']);
+	  _gaq.push(['_setDomainName', '.georemindme.com']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+  </body>
+</html>

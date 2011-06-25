@@ -6,10 +6,19 @@
 GeoAuth
 ====================================
 
-Contents:
+Este paquete contiene todo los necesario para **implementar el protocolo
+OAuth** que se utiliza en la aplicación para permitir que el usuario se
+identifique en la aplicación usando su cuenta de usuario de otras redes
+sociales. 
+
+También se utilizará para que si el usuario quiere, se establecer un
+puente de comunicación entre redes para sincronizar algunos datos.
 
 .. toctree::
    	:maxdepth: 2
 	
-	geoauth.server
-
+        Backend <geoauth.backend>
+        Models <geoauth.models>
+        Server <geoauth.server>
+        Utilities <geoauth.utils>
+        Views <geoauth.views>

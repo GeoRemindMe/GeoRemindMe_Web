@@ -1,0 +1,221 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoAuth models &mdash; GeoRemindMe v0.1a documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="GeoRemindMe v0.1a documentation" href="index.html" />
+    <link rel="up" title="GeoAuth" href="geoauth.html" />
+    <link rel="next" title="GeoAuth server" href="geoauth.server.html" />
+    <link rel="prev" title="GeoAuth Backend" href="geoauth.backend.html" /> 
+  </head>
+  <body>
+      <div class="header"><img class="rightlogo" src="_static/logo_doc.png" alt="Logo"/><h1 class="heading"><a href="index.html">
+          <span>GeoRemindMe v0.1a documentation</span></a></h1>
+        <h2 class="heading"><span>GeoAuth models</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="geoauth.backend.html">GeoAuth Backend</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geoauth.server.html">GeoAuth server</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="module-geoauth.models">
+<span id="geoauth-models"></span><h1>GeoAuth models<a class="headerlink" href="#module-geoauth.models" title="Enlazar permanentemente con este título">¶</a></h1>
+<p id="module-OAUTH_Models"><em>Plataformas:</em>appengine</p>
+<dl class="class">
+<dt id="geoauth.models.OAUTH_Client">
+<em class="property">class </em><tt class="descclassname">geoauth.models.</tt><tt class="descname">OAUTH_Client</tt><big>(</big><em>parent=None</em>, <em>key_name=None</em>, <em>_app=None</em>, <em>_from_entity=False</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#geoauth.models.OAUTH_Client" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Applications using our data</p>
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Client.callback">
+<tt class="descname">callback</tt><a class="headerlink" href="#geoauth.models.OAUTH_Client.callback" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A property whose values are Link instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Client.client_secret">
+<tt class="descname">client_secret</tt><a class="headerlink" href="#geoauth.models.OAUTH_Client.client_secret" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Client.client_verifier">
+<tt class="descname">client_verifier</tt><a class="headerlink" href="#geoauth.models.OAUTH_Client.client_verifier" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Client.created">
+<tt class="descname">created</tt><a class="headerlink" href="#geoauth.models.OAUTH_Client.created" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>The base class of all of our date/time properties.</p>
+<p>We handle common operations, like converting between time tuples and
+datetime instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Client.description">
+<tt class="descname">description</tt><a class="headerlink" href="#geoauth.models.OAUTH_Client.description" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Client.image">
+<tt class="descname">image</tt><a class="headerlink" href="#geoauth.models.OAUTH_Client.image" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A property whose values are IM instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Client.name">
+<tt class="descname">name</tt><a class="headerlink" href="#geoauth.models.OAUTH_Client.name" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Client.oauth_token_set">
+<tt class="descname">oauth_token_set</tt><a class="headerlink" href="#geoauth.models.OAUTH_Client.oauth_token_set" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>The inverse of the Reference property above.</p>
+<p>We construct reverse references automatically for the model to which
+the Reference property is pointing to create the one-to-many property for
+that model.  For example, if you put a Reference property in model A that
+refers to model B, we automatically create a _ReverseReference property in
+B called a_set that can fetch all of the model A instances that refer to
+that instance of model B.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Client.user">
+<tt class="descname">user</tt><a class="headerlink" href="#geoauth.models.OAUTH_Client.user" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A property that represents a many-to-one reference to another model.</p>
+<p>For example, a reference property in model A that refers to model B forms
+a many-to-one relationship from A to B: every instance of A refers to a
+single B instance, and every B instance can have many A instances refer
+to it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoauth.models.OAUTH_Token">
+<em class="property">class </em><tt class="descclassname">geoauth.models.</tt><tt class="descname">OAUTH_Token</tt><big>(</big><em>parent=None</em>, <em>key_name=None</em>, <em>_app=None</em>, <em>_from_entity=False</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#geoauth.models.OAUTH_Token" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Save the token used by another applications trying to get the authorization for a user</p>
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Token.access">
+<tt class="descname">access</tt><a class="headerlink" href="#geoauth.models.OAUTH_Token.access" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Token.created">
+<tt class="descname">created</tt><a class="headerlink" href="#geoauth.models.OAUTH_Token.created" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>The base class of all of our date/time properties.</p>
+<p>We handle common operations, like converting between time tuples and
+datetime instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Token.oauth_consumer">
+<tt class="descname">oauth_consumer</tt><a class="headerlink" href="#geoauth.models.OAUTH_Token.oauth_consumer" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A property that represents a many-to-one reference to another model.</p>
+<p>For example, a reference property in model A that refers to model B forms
+a many-to-one relationship from A to B: every instance of A refers to a
+single B instance, and every B instance can have many A instances refer
+to it.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Token.oauth_user">
+<tt class="descname">oauth_user</tt><a class="headerlink" href="#geoauth.models.OAUTH_Token.oauth_user" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A property that represents a many-to-one reference to another model.</p>
+<p>For example, a reference property in model A that refers to model B forms
+a many-to-one relationship from A to B: every instance of A refers to a
+single B instance, and every B instance can have many A instances refer
+to it.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Token.token_callback">
+<tt class="descname">token_callback</tt><a class="headerlink" href="#geoauth.models.OAUTH_Token.token_callback" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A property whose values are Link instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Token.token_secret">
+<tt class="descname">token_secret</tt><a class="headerlink" href="#geoauth.models.OAUTH_Token.token_secret" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoauth.models.OAUTH_Token.token_verifier">
+<tt class="descname">token_verifier</tt><a class="headerlink" href="#geoauth.models.OAUTH_Token.token_verifier" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="geoauth.backend.html">GeoAuth Backend</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geoauth.server.html">GeoAuth server</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright GFDL 2011, GeoRemindMe.
+      Creado con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+    
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-19272923-1']);
+	  _gaq.push(['_setDomainName', '.georemindme.com']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+  </body>
+</html>

@@ -6,6 +6,12 @@ from google.appengine.ext import db
 from models import OAUTH_Client, OAUTH_Token
 from exceptions import *
 
+"""
+.. module:: backend
+    :platform: appengine
+    :synopsis: Backend functions
+"""
+
 class OAUTH_Store(object):
     """ Handle the models in the datastore (clients, tokens, etc)"""
     

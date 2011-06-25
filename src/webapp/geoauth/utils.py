@@ -11,7 +11,7 @@ def validate_client(request):
             :param Request: A valid request
             :type Request: :class:`Request`
             :return: :class:`OAUTH_Client`
-            :raises: :class:`OAUTHException
+            :raises: :class:`OAUTHException`
     """
     
     def _get_oauth_request(request):
