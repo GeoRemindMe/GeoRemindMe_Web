@@ -16,6 +16,25 @@ Cada URL de la aplicación llama a una función declarada dentro de una
 determinada vista, y esta puede o no llamar a su vez a otras funciones 
 de la misma o de las vistas de otros paquetes.
 
+Indices y tablas
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+Modelado de la base de datos
+===============================
+En el siguiente diagrama resume la estructura de la aplicación:
+
+.. image:: ../../database/modelo.jpeg
+    :width: 980px
+    :align: center
+    :alt: Diagrama de la base de datos
+
+
+Paquetes
+===========
 Estos paquetes son:
 
 .. toctree::
@@ -28,11 +47,7 @@ Estos paquetes son:
         geoalert
     
 	
+.. note::
+    
+    Dentro de esta aplicación se encuentra la aplicación para Facebook.
 
-
-Indices y tablas
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

@@ -19,7 +19,7 @@ Contents:
 	Helpers <geouser.helpers>
 	Helpers access <geouser.helpers_acc>
 	Models <geouser.models>
-	Model access <geouser.models_acc>
+	Model accounts <geouser.models_acc>
 	Properties <geouser.properties>
 	Signals <geouser.signals>
 	Social models <geouser.models_social>

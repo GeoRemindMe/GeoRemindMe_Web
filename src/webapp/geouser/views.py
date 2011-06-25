@@ -34,12 +34,11 @@ from geoauth.clients import facebook, twitter
 # REGISTER VIEW
 #===============================================================================
 def register(request):
-    """
-        Recibe una petición de registro vía POST e intenta crea al 
-        usuario; en caso de éxito le enviará un email para confirmar 
-        su cuenta.
+    """**Descripción**: Recibe una petición de registro vía POST e intenta crear un usuario; en caso de éxito le enviará un email para confirmar su cuenta.
         
-            :returns: En caso de éxito un :class:`google.appengine.api.user` y un formulario de registro. En caso de que no se reciba POST redirige al panel de registro
+        :param request: array con un email y dos contraseñas
+        :type request: array
+		:return: En caso de éxito un :class:`google.appengine.api.user` y un formulario de registro. En caso de que no se reciba POST redirige al panel de registro
             
     """
     if request.method == 'POST':
@@ -56,12 +55,11 @@ def register(request):
 # LOGIN VIEWS
 #===============================================================================
 def login(request):
-    """
-        Recibe petición de autenticación vía POST y si los datos son correctos
+    """**Descripción**: Recibe petición de autenticación vía POST y si los datos son correctos
         se llama a la función login_func que inicializa, crea la sesión y 
         devuelve un mensaje en caso de éxito.
         
-            :returns: En caso de recibir el POST devuelve un string con posibles errores y redirect con la URL a la que habría que dirigir. En caso contrario renderiza la plantilla de login.
+        :return: En caso de recibir el POST devuelve un string con posibles errores y redirect con la URL a la que habría que dirigir. En caso contrario renderiza la plantilla de login.
             
     """
     
@@ -77,12 +75,11 @@ def login(request):
     return render_to_response('webapp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
 
 def login_google(request):
-    """
-        Comprueba si ya te has dado de alta en la App con tu cuenta de Google
+    """**Descripción**: Comprueba si ya te has dado de alta en la App con tu cuenta de Google
         para entrar automáticamente y sino pedirte permiso para hacerlo.
         Además en caso de éxito inicializa la sesión para dicho usuario.
         
-            :returns: En caso de exito redirige al panel y en caso contrario renderiza la plantilla de login.
+       :return: En caso de exito llama a :py:func:`geouser.funcs.login_func` y redirige al panel. En caso contrario renderiza la plantilla de login.
     """
     ugoogle = users.get_current_user()
     if ugoogle:
@@ -103,25 +100,24 @@ def login_google(request):
     return HttpResponseRedirect(users.create_login_url(reverse('geouser.views.login_google')))
     
 def login_facebook(request):
-    """
-        Utiliza el protocolo OAuth para solicitar al usuario que confirme
-        que podemos usar sus sesión de Facebook para identificarlo.
+    """**Descripción**: Utiliza el `protocolo OAuth <http://oauth.net/>`_ para solicitar al 
+        usuario que confirme que podemos usar sus sesión de Facebook para identificarlo.
         Así si el usuario está identificado en Facebook no necesitará
-        rellenar el formulario de login de GeoRemindMe.
+        rellenar el formulario de login de GeoRemindMe. :py:func:`.login_twitter`
         
-            :returns: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
+        :return: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
     """
     from geoauth.views import facebook_authenticate_request
     return facebook_authenticate_request(request)
 
 def login_twitter(request):
-    """
-        Utiliza el protocolo OAuth para solicitar al usuario que confirme
+    """**Descripción**: Utiliza el `protocolo OAuth <http://oauth.net/>`_ para solicitar al usuario que confirme
         que podemos usar sus sesión de Twitter para identificarlo.
+        
         Así si el usuario está identificado en Twitter no necesitará
         rellenar el formulario de login de GeoRemindMe.
         
-            :returns: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
+        :return: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
     """
     from geoauth.views import authenticate_request
     return authenticate_request(request, 'twitter')
@@ -130,10 +126,9 @@ def login_twitter(request):
 # LOGOUT VIEW
 #===============================================================================
 def logout(request):
-    """
-        Elimina la sesión de usuario y redirige al usuario.
+    """**Descripción**: Elimina la sesión de usuario y redirige al usuario.
         
-            :returns: Redirige al usuario a donde le diga la función login_panel.
+        :return: Redirige al usuario a donde le diga la función login_panel.
     """
     request.session.delete()
     return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
@@ -144,10 +139,9 @@ def logout(request):
 #===============================================================================
 @login_required
 def update_profile(request):
-    """
-        Actualiza el nombre de usuario y el avatar.
+    """**Descripción**: Actualiza el nombre de usuario y el avatar.
         
-            :returns: Solo devuelve errores si el proceso falla.
+        :return: Solo devuelve errores si el proceso falla.
     """
     if request.method == 'POST':
         f = UserProfileForm(request.POST, prefix='user_settings_profile')
@@ -159,10 +153,9 @@ def update_profile(request):
     
 @login_required
 def update_user(request):
-    """
-        Permite actualizar el email y la contraseña.
+    """**Descripción**: Permite actualizar el email y la contraseña.
         
-            :returns: Solo devuelve errores si el proceso falla.
+        :return: Solo devuelve errores si el proceso falla.
     """
     if request.method == 'POST':
         f = UserForm(request.POST, prefix='user_settings')
@@ -178,10 +171,9 @@ def update_user(request):
 #===============================================================================
 @login_required
 def dashboard(request):
-    """
-        Permite actualizar el email y la contraseña.
+    """**Descripción**: Permite actualizar el email y la contraseña.
         
-            :returns: Solo devuelve errores si el proceso falla.
+        :return: Solo devuelve errores si el proceso falla.
     """
     if request.session['user'].username is None or request.session['user'].email is None:
         if request.method == 'POST':
@@ -200,9 +192,11 @@ def dashboard(request):
     return direct_to_template(request, 'webapp/dashboard.html')
 
 def public_profile(request, username):
-    '''
-    Perfil publico que veran los demas usuarios
-    '''
+    """**Descripción**: Perfil publico que veran los demas usuarios
+    
+    :param username: nombre de usuario
+    :type username: ni idea
+    """
     profile_key = User.objects.get_by_username(username, keys_only=True)
     if profile_key is None:
         raise Http404()
@@ -231,7 +225,14 @@ def public_profile(request, username):
 # CONFIRM VIEW
 #===============================================================================
 def confirm(request, user, code):
-    """Confirms a user's email"""
+    """**Descripción**: confirma el email de usuario
+		
+		:param user: nombre de usuario
+		:type user: string
+		:param code: código de confirmación
+		:type code: string
+		:return: En caso de que todo vaya correctamente solicitar identificarse al usuario. En caso contrario devuelve un mensaje de error
+	"""
     user = base64.urlsafe_b64decode(user.encode('ascii'))
     u = User.objects.get_by_email_not_confirm(user)
     if u is not None:
@@ -245,7 +246,8 @@ def confirm(request, user, code):
 # REMIND PASSWORD VIEWS 
 #===============================================================================
 def remind_user(request):
-    """reset the pass for a user"""
+    """**Descripción**: Resetea la contraseña de usuario
+	"""
     if request.method == 'POST':
         f = EmailForm(request.POST, prefix='pass_remind')
         if f.is_valid():
@@ -264,7 +266,13 @@ def remind_user(request):
     return render_to_response('user_pass.html', {'form': f}, context_instance=RequestContext(request))
 
 def remind_user_code(request, user, code):
-    """allow to reset password link"""
+    """**Descripción**: Genera una nueva URL única para resetear la contraseña de usuario
+    
+    :param user: nombre de usuario
+    :type user: string
+    :param code: código único para recuperar contraseña
+    :type code: int
+	"""
     user = base64.urlsafe_b64decode(user.encode('ascii'))
     user = User.objects.get_by_email(user)
     if user is not None:
@@ -293,20 +301,18 @@ def remind_user_code(request, user, code):
 # FUNCIONES DE FOLLOWERS Y FOLLOWINGS
 #===============================================================================
 def get_followers(request, userid=None, username=None, page=1, query_id=None):
-    '''
-        Obtiene la lista de followers de un usuario, si no se recibe userid o username,
-        se obtiene la lista del usuario logueado
+    """**Descripción**: Obtiene la lista de followers de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado.
         
-            :param userid: id del usuario (user.id)
-            :type userid: :class:`string`
-            :param username: nombre del usuario (user.username)
-            :type username: :class:`string`
-            :param page: numero de pagina a mostrar
-            :type param: int
-            :param query_id: identificador de busqueda
-            :type query_id: int
-            :returns: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
-    '''
+		:param userid: id del usuario (user.id)
+		:type userid: string
+		:param username: nombre del usuario (user.username)
+		:type username: string
+		:param page: numero de pagina a mostrar
+		:type page: int
+		:param query_id: identificador de busqueda
+		:type query_id: int
+		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
+    """
     if userid is None and username is None:
         if request.session.get('user', None):
             return request.session['user'].get_followers(page=page, query_id=query_id)
@@ -322,20 +328,18 @@ def get_followers(request, userid=None, username=None, page=1, query_id=None):
     return None
     
 def get_followings(request, userid=None, username=None, page=1, query_id=None):
-    '''
-        Obtiene la lista de followings de un usuario, si no se recibe userid o username,
-        se obtiene la lista del usuario logueado
+    """**Descripción**: Obtiene la lista de followings de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado
         
-            :param userid: id del usuario (user.id)
-            :type userid: :class:`string`
-            :param username: nombre del usuario (user.username)
-            :type username: :class:`string`
-            :param page: numero de pagina a mostrar
-            :type param: int
-            :param query_id: identificador de busqueda
-            :type query_id: int
-            :returns: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
-    '''
+		:param userid: id del usuario (user.id)
+		:type userid: string
+		:param username: nombre del usuario (user.username)
+		:type username: string
+		:param page: numero de pagina a mostrar
+		:type page: int
+		:param query_id: identificador de busqueda
+		:type query_id: int
+		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
+    """
     if userid is None and username is None:
         if request.session.get('user', None):
             return request.session['user'].get_followings(page=page, query_id=query_id)
@@ -352,48 +356,44 @@ def get_followings(request, userid=None, username=None, page=1, query_id=None):
     
 @login_required
 def add_following(request, userid=None, username=None):
-    '''
-    Añade un  nuevo usuario a la lista de following del usuario logeado
+    """**Descripción**:	Añade un  nuevo usuario a la lista de following del usuario logeado
     
-        :param userid: id del usuario (user.id)
-        :type userid: :class:`string`
-        :param username: nombre del usuario (user.username)
-        :type username: :class:`string`
-        :returns: boolean con el resultado de la operacion
-    '''
+		:param userid: id del usuario (user.id)
+		:type userid: :class:`string`
+		:param username: nombre del usuario (user.username)
+		:type username: :class:`string`
+		:return: boolean con el resultado de la operacion
+    """
     return request.session['user'].add_following(userid=userid, username=username)
 
 @login_required
 def del_following(request, userid=None, username=None):
-    '''
-    Borra un usuario de la lista de following del usuario logeado
-    
-        :param userid: id del usuario (user.id)
-        :type userid: :class:`string`
-        :param username: nombre del usuario (user.username)
-        :type username: :class:`string`
-        :returns: boolean con el resultado de la operacion
-    '''
+    """**Descripción**: Borra un usuario de la lista de following del usuario logeado
+		
+		:param userid: id del usuario (user.id)
+		:type userid: :class:`string`
+		:param username: nombre del usuario (user.username)
+		:type username: :class:`string`
+		:return: boolean con el resultado de la operacion
+    """
     return request.session['user'].del_following(userid=userid, username=username)
 
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
 def get_timeline(request, userid = None, username = None, page=1, query_id=None):
-    '''
-        Obtiene la lista de timeline de un usuario, si no se recibe userid o username,
-        se obtiene la lista del usuario logueado
+    """**Descripción**: Obtiene la lista de timeline de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado
         
-            :param userid: id del usuario (user.id)
-            :type userid: :class:`string`
-            :param username: nombre del usuario (user.username)
-            :type username: :class:`string`
-            :param page: numero de pagina a mostrar
-            :type param: int
-            :param query_id: identificador de busqueda
-            :type query_id: int
-            :returns: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
-    '''
+		:param userid: id del usuario (user.id)
+		:type userid: string
+		:param username: nombre del usuario (user.username)
+		:type username: string
+		:param page: numero de pagina a mostrar
+		:type page: int
+		:param query_id: identificador de busqueda
+		:type query_id: int
+		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad            
+    """
     if userid is None and username is None:
         if request.session.get('user', None):
             return request.session['user'].get_timelineALL(page=page, query_id=query_id)
@@ -410,15 +410,14 @@ def get_timeline(request, userid = None, username = None, page=1, query_id=None)
 
 @login_required
 def get_chronology(request, page=1, query_id=None):
-    '''
-        Obtiene la lista de timeline de los followings del usuario logueado
+    """**Descripción**: Obtiene la lista de timeline de los followings del usuario logueado
 
-            :param page: numero de pagina a mostrar
-            :type param: int
-            :param query_id: identificador de busqueda
-            :type query_id: int
-            :returns: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
-    '''
+		:param page: numero de pagina a mostrar
+		:type page: int
+		:param query_id: identificador de busqueda
+		:type query_id: int
+		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
+    """
     return request.session['user'].get_chronology(page=page, query_id=query_id)
 
         
