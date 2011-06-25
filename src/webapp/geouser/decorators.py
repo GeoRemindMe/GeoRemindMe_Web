@@ -10,6 +10,14 @@ from functools import wraps
     It is used to check if a user is logged in or not
 """
 
+#~ def decorator(f):
+    #~ def _decorator():
+        #~ print 'decorator active'
+        #~ f()
+    #~ _decorator.__name__=f.__name__
+    #~ _decorator.__doc__=f.__doc__
+    #~ return _decorator
+
 def login_required(func):
     @wraps(func)
     def _wrapper(*args, **kwargs):
