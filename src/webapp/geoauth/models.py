@@ -1,4 +1,10 @@
 # coding=utf-8
+"""
+.. module:: OAUTH_Models
+    :platform: appengine
+    :synopsis: OAUTH Models
+.. moduleauthor:: Javier Cordero <javier@georemindme.com>
+"""
 
 from uuid import uuid4
 from time import time

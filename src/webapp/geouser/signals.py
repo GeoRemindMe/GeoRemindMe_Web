@@ -1,5 +1,19 @@
 # coding=utf-8
 
+"""
+.. module:: signals
+    :platform: appengine
+    :synopsis: Señales definidas en el paquete
+    
+Aquí se definen diferentes señales que se generan en el paquete. Estas son: 
+
+* Registar un nuevo usuario
+* Dar de alta el acceso desde una red social
+* Tener un nuevo follower
+* Se deja de seguir a otro usuario
+* Hay que añadir al timeline publico
+"""
+
 import django.dispatch
 
 # se registra un nuevo usuario

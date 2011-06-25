@@ -1,0 +1,120 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoUser watchers &mdash; GeoRemindMe v0.1a documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="GeoRemindMe v0.1a documentation" href="index.html" />
+    <link rel="up" title="GeoUser" href="geouser.html" />
+    <link rel="next" title="GeoAuth" href="geoauth.html" />
+    <link rel="prev" title="GeoUser Views" href="geouser.views.html" /> 
+  </head>
+  <body>
+      <div class="header"><img class="rightlogo" src="_static/logo_doc.png" alt="Logo"/><h1 class="heading"><a href="index.html">
+          <span>GeoRemindMe v0.1a documentation</span></a></h1>
+        <h2 class="heading"><span>GeoUser watchers</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="geouser.views.html">GeoUser Views</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geoauth.html">GeoAuth</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="module-geouser.watchers">
+<span id="geouser-watchers"></span><h1>GeoUser watchers<a class="headerlink" href="#module-geouser.watchers" title="Enlazar permanentemente con este título">¶</a></h1>
+<dl class="function">
+<dt id="geouser.watchers.deleted_following">
+<tt class="descclassname">geouser.watchers.</tt><tt class="descname">deleted_following</tt><big>(</big><em>sender</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.watchers.deleted_following" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Sender deja de seguir a un nuevo usuario</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.watchers.new_follower">
+<tt class="descclassname">geouser.watchers.</tt><tt class="descname">new_follower</tt><big>(</big><em>sender</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.watchers.new_follower" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Sender empieza a seguir a un nuevo usuario</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.watchers.new_social_user_registered">
+<tt class="descclassname">geouser.watchers.</tt><tt class="descname">new_social_user_registered</tt><big>(</big><em>sender</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.watchers.new_social_user_registered" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Se da de alta un usuario de una red social</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.watchers.new_timeline">
+<tt class="descclassname">geouser.watchers.</tt><tt class="descname">new_timeline</tt><big>(</big><em>sender</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.watchers.new_timeline" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Sender ha escrito un nuevo timeline publico, notificar a los seguidores</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.watchers.new_user_registered">
+<tt class="descclassname">geouser.watchers.</tt><tt class="descname">new_user_registered</tt><big>(</big><em>sender</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.watchers.new_user_registered" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Un nuevo usuario se registra, escribimos el primer timeline</p>
+</dd></dl>
+
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="geouser.views.html">GeoUser Views</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geoauth.html">GeoAuth</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright GFDL 2011, GeoRemindMe.
+      Creado con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+    
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-19272923-1']);
+	  _gaq.push(['_setDomainName', '.georemindme.com']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+  </body>
+</html>

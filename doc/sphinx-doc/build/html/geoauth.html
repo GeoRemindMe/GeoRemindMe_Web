@@ -26,8 +26,8 @@
     <script type="text/javascript" src="_static/translations.js"></script>
     <script type="text/javascript" src="_static/theme_extras.js"></script>
     <link rel="top" title="GeoRemindMe v0.1a documentation" href="index.html" />
-    <link rel="next" title="GeoAuth server" href="geoauth.server.html" />
-    <link rel="prev" title="GeoUser Views" href="geouser.views.html" /> 
+    <link rel="next" title="GeoAuth Backend" href="geoauth.backend.html" />
+    <link rel="prev" title="GeoUser watchers" href="geouser.watchers.html" /> 
   </head>
   <body>
       <div class="header"><img class="rightlogo" src="_static/logo_doc.png" alt="Logo"/><h1 class="heading"><a href="index.html">
@@ -37,11 +37,11 @@
       <div class="topnav">
       
         <p>
-        «&#160;&#160;<a href="geouser.views.html">GeoUser Views</a>
+        «&#160;&#160;<a href="geouser.watchers.html">GeoUser watchers</a>
         &#160;&#160;::&#160;&#160;
         <a class="uplink" href="index.html">Contents</a>
         &#160;&#160;::&#160;&#160;
-        <a href="geoauth.server.html">GeoAuth server</a>&#160;&#160;»
+        <a href="geoauth.backend.html">GeoAuth Backend</a>&#160;&#160;»
         </p>
 
       </div>
@@ -50,10 +50,19 @@
         
   <div class="section" id="geoauth">
 <h1>GeoAuth<a class="headerlink" href="#geoauth" title="Enlazar permanentemente con este título">¶</a></h1>
-<p>Contents:</p>
+<p>Este paquete contiene todo los necesario para <strong>implementar el protocolo
+OAuth</strong> que se utiliza en la aplicación para permitir que el usuario se
+identifique en la aplicación usando su cuenta de usuario de otras redes
+sociales.</p>
+<p>También se utilizará para que si el usuario quiere, se establecer un
+puente de comunicación entre redes para sincronizar algunos datos.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="geoauth.server.html">GeoAuth server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geoauth.backend.html">Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geoauth.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geoauth.server.html">Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geoauth.utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geoauth.views.html">Views</a></li>
 </ul>
 </div>
 </div>
@@ -63,11 +72,11 @@
       <div class="bottomnav">
       
         <p>
-        «&#160;&#160;<a href="geouser.views.html">GeoUser Views</a>
+        «&#160;&#160;<a href="geouser.watchers.html">GeoUser watchers</a>
         &#160;&#160;::&#160;&#160;
         <a class="uplink" href="index.html">Contents</a>
         &#160;&#160;::&#160;&#160;
-        <a href="geoauth.server.html">GeoAuth server</a>&#160;&#160;»
+        <a href="geoauth.backend.html">GeoAuth Backend</a>&#160;&#160;»
         </p>
 
       </div>
@@ -77,19 +86,19 @@
       Creado con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     
-<script type="text/javascript">
+	<script type="text/javascript">
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-19272923-1']);
-  _gaq.push(['_setDomainName', '.georemindme.com']);
-  _gaq.push(['_trackPageview']);
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-19272923-1']);
+	  _gaq.push(['_setDomainName', '.georemindme.com']);
+	  _gaq.push(['_trackPageview']);
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
 
-</script>
+	</script>
   </body>
 </html>

@@ -2,11 +2,13 @@
 
 from django.http import HttpResponseRedirect
 
+"""
+.. module:: decorators
+    :platform: appengine
+    :synopsis: login_required decorator
+    It is used to check if a user is logged in or not
+"""
 
-"""
-   login_required decorator
-   It is used to check if a user is logged in or not
-"""
 def login_required(func):
     def _wrapper(*args, **kwargs):
         request = args[0]  # request es el primer parametro que pasamos

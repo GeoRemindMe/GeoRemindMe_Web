@@ -11,5 +11,18 @@ Contents:
 .. toctree::
    	:maxdepth: 2
 	
+	Decorators <geouser.decorators>
+	Emails <geouser.mails>
+	Exceptions <geouser.exceptions>
+	Forms <geouser.forms>
+	Functions <geouser.funcs>
+	Helpers <geouser.helpers>
+	Helpers access <geouser.helpers_acc>
+	Models <geouser.models>
+	Model access <geouser.models_acc>
+	Properties <geouser.properties>
+	Signals <geouser.signals>
+	Social models <geouser.models_social>
 	Views <geouser.views>
+	Watchers <geouser.watchers>
 

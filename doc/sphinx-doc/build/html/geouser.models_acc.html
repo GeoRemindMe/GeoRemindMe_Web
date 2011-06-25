@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoUser models_acc &mdash; GeoRemindMe v0.1a documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="GeoRemindMe v0.1a documentation" href="index.html" />
+    <link rel="up" title="GeoUser" href="geouser.html" />
+    <link rel="next" title="GeoUser properties" href="geouser.properties.html" />
+    <link rel="prev" title="GeoUser models" href="geouser.models.html" /> 
+  </head>
+  <body>
+      <div class="header"><img class="rightlogo" src="_static/logo_doc.png" alt="Logo"/><h1 class="heading"><a href="index.html">
+          <span>GeoRemindMe v0.1a documentation</span></a></h1>
+        <h2 class="heading"><span>GeoUser models_acc</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="geouser.models.html">GeoUser models</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geouser.properties.html">GeoUser properties</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="module-geouser.models_acc">
+<span id="geouser-models-acc"></span><h1>GeoUser models_acc<a class="headerlink" href="#module-geouser.models_acc" title="Enlazar permanentemente con este título">¶</a></h1>
+<dl class="class">
+<dt id="geouser.models_acc.UserCounter">
+<em class="property">class </em><tt class="descclassname">geouser.models_acc.</tt><tt class="descname">UserCounter</tt><big>(</big><em>parent=None</em>, <em>key_name=None</em>, <em>_app=None</em>, <em>_from_entity=False</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#geouser.models_acc.UserCounter" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Contadores para evitar usar count().
+Podriamos actualizarlos en tiempo real o con algun proceso de background?</p>
+<dl class="attribute">
+<dt id="geouser.models_acc.UserCounter.created">
+<tt class="descname">created</tt><a class="headerlink" href="#geouser.models_acc.UserCounter.created" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>The base class of all of our date/time properties.</p>
+<p>We handle common operations, like converting between time tuples and
+datetime instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserCounter.followers">
+<tt class="descname">followers</tt><a class="headerlink" href="#geouser.models_acc.UserCounter.followers" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>An integer property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserCounter.following">
+<tt class="descname">following</tt><a class="headerlink" href="#geouser.models_acc.UserCounter.following" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>An integer property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserCounter.influenced">
+<tt class="descname">influenced</tt><a class="headerlink" href="#geouser.models_acc.UserCounter.influenced" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>An integer property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserCounter.suggested">
+<tt class="descname">suggested</tt><a class="headerlink" href="#geouser.models_acc.UserCounter.suggested" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>An integer property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserCounter.supported">
+<tt class="descname">supported</tt><a class="headerlink" href="#geouser.models_acc.UserCounter.supported" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>An integer property.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geouser.models_acc.UserFollowingIndex">
+<em class="property">class </em><tt class="descclassname">geouser.models_acc.</tt><tt class="descname">UserFollowingIndex</tt><big>(</big><em>parent=None</em>, <em>key_name=None</em>, <em>_app=None</em>, <em>_from_entity=False</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#geouser.models_acc.UserFollowingIndex" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Listas de gente que sigue el usuario</p>
+<dl class="attribute">
+<dt id="geouser.models_acc.UserFollowingIndex.created">
+<tt class="descname">created</tt><a class="headerlink" href="#geouser.models_acc.UserFollowingIndex.created" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>The base class of all of our date/time properties.</p>
+<p>We handle common operations, like converting between time tuples and
+datetime instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserFollowingIndex.following">
+<tt class="descname">following</tt><a class="headerlink" href="#geouser.models_acc.UserFollowingIndex.following" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A property that stores a list of things.</p>
+<p>This is a parameterized property; the parameter must be a valid
+non-list data type, and all items must conform to this type.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geouser.models_acc.UserProfile">
+<em class="property">class </em><tt class="descclassname">geouser.models_acc.</tt><tt class="descname">UserProfile</tt><big>(</big><em>parent=None</em>, <em>key_name=None</em>, <em>_app=None</em>, <em>_from_entity=False</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#geouser.models_acc.UserProfile" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Datos para el perfil del usuario</p>
+<dl class="attribute">
+<dt id="geouser.models_acc.UserProfile.avatar">
+<tt class="descname">avatar</tt><a class="headerlink" href="#geouser.models_acc.UserProfile.avatar" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A byte string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserProfile.created">
+<tt class="descname">created</tt><a class="headerlink" href="#geouser.models_acc.UserProfile.created" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>The base class of all of our date/time properties.</p>
+<p>We handle common operations, like converting between time tuples and
+datetime instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserProfile.username">
+<tt class="descname">username</tt><a class="headerlink" href="#geouser.models_acc.UserProfile.username" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geouser.models_acc.UserSettings">
+<em class="property">class </em><tt class="descclassname">geouser.models_acc.</tt><tt class="descname">UserSettings</tt><big>(</big><em>parent=None</em>, <em>key_name=None</em>, <em>_app=None</em>, <em>_from_entity=False</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#geouser.models_acc.UserSettings" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Configuracion del usuario (privacidad, etc.)</p>
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.created">
+<tt class="descname">created</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.created" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>The base class of all of our date/time properties.</p>
+<p>We handle common operations, like converting between time tuples and
+datetime instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.language">
+<tt class="descname">language</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.language" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.notification_followers">
+<tt class="descname">notification_followers</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.notification_followers" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.notification_invitation">
+<tt class="descname">notification_invitation</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.notification_invitation" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.notification_list_following">
+<tt class="descname">notification_list_following</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.notification_list_following" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.notification_suggestion_comment">
+<tt class="descname">notification_suggestion_comment</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.notification_suggestion_comment" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.notification_suggestion_following">
+<tt class="descname">notification_suggestion_following</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.notification_suggestion_following" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.notification_suggestion_following_comm">
+<tt class="descname">notification_suggestion_following_comm</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.notification_suggestion_following_comm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.show_followers">
+<tt class="descname">show_followers</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.show_followers" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.show_followings">
+<tt class="descname">show_followings</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.show_followings" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.show_lists">
+<tt class="descname">show_lists</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.show_lists" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.show_public_profile">
+<tt class="descname">show_public_profile</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.show_public_profile" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSettings.show_timeline">
+<tt class="descname">show_timeline</tt><a class="headerlink" href="#geouser.models_acc.UserSettings.show_timeline" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A boolean property.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geouser.models_acc.UserSocialLinks">
+<em class="property">class </em><tt class="descclassname">geouser.models_acc.</tt><tt class="descname">UserSocialLinks</tt><big>(</big><em>parent=None</em>, <em>key_name=None</em>, <em>_app=None</em>, <em>_from_entity=False</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#geouser.models_acc.UserSocialLinks" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Enlaces a los perfiles de redes sociales del usuario</p>
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSocialLinks.created">
+<tt class="descname">created</tt><a class="headerlink" href="#geouser.models_acc.UserSocialLinks.created" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>The base class of all of our date/time properties.</p>
+<p>We handle common operations, like converting between time tuples and
+datetime instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSocialLinks.facebook">
+<tt class="descname">facebook</tt><a class="headerlink" href="#geouser.models_acc.UserSocialLinks.facebook" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSocialLinks.foursquares">
+<tt class="descname">foursquares</tt><a class="headerlink" href="#geouser.models_acc.UserSocialLinks.foursquares" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geouser.models_acc.UserSocialLinks.twitter">
+<tt class="descname">twitter</tt><a class="headerlink" href="#geouser.models_acc.UserSocialLinks.twitter" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>A string that can be longer than 500 bytes.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="geouser.models.html">GeoUser models</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geouser.properties.html">GeoUser properties</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright GFDL 2011, GeoRemindMe.
+      Creado con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+    
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-19272923-1']);
+	  _gaq.push(['_setDomainName', '.georemindme.com']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+  </body>
+</html>
