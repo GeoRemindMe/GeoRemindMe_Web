@@ -56,7 +56,8 @@ class PrivatePlaceHelper(POIHelper):
                 return place
         if location is None:
             raise AttributeError()
-        location = db.GeoPt(location)
+        if not isinstance(location, db.GeoPt):
+            location = db.GeoPt(location)
         return self._klass.gql('WHERE location = :1 AND user = :2 ORDER BY created DESC', location, user).get()
 
 

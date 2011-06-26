@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from google.appengine.ext import db
 from geouser.models import User
 
-def admin_required(func):
+def cron_required(func):
     from google.appengine.api import users
     
     def _wrapper(*args, **kwargs):
@@ -35,7 +35,7 @@ class Stats_alert_done(Stats_base):
     pass
     
 
-@admin_required
+@cron_required
 def stats_daily(request):
     from geoalert.models import  *
     _get_stats(model=User, model_stats=Stats_user)
@@ -65,7 +65,7 @@ def _get_stats(model=User, model_stats=Stats_user, order_field='created'):
     
     return
 
-@admin_required
+@cron_required
 def clean_sessions(request):
     from geomiddleware.sessions.models import _Session_Data
     sessions = _Session_Data.all().filter('expires <', datetime.now())
