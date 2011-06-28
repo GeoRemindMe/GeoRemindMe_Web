@@ -10,7 +10,13 @@ function facebookInit(config) {
     //~ channelUrl:
       //~ window.location.protocol + '//' + window.location.host + '/channel.html'
   });
-  //~ FB.Event.subscribe('auth.sessionChange', handleSessionChange);
+  FB.Event.subscribe('auth.sessionChange', handleSessionChange);
+  //~ FB.Event.subscribe('auth.logout', function() {
+      //~ alert("yepah2");
+      //~ FB.logout(function(response) {
+          //~ alert("yepah");
+          //~ });
+    //~ });
   FB.Canvas.setAutoResize();
 
   // ensure we're always running on apps.facebook.com
@@ -30,7 +36,7 @@ function handleSessionChange(response) {
 }
 
 function goHome() {
-  top.location = 'http://apps.facebook.com/' + Config.canvasName + '/';
+  top.location = 'http://apps.facebook.com/' + Config.canvasName + '/dashboard/';
 }
 
 function publishRun(title) {

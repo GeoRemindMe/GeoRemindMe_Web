@@ -5,13 +5,13 @@
     <title>Facebook Example</title>
   </head>
   <body>
-    <fb:login-button autologoutlink="true"></fb:login-button>
-
     {% if current_user %}
       <p><a href="{{ current_user.profile_url }}"><img src="http://graph.facebook.com/{{ current_user.id }}/picture?type=square"/></a></p>
       <p>Hello, {{ current_user.name|escape }}</p>
+    {% else%}
+        <p>GeoRemindMe es una app que...</p>
     {% endif %}
-
+    <fb:login-button autologoutlink="true"></fb:login-button>
     <div id="fb-root"></div>
     <script>
       window.fbAsyncInit = function() {

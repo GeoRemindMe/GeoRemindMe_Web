@@ -85,9 +85,12 @@ class FacebookClient(object):
             return True
         return False
     
-    def authenticate(self):
+    def authenticate(self,password=None):
         """el usuario se esta logeando usando facebook"""
-        facebookInfo = self.get_user_info()
+        try:
+            facebookInfo = self.get_user_info()
+        except:
+            return False;
         user = FacebookUser.objects.get_by_id(facebookInfo['id'])
         if user is not None:#el usuario ya existe, iniciamos sesion
             user = user.user
@@ -95,9 +98,18 @@ class FacebookClient(object):
         else:#no existe, creamos un nuevo usuario
             user = User.objects.get_by_email(facebookInfo['email'])
             if user is None:
-                user = User.register(email=facebookInfo['email'], password=make_random_string(length=6))
+                user = User.register(email=facebookInfo['email'], password=password if password is not None else make_random_string(length=6))
             self.authorize(user)
         return user
+    
+    def token_is_valid(self):
+        """el usuario se esta logeando usando facebook"""
+        try:
+            facebookInfo = self.get_user_info()
+            return True
+        except:
+            return False
+        
 
 class GraphAPI(object):
     """A client for the Facebook Graph API.

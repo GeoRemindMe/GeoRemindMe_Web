@@ -112,8 +112,10 @@ class OAUTH_Access(db.Model):
     
     @classmethod
     def get_token(cls, key_name):
+        """Obtener un objeto de la clase token conociendo el token de acceso"""
         return OAUTH_Access.get_by_key_name('atoken_%s' % key_name) 
     
     @classmethod
     def get_token_user(cls, provider, user):
+        """Obtener un objeto de la clase token conociendo el nombre de usuario"""
         return OAUTH_Access.all().filter('provider =', provider).filter('user =', user).get()

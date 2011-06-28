@@ -184,11 +184,15 @@ def authenticate_request(request, provider):
     return HttpResponseRedirect(url)
 
 
-def facebook_authenticate_request(request):
+def facebook_authenticate_request(request,get="redirect"):
     OAUTH = settings.OAUTH
-    url = "%s?client_id=%s&redirect_uri=%s&scope=email,offline_access" % (OAUTH['facebook']['authorization_url'], 
-                        OAUTH['facebook']['app_key'], OAUTH['facebook']['callback_url'])
-    return HttpResponseRedirect(url)
+    url = "%s?client_id=%s&redirect_uri=%s&scope=%s" % (OAUTH['facebook']['authorization_url'], 
+                        OAUTH['facebook']['app_key'], OAUTH['facebook']['callback_url'],OAUTH['facebook']['scope'])
+    
+    if get=="url":
+        return url
+    else:
+        return HttpResponseRedirect(url)
 
 
 def facebook_access_request(request):
