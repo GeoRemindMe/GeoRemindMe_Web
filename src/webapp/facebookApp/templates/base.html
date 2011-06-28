@@ -11,14 +11,28 @@
 </head>
 <body>
     <div id="doc">
-        <div class="hd">
-            <a class="logo" href="/">GeoRemindMe</a>
-        </div>
 
+
+    <div class="hd">
+        {% if logged_in_user %}
+          <div id="user-info">
+            <div class="info">
+              <a class="name" href="/user/{{ logged_in_user.user_id }}">
+                {{ logged_in_user.name }}
+              </a>
+              <a class="logout" onclick="FB.logout()">Logout</a>
+            </div>
+            <img width="50" height="50" src="{{ logged_in_user.picture }}">
+          </div>
+        {% endif %}
+        <a class="logo" href="/">GeoRemindMe</a>
+      </div>
         <div class="bd">
             {% block body %}{% endblock %}
         </div><!-- .bd -->
+<!--
         <a class="logout" onclick="FB.logout()">Logout</a>
+-->
         
         
     </div>
@@ -29,7 +43,7 @@
     <script>
         <!-- async loading of facebook js sdk  -->
         window.fbAsyncInit = function() { 
-            facebookInit({{data.js_conf|safe}}) 
+            facebookInit({{js_conf|safe}}) 
         };
         
         (function() {
@@ -42,7 +56,7 @@
 
         <!--  async loading of google analytics -->
         var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-19854556-1']);
+        _gaq.push(['_setAccount', 'UA-19272923-3']);
         _gaq.push(['_trackPageview']);
 
         (function() {

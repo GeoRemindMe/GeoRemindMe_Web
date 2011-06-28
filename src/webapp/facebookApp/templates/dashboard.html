@@ -3,7 +3,12 @@
 {% block title %}Recent Runs{% endblock %}
 {% block body %}
 Dashboard
-   <br>User:{{user}}
+<ul>
+    <li>Perfil de usuario</li>
+    
+</ul>
+   <br>User:{{current_user.first_name}}
+   <br>Email:{{current_user.email}}
 <!--
 {{data.canvas_name}}
 
