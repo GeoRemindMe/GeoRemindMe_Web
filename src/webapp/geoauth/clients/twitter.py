@@ -3,7 +3,6 @@ from django.utils import simplejson
 from django.conf import settings
 from libs.oauth2 import Client, Consumer
 
-from google.appengine.ext import db
 from geoauth.models import OAUTH_Access
 from geouser.models import User
 from geouser.models_social import TwitterUser

@@ -16,7 +16,7 @@ from geouser.forms import LoginForm
 from geouser.decorators import login_required
 from geouser.funcs import login_func, init_user_session
 from server import OAUTH_Server
-from models import OAUTH_Access
+from exceptions import OAUTHException
 
 
 #===============================================================================
@@ -90,8 +90,11 @@ def client_token_request(request, provider):
     OAUTH = settings.OAUTH
     provider = provider.lower()
     consumer = oauth2.Consumer(OAUTH[provider]['app_key'], OAUTH[provider]['app_secret'])
-    client = oauth2.Client(consumer) 
-    response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=OAUTH[provider]['callback_url'])
+    client = oauth2.Client(consumer)
+    if provider.lower() == 'google':  # pasamos el scope con los permisos que queremos en google
+        response, content = client.request('%s?scope=https://www.google.com/m8/feeds/' % OAUTH[provider]['request_token_url'], method="POST", callback=OAUTH[provider]['callback_url'])
+    else:
+        response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=OAUTH[provider]['callback_url'])
     if response['status'] != 200:
         raise Exception("Invalid response from server.")
 
@@ -143,8 +146,16 @@ def client_access_request(request, provider):
             user = client.authenticate()
             messages.success(request, _('Logged from %s' % provider))
             init_user_session(request, user)
+    if provider == 'google':
+        from clients.google import GoogleClient
+        client = GoogleClient(token=oauth2.Token(token['oauth_token'], token['oauth_token_secret']))
+        if 'user' in request.session:#usuario ya esta logeado, guardamos el token de su cuenta
+            if client.authorize(request.session['user']):
+                messages.success(request, _('Got access from %s' % provider))
+        else:
+            raise OAUTHException()
     else:
-        raise Exception("Invalid server.")
+        raise OAUTHException("Invalid server.")
     return HttpResponseRedirect(reverse('geouser.views.dashboard'))
 
     

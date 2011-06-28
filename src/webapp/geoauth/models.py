@@ -45,7 +45,7 @@ class OAUTH_Client(db.Model):
     
     @property
     def client_key(self):
-        return self.key().name().split('_')[:-1]
+        return self.key().name().split('oclient_')[:-1]
     
     
 class OAUTH_Token(db.Model):
@@ -61,7 +61,7 @@ class OAUTH_Token(db.Model):
     
     @property
     def token_key(self):
-        return self.key().name().split('_')[:-1]
+        return self.key().name().split('otoken_')[:-1]
     
     @classmethod
     def generate(cls, *args, **kwargs):
@@ -94,7 +94,7 @@ class OAUTH_Access(db.Model):
     
     @property
     def token_key(self):
-        return self.key().name().split('_')[:-1]
+        return self.key().name().split('atoken_')[1]
     
     @staticmethod
     def remove_token(user, provider):
@@ -113,3 +113,7 @@ class OAUTH_Access(db.Model):
     @classmethod
     def get_token(cls, key_name):
         return OAUTH_Access.get_by_key_name('atoken_%s' % key_name) 
+    
+    @classmethod
+    def get_token_user(cls, provider, user):
+        return OAUTH_Access.all().filter('provider =', provider).filter('user =', user).get()
