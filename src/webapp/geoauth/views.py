@@ -146,7 +146,7 @@ def client_access_request(request, provider):
             user = client.authenticate()
             messages.success(request, _('Logged from %s' % provider))
             init_user_session(request, user)
-    if provider == 'google':
+    elif provider == 'google':
         from clients.google import GoogleClient
         client = GoogleClient(token=oauth2.Token(token['oauth_token'], token['oauth_token_secret']))
         if 'user' in request.session:#usuario ya esta logeado, guardamos el token de su cuenta

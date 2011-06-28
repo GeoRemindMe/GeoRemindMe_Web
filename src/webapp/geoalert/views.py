@@ -177,7 +177,7 @@ def add_from_google_reference(request, reference):
     except:
         return HttpResponseServerError
 
-    place = Place.insert_or_update(name=search['result']['name'],
+    place = Place.insert_or_update_google(name=search['result']['name'],
                                 address=search['result']['formatted_address'], 
                                 city=_get_city(search['result']['address_components']),
                                 location=db.GeoPt(search['result']['geometry']['location']['lat'], search['result']['geometry']['location']['lng']),
@@ -205,6 +205,7 @@ def view_place(request, slug):
         return render_to_response('webapp/place.html', {'place': place},
                                   context_instance=RequestContext(request)
                                   )
+    
     place.update(name=search['result']['name'],
                         address=search['result']['formatted_address'], 
                         city=_get_city(search['result']['address_components']),

@@ -33,6 +33,7 @@ class GoogleClient(Client):
     def load_client(self):
         from libs.gdata.contacts.client import ContactsClient
         from libs.gdata.gauth import OAuthHmacToken, ACCESS_TOKEN
+        
         from django.conf import settings
         token = OAUTH_Access.get_token_user(provider='google', user=self.user)
         self._client = ContactsClient(source=self._source)
@@ -42,6 +43,19 @@ class GoogleClient(Client):
                                            token.token_secret, 
                                            ACCESS_TOKEN
                                            )
-    
+        #from libs.gdata.alt.appengine import run_on_appengine
+        #run_on_appengine(self._client)
+        
     def get_contacts(self):
         return self._client.GetContacts()
+    
+    def get_contacts_to_follow(self):
+        from geouser.models import User
+        registered = []
+        feed = self.get_contacts()
+        for i, entry in enumerate(feed.entry):
+            for email in entry.email:
+                user = User.objects.get_by_email(email.address)
+                if user is not None:
+                    registered.append((user.id, user.username, user.profile.avatar))
+        return registered

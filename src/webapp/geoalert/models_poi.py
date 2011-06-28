@@ -48,7 +48,7 @@ class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty(auto_now=True)
     users = db.ListProperty(db.Key)  #  lista con los usuarios que han modificado el POI
-    user = db.ReferenceProperty(User, required=True)  # el usuario que creo el POI
+    user = db.ReferenceProperty(User, required=False)  # el usuario que creo el POI
     address = db.StringProperty()
     
     
@@ -93,6 +93,25 @@ class PrivatePlace(POI):
     @classmethod
     def get_or_insert(cls, id = None, name = None, bookmark = False, address = None,
                          business = None, location = None, user = None):
+        """
+            Obtiene o añade un nuevo punto a la BD
+            
+                :param id: identificador del punto (opcional)
+                :type id: :class:`integer`
+                :param name: nombre para identificar el punto (opcional)
+                :type name: :class:`string`
+                :param bookmark: marca el punto como favorito
+                :type bookmark: :class:`boolean`
+                :param business: tipo de negocio (opcional)
+                :type business: :class:`geoalert.models_poi.Business`
+                :param location: coordenadas del punto
+                :type location: :class:`db.GeoPt` o :class:string`
+                :param user: usuario que añade o busca el punto
+                :type user: :class:`geouser.models.User`
+                
+                :returns: :class:`geoalert.models_poi.PrivatePlace`
+                :raises: AttributeError
+        """
         if id:
             place = cls.objects.get_by_id_user(id, user)
         else:
@@ -115,13 +134,25 @@ class PrivatePlace(POI):
     @classmethod
     def insert_or_update(cls, id = None, name = None, bookmark = False, address = None,
                          business = None, location = None, user = None):
-        if name is not None and not isinstance(name, basestring):
-            raise AttributeError()
-        if address is not None and not isinstance(address, basestring):
-            raise AttributeError()
-        if business is not None and not isinstance(business, Business):
-            raise AttributeError()
-        
+        """
+            Añade o actualiza un nuevo punto a la BD
+            
+                :param id: identificador del punto (opcional)
+                :type id: :class:`integer`
+                :param name: nombre para identificar el punto (opcional)
+                :type name: :class:`string`
+                :param bookmark: marca el punto como favorito
+                :type bookmark: :class:`boolean`
+                :param business: tipo de negocio (opcional)
+                :type business: :class:`geoalert.models_poi.Business`
+                :param location: coordenadas del punto
+                :type location: :class:`db.GeoPt` o :class:string`
+                :param user: usuario que añade o busca el punto
+                :type user: :class:`geouser.models.User`
+                
+                :returns: :class:`geoalert.models_poi.PrivatePlace`
+                :raises: AttributeError
+        """
         if id:
             place = cls.objects.get_by_id_user(id, user)
             if place is not None:
@@ -131,9 +162,14 @@ class PrivatePlace(POI):
         else:
             place = cls.objects.get_by_address_or_point_user(address, user, location = location)
             if place is None:
+                if name is not None and not isinstance(name, basestring):
+                    raise AttributeError()
+                if address is not None and not isinstance(address, basestring):
+                    raise AttributeError()
+                if business is not None and not isinstance(business, Business):
+                    raise AttributeError()
                 if location is None or user is None:
                     raise AttributeError()
-                location = db.GeoPt(location)
                 place = PrivatePlace(name = name, bookmark = bookmark,
                                  address = address, business = business,
                                  location = location, user = user)
@@ -218,8 +254,30 @@ class Place(POI):
     
     
     @classmethod
-    def insert_or_update(cls, name, address, city, location, google_places_reference, google_places_id, user):
+    def insert_or_update_google(cls, name, address, city, location, google_places_reference, google_places_id, user):
+        """
+            Añade o actualiza un nuevo punto publico a la BD
+            
+                :param name: nombre para identificar el punto (opcional)
+                :type name: :class:`string`
+                :param city: ciudad donde esta el punto
+                :type city: :class:`string`
+                :param location: coordenadas del punto
+                :type location: :class:`db.GeoPt` o :class:string`
+                :param google_places_reference: referencia devuelta por google places
+                :type google_places_reference: :class:`string`
+                :param google_places_id: id devuelto por google places
+                :type google_places_id: :class:`string`
+                :param user: usuario que añade o busca el punto por primera vez
+                :type user: :class:`geouser.models.User`
+                
+                :returns: :class:`geoalert.models_poi.PrivatePlace`
+                :raises: AttributeError
+        """
+
         place = cls.objects.get_by_google_id(google_places_id)
+        if not isinstance(location, db.GeoPt):
+            location = db.GeoPt(location)
         if place is not None:
             place.update(name, address, city, location, google_places_reference, google_places_id)    
         else:
@@ -240,20 +298,27 @@ class Place(POI):
         self.put()
         
     def insert_ft(self):
+        """
+            Añade el punto a la tabla en fusiontables
+            
+            En caso de fallo, se guarda el punto en _Do_later_ft,
+            para intentar añadirlo luego
+        """
         from mapsServices.fusiontable import ftclient, sqlbuilder
         from django.conf import settings
         try:
-            ftclient = ftclient.ClientLoginFTClient()
-            ftclient.query(sqlbuilder.SQL().insert(settings['TABLE_PLACES'], {'bus_id': self.business,
-                                                                            'location': '%s,%s' % (self.location.lat, self.location.lon),
-                                                                            'place_id': self.id,
-                                                                             }
+            ftclient = ftclient.OAuthFTClient()
+            ftclient.query(sqlbuilder.SQL().insert(settings.FUSIONTABLES['TABLE_PLACES'],
+                                                    {'bus_id': self.business.id if self.business is not None else -1,
+                                                    'location': '%s,%s' % (self.location.lat, self.location.lon),
+                                                    'place_id': self.id,
+                                                    'modified': self.modified.__str__(),
+                                                     }
                                                    )
                            )
-        except:
-            # TODO :  guardar recordatorio por si fallo añadir el sitio
-            pass
-            #__do_later(self.kind(), self.key())
-            #__do_later.put()
+        except:  # Si falla, se guarda para intentar añadir mas tarde
+            from georemindme.models_utils import _Do_later_ft
+            later = _Do_later_ft(instance_key=self.key())
+            later.put()
 
 from helpers_poi import *

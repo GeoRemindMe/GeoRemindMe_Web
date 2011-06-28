@@ -144,7 +144,7 @@ class SQL:
         cols = values.keys()
         values = values.values()
         for value in values:
-            if type(value).__name__ == 'int':
+            if type(value).__name__ in ('int', 'long'):
                 stringValues = '%s%d' % (stringValues, value)
             elif type(value).__name__ == 'float':
                 stringValues = '%s%f' % (stringValues, value)

@@ -71,7 +71,7 @@ class SessionStore(object):
                 if session is not None:  # es valida
                     return SessionStore(session=session, from_cookie=True)
         elif from_rpc:
-            if session_id is not None:
+            if session_id is not None and session_id != '':
                 session = _Session_Data.restore_session(session_id)
                 if session is not None:
                     return SessionStore(session=session, from_cookie=False, from_rpc=True)

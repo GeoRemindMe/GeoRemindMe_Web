@@ -223,6 +223,21 @@ def del_following(request):
     deleted = geouser.del_following(request, userid=userid, username=username)
     return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
 
+@ajax_request
+def follow_contacts_google(request):
+    contacts = geouser.follow_contacts_google(request)
+    return HttpResponse(simplejson.dumps(contacts))
+
+@ajax_request
+def follow_friends_facebook(request):
+    friends = geouser.follow_friends_facebook(request)
+    return HttpResponse(simplejson.dumps(friends))
+
+@ajax_request
+def follow_friends_twitter(request):
+    friends = geouser.follow_friends_twitter(request)
+    return HttpResponse(simplejson.dumps(friends))
+
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
@@ -637,3 +652,4 @@ def get_vote_comment(request):
     vote = geovote.get_vote_comment(request, instance_id, query_id, page) 
     
     return HttpResponse(simplejson.dumps(vote), mimetype="application/json")
+

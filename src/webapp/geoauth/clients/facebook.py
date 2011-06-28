@@ -53,12 +53,41 @@ from georemindme.funcs import make_random_string
 
 
 class FacebookClient(object):
-    def __init__(self, access_token=None):
-        self.consumer = GraphAPI(access_token=access_token)
+    _fb_id = None
+    
+    def __init__(self, access_token=None, user=None):
+        if user is not None:
+            self.user = user
+            access_token = OAUTH_Access.get_token_user(provider='facebook', user=user)
+            if access_token is None:
+                raise OAUTHException()
+            self.consumer = GraphAPI(access_token=access_token.token_key)
+        else:
+            self.consumer = GraphAPI(access_token=access_token)
         self.api_key = settings.OAUTH['facebook']['app_key']
     
     def get_user_info(self):    
-        return self.consumer.get_object("me")
+        me = self.consumer.get_object("me")
+        self._fb_id = me['id']
+        return me
+    
+    def get_friends(self):
+        if self._fb_id is None:
+            self.get_user_info()
+        friends = self.consumer.get_connections(self._fb_id, "friends")
+        return friends
+    
+    def get_friends_to_follow(self):
+        friends = self.get_friends()
+        friends = friends['data']
+        
+        from geouser.models_social import FacebookUser
+        registered = []
+        for f in friends:
+            user = FacebookUser.objects.get_by_id(f['id'])
+            if user is not None:
+                registered.append((user.user.id, user.user.username, user.user.profile.avatar))
+        return registered
         
     def authorize(self, user=None):
         """guarda el token de autorizacion"""

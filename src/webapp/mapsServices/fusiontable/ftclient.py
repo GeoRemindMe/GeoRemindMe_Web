@@ -9,6 +9,7 @@ __author__ = 'kbrisbin@google.com (Kathryn Brisbin)'
 __maintainer__ = "javier@georemindme.com (Javier Cordero)"
 
 import libs.httplib2 as httplib2
+import libs.oauth2 as oauth2
 import urllib
 
 
@@ -91,53 +92,78 @@ class FTClient():
 #            table_id, end_time - start_time, str(bulk))
 
 
-class ClientLoginFTClient(FTClient):
+#class ClientLoginFTClient(FTClient):
+#    def __init__(self):
+#        from google.appengine.api.memcache import Client
+#        mem = Client()
+#        self.request = httplib2.Http(cache=mem)
+#        from django.conf import settings
+#        self.auth_token = self.authorize(settings.FUSIONTABLES['FT_USERNAME'],
+#                                                   settings.FUSIONTABLES['FT_PASSWORD'])
+#        self.request_url = "https://www.google.com/fusiontables/api/query"
+#
+#
+#
+#    def _get(self, query):
+#        headers = {
+#          'Authorization': 'GoogleLogin auth=' + self.auth_token,
+#        }
+#        response, content = self.request.request('%s?%s' % (self.request_url, query),
+#                                                method='GET',
+#                                                headers=headers
+#                                                )
+#        if response['status'] != 200:
+#            raise FTAPIError(response['status'], 'ERROR IN REQUEST')
+#        return content
+#
+#    def _post(self, query):
+#        headers = {
+#            'Authorization': 'GoogleLogin auth=' + self.auth_token,
+#            'Content-Type': 'application/x-www-form-urlencoded',
+#        }
+#        response, content = self.request.request(self.request_url, method='POST',
+#                                                 body=query, headers=headers
+#                                                 )
+#        if response['status'] != 200:
+#            raise FTAPIError(response['status'])
+#        return content
+#    
+#    def authorize(self, username, password):
+#        auth_uri = 'https://www.google.com/accounts/ClientLogin'
+#        authreq_data = urllib.urlencode({
+#            'Email': username,
+#            'Passwd': password,
+#            'service': 'fusiontables',
+#            'accountType': 'HOSTED_OR_GOOGLE'})
+#        response, content = self.request.request(auth_uri, method='POST', body=authreq_data)
+#        if response['status'] != 200:
+#            raise FTAPIError(response['status'], 'ERROR IN REQUEST')
+#    
+#        auth_resp_dict = dict(
+#            x.split('=') for x in content.split('\n') if x)
+#        return auth_resp_dict['Auth']
+    
+class OAuthFTClient(FTClient):
+
     def __init__(self):
-        from google.appengine.api.memcache import Client
-        mem = Client()
-        self.request = httplib2.Http(cache=mem)
         from django.conf import settings
-        self.auth_token = self.authorize(settings.FUSIONTABLES['FT_USERNAME'],
-                                                   settings.FUSIONTABLES['FT_PASSWORD'])
-        self.request_url = "https://www.google.com/fusiontables/api/query"
-
-
+        self.consumer_key = settings.OAUTH['google']['app_key']
+        self.consumer_secret = settings.OAUTH['google']['app_secret']
+        self.token = oauth2.Token(settings.FUSIONTABLES['token_key'], settings.FUSIONTABLES['token_secret'])
+        self.scope = "https://www.google.com/fusiontables/api/query"
 
     def _get(self, query):
-        headers = {
-          'Authorization': 'GoogleLogin auth=' + self.auth_token,
-        }
-        response, content = self.request.request('%s?%s' % (self.request_url, query),
-                                                method='GET',
-                                                headers=headers
-                                                )
-        if response['status'] != 200:
-            raise FTAPIError(response['status'], 'ERROR IN REQUEST')
+        consumer = oauth2.Consumer(self.consumer_key, self.consumer_secret)
+        client = oauth2.Client(consumer, self.token)
+        resp, content = client.request(uri="%s?%s" % (self.scope, query),
+                                        method="GET")
         return content
 
+
     def _post(self, query):
-        headers = {
-            'Authorization': 'GoogleLogin auth=' + self.auth_token,
-            'Content-Type': 'application/x-www-form-urlencoded',
-        }
-        response, content = self.request.request(self.request_url, method='POST',
-                                                 body=query, headers=headers
-                                                 )
-        if response['status'] != 200:
-            raise FTAPIError(response['status'])
+        consumer = oauth2.Consumer(self.consumer_key, self.consumer_secret)
+        client = oauth2.Client(consumer, self.token)
+        resp, content = client.request(uri=self.scope,
+                                       method="POST",
+                                       body=query)
         return content
-    
-    def authorize(self, username, password):
-        auth_uri = 'https://www.google.com/accounts/ClientLogin'
-        authreq_data = urllib.urlencode({
-            'Email': username,
-            'Passwd': password,
-            'service': 'fusiontables',
-            'accountType': 'HOSTED_OR_GOOGLE'})
-        response, content = self.request.request(auth_uri, method='POST', body=authreq_data)
-        if response['status'] != 200:
-            raise FTAPIError(response['status'], 'ERROR IN REQUEST')
-    
-        auth_resp_dict = dict(
-            x.split('=') for x in content.split('\n') if x)
-        return auth_resp_dict['Auth']

@@ -11,8 +11,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.simple import direct_to_template
 
 from google.appengine.api import users
-from google.appengine.ext import db
-
 
 from georemindme.funcs import make_random_string
 from models import User
@@ -22,7 +20,7 @@ from forms import *
 from exceptions import *
 from funcs import init_user_session, get_next, login_func
 from decorators import login_required
-from geoauth.clients import facebook, twitter
+from geoauth.clients import facebook, twitter, google
 
 """
 .. module:: views
@@ -38,7 +36,7 @@ def register(request):
         
         :param request: array con un email y dos contraseñas
         :type request: array
-		:return: En caso de éxito un :class:`google.appengine.api.user` y un formulario de registro. En caso de que no se reciba POST redirige al panel de registro
+		:return: En caso de éxito un :class:`geouser.models.User` y un formulario de registro. En caso de que no se reciba POST redirige al panel de registro
             
     """
     if request.method == 'POST':
@@ -377,6 +375,42 @@ def del_following(request, userid=None, username=None):
 		:return: boolean con el resultado de la operacion
     """
     return request.session['user'].del_following(userid=userid, username=username)
+
+@login_required
+def get_contacts_google(request):
+    """**Descripción**: Obtiene una lista con los contactos en gmail que
+    el usuario puede seguir
+    
+    """
+    from geoauth.clients.google import *
+    c = GoogleClient(user=request.user)
+    c.load_client()
+    
+    return c.get_contacts_to_follow()
+
+@login_required
+def get_friends_facebook(request):
+    """**Descripción**: Obtiene una lista con los contactos en gmail que
+    el usuario puede seguir
+    
+    """
+    from geoauth.clients.facebook import *
+
+    c = FacebookClient(user=request.user)
+    return c.get_friends_to_follow()
+
+@login_required
+def get_friends_twitter(request):
+    """**Descripción**: Obtiene una lista con los contactos en gmail que
+    el usuario puede seguir
+    
+    """
+    from geoauth.clients.twitter import *
+
+    c = TwitterClient(user=request.user)
+    return c.get_friends_to_follow()
+    
+
 
 #===============================================================================
 # FUNCIONES PARA TIMELINEs

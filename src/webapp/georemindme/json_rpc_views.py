@@ -16,12 +16,31 @@ from geomiddleware.sessions.store import SessionStore
 from libs.jsonrpc import jsonrpc_method
 from libs.jsonrpc.exceptions import *
 
+def need_authenticate(username=None, password=None):
+    raise BadSessionException
+    
+def parse_date(date, excep=True):
+        if date is None:
+            if excep:
+                raise InvalidParamsError
+            else:
+                return None
+        if type(date) in (str, unicode,) and not date.isdigit():
+            if excep:
+                raise InvalidParamsError
+            else:
+                return None
+        return datetime.fromtimestamp(date)
+
 @jsonrpc_method('login', authenticated=False)
 def login(request, email, password):
-    '''
-        Log a user and creates a new UserRPC session ID.
-        The user_id should be send with all the request.
-    '''
+    """
+        Logs a user and init a new session, returns the session_id
+        if the user is valid
+        
+            :params email: email del usuario
+            :type email: 
+    """
     email = unicode(email)
     password = unicode(password)
     error, redirect = login_func(request, email=email, password=password, from_rpc=True)
@@ -34,7 +53,7 @@ def login(request, email, password):
     return request.session.session_id
     
 
-@jsonrpc_method('register', validate=False, authenticated=False)
+@jsonrpc_method('register', authenticated=False)
 def register(request, email, password):
     '''
         Register a user
@@ -50,98 +69,63 @@ def register(request, email, password):
         pass
     raise RegisterException
 
-@jsonrpc_method('sync', validate=False, authenticated=False)
-def sync(request, session_id, last_sync, modified=[]):
-    '''
-        Sync with devices
-    '''
-    if not isinstance(session_id, basestring):
+@jsonrpc_method('sync_alert', authenticated=need_authenticate)
+def sync_alert(request, last_sync, modified=[], deleted=[]):
+    if type(modified) != type(list()) or type(deleted) != type(list()):
         raise InvalidParamsError
-    if type(modified) != type(list()):
-        raise InvalidParamsError
-    last_sync= float(last_sync)
-    def parse_date(date, excep=True):
-        if date is None:
-            if excep:
-                raise InvalidParamsError
-            else:
-                return None
-        if type(date) in (str, unicode,) and not date.isdigit():
-            if excep:
-                raise InvalidParamsError
-            else:
-                return None
-        return datetime.fromtimestamp(date)
-    # cuando se envie la sesion id por cabeceras HTTP esta parte no es necesaria
-    # user estaria en request.user
-    session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
-    try:
-        u = session['user']
-        if u is None:
-            raise
-    except:
-        raise BadSessionException
-    session.put()
     
+    temp_alert = {}
     last_sync = parse_date(last_sync)
-    response = []
-    deleted = []
     for a in modified:
-        if type(a) != type(dict()):
-            raise InvalidParamsError
+
         id = a.get('id', None)
-        if id is not None:
-            if not isinstance(id, int):  # invalid type
-                raise InvalidParamsError
-            old = Alert.objects.get_by_id_user(id, u)
+        if id is not None:  # la alerta ya estaba sincronizada, la actualizamos
+            old = Alert.objects.get_by_id_user(id, request.user)
             # sync control
             if parse_date(a.get('modified')) <= old.modified:
                 continue
             if not old:  # unknow alert
-                deleted = id
+                deleted_to_sync.append(id)
                 continue
         poi = PrivatePlace.get_or_insert(name = '',
                                          location = GeoPt(a.get('x'), a.get('y')),
                                          address = '',
-                                         user = u)
+                                         user = request.user)
         alert = Alert.update_or_insert(
                      id = id,
                      name = a.get('name', u''),
                      description = a.get('description', u''),
                      date_starts = parse_date(a.get('starts'), False),
                      date_ends = parse_date(a.get('ends'), False),
-                     user = u,
+                     user = request.user,
                      poi = poi,
                      done = True if parse_date(a.get('done_when'), False) else False,
                      done_when = parse_date(a.get('done_when'), False),
                      active = True if a.get('active', False) else False,
-                     )            
-# return the alerts modified after last sync
-    alerts = Alert.objects.get_by_last_sync(u, last_sync)
+                     )
+        if a.get('client_id', None) is not None:  # la alerta no estaba sincronizada
+            temp_alert[int(alert.id)] = a.get('client_id')
+        
+    response = []
+    alerts = Alert.objects.get_by_last_sync(request.user, last_sync)
     for a in alerts:
-        response.append(a.to_dict())
+        if int(a.id) in temp_alert:  # añadir alerta no sincro
+            dict = a.to_dict()
+            dict['client_id'] = temp_alert[int(a.id)]
+            response.append(dict)
+        else:
+            response.append(a.to_dict())
     return [int(time.mktime(datetime.now().timetuple())), response, deleted]
 
-
-
-@jsonrpc_method('getProximityAlerts', validate=False)
-def getProximityAlerts(request, session_id, lat, long):
-    '''
-        Get the Alerts near to the user position
-    '''
-    session = SessionStore.load(session_id, from_cookie=False, from_rpc=True)
-    session.put()
-    u = session['user'] 
-    from geoalert.geobox import proximity_alerts
-
-    alerts = proximity_alerts(u, lat, long)
-    ##return simplejson.dumps( [ a.__dict__ for a in alerts ] )
+@jsonrpc_method('report_bug', authenticated=False)
+def report_bug(request, email, msg, datetime):
+    from rpc_server.models import _Report_Bug
+    try:
+        datetime = parse_data(datetime)
+        u = User.objects.get_by_email(email)
+        bug = _Report_Bug(user=u, msg=msg, datetime=datetime)
+        bug.put()
+    except:
+        return False
+    return True
     
-    # now only works for Point alerts (no Business alerts)
-    ret = [
-        dict(id=str(alert.key()), # alert's key
-        points=[ (alert.poi.point.lat, alert.poi.point.lon) ] # point of the alert
-        
-        ) for alert in alerts]
-    
-    return ret

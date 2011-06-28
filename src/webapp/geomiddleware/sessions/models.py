@@ -1,5 +1,3 @@
-import base64
-import pickle
 import os
 from random import randrange
 from datetime import datetime
@@ -74,7 +72,7 @@ class _Session_Data(_Session_Dict, db.Model):
             self._decoded = {}
         
     
-    def encode(self, dict):
+    def encode(self):
         '''
             Guarda el diccionario
         '''
@@ -127,6 +125,7 @@ class _Session_Data(_Session_Dict, db.Model):
         '''
         t = time() + settings.SESSION_COOKIE_AGE
         self.expires = datetime.fromtimestamp(t)
+        self.encode()
         super(_Session_Data, self).put()
 
 

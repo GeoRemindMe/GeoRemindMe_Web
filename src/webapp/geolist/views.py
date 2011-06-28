@@ -7,7 +7,7 @@ from models import *
 # CREACION DE LISTAS
 #===============================================================================
 @login_required
-def new_list_user(request, name, description = None, instances = []):
+def add_list_user(request, name, description = None, instances = []):
     '''
     Crea una nueva lista de usuarios
         
@@ -23,7 +23,7 @@ def new_list_user(request, name, description = None, instances = []):
     return list.id
 
 @login_required
-def new_list_alert(request, name=None, description=None, instances=None):
+def add_list_alert(request, name=None, description=None, instances=None):
     '''
     Crea una nueva lista de alertas
         
@@ -56,7 +56,7 @@ def mod_list_user(request, id, name=None, description=None, instances_add=[], in
         :type instances: :class:`list`
         :returns: id de la lista modificada
     '''
-    list = ListUser.objects.get_by_id_user(id, user)
+    list = ListUser.objects.get_by_id_user(id, request.user)
     if list is not None:
         list.update(name=name, description=description, instances_add=instances_add, instances_del=instances_del)
         return True
@@ -77,7 +77,7 @@ def mod_list_alert(request, id, name=None, description=None, instances_add=[], i
         :type instances: :class:`list`
         :returns: id de la lista modificada
     '''
-    list = ListAlert.objects.get_by_id_user(id, user)
+    list = ListAlert.objects.get_by_id_user(id, request.user)
     if list is not None:
         list.update(name=name, description=description, instances_add=instances_add, instances_del=instances_del)
         return True
@@ -86,7 +86,7 @@ def mod_list_alert(request, id, name=None, description=None, instances_add=[], i
 #===============================================================================
 # Obtiene listas
 #===============================================================================
-def get_list(request, id = None, user = None):
+def get_list_id(request, id = None, user = None):
     '''
     Obtiene una lista por el identificador
         
@@ -100,7 +100,7 @@ def get_list(request, id = None, user = None):
     return list
 
 @login_required
-def get_list_user(request, id = None, name = None):
+def get_list_user_id(request, id = None, name = None):
     '''
     Obtiene una lista de usuarios
         
@@ -111,18 +111,30 @@ def get_list_user(request, id = None, name = None):
         :returns: id de la lista modificada
     '''
     user = request.session['user']
-    if id is not None:
-        list = ListUser.objects.get_by_id_user(id, user)
-    elif name is not None:
-        list = ListUser.objects.get_by_name_user(name, user)
-    else:
-        raise TypeError()
+
+    list = ListUser.objects.get_by_id_user(id, user)
+
+    return list
+
+@login_required
+def get_list_user_name(request, name):
+    '''
+    Obtiene una lista de usuarios
+        
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        :param name: nombre para la lista (el nombre es unico)
+        :type name: :class:`string`
+        :returns: id de la lista modificada
+    '''
+    user = request.session['user']
+    list = ListUser.objects.get_by_name_user(name, user)
     
     return list
 
 
 @login_required
-def get_list_alert(request, id = None, name = None):
+def get_list_alert_id(request, id = None, name = None):
     '''
     Obtiene una lista de alertas
         
@@ -133,12 +145,22 @@ def get_list_alert(request, id = None, name = None):
         :returns: id de la lista modificada
     '''
     user = request.session['user']
-    if id is not None:
-        list = ListAlert.objects.get_by_id_user(id, user)
-    elif name is not None:
-        list = ListAlert.objects.get_by_name_user(name, user)
-    else:
-        raise TypeError()
+    list = ListAlert.objects.get_by_id_user(id, user)
+    return list
+
+@login_required
+def get_list_alert_name(request, name):
+    '''
+    Obtiene una lista de usuarios
+        
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        :param name: nombre para la lista (el nombre es unico)
+        :type name: :class:`string`
+        :returns: id de la lista modificada
+    '''
+    user = request.session['user']
+    list = ListAlert.objects.get_by_name_user(name, user)
     
     return list
 
@@ -168,10 +190,10 @@ def get_all_list_user(request, query_id=None, page=1):
         :type param: int
         :param query_id: identificador de busqueda
         :type query_id: int
-        :returns: [query_id, [:class:`geolist.models.ListUser`]
+        :returns: [query_id, [:class:`geolist.models.`]
     '''
     user = request.session['user']
-    lists = UserList.objects.get_by_user(user, query_id=query_id, page=page)
+    lists = ListUser.objects.get_by_user(user, query_id=query_id, page=page)
     
     return lists
 
@@ -184,10 +206,10 @@ def get_all_list_alert(request, query_id=None, page=1):
         :type param: int
         :param query_id: identificador de busqueda
         :type query_id: int
-        :returns: [query_id, [:class:`geolist.models.ListAlert`]
+        :returns: [query_id, [:class:`geolist.models.`]
     '''
     user = request.session['user']
-    lists = AlertList.objects.get_by_user(user, query_id=query_id, page=page)
+    lists = ListAlert.objects.get_by_user(user, query_id=query_id, page=page)
     
     return lists
 
@@ -203,7 +225,7 @@ def get_all_list_suggestion(request, query_id=None, page=1):
         :returns: [query_id, [:class:`geolist.models.ListSuggestion`]
     '''
     user = request.session['user']
-    lists = SuggestionList.objects.get_by_user(user, query_id=query_id, page=page)
+    lists = ListSuggestion.objects.get_by_user(user, query_id=query_id, page=page)
     
     return lists
 
@@ -218,7 +240,7 @@ def follow_list_suggestion(request, id):
         :returns: True si se añadio, False si no tiene permisos
     '''
     user = request.session['user']
-    list = SuggestionList.objects.get_by_id(id)
+    list = ListSuggestion.objects.get_by_id(id)
     follow = list.add_follower(user)
     
     return follow
@@ -233,7 +255,7 @@ def get_all_public_list_suggestion(request, query_id=None, page=1):
         :type query_id: int
         :returns: [query_id, [:class:`geolist.models.ListSuggestion`]
     '''
-    lists = SuggestionList.objects.get_all_public(query_id=query_id, page=page)
+    lists = ListSuggestion.objects.get_all_public(query_id=query_id, page=page)
     
     return lists
 
@@ -244,6 +266,6 @@ def get_all_shared_list_suggestion(request):
     
         :returns: [:class:`geolist.models.ListSuggestion`]
     '''
-    lists = SuggestionList.objects.get_shared_list(request.user)
+    lists = ListSuggestion.objects.get_shared_list(request.user)
     
     return lists

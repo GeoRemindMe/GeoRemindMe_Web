@@ -45,14 +45,18 @@ class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
     def id(self):
         return self.key().id()
 
+    '''
     def put(self):
         try:
             if self.date_ends < self.date_starts:
-                raise BadValueError()
+                raise BadValueError('date starts > date ends')
         except TypeError:
-            pass        
+            pass
+        except:
+            raise
+                
         super(polymodel.PolyModel, self).put()
-
+    '''
     def is_active(self):
         if 'active:T' in self.has:
             return True
@@ -216,11 +220,11 @@ class Alert(Event):
                     'x': self.poi.location.lat,
                     'y': self.poi.location.lon,
                     'address': unicode(self.poi.address),
-                    'created': unicode('%d' % time.mktime(self.created.timetuple())) if self.created else '',
-                    'modified': unicode('%d' % time.mktime(self.modified.timetuple())) if self.modified else '',
-                    'starts': unicode('%d' % time.mktime(self.date_starts.timetuple())) if self.date_starts else '',
-                    'ends': unicode('%d' % time.mktime(self.date_ends.timetuple())) if self.date_ends else '',
-                    'done_when': unicode('%d' % time.mktime(self.done_when.timetuple())) if self.done_when else '',
+                    'created': long(time.mktime(self.created.timetuple())) if self.created else 0,
+                    'modified': long(time.mktime(self.modified.timetuple())) if self.modified else 0,
+                    'starts': long(time.mktime(self.date_starts.timetuple())) if self.date_starts else 0,
+                    'ends': long(time.mktime(self.date_ends.timetuple())) if self.date_ends else 0,
+                    'done_when': long(time.mktime(self.done_when.timetuple())) if self.done_when else 0,
                     'done': self.is_done(),
                     'distance':self.get_distance(),
                     'active': self.is_active(),

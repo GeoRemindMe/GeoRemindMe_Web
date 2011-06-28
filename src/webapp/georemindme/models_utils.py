@@ -1,5 +1,28 @@
+# coding=utf-8
+
 from google.appengine.ext import db
 
+
+class _Do_later_ft(db.Model):
+    instance_key = db.ReferenceProperty(None)
+    created = db.DateTimeProperty(auto_now_add=True)
+    last_try = db.DateTimeProperty(auto_now=True)
+    
+    @classmethod
+    def try_again(cls):
+        """
+            Reintenta añadir a fusion tables los objetos 
+            que fallaron, deben implementar el metodo insert_ft()
+        """
+        queries = cls.all()
+        
+        for q in queries:
+            try:
+                instance = db.get(q.instance_key)
+                instance.insert_ft()
+                q.delete()
+            except:
+                q.put()
 
 class Counter(db.Model):
     counter = db.IntegerProperty()

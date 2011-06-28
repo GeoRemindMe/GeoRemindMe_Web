@@ -59,19 +59,19 @@ class User(polymodel.PolyModel, HookedModel):
     @property
     def google_user(self):
         if self._google_user is None:
-            self._google_user = self.googleuser_set.get()
+            self._google_user = GoogleUser.all().filter('user =', self).get()
         return self._google_user
     
     @property
     def facebook_user(self):
         if self._facebook_user is None:
-            self._facebook_user = self.facebookuser_set.get()
+            self._facebook_user = FacebookUser.all().filter('user =', self).get()
         return self._facebook_user
     
     @property
     def twitter_user(self):
         if self._twitter_user is None:
-            self._twitter_user = self.twitteruser_set.get()
+            self._twitter_user = TwitterUser.all().filter('user =', self).get()
         return self._twitter_user
     
     @property
