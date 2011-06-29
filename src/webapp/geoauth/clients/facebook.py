@@ -355,7 +355,9 @@ class GraphAPI(object):
         request = httplib2.Http()
         
         response, content = request.request("https://graph.facebook.com/" + path + "?" +
-                                            urllib.urlencode(args), method='GET', body=post_data)
+                                            urllib.urlencode(args), 
+                                            method='GET' if post_data is None else 'POST',
+                                            body=post_data)
         content = _parse_json(content)
         if response['status'] != 200:
             raise GraphAPIError(content["error"]["type"],
