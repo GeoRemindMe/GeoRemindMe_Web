@@ -143,11 +143,11 @@ def dashboard(request):
         #~ raise Exception(user)
         args['js_conf'] = registration_panel(request)
         
-        friends=fb_client.get_friends()
+        #~ friends=fb_client.get_friends()
+        #~ args['friends']=friends['data']
+        #~ raise Exception(friends)
         
         friends_to_follow=fb_client.get_friends_to_follow()
-        #~ raise Exception(friends)
-        args['friends']=friends['data']
         args['friends_to_follow']=friends_to_follow
         
         followers=request.user.get_followers()

@@ -23,17 +23,10 @@
     </script>
 {%endblock%}
 
-{% block title %}Recent Runs{% endblock %}
+{% block title %}Dashboard{% endblock %}
 {% block body %}
     <h1>Timeline</h1>
-    <ul>
-        <li>Timeline</li>
-        <li><a href="/fb/profile">Mis datos</a></li>
-    </ul>
-    <h2>Friendlist</h2>
-    {% for f in friends %}
-        amigo {{f.name}}<br>
-    {% endfor %}
+
     
     {% if friends_to_follow %}
         <h2>Te siguen</h2>

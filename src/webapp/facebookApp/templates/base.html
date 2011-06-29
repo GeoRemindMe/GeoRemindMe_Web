@@ -18,9 +18,16 @@
 
 
         <div class="hd">
-            <a class="logo" href="/">GeoRemindMe</a>
+            <a class="logo" href="/fb/dashboard/">GeoRemindMe</a>
         </div>
-
+        {% block nav %} 
+            <ul>
+                <li><a href="/fb/dashboard/" title="Dashboard">Home</a></li>
+                <li><a href="/fb/profile">Mis datos</a></li>
+                <li>Gestionar recomendaciones</li>
+                <li>Gestionar POIs</li>
+            </ul>
+        {% endblock %}
         <div class="bd">
             {% block body %}{% endblock %}
         </div>
