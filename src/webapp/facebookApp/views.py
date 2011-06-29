@@ -8,12 +8,17 @@ from django.views.decorators.csrf import csrf_exempt
 from geouser import models_social
 from uuid import uuid4
 from django.utils.decorators import decorator_from_middleware
+#Para redireccionar sin necesidad de hacer otra petición HTTP
+from django.core.urlresolvers import reverse
 #~ from django.utils.decorators import decorator_from_middleware
 #~ from facebookApp.facebook.djangofb import FacebookMiddleware
 #~ import facebookApp.facebook.djangofb as facebook
 from geouser.funcs import init_user_session
 
 from settings import OAUTH, FACEBOOK_APP
+
+from geouser.forms import *
+from django.template import RequestContext
 
 
 
@@ -43,10 +48,31 @@ def registration_panel(request):
 #~ @decorator_from_middleware(FacebookMiddleware)
 #~ @facebook.require_login()
 def login_panel(request):
-    if u'signed_request' in request.POST:
+    
+    if request.session['user'].username is None or request.session['user'].email is None:
+        #~ raise Exception(request.POST.get('id_user_set_username-username'))
+        if request.method == 'POST':
+            #~ raise Exception("Username=%s, email=%s"%(request['id_user_set_username-username'],request.session['user'].email))
+            f = SocialUserForm(request.POST, prefix='user_set_username')
+            if f.is_valid():
+                user = f.save(request.session['user'])
+                if user:
+                    request.session['user'] = user
+                    return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+        else:
+            
+            f = SocialUserForm(prefix='user_set_username', initial = { 
+                                                                  'email': request.session['user'].email,
+                                                                  'username': request.session['user'].username,
+                                                                  })
+        return render_to_response('webapp/socialsettings.html', {'form': f}, context_instance=RequestContext(request))
+    
+    raise Exception("Username=%s, email=%s"%(request.session['user'].username,request.session['user'].email))
+    
+    
+    if u'signed_request' in request.POST:        
         data = parse_signed_request(request.POST['signed_request'])
         #~ raise Exception (data)
-    
         cookie = get_user_from_cookie(request.COOKIES)
         #~ raise Exception(cookie)
         if 'user_id' in data:
@@ -62,10 +88,11 @@ def login_panel(request):
 
                 else:
                     #~ raise Exception("Aasdasd2 %s"%cookie)
+                    #~ raise Exception("Username=%s"%request.user.username)
                     user=FacebookUser.objects.get_by_id(cookie["uid"])
                     if not request.user.is_authenticated():
                         init_user_session(request,user.user)
-                    return HttpResponseRedirect('/fb/dashboard')
+                    return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
             else:
                 #~ raise Exception("Aquí entro? ",cookie["uid"])
                 pass
@@ -134,6 +161,10 @@ def dashboard(request):
     else:
         return HttpResponseRedirect('/fb/')
 
+
+def user_profile(request, username):
+    raise Exception(username)
+    #User.objects.username
 
 @csrf_exempt
 #~ @decorator_from_middleware(FacebookMiddleware)

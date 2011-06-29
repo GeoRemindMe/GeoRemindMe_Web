@@ -61,8 +61,14 @@
         <ul>
             <li>
             {% for f in friends_to_follow %}
-                <fb:profile-pic uid="{{ f.uid }}" linked="true" /></fb:profile-pic>
-                <fb:name uid="{{ f.uid }}" capitalize="true" /></fb:name> | <span id="follow_{{ f.uid }}" onclick="javascript:follow({{f.id}} {% if username %},'{{f.username}}'{% endif %})"><a href="#">Seguir</a></span>
+                <a href="/fb/user/{{f.id}}" title="Ver perfil en GeoRemindMe">
+                    <fb:profile-pic uid="{{ f.uid }}" linked="false" /></fb:profile-pic>
+                    {% if f.uid %}
+                        <fb:name uid="{{ f.uid }}" linked="false" capitalize="true" /></fb:name> | <span id="follow_{{ f.uid }}" onclick="javascript:follow({{f.id}} {% if username %},'{{f.username}}'{% endif %})"><a href="#">Seguir</a></span>
+                    {% else %}
+                        Un NO-usuario de facebook
+                    {% endif %}
+                </a>
             {% endfor %}
             </li>
         </ul>
