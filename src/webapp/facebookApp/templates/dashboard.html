@@ -61,7 +61,7 @@
         <ul>
             <li>
             {% for f in friends_to_follow %}
-                <a href="/fb/user/{{f.id}}" title="Ver perfil en GeoRemindMe">
+                <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
                     <fb:profile-pic uid="{{ f.uid }}" linked="false" /></fb:profile-pic>
                     {% if f.uid %}
                         <fb:name uid="{{ f.uid }}" linked="false" capitalize="true" /></fb:name> | <span id="follow_{{ f.uid }}" onclick="javascript:follow({{f.id}} {% if username %},'{{f.username}}'{% endif %})"><a href="#">Seguir</a></span>

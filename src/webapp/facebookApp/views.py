@@ -67,7 +67,7 @@ def login_panel(request):
                                                                   })
         return render_to_response('webapp/socialsettings.html', {'form': f}, context_instance=RequestContext(request))
     
-    raise Exception("Username=%s, email=%s"%(request.session['user'].username,request.session['user'].email))
+    #~ raise Exception("Username=%s, email=%s"%(request.session['user'].username,request.session['user'].email))
     
     
     if u'signed_request' in request.POST:        
