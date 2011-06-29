@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Recent Runs{% endblock %}
+{% block body %}
+    <h1>Perfil público de {{user.username}}</h1>
+    <h2>Datos:</h2>
+    <dl>
+        
+        {% if user.profile.avatar %}
+            <img src="{{user.profile.avatar}}" alt="{{user.username}} avatar"/>
+        {% else %}
+            <img src="/static/facebookApp/img/no_avatar.png" alt="{{f.username}} avatar"/>
+        {% endif %}
+        <dt>Nombre:</dt>
+        <dd>{{user.facebook_user.realname}}</dd>
+        <dt>Email:</dt>
+        <dd>{{user.email}}</dd>
+        <dt>Perfil en facebook:</dt>
+        <dd><a href="http://www.facebook.com/profile.php?id={{user.facebook_user.uid}}">Ir al perfil</a></dd>
+    </dl>
+    <h2>Recomendaciones hechas</h2>
+{% endblock %}

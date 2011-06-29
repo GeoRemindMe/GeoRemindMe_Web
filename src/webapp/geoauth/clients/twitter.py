@@ -4,6 +4,7 @@ from django.conf import settings
 from libs.oauth2 import Client, Consumer, Token
 
 from geoauth.models import OAUTH_Access
+from geoauth.exceptions import OAUTHException
 from geouser.models import User
 from geouser.models_social import TwitterUser
 from georemindme.funcs import make_random_string
@@ -32,13 +33,13 @@ class TwitterClient(Client):
         
         response, content = self.request('https://twitter.com/account/verify_credentials.json')
         if response['status'] != 200:
-            raise TwitterAPIException(response['status'], response)
+            raise TwitterAPIError(response['status'], response)
         return simplejson.loads(content)
     
     def get_other_user_info(self, id):
         response, content = self.request('http://api.twitter.com/1/users/show.json/?user_id=%s' % id)
         if response['status'] != 200:
-            raise TwitterAPIException(response['status'], response)
+            raise TwitterAPIError(response['status'], response)
         return simplejson.loads(content)
     
     

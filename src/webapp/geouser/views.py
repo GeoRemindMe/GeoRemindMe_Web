@@ -384,7 +384,6 @@ def get_contacts_google(request):
     """
     from geoauth.clients.google import *
     c = GoogleClient(user=request.user)
-    c.load_client()
     
     return c.get_contacts_to_follow()
 

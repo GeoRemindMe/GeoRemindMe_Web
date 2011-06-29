@@ -132,7 +132,41 @@ class Test(unittest.TestCase):
 
         self.assertRaises(AttributeError, u.del_following), 'Error borrando following'
         assert u.del_following(followid=12445)==False, 'Error borrando following'
-        assert u.del_following(followname='')==False, 'Error borrando following'        
+        assert u.del_following(followname='')==False, 'Error borrando following'      
+        
+    def test_acchelper(self):
+        #probar todas las busquedas en helper de models_acc
+        User.register(email='test@test.com', password='123456', username='usertest')
+        User.register(email='test2@test.com', password='123456', username='usertest2')
+        u = User.objects.get_by_email('test@test.com')
+        assert UserSettings.objects.get_by_id(u.id).key() == u.settings.key(), 'Busqueda de settings erronea'
+        assert UserSettings.objects.get_by_id(str(u.id)).key() == u.settings.key(), 'Busqueda de settings erronea'
+        assert UserSettings.objects.get_by_id('asdf')== None, 'Busqueda de settings erronea'
+        assert UserSettings.objects.get_by_id('')== None, 'Busqueda de settings erronea'
+        assert UserSettings.objects.get_by_id(123)== None, 'Busqueda de settings erronea'
+        assert UserSettings.objects.get_by_id(None)== None, 'Busqueda de settings erronea'
+        
+        assert UserProfile.objects.get_by_id(u.id).key() == u.profile.key(), 'Busqueda de profile erronea'
+        assert UserProfile.objects.get_by_id(str(u.id)).key() == u.profile.key(), 'Busqueda de profile erronea'
+        assert UserProfile.objects.get_by_id('asdf') == None, 'Busqueda de profile erronea'
+        assert UserProfile.objects.get_by_id('') == None, 'Busqueda de profile erronea'
+        assert UserProfile.objects.get_by_id(123) == None, 'Busqueda de profile erronea'
+        assert UserProfile.objects.get_by_id(None) == None, 'Busqueda de profile erronea'
+
+        assert UserCounter.objects.get_by_id(u.id).key() == u.counters().key(), 'Busqueda de contadores erronea'
+        assert UserCounter.objects.get_by_id(str(u.id)).key() == u.counters().key(), 'Busqueda de contadores erronea'
+        assert UserCounter.objects.get_by_id('asdf')== None, 'Busqueda de contadores erronea'
+        assert UserCounter.objects.get_by_id('')== None, 'Busqueda de contadores erronea'
+        assert UserCounter.objects.get_by_id(123) == None, 'Busqueda de contadores erronea'
+        assert UserCounter.objects.get_by_id(None) == None, 'Busqueda de contadores erronea'
+        
+        assert UserTimeline.objects.get_by_id(u.id)[1] == u.get_timeline()[1], 'Error en timeline'
+        assert UserTimeline.objects.get_by_id(str(u.id))[1] == u.get_timeline()[1], 'Error en timeline'
+        assert UserTimeline.objects.get_by_id('asdf') == None, 'Error en timeline'
+        assert UserTimeline.objects.get_by_id('') == None, 'Error en timeline'
+        assert UserTimeline.objects.get_by_id(123)[1] == [], 'Error en timeline'
+        assert UserTimeline.objects.get_by_id(None) == None, 'Error en timeline'
+          
         
         
         
