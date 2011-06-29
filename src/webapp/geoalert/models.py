@@ -157,7 +157,7 @@ class Alert(Event):
     @classmethod
     def update_or_insert(cls, id = None, name = None, description = None,
                          date_starts = None, date_ends = None, poi = None,
-                         user = None, done = False, active = True, done_when=None):
+                         user = None, done = False, active = None, done_when=None):
         '''
             Crea una alerta nueva, si recibe un id, la busca y actualiza.
             
@@ -177,7 +177,7 @@ class Alert(Event):
             alert.date_starts = date_starts
             alert.date_ends = date_ends
             alert.poi = poi
-            if alert.is_active() != active:
+            if active is not None and alert.is_active() != active:
                 alert.toggle_active()
             if alert.is_done() != done:
                 alert.toggle_done()
@@ -190,10 +190,9 @@ class Alert(Event):
                 alert.toggle_done()
                 if done_when is not None:
                     alert.done_when = done_when
-            '''
-            if not active:
+            if active == False:
                 alert.toggle_active()
-            '''
+            
             alert.put()
             return alert
         
@@ -210,7 +209,10 @@ class Alert(Event):
             
     def delete(self):
         alert_deleted.send(sender=self)
+        d = _Deleted_Alert(deleted_id=self.id, user=self.user)
+        put = db.put_async([d])
         super(Alert, self).delete()
+        put.get_result()
         
     def to_dict(self):
             return {'id': self.id,
@@ -470,7 +472,41 @@ class AlertSuggestion(Event):
         
     def __str__(self):
         return self.suggestion.name
-            
+
+
+class _Deleted_AlertHelper(object):
+    def get_by_id_user(self, id, user):
+        '''
+        Obtiene el evento con ese id comprobando que
+        pertenece al usuario
+        
+            :raises: :class:`geoalert.exceptions.ForbiddenAccess`
+        '''
+        if not isinstance(user, User):
+            raise TypeError()
+        event = _Deleted_Alert.get_by_id(int(id))
+        if event.user.key() == user.key():
+            return event
+        return None
+    
+    def get_by_last_sync(self, user, last_sync):
+        '''
+        Obtiene los ultimos eventos a partir
+        de una fecha de ultima sincronizacion
+        '''
+        if not isinstance(user, User):
+            raise TypeError()
+        return _Deleted_Alert.all().filter('user =', user).filter('created >', last_sync).order('-created')
+
+class _Deleted_Alert(db.Model):
+    deleted_id = db.IntegerProperty()
+    user = db.ReferenceProperty(User)
+    created = db.DateTimeProperty(auto_now_add=True)
+    objects = _Deleted_AlertHelper()
+    
+    @property
+    def id(self):
+        return self.deleted_id
 
 from watchers import *    
 from helpers import *

@@ -22,7 +22,7 @@ handlers:
   
 - url: /service/.*
   script: main.py
-  secure: optional
+  secure: always
 
 - url: /dashboard/.*
   script: main.py

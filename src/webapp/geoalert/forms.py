@@ -81,7 +81,7 @@ class RemindForm(forms.Form):
                          date_starts = self.cleaned_data['starts'],
                          date_ends = self.cleaned_data['ends'], poi = poi,
                          user = kwargs['user'], done = self.cleaned_data.get('done', False),
-                         active = True # (no aparece en el formulario)self.cleaned_data.get('active', True)
+                         active = None  # self.cleaned_data.get('active', True)
                          )
         
         return alert

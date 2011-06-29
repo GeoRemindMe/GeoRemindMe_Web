@@ -473,7 +473,10 @@ class User(polymodel.PolyModel, HookedModel):
             :type key: :class:`db.Key()
             :returns: True si se añadio el usuario
         '''
-        last_follow = followiterator.next()  # como estan ordenados por fecha de creacion, carga el primero que seria el ultimo indice.
+        try: 
+            last_follow = followiterator.next()  # como estan ordenados por fecha de creacion, carga el primero que seria el ultimo indice.
+        except StopIteration:
+            last_follow = UserFollowingIndex(parent=self)
         if len(last_follow.following) < TIMELINE_PAGE_SIZE*2:  # un maximo de usuarios en este index para que las listas no sean lentas
             last_follow.following.append(key)
         else:  # creamos un index nuevo

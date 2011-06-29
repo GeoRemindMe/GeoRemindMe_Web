@@ -80,7 +80,7 @@ class EventHelper(object):
                 return event
             elif event._is_shared() and event.user_invited(user):
                 return event
-        raise None
+        return None
     
     def get_by_last_sync(self, user, last_sync):
         '''
@@ -89,7 +89,7 @@ class EventHelper(object):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        return Alert.all().filter('user =', user).filter('modified >', last_sync).order('-modified')
+        return self._klass.all().filter('user =', user).filter('modified >', last_sync).order('-modified')
 
     
 class AlertHelper(EventHelper):

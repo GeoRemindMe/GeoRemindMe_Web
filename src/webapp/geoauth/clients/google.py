@@ -57,5 +57,9 @@ class GoogleClient(Client):
             for email in entry.email:
                 user = User.objects.get_by_email(email.address)
                 if user is not None:
-                    registered.append((user.id, user.username, user.profile.avatar))
+                    registered.append({'id':user.id, 
+                                       'username': user.username, 
+                                       'avatar': user.profile.avatar, 
+                                       'email': user.email
+                                       })
         return registered

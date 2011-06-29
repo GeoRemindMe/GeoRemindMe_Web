@@ -7,7 +7,7 @@ from django.utils import simplejson
 
 from google.appengine.ext.db import GeoPt
 
-from geoalert.models import *
+from geoalert.models import Alert, _Deleted_Alert
 from geoalert.models_poi import *
 from geouser.models import User
 from geouser.funcs import login_func
@@ -31,6 +31,15 @@ def parse_date(date, excep=True):
             else:
                 return None
         return datetime.fromtimestamp(date)
+    
+def parse_deleted(deleted, user):
+    for a in deleted:  # borrar las alertas enviadas por el movil
+        id = a.get('id', None)
+        if id is not None:
+            alert = Alert.objects.get_by_id_user(id, user)
+            if alert is not None:
+                alert.delete()
+    
 
 @jsonrpc_method('login', authenticated=False)
 def login(request, email, password):
@@ -73,19 +82,18 @@ def register(request, email, password):
 def sync_alert(request, last_sync, modified=[], deleted=[]):
     if type(modified) != type(list()) or type(deleted) != type(list()):
         raise InvalidParamsError
-    
+    sync_deleted = set()
     temp_alert = {}
     last_sync = parse_date(last_sync)
+    parse_deleted(deleted, request.user)
     for a in modified:
-
         id = a.get('id', None)
         if id is not None:  # la alerta ya estaba sincronizada, la actualizamos
             old = Alert.objects.get_by_id_user(id, request.user)
-            # sync control
-            if parse_date(a.get('modified')) <= old.modified:
+            if not old:  # no existe en la BD, fue borrada.
+                sync_deleted.add(id)
                 continue
-            if not old:  # unknow alert
-                deleted_to_sync.append(id)
+            if parse_date(a.get('modified')) <= old.modified:
                 continue
         poi = PrivatePlace.get_or_insert(name = '',
                                          location = GeoPt(a.get('x'), a.get('y')),
@@ -101,11 +109,11 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
                      poi = poi,
                      done = True if parse_date(a.get('done_when'), False) else False,
                      done_when = parse_date(a.get('done_when'), False),
-                     active = True if a.get('active', False) else False,
+                     active = True if a.get('active', True) else False,
                      )
         if a.get('client_id', None) is not None:  # la alerta no estaba sincronizada
             temp_alert[int(alert.id)] = a.get('client_id')
-        
+                       
     response = []
     alerts = Alert.objects.get_by_last_sync(request.user, last_sync)
     for a in alerts:
@@ -115,17 +123,23 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
             response.append(dict)
         else:
             response.append(a.to_dict())
-    return [int(time.mktime(datetime.now().timetuple())), response, deleted]
+    alertsDel =  _Deleted_Alert.objects.get_by_last_sync(request.user, last_sync)
+    for a in alertsDel:
+        sync_deleted.add(a.id)
+    dict_deleted = [{'id': a} for a in sync_deleted]
+    return [int(time.mktime(datetime.now().timetuple())), response, dict_deleted]
 
 @jsonrpc_method('report_bug', authenticated=False)
-def report_bug(request, email, msg, datetime):
+def report_bug(request, bugs):
     from rpc_server.models import _Report_Bug
     try:
-        datetime = parse_data(datetime)
-        u = User.objects.get_by_email(email)
-        bug = _Report_Bug(user=u, msg=msg, datetime=datetime)
-        bug.put()
+        for b in bugs:
+            datetime = parse_date(b.get('datetime'))
+            u = User.objects.get_by_email(b.get('email'))
+            report = _Report_Bug(user=u, msg=b.get('msg'), datetime=datetime)
+            db.put_async([report])
     except:
+        raise
         return False
     return True
     

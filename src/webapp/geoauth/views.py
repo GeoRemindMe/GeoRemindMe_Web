@@ -115,8 +115,12 @@ def client_token_request(request, provider):
 @csrf_exempt
 def client_access_request(request, provider):
     provider = provider.lower()
-    if not request.session[provider]['request_token']['oauth_token'] == request.GET.get('oauth_token') \
+    try:
+        if not request.session[provider]['request_token']['oauth_token'] == request.GET.get('oauth_token') \
             and request.GET.get('oauth_verifier') :
+            messages.error(request, _("Invalid response from server."))
+            return HttpResponseRedirect(reverse('georemindme.views.home'))
+    except:
         messages.error(request, _("Invalid response from server."))
         return HttpResponseRedirect(reverse('georemindme.views.home'))
     #lee el token recibido

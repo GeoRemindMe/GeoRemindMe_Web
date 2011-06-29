@@ -35,6 +35,13 @@ class TwitterClient(Client):
             raise TwitterAPIException(response['status'], response)
         return simplejson.loads(content)
     
+    def get_others_user_info(self, id):
+        response, content = self.request('http://api.twitter.com/version/users/show.json/?user_id=%s' % id)
+        if response['status'] != 200:
+            raise TwitterAPIException(response['status'], response)
+        return simplejson.loads(content)
+    
+    
     def get_friends(self):
         twitterInfo = self.get_user_info()
         response, content = self.request(
@@ -55,8 +62,12 @@ class TwitterClient(Client):
         for i in ids:
             user = TwitterUser.objects.get_by_id(i)
             if user is not None:
-                registered.append((user.user.id, user.user.username, user.user.profile.avatar))
-                
+                info = self.get_others_user_info(id=user.id)
+                registered.append({'id':user.id, 
+                                   'username': user.username, 
+                                   'avatar': user.profile.avatar,
+                                   'twittername': info['screen_name'], 
+                                   })
         return registered
     def authorize(self, user=None):
         """Guarda el token de autorizacion"""
