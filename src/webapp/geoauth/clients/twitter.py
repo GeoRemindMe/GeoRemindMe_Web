@@ -35,8 +35,8 @@ class TwitterClient(Client):
             raise TwitterAPIException(response['status'], response)
         return simplejson.loads(content)
     
-    def get_others_user_info(self, id):
-        response, content = self.request('http://api.twitter.com/version/users/show.json/?user_id=%s' % id)
+    def get_other_user_info(self, id):
+        response, content = self.request('http://api.twitter.com/1/users/show.json/?user_id=%s' % id)
         if response['status'] != 200:
             raise TwitterAPIException(response['status'], response)
         return simplejson.loads(content)
