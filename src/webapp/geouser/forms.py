@@ -7,6 +7,9 @@ from google.appengine.ext.db import GeoPt, NotSavedError
 
 from models import User
 
+# import code for encoding urls and generating md5 hashes for GRAVATAR
+import urllib, hashlib
+
 
 class EmailForm(forms.Form):
     email = forms.EmailField(required=True)
@@ -155,6 +158,16 @@ class UserProfileForm(forms.Form):
         if file is not None:
             if 'image/' in file.type:
                 user.profile.avatar = file
+        #Aniadido por Raul, si no se indica avatar buscar en Gravatar
+        else:
+            #Set your variables here
+            email = user.email
+            default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
+            size = 50
+            # construct the url
+            gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+            gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
+            user.profile.avatar = file
         try:
             user.update(username=self.cleaned_data['username'])
             return True

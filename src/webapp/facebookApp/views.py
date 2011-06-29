@@ -125,6 +125,9 @@ def dashboard(request):
         
         followers=request.user.get_followers()
         args['followers']=followers[1]
+        
+        followings=request.user.get_followings()
+        args['followings']=followings[1]
         #~ raise Exception(friends_to_follow)
         
         return  render_to_response('dashboard.html',args)

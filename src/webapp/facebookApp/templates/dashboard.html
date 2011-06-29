@@ -38,9 +38,24 @@
     {% if friends_to_follow %}
         <h2>Te siguen</h2>
         {% for f in followers %}
-            Username={{f.username}},Avatar{{f.avatar}}
+            {% if f.avatar%}
+                <img src="{{f.avatar}}" alt="{{f.username}} avatar"/>
+            {% else %}
+                <img src="/static/facebookApp/img/no_avatar.png" style="width:50px" alt="{{f.username}} avatar"/>
+            {% endif %}
+            Username={{f.username}}
+            
+            
         {% endfor %}
         <h2>Sigues</h2>
+        {% for f in followings %}
+            {% if f.avatar%}
+                <img src="{{f.avatar}}" alt="{{f.username}} avatar"/>
+            {% else %}
+                <img src="/static/facebookApp/no_avatar.png" alt="{{f.username}} avatar"/>
+            {% endif %}
+            Username={{f.username}}
+        {% endfor %}
         <h2>Amigos sugeridos</h2>
         <p>De tus amigos de facebook usan GeoRemindMe para hacer recomendaciones:</p>
         <ul>
