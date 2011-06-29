@@ -47,6 +47,7 @@ from django.utils import simplejson as json
 _parse_json = json.loads
 
 from geoauth.models import OAUTH_Access
+from geoauth.exceptions import OAUTHException
 from geouser.models import User
 from geouser.models_social import FacebookUser
 from georemindme.funcs import make_random_string
@@ -394,7 +395,9 @@ class GraphAPI(object):
         post_data = None if post_args is None else urllib.urlencode(post_args)
         request = httplib2.Http()
         response, content = request.request("https://api.facebook.com/" + path + "?" +
-                                            urllib.urlencode(args), body=post_data)
+                                            urllib.urlencode(args),
+                                            method='GET' if post_data is None else 'POST',
+                                            body=post_data)
         content = _parse_json(content)
         if response['status'] != 200:
             raise GraphAPIError(content["error"]["type"],
@@ -422,7 +425,9 @@ class GraphAPI(object):
         args["format"]="json"
         request = httplib2.Http()
         response, content = request.request("https://api.facebook.com/method/fql.query?" + 
-                                            urllib.urlencode(args), body=post_data)
+                                            urllib.urlencode(args),
+                                            method='GET' if post_data is None else 'POST',
+                                            body=post_data)
         content = _parse_json(content)
         if response['status'] != 200:
             raise GraphAPIError(content["error_code"],content["error_msg"])

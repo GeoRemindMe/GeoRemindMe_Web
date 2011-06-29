@@ -67,6 +67,8 @@ class UserHelper(object):
             :param query_id: identificador de busqueda
             :type query_id: int
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
+            
+            :raises: AttributeError
         """
         if username is not None:
             userkey = self.get_by_username(username, keys_only=True)
@@ -77,7 +79,10 @@ class UserHelper(object):
         followers = UserFollowingIndex.gql('WHERE following = :1 ORDER BY created DESC', userkey)
         p = PagedQuery(followers, id = query_id)
         ##users = [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]
-        return [p.id, [{'id':u.id, 'username':u.username, 'avatar':u.profile.avatar} for u in (index.parent() for index in p.fetch_page(page))]]
+        return [p.id, [{'id':u.id, 
+                        'username':u.username, 
+                        'avatar':u.profile.avatar} 
+                       for u in (index.parent() for index in p.fetch_page(page))]]
     
     def get_followings(self, userid = None, username=None, page=1, query_id=None):
         """Obtiene la lista de personas a las que sigue el usuario
@@ -91,6 +96,8 @@ class UserHelper(object):
             :param query_id: identificador de busqueda
             :type query_id: int
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
+            
+            :raises: AttributeError
         """
         if username is not None:
             userkey = self.get_by_username(username, keys_only=True)
@@ -101,8 +108,9 @@ class UserHelper(object):
         followings = UserFollowingIndex.all().ancestor(userkey).order('-created')
         p = PagedQuery(followings, id = query_id)
         users = [db.get(index.following) for index in p.fetch_page(page)]  # devuelve una lista anidada con otra
-        users = [(item.id, item.username, item.profile.avatar) for sublist in users for item in sublist]  # obtenemos las listas anidadas como una sola
-        return [p.id, users]
+        return [p.id, [{'id':u.id, 'username':u.username, 
+                        'avatar':u.profile.avatar }
+                        for sublist in users for u in sublist]]
     
     def _get(self, string=None):
         return User.all().filter('has =', 'active:T')

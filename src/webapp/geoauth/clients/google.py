@@ -3,6 +3,7 @@
 from django.conf import settings
 from libs.oauth2 import Client, Consumer
 from geoauth.models import OAUTH_Access
+from geoauth.exceptions import OAUTHException
 
 
 class GoogleClient(Client):
@@ -36,13 +37,16 @@ class GoogleClient(Client):
         
         from django.conf import settings
         token = OAUTH_Access.get_token_user(provider='google', user=self.user)
-        self._client = ContactsClient(source=self._source)
-        self._client.auth_token = OAuthHmacToken(settings.OAUTH['google']['app_key'],
+        if token is not None:
+            self._client = ContactsClient(source=self._source)
+            self._client.auth_token = OAuthHmacToken(settings.OAUTH['google']['app_key'],
                                            settings.OAUTH['google']['app_secret'],
                                            token.token_key,
                                            token.token_secret, 
                                            ACCESS_TOKEN
                                            )
+        else:
+            raise OAUTHException
         #from libs.gdata.alt.appengine import run_on_appengine
         #run_on_appengine(self._client)
         

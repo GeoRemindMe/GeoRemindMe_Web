@@ -47,6 +47,7 @@ class User(polymodel.PolyModel, HookedModel):
     _google_user = None
     _twitter_user = None
     _facebook_user = None
+    _counters = None
     
     @classproperty
     def objects(self):
@@ -91,6 +92,12 @@ class User(polymodel.PolyModel, HookedModel):
                 self._settings = UserSettings.all().ancestor(self.key()).get() 
                 memcache.set('%ssettings_%s' % (memcache.version, self.id), memcache.serialize_instances(self._settings))
         return self._settings
+    
+    @property
+    def counters(self):
+        if self._counters is None:
+            self._counters = UserCounter.all().ancestor(self.key()).get()
+        return self._counters 
         
     def get_timelineALL(self, page=1, query_id=None):
         '''
@@ -108,7 +115,10 @@ class User(polymodel.PolyModel, HookedModel):
         q = UserTimelineBase.all().filter('user =', self.key()).order('-created')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
-        return [p.id, [(timeline.id, timeline.created, timeline.user.username, timeline.msg, timeline.instance.key() if timeline.instance is not None else None) for timeline in timelines]]
+        return [p.id, [{'id': timeline.id, 'created': timeline.created, 
+                        'msg': timeline.msg, 'username':timeline.user.username, 
+                        'instance': timeline.instance if timeline.instance is not None else None }
+                        for timeline in timelines]]
         
     def get_timelinesystem(self, page=1, query_id=None):
         '''
@@ -125,7 +135,10 @@ class User(polymodel.PolyModel, HookedModel):
         q = UserTimelineSystem.all().filter('user =', self.key()).order('-created')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
-        return [p.id, [(timeline.id, timeline.created, timeline.user.username, timeline.msg, timeline.instance.key() if timeline.instance is not None else None) for timeline in timelines]]
+        return [p.id, [{'id': timeline.id, 'created': timeline.created, 
+                        'msg': timeline.msg, 'username':timeline.user.username, 
+                        'instance': timeline.instance if timeline.instance is not None else None}
+                       for timeline in timelines]]
     
     def get_timeline(self, page=1, query_id=None):
         '''
@@ -158,7 +171,10 @@ class User(polymodel.PolyModel, HookedModel):
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
         timelines = [db.get(timeline.parent()) for timeline in timelines]
-        return [p.id, [(timeline.id, timeline.user.username, timeline.msg) for timeline in timelines if timeline is not None ]]
+        return [p.id, [{'id': timeline.id, 'created': timeline.created, 
+                        'msg': timeline.msg, 'username':timeline.user.username, 
+                        'instance': timeline.instance if timeline.instance is not None else None}
+                        for timeline in timelines if timeline is not None ]]
         
         
     def following(self, async=False):
