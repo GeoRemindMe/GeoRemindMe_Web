@@ -30,6 +30,9 @@ import appengine_admin
 from libs.jsonrpc import jsonrpc_site as jsonrpc_site
 import georemindme.json_rpc_views
 
+import facebookApp.watchers
+
+
 urlpatterns = patterns('',
     (r'^(?i)blog/(?P<path>.*)$', 'django.views.generic.simple.redirect_to', {'url': 'http://blog.georemindme.com/%(path)s', 'permanent': True}),
     (r'^(?i)oauth/', include('geoauth.urls')),

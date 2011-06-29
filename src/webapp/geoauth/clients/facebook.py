@@ -226,6 +226,8 @@ class GraphAPI(object):
         http://developers.facebook.com/docs/authentication/ for details about
         extended permissions.
         """
+        #~ if connection_name == "feed":
+            #~ raise Exception("%s/%s %s" % (parent_object,connection_name, data))
         assert self.access_token, "Write operations require an access token"
         return self.request(parent_object + "/" + connection_name, post_args=data)
 
@@ -238,7 +240,7 @@ class GraphAPI(object):
         attachment adds a structured attachment to the status message being
         posted to the Wall. It should be a dictionary of the form:
 
-            {"name": "Link name"
+            {"name": "Link name",
              "link": "http://www.example.com/",
              "caption": "{*actor*} posted a new review",
              "description": "This is a longer description of the attachment",
@@ -351,6 +353,7 @@ class GraphAPI(object):
                 args["access_token"] = self.access_token
         post_data = None if post_args is None else urllib.urlencode(post_args)
         request = httplib2.Http()
+        
         response, content = request.request("https://graph.facebook.com/" + path + "?" +
                                             urllib.urlencode(args), method='GET', body=post_data)
         content = _parse_json(content)

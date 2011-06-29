@@ -90,6 +90,7 @@ def dashboard(request):
         
         #Comprobamos que el toque es aún válido
         fb_client=FacebookClient(cookie["access_token"])
+        #~ raise Exception(fb_client.consumer.access_token)
         if not fb_client.token_is_valid():
             #Si el usuario ya no tiene instalada la app lo lleva a instalar
             args=registration_panel(request)
