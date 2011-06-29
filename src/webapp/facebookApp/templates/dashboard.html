@@ -34,12 +34,11 @@
     {% for f in friends %}
         amigo {{f.name}}<br>
     {% endfor %}
-    User2={{user2.name}}
+    
     {% if friends_to_follow %}
         <h2>Te siguen</h2>
         {% for f in followers %}
-            {{f.username}}
-            {{f.avatar}}
+            Username={{f.username}},Avatar{{f.avatar}}
         {% endfor %}
         <h2>Sigues</h2>
         <h2>Amigos sugeridos</h2>
