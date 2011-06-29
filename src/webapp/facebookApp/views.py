@@ -161,10 +161,12 @@ def dashboard(request):
     else:
         return HttpResponseRedirect('/fb/')
 
-
+@csrf_exempt
 def user_profile(request, username):
-    raise Exception(username)
-    #User.objects.username
+    
+    user=User.objects.get_by_username(username)
+    #~ raise Exception(user.__dict__)
+    return  render_to_response('public_profile.html',{'user':user})
 
 @csrf_exempt
 #~ @decorator_from_middleware(FacebookMiddleware)
