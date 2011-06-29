@@ -1,20 +1,37 @@
 # coding=utf-8
 
 from django.conf import settings
-from libs.oauth2 import Client, Consumer
+from libs.oauth2 import Client, Consumer, Token
 from geoauth.models import OAUTH_Access
 from geoauth.exceptions import OAUTHException
 
 
 class GoogleClient(Client):
-    _source='Georemindme-v0.1'
+    _source='Georemindme-v0.1 www.georemindme.com'
     _client = None
     
     def __init__(self, token=None, user=None):
+        from libs.gdata.contacts.client import ContactsClient
+        from libs.gdata.gauth import OAuthHmacToken, ACCESS_TOKEN
         if user is not None:
             self.user = user
+            access_token = OAUTH_Access.get_token_user(provider='google', user=self.user)
+            if access_token is not None:
+                token= Token(access_token.token_key, access_token.token_secret)
+            else:
+                raise OAUTHException
         consumer = Consumer(key=settings.OAUTH['google']['app_key'], secret=settings.OAUTH['google']['app_secret'])
         super(self.__class__, self).__init__(consumer, token=token)
+        
+        from libs.gdata.contacts.client import ContactsClient
+        from libs.gdata.gauth import OAuthHmacToken, ACCESS_TOKEN
+        self._client = ContactsClient(source=self._source)
+        self._client.auth_token = OAuthHmacToken(settings.OAUTH['google']['app_key'],
+                                           settings.OAUTH['google']['app_secret'],
+                                           self.token.key,
+                                           self.token.secret, 
+                                           ACCESS_TOKEN
+                                           )
     
     def authorize(self, user=None):
         """Guarda el token de autorizacion"""
@@ -32,23 +49,9 @@ class GoogleClient(Client):
         return False
     
     def load_client(self):
-        from libs.gdata.contacts.client import ContactsClient
-        from libs.gdata.gauth import OAuthHmacToken, ACCESS_TOKEN
-        
-        from django.conf import settings
-        token = OAUTH_Access.get_token_user(provider='google', user=self.user)
-        if token is not None:
-            self._client = ContactsClient(source=self._source)
-            self._client.auth_token = OAuthHmacToken(settings.OAUTH['google']['app_key'],
-                                           settings.OAUTH['google']['app_secret'],
-                                           token.token_key,
-                                           token.token_secret, 
-                                           ACCESS_TOKEN
-                                           )
-        else:
-            raise OAUTHException
         #from libs.gdata.alt.appengine import run_on_appengine
         #run_on_appengine(self._client)
+        pass
         
     def get_contacts(self):
         return self._client.GetContacts()
