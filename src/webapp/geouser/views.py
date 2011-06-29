@@ -362,7 +362,7 @@ def add_following(request, userid=None, username=None):
 		:type username: string
 		:return: booleano con el resultado de la operación
     """
-    return request.session['user'].add_following(userid=userid, username=username)
+    return request.session['user'].add_following(followid=userid, followname=username)
 
 @login_required
 def del_following(request, userid=None, username=None):
@@ -374,7 +374,7 @@ def del_following(request, userid=None, username=None):
 		:type username: string
 		:return: boolean con el resultado de la operacion
     """
-    return request.session['user'].del_following(userid=userid, username=username)
+    return request.session['user'].del_following(followid=userid, followname=username)
 
 @login_required
 def get_contacts_google(request):

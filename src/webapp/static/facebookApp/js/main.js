@@ -8,7 +8,7 @@ function facebookInit(config) {
     xfbml: true,
     cookie : true, // enable cookies to allow the server to access the session
     //~ channelUrl:
-      //~ window.location.protocol + '//' + window.location.host + '/channel.html'
+      //~ window.location.protocol + '//' + window.location.host + '/js/channel.html'
   });
   FB.Event.subscribe('auth.sessionChange', handleSessionChange);
   //~ FB.Event.subscribe('auth.logout', function() {
@@ -36,7 +36,7 @@ function handleSessionChange(response) {
 }
 
 function goHome() {
-  top.location = 'http://apps.facebook.com/' + Config.canvasName + '/dashboard/';
+  top.location = 'http://apps.facebook.com/' + Config.canvasName + '/';
 }
 
 function publishRun(title) {

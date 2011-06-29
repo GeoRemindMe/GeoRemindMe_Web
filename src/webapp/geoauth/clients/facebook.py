@@ -66,7 +66,22 @@ class FacebookClient(object):
             self.consumer = GraphAPI(access_token=access_token)
         self.api_key = settings.OAUTH['facebook']['app_key']
     
-    def get_user_info(self):    
+    def get_user_info(self): 
+        """
+        It returns a dictionary with this keys:
+        - first_name
+        - last_name
+        - verified'
+        - name
+        - locale
+        - gender
+        - email
+        - link: profile link
+        - timezone: GMT+VAR
+        - updated_time
+        - id: 100002508846747
+        """
+   
         me = self.consumer.get_object("me")
         self._fb_id = me['id']
         return me
@@ -78,6 +93,7 @@ class FacebookClient(object):
         return friends
     
     def get_friends_to_follow(self):
+        """Devuelve un array de amigos con id, username, avatar, uid"""
         friends = self.get_friends()
         friends = friends['data']
         
@@ -86,7 +102,7 @@ class FacebookClient(object):
         for f in friends:
             user = FacebookUser.objects.get_by_id(f['id'])
             if user is not None:
-                registered.append((user.user.id, user.user.username, user.user.profile.avatar))
+                registered.append({'id':user.user.id, 'username':user.user.username, 'avatar':user.user.profile.avatar, 'uid':user.uid})
         return registered
         
     def authorize(self, user=None):

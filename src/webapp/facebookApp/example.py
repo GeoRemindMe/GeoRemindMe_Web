@@ -85,9 +85,10 @@ def login_panel(request):
                     #~ raise Exception("Aasdasd2 %s"%cookie)
                     return HttpResponseRedirect('/fb/dashboard')
             else:
-                raise Exception("Aquí entro? ",cookie["uid"])
+                #~ raise Exception("Aquí entro? ",cookie["uid"])
+                pass
         else:
-            #Usuario ya no está logueado
+            #No hay user_ide la cookie
             pass
             #~ raise Exception("Aquí entro?2")
     

@@ -17,11 +17,14 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template, redirect_to
-from example import *
 
-urlpatterns = patterns('facebookApp.example',
+import facebookApp.watchers
+#~ from facebookApp import 
+
+urlpatterns = patterns('facebookApp.views',
     url(r'^fb/$', 'login_panel'),
     url(r'^fb/dashboard/$', 'dashboard'),
+    url(r'^fb/profile/$', 'profile_settings'),
     #url(r'^(?i)timonholandes/$', 'register_panel' ),
     #url(r'^private/', 'homeprivate'),
     #url(r'^team/$',direct_to_template, {'template': 'team.html', 'extra_context': {'active': 'team',}}, 'georemindme.team'),

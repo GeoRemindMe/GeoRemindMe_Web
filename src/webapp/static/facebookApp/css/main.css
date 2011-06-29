@@ -76,7 +76,7 @@ h1 {
 /**
  * Document
  */
-#doc {
+#container {
   width: 760px;
   margin: 0 auto;
 }
@@ -87,8 +87,6 @@ h1 {
  * Header
  */
 .hd {
-  background: #9cccff;
-  border-bottom: 6px solid #1d4088;
   padding: 10px 10px;
 }
 .hd a,
@@ -97,10 +95,12 @@ h1 {
 }
 .hd .logo,
 .hd .logo:hover {
+/*
   font-family: "Arial Black", Arial, serif;
   font-size: 30px;
   text-decoration: none;
   color: #000;
+*/
 }
 
 

@@ -169,7 +169,7 @@ def get_followers(request):
     """ 
     page = request.POST.get('page', 1)
     query_id = request.POST.get('query_id', None)
-    userid = request.POST.get('id', None)
+    userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     followers = geouser.get_followers(request, userid, username, page, query_id)
     return HttpResponse(simplejson.dumps(followers), mimetype="application/json")  # los None se parsean como null
@@ -188,7 +188,7 @@ def get_followings(request):
     """ 
     page = request.POST.get('page', 1)
     query_id = request.POST.get('query_id', None)
-    userid = request.POST.get('id', None)
+    userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     followings = geouser.get_followings(request, userid, username, page, query_id)
     return HttpResponse(simplejson.dumps(followings), mimetype="application/json")
@@ -203,8 +203,10 @@ def add_following(request):
        
             :returns: boolean
     """ 
-    userid = request.POST.get('id', None)
+    userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
+    if username == 'None':
+        username=None
     added = geouser.add_following(request, userid=userid, username=username)
     return HttpResponse(simplejson.dumps(added), mimetype="application/json")
     
@@ -218,7 +220,7 @@ def del_following(request):
        
             :returns: boolean
     """
-    userid = request.POST.get('id', None)
+    userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     deleted = geouser.del_following(request, userid=userid, username=username)
     return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
@@ -254,7 +256,7 @@ def get_timeline(request):
         
         :returns: lista de la forma [query_id, [(id, username, avatar)]]
     """ 
-    userid = request.POST.get('id', None)
+    userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     page = request.POST.get('page', 1)
     query_id = request.POST.get('query_id', None)

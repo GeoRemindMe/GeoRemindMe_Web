@@ -77,7 +77,7 @@ class UserHelper(object):
         followers = UserFollowingIndex.gql('WHERE following = :1 ORDER BY created DESC', userkey)
         p = PagedQuery(followers, id = query_id)
         ##users = [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]
-        return [p.id, [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]]
+        return [p.id, [{'id':u.id, 'username':u.username, 'avatar':u.profile.avatar} for u in (index.parent() for index in p.fetch_page(page))]]
     
     def get_followings(self, userid = None, username=None, page=1, query_id=None):
         """Obtiene la lista de personas a las que sigue el usuario

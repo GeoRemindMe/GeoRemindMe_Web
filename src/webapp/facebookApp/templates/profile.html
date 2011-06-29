@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Recent Runs{% endblock %}
+{% block body %}
+    <h1>Profile</h1>
+    <ul>
+        <li><a href="/fb/dashboard">Timeline</a></li>
+        <li>Mis datos</li>
+    </ul>
+    <h2>Datos personales</h2>
+    <form>
+    <br>Username: <input type="text" id="username" value="{{current_user.first_name}}">
+    <br>Email: <input type="text" id="email" value="{{current_user.email}}">
+    <input type="submit" value="guardar">
+    </form>
+    <h2>Cuentas enlazadas</h2>
+    <ul>
+        <li>Twitter: Off</li>
+        <li>Facebook: On</li>
+        <li>Foursquare: Off</li>
+    </ul>
+{% endblock %}

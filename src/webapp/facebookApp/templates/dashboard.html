@@ -1,18 +1,64 @@
 {% extends "base.html" %}
+{% block extra_js %}
+    <script type="text/javascript">
+    <!--
+        function follow(userid,username) {
+            var data = { "userid" : userid};
+            if(username!=null)
+                data["username"]=username;
+            var url = 'http://localhost:8080/ajax/add/following/'
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function(data){
+                    //console.log(data)
+                    }
+            });
+        }
+        $(document).ready(function(){
+            
+        });
+    //-->
+    </script>
+{%endblock%}
 
 {% block title %}Recent Runs{% endblock %}
 {% block body %}
-Dashboard
-<ul>
-    <li>Perfil de usuario</li>
-    
-</ul>
-   <br>User:{{current_user.first_name}}
-   <br>Email:{{current_user.email}}
+    <h1>Timeline</h1>
+    <ul>
+        <li>Timeline</li>
+        <li><a href="/fb/profile">Mis datos</a></li>
+    </ul>
+    <h2>Friendlist</h2>
+    {% for f in friends %}
+        amigo {{f.name}}<br>
+    {% endfor %}
+    User2={{user2.name}}
+    {% if friends_to_follow %}
+        <h2>Te siguen</h2>
+        {% for f in followers %}
+            {{f.username}}
+            {{f.avatar}}
+        {% endfor %}
+        <h2>Sigues</h2>
+        <h2>Amigos sugeridos</h2>
+        <p>De tus amigos de facebook usan GeoRemindMe para hacer recomendaciones:</p>
+        <ul>
+            <li>
+            {% for f in friends_to_follow %}
+                <fb:profile-pic uid="{{ f.uid }}" linked="true" /></fb:profile-pic>
+                <fb:name uid="{{ f.uid }}" capitalize="true" /></fb:name> | <span id="follow_{{ f.uid }}" onclick="javascript:follow({{f.id}} {% if username %},'{{f.username}}'{% endif %})"><a href="#">Seguir</a></span>
+            {% endfor %}
+            </li>
+        </ul>
+    {% endif %}
 <!--
-{{data.canvas_name}}
-
-{{data.js_conf}}
+    <fb:name uid="{{current_user.id}}" capitalize="true" />
 -->
 
+
+    
+    
+    
 {% endblock %}

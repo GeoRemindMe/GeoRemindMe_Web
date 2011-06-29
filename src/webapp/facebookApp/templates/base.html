@@ -6,46 +6,37 @@
       {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
     </title>
     <meta name="description" content="Track and share your runs with friends.">
-    <link type="text/css" rel="stylesheet" href="/static/facebookApp/awesome-buttons.css">
-    <link type="text/css" rel="stylesheet" href="/static/facebookApp/main.css">
+    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/awesome-buttons.css">
+    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
+    
+    <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+    {% block extra_js %}{%endblock%}
 </head>
 <body>
-    <div id="doc">
+    <div id="container">
 
 
-    <div class="hd">
-        {% if logged_in_user %}
-          <div id="user-info">
-            <div class="info">
-              <a class="name" href="/user/{{ logged_in_user.user_id }}">
-                {{ logged_in_user.name }}
-              </a>
-              <a class="logout" onclick="FB.logout()">Logout</a>
-            </div>
-            <img width="50" height="50" src="{{ logged_in_user.picture }}">
-          </div>
-        {% endif %}
-        <a class="logo" href="/">GeoRemindMe</a>
-      </div>
+        <div class="hd">
+            <a class="logo" href="/">GeoRemindMe</a>
+        </div>
+
         <div class="bd">
             {% block body %}{% endblock %}
-        </div><!-- .bd -->
-<!--
-        <a class="logout" onclick="FB.logout()">Logout</a>
--->
-        
-        
-    </div>
+        </div>
 
-    <script src="/static/facebookApp/main.js"></script>
-    <div id="fb-root"></div>
+
+    </div>
     
+    <div id="fb-root"></div>
+
+    <script src="/static/facebookApp/js/main.js"></script>
     <script>
         <!-- async loading of facebook js sdk  -->
         window.fbAsyncInit = function() { 
             facebookInit({{js_conf|safe}}) 
         };
-        
+
         (function() {
             var e = document.createElement('script');
             e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
@@ -66,5 +57,5 @@
             s.parentNode.insertBefore(ga, s);
         })();
     </script>
-  </body>
+</body>
 </html>
