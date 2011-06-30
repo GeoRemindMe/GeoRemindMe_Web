@@ -44,10 +44,8 @@ class Business(db.Model):
 class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
     ''' Puntos de interes '''
     name = db.StringProperty()
-    bookmark = db.BooleanProperty(default=False)
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty(auto_now=True)
-    users = db.ListProperty(db.Key)  #  lista con los usuarios que han modificado el POI
     user = db.ReferenceProperty(User, required=False)  # el usuario que creo el POI
     address = db.StringProperty()
     
@@ -74,6 +72,7 @@ class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
 class PrivatePlace(POI):
     '''Lugares especificos para una alerta, solo visibles por el usuario que los crea'''
     business = db.ReferenceProperty(Business)
+    bookmark = db.BooleanProperty(default=False)
     
     
     @classmethod
@@ -216,6 +215,7 @@ class Place(POI):
     google_places_reference = db.StringProperty()
     google_places_id = db.StringProperty(default=None)
     business = db.ReferenceProperty(Business)
+    users = db.ListProperty(db.Key)  #  lista con los usuarios que administran el POI
  
     
     @classproperty

@@ -123,4 +123,13 @@ class SuggestionHelper(EventHelper):
 
 class AlertSuggestionHelper(AlertHelper):
     _klass = AlertSuggestion
-
+    
+    def get_by_sugid_user(self, sugid, user):
+        if not isinstance(user, User):
+            raise TypeError()
+        try:
+            sugid = long(sugid)
+        except:
+            return None
+        sugkey = db.Key.from_path(Suggestion.kind(), sugid)
+        return self._klass.all().filter('suggestion =', sugkey).filter('user =', user).get()
