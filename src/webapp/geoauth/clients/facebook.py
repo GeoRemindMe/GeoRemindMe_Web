@@ -129,6 +129,7 @@ class FacebookClient(object):
                              realname = facebookInfo['name'],
                              profile_url=facebookInfo["link"]
                             )
+            self.user = user
             return True
         return False
     

@@ -131,7 +131,7 @@ def dashboard(request):
     
         else:
             fb_client=FacebookClient(access_token.token_key)
-            fb_client.authorize()
+            fb_client.authenticate()
         
         user = fb_client.get_user_info()            
         #~ raise Exception(user)
