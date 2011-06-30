@@ -102,7 +102,7 @@ class FacebookClient(object):
         registered = []
         for f in friends:
             user = FacebookUser.objects.get_by_id(f['id'])
-            if user is not None:
+            if user is not None and not self.user.is_following(user.user):
                 registered.append({'id':user.user.id, 'username':user.user.username, 'avatar':user.user.profile.avatar, 'uid':user.uid})
         return registered
         

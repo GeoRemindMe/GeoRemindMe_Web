@@ -96,3 +96,48 @@ class RemindForm(forms.Form):
             alert.delete()
             return True
         return False    
+
+from georemindme.models_utils import VISIBILITY_CHOICES
+
+class SuggestionForm(forms.Form):
+    name = forms.CharField(required=True)
+    place_id = forms.IntegerField(required=True, initial=-1)
+    starts = forms.DateTimeField(required=False, widget=SelectDateWidget())
+    ends = forms.DateTimeField(required=False, widget=SelectDateWidget())
+    description = forms.CharField(required=False,widget=forms.Textarea())    
+    done = forms.BooleanField(required=False)
+    visibility = forms.ChoiceField(required=True, choices=VISIBILITY_CHOICES)
+    
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(*args, **kwargs)
+
+        if 'initial' in kwargs:
+            if 'done' in kwargs['initial']:#only shows done field when
+                self.fields['done'] = forms.BooleanField() 
+        elif args:
+            if 'done' in args[0]:
+                self.fields['done'] = forms.BooleanField()
+            
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        starts = cleaned_data.get('starts')
+        ends = cleaned_data.get('ends')
+        
+        if all([starts, ends]):
+            if (starts > ends):
+                msg = _("Wrong dates")
+                self._errors['starts'] = self.error_class([msg])
+        
+        return cleaned_data
+    
+    # only save if it is valid
+    def save(self, **kwargs):
+        poi = Place.objects.get_by_id(self.cleaned_data['poi_id'])
+        suggestion = Suggestion.update_or_insert(
+                         id = kwargs.get('id', None), name = self.cleaned_data['name'],
+                         description = self.cleaned_data['description'], 
+                         date_starts = self.cleaned_data['starts'],
+                         date_ends = self.cleaned_data['ends'], poi = poi,
+                         user = kwargs['user'], done = self.cleaned_data.get('done', False),
+                         )
+        return suggestion  

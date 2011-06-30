@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from google.appengine.ext import db
+from django.utils.translation import ugettext as _
 
 
 class _Do_later_ft(db.Model):
@@ -46,6 +47,12 @@ class Counter(db.Model):
             counter = counter.key()
         return db.run_in_transaction(_increment_counter, counter)
     
+VISIBILITY_CHOICES = (
+          ('public', _('Public')),
+          ('private', _('Private')),
+          ('shared', _('Shared')),
+                      )
+
 class Visibility(db.Model):
     """Metodos comunes heredados por todas las Clases que necesiten visibilidad"""
     _vis = db.StringProperty(required = True, choices = ['public', 'private', 'shared',], default = 'public')
