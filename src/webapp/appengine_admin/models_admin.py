@@ -19,6 +19,7 @@ from model_register import ModelAdmin, register
 from geouser.models import User
 from geouser.models_social import SocialUser
 from geouser.models_acc import UserSettings
+from georpcjson.models import  _Report_Bug
 
 class UserAdminForm(ModelAdmin):
     model = User
@@ -37,6 +38,11 @@ class UserSettingsAdminForm(ModelAdmin):
     listFields = ('parent', 'created')
     editFields = ('notification_followers', 'show_followers', 'show_followings', 'show_timeline', 'language')
     readonlyFields = ('created',)
+    
+class _Report_BugAdminForm(ModelAdmin):
+    model = _Report_Bug
+    listFields = ('user', 'msg', 'datetime', 'created')
+    readonlyFields = ('user', 'msg', 'datetime', 'created')
 
 # Register to admin site
-register(UserAdminForm, SocialUserAdminForm, UserSettingsAdminForm)
+register(UserAdminForm, SocialUserAdminForm, UserSettingsAdminForm, _Report_BugAdminForm)

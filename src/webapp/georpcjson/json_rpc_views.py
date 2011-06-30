@@ -11,7 +11,6 @@ from geoalert.models import Alert, _Deleted_Alert
 from geoalert.models_poi import *
 from geouser.models import User
 from geouser.funcs import login_func
-from geomiddleware.sessions.store import SessionStore
 
 from libs.jsonrpc import jsonrpc_method
 from libs.jsonrpc.exceptions import *
@@ -131,7 +130,7 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
 
 @jsonrpc_method('report_bug', authenticated=False)
 def report_bug(request, bugs):
-    from rpc_server.models import _Report_Bug
+    from models import _Report_Bug
     try:
         for b in bugs:
             datetime = parse_date(b.get('datetime'))
