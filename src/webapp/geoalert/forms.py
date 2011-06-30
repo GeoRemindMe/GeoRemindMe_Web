@@ -42,8 +42,9 @@ class RemindForm(forms.Form):
             if 'done' in kwargs['initial']:#only shows done field when
                 self.fields['done'] = forms.BooleanField() 
                 
-        elif 'done' in args[0]:
-            self.fields['done'] = forms.BooleanField()
+        elif args:
+            if 'done' in args[0]:
+                self.fields['done'] = forms.BooleanField()
 
     def clean_distance(self):
         data = self.cleaned_data['distance']

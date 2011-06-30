@@ -18,6 +18,7 @@ from geouser.funcs import init_user_session
 from settings import OAUTH, FACEBOOK_APP
 
 from geouser.forms import *
+from geoalert.forms import *
 from django.template import RequestContext
 
 
@@ -49,23 +50,24 @@ def registration_panel(request):
 #~ @facebook.require_login()
 def login_panel(request):
     
-    if request.session['user'].username is None or request.session['user'].email is None:
-        #~ raise Exception(request.POST.get('id_user_set_username-username'))
-        if request.method == 'POST':
-            #~ raise Exception("Username=%s, email=%s"%(request['id_user_set_username-username'],request.session['user'].email))
-            f = SocialUserForm(request.POST, prefix='user_set_username')
-            if f.is_valid():
-                user = f.save(request.session['user'])
-                if user:
-                    request.session['user'] = user
-                    return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
-        else:
-            
-            f = SocialUserForm(prefix='user_set_username', initial = { 
-                                                                  'email': request.session['user'].email,
-                                                                  'username': request.session['user'].username,
-                                                                  })
-        return render_to_response('webapp/socialsettings.html', {'form': f}, context_instance=RequestContext(request))
+    if "user" in request.session:
+        if request.session['user'].username is None or request.session['user'].email is None:
+            #~ raise Exception(request.POST.get('id_user_set_username-username'))
+            if request.method == 'POST':
+                #~ raise Exception("Username=%s, email=%s"%(request['id_user_set_username-username'],request.session['user'].email))
+                f = SocialUserForm(request.POST, prefix='user_set_username')
+                if f.is_valid():
+                    user = f.save(request.session['user'])
+                    if user:
+                        request.session['user'] = user
+                        return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+            else:
+                
+                f = SocialUserForm(prefix='user_set_username', initial = { 
+                                                                      'email': request.session['user'].email,
+                                                                      'username': request.session['user'].username,
+                                                                      })
+            return render_to_response('webapp/socialsettings.html', {'form': f}, context_instance=RequestContext(request))
     
     #~ raise Exception("Username=%s, email=%s"%(request.session['user'].username,request.session['user'].email))
     
@@ -87,12 +89,17 @@ def login_panel(request):
                     return render_to_response('register.html',args)
 
                 else:
-                    #~ raise Exception("Aasdasd2 %s"%cookie)
-                    #~ raise Exception("Username=%s"%request.user.username)
+                    #~ raise Exception("Uid %s"%cookie["uid"])
+                    
                     user=FacebookUser.objects.get_by_id(cookie["uid"])
+                                            
+                    #~ raise Exception("Username=%s"%request.user.username)
                     if not request.user.is_authenticated():
-                        init_user_session(request,user.user)
-                    return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+                        fb_client=FacebookClient(cookie["access_token"])
+                        user=fb_client.authenticate()
+                        init_user_session(request,user)
+                    #Renderizamos de nuevo esta plantilla para que le pida usuario y mail
+                    return HttpResponseRedirect(reverse('facebookApp.views.login_panel'))
             else:
                 #~ raise Exception("Aquí entro? ",cookie["uid"])
                 pass
@@ -167,6 +174,27 @@ def user_profile(request, username):
     user=User.objects.get_by_username(username)
     #~ raise Exception(user.__dict__)
     return  render_to_response('public_profile.html',{'user':user})
+    
+@csrf_exempt
+def user_suggestions(request):
+    """
+    name = forms.CharField(required=True)
+    location = LocationField(required=True)
+    poi_id = forms.IntegerField(required=False, initial=-1)
+    starts = forms.DateTimeField(required=False, widget=SelectDateWidget())
+    ends = forms.DateTimeField(required=False, widget=SelectDateWidget())
+    description = forms.CharField(required=False,widget=forms.Textarea())
+    distance = forms.CharField(label=_('Alert distance (meters)'), required=False)
+    active = forms.BooleanField(required=False, initial=True)
+    done = forms.BooleanField(required=False)
+    """
+    f = RemindForm(initial = { 
+                              # 'location' : [1,2] <<- coordenadas por defecto,
+                              'name': 'Recomiendo...',
+                              'done': False,
+                              })
+    #~ raise Exception (f)
+    return  render_to_response('suggestions.html',{'form': f}, context_instance=RequestContext(request))
 
 @csrf_exempt
 #~ @decorator_from_middleware(FacebookMiddleware)
