@@ -220,7 +220,6 @@ def profile_settings(request):
         args={}
         args["current_user"]=user;
         #~ raise Exception(user)
-        args['js_conf'] = registration_panel(request)
     
         return  render_to_response('profile.html',args,RequestContext(request))
     else:
