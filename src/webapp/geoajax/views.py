@@ -27,6 +27,9 @@ import geovote.views as geovote
     :platform: appengine
     :synopsis: Views for AJAX request
 """
+def str2bool(v):
+  return v.lower() in ("yes", "true", "t", "1")
+
 
 @ajax_request
 def exists(request):
@@ -109,7 +112,7 @@ def add_reminder(request):
         Añade o edita una alerta
         Parametros en POST:
             eventid: el id del evento a editar (opcional)
-            address: direccion del servidor
+            address: direccion
     """
     form = RemindForm(request.POST)
     address = request.POST.get('address', None)
@@ -149,6 +152,53 @@ def delete_reminder(request):
     """
     eventid = request.POST.get('eventid', None)
     geoalert.del_alert(request, eventid)    
+    return HttpResponse()
+
+#===============================================================================
+# FUNCIONES AJAX PARA OBTENER, MODIFICAR, BORRAR SUGERE
+#===============================================================================
+def add_suggestion(request):
+    """
+        Añade o edita una alerta
+        Parametros en POST:
+            eventid: el id del evento a editar (opcional)
+    """
+    form = SuggestionForm(request.POST)
+    if form.is_valid():
+        eventid = request.POST.get('eventid', None)
+        if eventid:
+            sug = geoalert.edit_sug(request, eventid, form)
+        else: 
+            sug = geoalert.add_sug(request, form)
+        return HttpResponse(simplejson.dumps(dict(id=suggestion.id)), mimetype="application/json")
+    else:
+        return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
+
+@ajax_request
+def get_suggestion(request):
+    """
+        Obtiene los eventos
+        Parametros en POST:
+            eventid: el id del evento a buscar
+            page : pagina a mostrar
+            query_id: id de la consulta de pagina
+    """
+    eventid = request.POST.get('eventid', None)
+    private_profile= str2bool(request.POST.get('private_profile', ''))
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    suggestions = geoalert.get_suggestion(request, eventid, private_profile, page, query_id)
+    return HttpResponse(getAlertsJSON(suggestions), mimetype="application/json")
+
+@ajax_request
+def delete_suggestion(request):
+    """
+        Borra un evento
+        Parametros en POST
+            eventid : el id de la sugerencia a borrar
+    """
+    eventid = request.POST.get('eventid', None)
+    geoalert.del_suggestion(request, eventid)    
     return HttpResponse()
 
 

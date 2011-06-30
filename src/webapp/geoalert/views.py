@@ -218,7 +218,78 @@ def view_place(request, slug):
                               context_instance=RequestContext(request)
                               )
         
-    
+
+#===============================================================================
+# FUNCIONES PARA AÑADIR, EDITAR, OBTENER Y MODIFICAR RECOMENDACIONES
+#===============================================================================
+@login_required
+def add_suggestion(request, form):
+    """ Añade una sugerencia
+        
+            :param form: formulario con los datos
+            :type form: :class:`geoalert.forms.RemindForm`
+            :param address: direccion obtenida de la posicion
+            :type: :class:`string`
+            
+            :returns: :class:`geoalert.models.Suggestion`
+    """
+    sug = form.save(user = request.session['user'])
+    return sug
+
+
+@login_required
+def edit_suggestion(request, id, form):
+    """ Edita una sugerencia
+        
+            :param form: formulario con los datos
+            :type id: :class:`geoalert.forms.SuggestionForm`
+            
+            :returns: :class:`geoalert.models.Suggestion`
+    """
+    alert = form.save(user = request.session['user'], id = id)
+    return alert
+
+
+@login_required
+def get_suggestion(request, id, private_profile=False, page = 1, query_id = None):
+    """ Obtiene sugerencias
+        
+            :param id: identificador de la sugerencia
+            :type id: :class:`integer`
+            :param done: devolver solo las realizadas
+            :type done: boolean
+            :param page: pagina a devolver
+            :type page: :class:`ìnteger`
+            :param query_id: identificador de la busqueda
+            :type query_id: :class:`integer`
+            
+            :returns: :class:`geoalert.models.Suggestion`
+    """
+    if id:
+        return [Suggestion.objects.get_by_id_user(id, request.session['user'])]
+    elif private_profile:
+        return Suggestion.objects.get_by_userALL(request.session['user'], page, query_id)
+    else:
+        return Suggestion.objects.get_by_user(request.session['user'], page, query_id)
+
+
+@login_required    
+def del_suggestion(request, id = None):
+    """ Borra una sugerencia
+        
+            :param id: identificador de la alerta
+            :type id: :class:`integer`
+            
+            :returns: True
+            :raises: AttributeError
+    """
+    if id is None:
+        raise AttributeError()
+    sug = request.user.suggestions.filter('id =', id).get()
+    if not sug:
+        raise AttributeError()
+    sug.delete()    
+    return True
     
     
     

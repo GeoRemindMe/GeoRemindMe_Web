@@ -120,6 +120,28 @@ class AlertHelper(EventHelper):
 
 class SuggestionHelper(EventHelper):
     _klass = Suggestion
+    
+    def get_by_user(self, user, page = 1, query_id = None):
+        '''
+        Obtiene una lista con todos los Eventos
+        de un usuario
+        '''
+        if not isinstance(user, User):
+            raise TypeError()
+        q = self._klass.gql('WHERE user = :1 AND _vis = :2 ORDER BY modified DESC', user, 'public')
+        p = PagedQuery(q, id = query_id)
+        return [p.id, p.fetch_page(page)]
+    
+    def get_by_userALL(self, user, page = 1, query_id = None):
+        '''
+        Obtiene una lista con todos los Eventos
+        de un usuario
+        '''
+        if not isinstance(user, User):
+            raise TypeError()
+        q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
+        p = PagedQuery(q, id = query_id)
+        return [p.id, p.fetch_page(page)]
 
 class AlertSuggestionHelper(AlertHelper):
     _klass = AlertSuggestion
