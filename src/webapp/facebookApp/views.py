@@ -33,18 +33,6 @@ more information.
 """
 
 
-
-def registration_panel(request):
-    args={}
-    args['js_conf'] = json.dumps({
-            u'appId': settings.OAUTH['facebook']['app_key'],
-            u'canvasName': settings.FACEBOOK_APP['canvas_name'],
-            #~ u'userIdOnServer': self.user.user_id if self.user else None,
-        })
-    args["permissions"]=settings.OAUTH['facebook']['scope']
-    
-    return args
-
 @csrf_exempt
 #~ @decorator_from_middleware(FacebookMiddleware)
 #~ @facebook.require_login()
@@ -85,8 +73,10 @@ def login_panel(request):
                     #~ raise Exception("Aasdasd %s"%cookie)
                     user=FacebookUser.objects.get_by_id(cookie["uid"])
                     OAUTH_Access.remove_token(user, 'facebook')
-                    args=registration_panel(request)
-                    return render_to_response('register.html',args)
+                    
+                    #Permisos para el boton FBML
+                    args["permissions"]=settings.OAUTH['facebook']['scope']
+                    return render_to_response('register.html',args,RequestContext(request))
 
                 else:
                     #~ raise Exception("Uid %s"%cookie["uid"])
@@ -109,8 +99,7 @@ def login_panel(request):
             #~ raise Exception("Aquí entro?2")
     
     #Identificarse o registrarse
-    args=registration_panel(request)
-    return render_to_response('register.html',args)
+    return render_to_response('register.html',{"permissions":settings.OAUTH['facebook']['scope']},RequestContext(request))
     
 
 
@@ -127,7 +116,8 @@ def dashboard(request):
         #~ raise Exception(fb_client.consumer.access_token)
         if not fb_client.token_is_valid():
             #Si el usuario ya no tiene instalada la app lo lleva a instalar
-            args=registration_panel(request)
+            args={}
+            args["permissions"]=settings.OAUTH['facebook']['scope']
             return HttpResponseRedirect('/fb/')
         
         
@@ -141,14 +131,14 @@ def dashboard(request):
     
         else:
             fb_client=FacebookClient(access_token.token_key)
-            fb_client.authorize()
+            fb_client.authenticate()
         
         user = fb_client.get_user_info()            
-        
+        #~ raise Exception(user)
         args={}
         args["current_user"]=user;
         #~ raise Exception(user)
-        args['js_conf'] = registration_panel(request)
+        args["permissions"]=settings.OAUTH['facebook']['scope']
         
         #~ friends=fb_client.get_friends()
         #~ args['friends']=friends['data']
@@ -164,7 +154,7 @@ def dashboard(request):
         args['followings']=followings[1]
         #~ raise Exception(friends_to_follow)
         
-        return  render_to_response('dashboard.html',args)
+        return  render_to_response('dashboard.html',args,RequestContext(request))
     else:
         return HttpResponseRedirect('/fb/')
 
@@ -172,8 +162,9 @@ def dashboard(request):
 def user_profile(request, username):
     
     user=User.objects.get_by_username(username)
+    is_following=request.user.is_following(user)
     #~ raise Exception(user.__dict__)
-    return  render_to_response('public_profile.html',{'user':user})
+    return  render_to_response('public_profile.html',{'profile_user':user,'is_following':is_following},RequestContext(request))
     
 @csrf_exempt
 def user_suggestions(request):
@@ -207,7 +198,8 @@ def profile_settings(request):
         fb_client=FacebookClient(cookie["access_token"])
         if not fb_client.token_is_valid():
             #Si el usuario ya no tiene instalada la app lo lleva a instalar
-            args=registration_panel(request)
+            args={}
+            args["permissions"]=settings.OAUTH['facebook']['scope']
             return HttpResponseRedirect('/fb/')
         
         
@@ -228,9 +220,8 @@ def profile_settings(request):
         args={}
         args["current_user"]=user;
         #~ raise Exception(user)
-        args['js_conf'] = registration_panel(request)
     
-        return  render_to_response('profile.html',args)
+        return  render_to_response('profile.html',args,RequestContext(request))
     else:
         return HttpResponseRedirect('/fb/')
     
