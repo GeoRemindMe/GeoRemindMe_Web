@@ -14,6 +14,7 @@ from geouser.funcs import login_func
 
 from libs.jsonrpc import jsonrpc_method
 from libs.jsonrpc.exceptions import *
+from libs.jsonrpc.views import *
 
 def need_authenticate(username=None, password=None):
     raise BadSessionException

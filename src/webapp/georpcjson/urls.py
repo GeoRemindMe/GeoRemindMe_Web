@@ -19,11 +19,11 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from django.conf.urls.defaults import *
-from libs.jsonrpc import jsonrpc_site as jsonrpc_site
+from libs.jsonrpc import jsonrpc_site
 
 urlpatterns = patterns('georpcjson.views',
        url(r'^(?i)service/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
-       #url(r'^(?i)browse/', 'libs.jsonrpc.views.browse', name="jsonrpc_browser"
+       #url(r'^(?i)browse/', 'libs.jsonrpc.views.browse', name="jsonrpc_browser"),
 )
 
 

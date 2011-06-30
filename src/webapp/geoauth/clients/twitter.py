@@ -62,7 +62,7 @@ class TwitterClient(Client):
         registered = []
         for i in ids:
             user = TwitterUser.objects.get_by_id(i)
-            if user is not None:
+            if user is not None and not self.user.is_following(user.user):
                 info = self.get_others_user_info(id=user.id)
                 registered.append({'id':user.id, 
                                    'username': user.username, 
