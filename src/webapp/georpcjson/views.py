@@ -60,7 +60,24 @@ def login(request, email, password):
     elif error != '':
         raise InvalidRequestError         
     return request.session.session_id
-    
+
+@jsonrpc_method('login_facebook', authenticated=False)
+def login_facebook(request, access_token):
+    """
+        Inicia la sesion de un usuario con un token de acceso de facebook
+        
+        :param access_token: token de acceso valido de facebook
+        :type access_token: :class:`string`
+        
+        :returns: :class:`string` identificador de sesion
+    """
+    client = FacebookClient(access_token = token['access_token'])
+    user = client.authenticate()
+    if not user:
+        raise InvalidCredentialsError
+    messages.success(request, _('USER: %s logged from Facebook') % user.id)
+    init_user_session(request, user, from_rpc=True)
+    return request.session.session_id
 
 @jsonrpc_method('register', authenticated=False)
 def register(request, email, password):

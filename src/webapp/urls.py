@@ -36,7 +36,7 @@ urlpatterns = patterns('',
     (r'', include('georemindme.urls')),
     (r'', include('geouser.urls')),
     (r'', include('geoalert.urls')),
-    (r'', include('facebookApp.urls')),
+    #(r'', include('facebookApp.urls')),
 )
 
 
