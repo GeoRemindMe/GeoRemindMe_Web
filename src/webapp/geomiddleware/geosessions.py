@@ -35,6 +35,11 @@ class geosession(object):
             request.user = request.session['user']
         else:
             request.user = AnonymousUser()
+            
+        from geoauth.clients.facebook import get_user_from_cookie
+        cookie = get_user_from_cookie(request.COOKIES)
+        if cookie is not None:
+            request.facebook = cookie
 
     def process_response(self, request, response):
         """
