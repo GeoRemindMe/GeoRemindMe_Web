@@ -18,16 +18,22 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 """
 from geouser.models import AnonymousUser
 from georemindme.forms import ContactForm
-
+import settings
 
 def geoAuth(request):
     """
         Add the object user to all templates
     """
-    return {
+    parameters = {
             'user' : request.user,
             'contactForm' : ContactForm(),
+            'app_settings' :{
+                                u'appId': settings.OAUTH['facebook']['app_key'],
+                                u'canvasName': settings.FACEBOOK_APP['canvas_name'],
+                            },
             }
+    
+    return parameters
     
         
     

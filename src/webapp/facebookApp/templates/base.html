@@ -36,12 +36,13 @@
     </div>
     
     <div id="fb-root"></div>
+    <div id="templates"></div>
 
     <script src="/static/facebookApp/js/main.js"></script>
     <script>
         <!-- async loading of facebook js sdk  -->
         window.fbAsyncInit = function() { 
-            facebookInit({{js_conf|safe}}) 
+            facebookInit({'appId':{{app_settings.appId}}, 'canvasName':'{{app_settings.canvasName}}'}) 
         };
 
         (function() {
