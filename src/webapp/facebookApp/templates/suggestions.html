@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Recent Runs{% endblock %}
+{% block extra_js %}
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+{%endblock%}
+{% block body %}
+    <h1>Sugerencias</h1>
+    <p>Añade una sugerencia</p>
+    {% include "add_suggestion.html" %}
+    <p>Sugerencias hechas</p>
+    {{form}}
+{% endblock %}

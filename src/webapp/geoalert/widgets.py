@@ -12,12 +12,15 @@ class LocationWidget(forms.widgets.Widget):
         super(self.__class__, self).__init__(*args, **kw)
         self.inner_widget = forms.widgets.HiddenInput()
 
-    def render(self, name, value=[0,0], *args, **kwargs):
+    def render(self, name, value, *args, **kwargs):
         
         if isinstance(value, unicode):
             a, b = value.split(',')
         else:
-            a, b = value
+            if not value:
+                a,b = 0,0 #Valor por defecto
+            else:
+                a, b = value
         lat, lng = float(a), float(b)
         
         js = '''
