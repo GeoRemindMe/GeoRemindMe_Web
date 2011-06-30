@@ -11,22 +11,19 @@ from geouser.models import User
 class POIHelper(object):
     _klass = POI
     
-    def get_by_id(self, id):
-        try:
-            id = long(id)
-        except:
-            return None
-        return self._klass.get_by_id(id)
-    
     def search(self, word, page=1, query_id = None):
         q = self._klass.all().search(word).order('-modified')
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
     
     def get_by_id_user(self, id, user):
+        try:
+            id = long(id)
+        except:
+            return None
         if not isinstance(user, User):
             raise AttributeError()
-        poi = self.get_by_id(id)
+        poi = self._klass.get_by_id(id)
         if poi is None or (poi.user.key() != user.key()):
             return None
         return poi
@@ -34,7 +31,7 @@ class POIHelper(object):
 
 class PrivatePlaceHelper(POIHelper):
     _klass = PrivatePlace
-    
+
     def get_by_business_user(self, business, user, page=1, query_id=None):
         if not isinstance(user, User):
             raise AttributeError()
@@ -63,6 +60,13 @@ class PrivatePlaceHelper(POIHelper):
 
 class PlaceHelper(POIHelper):
     _klass = Place
+    
+    def get_by_id(self, id):
+        try:
+            id = long(id)
+        except:
+            return None
+        return self._klass.get_by_id(id)
     
     def get_by_slug(self, slug):
         if not isinstance(slug, basestring):

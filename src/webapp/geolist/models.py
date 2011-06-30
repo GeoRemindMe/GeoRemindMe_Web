@@ -223,7 +223,7 @@ class ListSuggestion(List, Visibility):
                 
     def user_invited(self, user, set_status=None):
         '''
-        Comprueba que un usuario ha sido invitado a la sugerencia
+        Comprueba que un usuario ha sido invitado a la lista
             
             :param user: Usuario que debe estar invitado
             :type user: :class:`geouser.models.User`

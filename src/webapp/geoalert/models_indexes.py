@@ -15,11 +15,9 @@ class SuggestionCounter(db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
     
     def _change_counter(self, prop, value):
-        obj = UserCounter.get(self.key())
+        obj = SuggestionCounter.get(self.key())
         oldValue = getattr(obj, prop) #  obtiene el valor actual
         value = oldValue+value
-        if value < 0:
-            raise ValueError
         setattr(obj, prop, value)
         db.put_async(obj)
         return value

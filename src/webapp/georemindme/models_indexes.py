@@ -28,7 +28,7 @@ class InvitationHelper(object):
         '''
         if getattr(instance, 'user', None) == user:
             return True
-        invitation = db.GqlQuery('SELECT __KEY__ FROM Invitation WHERE instance = :ins AND to = :user', ins=instance.key(), user=user.key()).get()
+        invitation = db.GqlQuery('SELECT __key__ FROM Invitation WHERE instance = :ins AND to = :user', ins=instance.key(), user=user.key()).get()
         if invitation is not None:
             return True
         return False

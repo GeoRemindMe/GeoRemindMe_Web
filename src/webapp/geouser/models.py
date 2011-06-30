@@ -535,6 +535,11 @@ class User(polymodel.PolyModel, HookedModel):
             return True
         return False
     
+    def is_following(self, user):
+        if UserFollowingIndex.all().ancestor(self.key()).filter('following =', user.key()).count() != 0:
+            return True
+        return False        
+    
     def write_timeline(self, msg, instance=None):
         return UserTimeline.insert(msg=msg, user=self, instance=instance)
     
