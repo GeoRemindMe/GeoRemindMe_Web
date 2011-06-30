@@ -55,8 +55,11 @@ class UserProfile(db.Model):
     def objects(self):
         return UserProfileHelper()
         
+    
     def __init__(self, *args, **kwargs):
-        if parent.email != '':
+        super(self.__class__, self).__init__(*args, **kwargs)
+        parent = self.parent()
+        if parent is not None and parent.email is not None:
             email = parent.email
             default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
             size = 50
@@ -64,7 +67,6 @@ class UserProfile(db.Model):
             gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
             gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
             self.avatar = gravatar_url 
-        super(self.__class__, self).__init__(*args, **kwargs)
     
 
 class UserSocialLinks(db.Model):
