@@ -261,7 +261,7 @@ def add_following(request):
     return HttpResponse(simplejson.dumps(added), mimetype="application/json")
     
 @ajax_request
-def del_following(request):
+def delete_following(request):
     """
         Borra de la lista de de followings de un usuario
         Parametros en POST
@@ -470,7 +470,7 @@ def mod_list_alert(request):
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
 @ajax_request
-def del_list(request):
+def delete_list(request):
     """
     Borra una lista
     Parametros POST

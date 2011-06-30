@@ -5,8 +5,8 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('geoajax.views',
     (r'^(?i)delete/reminder/$', 'delete_reminder'),
-    (r'^(?i)delete/following/$', 'del_following'),
-    (r'^(?i)delete/suggestion/$', 'del_suggestion'),
+    (r'^(?i)delete/following/$', 'delete_following'),
+    (r'^(?i)delete/suggestion/$', 'delete_suggestion'),
     (r'^(?i)add/following/$', 'add_following'),
     (r'^(?i)add/reminder/$', 'add_reminder'),
     (r'^(?i)add/following/$', 'add_following'),
