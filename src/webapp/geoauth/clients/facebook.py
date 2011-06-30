@@ -107,7 +107,7 @@ class FacebookClient(object):
                 registered.append({'id':user.user.id, 'username':user.user.username, 'avatar':user.user.profile.avatar, 'uid':user.uid})
         return registered
         
-    def authorize(self, user=None):
+    def authorize(self, user):
         """guarda el token de autorizacion"""
         if user is not None:#el usuario ya esta conectado, pero pide permisos
             if OAUTH_Access.get_token(self.consumer.access_token,) is None: 
