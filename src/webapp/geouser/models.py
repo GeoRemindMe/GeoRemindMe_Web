@@ -351,7 +351,7 @@ class User(polymodel.PolyModel, HookedModel):
         '''
         def _tx(user):
             settings = UserSettings(key_name='settings_%s' % user.id, parent=user, language=language)
-            profile = UserProfile(key_name='profile_%s' % user.id, parent=user, nickname=user.username)
+            profile = UserProfile(key_name='profile_%s' % user.id, parent=user, username=user.username)
             followings = UserFollowingIndex(parent=user)
             counters = UserCounter(key_name='counters_%s' % user.id, parent=user)
             sociallinks = UserSocialLinks(parent=profile)

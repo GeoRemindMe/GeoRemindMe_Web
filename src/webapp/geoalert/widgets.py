@@ -12,7 +12,7 @@ class LocationWidget(forms.widgets.Widget):
         super(self.__class__, self).__init__(*args, **kw)
         self.inner_widget = forms.widgets.HiddenInput()
 
-    def render(self, name, value, *args, **kwargs):
+    def render(self, name, value=[0,0], *args, **kwargs):
         
         if isinstance(value, unicode):
             a, b = value.split(',')
