@@ -134,7 +134,7 @@ def dashboard(request):
             fb_client.authorize()
         
         user = fb_client.get_user_info()            
-        
+        #~ raise Exception(user)
         args={}
         args["current_user"]=user;
         #~ raise Exception(user)
