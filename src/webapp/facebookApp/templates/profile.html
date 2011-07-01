@@ -2,19 +2,75 @@
 
 {% block title %}Datos personales{% endblock %}
 {% block body %}
-    <h1>Profile</h1>
-    <h2>Datos personales</h2>
-    <form>
+    <div id="profile">
+        <h1>Cuenta en GeoRemindMe</h1>
+        <div class="section">
+            <div class="header">
+                <h2>Perfil público</h2>
+                <p><a href="">Editar</a></p>
+            </div>
+            <dl>
+                <dt>Nombre de usuario:</dt>
+                <dd>{{user.username}}</dd>
+                
+                <dt>Perfil público:</dt>
+                <dd><a href="/user/{{user.username}}">http://appspot.georemindme.com/user/{{user.username}}</a></dd>
+                
+                <dt>Facebook público:</dt>
+                <dd><a href="/fb/user/{{user.username}}">http://appspot.georemindme.com/fb/user/{{user.username}}</a></dd>
+                
+                <dt>Email:</dt>
+                <dd><a href="mailto:{{user.email}}">{{user.email}}</a></dd>
+                
+                <dt>Descripción:</dt>
+                <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris </dd>
+                
+                <dt>Sugerencias:</dt>
+                <dd><a href="">32 sugerencias hechas</a></dd>
+                
+                <dt>Te siguen:</dt>
+                <dd><a href="/fb/user/{{user.username}}/followers">{{followers}} usuarios</a></dd>
+                
+                <dt>Sigues a:</dt>
+                <dd><a href="/fb/user/{{user.username}}/followings">{{followings}} usuarios</a></dd>
+            </dl>
+            <p><strong>Cuentas vinculadas:</strong></p>
+                
+            <ul>
+                <li class="li-icon"><span>Twitter:</span> <a id="twitter-icon" href="">vincular</a></li>
+                <li class="li-icon"><span>Google:</span> <a id="google-icon" href="">vincular</a></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="header">
+                <h2>Configuración</h2>
+                <p><a href="">Editar</a></p>
+            </div>
+            <h3>Privacidad</h3>
+            <p><strong>Visibilidad del perfil</strong>: Público</p>
+            <p>Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.</p>
+            
+            <h3>Notificaciones</h3>
+            <p>Te llegarán notificaciones por email cuando:</p>
+            <dl id="mail-notifications">
+                <dt>Otro usuario empieza a seguir tus sugerencias</dt>
+                <dd>Instantáneamente</dd>
+                
+                <dt>Recibes un comentario en una sugerencia</dt>
+                <dd>Instantáneamente</dd>
+                
+                <dt>Persona guarda una sugerencia tuya</dt>
+                <dd>Instantáneamente</dd>
+                
+                <dt>Otro usuario te envíe una sugerencia</dt>
+                <dd>Instantáneamente</dd>
+            </dl>
+            </div>
+        </div>
+        
+        <hr>
+        <a id="desinstall" href="">Desinstalar la aplicación</a>
+    </div>
     
-    
-<p>a</p>
-{% include "webapp/socialsettings.html" %}
-    
-    </form>
-    <h2>Cuentas enlazadas</h2>
-    <ul>
-        <li>Twitter: Off</li>
-        <li>Facebook: On</li>
-        <li>Foursquare: Off</li>
-    </ul>
 {% endblock %}

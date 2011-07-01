@@ -214,14 +214,21 @@ def profile_settings(request):
             fb_client=FacebookClient(access_token.token_key)
             fb_client.authenticate()
         
-        #~ raise Exception(request.user)
-        f = SocialUserForm(initial = { 
-                            # 'location' : [1,2] <<- coordenadas por defecto,
-                            'email': request.user.email,
-                            'username': request.user.username,
-                      })
+        followers=len(request.user.get_followers()[1])
+        followings=len(request.user.get_followings()[1])
+        #~ args['followers']=followers[1]
         
-        return  render_to_response('profile.html',{'form': f},RequestContext(request))
+        return  render_to_response('profile.html',{'followers': followers, 'followings': followings},RequestContext(request))
     else:
         return HttpResponseRedirect('/fb/')
+    
+def followers_panel(request, username):
+    user=User.objects.get_by_username(username)
+    followers=user.get_followers()[1]
+    return  render_to_response('followers.html',{'followers': followers},RequestContext(request))
+    
+def followings_panel(request, username):
+    user=User.objects.get_by_username(username)
+    followings=user.get_followings()[1]
+    return  render_to_response('profile.html',{'followings': followings},RequestContext(request))
     

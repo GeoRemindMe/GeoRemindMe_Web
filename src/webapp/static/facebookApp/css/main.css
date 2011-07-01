@@ -39,7 +39,7 @@ body{
         line-height: 19px;
         padding-left: 25px;
         text-decoration: none;
-        width: 160px;
+        width: 155px;
     }
     div#left-col li:hover{
         background-color:#eff2f7
@@ -109,4 +109,65 @@ body{
     #right-col .right{
         float:right;
     }
+    
+    
+    /* COMMON */
+    #right-col .section .header, .right-col .section .article .header{
+        border-bottom: medium none;
+        border-top: 1px solid #E2E2E2;
+        background-color:#F2F2F2;
+        padding:0 5px;
+        height:30px;
+    }
+    #right-col .section p, #right-col .section h3{
+        padding:0 5px;
+    }
+    #right-col .section .header p, .right-col .section .article .header p{
+        float:right;
+    }
+    #right-col .section .header h2,#right-col .section .article .header h2{
+        font-size:1em;
+        float:left;
+    }
+    
+    
+    
+    /* PROFILE */
+    #profile dl{
+        line-height:2.5em;
+        padding-left: 5px;
+    }
+    #profile dl dd{
+        padding-left: 100px;
+    }
+   
+    #profile dl#mail-notifications dt{
+        display: list-item;
+        list-style: square outside none;
+        margin-left: 25px;
+        width: 350px;
+    }
+    
+    div#right-col #profile ul{
+        list-style: none outside none;
+        margin: 5px 0;
+        padding: 0 5px;
+    }
+    div#right-col #profile li{
+        padding: 10px 0;
+    }
+    div#right-col #profile li span,#profile dl dt{
+        width:120px;
+        float:left;
+        clear:left;
+        font-weight:bold;
+    }
+    div#right-col #profile li a{
+        padding-left: 20px;
+    }
+    #desinstall{
+        float:right;
+        margin-right:10px;
+    }
+    
     

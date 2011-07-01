@@ -6,21 +6,12 @@
 
 {% block title %}Dashboard{% endblock %}
 {% block body %}
-    <h1>Timeline</h1>
+    <h1>Actividad</h1>
 
+    <h2>Actividad en tu red</h2>
     
     {% if friends_to_follow %}
-        <h2>Te siguen</h2>
-        {% for f in followers %}
-            {% if f.avatar%}
-                <img src="{{f.avatar}}" alt="{{f.username}} avatar"/>
-            {% else %}
-                <img src="/static/facebookApp/img/no_avatar.png" style="width:50px" alt="{{f.username}} avatar"/>
-            {% endif %}
-            Username={{f.username}}
-            
-            
-        {% endfor %}
+        
         <h2>Sigues</h2>
         {% for f in followings %}
             {% if f.avatar%}
