@@ -1,26 +1,33 @@
 {% extends "base.html" %}
 
 {% block title %}Welcome{% endblock %}
-{% block nav %} {% endblock %}
+{% block nav %} 
+
+    <ul>
+        <li class="menu-icons fb-icons"><a id="fb-wall" href="#">Introducción</a></li>
+        <li class="menu-icons fb-icons"><a id="fb-last-news" href="">Nosotros</a></li>
+        <li class="menu-icons fb-icons"><a id="fb-last-news" href="">Comunidad</a></li>
+        <li class="menu-icons fb-icons"><a id="fb-events" href="">Blog</a></li>
+        <li class="menu-icons fb-icons"><a id="fb-last-news" href="">Privacidad</a></li>
+        <li class="menu-icons fb-icons"><a id="fb-events" href="">Términos de uso</a></li>
+    </ul>
+{% endblock %}
+
+
 {% block body %}
-<div class="welcome">
-  <h1>GeoRemindMe</h1>
-
-  <div class="info">
-    <p>
-      This is a simple site where you can log your runs and share your
-      progress with your friends.
-    </p>
-    <p>
-      In order to use Run with Friends you must sign in with your
-      Facebook account.
-      
-    </p>
-
-  </div>
-
-    <fb:login-button perms="{{permissions}}" show-faces="true"></fb:login-button>
-
-</div>
-<img class="promo" alt="Welcome to Run with Friends" src="/static/facebookApp/splash.png" style="border:0">
+    <div id="register-panel">
+        <h1>Aplicación GeoRemindMe</h1>
+        <h2>Crea, recibe y gestiona recomendaciones con tus amigos</h2>
+        <p>Y sincronízalas con tu teléfono móvil</p>
+        <div id="video">
+            <iframe width="399" height="257" src="http://www.youtube.com/embed/Sc42jveY8PI" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="left">
+            <a href="#">Más información</a>
+        </div>
+        <div class="right">
+                <fb:login-button perms="{{permissions}}" show-faces="true"></fb:login-button>
+        </div>
+    </div>
+    
 {% endblock %}
