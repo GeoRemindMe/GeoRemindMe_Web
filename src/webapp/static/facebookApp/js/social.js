@@ -5,12 +5,13 @@ function follow(action,userid,username) {
     //TEMPLATES
     if($('#followTemplate').length==0){
         var temp =  '<script id="followTemplate" type="text/x-jquery-tmpl">\
-                        <span  onclick="javascript:follow(\'follow\',${id})"><a href="#">Seguir</a></span>\
+                        <span  onclick="javascript:follow(\'follow\',${id})"><a href="#" class="no-following">Seguir</a></span>\
                     </script>\
                     <script id="unfollowTemplate" type="text/x-jquery-tmpl">\
-                        <span  onclick="javascript:follow(\'unfollow\',${id})"><a href="#">Dejar de seguir</a></span>\
+                        <span  onclick="javascript:follow(\'unfollow\',${id})"><a href="#" class="following">Seguiendo</a></span>\
                     </script>'
         $('#templates').append(temp).ready()
+        
     }
     
     
@@ -29,10 +30,16 @@ function follow(action,userid,username) {
         success: function(data,userid){
             //console.log(data)
             $("#following_state_"+lastUID).children().remove()
-            if(action=='follow' && data)
+            if(action=='follow' && data){
                 $("#unfollowTemplate").tmpl( {id:lastUID} ).appendTo( "#following_state_"+lastUID );
-            else if (action=='unfollow' && data)
-                $("#followTemplate").tmpl( {id:lastUID} ).appendTo( "#following_state_"+lastUID );
+            
+                $('#following_state_'+lastUID).addClass('following-state');
             }
+            else if (action=='unfollow' && data){
+                $("#followTemplate").tmpl( {id:lastUID} ).appendTo( "#following_state_"+lastUID );
+                
+                $('#following_state_'+lastUID).removeClass('following-state');
+            }
+        }
     });
 }

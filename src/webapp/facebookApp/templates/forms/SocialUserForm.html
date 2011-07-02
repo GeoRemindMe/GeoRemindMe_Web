@@ -1,0 +1,33 @@
+{% load i18n %}
+<!-- It form is for the class SocialUserForm at geouser/forms -->
+
+
+<form method="post" id="SocialUserProfile-form" action=".">
+    {% csrf_token %}
+    
+    <div class="fieldWrapper">
+        <label for="id_Email">Email:</label>
+        <input id="{{form.prefix}}-email" type="text" value="{% if form.initial.email %}{{form.initial.email}}{% endif %}" name="{{form.prefix}}_email">        
+        <span class="error-msg" id="email-error">
+            {% if form.email.errors %}
+                {{form.email.errors}}
+            {% endif %}
+        </span>
+
+        
+        
+        <label for="id_username">Username:</label>
+        <input id="{{form.prefix}}-username" type="text" value="{% if form.initial.username %}{{form.initial.username}}{% endif %}" name="{{form.prefix}}_username">        
+        <span class="error-msg" id="username-error">
+            {% if form.username.errors %}
+                {{form.username.errors}}
+            {% endif %}
+        </span>
+
+    </div>
+    
+
+    <input type="submit" value="{% trans "Continuar" %}" id="startBtn" title="{% trans 'Por favor rellena toso los campos' %}">
+    
+</form>
+

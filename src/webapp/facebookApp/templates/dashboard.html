@@ -7,41 +7,51 @@
 {% block title %}Dashboard{% endblock %}
 {% block body %}
     <h1>Actividad</h1>
-
-    <h2>Actividad en tu red</h2>
-    
+    <div class="section">
+        <div class="header">
+            <h2>Actividad en tu red</h2>
+            <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+        </div>
+    </div>
+    <p>Hola</p>
     {% if friends_to_follow %}
         
-        <h2>Sigues</h2>
-        {% for f in followings %}
-            {% if f.avatar%}
-                <img src="{{f.avatar}}" alt="{{f.username}} avatar"/>
-            {% else %}
-                <img src="/static/facebookApp/img/no_avatar.png" alt="{{f.username}} avatar"/>
-            {% endif %}
-            Username={{f.username}}
-        {% endfor %}
-        <h2>Amigos sugeridos</h2>
+    <div class="section">    
+        <div class="header">
+            <h2>Personas a las que podrías conocer</h2>
+            <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+        </div>
         <p>De tus amigos de facebook usan GeoRemindMe para hacer recomendaciones:</p>
-        <ul>
-            <li>
+        <ul id="friends-to-follow">
+            
             {% for f in friends_to_follow %}
-                <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
-                    <fb:profile-pic uid="{{ f.uid }}" linked="false" /></fb:profile-pic>
-                    {% if f.uid %}
-                        <fb:name uid="{{ f.uid }}" linked="false" capitalize="true" /></fb:name>
-                    {% else %}
-                        Un NO-usuario de facebook
-                    {% endif %}
-                    </a>
-                     | 
-                    <span id="following_state_{{ f.id }}">
-                        <span  onclick="javascript:follow('follow',{{f.id}})"><a href="#">Seguir</a></span>
-                    </span>
-                
+                <li>
+                    <div class="avatar">
+                        <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
+                            <fb:profile-pic uid="{{ f.uid }}" linked="false" /></fb:profile-pic>
+                        </a>
+                        <br>
+                        <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
+                    </div>
+                    <div class="user-data">
+                        <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
+                            {% if f.uid %}
+                                    <fb:name uid="{{ f.uid }}" linked="false" capitalize="true" /></fb:name>
+                            {% else %}
+                                    Un NO-usuario de facebook
+                            {% endif %}
+                        </a>
+                        <p>Redes:</p>
+
+                        <div id="following_state_{{ f.id }}" class="follow-button">
+                            <span  onclick="javascript:follow('follow',{{f.id}})"><a href="#" class="no-following">Seguir</a></span>
+                        </div>
+                    </div>
+                </li>
             {% endfor %}
-            </li>
+            
         </ul>
+    </div>
     {% endif %}
 
 
