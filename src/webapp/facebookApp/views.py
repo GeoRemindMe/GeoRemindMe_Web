@@ -55,7 +55,7 @@ def login_panel(request):
                                                                       'email': request.session['user'].email,
                                                                       'username': request.session['user'].username,
                                                                       })
-            return render_to_response('webapp/socialsettings.html', {'form': f}, context_instance=RequestContext(request))
+            return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
     
     #~ raise Exception("Username=%s, email=%s"%(request.session['user'].username,request.session['user'].email))
     

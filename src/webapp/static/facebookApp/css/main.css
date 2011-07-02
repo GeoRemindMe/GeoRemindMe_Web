@@ -65,10 +65,6 @@ body{
     .fb-icons a {
         background-image: url("/static/facebookApp/img/fb-icons.png");
     }
-    
-    div#left-col hr{
-        border: 1px solid #D3D3D3;
-    }
 
 
 /**
@@ -79,7 +75,9 @@ body{
     float: left;
     padding-left: 20px;
     width: 555px;
-    min-height:500px
+    min-height:500px;
+    font-size: 1.2em;
+    line-height: 1.5em;
 }
 
     #right-col #register-panel h1{
@@ -89,14 +87,14 @@ body{
         text-align: left;
     }
     #right-col h2{
-        font-size:1.5em;
+        font-size:1.3em;
         
     }
     #right-col #register-panel{
         text-align:center;
     }
     #right-col #register-panel p{
-        font-size: 1.4em
+        font-size: 1.2em
     }
     #right-col #register-panel #video{
         clear: both;
@@ -126,10 +124,120 @@ body{
         float:right;
     }
     #right-col .section .header h2,#right-col .section .article .header h2{
-        font-size:1em;
+        font-size:11px;
         float:left;
     }
+    .error-msg{
+         display: block;
+    }
+    .error-msg ul{
+    }
+    .error-msg ul li{
+    }
+    div#left-col hr,#right-col hr{
+        border: 1px solid #D3D3D3;
+        clear:both;
+    }
     
+    input[type="submit"], input[type="button"]{
+        border-style: solid;
+        border-width: 1px;
+        border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
+        background-color: #3B5998;
+        color: white;
+        padding: 2px 15px 3px 15px;
+        text-align: center;
+        float:right
+    }
+
+    input[type="submit"]:hover, input[type="button"]:hover{
+        cursor:pointer;
+    }
+    .footer-notes{
+        color: #777;
+        font-size:0.9em
+    }
+    .note{
+        color: #777;
+        font-size:0.9em;
+        border:1px solid #ccc;
+        padding: 5px;
+    }
+    .note a{
+        color: inherit;
+        padding-left: 10px;
+    }
+    
+    /* Create Social Profile */
+    #SocialUserProfile-form label{
+        clear: left;
+        display: block;
+        float: left;
+        font-size: 1 em;
+        line-height: 1.8em;
+        width: 80px;
+        font-weight: bold;
+        margin: 9px 0;
+    }
+    #SocialUserProfile-form .error-msg{
+        border:1px solid red;
+        clear:both;
+        display: none;
+    }
+    #SocialUserProfile-form .error-msg ul{
+
+    }
+    
+    #SocialUserProfile-form input{
+        clear: right;
+        float: left;
+/*
+        display: block;
+*/
+        font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+        font-size: 1em;
+        margin: 10px 0;
+    }
+    #SocialUserProfile-form input[type="submit"]{
+        clear:both;
+        float:right;
+    }
+    
+    ul#link-social-accounts{
+        list-style: none outside none;
+        margin: 0 auto;
+        padding: 0;
+        width: 450px;        
+    }
+    
+    #link-social-accounts li{
+        -moz-border-radius: 15px 15px 15px 15px;
+        -webkit-border-radius: 15px 15px 15px 15px;
+        background-color: #FFEE7F;
+        border: 2px solid #FFCB04;
+        list-style: none outside none;
+        margin: 10px;
+        padding: 10px;
+    }
+    #link-social-accounts li:hover{
+        background-color: #FFCB04;
+    }
+
+    #link-social-accounts li a{       
+        color: black;
+        display: block;
+        font-size: 1.1em;
+        line-height: 32px;
+        padding-left: 40px;
+        text-decoration: none;
+    }
+    ul#link-social-accounts li a#google{
+        background: url("/static/facebookApp/img/sprite_social.png") no-repeat scroll 0 -32px transparent;
+    }
+    
+    ul#link-social-accounts li a#twitter{
+        background: url("/static/facebookApp/img/sprite_social.png") no-repeat scroll 0 0 transparent;
+    }
     
     
     /* PROFILE */
@@ -169,5 +277,6 @@ body{
         float:right;
         margin-right:10px;
     }
+    
     
     
