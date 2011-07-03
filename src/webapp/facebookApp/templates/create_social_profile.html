@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block nav %} 
+    {% include "register_menu.html" %}
+{% endblock %}
+
+{% block body %}
+    <div id="social-profile">
+        <h1>Configuración inicial</h1>
+        <p>
+            Si quieres, te diremos cuales de tus conocidos ya están en GeoRemindMe.<br>
+            <strong>Danos permiso para</strong>:
+        </p>
+        <ul id="link-social-accounts">
+            <li><a id="google" href="#"><strong>Buscar</strong> entre mis contactos de Gmail</a></li>
+            <li><a id="twitter" href="#"><strong>Buscar</strong> entre las personas que sigo en Twitter</a></li>
+        </ul>
+        <p class="note">
+            <strong>Nota</strong>: En ningún momento enviaremos mensajes a tus contacto <strong><a href="">[Ver más]</a></strong>
+        </p>
+        
+        <p>
+            Por último, y para poder terminar de configurar tu cuenta,
+            necesitamos que nos confirmes cual quieres que sea tu nombre
+            de usuario <sup>(1)</sup>.
+        </p>
+        {% include "forms/SocialUserForm.html" %}
+        <hr>
+        <p class="footer-notes">
+            (1) El nombre de usuario será usado para....
+        </p>
+    </div>
+{%endblock%}

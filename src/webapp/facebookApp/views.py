@@ -12,7 +12,7 @@ from django.utils.decorators import decorator_from_middleware
 from django.core.urlresolvers import reverse
 #~ from django.utils.decorators import decorator_from_middleware
 #~ from facebookApp.facebook.djangofb import FacebookMiddleware
-#~ import facebookApp.facebook.djangofb as facebook
+import facebookApp.facebook.djangofb as facebook
 from geouser.funcs import init_user_session
 
 from settings import OAUTH, FACEBOOK_APP
@@ -34,7 +34,7 @@ more information.
 
 
 @csrf_exempt
-#~ @decorator_from_middleware(FacebookMiddleware)
+#~ @decorator_from_middleware(facebook.FacebookMiddleware)
 #~ @facebook.require_login()
 def login_panel(request):
     
@@ -55,7 +55,7 @@ def login_panel(request):
                                                                       'email': request.session['user'].email,
                                                                       'username': request.session['user'].username,
                                                                       })
-            return render_to_response('webapp/socialsettings.html', {'form': f}, context_instance=RequestContext(request))
+            return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
     
     #~ raise Exception("Username=%s, email=%s"%(request.session['user'].username,request.session['user'].email))
     
@@ -104,7 +104,7 @@ def login_panel(request):
 
 
 @csrf_exempt
-#~ @decorator_from_middleware(FacebookMiddleware)
+#~ @decorator_from_middleware(facebook.FacebookMiddleware)
 #~ @facebook.require_login()
 def dashboard(request):
     cookie = get_user_from_cookie(request.COOKIES)
@@ -184,7 +184,6 @@ def user_suggestions(request):
                               'name': 'Recomiendo...',
                               'done': False,
                               })
-    #~ raise Exception (f)
     return  render_to_response('suggestions.html',{'form': f}, context_instance=RequestContext(request))
 
 @csrf_exempt
@@ -213,15 +212,23 @@ def profile_settings(request):
     
         else:
             fb_client=FacebookClient(access_token.token_key)
-            fb_client.authorize()
+            fb_client.authenticate()
         
-        user = fb_client.get_user_info()            
+        followers=len(request.user.get_followers()[1])
+        followings=len(request.user.get_followings()[1])
+        #~ args['followers']=followers[1]
         
-        args={}
-        args["current_user"]=user;
-        #~ raise Exception(user)
-    
-        return  render_to_response('profile.html',args,RequestContext(request))
+        return  render_to_response('profile.html',{'followers': followers, 'followings': followings},RequestContext(request))
     else:
         return HttpResponseRedirect('/fb/')
+    
+def followers_panel(request, username):
+    user=User.objects.get_by_username(username)
+    followers=user.get_followers()[1]
+    return  render_to_response('followers.html',{'followers': followers},RequestContext(request))
+    
+def followings_panel(request, username):
+    user=User.objects.get_by_username(username)
+    followings=user.get_followings()[1]
+    return  render_to_response('profile.html',{'followings': followings},RequestContext(request))
     

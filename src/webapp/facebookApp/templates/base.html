@@ -11,24 +11,43 @@
     
     <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+    <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+
     {% block extra_js %}{%endblock%}
 </head>
 <body>
     <div id="container">
 
 
-        <div class="hd">
-            <a class="logo" href="/fb/dashboard/">GeoRemindMe</a>
-        </div>
-        {% block nav %} 
+        <div id="left-col">
+            <a id="logo" href="/fb/dashboard/"><img src="/static/facebookApp/img/header_logo.png" alt="GeoRemindMe logo"></a>
+        
+            {% block mainButton %} 
+            {% endblock %}
+            
+            <hr>
+        
+            {% block nav %} 
+                <ul>
+                    <li class="menu-icons fb-icons" id="active-section"><a id="fb-wall" href="/fb/dashboard/" title="Dashboard">Actividad</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="/fb/suggestions/">Notificaciones</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="/fb/suggestions/">Sugerencias</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="">Sitios</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="">Baúl</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="">Comunidad</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="/fb/profile">Cuenta en GeoRemindMe</a></li>
+                </ul>
+            {% endblock %}
+            <hr>
+            <p><strong>Facebook</strong>:</p>
             <ul>
-                <li><a href="/fb/dashboard/" title="Dashboard">Home</a></li>
-                <li><a href="/fb/profile">Mis datos</a></li>
-                <li><a href="/fb/suggestions/">Gestionar recomendaciones</a></li>
-                <li>Gestionar POIs</li>
+                <li class="menu-icons fb-icons"><a id="fb-wall" href="">Muro</a></li>
+                <li class="menu-icons fb-icons"><a id="fb-last-news" href="">Últimas noticias</a></li>
+                <li class="menu-icons fb-icons"><a id="fb-events" href="">Eventos</a></li>
             </ul>
-        {% endblock %}
-        <div class="bd">
+        </div>
+        
+        <div id="right-col">
             {% block body %}{% endblock %}
         </div>
 
