@@ -46,7 +46,6 @@ def send_confirm_mail(to=None, confirm_code=None, language='en'):
     
     translation.activate(language)
     message = GeoMail()    
-    message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = _("Confirm your registration at GeoRemindMe")
     message.body = _("""
@@ -89,7 +88,6 @@ def send_remind_pass_mail(to=None, remind_code=None, language='en'):
         raise ValueError()
     translation.activate(language)
     message = GeoMail()
-    message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = _("Set a new password at GeoRemindMe")
     message.body = _("""
@@ -115,7 +113,6 @@ def send_remind_pass_mail(to=None, remind_code=None, language='en'):
 def send_notification_follower(to, follower, language='en'):
     translation.activate(language)
     message = GeoMail()
-    message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = _("%s is now following you at Georemindme") % follower
     message.body = _("""
@@ -129,6 +126,98 @@ def send_notification_follower(to, follower, language='en'):
         </body></html>
         """) % {
                     'username': follower.username,
+                }
+    translation.deactivate()
+    message.push()
+    
+    
+def send_notification_suggestion_follower(to, suggestion, user, language='en'):
+    translation.activate(language)
+    message = GeoMail()
+    message.to = to
+    message.subject = _("%s is now following your suggestion: %s at Georemindme") % (user, suggestion.name)
+    message.body = _("""
+        %(suggestion)s new follower %s(username)s
+        """) % {
+                    'suggestion': suggestion.name,
+                    'username': user.username,
+                }
+    message.html = _("""
+        <html><head></head><body>
+        %(suggestion)s new follower %s(username)s
+        </body></html>
+        """) % {
+                    'suggestion': suggestion.name,
+                    'username': user.username,
+                }
+    translation.deactivate()
+    message.push()
+    
+def send_notification_suggestion_comment(to, comment, language='en'):
+    translation.activate(language)
+    message = GeoMail()
+    message.to = to
+    message.subject = _("%s commented in your suggestion: %s at Georemindme") % (comment.user, comment.instance.name)
+    message.body = _("""
+        %(suggestion)s new comment %s(username)s
+        %(msg)s
+        """) % {
+                    'suggestion': comment.instance.name,
+                    'username': comment.user.username,
+                    'msg': comment.msg,
+                }
+    message.html = _("""
+        <html><head></head><body>
+        %(suggestion)s new comment %s(username)s
+        <br>%(msg)s
+        </body></html>
+        """) % {
+                    'suggestion': comment.instance.name,
+                    'username': comment.user.username,
+                    'msg': comment.msg,
+                }
+    translation.deactivate()
+    message.push()
+    
+def send_notification_account_summary(to, user, followers, language='en'):
+    translation.activate(language)
+    message = GeoMail()
+    message.to = to
+    message.subject = _("Report of your account %s at Georemindme") % user
+    names = ', '.join(str(follow) for follow in followers)
+    message.body = _("""
+        New followers:
+        %(names)s
+        """) % {
+                    'names': names
+                }
+    message.html = _("""
+        <html><head></head><body>
+        New followers:
+        <br/ >%(names)s
+        </body></html>
+        """) % {
+                    'names': names
+                }
+    translation.deactivate()
+    message.push()
+    
+def send_notification_suggestion_summary(to, suggestions, language='en'):
+    translation.activate(language)
+    message = GeoMail()
+    message.to = to
+    message.subject = _("Summary of your suggestions at Georemindme")
+    message.body = _("""
+        %(suggestion)s
+        """) % {
+                    'suggestion': suggestions,
+                }
+    message.html = _("""
+        <html><head></head><body>
+        %(suggestion)s
+        </body></html>
+        """) % {
+                    'suggestion': suggestions,
                 }
     translation.deactivate()
     message.push()

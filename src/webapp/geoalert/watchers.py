@@ -76,6 +76,8 @@ suggestion_deleted.connect(deleted_suggestion)
 def new_following_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=333)
     timeline.put()
+    from google.appengine.ext.deferred import defer
+    defer(sender.user.settings.notify_suggestion_follower, sender.key(), kwargs['user'].key())
 suggestion_following_new.connect(new_following_suggestion)
 
 def deleted_following_suggestion(sender, **kwargs):

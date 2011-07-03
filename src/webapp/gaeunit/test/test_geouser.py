@@ -153,8 +153,8 @@ class Test(unittest.TestCase):
         assert UserProfile.objects.get_by_id(123) == None, 'Busqueda de profile erronea'
         assert UserProfile.objects.get_by_id(None) == None, 'Busqueda de profile erronea'
 
-        assert UserCounter.objects.get_by_id(u.id).key() == u.counters().key(), 'Busqueda de contadores erronea'
-        assert UserCounter.objects.get_by_id(str(u.id)).key() == u.counters().key(), 'Busqueda de contadores erronea'
+        assert UserCounter.objects.get_by_id(u.id).key() == u.counters.key(), 'Busqueda de contadores erronea'
+        assert UserCounter.objects.get_by_id(str(u.id)).key() == u.counters.key(), 'Busqueda de contadores erronea'
         assert UserCounter.objects.get_by_id('asdf')== None, 'Busqueda de contadores erronea'
         assert UserCounter.objects.get_by_id('')== None, 'Busqueda de contadores erronea'
         assert UserCounter.objects.get_by_id(123) == None, 'Busqueda de contadores erronea'

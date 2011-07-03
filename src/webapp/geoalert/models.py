@@ -255,13 +255,13 @@ class Suggestion(Event, Visibility):
     user = db.ReferenceProperty(User, required=True, collection_name='suggestions')
     has = db.StringListProperty(default=[u'active:T',])
     
-    _counter = None
+    _counters = None
     
     @property
-    def counter(self):
-        if self._counter is None:
-            self._counter = SuggestionCounter.all().ancestor(self).get()
-        return self._counter
+    def counters(self):
+        if self._counters is None:
+            self._counters = SuggestionCounter.all().ancestor(self).get()
+        return self._counters
     
     @classproperty
     def objects(self):
@@ -294,6 +294,7 @@ class Suggestion(Event, Visibility):
             if sugg.is_active() != active:
                 sugg.toggle_active()
             sugg.put()
+            suggestion_modified.send(sender=sugg, user=user)
             return sugg
         else:
             sugg = Suggestion(name = name, description = description, date_starts = date_starts,
@@ -303,6 +304,7 @@ class Suggestion(Event, Visibility):
             sugg.put()
             counter = SuggestionCounter(parent=sugg)
             counter.put()
+            suggestion_new.send(sender=sugg, user=user)
             return sugg
         
     def add_follower(self, user):
@@ -324,27 +326,24 @@ class Suggestion(Event, Visibility):
             index.keys.append(user_key)
             index.count += 1
             db.put_async([sug, index])
-        try:
-            if SuggestionFollowersIndex.all().ancestor(self).filter('keys =', user.key()).count() != 0:
-                a = AlertSuggestion.objects.get_by_sugid_user(self.id, user)
-                if a is None:
-                    return True
-                else:
-                    return a
-            if self._is_public():
+        if SuggestionFollowersIndex.all().ancestor(self).filter('keys =', user.key()).count() != 0:
+            a = AlertSuggestion.objects.get_by_sugid_user(self.id, user)
+            if a is None:
+                return True
+            else:
+                return a
+        if self._is_public():
+            trans = db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
+        else:
+            if self.user_invited(user):
                 trans = db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
             else:
-                if self.user_invited(user):
-                    trans = db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
-                else:
-                    raise ForbiddenAccess()
-            #  FIXME : mejor manera de cambiar estado invitacion
-            self.user_invited(user, set_status=1) 
-            self.counter.set_followers()  # incrementar contadores
-            alert = AlertSuggestion.update_or_insert(suggestion = self, user = user)
-            suggestion_following_new.send(sender=self, user=user)
-        except ForbiddenAccess():
-            return None
+                raise ForbiddenAccess()
+        self.user_invited(user, set_status=1) 
+        self.counters.set_followers(+1)  # incrementar contadores
+        alert = AlertSuggestion.update_or_insert(suggestion = self, user = user)
+        suggestion_following_new.send(sender=self, user=user)
+
         return alert
     
     def del_follower(self, user):
@@ -365,7 +364,7 @@ class Suggestion(Event, Visibility):
         index = SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get()
         if index is not None:
             db.run_in_transaction(_tx, self.key(), index.key(), user.key())
-            self.counter.set_followers(-1)
+            self.counters.set_followers(-1)
             suggestion_following_deleted.send(sender=self, user=user)
             return True
         return False

@@ -42,7 +42,6 @@ def send_contact_email(org,msg,to=settings.CONTACT_EMAIL,):
     import datetime
     
     message = GeoMail()
-    message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = "[GeoRemindMe] Email de contacto"
     message.body = _("""
@@ -61,7 +60,6 @@ def send_keepuptodate(org,msg,to=settings.CONTACT_EMAIL,):
     import datetime
     
     message = GeoMail()
-    message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = "[GeoRemindMe] Keep up to date"
     message.body = _("""
@@ -79,7 +77,6 @@ def send_keepuptodate(org,msg,to=settings.CONTACT_EMAIL,):
 def send_notification_invitation(to, sender, invitation, language='en'):
     translation.activate(language)
     message = GeoMail()
-    message.sender = 'noreply@georemind.me'
     message.to = to
     message.subject = _("%s sent you a new invitation") % sender
     message.body = _("""

@@ -3,6 +3,7 @@ version: 3
 runtime: python
 api_version: 1
 
+
 handlers:
   
 - url: /robots.txt
@@ -46,6 +47,7 @@ handlers:
 builtins:
 - datastore_admin: on
 - appstats: on
+- deferred: on
 
 inbound_services:
 - warmup

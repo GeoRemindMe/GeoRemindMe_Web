@@ -40,7 +40,7 @@ def deleted_list(sender, **kwargs):
     elif isinstance(sender, ListUser):
         timeline = UserTimelineSystem(user=sender.user.key(), msg_id=152, instance=sender)
     elif isinstance(sender, ListSuggestion):
-        timeline = UserTimelineSystem(user=self.user, msg_id=352, instance=self)
+        timeline = UserTimelineSystem(user=sender.user.key(), msg_id=352, instance=sender)
     else:
         return
     timeline.put()

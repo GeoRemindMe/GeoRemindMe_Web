@@ -9,6 +9,13 @@ from geoalert.models import *
 from geolist.models import *
 
 class CommentHelper(object):
+    
+    def get_by_key(self, key):
+        '''
+        Obtiene el evento con ese key
+        '''
+        return Comment.get(key)
+    
     def get_by_user(self, user, query_id = None, page=1):
         '''
         Obtiene una lista con todos los comentarios hechos por un usuario
@@ -64,6 +71,7 @@ class Comment(Visibility):
     user = db.ReferenceProperty(User, collection_name='comments')
     instance = db.ReferenceProperty(None)
     created = db.DateTimeProperty(auto_now_add=True)
+    modified = db.DateTimeProperty(auto_now = True)
     msg = db.TextProperty(required=True)
     
     objects = CommentHelper()
@@ -120,6 +128,7 @@ class VoteCounter(db.Model):
         '''
         instance=str(instance)
         def increase():
+            import random
             index = random.randint(0, SHARDS-1)#select a random shard to increases
             shard_key = instance + str(index)#creates key_name
             counter = VoteCounter.get_by_key_name(shard_key)
@@ -143,7 +152,7 @@ class VoteHelper(object):
             
             :returns: True si ya ha votado, False en caso contrario
         '''
-        vote = db.GqlQuery('SELECT __KEY__ FROM Vote WHERE instance = :ins AND to = :user', ins=instance, user=user.key()).get()
+        vote = db.GqlQuery('SELECT __KEY__ FROM Vote WHERE instance = :ins AND to = :user', ins=instance_key, user=user.key()).get()
         if vote is not None:
             return True
         return False
@@ -184,6 +193,7 @@ class Vote(db.Model):
     
     objects = VoteHelper()
     
+    @classmethod
     def do_vote(cls, user, instance, count=1):
         '''
         Añade un voto de un usuario a una instancia
