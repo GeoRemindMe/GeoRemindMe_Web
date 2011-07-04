@@ -261,7 +261,7 @@ def remind_user(request):
                 return render_to_response('user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
     else:
         f = EmailForm(prefix='pass_remind')
-    return render_to_response('user_pass.html', {'form': f}, context_instance=RequestContext(request))
+    return render_to_response('webapp/user_pass.html', {'form': f}, context_instance=RequestContext(request))
 
 def remind_user_code(request, user, code):
     """**Descripción**: Genera una nueva URL única para resetear la contraseña de usuario
@@ -292,7 +292,7 @@ def remind_user_code(request, user, code):
             msg = _(i.message)
     else:
         msg = _('Invalid user')
-    return render_to_response('user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
+    return render_to_response('webapp/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
 
 
 #===============================================================================
