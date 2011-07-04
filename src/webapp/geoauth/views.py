@@ -190,8 +190,12 @@ def authenticate_request(request, provider):
 
 def facebook_authenticate_request(request,get="redirect"):
     OAUTH = settings.OAUTH
-    url = "%s?client_id=%s&redirect_uri=%s&scope=%s" % (OAUTH['facebook']['authorization_url'], 
-                        OAUTH['facebook']['app_key'], OAUTH['facebook']['callback_url'],OAUTH['facebook']['scope'])
+    url = "%s?client_id=%s&redirect_uri=%s&scope=%s" % (
+                                                        OAUTH['facebook']['authorization_url'], 
+                                                        OAUTH['facebook']['app_key'], 
+                                                        OAUTH['facebook']['callback_url'],
+                                                        OAUTH['facebook']['scope']
+                                                        )
     
     if get=="url":
         return url
@@ -203,7 +207,8 @@ def facebook_access_request(request):
     code = request.GET.get('code', None)
     if code is not None:
         OAUTH = settings.OAUTH
-        url = "%s?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s" % (OAUTH['facebook']['access_token_url'],
+        url = "%s?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s" % (
+                                                                            OAUTH['facebook']['access_token_url'],
                                                                             OAUTH['facebook']['app_key'],
                                                                             OAUTH['facebook']['callback_url'],
                                                                             OAUTH['facebook']['app_secret'],

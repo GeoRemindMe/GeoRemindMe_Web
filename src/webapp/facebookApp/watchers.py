@@ -28,3 +28,6 @@ def new_follower_notification(sender, **kwargs):
     #~ raise Exception(user_followed.facebook_user.uid)
     
 user_follower_new.connect(new_follower_notification)   
+
+def disconnect_all():
+    user_follower_new.disconnect(new_follower_notification)

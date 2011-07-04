@@ -7,6 +7,8 @@ from geouser.models import AnonymousUser
 
 class geosession(object):
     def process_request(self, request):
+        if hasattr(request, 'facebook') and '/fb/' in request.path:
+            pass
         session_id = request.COOKIES.get(settings.COOKIE_NAME, None)
         """
         #  sesiones hibridas (usuarios en BD y anonimos en cookies
@@ -35,16 +37,6 @@ class geosession(object):
             request.user = request.session['user']
         else:
             request.user = AnonymousUser()
-            
-        from geoauth.clients.facebook import FacebookClient, get_user_from_cookie
-        cookie = get_user_from_cookie(request.COOKIES)
-        if cookie is not None:
-            request.facebook = cookie
-            request.facebook['client'] = FacebookClient(cookie["access_token"])
-        else:
-            from geouser.signals import user_follower_new
-            from facebookApp.watchers import new_follower_notification
-            user_follower_new.disconnect(new_follower_notification)   
 
     def process_response(self, request, response):
         """

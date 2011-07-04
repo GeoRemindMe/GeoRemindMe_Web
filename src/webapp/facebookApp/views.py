@@ -20,6 +20,7 @@ from settings import OAUTH, FACEBOOK_APP
 from geouser.forms import *
 from geoalert.forms import *
 from django.template import RequestContext
+from decorators import facebook_required
 
 
 
@@ -33,79 +34,35 @@ more information.
 """
 
 
-@csrf_exempt
-#~ @decorator_from_middleware(facebook.FacebookMiddleware)
-#~ @facebook.require_login()
 def login_panel(request):
-    
-    if "user" in request.session:
-        if request.session['user'].username is None or request.session['user'].email is None:
-            #~ raise Exception(request.POST.get('id_user_set_username-username'))
-            if request.method == 'POST':
-                #~ raise Exception("Username=%s, email=%s"%(request['id_user_set_username-username'],request.session['user'].email))
-                f = SocialUserForm(request.POST, prefix='user_set_username')
-                if f.is_valid():
-                    user = f.save(request.session['user'])
-                    if user:
-                        request.session['user'] = user
-                        return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
-            else:
-                
-                f = SocialUserForm(prefix='user_set_username', initial = { 
-                                                                      'email': request.session['user'].email,
-                                                                      'username': request.session['user'].username,
-                                                                      })
-            return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
-    
-    #~ raise Exception("Username=%s, email=%s"%(request.session['user'].username,request.session['user'].email))
-    
-    
-    if u'signed_request' in request.POST:        
-        data = parse_signed_request(request.POST['signed_request'])
-        #~ raise Exception (data)
-        cookie = get_user_from_cookie(request.COOKIES)
-        #~ raise Exception(cookie)
-        if 'user_id' in data:
-            # Actualizamos los datos de usuario
-            if cookie is not None and data['user_id'] == cookie["uid"]:
-                fb_client=FacebookClient(cookie["access_token"])
-                if not fb_client.token_is_valid():
-                    #~ raise Exception("Aasdasd %s"%cookie)
-                    user=FacebookUser.objects.get_by_id(cookie["uid"])
-                    OAUTH_Access.remove_token(user, 'facebook')
-                    
-                    #Permisos para el boton FBML
-                    args["permissions"]=settings.OAUTH['facebook']['scope']
-                    return render_to_response('register.html',args,RequestContext(request))
-
+    if hasattr(request, 'facebook'):
+        if request.user.is_authenticated():  # usuario identificado y con permisos
+            if request.user.username is None or request.session['user'].email is None:
+                if request.method == 'POST':
+                    f = SocialUserForm(request.POST, prefix='user_set_username')
+                    if f.is_valid():
+                        user = f.save(request.session['user'])
+                        if user:
+                            request.session['user'] = user
+                            return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
                 else:
-                    #~ raise Exception("Uid %s"%cookie["uid"])
-                    
-                    user=FacebookUser.objects.get_by_id(cookie["uid"])
-                                            
-                    #~ raise Exception("Username=%s"%request.user.username)
-                    if not request.user.is_authenticated():
-                        fb_client=FacebookClient(cookie["access_token"])
-                        user=fb_client.authenticate()
-                        init_user_session(request,user)
-                    #Renderizamos de nuevo esta plantilla para que le pida usuario y mail
-                    return HttpResponseRedirect(reverse('facebookApp.views.login_panel'))
-            else:
-                #~ raise Exception("Aquí entro? ",cookie["uid"])
-                pass
-        else:
-            #No hay user_ide la cookie
-            pass
-            #~ raise Exception("Aquí entro?2")
-    
+                    f = SocialUserForm(prefix='user_set_username', initial = { 
+                                                                          'email': request.session['user'].email,
+                                                                          'username': request.session['user'].username,
+                                                                          })
+                return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
+            return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+        else:  # tenemos permisos pero no sabemos que usuario es, por tanto, autenticarlo e iniciar sesion
+            user = request.facebook['client'].authenticate()
+            init_user_session(request, user)
+            #Renderizamos de nuevo esta plantilla para que le pida usuario y mail
+            return HttpResponseRedirect(reverse('facebookApp.views.login_panel'))
     #Identificarse o registrarse
     return render_to_response('register.html',{"permissions":settings.OAUTH['facebook']['scope']},RequestContext(request))
     
 
 
-@csrf_exempt
-#~ @decorator_from_middleware(facebook.FacebookMiddleware)
-#~ @facebook.require_login()
+@facebook_required
 def dashboard(request):
     cookie = get_user_from_cookie(request.COOKIES)
     
@@ -158,15 +115,17 @@ def dashboard(request):
     else:
         return HttpResponseRedirect('/fb/')
 
-@csrf_exempt
+
+@facebook_required
 def user_profile(request, username):
     
     user=User.objects.get_by_username(username)
     is_following=request.user.is_following(user)
     #~ raise Exception(user.__dict__)
     return  render_to_response('public_profile.html',{'profile_user':user,'is_following':is_following},RequestContext(request))
-    
-@csrf_exempt
+
+
+@facebook_required    
 def user_suggestions(request):
     """
     name = forms.CharField(required=True)
@@ -186,9 +145,8 @@ def user_suggestions(request):
                               })
     return  render_to_response('suggestions.html',{'form': f}, context_instance=RequestContext(request))
 
-@csrf_exempt
-#~ @decorator_from_middleware(FacebookMiddleware)
-#~ @facebook.require_login()
+
+@facebook_required
 def profile_settings(request):
     cookie = get_user_from_cookie(request.COOKIES)
     if cookie:
@@ -221,12 +179,15 @@ def profile_settings(request):
         return  render_to_response('profile.html',{'followers': followers, 'followings': followings},RequestContext(request))
     else:
         return HttpResponseRedirect('/fb/')
-    
+
+
+@facebook_required    
 def followers_panel(request, username):
     user=User.objects.get_by_username(username)
     followers=user.get_followers()[1]
     return  render_to_response('followers.html',{'followers': followers},RequestContext(request))
-    
+
+@facebook_required    
 def followings_panel(request, username):
     user=User.objects.get_by_username(username)
     followings=user.get_followings()[1]

@@ -173,7 +173,7 @@ def dashboard(request):
         
         :return: Solo devuelve errores si el proceso falla.
     """
-    if request.session['user'].username is None or request.session['user'].email is None:
+    if request.user.username is None or request.user.email is None:
         if request.method == 'POST':
             f = SocialUserForm(request.POST, prefix='user_set_username')
             if f.is_valid():
@@ -250,18 +250,16 @@ def remind_user(request):
         f = EmailForm(request.POST, prefix='pass_remind')
         if f.is_valid():
             user = User.objects.get_by_email(f.cleaned_data['email'])
-            if not user:
+            if user is None:
                 fail = _("Email doesn't exist")
                 f._errors['email'] = f.error_class([fail])
-            if user.is_google_account():
-                return HttpResponseRedirect(reverse('georemindme.views.login_google'))
-            if user.is_geouser():
-                user.profile.send_remind_code()
+            else:
+                user.send_remind_code()
                 msg = _("A confirmation mail has been sent to %s. Check mail") % user.email
-                return render_to_response('user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
+                return render_to_response('webapp/user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
     else:
         f = EmailForm(prefix='pass_remind')
-    return render_to_response('user_pass.html', {'form': f}, context_instance=RequestContext(request))
+    return render_to_response('webapp/user_pass.html', {'form': f}, context_instance=RequestContext(request))
 
 def remind_user_code(request, user, code):
     """**Descripción**: Genera una nueva URL única para resetear la contraseña de usuario
@@ -292,7 +290,7 @@ def remind_user_code(request, user, code):
             msg = _(i.message)
     else:
         msg = _('Invalid user')
-    return render_to_response('user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
+    return render_to_response('webapp/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
 
 
 #===============================================================================
