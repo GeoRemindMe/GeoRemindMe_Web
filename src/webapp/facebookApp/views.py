@@ -37,7 +37,7 @@ more information.
 #~ @decorator_from_middleware(facebook.FacebookMiddleware)
 #~ @facebook.require_login()
 def login_panel(request):
-    
+    raise Exception(request)
     if "user" in request.session:
         if request.session['user'].username is None or request.session['user'].email is None:
             #~ raise Exception(request.POST.get('id_user_set_username-username'))

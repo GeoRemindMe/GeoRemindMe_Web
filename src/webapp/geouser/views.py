@@ -253,12 +253,9 @@ def remind_user(request):
             if not user:
                 fail = _("Email doesn't exist")
                 f._errors['email'] = f.error_class([fail])
-            if user.is_google_account():
-                return HttpResponseRedirect(reverse('georemindme.views.login_google'))
-            if user.is_geouser():
-                user.profile.send_remind_code()
-                msg = _("A confirmation mail has been sent to %s. Check mail") % user.email
-                return render_to_response('user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
+            user.send_remind_code()
+            msg = _("A confirmation mail has been sent to %s. Check mail") % user.email
+            return render_to_response('webapp/user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
     else:
         f = EmailForm(prefix='pass_remind')
     return render_to_response('webapp/user_pass.html', {'form': f}, context_instance=RequestContext(request))
