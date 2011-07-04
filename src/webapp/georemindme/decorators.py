@@ -1,6 +1,5 @@
 # coding=utf-8
 
-
 class classproperty(object):
     '''
     Define una propiedad de clase

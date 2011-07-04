@@ -36,7 +36,7 @@ class SocialUserAdminForm(ModelAdmin):
 class UserSettingsAdminForm(ModelAdmin):
     model = UserSettings
     listFields = ('parent', 'created')
-    editFields = ('notification_followers', 'show_followers', 'show_followings', 'show_timeline', 'language')
+    editFields = ('time_notification_account', 'time_notification_suggestion_follower', 'show_followers', 'show_followings', 'show_timeline', 'language')
     readonlyFields = ('created',)
     
 class _Report_BugAdminForm(ModelAdmin):

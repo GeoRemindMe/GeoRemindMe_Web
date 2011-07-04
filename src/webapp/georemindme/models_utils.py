@@ -55,7 +55,7 @@ VISIBILITY_CHOICES = (
 
 class Visibility(db.Model):
     """Metodos comunes heredados por todas las Clases que necesiten visibilidad"""
-    _vis = db.StringProperty(required = True, choices = ['public', 'private', 'shared',], default = 'public')
+    _vis = db.StringProperty(required = True, choices = ('public', 'private', 'shared'), default = 'public')
     
     def _get_visibility(self):
         return self._vis

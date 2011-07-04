@@ -28,11 +28,12 @@ urlpatterns = patterns('georemindme.views',
     #url(r'^team/$',direct_to_template, {'template': 'team.html', 'extra_context': {'active': 'team',}}, 'georemindme.team'),
     url(r'^(?i)m/$', direct_to_template, {'template': 'mobile/index.html'}, 'georemindme.mobile'),
     url(r'^(?i)lang/$', 'set_language'),
-    url(r'^(?i)stats/daily/$', 'stats_daily'),
+    #url(r'^(?i)stats/daily/$', 'stats_daily'),
     url(r'^(?i)clean/sessions/$', 'clean_sessions'),
     url(r'^(?i)tasks/email/$', 'email_worker'),
     url(r'^(?i)tasks/notify/timeline/$', 'timelinefollowers_worker'),
     url(r'^(?i)tasks/notify/list/$', 'list_notify_worker'),
+    url(r'^(?i)reports/(?P<time>[^/]*)/$', 'report_notify'),
 )
 
 

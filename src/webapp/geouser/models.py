@@ -97,7 +97,11 @@ class User(polymodel.PolyModel, HookedModel):
     def counters(self):
         if self._counters is None:
             self._counters = UserCounter.all().ancestor(self.key()).get()
-        return self._counters 
+        return self._counters
+    
+    def counters_async(self):
+        q = UserCounter.all().ancestor(self.key())
+        return q.run()
         
     def get_timelineALL(self, page=1, query_id=None):
         '''
@@ -186,12 +190,7 @@ class User(polymodel.PolyModel, HookedModel):
             return q.run()
         return UserFollowingIndex.all().ancestor(self.key()).order('-created')
         
-    def counters(self, async=False):
-        if async:
-            q = UserCounter.all().ancestor(self.key())
-            return q.run()
-        return UserCounter.all().ancestor(self.key()).get()
-    
+
     def get_followings(self, page=1, query_id=None):
         '''
         (Wrapper del metodo User.objects.get_followings(...)
@@ -363,6 +362,7 @@ class User(polymodel.PolyModel, HookedModel):
         user = User(**kwargs)
         user.put()
         trans = db.run_in_transaction(_tx, user)
+        from google.appengine.ext.deferred import defer
         user_new.send(sender=user, status=trans)
         return user
     
@@ -498,7 +498,7 @@ class User(polymodel.PolyModel, HookedModel):
         else:  # creamos un index nuevo
             last_follow = UserFollowingIndex(parent=self, following=[key])
         try:
-            counter_result = self.counters(async=True) # obtiene los contadores de self
+            counter_result = self.counters_async() # obtiene los contadores de self
             follow_query = UserCounter.all().ancestor(key) # obtiene los contadores del otro usuario
             follow_result = follow_query.run()
             counter_result = counter_result.next()  
@@ -522,7 +522,7 @@ class User(polymodel.PolyModel, HookedModel):
         if index is not None:
             index.following.remove(key)
             try:
-                counter_result = self.counters(async=True) # obtiene los contadores de self
+                counter_result = self.counters_async() # obtiene los contadores de self
                 follow_query = UserCounter.all().ancestor(key) # obtiene los contadores del otro usuario
                 follow_result = follow_query.run()
                 counter_result = counter_result.next()  

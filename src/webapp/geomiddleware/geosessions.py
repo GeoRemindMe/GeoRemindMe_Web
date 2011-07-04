@@ -41,6 +41,10 @@ class geosession(object):
         if cookie is not None:
             request.facebook = cookie
             request.facebook['client'] = FacebookClient(cookie["access_token"])
+        else:
+            from geouser.signals import user_follower_new
+            from facebookApp.watchers import new_follower_notification
+            user_follower_new.disconnect(new_follower_notification)   
 
     def process_response(self, request, response):
         """

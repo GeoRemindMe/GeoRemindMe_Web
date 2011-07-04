@@ -36,6 +36,7 @@ def init_user_session(request, user, remember=False, from_rpc=False):
             :type remember: boolean
     """
     request.session.init_session(remember, lang=user.settings.language, user=user, from_rpc=from_rpc)
+    user.settings.put()
     user.last_login = datetime.now()
     user.put()
 

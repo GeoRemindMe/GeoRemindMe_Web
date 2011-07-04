@@ -13,14 +13,19 @@ from models import User
 # import code for encoding urls and generating md5 hashes for GRAVATAR
 import urllib, hashlib
 
+TIME_CHOICES = ('never', 'instant', 'daily', 'weekly', 'monthly')
 class UserSettings(db.Model):
     """Configuracion del usuario (privacidad, etc.)"""
+    
     notification_invitation = db.BooleanProperty(indexed=False, default=True)
-    notification_followers = db.BooleanProperty(indexed=False, default=True)
     notification_list_following = db.BooleanProperty(indexed=False, default=True)
     notification_suggestion_following = db.BooleanProperty(indexed=False, default=True)
-    notification_suggestion_following_comm = db.BooleanProperty(indexed=False, default=True)
-    notification_suggestion_comment = db.BooleanProperty(indexed=False, default=True)
+    time_notification_suggestion_follower = db.StringProperty(required = True, choices = TIME_CHOICES,
+                                                        default = 'weekly')
+    time_notification_suggestion_comment = db.StringProperty(required = True, choices = TIME_CHOICES,
+                                                        default = 'weekly')
+    time_notification_account = db.StringProperty(required = True, choices = TIME_CHOICES,
+                                                        default = 'weekly')
     show_followers = db.BooleanProperty(indexed=False, default=True)
     show_followings = db.BooleanProperty(indexed=False, default=True)
     show_timeline = db.BooleanProperty(indexed=False, default=True)
@@ -34,12 +39,63 @@ class UserSettings(db.Model):
     def objects(self):
         return UserSettingsHelper()
     
-    def notify_follower(self, user):
-        if self.notification_followers:
-            parent= self.parent()
-            from geouser.mails import send_notification_follower
-            send_notification_follower(parent.email, follower=user)
+    @property
+    def user_id(self):
+        return int(self.key().name().split('settings_')[1])
+
+    def notify_follower(self, userkey):
+        """
+            Manejo de las notificaciones de un usuario
             
+                :param user: Usuario que comienza a seguir a self.
+                :type user: :class:`geouser.models.User`
+        """
+        if self.time_notification_account == 'never':
+            return
+        elif self.time_notification_account == 'instant':
+            from geouser.mails import send_notification_follower
+            parent = self.parent()
+            send_notification_follower(parent.email,
+                                       follower=User.objects.get_by_key(userkey),
+                                       language=self.language
+                                       )
+        else:
+            from geouser.models_utils import _Report_Account_follower
+            _Report_Account_follower.insert_or_update(self.parent().key(), add=userkey)
+
+    def notify_suggestion_follower(self, suggestionkey, userkey):
+        if self.time_notification_suggestion_follower == 'never':
+            return
+        elif self.time_notification_suggestion_follower == 'instant':
+            from geouser.mails import send_notification_suggestion_follower
+            parent = self.parent()
+            from geoalert.models import Suggestion
+            send_notification_suggestion_follower(parent.email, 
+                                                  suggestion=Suggestion.objects.get_by_key(suggestionkey), 
+                                                  user=User.objects.get_by_key(userkey), 
+                                                  language=self.language
+                                                  )
+        else:
+            from geouser.models_utils import _Report_Suggestion_changed
+            _Report_Suggestion_changed.insert_or_update(self.parent().key(), suggestionkey)
+    
+           
+    def notify_suggestion_comment(self, commentkey):
+        if self.time_notification_suggestion_comment == 'never':
+            return
+        if self.time_notification_suggestion_comment == 'instant':
+            from geouser.mails import send_notification_suggestion_comment
+            parent = self.parent()
+            from geovote.models import Comment
+            comment = Comment.objects.get_by_key(commentkey)
+            if comment is not None:
+                send_notification_suggestion_comment(parent.email,
+                                                     comment=comment,
+                                                     language=self.language)
+        else:
+            from geouser.models_utils import _Report_Suggestion_commented
+            _Report_Suggestion_commented.insert_or_update(self.parent().key(), comment.instance, comment.created)
+                
     def put(self, **kwargs):
         super(UserSettings, self).put()
         memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self))
@@ -115,19 +171,19 @@ class UserCounter(db.Model):
         db.put_async(obj)
         return value
         
-    def set_suggested(self, value):
+    def set_suggested(self, value=1):
         return db.run_in_transaction(self._change_counter, 'suggested', value)
     
-    def set_supported(self, value):
+    def set_supported(self, value=1):
         return db.run_in_transaction(self._change_counter, 'supported', value)
     
-    def set_influenced(self, value):
+    def set_influenced(self, value=1):
         return db.run_in_transaction(self._change_counter, 'influenced', value)
     
-    def set_followings(self, value):
+    def set_followings(self, value=1):
         return db.run_in_transaction(self._change_counter, 'followings', value)
     
-    def set_followers(self, value):
+    def set_followers(self, value=1):
         return db.run_in_transaction(self._change_counter, 'followers', value)
     
     

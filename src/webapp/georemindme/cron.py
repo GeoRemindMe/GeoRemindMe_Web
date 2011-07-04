@@ -3,19 +3,19 @@ from datetime import datetime
 from django.http import HttpResponse, HttpResponseForbidden
 from google.appengine.ext import db
 from geouser.models import User
+from libs.decorator import decorator
 
-def cron_required(func):
+@decorator
+def cron_required(func, *args, **kwargs):
     from google.appengine.api import users
-    
-    def _wrapper(*args, **kwargs):
-        request = args[0]
-        if 'HTTP_X_APPENGINE_CRON' in request.META:
-            return func(*args, **kwargs)
-        user = request.session.get('user')
-        if (user and user.is_admin()) or users.is_current_user_admin():
-            return func(*args, **kwargs)
-        return HttpResponseForbidden("Cron only")
-    return _wrapper
+    request = args[0]
+    if 'HTTP_X_APPENGINE_CRON' in request.META:
+        return func(*args, **kwargs)
+    user = request.session.get('user')
+    if (user and user.is_admin()) or users.is_current_user_admin():
+        return func(*args, **kwargs)
+    return HttpResponseForbidden("Cron only")
+
 
 class Stats_base(db.Model):
     date = db.DateTimeProperty(required=True)
@@ -35,35 +35,36 @@ class Stats_alert_done(Stats_base):
     pass
     
 
-@cron_required
-def stats_daily(request):
-    from geoalert.models import  *
-    _get_stats(model=User, model_stats=Stats_user)
-    _get_stats(model=Alert, model_stats=Stats_alert_new)
-    _get_stats(model=Alert, model_stats=Stats_alert_done, order_field='done_when')
-    return HttpResponse()
-   
-        
-        
-def _get_stats(model=User, model_stats=Stats_user, order_field='created'):
-    newdate = datetime.now()
-    lastStat = model_stats.all().order('-date').get()
-    if not lastStat:
-        u = model.all().order(order_field).get()
-        if not u:
-            return
-        lastStat = model_stats(date=u.created, new=0, total=0)
-        
-    new = model.all(keys_only=True).filter('%s >=' % order_field, lastStat.date).count()
-    if new == 1000:
-        i = 1
-        while new == 1000*i:
-            new += model.all(keys_only=True).filter('%s >=' % order_field, lastStat.date).fetch(offset=1000*i, limit=1000).count()
-            i += 1
-    newStat = model_stats(date=newdate, new=new, total=lastStat.total+new)
-    newStat.put()
-    
-    return
+#@cron_required
+#def stats_daily(request):
+#    from geoalert.models import  *
+#    _get_stats(model=User, model_stats=Stats_user)
+#    _get_stats(model=Alert, model_stats=Stats_alert_new)
+#    _get_stats(model=Alert, model_stats=Stats_alert_done, order_field='done_when')
+#    return HttpResponse()
+#   
+#        
+#        
+#def _get_stats(model=User, model_stats=Stats_user, order_field='created'):
+#    newdate = datetime.now()
+#    lastStat = model_stats.all().order('-date').get()
+#    if not lastStat:
+#        u = model.all().order(order_field).get()
+#        if not u:
+#            return
+#        lastStat = model_stats(date=u.created, new=0, total=0)
+#        
+#    new = model.all(keys_only=True).filter('%s >=' % order_field, lastStat.date).count()
+#    if new == 1000:
+#        i = 1
+#        while new == 1000*i:
+#            new += model.all(keys_only=True).filter('%s >=' % order_field, lastStat.date).fetch(offset=1000*i, limit=1000).count()
+#            i += 1
+#    newStat = model_stats(date=newdate, new=new, total=lastStat.total+new)
+#    newStat.put()
+#    
+#    return
+
 
 @cron_required
 def clean_sessions(request):
@@ -74,3 +75,41 @@ def clean_sessions(request):
     except:
         pass
     return HttpResponse()
+
+
+@cron_required
+def report_notify(request, time):
+    # correos de los usuarios
+    from geouser.models_acc import UserSettings
+    from geouser.models_utils import _Report_Account_follower, _Report_Suggestion_changed
+    users = UserSettings().all().filter('time_notification_account =', time).run()
+    for user in users:
+        user = user.parent()
+        report = _Report_Account_follower.get_by_key_name('report_account_follower_%d' % user.id)
+        if report is not None:
+            report.send_notification(user)
+            report.delete()
+
+    # correos de resumen de sugerencia
+    from geouser.mails import send_notification_suggestion_summary
+    users = UserSettings().all().filter('time_notification_suggestions_follower =', time).run()
+    
+    for user in users:
+        suggs = {}
+        user = user.parent()
+        reports = _Report_Suggestion_changed.all().filter('user =', user).run()
+        for report in reports:
+            suggs.update(report.to_dict())
+            report.delete()
+        if len(suggs) != 0:
+            send_notification_suggestion_summary(user.email,
+                               suggestions=suggs,
+                               language=user.get_language()
+                               )
+            
+    # TODO: correos de comentarios
+    
+    return HttpResponse()
+                
+        
+        
