@@ -195,28 +195,30 @@ def public_profile(request, username):
     :param username: nombre de usuario
     :type username: ni idea
     """
-    profile_key = User.objects.get_by_username(username, keys_only=True)
-    if profile_key is None:
+    profile_user = User.objects.get_by_username(username)
+    if profile_user is None:
         raise Http404()
-    settings = UserSettings.objects.get_by_id(profile_key.name(), async=True)
-    profile = UserProfile.objects.get_by_id(profile_key.name(), async=True)
-    counters = UserCounter.objects.get_by_id(profile_key.name(), async=True)
-    if 'user' in request.session and request.session['user'].is_authenticated():
-        is_following = UserFollowingIndex.all().ancestor(request.session['user'].key()).filter('following =', profile_key).get()
-        is_follower = UserFollowingIndex.all().ancestor(profile_key).filter('following =', request.session['user'].key()).get()
+    settings = profile_user.settings
+    profile = profile_user.profile
+    counters = UserCounter.objects.get_by_id(profile_user.id, async=True)
+    if request.user.is_authenticated():
+        is_following = profile_user.is_following(request.user)
+        is_follower = request.user.is_following(profile_user)
     else:
         is_following = None
         is_follower = None
-    settings = settings.get_result()
     if is_following:  # el usuario logueado, sigue al del perfil
-        timeline = timeline = UserTimeline.objects.get_by_id(profile_key.name(), vis='shared')
+        timeline = UserTimeline.objects.get_by_id(profile_user.id, vis='shared')
     elif settings.show_timeline:
-        timeline = UserTimeline.objects.get_by_id(profile_key.name())
-    return render_to_response('webapp/publicprofile.html', {'profile': profile.get_result(), 'counters': counters.get_result(),
-                                                            'timeline': timeline, 'is_following': is_following,
-                                                            'is_follower': is_follower, 'show_followers': settings.show_followers,
-                                                            'show_followings': settings.show_followings}
-                              , context_instance=RequestContext(request))
+        timeline = UserTimeline.objects.get_by_id(profile_user.id)
+    return render_to_response('webapp/publicprofile.html', {'profile': profile, 
+                                                            'counters': counters.get_result(),
+                                                            'timeline': timeline, 
+                                                            'is_following': is_following,
+                                                            'is_follower': is_follower, 
+                                                            'show_followers': settings.show_followers,
+                                                            'show_followings': settings.show_followings
+                                                            }, context_instance=RequestContext(request))
     
     
 #===============================================================================
