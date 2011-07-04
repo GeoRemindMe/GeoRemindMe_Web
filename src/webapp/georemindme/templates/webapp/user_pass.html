@@ -1,0 +1,15 @@
+{% load i18n %}
+
+{% block content %}
+{% if form %}
+
+    <form method="post" action=".">
+    {% csrf_token %}
+    {{form.as_p}}
+    <div><input type="submit" value="{% trans "Send" %}" id="startBtn" title="{% trans "Please fill up all fields" %}"></div>
+    </form>
+    
+{% else %}
+    {{msg}}
+{% endif %}
+{%endblock%}
