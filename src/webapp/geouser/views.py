@@ -250,7 +250,7 @@ def remind_user(request):
         f = EmailForm(request.POST, prefix='pass_remind')
         if f.is_valid():
             user = User.objects.get_by_email(f.cleaned_data['email'])
-            if user is not None:
+            if user is None:
                 fail = _("Email doesn't exist")
                 f._errors['email'] = f.error_class([fail])
             user.send_remind_code()
