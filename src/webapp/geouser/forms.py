@@ -8,11 +8,8 @@ from google.appengine.ext.db import GeoPt, NotSavedError
 from models import User
 
 
-
-
 class EmailForm(forms.Form):
     email = forms.EmailField(required=True)
-
 
 class RecoverPassForm(forms.Form):
     password = forms.CharField(required=True, max_length=settings.MAX_PWD_LENGTH,
@@ -43,7 +40,6 @@ class RecoverPassForm(forms.Form):
                 self._errors['password'] = self.error_class([msg])
 
         return cleaned_data
-
 
 class LoginForm(forms.Form):
     """
@@ -151,7 +147,6 @@ class SocialUserForm(forms.Form):
             fail = _(e.message)
             self._errors['email'] = self.error_class([fail])
 
-
 class UserProfileForm(forms.Form):
     username = forms.CharField(label=_('Username'), required=True)
     
@@ -242,3 +237,15 @@ class UserForm(forms.Form):
                 return None
 
         return user
+    
+CHOICES = (
+           ('never', _('Never')),
+           ('daily', _('Daily')),
+           ('weekly', _('Weekly')),
+           ('monthly', _('Monthly')),
+           )
+class UserSettingsForm(forms.Form):
+    show_public_profile = forms.BooleanField(label=_('Profile visibility'))
+    time_notification_suggestion_follower = forms.ChoiceField(label=_('New follower on suggestions'), choices=CHOICES)
+    time_notification_suggestion_comment = forms.ChoiceField(label=_('New comment on suggestions'), choices=CHOICES)
+    time_notification_account = forms.ChoiceField(label=_('New account follower'), choices=CHOICES)

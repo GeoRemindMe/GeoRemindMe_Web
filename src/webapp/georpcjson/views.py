@@ -9,6 +9,7 @@ from google.appengine.ext.db import GeoPt
 
 from geoalert.models import Alert, _Deleted_Alert
 from geoalert.models_poi import *
+from geolist.models import *
 from geouser.models import User
 from geouser.funcs import login_func
 
@@ -32,13 +33,21 @@ def parse_date(date, excep=True):
                 return None
         return datetime.fromtimestamp(date)
     
-def parse_deleted(deleted, user):
+def parse_alertdeleted(deleted, user):
     for a in deleted:  # borrar las alertas enviadas por el movil
         id = a.get('id', None)
         if id is not None:
             alert = Alert.objects.get_by_id_user(id, user)
             if alert is not None:
                 alert.delete()
+
+def parse_listdeleted(deleted, user):
+    for a in deleted:  # borrar las alertas enviadas por el movil
+        id = a.get('id', None)
+        if id is not None:
+            list = List.objects.get_by_id_user(id, user)
+            if list is not None:
+                list.delete()
     
 
 @jsonrpc_method('login', authenticated=False)
@@ -90,13 +99,10 @@ def register(request, email, password):
     '''
     email = unicode(email)
     password = unicode(password)
-    try:
-        u = User.register(email=email, password=password)
-        if u is not None:
-            return True    
-    except:
-        pass
-    raise RegisterException
+
+    u = User.register(email=email, password=password)
+    if u is not None:
+        return True
 
 
 @jsonrpc_method('sync_alert', authenticated=need_authenticate)
@@ -106,13 +112,13 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
     sync_deleted = set()
     temp_alert = {}
     last_sync = parse_date(last_sync)
-    parse_deleted(deleted, request.user)
+    parse_alertdeleted(deleted, request.user)
     for a in modified:
         id = a.get('id', None)
         if id is not None:  # la alerta ya estaba sincronizada, la actualizamos
             old = Alert.objects.get_by_id_user(id, request.user)
             if not old:  # no existe en la BD, fue borrada.
-                sync_deleted.add(id)
+                sync_deleted.add({'id': id})
                 continue
             if parse_date(a.get('modified')) <= old.modified:
                 continue
@@ -146,9 +152,8 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
             response.append(a.to_dict())
     alertsDel =  _Deleted_Alert.objects.get_by_last_sync(request.user, last_sync)
     for a in alertsDel:
-        sync_deleted.add(a.id)
-    dict_deleted = [{'id': a} for a in sync_deleted]
-    return [int(time.mktime(datetime.now().timetuple())), response, dict_deleted]
+        sync_deleted.add({'id': a.id})
+    return [int(time.mktime(datetime.now().timetuple())), response, sync_deleted]
 
 
 @jsonrpc_method('report_bug', authenticated=False)
@@ -165,9 +170,58 @@ def report_bug(request, bugs):
         return False
     return True
 
+
 @jsonrpc_method('view_timeline', authenticated=need_authenticate)
 def view_timeline(request, userid=None, query_id=None, page=1):
     if userid is None:
         timelines = request.user.get_timelineALL(page=page, query_id=query_id)
-        return timelines       
+        return timelines
+    
+
+@jsonrpc_method('sync_alertlist', authenticated=need_authenticate)
+def sync_alertlist(request, last_sync, modified=[], deleted=[]): 
+    if type(modified) != type(list()) or type(deleted) != type(list()):
+        raise InvalidParamsError
+    sync_deleted = set()
+    temp_list = {}
+    last_sync = parse_date(last_sync)
+    parse_listdeleted(deleted, request.user)
+    for l in modified:
+        id = l.get('id', None)
+        if id is not None:  # la alerta ya estaba sincronizada, la actualizamos
+            old = List.objects.get_by_id_user(id, request.user)
+            if not old:  # no existe en la BD, fue borrada.
+                sync_deleted.add({'id': id})
+                continue
+            if parse_date(l.get('modified')) <= old.modified:
+                continue
+        keys_to_add = []
+        for i in l.get('instances'):
+            keys_to_add.add(Alert.get_by_id_user(id, request.user))
+        keys_to_del = []
+        for i in l.get('delete_instances'):
+            keys_to_del.add(Alert.get_by_id_user(id, request.user))
+        new_list = ListAlert.insert_list(request.user, id=id,
+                                          name=l.get('name'),
+                                          instances=keys_to_add)
+        new_list.update(instances_del=keys_to_del)
+        if l.get('client_id', None) is not None:  # la alerta no estaba sincronizada
+            temp_list[int(new_list.id)] = l.get('client_id')
+            
+    response = []
+    lists = ListAlert.objects.get_by_last_sync(request.user, last_sync)
+    for alist in lists:
+        if int(alist.id) in temp_list:  # añadir alerta no sincro
+            dict = alist.to_dict()
+            dict['client_id'] = temp_list[int(alist.id)]
+            response.append(dict)
+        else:
+            response.append(alist.to_dict())
+    
+    listsDel =  _Deleted_List.objects.get_by_last_sync(request.user, last_sync, ListAlert.kind())
+    for l in listsDel:
+        sync_deleted.add({'id': l.id})
+
+    return [int(time.mktime(datetime.now().timetuple())), response, sync_deleted]
+    
 

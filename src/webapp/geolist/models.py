@@ -55,9 +55,9 @@ class List(polymodel.PolyModel, HookedModel):
                     'name': self.name,
                     'description': self.description,
                     'user': self.user.username,
-                    'modified': unicode(self.modified.strftime("%d%b")),
-                    'created': unicode(self.created.strftime("%d%b")),
-                    'keys': [i.id for i in self.keys], 
+                    'modified': self.modified if self.modified is not None else 0,
+                    'created': self.created if self.created is not None else 0,
+                    'keys': [i.id() for i in self.keys], 
                     }
             
     def to_json(self):
@@ -106,7 +106,7 @@ class ListSuggestion(List, Visibility):
             return True
         
     @classmethod
-    def insert_list(cls, user, name, description = None, instances=[], vis='public'):
+    def insert_list(cls, user, id=None, name=None, description = None, instances=[], vis='public'):
         '''
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
@@ -122,7 +122,11 @@ class ListSuggestion(List, Visibility):
             :param vis: Visibilidad de la lista
             :type vis: :class:`string`
         '''
-        list = user.listsuggestion_set.filter('name =', name).get()
+        list = None
+        if id is not None:
+            list = cls.objects.get_by_id_user(id, user)
+        if list is None:
+            list = user.listsuggestion_set.filter('name =', name).get()
         if list is not None:  # la lista con ese nombre ya existe, la editamos
             if description is not None:
                 list.description = description

@@ -121,6 +121,25 @@ def user_suggestions(request):
 
 @facebook_required
 def profile_settings(request):
+    if request.method == 'POST':
+        f = UserSettingsForm(request.POST, prefix='user_set_settings', initial = { 
+                                                                                  'time_notification_suggestion_follower': request.user.settings.time_notification_suggestion_follower,
+                                                                                  'time_notification_suggestion_comment': request.user.settings.time_notification_suggestion_comment,
+                                                                                  'time_notification_account': request.user.settings.time_notification_account,
+                                                                                  'show_public_profile': request.user.settings.show_public_profile,
+                                                                                  })
+        if f.is_valid():
+            user = f.save(request.user)
+            if user:
+                request.user = user
+                return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+    else:
+        f = UserSettingsForm(prefix='user_set_settings', initial = { 
+                                                                  'time_notification_suggestion_follower': request.user.settings.time_notification_suggestion_follower,
+                                                                  'time_notification_suggestion_comment': request.user.settings.time_notification_suggestion_comment,
+                                                                  'time_notification_account': request.user.settings.time_notification_account,
+                                                                  'show_public_profile': request.user.settings.show_public_profile,
+                                                                  })
     has_twitter = True if request.user.twitter_user is not None else False
     has_google = True if request.user.google_user is not None else False
     return  render_to_response('profile.html',{'counters': request.user.counters,
@@ -128,6 +147,7 @@ def profile_settings(request):
                                                'has_twitter': has_twitter,
                                                'has_google': has_google,
                                                'settings': request.user.settings,
+                                               'settings_form': f,
                                                 }, RequestContext(request))
 
 

@@ -565,6 +565,10 @@ class User(polymodel.PolyModel, HookedModel):
         def __str__(self):
             return _('Username already in use: %s') % self.value
         
+    def get_absolute_url(self):
+        if self.username is not None:
+            return '/user/%s' % str(self.username)
+        
 from watchers import *
 from models_acc import *
 from helpers import UserHelper
