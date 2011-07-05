@@ -242,6 +242,13 @@ p.loginPassword input{
    color:red;
 }
 
+#errorTerms ul.errorlist{
+    background-color: #FCC7C7;
+    border: 1px dotted;
+    margin: 10px auto;
+    width: 250px;
+}
+
 #register form p.clear span{
    clear: none;
    display: block;
@@ -260,9 +267,10 @@ p.loginPassword input{
    border:0;
 }
 
-#startBtn.enabled{
+#startBtn.enabled, input[type="submit"]{
    background: url("../img/startBtn.png");
    color:white;
+   cursor:pointer;
 }
 #startBtn.disabled{
    background: url("../img/startBtn.png") repeat scroll 0 -54px transparent;
@@ -448,4 +456,61 @@ ul li{
       -moz-transform: rotate(360deg);
         -o-transform: rotate(360deg);
          transform: rotate(360deg);
+}
+
+/*
+ *
+ * PASSWORD RECOVERY 
+ * 
+ **/
+
+#password-recover form p,#social-profile form p{
+    text-align:center;
+}
+#password-recover form label,#social-profile form label{
+    display: inline-block;
+    clear: both;
+/*
+    float: left;
+*/
+    margin-right: 15px;
+    text-align: left;
+    width: 80px
+}
+
+#password-recover p,#social-profile p{
+    text-align:justify;
+    font-weight:normal;
+}
+
+#password-recover #main-container{
+    float: none;
+    line-height: 2em;
+    margin: 0 auto;
+    width: 500px;
+}
+
+#social-profile #main-container{
+    float: none;
+    line-height: 2em;
+    margin: 0 auto;
+    width: 550px;
+}
+#social-profile p{
+    text-align: left;
+}
+
+#social-profile #errorTerms ul.errorlist{
+    margin: 0 auto;
+}
+
+#social-profile #errorTerms{
+    float: right;
+}
+#social-profile form input{
+    margin:0;
+    height: 22px;
+}
+#social-profile form .field-and-label{
+    margin: 10px 0;
 }

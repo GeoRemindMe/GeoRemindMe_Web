@@ -4,18 +4,37 @@
     <script src="/static/facebookApp/js/social.js"></script>
 {%endblock%}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Followings{% endblock %}
 {% block body %}
-    <h1>Followers</h1>
-
-    <h2>Te siguen</h2>
-    {% for f in followers %}
-        {% if f.avatar%}
-            <img src="{{f.avatar}}" alt="{{f.username}} avatar"/>
-        {% else %}
-            <img src="/static/facebookApp/img/no_avatar.png" style="width:50px" alt="{{f.username}} avatar"/>
-        {% endif %}
-        Username={{f.username}}
-    {% endfor %}    
+    <h1>Sigues a {{followings|length}} personas</h1>
     
+    <ul id="user-list">
+    {% for f in followings %}
+        <li>
+            <div class="avatar">
+                <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
+                    <fb:profile-pic uid="{{ f.uid }}" linked="false" /></fb:profile-pic>
+                </a>
+                <br>
+                <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
+            </div>
+            <div class="user-data">
+                <div id="following_state_{{ f.id }}" class="follow-button">
+                    <span  onclick="javascript:follow('follow',{{f.id}})"><a href="#" class="no-following">Seguir</a></span>
+                </div>
+                <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
+                    {% if f.uid %}
+                            <fb:name uid="{{ f.uid }}" linked="false" capitalize="true" /></fb:name>
+                    {% else %}
+                            Un NO-usuario de facebook
+                    {% endif %}
+                </a>
+                <p>Redes:</p>
+
+                
+            </div>
+            <hr>
+        </li>
+    {% endfor %}    
+    </ul>
 {% endblock %}

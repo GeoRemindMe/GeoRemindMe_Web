@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Datos personales{% endblock %}
+{% block body %}
+    <div id="profile">
+        <h1>Cuenta en GeoRemindMe</h1>
+        <a href="edit/" class="help-icon">Guardar</a> 
+        <form>
+        <div class="section">
+            <div class="header">
+                <h2>Perfil público</h2>
+                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></p>
+                
+            </div>
+            
+            <dl>
+                <label>Nombre de usuario:</label>
+                <dd>{{user.username}}</dd>
+                
+                <label>Email:</label>
+                <dd><a href="mailto:{{user.email}}">{{user.email}}</a></dd>
+                
+                <label>Descripción:</label>
+                <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris </dd>
+                
+            </dl>
+
+        </div><!--End section-->
+
+        <div class="section">
+            <div class="header">
+                <h2>Configuración</h2>
+                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+            </div>
+            <h3>Privacidad</h3>
+            <p><strong>Visibilidad del perfil</strong>: Público</p>
+            <p>Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.</p>
+            
+            <h3>Notificaciones</h3>
+            <p>Te llegarán notificaciones por email cuando:</p>
+            <dl id="mail-notifications">
+                <label>Otro usuario empieza a seguir tus sugerencias</label>
+                <dd>Instantáneamente</dd>
+                
+                <label>Recibes un comentario en una sugerencia</label>
+                <dd>Instantáneamente</dd>
+                
+                <label>Persona guarda una sugerencia tuya</label>
+                <dd>Instantáneamente</dd>
+                
+                <label>Otro usuario te envíe una sugerencia</label>
+                <dd>Instantáneamente</dd>
+            </dl>
+            </div>
+        </div> <!--End section-->
+        </form>
+        
+        <hr>
+        <div id="desinstall">
+            <a href="">Desinstalar la aplicación</a> | 
+            <a href="">Cancelar mi cuenta en GeoRemindMe</a>
+        </div>
+    </div>
+    
+{% endblock %}
