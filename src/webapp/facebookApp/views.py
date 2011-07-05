@@ -49,14 +49,19 @@ def login_panel(request):
 
 @facebook_required
 def dashboard(request):
-    friends_to_follow=request.facebook['client'].get_friends_to_follow()    
-    followers=request.user.get_followers()
-    followings=request.user.get_followings()
     
-    return  render_to_response('dashboard.html', {'friends_to_follow': friends_to_follow,
-                                                  'followers': followers,
-                                                  'followings': followings, 
-                                                  } , RequestContext(request))
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('facebookApp.views.login_panel'))
+    #~ raise Exception(request.facebook['client'])
+    #~ friends_to_follow=request.facebook['client'].get_friends_to_follow()    
+    #~ followers=request.user.get_followers()
+    #~ followings=request.user.get_followings()
+    
+    return  render_to_response('dashboard.html', )
+                                                #~ {'friends_to_follow': friends_to_follow,
+                                                  #~ 'followers': followers,
+                                                  #~ 'followings': followings, 
+                                                  #~ } , RequestContext(request))
 
 
 @facebook_required
@@ -129,7 +134,9 @@ def profile_settings(request):
                                                'has_google': has_google,
                                                'settings': request.user.settings,
                                                 }, RequestContext(request))
-
+@facebook_required
+def edit_profile(request):
+    return  render_to_response('edit_profile.html',{}, RequestContext(request))
 
 @facebook_required
 def followers_panel(request, username):
@@ -158,4 +165,4 @@ def followings_panel(request, username):
             followings = request.user.get_followings()
         else:
             followings = None
-    return  render_to_response('followings.html', {'followings': followings}, RequestContext(request))
+    return  render_to_response('followings.html', {'followings': followings[1]}, RequestContext(request))

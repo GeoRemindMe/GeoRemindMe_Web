@@ -118,6 +118,10 @@ body{
      *  COMMON
      * 
      ***************************/
+    #right-col h1{
+        display: inline;
+        line-height: 2.5em;
+    }
     #right-col .section .header, .right-col .section .article .header{
         border-bottom: medium none;
         border-top: 1px solid #E2E2E2;
@@ -142,7 +146,7 @@ body{
     }
     .error-msg ul li{
     }
-    div#left-col hr,#right-col hr{
+    div#left-col hr,#right-col hr,hr{
         border: 1px solid #D3D3D3;
         clear:both;
     }
@@ -335,6 +339,13 @@ body{
     #right-col #profile{
         font-size:1.1em
     }
+    #profile a.help-icon{
+        display: inline-block;
+        font-size: 1.2em;
+        line-height: 4em;
+        margin-left: 10px;
+        vertical-align: top;
+    }
     #profile dl{
         line-height:2.5em;
         padding-left: 5px;
@@ -354,6 +365,7 @@ body{
     }
     #profile div#avatar{
         border: 1px dotted #CCCCCC;
+        clear: both;
         float: right;
         font-size: 1.2em;
         margin: 10px;
@@ -377,7 +389,7 @@ body{
         padding: 10px 0;
     }
     div#right-col #profile li span,#profile dl dt{
-        width:120px;
+        width:150px;
         float:left;
         clear:left;
         font-weight:bold;
@@ -388,6 +400,16 @@ body{
     #desinstall{
         float:right;
         margin-right:10px;
+    }
+    div#right-col #profile li span#twitter-icon{
+        background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 0px transparent;
+        padding-left: 20px;
+        width:110px;
+    }
+    div#right-col #profile li span#google-icon{
+        background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 -16px transparent;
+        padding-left: 20px;
+        width:110px;
     }
     
     /****************************
@@ -424,6 +446,44 @@ body{
         margin:0;padding:0;
     }
     ul#friends-to-follow li div.follow-button{
+        float:right;
+        right: 10px;
+        position: relative;
+    }
+
+
+    /****************************
+     *      
+     *  Followers and followings
+     * 
+     ***************************/
+    
+    ul#user-list{
+        list-style:none;
+        margin:0;
+        padding:5px;
+        font-size:1.1em
+    }
+    ul#user-list li{
+        width:100%; 
+        clear:both;
+    }
+    ul#user-list li div{
+        float: left;
+        margin: 10px 0;
+    }
+    ul#user-list div.user-data{
+        margin-left: 10px;
+        width:480px;
+        line-height:2em;
+    }
+    ul#user-list div.user-data a{
+        font-weight:bold;
+    }
+    ul#user-list div.user-data p{
+        margin:0;padding:0;
+    }
+    ul#user-list li div.follow-button{
         float:right;
         right: 10px;
         position: relative;
