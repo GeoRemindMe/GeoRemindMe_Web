@@ -167,7 +167,11 @@ class Alert(Event):
         '''
         if not isinstance(user, User):
             raise AttributeError()
-        if poi is None or not isinstance(poi, POI) or poi.user.key() != user.key():
+        if poi is None or not isinstance(poi, POI):
+            raise AttributeError()
+        if name is None or not isinstance(name, basestring):
+            raise AttributeError()
+        if description is not None and not isinstance(description, basestring):
             raise AttributeError()
         if id is not None:  # como se ha pasado un id, queremos modificar una alerta existente
             alert = cls.objects.get_by_id_user(id, user)
@@ -519,6 +523,26 @@ class AlertSuggestion(Event):
     def delete(self):
         alert_deleted.send(sender=self)
         super(Alert, self).delete()
+        
+    def to_dict(self):
+            return {'id': self.id,
+                    'name': self.suggestion.name,
+                    'description': self.suggestion.description,
+                    'poi_id': self.suggestion.poi.id,
+                    'x': self.suggestion.poi.location.lat,
+                    'y': self.suggestion.poi.location.lon,
+                    'address': unicode(self.suggestion.poi.address),
+                    'created': long(time.mktime(self.created.timetuple())) if self.suggestion.created else 0,
+                    'modified': long(time.mktime(self.modified.timetuple())) if self.suggestion.modified else 0,
+                    'starts': long(time.mktime(self.suggestion.date_starts.timetuple())) if self.suggestion.date_starts else 0,
+                    'ends': long(time.mktime(self.suggestion.date_ends.timetuple())) if self.suggestion.date_ends else 0,
+                    'done_when': long(time.mktime(self.suggestion.done_when.timetuple())) if self.suggestion.done_when else 0,
+                    'done': self.is_done(),
+                    'active': self.is_active(),
+                    }
+            
+    def to_json(self):
+        return simplejson.dumps(self.to_dict())
         
     def __str__(self):
         return self.suggestion.name

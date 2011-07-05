@@ -121,37 +121,14 @@ def user_suggestions(request):
 
 @facebook_required
 def profile_settings(request):
-    cookie = get_user_from_cookie(request.COOKIES)
-    if cookie:
-        
-        #Comprobamos que el toque es aún válido
-        fb_client=FacebookClient(cookie["access_token"])
-        if not fb_client.token_is_valid():
-            #Si el usuario ya no tiene instalada la app lo lleva a instalar
-            args={}
-            args["permissions"]=settings.OAUTH['facebook']['scope']
-            return HttpResponseRedirect('/fb/')
-        
-        
-        access_token=OAUTH_Access.get_token(cookie["access_token"])
-        if not access_token:
-            # Autentica al usuario con cookie["access_token"] y si no 
-            # existe tal usuario lo crea y lo devuelve           
-            fb_client=FacebookClient(cookie["access_token"])
-            user=fb_client.authenticate()
-            access_token=OAUTH_Access.get_token(cookie["access_token"])
-    
-        else:
-            fb_client=FacebookClient(access_token.token_key)
-            fb_client.authenticate()
-        
-        followers=len(request.user.get_followers()[1])
-        followings=len(request.user.get_followings()[1])
-        #~ args['followers']=followers[1]
-        
-        return  render_to_response('profile.html',{'followers': followers, 'followings': followings},RequestContext(request))
-    else:
-        return HttpResponseRedirect('/fb/')
+    has_twitter = True if request.user.twitter_user is not None else False
+    has_google = True if request.user.google_user is not None else False
+    return  render_to_response('profile.html',{'counters': request.user.counters,
+                                               'profile': request.user.profile,
+                                               'has_twitter': has_twitter,
+                                               'has_google': has_google,
+                                               'settings': request.user.settings,
+                                                }, RequestContext(request))
 
 
 @facebook_required

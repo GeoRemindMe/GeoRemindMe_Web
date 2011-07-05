@@ -67,6 +67,16 @@ class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
     @classproperty
     def objects(self):
         return POIHelper()
+    
+    def to_dict(self):
+        import time
+        return {'id': self.id,
+                'name': self.name,
+                'x': self.location.lat,
+                'y': self.location.lon,
+                'address': unicode(self.poi.address),
+                'created': self.created if self.created is not None else 0,
+                }
 
 
 class PrivatePlace(POI):
@@ -206,6 +216,23 @@ class PrivatePlace(POI):
     def delete(self):
         privateplace_deleted.send(sender=self)
         super(PrivatePlace, self).delete()
+        
+    def to_dict(self):
+        import time
+        return {'id': self.id,
+                'name': self.name,
+                'x': self.location.lat,
+                'y': self.location.lon,
+                'business': self.business.name if self.business is not None else None,
+                'address': unicode(self.address),
+                'created': self.created if self.created is not None else 0,
+                }
+        
+    def __str__(self):
+        if self.name is not None:
+            return self.name
+        else:
+            return str(self.id)
 
     
 class Place(POI):
@@ -320,5 +347,22 @@ class Place(POI):
             from georemindme.models_utils import _Do_later_ft
             later = _Do_later_ft(instance_key=self.key())
             later.put()
+            
+    def to_dict(self):
+        import time
+        return {'id': self.id,
+                'name': self.name,
+                'x': self.location.lat,
+                'y': self.location.lon,
+                'business': self.business.name if self.business is not None else None,
+                'address': unicode(self.address),
+                'created': self.created if self.created is not None else 0,
+                }
+        
+    def __str__(self):
+        if self.name is not None:
+            return self.name
+        else:
+            return str(self.id)
 
 from helpers_poi import *

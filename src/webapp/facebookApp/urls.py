@@ -22,11 +22,11 @@ import facebookApp.watchers
 #~ from facebookApp import 
 
 urlpatterns = patterns('facebookApp.views',
-    url(r'^fb/$', 'login_panel'),
-    url(r'^fb/dashboard/$', 'dashboard'),
-    url(r'^fb/profile/$', 'profile_settings'),
-    url(r'^fb/user/(?P<username>\w+)$', 'public_profile'),
-    url(r'^fb/user/(?P<username>\w+)/followers/$', 'followers_panel'),
-    url(r'^fb/user/(?P<username>\w+)/followings/$', 'followings_panel'),
-    url(r'^fb/suggestions/$', 'user_suggestions'),
+    url(r'^$', 'login_panel'),
+    url(r'^(?i)dashboard/$', 'dashboard'),
+    url(r'^(?i)profile/$', 'profile_settings'),
+    url(r'^(?i)user/(?P<username>[^/]*)$', 'public_profile'),
+    url(r'^(?i)user/(?P<username>[^/]*)/followers/$', 'followers_panel'),
+    url(r'^(?i)user/(?P<username>[^/]*)/followings/$', 'followings_panel'),
+    url(r'^(?i)suggestions/$', 'user_suggestions'),
 )

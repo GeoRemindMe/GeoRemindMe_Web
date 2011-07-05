@@ -167,10 +167,10 @@ def add_suggestion(request):
     if form.is_valid():
         eventid = request.POST.get('eventid', None)
         if eventid:
-            sug = geoalert.edit_sug(request, eventid, form)
+            sug = geoalert.edit_suggestion(request, eventid, form)
         else: 
-            sug = geoalert.add_sug(request, form)
-        return HttpResponse(simplejson.dumps(dict(id=suggestion.id)), mimetype="application/json")
+            sug = geoalert.add_suggestion(request, form)
+        return HttpResponse(simplejson.dumps(dict(id=sug.id)), mimetype="application/json")
     else:
         return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
@@ -179,15 +179,18 @@ def get_suggestion(request):
     """
         Obtiene los eventos
         Parametros en POST:
-            eventid: el id del evento a buscar
-            page : pagina a mostrar
+            eventid: el id del evento a buscar (opcional)
+            wanted_user: usuario a buscar (opcional, por defecto, es uno mismo)
+            private_profile: busqueda para mostrar en el perfil privado del usuario
             query_id: id de la consulta de pagina
+            page : pagina a mostrar
     """
     eventid = request.POST.get('eventid', None)
+    wanted_user = request.POST.get('wanteduser', request.user)
     private_profile= str2bool(request.POST.get('private_profile', ''))
     query_id = request.POST.get('query_id', None)
     page = request.POST.get('page', 1)
-    suggestions = geoalert.get_suggestion(request, eventid, private_profile, page, query_id)
+    suggestions = geoalert.get_suggestion(request, eventid, wanted_user, private_profile, page, query_id)
     return HttpResponse(getAlertsJSON(suggestions), mimetype="application/json")
 
 @ajax_request
@@ -276,18 +279,18 @@ def delete_following(request):
     return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
 
 @ajax_request
-def follow_contacts_google(request):
-    contacts = geouser.follow_contacts_google(request)
+def get_contacts_google(request):
+    contacts = geouser.get_contacts_google(request)
     return HttpResponse(simplejson.dumps(contacts))
 
 @ajax_request
-def follow_friends_facebook(request):
-    friends = geouser.follow_friends_facebook(request)
+def get_friends_facebook(request):
+    friends = geouser.get_friends_facebook(request)
     return HttpResponse(simplejson.dumps(friends))
 
 @ajax_request
-def follow_friends_twitter(request):
-    friends = geouser.follow_friends_twitter(request)
+def get_friends_twitter(request):
+    friends = geouser.get_friends_twitter(request)
     return HttpResponse(simplejson.dumps(friends))
 
 #===============================================================================

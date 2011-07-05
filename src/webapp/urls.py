@@ -32,11 +32,11 @@ urlpatterns = patterns('',
     (r'^(?i)blog/(?P<path>.*)$', 'django.views.generic.simple.redirect_to', {'url': 'http://blog.georemindme.com/%(path)s', 'permanent': True}),
     (r'^(?i)oauth/', include('geoauth.urls')),
     (r'^(?i)ajax/', include('geoajax.urls')),
+    (r'^(?i)fb/', include('facebookApp.urls')),
     (r'', include('georpcjson.urls')),
     (r'', include('georemindme.urls')),
     (r'', include('geouser.urls')),
     (r'', include('geoalert.urls')),
-    (r'', include('facebookApp.urls')),
 )
 
 

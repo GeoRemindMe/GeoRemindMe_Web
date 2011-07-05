@@ -34,7 +34,7 @@ class UserProfileHelper(object):
             return None
         profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, userid)))
         if profile is None:
-            key = db.Key.from_path(User.kind(), userid, UserSettings.kind(), 'profile_%s' % userid)
+            key = db.Key.from_path(User.kind(), userid, UserProfile.kind(), 'profile_%s' % userid)
             profile = db.get(key)
             memcache.set('%sprofile_%s' % (memcache.version, userid), memcache.serialize_instances(profile))
         return profile

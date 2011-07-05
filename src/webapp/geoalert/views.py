@@ -25,14 +25,13 @@ def suggestion_profile(request, id):
             :param id: identificador de la sugerencia
             :type id: :class:`ìnteger`
     """
-    user = request.session.get('user', None)
     suggestion = Suggestion.objects.get_by_id(id)
     if suggestion is None:
         raise Http404
-    if suggestion._is_private() and suggestion.user != user:
+    if suggestion._is_private() and suggestion.user.id != request.user.id:
         # sugerencia privada, pero de otro usuario
         raise Http404
-    elif suggestion._is_shared() and not suggestion.user_invited(user):
+    elif suggestion._is_shared() and not suggestion.user_invited(request.user):
         raise Http404 
     
     return render_to_response('webapp/suggestionprofile.html', {'suggestion':suggestion},
@@ -53,7 +52,7 @@ def add_alert(request, form, address):
             
             :returns: :class:`geoalert.models.Alert`
     """
-    alert = form.save(user = request.session['user'], address = address)
+    alert = form.save(user = request.user, address = address)
     return alert
 
 
@@ -66,7 +65,7 @@ def edit_alert(request, id, form, address):
             
             :returns: :class:`geoalert.models.Alert`
     """
-    alert = form.save(user = request.session['user'], address = address, id = id)
+    alert = form.save(user = request.user, address = address, id = id)
     return alert
 
 
@@ -86,13 +85,13 @@ def get_alert(request, id, done = None, page = 1, query_id = None):
             :returns: :class:`geoalert.models.Alert`
     """
     if id:
-        return [Alert.objects.get_by_id_user(id, request.session['user'])]
+        return [Alert.objects.get_by_id_user(id, request.user)]
     if done is None:
-        return Alert.objects.get_by_user(request.session['user'], page, query_id)
+        return Alert.objects.get_by_user(request.user, page, query_id)
     if done:
-        return Alert.objects.get_by_user_done(request.session['user'], page, query_id)
+        return Alert.objects.get_by_user_done(request.user, page, query_id)
     else:
-        return Alert.objects.get_by_user_undone(request.session['user'], page, query_id)
+        return Alert.objects.get_by_user_undone(request.user, page, query_id)
 
 
 @login_required    
@@ -107,7 +106,7 @@ def del_alert(request, id = None):
     """
     if id is None:
         raise AttributeError()
-    alert = Alert.objects.get_by_id_user(int(id), request.session['user'])
+    alert = Alert.objects.get_by_id_user(id, request.user)
     if not alert:
             raise AttributeError()
     alert.delete()    
@@ -233,7 +232,7 @@ def add_suggestion(request, form):
             
             :returns: :class:`geoalert.models.Suggestion`
     """
-    sug = form.save(user = request.session['user'])
+    sug = form.save(user = request.user)
     return sug
 
 
@@ -246,12 +245,12 @@ def edit_suggestion(request, id, form):
             
             :returns: :class:`geoalert.models.Suggestion`
     """
-    alert = form.save(user = request.session['user'], id = id)
-    return alert
+    sug = form.save(user = request.user, id = id)
+    return sug
 
 
 @login_required
-def get_suggestion(request, id, private_profile=False, page = 1, query_id = None):
+def get_suggestion(request, id, wanted_user=None, private_profile=False, page = 1, query_id = None):
     """ Obtiene sugerencias
         
             :param id: identificador de la sugerencia
@@ -266,11 +265,11 @@ def get_suggestion(request, id, private_profile=False, page = 1, query_id = None
             :returns: :class:`geoalert.models.Suggestion`
     """
     if id:
-        return [Suggestion.objects.get_by_id_user(id, request.session['user'])]
+        return [Suggestion.objects.get_by_id_user(id, wanted_user, request.user)]
     elif private_profile:
-        return Suggestion.objects.get_by_userALL(request.session['user'], page, query_id)
+        return Suggestion.objects.get_by_userALL(request.user, page, query_id)
     else:
-        return Suggestion.objects.get_by_user(request.session['user'], page, query_id)
+        return Suggestion.objects.get_by_user(wanted_user, request.user, page, query_id)
 
 
 @login_required    

@@ -44,4 +44,7 @@ class FacebookMiddleware(object):
         if valid_key == signature:
             return True
         else:
-            raise ValueError('Invalid signature')
+            return False
+            
+        
+    

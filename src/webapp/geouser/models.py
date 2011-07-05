@@ -440,9 +440,9 @@ class User(polymodel.PolyModel, HookedModel):
             following = User.objects.get_by_id(followid, keys_only=True)
         else:
             raise AttributeError()
-        if following.id == self.id:
-            return True
         if following is not None:
+            if following.id == self.id:
+                return True
             is_following = UserFollowingIndex.all().filter('following =', following).ancestor(self.key()).count()
             if is_following != 0:  # en este caso, el usuario ya esta siguiendo al otro, no hacemos nada mas.
                 return True
@@ -472,9 +472,9 @@ class User(polymodel.PolyModel, HookedModel):
             following = User.objects.get_by_id(followid, keys_only=True)
         else:
             raise AttributeError()
-        if following.id == self.id:
-            return True
         if following is not None:
+            if following.id == self.id:
+                return True
             if self._del_follows(following):
                 user_following_deleted.send(sender=self, following=following)
                 return True

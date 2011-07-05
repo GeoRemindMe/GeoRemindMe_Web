@@ -105,6 +105,7 @@ class UserProfile(db.Model):
     """Datos para el perfil del usuario"""
     username = db.TextProperty()
     avatar = db.URLProperty()
+    description = db.TextProperty(required=False)
     created = db.DateTimeProperty(auto_now_add=True)
     
     @classproperty

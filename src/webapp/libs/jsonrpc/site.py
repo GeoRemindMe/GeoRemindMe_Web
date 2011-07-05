@@ -9,7 +9,7 @@ from types import *
 from django.core import signals
 empty_dec = lambda f: f
 from django.views.decorators.csrf import csrf_exempt
-from django.core.serializers.json import DjangoJSONEncoder
+from jsonencoder import JSONEncoder
 
 NoneType = type(None)
 encode_kw = lambda p: dict([(str(k), v) for k, v in p.iteritems()])
@@ -75,7 +75,7 @@ def validate_params(method, D):
 
 class JSONRPCSite(object):
     "A JSON-RPC Site"
-    def __init__(self, json_encoder=DjangoJSONEncoder):
+    def __init__(self, json_encoder=JSONEncoder):
         self.urls = {}
         self.uuid = str(uuid1())
         self.version = '1.1'
@@ -83,7 +83,7 @@ class JSONRPCSite(object):
         self.register('system.describe', self.describe)
         self.set_json_encoder(json_encoder)
 
-    def set_json_encoder(self, json_encoder=DjangoJSONEncoder):
+    def set_json_encoder(self, json_encoder=JSONEncoder):
         self.json_encoder = json_encoder
 
     def register(self, name, method):

@@ -61,6 +61,7 @@ def login(request, email, password):
         raise InvalidRequestError         
     return request.session.session_id
 
+
 @jsonrpc_method('login_facebook', authenticated=False)
 def login_facebook(request, access_token):
     """
@@ -71,13 +72,15 @@ def login_facebook(request, access_token):
         
         :returns: :class:`string` identificador de sesion
     """
-    client = FacebookClient(access_token = token['access_token'])
+    from geoauth.clients.facebook import FacebookClient
+    from geouser.funcs import init_user_session
+    client = FacebookClient(access_token = access_token)
     user = client.authenticate()
     if not user:
         raise InvalidCredentialsError
-    messages.success(request, _('USER: %s logged from Facebook') % user.id)
     init_user_session(request, user, from_rpc=True)
     return request.session.session_id
+
 
 @jsonrpc_method('register', authenticated=False)
 def register(request, email, password):
@@ -94,6 +97,7 @@ def register(request, email, password):
     except:
         pass
     raise RegisterException
+
 
 @jsonrpc_method('sync_alert', authenticated=need_authenticate)
 def sync_alert(request, last_sync, modified=[], deleted=[]):
@@ -146,6 +150,7 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
     dict_deleted = [{'id': a} for a in sync_deleted]
     return [int(time.mktime(datetime.now().timetuple())), response, dict_deleted]
 
+
 @jsonrpc_method('report_bug', authenticated=False)
 def report_bug(request, bugs):
     from models import _Report_Bug
@@ -159,4 +164,10 @@ def report_bug(request, bugs):
         raise
         return False
     return True
-    
+
+@jsonrpc_method('view_timeline', authenticated=need_authenticate)
+def view_timeline(request, userid=None, query_id=None, page=1):
+    if userid is None:
+        timelines = request.user.get_timelineALL(page=page, query_id=query_id)
+        return timelines       
+

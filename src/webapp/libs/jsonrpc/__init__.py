@@ -214,6 +214,9 @@ def jsonrpc_method(name, authenticated=False, safe=False, validate=False,
             @wraps(func)    
             def _func1(request, *args, **kwargs):
                 user = getattr(request, 'user', None)
+                if user is None or not user.is_authenticated():
+                    raise InvalidCredentialsError
+                """
                 is_authenticated = getattr(user, 'is_authenticated', lambda: False)
                 if ((user is not None 
                             and callable(is_authenticated) and not is_authenticated()) 
@@ -235,9 +238,12 @@ def jsonrpc_method(name, authenticated=False, safe=False, validate=False,
                             raise InvalidParamsError(
                                 'Authenticated methods require at least '
                                 '[username, password] or {username: password:} arguments')
+                        
                     if user is None:
                         raise InvalidCredentialsError
+                    
                     request.user = user
+                    """
                 return func(request, *args, **kwargs)
             _func = _func1
         else:
