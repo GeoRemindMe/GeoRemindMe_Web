@@ -21,7 +21,10 @@ def login_panel(request):
         if request.user.is_authenticated():  # usuario identificado y con permisos
             if request.user.username is None or request.user.email is None:
                 if request.method == 'POST':
-                    f = SocialUserForm(request.POST, prefix='user_set_username')
+                    f = SocialUserForm(request.POST, prefix='user_set_username', initial = { 
+                                                                          'email': request.user.email,
+                                                                          'username': request.user.username,
+                                                                          })
                     if f.is_valid():
                         user = f.save(request.user)
                         if user:
@@ -54,6 +57,7 @@ def dashboard(request):
                                                   'followers': followers,
                                                   'followings': followings, 
                                                   } , RequestContext(request))
+
 
 @facebook_required
 def public_profile(request, username):
@@ -178,4 +182,3 @@ def followings_panel(request, username):
         else:
             followings = None
     return  render_to_response('followings.html', {'followings': followings}, RequestContext(request))
-    
