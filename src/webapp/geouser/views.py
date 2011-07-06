@@ -3,7 +3,7 @@ import base64
 from django.contrib import messages
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -85,8 +85,9 @@ def login_google(request):
             guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
             if not guser:
                 guser = GoogleUser.register(user=request.user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
-            return HttpResponseRedirect(get_next(request))
-        guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
+            if hasattr(request, 'facebook'):
+                return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))    
+            return HttpResponse(get_next(request))
         if not guser:#user is not registered, register it
             user = User.objects.get_by_email(ugoogle.email())
             if user:
@@ -380,11 +381,6 @@ def del_following(request, userid=None, username=None):
 		:return: boolean con el resultado de la operacion
     """
     return request.session['user'].del_following(followid=userid, followname=username)
-
-@login_required
-def get_perms_google(request):
-    from geoauth.views import client_token_request
-    return client_token_request(request, 'google', callback_url=request.build_absolute_uri(reverse('geouser.views.get_contacts_google') ))
 
 @login_required
 def get_contacts_google(request):

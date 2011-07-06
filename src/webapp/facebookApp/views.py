@@ -126,6 +126,16 @@ def user_suggestions(request):
 
 @facebook_required
 def profile_settings(request):
+    has_twitter = True if request.user.twitter_user is not None else False
+    has_google = True if request.user.google_user is not None else False
+    return  render_to_response('profile.html',{'counters': request.user.counters,
+                                               'profile': request.user.profile,
+                                               'has_twitter': has_twitter,
+                                               'has_google': has_google,
+                                               'settings': request.user.settings,
+                                                }, RequestContext(request))
+@facebook_required
+def edit_profile(request):
     if request.method == 'POST':
         f = UserSettingsForm(request.POST, prefix='user_set_settings', initial = { 
                                                                                   'time_notification_suggestion_follower': request.user.settings.time_notification_suggestion_follower,
@@ -135,7 +145,6 @@ def profile_settings(request):
                                                                                   })
         if f.is_valid():
             f.save(request.user)
-            
     else:
         f = UserSettingsForm(prefix='user_set_settings', initial = { 
                                                                   'time_notification_suggestion_follower': request.user.settings.time_notification_suggestion_follower,
@@ -143,18 +152,10 @@ def profile_settings(request):
                                                                   'time_notification_account': request.user.settings.time_notification_account,
                                                                   'show_public_profile': request.user.settings.show_public_profile,
                                                                   })
-    has_twitter = True if request.user.twitter_user is not None else False
-    has_google = True if request.user.google_user is not None else False
-    return  render_to_response('profile.html',{'counters': request.user.counters,
-                                               'profile': request.user.profile,
-                                               'has_twitter': has_twitter,
-                                               'has_google': has_google,
-                                               'settings': request.user.settings,
-                                               'settings_form': f,
-                                                }, RequestContext(request))
-@facebook_required
-def edit_profile(request):
-    return  render_to_response('edit_profile.html',{}, RequestContext(request))
+    return  render_to_response('edit_profile.html',{'profile': request.user.profile,
+                                                    'settings': request.user.settings,
+                                                    'settings_form': f,
+                                                    }, RequestContext(request))
 
 @facebook_required
 def followers_panel(request, username):
