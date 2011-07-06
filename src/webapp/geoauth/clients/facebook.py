@@ -146,7 +146,7 @@ class FacebookClient(object):
             self.user = user.user
             self.authorize(self.user)
         else:#no existe, creamos un nuevo usuario
-            user = User.objects.get_by_email(facebookInfo['email'])
+            self.user = User.objects.get_by_email(facebookInfo['email'])
             if user is None:
                 self.user = User.register(email=facebookInfo['email'], password=password if password is not None else make_random_string(length=6))
             self.authorize(self.user)
