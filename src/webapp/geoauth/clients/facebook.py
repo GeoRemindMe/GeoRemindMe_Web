@@ -141,15 +141,14 @@ class FacebookClient(object):
             facebookInfo = self.get_user_info()
         except:
             return False;
-        user = FacebookUser.objects.get_by_id(facebookInfo['id'])
-        if user is not None:#el usuario ya existe, iniciamos sesion
-            self.user = user.user
-            self.authorize(self.user)
+        fbuser = FacebookUser.objects.get_by_id(facebookInfo['id'])
+        if fbuser is not None:#el usuario ya existe, iniciamos sesion
+            self.user = fbuser.user
         else:#no existe, creamos un nuevo usuario
             self.user = User.objects.get_by_email(facebookInfo['email'])
-            if user is None:
+            if self.user is None:
                 self.user = User.register(email=facebookInfo['email'], password=password if password is not None else make_random_string(length=6))
-            self.authorize(self.user)
+        self.authorize(self.user)
         return self.user
     
     def token_is_valid(self):
