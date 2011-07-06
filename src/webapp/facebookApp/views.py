@@ -134,7 +134,7 @@ def profile_settings(request):
                                                                                   'show_public_profile': request.user.settings.show_public_profile,
                                                                                   })
         if f.is_valid():
-            pass
+            f.save(request.user)
             
     else:
         f = UserSettingsForm(prefix='user_set_settings', initial = { 
