@@ -19,7 +19,7 @@ from decorators import facebook_required
 def login_panel(request):
     if hasattr(request, 'facebook'):
         user = request.facebook['client'].authenticate()
-        init_user_session(request, user)
+        init_user_session(request, user, is_from_facebook=True)
         if user.username is None or user.email is None:
                 if request.method == 'POST':
                     f = SocialUserForm(request.POST, prefix='user_set_username', initial = { 

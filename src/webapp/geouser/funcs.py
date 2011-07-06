@@ -25,7 +25,7 @@ def get_next(request):
         return reverse('geouser.views.dashboard')
 
 
-def init_user_session(request, user, remember=False, from_rpc=False):
+def init_user_session(request, user, remember=False, from_rpc=False, is_from_facebook=False):
     """When a user logs in, we need to initialize a new session, save session in user, and save the user in the session
 
             :param request: The HTTP Request
@@ -35,7 +35,7 @@ def init_user_session(request, user, remember=False, from_rpc=False):
             :param remember: True if the user wants to save his session
             :type remember: boolean
     """
-    request.session.init_session(remember, lang=user.settings.language, user=user, from_rpc=from_rpc)
+    request.session.init_session(remember, lang=user.settings.language, user=user, from_rpc=from_rpc, is_from_facebook=is_from_facebook)
     user.settings.put()
     user.last_login = datetime.now()
     user.put()

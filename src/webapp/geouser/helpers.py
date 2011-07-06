@@ -81,7 +81,8 @@ class UserHelper(object):
         ##users = [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]
         return [p.id, [{'id':u.id, 
                         'username':u.username, 
-                        'avatar':u.profile.avatar} 
+                        'avatar': u.profile.avatar,
+                        'is_following': u.has_follower(userkey=userkey) } 
                        for u in (index.parent() for index in p.fetch_page(page))]]
     
     def get_followings(self, userid = None, username=None, page=1, query_id=None):

@@ -9,21 +9,11 @@ class geosession(object):
     def process_request(self, request):
         
         session_id = request.COOKIES.get(settings.COOKIE_NAME, None)
-        """
-        #  sesiones hibridas (usuarios en BD y anonimos en cookies
-        if session_key is None:
-            request.session = SessionStore.load(session_data=request.COOKIES.get(settings.SESSION_COOKIE_DATA_NAME, None))
-        else:
-        """
+
         if session_id is None:
             session_id = request.META.get('HTTP_X_GEOREMINDME_SESSION', None)
             request.session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
-        """
-        if session_key is None:
-            # validar request
-            # asignar usuario a request
-            request.
-        """
+
         if session_id is None:
             request.session = SessionStore.load(session_data=request.COOKIES.get(
                                              settings.COOKIE_DATA_NAME, None),
@@ -35,6 +25,8 @@ class geosession(object):
         
         if 'user' in request.session:
             request.user = request.session['user']
+            if request.session.is_from_facebook and not hasattr(request, 'facebook'):
+                request.user = AnonymousUser()
         else:
             request.user = AnonymousUser()
 
@@ -54,8 +46,8 @@ class geosession(object):
                 pass
             else:
                 if deleted:
-                    response.delete_cookie(settings.COOKIE_NAME)
-                if cookieless:
+                    response.delete_cookie(settings.COOKIE_NAME, path=settings.SESSION_COOKIE_PATH, domain=settings.SESSION_COOKIE_DOMAIN)
+                elif cookieless:
                     request.session.put()
                 elif anonymous:
                     response.set_cookie(settings.COOKIE_DATA_NAME,

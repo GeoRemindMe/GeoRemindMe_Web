@@ -46,6 +46,12 @@ class SessionStore(object):
             return default
         
     @property
+    def is_from_facebook(self):
+        if isinstance(self._session, _Session_Data):
+            return self._session.is_from_facebook
+        return False
+        
+    @property
     def data(self):
         return simplejson.dumps(self._session._decoded)
     
@@ -80,11 +86,11 @@ class SessionStore(object):
         # inicia una sesion nueva temporal
         return SessionStore(session_data=session_data, from_cookie=False)
     
-    def init_session(self, remember=False, lang=None, user=None, from_rpc=False):
+    def init_session(self, remember=False, lang=None, user=None, from_rpc=False, is_from_facebook=False):
         '''
         Login de un usuario, guarda la sesion en datastore
         '''
-        self._session = _Session_Data.new_session(lang=lang, user=user, remember=remember)
+        self._session = _Session_Data.new_session(lang=lang, user=user, remember=remember, is_from_facebook=is_from_facebook)
         self._anonymous = False
         self._accessed = True
         self._modified = True

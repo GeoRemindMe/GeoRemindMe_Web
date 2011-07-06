@@ -1,24 +1,23 @@
 # coding=utf-8
 
 from django.conf import settings
-import base64
 
 
 class FacebookMiddleware(object):
     def process_request(self, request):
-        from geoauth.clients.facebook import FacebookClient, get_user_from_cookie
+        from geoauth.clients.facebook import FacebookClient, get_user_from_cookie, parse_signed_request
         if 'signed_request' in request.REQUEST:
-            signed_request = request.REQUEST.get('signed_request').split('.')
-            if self._check_signature(signed_request[0], signed_request[1]):
-                from django.utils import simplejson
-                data = simplejson.loads(self._base64_url_decode(signed_request[1]))
+            try:
+                data = parse_signed_request(request.REQUEST['signed_request'])
                 if 'oauth_token' in data:
                     request.facebook = {'uid': data['user_id'],
-                                        'access_token': data['oauth_token'],
-                                        'client': FacebookClient(data['oauth_token'])
-                                        }
+                                    'access_token': data['oauth_token'],
+                                    'client': FacebookClient(data['oauth_token'])
+                                    }
                 import facebookApp.watchers
                 request.csrf_processing_done = True
+            except:
+                request.csrf_processing_done = False
         else:
             cookie = get_user_from_cookie(request.COOKIES)
             if cookie is not None:
@@ -29,7 +28,7 @@ class FacebookMiddleware(object):
             else:  # no es un usuario de facebook, desconectar señales
                 from facebookApp.watchers import disconnect_all
                 disconnect_all()   
-                
+"""                
     def _base64_url_decode(self, inp):
         # http://sunilarora.org/parsing-signedrequest-parameter-in-python-bas
         padding_factor = (4 - len(inp) % 4) % 4
@@ -48,6 +47,14 @@ class FacebookMiddleware(object):
             return True
         else:
             return False
+    
+"""
+"""
+    def process_response(self, request, response):
+        response.delete_cookie("fbs_" + settings.OAUTH['facebook']['app_key'])
+        
+    return response
+"""
             
         
     

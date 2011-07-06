@@ -15,7 +15,6 @@ from properties import PasswordProperty, UsernameProperty
 from exceptions import *
 from signals import *
 
-
 TIMELINE_PAGE_SIZE = 42
 
 
@@ -542,7 +541,15 @@ class User(polymodel.PolyModel, HookedModel):
     def is_following(self, user):
         if UserFollowingIndex.all().ancestor(self.key()).filter('following =', user.key()).count() != 0:
             return True
-        return False        
+        return False
+    
+    def has_follower(self, user=None, userkey=None):
+        if userkey is not None:
+            if UserFollowingIndex.all().ancestor(userkey).filter('following =', self.key()).count() != 0:
+                return True
+        elif UserFollowingIndex.all().ancestor(user.key()).filter('following =', self.key()).count() != 0:
+            return True
+        return False       
     
     def write_timeline(self, msg, instance=None):
         return UserTimeline.insert(msg=msg, user=self, instance=instance)
