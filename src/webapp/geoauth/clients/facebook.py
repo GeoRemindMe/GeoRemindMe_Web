@@ -150,7 +150,7 @@ class FacebookClient(object):
             if user is None:
                 self.user = User.register(email=facebookInfo['email'], password=password if password is not None else make_random_string(length=6))
             self.authorize(self.user)
-        return user
+        return self.user
     
     def token_is_valid(self):
         """el usuario se esta logeando usando facebook"""
