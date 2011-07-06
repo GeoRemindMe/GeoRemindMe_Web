@@ -166,25 +166,28 @@ def followers_panel(request, username):
         if user is None:
             raise Http404
         if user.settings.show_followers:
-            followers = request.user.get_followers()
+            followers = user.get_followers()
         else:
             followers = None
-    return  render_to_response('followers.html', {'followers': followers}, context_instance=RequestContext(request))
+    return  render_to_response('followers.html', {'followers': followers[1],'username_page':username}, context_instance=RequestContext(request))
 
 
 @facebook_required
 def followings_panel(request, username):
     if username == request.user.username:
         followings=request.user.get_followings()
+        user=request.user
     else:
         user = User.objects.get_by_username(username)
+        #~ raise Exception("Entramos con ", username)
         if user is None:
             raise Http404
         if user.settings.show_followings:
-            followings = request.user.get_followings()
+            followings = user.get_followings()
         else:
             followings = None
-    return  render_to_response('followings.html', {'followings': followings[1]}, context_instance=RequestContext(request))
+    
+    return  render_to_response('followings.html', {'followings': followings[1],'username_page':username}, context_instance=RequestContext(request))
 
 
 def test_users(request):

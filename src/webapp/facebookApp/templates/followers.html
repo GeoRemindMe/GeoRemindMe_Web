@@ -6,22 +6,32 @@
 
 {% block title %}Followers{% endblock %}
 {% block body %}
-    <h1>Te siguen {{followers|length}} personas</h1>
+    <h1>
+        {% ifequal user.username username_page %}
+            Te siguen {{followers|length}} personas
+        {% else %}
+            A {{username_page}} le siguen {{followers|length}} personas
+        {% endifequal %}
+    </h1>
     
     <ul id="user-list">
     {% for f in followers %}
         <li>
             <div class="avatar">
                 <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
-                    <fb:profile-pic uid="{{ f.uid }}" linked="false" /></fb:profile-pic>
+                    <img src="{{f.avatar}}" alt="Avatar">
                 </a>
                 <br>
                 <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
             </div>
-            <div class="user-data">
-                <div id="following_state_{{ f.id }}" class="follow-button">
+            <div id="following_state_{{ f.id }}" class="follow-button">
+                {% ifequal user.username username_page %}
+                    <!-- Depende de si ya lo sigues o-->
                     <span  onclick="javascript:follow('follow',{{f.id}})"><a href="#" class="no-following">Seguir</a></span>
-                </div>
+                {% endifequal %}
+            </div>
+            <div class="user-data">
+                
                 <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
                     {% if f.uid %}
                             <fb:name uid="{{ f.uid }}" linked="false" capitalize="true" /></fb:name>

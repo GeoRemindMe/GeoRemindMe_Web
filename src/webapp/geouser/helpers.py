@@ -111,7 +111,7 @@ class UserHelper(object):
         users = [db.get(index.following) for index in p.fetch_page(page)]  # devuelve una lista anidada con otra
 
         return [p.id, [{'id':u.id, 'username':u.username, 
-                        'avatar':u.profile.avatar }
+                        'avatar':u.profile.avatar, 'profile':u.profile }
                         for sublist in users for u in sublist]]
     
     def _get(self, string=None):
