@@ -274,7 +274,12 @@ body{
     .clear{
         clear:both;
     }
-    
+    #go-back{
+        cursor:pointer;
+        color:blue;
+        text-decoration:underline;
+        float:right;
+    }
     
     
     

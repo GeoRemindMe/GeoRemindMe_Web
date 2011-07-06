@@ -55,6 +55,7 @@
         </div>
         
         <div id="right-col">
+            {% block goBack %}<p id="go-back" onclick="javascript:history.back()">Volver atrás</p>{% endblock %}
             {% block body %}{% endblock %}
         </div>
 
