@@ -143,13 +143,13 @@ class FacebookClient(object):
             return False;
         user = FacebookUser.objects.get_by_id(facebookInfo['id'])
         if user is not None:#el usuario ya existe, iniciamos sesion
-            user = user.user
-            self.authorize(user)
+            self.user = user.user
+            self.authorize(self.user)
         else:#no existe, creamos un nuevo usuario
             user = User.objects.get_by_email(facebookInfo['email'])
             if user is None:
-                user = User.register(email=facebookInfo['email'], password=password if password is not None else make_random_string(length=6))
-            self.authorize(user)
+                self.user = User.register(email=facebookInfo['email'], password=password if password is not None else make_random_string(length=6))
+            self.authorize(self.user)
         return user
     
     def token_is_valid(self):
@@ -523,3 +523,28 @@ def get_app_access_token():
         raise GraphAPIError(content["error_code"],content["error_msg"])
     result = content.split("=")[1]
     return result
+
+def add_test_users():
+    access_token = get_app_access_token()
+    request = httplib2.Http()
+    args = {
+            'permissions': settings.OAUTH['facebook']['scope'],
+            'access_token': access_token,
+            }
+    
+    response, content = request.request("https://graph.facebook.com/%s/accounts/test-users?installed=true&method=post&" % settings.OAUTH['facebook']['app_key'] +
+                                        urllib.urlencode(args),
+                                        )
+    
+    if response['status'] != 200:
+        raise GraphAPIError(response, content)
+    return content
+
+def get_test_users():
+    access_token = get_app_access_token()
+    request = httplib2.Http()
+    response, content = request.request("https://graph.facebook.com/%s/accounts/test-users?access_token=%s" % (settings.OAUTH['facebook']['app_key'], access_token))
+    
+    if response['status'] != 200:
+        raise GraphAPIError(response, content)
+    return content

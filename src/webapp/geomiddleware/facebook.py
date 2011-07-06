@@ -3,6 +3,7 @@
 from django.conf import settings
 import base64
 
+
 class FacebookMiddleware(object):
     def process_request(self, request):
         from geoauth.clients.facebook import FacebookClient, get_user_from_cookie
@@ -16,12 +17,14 @@ class FacebookMiddleware(object):
                                         'access_token': data['oauth_token'],
                                         'client': FacebookClient(data['oauth_token'])
                                         }
+                import facebookApp.watchers
                 request.csrf_processing_done = True
         else:
             cookie = get_user_from_cookie(request.COOKIES)
             if cookie is not None:
                 request.facebook = cookie
                 request.facebook['client'] = FacebookClient(cookie["access_token"])
+                import facebookApp.watchers
                 request.csrf_processing_done = True
             else:  # no es un usuario de facebook, desconectar señales
                 from facebookApp.watchers import disconnect_all

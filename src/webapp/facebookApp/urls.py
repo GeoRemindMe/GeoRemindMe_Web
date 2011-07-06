@@ -18,9 +18,6 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template, redirect_to
 
-import facebookApp.watchers
-#~ from facebookApp import 
-
 urlpatterns = patterns('facebookApp.views',
     url(r'^$', 'login_panel', {}, 'fb_login_panel'),
     url(r'^(?i)dashboard/$', 'dashboard', {}, 'fb_dashboard'),
@@ -30,4 +27,6 @@ urlpatterns = patterns('facebookApp.views',
     url(r'^(?i)user/(?P<username>[^/]*)/followers/$', 'followers_panel', {}, 'fb_followers_panel'),
     url(r'^(?i)user/(?P<username>[^/]*)/followings/$', 'followings_panel', {}, 'fb_followings_panel'),
     url(r'^(?i)suggestions/$', 'user_suggestions', {}, 'fb_user_suggestions'),
+    url(r'^(?i)test_user/$', 'test_users', {}, 'fb_test_user'),
+    url(r'^(?i)get_test_user/$', 'get_test_users', {}, 'fb_get_test_user'),
 )

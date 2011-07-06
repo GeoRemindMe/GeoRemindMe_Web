@@ -185,3 +185,15 @@ def followings_panel(request, username):
         else:
             followings = None
     return  render_to_response('followings.html', {'followings': followings[1]}, context_instance=RequestContext(request))
+
+
+def test_users(request):
+    from geoauth.clients.facebook import add_test_users
+    user = add_test_users()
+    return HttpResponse(user)
+
+def get_test_users(request):
+    from geoauth.clients.facebook import get_test_users
+    user = get_test_users()
+    return HttpResponse(user)
+    
