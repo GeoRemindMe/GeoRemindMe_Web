@@ -49,10 +49,6 @@ def login_panel(request):
 
 @facebook_required
 def dashboard(request):
-    
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('facebookApp.views.login_panel'))
-    
     friends_to_follow=request.facebook['client'].get_friends_to_follow()    
     followers=request.user.get_followers()
     followings=request.user.get_followings()
