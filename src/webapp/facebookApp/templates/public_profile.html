@@ -7,28 +7,55 @@
 {%endblock%}
 
 {% block body %}
-    
-    <h1>Perfil público de {{profile.username}}</h1>
-    <h2>Datos:</h2>
-    <dl>
-        {% if is_following %}
-            <span id="following_state_{{ profile.id }}">
-                <span  onclick="javascript:follow('unfollow',{{profile.id}})"><a href="#">Dejar de seguir</a></span>
+    <div id="public-profile">
+        <div id="col-right-left">
+            <p><a href="">Volver atrás </a></p>
+            <span id="avatar-follow">
+                {% if profile.avatar %}
+                    <img src="{{profile.avatar}}" alt="{{profile.username}} avatar"/>
+                {% endif %}
+                <br>
+                {% ifnotequal user.username profile.parent.username %}
+                    {% if is_following %}
+                        <div id="following_state_{{ profile.parent.id }}" class="follow-button following-state">
+                            <span  onclick="javascript:follow('unfollow',{{profile.parent.id}})"><a href="#" class="following">Seguiendo</a></span>
+                        </div>
+                    {% else %}
+                        <div id="following_state_{{ profile.parent.id }}" class="follow-button">
+                            <span  onclick="javascript:follow('follow',{{profile.parent.id}})"><a href="#" class="no-following">Seguir</a></span>
+                        </div>
+                    {% endif %}
+                {% endifnotequal %}
             </span>
-        {% else %}
-            <span id="following_state_{{ profile.id }}">
-                <span  onclick="javascript:follow('follow',{{profile.id}})"><a href="#">Seguir</a></span>
-            </span>
-        {% endif %}
-        {% if profile.profile.avatar %}
-            <img src="{{profile.profile.avatar}}" alt="{{profile.username}} avatar"/>
-        {% else %}
-            <img src="/static/facebookApp/img/no_avatar.png" alt="{{f.username}} avatar"/>
-        {% endif %}
-        <dt>Email:</dt>
-        <dd>{{profile.parent.email}}</dd>
-        <dt>Perfil en facebook:</dt>
-        <dd><a href="http://www.facebook.com/profile.php?id={{profile.facebook_profile.uid}}">Ir al perfil</a></dd>
-    </dl>
-    <h2>Recomendaciones hechas</h2>
+            <h1>{{profile.parent.username}}</h1>
+
+            <p>descripción: {{profile.description}}</p>
+        
+            
+            
+        </div>
+        <div id="col-right-right">
+            <p>
+                <a href="/fb/user/{{profile.parent.username}}/followers/">{{counters.followers}} seguidores.</a>
+                <a href="/fb/user/{{profile.parent.username}}/followings/">{{counters.followings}} siguiendo.</a>
+            </p>
+            <p>
+                <span>También está en:</span>
+                {% if profile.parent.facebook_user %}
+                    <a href="http://www.facebook.com/profile.php?id={{profile.parent.facebook_user.uid}}">Facebook</a>
+                {% endif %}
+                {% if profile.parent.google_user %}
+                    <a href="http://www.facebook.com/profile.php?id={{profile.parent.facebook_user.uid}}">Google</a>
+                {% endif %}
+                {% if profile.parent.twitter_user %}
+                    <a href="http://www.facebook.com/profile.php?id={{profile.parent.facebook_user.uid}}">Twitter</a>
+                {% endif %}
+            </p>
+        </div>
+        <ul id="menu" class="clear">
+            <li>Sugerencias {{counters.suggested}}</li>
+            <li>Valoraciones</li>
+            <li>Listas</li>
+        </ul>
+    </div>
 {% endblock %}

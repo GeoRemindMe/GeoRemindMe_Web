@@ -78,7 +78,7 @@ body{
     border-left: 1px solid #B3B3B3;
     float: left;
     padding-left: 20px;
-    width: 555px;
+    width: 550px;
     min-height:500px;
     font-size: 1em;
     line-height: 1.5em;
@@ -270,19 +270,9 @@ body{
         text-decoration: none;
         vertical-align: middle;
         white-space: nowrap;    
-        
-        
-/*
-        
-        
-        outline: none;
-        
-        color: black;
-        
-        
-
-        -moz-border-radius: 3px;
-*/
+    }
+    .clear{
+        clear:both;
     }
     
     
@@ -563,6 +553,39 @@ body{
         font-weight: bold;
     }
 
+    /****************************
+     *      
+     *  Public profile
+     * 
+     ***************************/
+    #public-profile h1{
+        margin-top: 2em;
+    }
+    #public-profile #col-right-left{
+        float:left;
+    }
+    #public-profile #col-right-left p{
+        margin:0;
+    }
+    #col-right-left span#avatar-follow{
+        float:left;
+        margin:5px 15px 5px 0;
+        text-align: center;
+    }
+    #col-right-left span img{
+        width:75px;
+    }
+    #public-profile #col-right-right{
+        border-left: 1px dotted black;
+        float: right;
+        margin-top: 40px;
+        padding-left: 10px;
+    }
+    #public-profile #menu{
+        margin:10px 0
+    }
+    
+    
     /****************************
      *      
      *  Suggestions panel
