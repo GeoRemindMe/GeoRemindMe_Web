@@ -30,4 +30,5 @@ urlpatterns = patterns('facebookApp.views',
     url(r'^(?i)user/(?P<username>[^/]*)/followers/$', 'followers_panel'),
     url(r'^(?i)user/(?P<username>[^/]*)/followings/$', 'followings_panel'),
     url(r'^(?i)suggestions/$', 'user_suggestions'),
+    url(r'^(?i)suggestions/add/$', 'add_suggestion'),
 )

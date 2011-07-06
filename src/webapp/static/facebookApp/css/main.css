@@ -249,7 +249,41 @@ body{
         height: 22px;
         margin: 2px 0;
     }
-    
+    #btn-add-suggestion{
+        -moz-border-radius: 3px 3px 3px 3px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
+        background: -webkit-gradient(linear,0% 40%,0% 70%,from(#F9F9F9),to(#E3E3E3));
+        
+        border-top-color: #CCC;
+        border: 1px solid #BBB;
+        border-bottom-color: #A0A0A0;
+        color: #000000;
+        cursor: pointer;
+        display: block;
+        font: 1.2em arial,sans-serif;
+        margin: 10px;
+        outline: medium none;
+        padding: 5px 8px;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        white-space: nowrap;    
+        
+        
+/*
+        
+        
+        outline: none;
+        
+        color: black;
+        
+        
+
+        -moz-border-radius: 3px;
+*/
+    }
     
     
     

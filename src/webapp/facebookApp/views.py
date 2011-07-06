@@ -123,6 +123,14 @@ def user_suggestions(request):
                               })
     return  render_to_response('suggestions.html',{'form': f}, context_instance=RequestContext(request))
 
+@facebook_required    
+def add_suggestion(request):
+    f = RemindForm(initial = { 
+                              # 'location' : [1,2] <<- coordenadas por defecto,
+                              'name': 'Recomiendo...',
+                              'done': False,
+                              })
+    return  render_to_response('add_suggestion.html',{'form': f}, context_instance=RequestContext(request))
 
 @facebook_required
 def profile_settings(request):

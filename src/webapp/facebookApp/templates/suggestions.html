@@ -7,9 +7,20 @@
 {%endblock%}
 
 {% block body %}
-    <h1>Sugerencias</h1>
-    <p>Añade una sugerencia</p>
-    {% include "add_suggestion.html" %}
-    <p>Sugerencias hechas</p>
-    {{form}}
+    <div id="suggestions">
+        <h1>Tus sugerencias</h1>
+        <p>Ver en tu perfil</p>
+        <ul>
+            <li><a href="">Sugerencias</a></li>
+            <li><a href="">Listas</a></li>
+        </ul>
+        <div id="content">
+            <table>
+                <tr>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
 {% endblock %}
