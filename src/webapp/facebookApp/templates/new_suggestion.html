@@ -1,0 +1,12 @@
+{% load i18n %}
+
+
+    
+{% block body %}
+    <form method="post" action=".">
+        {{form.as_p}}
+        <div>
+            <input type="submit" value="{% trans 'Enviar' %}" id="startBtn" title="{% trans 'Please fill up all fields' %}">
+        </div>
+    </form>
+{%endblock%}

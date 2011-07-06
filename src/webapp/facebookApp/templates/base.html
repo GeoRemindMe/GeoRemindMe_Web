@@ -2,6 +2,7 @@
 
 {% url fb_dashboard as dashboard %}
 {% url fb_profile_settings as profile_settings %}
+{% url fb_user_suggestions as user_suggestions %}
 
 
 <!doctype html>
@@ -12,7 +13,6 @@
       {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
     </title>
     <meta name="description" content="Track and share your runs with friends.">
-    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/awesome-buttons.css">
     <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
     
     <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
@@ -38,7 +38,7 @@
                 <ul>
                     <li class="menu-icons fb-icons" id="{% active request dashboard %}"><a id="fb-wall" href="{{dashboard}}" title="Dashboard">Actividad</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="">Notificaciones</a></li>
-                    <li class="menu-icons fb-icons"><a id="fb-wall" href="/fb/suggestions/">Sugerencias</a></li>
+                    <li class="menu-icons fb-icons" id="{% active request user_suggestions %}"><a id="fb-wall" href="/fb/suggestions/">Sugerencias</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="">Sitios</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="">Baúl</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="">Comunidad</a></li>
