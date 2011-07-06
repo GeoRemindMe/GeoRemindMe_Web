@@ -280,8 +280,7 @@ def delete_following(request):
 
 @ajax_request
 def get_contacts_google(request):
-    contacts = geouser.get_contacts_google(request)
-    return HttpResponse(simplejson.dumps(contacts))
+    return geouser.get_perms_google(request)
 
 @ajax_request
 def get_friends_facebook(request):

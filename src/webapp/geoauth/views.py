@@ -86,15 +86,17 @@ def access_token_request(request):
 # CLIENTE, IDENTIFICACION CON OTROS SERVIDORES, ETC.
 #=============================================================================== 
 @login_required
-def client_token_request(request, provider):
+def client_token_request(request, provider, callback_url=None):
     OAUTH = settings.OAUTH
     provider = provider.lower()
     consumer = oauth2.Consumer(OAUTH[provider]['app_key'], OAUTH[provider]['app_secret'])
     client = oauth2.Client(consumer)
+    if callback_url is None:
+        callback_url = OAUTH[provider]['callback_url']
     if provider.lower() == 'google':  # pasamos el scope con los permisos que queremos en google
-        response, content = client.request('%s?scope=https://www.google.com/m8/feeds/' % OAUTH[provider]['request_token_url'], method="POST", callback=OAUTH[provider]['callback_url'])
+        response, content = client.request('%s?scope=https://www.google.com/m8/feeds/' % OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
     else:
-        response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=OAUTH[provider]['callback_url'])
+        response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
     if response['status'] != 200:
         raise Exception("Invalid response from server.")
 
@@ -107,13 +109,13 @@ def client_token_request(request, provider):
                                                     }
                                  }
     url = "%s?oauth_token=%s&oauth_callback=%s" % (OAUTH[provider]['authorization_url'],
-        request.session[provider]['request_token']['oauth_token'], OAUTH[provider]['callback_url'])
+        request.session[provider]['request_token']['oauth_token'], callback_url)
     
     return HttpResponseRedirect(url)
 
 
 @csrf_exempt
-def client_access_request(request, provider):
+def client_access_request(request, provider, next=None):
     provider = provider.lower()
     try:
         if not request.session[provider]['request_token']['oauth_token'] == request.GET.get('oauth_token') \
@@ -160,19 +162,23 @@ def client_access_request(request, provider):
             raise OAUTHException()
     else:
         raise OAUTHException("Invalid server.")
-    return HttpResponseRedirect(reverse('geouser.views.dashboard'))
+    if next is None:
+        next = reverse('geouser.views.dashboard')
+    return HttpResponseRedirect(next)
 
     
 #===============================================================================
 # LOGIN WITH OAUTH
 #===============================================================================
-def authenticate_request(request, provider):
+def authenticate_request(request, provider, callback_url=None):
     #normalmente la diferencia con client_token_request es que peticion se hace a la url /authenticate en vez de /authorize
     OAUTH = settings.OAUTH
     provider = provider.lower()
     consumer = oauth2.Consumer(OAUTH[provider]['app_key'], OAUTH[provider]['app_secret'])
-    client = oauth2.Client(consumer) 
-    response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=OAUTH[provider]['callback_url'])
+    client = oauth2.Client(consumer)
+    if callback_url is None:
+        callback_url = OAUTH[provider]['callback_url']
+    response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
     if response['status'] != 200:
         raise Exception("Invalid response from server.")
     params = parse_qs(content, keep_blank_values=False)
@@ -183,17 +189,19 @@ def authenticate_request(request, provider):
                                                     }
                                  }
     url = "%s?oauth_token=%s&oauth_callback=%s" % (OAUTH[provider]['authenticate_url'],
-        request.session[provider]['request_token']['oauth_token'], OAUTH[provider]['callback_url'])
+        request.session[provider]['request_token']['oauth_token'], callback_url)
 
     return HttpResponseRedirect(url)
 
 
-def facebook_authenticate_request(request,get="redirect"):
+def facebook_authenticate_request(request,get="redirect", callback_url=None):
     OAUTH = settings.OAUTH
+    if callback_url is None:
+        callback_url = OAUTH['facebook']['callback_url']
     url = "%s?client_id=%s&redirect_uri=%s&scope=%s" % (
                                                         OAUTH['facebook']['authorization_url'], 
                                                         OAUTH['facebook']['app_key'], 
-                                                        OAUTH['facebook']['callback_url'],
+                                                        callback_url,
                                                         OAUTH['facebook']['scope']
                                                         )
     
@@ -203,7 +211,7 @@ def facebook_authenticate_request(request,get="redirect"):
         return HttpResponseRedirect(url)
 
 
-def facebook_access_request(request):
+def facebook_access_request(request, next=None):
     code = request.GET.get('code', None)
     if code is not None:
         OAUTH = settings.OAUTH
@@ -230,6 +238,8 @@ def facebook_access_request(request):
             user = client.authenticate()
             messages.success(request, _('Logged from Facebook'))
             init_user_session(request, user)
-    return HttpResponseRedirect('/')
+    if next is None:
+        next = reverse('geouser.views.dashboard')
+    return HttpResponseRedirect(next)
     
     

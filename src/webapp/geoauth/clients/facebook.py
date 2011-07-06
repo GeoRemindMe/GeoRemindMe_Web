@@ -58,6 +58,8 @@ class FacebookClient(object):
     user = None
     
     def __init__(self, access_token=None, user=None):
+        if user is None and access_token is None:
+            raise AttributeError
         if user is not None:
             self.user = user
             access_token = OAUTH_Access.get_token_user(provider='facebook', user=user)

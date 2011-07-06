@@ -13,4 +13,8 @@ urlpatterns = patterns('geouser.views',
     (r'^(?i)confirm/(?P<user>[^/]*)/(?P<code>[^/]*)/$', 'confirm'),
     (r'^(?i)remind/$', 'remind_user'),
     (r'^(?i)remind/(?P<user>[^/]*)/(?P<code>[^/]*)/$', 'remind_user_code'),
+    (r'^(?i)ext/google/perms/$', 'get_perms_google'),
+    (r'^(?i)ext/google/contacts/$', 'get_contacts_google'),
+    (r'^(?i)ext/twitter/perms/$', 'get_perms_twitter'),
+    (r'^(?i)ext/twitter/contacts/$', 'get_friends_twitter'),
 )

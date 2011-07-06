@@ -11,6 +11,9 @@ class GoogleClient(Client):
     _client = None
     
     def __init__(self, token=None, user=None):
+        if user is None and token is not None:
+            raise AttributeError
+        
         from libs.gdata.contacts.client import ContactsClient
         from libs.gdata.gauth import OAuthHmacToken, ACCESS_TOKEN
         if user is not None:
@@ -23,8 +26,6 @@ class GoogleClient(Client):
         consumer = Consumer(key=settings.OAUTH['google']['app_key'], secret=settings.OAUTH['google']['app_secret'])
         super(self.__class__, self).__init__(consumer, token=token)
         
-        from libs.gdata.contacts.client import ContactsClient
-        from libs.gdata.gauth import OAuthHmacToken, ACCESS_TOKEN
         self._client = ContactsClient(source=self._source)
         self._client.auth_token = OAuthHmacToken(settings.OAUTH['google']['app_key'],
                                            settings.OAUTH['google']['app_secret'],

@@ -377,15 +377,34 @@ def del_following(request, userid=None, username=None):
     return request.session['user'].del_following(followid=userid, followname=username)
 
 @login_required
+def get_perms_google(request):
+    from geoauth.views import client_token_request
+    return client_token_request(request, 'google', callback_url=request.build_absolute_uri(reverse('geouser.views.get_contacts_google') ))
+
+@login_required
 def get_contacts_google(request):
     """**Descripción**: Obtiene una lista con los contactos en gmail que
     el usuario puede seguir
     
     """
-    from geoauth.clients.google import *
-    c = GoogleClient(user=request.user)
+    from geoauth.clients.google import GoogleClient
+    try:
+        c = GoogleClient(user=request.user)
+        contacts = c.get_contacts_to_follow()
+    except:
+        return HttpResponseRedirect(reverse('geouser.views.get_perms_google'))
     
-    return c.get_contacts_to_follow()
+    return render_to_response('webapp/contacts_google.html', {'contacts' : contacts, },
+                              context_instance=RequestContext(request))
+
+@login_required
+def get_perms_google(request):
+    """**Descripción**: Obtiene los permisos para acceder a los contactos de una cuenta de google
+    
+    """
+    from geoauth.views import client_token_request
+    return client_token_request(request, 'google', callback_url=request.build_absolute_uri(reverse('geouser.views.get_contacts_google') ))
+
 
 @login_required
 def get_friends_facebook(request):
@@ -399,15 +418,31 @@ def get_friends_facebook(request):
     return c.get_friends_to_follow()
 
 @login_required
+def get_perms_twitter(request):
+    """**Descripción**: Obtiene los permisos para acceder a una cuenta de twitter
+    
+    """
+    from geoauth.views import client_token_request
+    return client_token_request(request, 'twitter', callback_url=request.build_absolute_uri(reverse('geouser.views.get_friends_twitter')))
+
+@login_required
 def get_friends_twitter(request):
     """**Descripción**: Obtiene una lista con los contactos en gmail que
     el usuario puede seguir
     
     """
+    from geoauth.views import client_access_request
+    if 'oauth_token' in request.GET:
+        client_access_request(request, 'twitter')
     from geoauth.clients.twitter import *
-
-    c = TwitterClient(user=request.user)
-    return c.get_friends_to_follow()
+    try:
+        c = TwitterClient(user=request.user)
+        contacts = c.get_friends_to_follow()
+    except:
+        return HttpResponseRedirect(reverse('geouser.views.get_perms_twitter'))
+    
+    return render_to_response('webapp/contacts_twitter.html', {'contacts' : contacts, },
+                              context_instance=RequestContext(request))
     
 
 

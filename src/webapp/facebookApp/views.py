@@ -134,10 +134,8 @@ def profile_settings(request):
                                                                                   'show_public_profile': request.user.settings.show_public_profile,
                                                                                   })
         if f.is_valid():
-            user = f.save(request.user)
-            if user:
-                request.user = user
-                return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+            pass
+            
     else:
         f = UserSettingsForm(prefix='user_set_settings', initial = { 
                                                                   'time_notification_suggestion_follower': request.user.settings.time_notification_suggestion_follower,
