@@ -308,9 +308,13 @@ body{
         margin: 9px 0;
     }
     #SocialUserProfile-form .error-msg{
-        border:1px solid red;
+        border:1px dotted red;
         clear:both;
+/*
         display: none;
+*/
+        background-color: #FCC7C7;
+        width: 250px;
     }
     #SocialUserProfile-form .error-msg ul{
 
@@ -464,13 +468,14 @@ body{
     ul#friends-to-follow li{
         width:50%; /*272px*/
         float:left;
+        margin: 10px 0;
     }
     ul#friends-to-follow li div{
         float:left;
     }
     ul#friends-to-follow div.user-data{
         margin-left: 10px;
-        width:209px;
+        width:190px;
         line-height:2em;
     }
     ul#friends-to-follow div.user-data a{
@@ -505,20 +510,64 @@ body{
     ul#user-list li div{
         float: left;
         margin: 10px 0;
+        width:80px;
     }
+    
     ul#user-list div.user-data{
         margin-left: 10px;
-        width:480px;
+
+        width:auto;
+
         line-height:2em;
     }
     ul#user-list div.user-data a{
-        font-weight:bold;
+ 
+        display: block;
+        float: left;
+        
     }
     ul#user-list div.user-data p{
         margin:0;padding:0;
     }
     ul#user-list li div.follow-button{
         float:right;
+/*
         right: 10px;
+*/
+        margin:20px 10px;
         position: relative;
+        width: auto;
     }
+    ul#user-list li div.avatar img{
+        width: 50px;
+    }
+    div.user-data ul{
+        list-style: none outside none;
+        margin: 0;
+        padding: 0;
+    }
+    ul#user-list div.user-data ul li{
+        display: inline;
+        text-align: center;
+    }
+    ul#user-list div.user-data ul li a{
+        border: 1px dotted black;
+        color: black;
+        margin: 0 5px;
+        padding: 5px;
+        text-decoration: none;
+    }
+    ul#user-list div.user-data ul li a span{
+        display: block;
+        font-size: 1.3em;
+        font-weight: bold;
+    }
+
+    /****************************
+     *      
+     *  Suggestions panel
+     * 
+     ***************************/
+/*
+    #suggestions
+*/

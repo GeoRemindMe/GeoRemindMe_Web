@@ -6,32 +6,36 @@
 
 {% block title %}Followings{% endblock %}
 {% block body %}
-    <h1>Sigues a {{followings|length}} personas</h1>
+    <h1>
+        {% ifequal user.username username_page %}
+            Sigues a {{followings|length}} personas
+        {% else %}
+            {{username_page}} sigue a {{followings|length}} personas
+        {% endifequal %}
+    </h1>
     
     <ul id="user-list">
     {% for f in followings %}
         <li>
             <div class="avatar">
                 <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
-                    <fb:profile-pic uid="{{ f.uid }}" linked="false" /></fb:profile-pic>
+                    <img src="{{f.avatar}}" alt="Avatar">
                 </a>
                 <br>
                 <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
             </div>
-            <div class="user-data">
-                <div id="following_state_{{ f.id }}" class="follow-button">
-                    <span  onclick="javascript:follow('follow',{{f.id}})"><a href="#" class="no-following">Seguir</a></span>
+            {% ifequal user.username username_page %}
+                <div id="following_state_{{ f.id }}" class="follow-button following-state">
+                    <span  onclick="javascript:follow('unfollow',{{f.id}})"><a href="#" class="following">Seguiendo</a></span>
                 </div>
-                <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
-                    {% if f.uid %}
-                            <fb:name uid="{{ f.uid }}" linked="false" capitalize="true" /></fb:name>
-                    {% else %}
-                            Un NO-usuario de facebook
-                    {% endif %}
-                </a>
-                <p>Redes:</p>
-
-                
+            {% endifequal %}
+            <div class="user-data">
+                <ul>
+                    <li><a href="/fb/user/{{f.username}}" title="Sugerencias hechas"><span>{{ f.profile.parent.counters.suggested }}</span>Sugerencias</a></li>
+                    <li><a href="/fb/user/{{f.username}}/followers/" title="Personas que le siguen"><span>{{ f.profile.parent.counters.followers }}</span>Seguidores</a></li>
+                    <li><a href="/fb/user/{{f.username}}" title="Recomendaciones suyas que te han gustado"><span>{{ f.profile.parent.counters.influenced }}</span>Impactos</a></li>
+                    <li><a href="/fb/user/{{f.username}}/followings/" title="Personas a las que sigue"><span>{{ f.profile.parent.counters.followings }}</span>Siguiendo</a></li>
+                </ul>
             </div>
             <hr>
         </li>
