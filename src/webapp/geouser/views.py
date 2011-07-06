@@ -81,6 +81,11 @@ def login_google(request):
     """
     ugoogle = users.get_current_user()
     if ugoogle:
+        if request.user.is_authenticated():
+            guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
+            if not guser:
+                guser = GoogleUser.register(user=request.user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
+            return HttpResponseRedirect(get_next(request))
         guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
         if not guser:#user is not registered, register it
             user = User.objects.get_by_email(ugoogle.email())
