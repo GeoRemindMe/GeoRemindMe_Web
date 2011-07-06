@@ -1,6 +1,9 @@
 {% load tags %}
 
 {% url fb_dashboard as dashboard %}
+{% url fb_profile_settings as profile_settings %}
+{% url fb_user_suggestions as user_suggestions %}
+
 
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
@@ -10,7 +13,6 @@
       {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
     </title>
     <meta name="description" content="Track and share your runs with friends.">
-    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/awesome-buttons.css">
     <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
     
     <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
@@ -27,6 +29,7 @@
             <a id="logo" href="/fb/dashboard/"><img src="/static/facebookApp/img/header_logo.png" alt="GeoRemindMe logo"></a>
         
             {% block mainButton %} 
+                <a href="/fb/suggestions/add/" id="btn-add-suggestion">Añadir sugerencia</a>
             {% endblock %}
             
             <hr>
@@ -34,12 +37,12 @@
             {% block nav %} 
                 <ul>
                     <li class="menu-icons fb-icons" id="{% active request dashboard %}"><a id="fb-wall" href="{{dashboard}}" title="Dashboard">Actividad</a></li>
-                    <li class="menu-icons fb-icons"><a id="fb-wall" href="/fb/suggestions/">Notificaciones</a></li>
-                    <li class="menu-icons fb-icons"><a id="fb-wall" href="/fb/suggestions/">Sugerencias</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="">Notificaciones</a></li>
+                    <li class="menu-icons fb-icons" id="{% active request user_suggestions %}"><a id="fb-wall" href="/fb/suggestions/">Sugerencias</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="">Sitios</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="">Baúl</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="">Comunidad</a></li>
-                    <li class="menu-icons fb-icons"><a id="fb-wall" href="/fb/profile">Cuenta en GeoRemindMe</a></li>
+                    <li class="menu-icons fb-icons" id="{% active request profile_settings %}"><a id="fb-wall" href="/fb/profile">Cuenta en GeoRemindMe</a></li>
                 </ul>
             {% endblock %}
             <hr>

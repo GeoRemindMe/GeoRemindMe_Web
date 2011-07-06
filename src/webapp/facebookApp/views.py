@@ -52,16 +52,15 @@ def dashboard(request):
     
     if not request.user.is_authenticated():
         return HttpResponseRedirect(reverse('facebookApp.views.login_panel'))
-    #~ raise Exception(request.facebook['client'])
-    #~ friends_to_follow=request.facebook['client'].get_friends_to_follow()    
-    #~ followers=request.user.get_followers()
-    #~ followings=request.user.get_followings()
     
-    return  render_to_response('dashboard.html', {}, context_instance=RequestContext(request))
-                                                #~ {'friends_to_follow': friends_to_follow,
-                                                  #~ 'followers': followers,
-                                                  #~ 'followings': followings, 
-                                                  #~ } , RequestContext(request))
+    friends_to_follow=request.facebook['client'].get_friends_to_follow()    
+    followers=request.user.get_followers()
+    followings=request.user.get_followings()
+    
+    return  render_to_response('dashboard.html', {'friends_to_follow': friends_to_follow,
+                                                  'followers': followers,
+                                                  'followings': followings, 
+                                                  } , RequestContext(request))
 
 
 @facebook_required
@@ -123,6 +122,14 @@ def user_suggestions(request):
                               })
     return  render_to_response('suggestions.html',{'form': f}, context_instance=RequestContext(request))
 
+@facebook_required    
+def add_suggestion(request):
+    f = RemindForm(initial = { 
+                              # 'location' : [1,2] <<- coordenadas por defecto,
+                              'name': 'Recomiendo...',
+                              'done': False,
+                              })
+    return  render_to_response('add_suggestion.html',{'form': f}, context_instance=RequestContext(request))
 
 @facebook_required
 def profile_settings(request):

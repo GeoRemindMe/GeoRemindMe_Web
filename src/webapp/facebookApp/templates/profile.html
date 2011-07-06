@@ -22,13 +22,13 @@
             </div>
             <dl>
                 <dt>Nombre de usuario:</dt>
-                <dd>{{profile.username}}</dd>
+                <dd>{{user.username}}</dd>
                 
                 <dt>Perfil público:</dt>
-                <dd><a href="/user/{{profile.username}}">http://appspot.georemindme.com/user/{{profile.username}}</a></dd>
+                <dd><a href="/user/{{user.username}}">http://appspot.georemindme.com/user/{{user.username}}</a></dd>
                 
                 <dt>Facebook público:</dt>
-                <dd><a href="/fb/user/{{profile.username}}">http://appspot.georemindme.com/fb/user/{{profile.username}}</a></dd>
+                <dd><a href="/fb/user/{{user.username}}">http://appspot.georemindme.com/fb/user/{{user.username}}</a></dd>
                 
                 <dt>Email:</dt>
                 <dd><a href="mailto:{{user.email}}">{{user.email}}</a></dd>
@@ -49,10 +49,10 @@
                 <dd><a href="">{{counters.suggested}}</a></dd>
                 
                 <dt>Te siguen:</dt>
-                <dd><a href="/fb/user/{{profile.username}}/followers">{{counters.followers}} usuarios</a></dd>
+                <dd><a href="/fb/user/{{user.username}}/followers">{{counters.followers}} usuarios</a></dd>
                 
                 <dt>Sigues a:</dt>
-                <dd><a href="/fb/user/{{profile.username}}/followings">{{counters.followings}} usuarios</a></dd>
+                <dd><a href="/fb/user/{{user.username}}/followings">{{counters.followings}} usuarios</a></dd>
             </dl>
             <p>Cuentas vinculadas:</p>
                 
