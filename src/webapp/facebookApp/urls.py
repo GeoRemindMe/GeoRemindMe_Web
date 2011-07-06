@@ -19,16 +19,15 @@ from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template, redirect_to
 
 import facebookApp.watchers
-#~ from facebookApp import 
 
 urlpatterns = patterns('facebookApp.views',
-    url(r'^$', 'login_panel'),
-    url(r'^(?i)dashboard/$', 'dashboard'),
-    url(r'^(?i)profile/$', 'profile_settings'),
-    url(r'^(?i)profile/edit/$', 'edit_profile'),
-    url(r'^(?i)user/(?P<username>[^/]*)$', 'public_profile'),
-    url(r'^(?i)user/(?P<username>[^/]*)/followers/$', 'followers_panel'),
-    url(r'^(?i)user/(?P<username>[^/]*)/followings/$', 'followings_panel'),
-    url(r'^(?i)suggestions/$', 'user_suggestions'),
-    url(r'^(?i)suggestions/add/$', 'add_suggestion'),
+    url(r'^$', 'login_panel', {}, 'fb_login_panel'),
+    url(r'^(?i)dashboard/$', 'dashboard', {}, 'fb_dashboard'),
+    url(r'^(?i)profile/$', 'profile_settings', {}, 'fb_profile_settings'),
+    url(r'^(?i)profile/edit/$', 'edit_profile', {}, 'fb_edit_profile'),
+    url(r'^(?i)user/(?P<username>[^/]*)$', 'public_profile', {}, 'fb_public_profile'),
+    url(r'^(?i)user/(?P<username>[^/]*)/followers/$', 'followers_panel', {}, 'fb_followers_panel'),
+    url(r'^(?i)user/(?P<username>[^/]*)/followings/$', 'followings_panel', {}, 'fb_followings_panel'),
+    url(r'^(?i)suggestions/$', 'user_suggestions', {}, 'fb_user_suggestions'),
+    url(r'^(?i)suggestions/add/$', 'add_suggestion',{},'fb_add_suggestions'),
 )

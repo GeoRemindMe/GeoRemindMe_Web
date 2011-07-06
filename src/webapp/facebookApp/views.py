@@ -43,7 +43,7 @@ def login_panel(request):
             #Renderizamos de nuevo esta plantilla para que le pida usuario y mail
             return HttpResponseRedirect(reverse('facebookApp.views.login_panel'))
     #Identificarse o registrarse
-    return render_to_response('register.html', {"permissions":settings.OAUTH['facebook']['scope']}, RequestContext(request))
+    return render_to_response('register.html', {"permissions":settings.OAUTH['facebook']['scope']}, context_instance=RequestContext(request))
     
 
 
@@ -57,7 +57,7 @@ def dashboard(request):
     #~ followers=request.user.get_followers()
     #~ followings=request.user.get_followings()
     
-    return  render_to_response('dashboard.html', )
+    return  render_to_response('dashboard.html', {}, context_instance=RequestContext(request))
                                                 #~ {'friends_to_follow': friends_to_follow,
                                                   #~ 'followers': followers,
                                                   #~ 'followings': followings, 
@@ -141,7 +141,7 @@ def profile_settings(request):
                                                'has_twitter': has_twitter,
                                                'has_google': has_google,
                                                'settings': request.user.settings,
-                                                }, RequestContext(request))
+                                                }, context_instance=RequestContext(request))
 @facebook_required
 def edit_profile(request):
     if request.method == 'POST':
@@ -163,7 +163,7 @@ def edit_profile(request):
     return  render_to_response('edit_profile.html',{'profile': request.user.profile,
                                                     'settings': request.user.settings,
                                                     'settings_form': f,
-                                                    }, RequestContext(request))
+                                                    }, context_instance=RequestContext(request))
 
 @facebook_required
 def followers_panel(request, username):
@@ -177,7 +177,7 @@ def followers_panel(request, username):
             followers = request.user.get_followers()
         else:
             followers = None
-    return  render_to_response('followers.html', {'followers': followers}, RequestContext(request))
+    return  render_to_response('followers.html', {'followers': followers}, context_instance=RequestContext(request))
 
 
 @facebook_required
@@ -192,4 +192,4 @@ def followings_panel(request, username):
             followings = request.user.get_followings()
         else:
             followings = None
-    return  render_to_response('followings.html', {'followings': followings[1]}, RequestContext(request))
+    return  render_to_response('followings.html', {'followings': followings[1]}, context_instance=RequestContext(request))
