@@ -130,7 +130,8 @@ class UserProfile(db.Model):
             
     def put(self):
         self._update_gravatar()
-        super(self.__class__, self).put()       
+        super(self.__class__, self).put()   
+        memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self))    
     
 
 class UserSocialLinks(db.Model):
