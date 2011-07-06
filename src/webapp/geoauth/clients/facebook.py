@@ -67,6 +67,9 @@ class FacebookClient(object):
                 raise OAUTHException()
             self.consumer = GraphAPI(access_token=access_token.token_key)
         else:
+            token = OAUTH_Access.get_token(access_token)  # TODO: buscar por proveedor
+            if token is not None:
+                self.user = token.user
             self.consumer = GraphAPI(access_token=access_token)
         self.api_key = settings.OAUTH['facebook']['app_key']
     
@@ -104,9 +107,13 @@ class FacebookClient(object):
         from geouser.models_social import FacebookUser
         registered = []
         for f in friends:
-            user = FacebookUser.objects.get_by_id(f['id'])
-            if user is not None and not self.user.is_following(user.user):
-                registered.append({'id':user.user.id, 'username':user.user.username, 'avatar':user.user.profile.avatar, 'uid':user.uid})
+            user_to_follow = FacebookUser.objects.get_by_id(f['id'])
+            if user_to_follow is not None and not self.user.is_following(user_to_follow.user):
+                registered.append({'id':user_to_follow.user.id,
+                                   'username':user_to_follow.user.username, 
+                                   'avatar':user_to_follow.user.profile.avatar, 
+                                   'uid':user_to_follow.uid
+                                   })
         return registered
         
     def authorize(self, user):
