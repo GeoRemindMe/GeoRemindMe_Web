@@ -18,15 +18,16 @@ from decorators import facebook_required
 
 def login_panel(request):
     if hasattr(request, 'facebook'):
-        if request.user.is_authenticated():  # usuario identificado y con permisos
-            if request.user.username is None or request.user.email is None:
+        user = request.facebook['client'].authenticate()
+        init_user_session(request, user)
+        if user.username is None or user.email is None:
                 if request.method == 'POST':
                     f = SocialUserForm(request.POST, prefix='user_set_username', initial = { 
-                                                                          'email': request.user.email,
-                                                                          'username': request.user.username,
+                                                                          'email': user.email,
+                                                                          'username': user.username,
                                                                           })
                     if f.is_valid():
-                        user = f.save(request.user)
+                        user = f.save(user)
                         if user:
                             request.user = user
                             return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
@@ -36,12 +37,8 @@ def login_panel(request):
                                                                           'username': request.user.username,
                                                                           })
                 return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
-            return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
-        else:  # tenemos permisos pero no sabemos que usuario es, por tanto, autenticarlo e iniciar sesion
-            user = request.facebook['client'].authenticate()
-            init_user_session(request, user)
-            #Renderizamos de nuevo esta plantilla para que le pida usuario y mail
-            return HttpResponseRedirect(reverse('facebookApp.views.login_panel'))
+        return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+        
     #Identificarse o registrarse
     return render_to_response('register.html', {"permissions":settings.OAUTH['facebook']['scope']}, context_instance=RequestContext(request))
     

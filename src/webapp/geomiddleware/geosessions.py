@@ -7,8 +7,7 @@ from geouser.models import AnonymousUser
 
 class geosession(object):
     def process_request(self, request):
-        if hasattr(request, 'facebook') and '/fb/' in request.path:
-            pass
+        
         session_id = request.COOKIES.get(settings.COOKIE_NAME, None)
         """
         #  sesiones hibridas (usuarios en BD y anonimos en cookies
@@ -32,6 +31,7 @@ class geosession(object):
                                              )
         else:
             request.session = SessionStore.load(session_id=session_id)
+        
         
         if 'user' in request.session:
             request.user = request.session['user']
