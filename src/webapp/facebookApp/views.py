@@ -85,7 +85,7 @@ def public_profile(request, username):
             timeline = UserTimeline.objects.get_by_id(profile_user.id, vis='shared')
         elif settings.show_timeline:
             timeline = UserTimeline.objects.get_by_id(profile_user.id)
-    return render_to_response('public_profile.html', {'profile': profile, 
+    return render_to_response('profile.html', {'profile': profile, 
                                                             'counters': counters.get_result(),
                                                             'timeline': timeline, 
                                                             'is_following': is_following,
@@ -94,6 +94,15 @@ def public_profile(request, username):
                                                             'show_followings': settings.show_followings
                                                             }, context_instance=RequestContext(request))
 
+
+@facebook_required
+def edit_profile (request):
+    """**Descripción**: Edición del perfil publico que veran los demas usuarios
+    
+    :param username: nombre de usuario
+    :type username: ni idea
+    """
+    return render_to_response('edit_profile.html', {}, context_instance=RequestContext(request))
 
 @facebook_required    
 def user_suggestions(request):
@@ -117,12 +126,13 @@ def user_suggestions(request):
 
 @facebook_required    
 def add_suggestion(request):
-    f = RemindForm(initial = { 
-                              # 'location' : [1,2] <<- coordenadas por defecto,
-                              'name': 'Recomiendo...',
-                              'done': False,
-                              })
-    return  render_to_response('add_suggestion.html',{'form': f}, context_instance=RequestContext(request))
+    f = SuggestionForm();
+    #~ initial = { 
+                              #~ # 'location' : [1,2] <<- coordenadas por defecto,
+                              #~ 'name': 'Recomiendo...',
+                              #~ 'done': False,
+                              #~ })
+    return  render_to_response('add_suggestion.html',{'f': f}, context_instance=RequestContext(request))
 
 @facebook_required
 def profile_settings(request):
@@ -135,7 +145,7 @@ def profile_settings(request):
                                                'settings': request.user.settings,
                                                 }, context_instance=RequestContext(request))
 @facebook_required
-def edit_profile(request):
+def edit_settings(request):
     if request.method == 'POST':
         
             

@@ -596,9 +596,48 @@ body{
     
     /****************************
      *      
-     *  Suggestions panel
+     *  Add suggestion panel
      * 
      ***************************/
-/*
-    #suggestions
-*/
+
+    #add-suggestion form{
+        background-color: #EFF3FF;
+        border: 1px dotted black;
+        padding: 1.5em;
+    }
+    #add-suggestion form fieldset{
+        border: 0 none;
+        font-size: 1.1em;
+    }
+    #add-suggestion form fieldset legend{
+        display: inline;
+        font-size: 2em;
+        font-weight: bold;
+        line-height: 2.5em;
+    }
+    #add-suggestion form fieldset input[type="text"]{
+        width:250px;
+    }
+    #add-suggestion form fieldset label{
+        display: inline-block;
+        font-weight: bold;
+        width: 155px;
+    }
+    #add-suggestion #id_description{
+        clear: both;
+        display: block;
+        height: 4em;
+        width: 100%;
+    }
+    #add-suggestion #show-details{
+        color:blue;
+        text-decoration:underline;
+        cursor:pointer;
+    }
+    #add-suggestion #more-details{
+        display:none;
+    }
+    #add-suggestion #more-details.visible{
+        display:block;
+    }
+    

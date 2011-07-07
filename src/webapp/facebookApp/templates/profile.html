@@ -1,114 +1,62 @@
 {% extends "base.html" %}
 
-{% block title %}Datos personales{% endblock %}
-{% block goBack %}{%endblock%}
-{% block body %}
-    <div id="profile">
-        
-        
-        <h1>Cuenta en GeoRemindMe</h1>
-        <a href="edit/" class="help-icon">Editar</a> 
-        <div class="section">
-            <div class="header">
-                <h2>Perfil público</h2>
-                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></p>
-                
-            </div>
-            <div id="avatar">
-                <a href="">
-                    <img src="{{profile.avatar}}" alt="{{profile.username}} avatar">
-                    <br>
-                    Cambiar foto
-                </a>
-            </div>
-            <dl>
-                <dt>Nombre de usuario:</dt>
-                <dd>{{user.username}}</dd>
-                
-                <dt>Perfil GeoRemindMe:</dt>
-                <dd><a href="/fb{{user.get_absolute_url}}">ver perfil público</a></dd>
-                
-                <dt>Perfil Facebook:</dt>
-                <dd><a href="http://www.facebook.com/profile.php?id={{user.facebook_user.uid}}">ver perfil público</a></dd>
-                
-                <dt>Email:</dt>
-                <dd><a href="mailto:{{user.email}}">{{user.email}}</a></dd>
-                
-                <dt>Descripción:</dt>
-                <dd>
-                    {% if profile.description %}
-                        {{profile.description}}
-                    {% else %}
-                        Sin descripción
-                    {% endif %}
-                </dd>
-                
-                <dt>Idioma:</dt>
-                <dd>{{settings.language}}</dd>
-                
-                <dt>Sugerencias hechas:</dt>
-                <dd><a href="">{{counters.suggested}}</a></dd>
-                
-                <dt>Te siguen:</dt>
-                <dd><a href="/fb/user/{{user.username}}/followers">{{counters.followers}} usuarios</a></dd>
-                
-                <dt>Sigues a:</dt>
-                <dd><a href="/fb/user/{{user.username}}/followings">{{counters.followings}} usuarios</a></dd>
-            </dl>
-            <p>Cuentas vinculadas:</p>
-                
-            <ul>
-                <li class="li-icon">
-                    <span id="twitter-icon">Twitter:</span> 
-                    {% if not has_twitter %}
-                        <a href="/login/twitter">vincular</a> 
-                    {% else %}
-                        <a href="/login/twitter">desvincular</a> | <a href="">Permisos</a>
-                    {% endif %}
-                </li>
-                <li class="li-icon">
-                    <span id="google-icon">Google:</span> 
-                    {% if not has_google %}
-                        <a href="/login/google">vincular</a>
-                    {% else %}
-                        <a href="/login/google">desvincular</a> | <a href="">Permisos</a>
-                    {% endif %}
-                </li>
-            </ul>
-        </div>
+{% block title %}Perfil público de {{profile.username}}{% endblock %}
+{% block extra_js %}
+    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script src="/static/facebookApp/js/social.js"></script>
+{%endblock%}
 
-        <div class="section">
-            <div class="header">
-                <h2>Configuración</h2>
-                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
-            </div>
-            <h3>Privacidad</h3>
-            <p><strong>Visibilidad del perfil</strong>: Público</p>
-            <p>Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.</p>
-            
-            <h3>Notificaciones</h3>
-            <p>Te llegarán notificaciones por email cuando:</p>
-            <dl id="mail-notifications">
-                <dt>Otro usuario empieza a seguir tus sugerencias</dt>
-                <dd>Instantáneamente</dd>
-                
-                <dt>Recibes un comentario en una sugerencia</dt>
-                <dd>Instantáneamente</dd>
-                
-                <dt>Persona guarda una sugerencia tuya</dt>
-                <dd>Instantáneamente</dd>
-                
-                <dt>Otro usuario te envíe una sugerencia</dt>
-                <dd>Instantáneamente</dd>
-            </dl>
-            </div>
-        </div>
+{% block body %}
+    <div id="public-profile">
+        <div id="col-right-left">
+            <span id="avatar-follow">
+                {% if profile.avatar %}
+                    <img src="{{profile.avatar}}" alt="{{profile.username}} avatar"/>
+                {% endif %}
+                <br>
+                {% ifnotequal user.username profile.parent.username %}
+                    {% if is_following %}
+                        <div id="following_state_{{ profile.parent.id }}" class="follow-button following-state">
+                            <span  onclick="javascript:follow('unfollow',{{profile.parent.id}})"><a href="#" class="following">Seguiendo</a></span>
+                        </div>
+                    {% else %}
+                        <div id="following_state_{{ profile.parent.id }}" class="follow-button">
+                            <span  onclick="javascript:follow('follow',{{profile.parent.id}})"><a href="#" class="no-following">Seguir</a></span>
+                        </div>
+                    {% endif %}
+                {% endifnotequal %}
+            </span>
+            <h1>{{profile.parent.username}}</h1>
+            {% ifequal user.username profile.parent.username %}
+                <a href="edit/" class="help-icon">Editar</a> 
+            {% endifequal %}
+            <p>descripción: {{profile.description}}</p>
         
-        <hr>
-        <div id="desinstall">
-            <a href="">Desinstalar la aplicación</a> | 
-            <a href="">Cancelar mi cuenta en GeoRemindMe</a>
+            
+            
         </div>
+        <div id="col-right-right">
+            <p>
+                <a href="/fb/user/{{profile.parent.username}}/followers/">{{counters.followers}} seguidores.</a>
+                <a href="/fb/user/{{profile.parent.username}}/followings/">{{counters.followings}} siguiendo.</a>
+            </p>
+            <p>
+                <span>También está en:</span>
+                {% if profile.parent.facebook_user %}
+                    <a href="http://www.facebook.com/profile.php?id={{profile.parent.facebook_user.uid}}">Facebook</a>
+                {% endif %}
+                {% if profile.parent.google_user %}
+                    <a href="http://www.facebook.com/profile.php?id={{profile.parent.facebook_user.uid}}">Google</a>
+                {% endif %}
+                {% if profile.parent.twitter_user %}
+                    <a href="http://www.facebook.com/profile.php?id={{profile.parent.facebook_user.uid}}">Twitter</a>
+                {% endif %}
+            </p>
+        </div>
+        <ul id="menu" class="clear">
+            <li>Sugerencias {{counters.suggested}}</li>
+            <li>Valoraciones</li>
+            <li>Listas</li>
+        </ul>
     </div>
-    
 {% endblock %}
