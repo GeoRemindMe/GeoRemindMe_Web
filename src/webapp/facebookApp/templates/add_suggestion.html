@@ -27,8 +27,10 @@ $(document).ready(function() {
             url: "/ajax/add/suggestion/",
             data: jQuery.param(params),
             complete: function(msg){
-                if (msg.status !=200)
-                    console.log("Error "+msg.status)
+                if (msg.status !=200){
+                    $('#error-msg').text("Error "+msg.status)
+                    $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+                }
                 $('#submit-button').val("Enviar")
                 $('#submit-button').removeClass("waiting")
             }
@@ -95,6 +97,7 @@ $(document).ready(function() {
             <div>
                 <input type="submit" id="submit-button" value="{% trans 'Añadir' %}" title="{% trans 'Please fill up all fields' %}">
             </div>
+            <div id="error-msg"></div>
         </form>
     </div>
 {%endblock%}

@@ -646,3 +646,10 @@ body{
         display:block;
     }
     
+    #add-suggestion #error-msg{
+        clear: both;
+        color: red;
+        display: block;
+        display: none;
+        text-align: center;
+    }
