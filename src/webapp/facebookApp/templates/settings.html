@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Datos personales{% endblock %}
+{% block goBack %}{%endblock%}
+{% block body %}
+    <div id="profile">
+        
+        <h1>Configuración de la cuenta</h1>
+        <a href="edit/" class="help-icon">Editar</a> 
+        
+        <div class="section">
+            <div class="header">
+                <h2>Notificaciones</h2>
+                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+            </div>
+            
+            
+            
+            
+            <p>Te llegarán notificaciones por email cuando:</p>
+            <dl id="mail-notifications">
+                <dt>Otro usuario empieza a seguir tus sugerencias</dt>
+                <dd>{{user.settings.time_notification_account}}</dd>
+                
+                <dt>Recibes un comentario en una sugerencia</dt>
+                <dd>{{user.settings.time_notification_suggestion_comment}}</dd>
+                
+                <dt>Persona guarda una sugerencia tuya</dt>
+                <dd>{{user.settings.time_notification_suggestion_follower}}</dd>
+            </dl>
+        </div>
+        <div class="section">
+            <div class="header">
+                <h2>Privacidad</h2>
+                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+            </div>
+        
+            
+            <p>
+                <strong>Visibilidad del perfil</strong>: 
+                {% if settings.show_public_profile %} 
+                    Público
+                {% else %}
+                    Privado
+                {% endif %}
+            </p>
+            <p>Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.</p>
+        </div>
+        <hr>
+        <div id="desinstall">
+            <a href="">Desinstalar la aplicación</a> | 
+            <a href="">Cancelar mi cuenta en GeoRemindMe</a>
+        </div>
+    </div>
+    
+{% endblock %}

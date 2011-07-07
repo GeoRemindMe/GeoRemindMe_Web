@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Datos personales{% endblock %}
+{% block goBack %}{%endblock%}
+{% block body %}
+    <div id="profile">
+        
+        <h1>Configuración de la cuenta</h1>
+        
+        {% include "forms/SettingsForm.html" %}
+        
+    
+{% endblock %}

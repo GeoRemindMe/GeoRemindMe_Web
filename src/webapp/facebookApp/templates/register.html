@@ -5,7 +5,11 @@
     {% include "register_menu.html" %}
 {% endblock %}
 
+{% block mainButton %} 
+                <a href="#" onclick="ConnectLogin.login(null, 'email,offline_access,user_likes,user_interests,user_location, read_friendlists,user_checkins,user_hometown,publish_stream,publish_checkins'); return false;"  id="btn-add-suggestion">Instalar App</a>
+{% endblock %}
 
+{% block goBack %}{%endblock%}
 {% block body %}
     <div id="register-panel">
         <h1>Aplicación GeoRemindMe</h1>

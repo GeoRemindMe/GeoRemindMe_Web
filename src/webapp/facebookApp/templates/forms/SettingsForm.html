@@ -1,0 +1,68 @@
+{% load i18n %}
+<!-- It form is for the class SocialUserForm at geouser/forms -->
+
+
+<form method="post"  action=".">
+    {% csrf_token %}
+    
+    
+    <div class="section">
+            <div class="header">
+                <h2>Notificaciones</h2>
+                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+            </div>
+            
+            <p>Te llegarán notificaciones por email cuando:</p>
+            <dl id="mail-notifications">
+                <dt>Otro usuario empieza a seguir tus sugerencias</dt>
+                <dd>{{settings_form.time_notification_account}}</dd>
+                {% if settings_form.time_notification_account.errors %}
+                     <span class="error-msg" id="email-error">
+                        {{settings_form.time_notification_account.errors}}
+                    </span>
+                {% endif %}
+                
+                <dt>Recibes un comentario en una sugerencia</dt>
+                <dd>{{settings_form.time_notification_suggestion_comment}}</dd>
+                {% if settings_form.time_notification_suggestion_comment.errors %}
+                     <span class="error-msg" id="email-error">
+                        {{settings_form.time_notification_suggestion_comment.errors}}
+                    </span>
+                {% endif %}
+                
+                <dt>Persona guarda una sugerencia tuya</dt>
+                <dd>{{settings_form.time_notification_suggestion_follower}}</dd>
+                {% if settings_form.time_notification_suggestion_follower.errors %}
+                     <span class="error-msg" id="email-error">
+                        {{settings_form.time_notification_suggestion_follower.errors}}
+                    </span>
+                {% endif %}
+                
+<!--
+                <dt>Otro usuario te envíe una sugerencia</dt>
+                <dd>{{settings_form.show_public_profile}}</dd>
+-->
+            </dl>
+        </div>
+        
+        <div class="section">
+            <div class="header">
+                <h2>Privacidad</h2>
+                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+            </div>
+            
+            <p><strong>Visibilidad del perfil</strong>: {{settings_form.show_public_profile}}</p>
+            {% if settings_form.show_public_profile.errors %}
+                 <span class="error-msg" id="email-error">
+                    {{settings_form.show_public_profile.errors}}
+                </span>
+            {% endif %}
+            <p>Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.</p>
+        </div>
+
+    </div>
+    
+    
+    <input type="submit" value="{% trans "Guardar" %}" id="startBtn" title="{% trans 'Por favor rellena toso los campos' %}">
+</form>
+
