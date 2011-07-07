@@ -235,6 +235,14 @@ body{
     .following-state{
         background-position:0 -66px;
     }
+    span.waiting{
+        background: url("/static/facebookApp/img/spinning-icons/wait16trans.gif") no-repeat scroll 5px 9px transparent;
+        color: black;
+        display: block;
+        font-weight: bold;
+        padding: 5px 10px 5px 27px;
+        line-height: 2em;
+    }
     .following-state span a.following{
         color:white;
     }
@@ -285,9 +293,9 @@ body{
     }
     input[type="submit"].waiting{
         background: url("/static/facebookApp/img/spinning-icons/wait16.gif") no-repeat scroll 4px 3px white;
-    border: 2px dotted #CCCCCC;
-    color: black;
-    padding-left: 20px;
+        border: 2px dotted #CCCCCC;
+        color: black;
+        padding-left: 20px;
     }
     
     

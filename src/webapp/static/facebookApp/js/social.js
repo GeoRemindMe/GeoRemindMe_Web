@@ -1,8 +1,7 @@
 var lastUID=null;
-function follow(action,userid,username) {
-    
-    //~ alert($('#followTemplate').length)
-    //TEMPLATES
+
+$(document).ready(function(){
+        //TEMPLATES
     if($('#followTemplate').length==0){
         var temp =  '<script id="followTemplate" type="text/x-jquery-tmpl">\
                         <span  onclick="javascript:follow(\'follow\',${id})"><a href="#" class="no-following">Seguir</a></span>\
@@ -13,33 +12,41 @@ function follow(action,userid,username) {
         $('#templates').append(temp).ready()
         
     }
-    
-    
+});
+
+function follow(action,userid,username) {      
     var data = { "userid" : userid};
-    lastUID=userid;
+    
     if(username!=null)
         data["username"]=username;
     if(action=='follow')
         var url = 'http://localhost:8080/ajax/add/following/'
     else
         var url = 'http://localhost:8080/ajax/delete/following/'
+    
+    $("#following_state_"+userid).children().text("Enviado...")
+    $('#following_state_'+userid).removeClass('following-state');
+    $("#following_state_"+userid).children().addClass("waiting")
     $.ajax({
         type: 'POST',
         url: url,
+        context: data,
         data: data,
-        success: function(data,userid){
+        success: function(data){
             //console.log(data)
-            $("#following_state_"+lastUID).children().remove()
+            $("#following_state_"+userid).children().remove()
+            $("#following_state_"+userid).children().removeClass("waiting")
             if(action=='follow' && data){
-                $("#unfollowTemplate").tmpl( {id:lastUID} ).appendTo( "#following_state_"+lastUID );
+                $("#unfollowTemplate").tmpl( {id:userid} ).appendTo( "#following_state_"+userid );
             
-                $('#following_state_'+lastUID).addClass('following-state');
+                $('#following_state_'+userid).addClass('following-state');
             }
             else if (action=='unfollow' && data){
-                $("#followTemplate").tmpl( {id:lastUID} ).appendTo( "#following_state_"+lastUID );
+                $("#followTemplate").tmpl( {id:userid} ).appendTo( "#following_state_"+userid );
                 
-                $('#following_state_'+lastUID).removeClass('following-state');
+                $('#following_state_'+userid).removeClass('following-state');
             }
+            
         }
     });
 }
