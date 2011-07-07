@@ -283,7 +283,12 @@ body{
         text-decoration:underline;
         float:right;
     }
-    
+    input[type="submit"].waiting{
+        background: url("/static/facebookApp/img/spinning-icons/wait16.gif") no-repeat scroll 4px 3px white;
+    border: 2px dotted #CCCCCC;
+    color: black;
+    padding-left: 20px;
+    }
     
     
     

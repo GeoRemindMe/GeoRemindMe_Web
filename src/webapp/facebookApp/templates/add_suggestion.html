@@ -5,6 +5,8 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $("form").submit(function() {
+        $('#submit-button').val("Enviado...")
+        $('#submit-button').addClass("waiting")
         var params = { 
             name: $('#id_name').val(), 
             place_id: $('#id_place_id').val(), 
@@ -24,12 +26,14 @@ $(document).ready(function() {
             type: "POST",
             url: "/ajax/add/suggestion/",
             data: jQuery.param(params),
-            //context: document.body,
-            success: function(msg){
-                console.log(msg)
-                return false;
+            complete: function(msg){
+                if (msg.status !=200)
+                    console.log("Error "+msg.status)
+                $('#submit-button').val("Enviar")
+                $('#submit-button').removeClass("waiting")
             }
         });
+         
         return false;
     });
 });
@@ -89,7 +93,7 @@ $(document).ready(function() {
             
             
             <div>
-                <input type="submit" value="{% trans 'Añadir' %}" title="{% trans 'Please fill up all fields' %}">
+                <input type="submit" id="submit-button" value="{% trans 'Añadir' %}" title="{% trans 'Please fill up all fields' %}">
             </div>
         </form>
     </div>
