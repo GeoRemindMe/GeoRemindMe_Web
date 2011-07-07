@@ -3,7 +3,36 @@
 
 {% block extra_js %}
 <script type="text/javascript">
-
+$(document).ready(function() {
+    $("form").submit(function() {
+        var params = { 
+            name: $('#id_name').val(), 
+            place_id: $('#id_place_id').val(), 
+            description: $('#id_description').val(),
+            starts_month: $('#id_starts_month').val(),
+            starts_day: $('#id_starts_day').val(),
+            starts_year: $('#id_starts_year').val(),
+            ends_month: $('#id_ends_month').val(),
+            ends_day: $('#id_ends_day').val(),
+            ends_year: $('#id_ends_year').val(),
+            visibility: $('#id_visibility').val()
+        };
+        
+        
+        
+        $.ajax({
+            type: "POST",
+            url: "/ajax/add/suggestion/",
+            data: jQuery.param(params),
+            //context: document.body,
+            success: function(msg){
+                console.log(msg)
+                return false;
+            }
+        });
+        return false;
+    });
+});
 </script>
 
 {%endblock%}
@@ -14,7 +43,7 @@
 {% block body %}
     <div id="add-suggestion">
         <h1>Añadir una sugerencia</h1> 
-        <form method="post" action="." onclick="">
+        <form id="add-suggestion-form" action="javascript:alert('success!');" >
     <!--
             name = forms.CharField(required=True)
             place_id = forms.IntegerField(required=True, initial=-1)
