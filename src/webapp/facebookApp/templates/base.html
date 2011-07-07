@@ -3,6 +3,7 @@
 {% url fb_dashboard as dashboard %}
 {% url fb_profile_settings as profile_settings %}
 {% url fb_user_suggestions as user_suggestions %}
+{% url fb_public_profile as public_profile %}
 
 
 <!doctype html>
@@ -37,20 +38,21 @@
             {% block nav %} 
                 <ul>
                     <li class="menu-icons fb-icons" id="{% active request dashboard %}"><a id="fb-wall" href="{{dashboard}}" title="Dashboard">Actividad</a></li>
-                    <li class="menu-icons fb-icons"><a id="fb-wall" href="">Notificaciones</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="#">Baúl</a></li>
                     <li class="menu-icons fb-icons" id="{% active request user_suggestions %}"><a id="fb-wall" href="/fb/suggestions/">Tus sugerencias</a></li>
-                    <li class="menu-icons fb-icons"><a id="fb-wall" href="">Sitios</a></li>
-                    <li class="menu-icons fb-icons"><a id="fb-wall" href="">Baúl</a></li>
-                    <li class="menu-icons fb-icons"><a id="fb-wall" href="#" onclick="parent.location.href='http://www.facebook.com/GeoRemindMe'">Comunidad</a></li>
-                    <li class="menu-icons fb-icons" id="{% active request profile_settings %}"><a id="fb-wall" href="/fb/profile">Cuenta en GeoRemindMe</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="#">Notificaciones</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="#">Sitios</a></li>
+                    <li class="menu-icons fb-icons" id="{% ifequal user.username profile.parent.username %}{% active request public_profile %}{% endifequal %}"><a id="fb-wall" href="/fb{{user.get_absolute_url}}">Mi perfil</a></li>
+                    <li class="menu-icons fb-icons" id="{% active request profile_settings %}"><a id="fb-wall" href="/fb/profile">Configuración</a></li>
                 </ul>
             {% endblock %}
             <hr>
             <p><strong>Facebook</strong>:</p>
             <ul>
-                <li class="menu-icons fb-icons"><a id="fb-wall" href="">Muro</a></li>
-                <li class="menu-icons fb-icons"><a id="fb-last-news" href="">Últimas noticias</a></li>
-                <li class="menu-icons fb-icons"><a id="fb-events" href="">Eventos</a></li>
+                <li class="menu-icons fb-icons"><a id="fb-wall" href="http://www.facebook.com/profile.php?id=100002576624564&sk=wall" onclick="parent.location.href='http://www.facebook.com/profile.php?id={{user.facebook_user.uid}}&sk=wall'">Muro</a></li>
+                <li class="menu-icons fb-icons"><a id="fb-last-news" href="http://www.facebook.com/?sk=nf" onclick="parent.location.href='http://www.facebook.com/?sk=nf'">Últimas noticias</a></li>
+                <li class="menu-icons fb-icons"><a id="fb-events" href="http://www.facebook.com/?sk=events&ap=1" onclick="parent.location.href='http://www.facebook.com/?sk=events&ap=1'">Eventos</a></li>
+                <li class="menu-icons fb-icons"><a id="fb-grm" href="http://www.facebook.com/GeoRemindMe" onclick="parent.location.href='http://www.facebook.com/GeoRemindMe'">Página de fans</a></li>
             </ul>
         </div>
         

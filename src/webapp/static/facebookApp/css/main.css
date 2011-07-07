@@ -47,14 +47,17 @@ body{
         background-color:#eff2f7
     }
     
+    #fb-wall {
+        background-position: 5px 0;
+    }
     #fb-last-news {
         background-position: 5px -22px;
     }
     #fb-events {
         background-position: 5px -42px;
     }
-    #fb-wall {
-        background-position: 5px 0;
+    #fb-grm {
+        background-position: 5px -62px;
     }
     
     .menu-icons a{
