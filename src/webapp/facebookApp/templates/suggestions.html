@@ -10,15 +10,33 @@
 {% block body %}
     <div id="suggestions">
         <h1>Tus sugerencias</h1>
-        <p>Ver en tu perfil</p>
-        <ul>
-            <li><a href="">Sugerencias</a></li>
-            <li><a href="">Listas</a></li>
+        <ul id="tabMenu">
+            <li class="active">Sugerencias</li>
+            <li>Listas</li>
         </ul>
         <div id="content">
-            <div>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th id="selectBox"></th>
+                        <th id="suggestionName">Sugiero que...</th>
+                        <th id="suggestionInLists">Lista(s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>Ir al mirador de San Nicolás por la tarde</td>
+                        <td>Turismo</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tomar una tapa "Bomba" en el Villa Magna</td>
+                        <td>Trabajo</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
         </div>
     </div>
-    
 {% endblock %}

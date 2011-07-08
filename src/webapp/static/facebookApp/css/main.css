@@ -325,9 +325,12 @@ body{
         display: none;
 */
         background-color: #FCC7C7;
+/*
         width: 250px;
+*/
     }
     #SocialUserProfile-form .error-msg ul{
+        margin:0.5em;
 
     }
     
@@ -661,3 +664,67 @@ body{
         display: none;
         text-align: center;
     }
+
+    /****************************
+     *      
+     *  Add suggestion panel
+     * 
+     ***************************/
+    #suggestions{
+        font-size:1.1em;
+    }
+    
+    ul#tabMenu{
+        margin:0;
+        padding:0;
+        
+    }
+        ul#tabMenu li{
+            border-left: 1px dotted #aaa;
+            border-right: 1px dotted #aaa;
+            border-top: 1px dotted #aaa;
+            display: inline-block;
+            padding: 0.5em 1em 0.2em;
+            font-weight:bold;
+            background-color: #ccc;
+            cursor:pointer;
+        }
+        ul#tabMenu li:hover{
+            text-decoration:underline;
+            
+        }
+        ul#tabMenu li.active{
+            background-color: white;
+        }
+        
+    div#content{
+        border-top:1px dotted #aaa;
+    }
+    
+    div#content table{
+        width:100%;
+        padding: 0;
+    }
+        div#content table thead tr th {
+            background-color: #EEEEEE;
+            border-bottom: 1px solid #CCCCCC;
+        }
+        
+        
+        div#content tr{
+            line-height:2em;
+            cursor:pointer;
+            border-bottom: 1px solid #CCCCCC;
+        }
+            div#content tr td{
+                border-bottom: 1px solid #CCCCCC;
+            }
+        #selectBox{
+            width:5%;
+        }
+        #suggestionName{
+            width:70%;
+        }
+        #suggestionInLists{
+            width:25%;
+        }

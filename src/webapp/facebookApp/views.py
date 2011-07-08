@@ -36,6 +36,7 @@ def login_panel(request):
                                                                           'email': request.user.email,
                                                                           'username': request.user.username,
                                                                           })
+                
                 return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
         return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
         
