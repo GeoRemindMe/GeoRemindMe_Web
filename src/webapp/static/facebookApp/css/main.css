@@ -297,7 +297,13 @@ body{
         color: black;
         padding-left: 20px;
     }
-    
+    .show-more{
+        text-decoration:underline;
+        
+    }
+    #show-more-text{
+        display:none;
+    }
     
     
     /****************************
@@ -673,6 +679,8 @@ body{
     #suggestions{
         font-size:1.1em;
     }
+    .suggestion{
+    }
     
     ul#tabMenu{
         margin:0;
@@ -701,30 +709,27 @@ body{
         border-top:1px dotted #aaa;
     }
     
-    div#content table{
-        width:100%;
-        padding: 0;
-    }
-        div#content table thead tr th {
+        div#content #header {
             background-color: #EEEEEE;
             border-bottom: 1px solid #CCCCCC;
+            cursor:default;
+            font-weight:bold;
         }
-        
-        
-        div#content tr{
+        div#content div{
             line-height:2em;
             cursor:pointer;
             border-bottom: 1px solid #CCCCCC;
         }
-            div#content tr td{
-                border-bottom: 1px solid #CCCCCC;
-            }
-        #selectBox{
+        div#content div span{
+            display:inline-block;
+        }
+            
+        .selectBox{
             width:5%;
         }
-        #suggestionName{
-            width:70%;
+        .suggestionName{
+            width:68%;
         }
-        #suggestionInLists{
+        .suggestionInLists{
             width:25%;
         }

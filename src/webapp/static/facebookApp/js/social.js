@@ -1,7 +1,7 @@
 var lastUID=null;
 
 $(document).ready(function(){
-        //TEMPLATES
+    //TEMPLATES
     if($('#followTemplate').length==0){
         var temp =  '<script id="followTemplate" type="text/x-jquery-tmpl">\
                         <span  onclick="javascript:follow(\'follow\',${id})"><a href="#" class="no-following">Seguir</a></span>\
