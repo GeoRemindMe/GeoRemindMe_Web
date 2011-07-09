@@ -15,7 +15,7 @@
                 {% endif %}
                 <br>
                 {% ifnotequal user.username profile.parent.username %}
-                    {% if is_following %}
+                    {% if is_follower %}
                         <div id="following_state_{{ profile.parent.id }}" class="follow-button following-state">
                             <span  onclick="javascript:follow('unfollow',{{profile.parent.id}})"><a href="#" class="following">Seguiendo</a></span>
                         </div>
@@ -53,10 +53,10 @@
                 {% endif %}
             </p>
         </div>
-        <ul id="tabMenu" class="clear">
-            <li class="active">Sugerencias ({{counters.suggested}})</li>
-            <li>Valoraciones</li>
-            <li>Listas</li>
-        </ul>
     </div>
+    <ul id="tabMenu" class="clear">
+		<li class="active">Sugerencias ({{counters.suggested}})</li>
+		<li>Valoraciones</li>
+		<li>Listas</li>
+	</ul>
 {% endblock %}

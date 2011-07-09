@@ -86,6 +86,7 @@ def public_profile(request, username):
             timeline = UserTimeline.objects.get_by_id(profile_user.id, vis='shared')
         elif settings.show_timeline:
             timeline = UserTimeline.objects.get_by_id(profile_user.id)
+    #~ raise Exception(is_follower)
     return render_to_response('profile.html', {'profile': profile, 
                                                             'counters': counters.get_result(),
                                                             'timeline': timeline, 
