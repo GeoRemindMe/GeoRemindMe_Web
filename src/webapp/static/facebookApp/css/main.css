@@ -1,0 +1,430 @@
+body{
+    color: #333333;
+    direction: ltr;
+    font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+    font-size: 11px;
+    text-align: left;
+}
+#container {
+  width: 760px;
+  margin: 0 auto;
+}
+
+/****************************
+ *      
+ *  LEFT COLUMN
+ * 
+ ***************************/
+#left-col{
+    
+    
+    float: left;
+    width: 180px;
+}
+    div#left-col a#logo img{
+        border:0;
+        width:170px;
+    }
+    
+    div#left-col ul{
+        list-style: none outside none;
+        margin: 0;
+        padding: 0;
+    }
+    div#left-col li{
+        padding: 5px 0;
+        
+    }
+    div#left-col li a{
+        color: black;
+        display: block;
+        line-height: 19px;
+        padding-left: 30px;
+        text-decoration: none;
+        width: 155px;
+    }
+    div#left-col li:hover{
+        background-color:#eff2f7
+    }
+    
+    #fb-last-news {
+        background-position: 5px -22px;
+    }
+    #fb-events {
+        background-position: 5px -42px;
+    }
+    #fb-wall {
+        background-position: 5px 0;
+    }
+    
+    .menu-icons a{
+        background-repeat: no-repeat;
+        display: inline-block;
+        height: 16px;
+        width: 17px;
+    }
+
+    .fb-icons a {
+        background-image: url("/static/facebookApp/img/fb-icons.png");
+    }
+
+
+/****************************
+ *      
+ *  RIGHT COLUMN
+ * 
+ ***************************/
+#right-col{
+    border-left: 1px solid #B3B3B3;
+    float: left;
+    padding-left: 20px;
+    width: 555px;
+    min-height:500px;
+    font-size: 1em;
+    line-height: 1.5em;
+}
+
+    #right-col #register-panel h1{
+        border-bottom: 2px solid #CCCCCC;
+        font-size: 2em;
+        padding: 5px 0 20px;
+        text-align: left;
+    }
+    #right-col h2{
+        font-size:1.3em;
+        
+    }
+    #right-col #register-panel{
+        text-align:center;
+    }
+    #right-col #register-panel p{
+        font-size: 1.2em
+    }
+    #right-col #register-panel #video{
+        clear: both;
+        margin: 0 auto 30px;
+        width: 399px;
+    }
+    #right-col .left{
+        float:left;
+    }
+    #right-col .right{
+        float:right;
+    }
+    
+    
+    /****************************
+     *      
+     *  COMMON
+     * 
+     ***************************/
+    #right-col .section .header, .right-col .section .article .header{
+        border-bottom: medium none;
+        border-top: 1px solid #E2E2E2;
+        background-color:#F2F2F2;
+        padding:0 5px;
+        height:30px;
+    }
+    #right-col .section p, #right-col .section h3{
+        padding:0 5px;
+    }
+    #right-col .section .header p, .right-col .section .article .header p{
+        float:right;
+    }
+    #right-col .section .header h2,#right-col .section .article .header h2{
+        font-size:1em;
+        float:left;
+    }
+    .error-msg{
+         display: block;
+    }
+    .error-msg ul{
+    }
+    .error-msg ul li{
+    }
+    div#left-col hr,#right-col hr{
+        border: 1px solid #D3D3D3;
+        clear:both;
+    }
+    
+    input[type="submit"], input[type="button"]{
+        border-style: solid;
+        border-width: 1px;
+        border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
+        background-color: #3B5998;
+        color: white;
+        padding: 2px 15px 3px 15px;
+        text-align: center;
+        float:right
+    }
+
+    input[type="submit"]:hover, input[type="button"]:hover{
+        cursor:pointer;
+    }
+    .footer-notes{
+        color: #777;
+        font-size:0.9em
+    }
+    .note{
+        color: #777;
+        font-size:0.9em;
+        border:1px solid #ccc;
+        padding: 5px;
+    }
+    .note a{
+        color: inherit;
+        padding-left: 10px;
+    }
+    #active-section,div #left-col li#active-section:hover{
+        background-color: #D8DFEA;
+    }
+    .header p {
+        margin:5px;
+    }
+    img{
+        border:0
+    }
+    
+    .follow-button{
+        -moz-border-radius: 4px;
+        -khtml-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        background: #DDD url(../img/buttons/bg-btn.gif) repeat-x 0 0;
+        border-color: #BBB #BBB #999;
+        border-radius: 4px;
+        border-style: solid;
+        border-width: 1px;
+        cursor: pointer;
+        display: inline-block;
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
+        text-shadow: 0 1px #F0F0F0;
+        color: #333!important;
+        -moz-box-shadow: 0 1px 0 #F8F8F8;
+        -wekbit-box-shadow: 0 1px 0 #F8F8F8;
+        box-shadow: 0 1px 0 #F8F8F8;
+        background-image: url("/static/facebookApp/img/btn_follow_bg.png");
+        background-repeat:norepeat;
+        
+    }
+    .follow-button a{
+        background-image: url("/static/facebookApp/img/sprite_follow.png");
+        background-repeat: no-repeat;
+        color: black;
+        font-family: Helvetica Neue,Arial,"Lucida Grande",Sans-serif;
+        font-weight: bold;
+        line-height: 32px;
+        padding: 7px 10px 7px 27px;
+        text-decoration: none;
+    }
+    .follow-button a.no-following{
+        background-position: 7px 6px;
+    }
+    .follow-button a.following{
+        background-position: 7px -60px;
+    }
+    
+    .following-state{
+        background-position:0 -66px;
+    }
+    .following-state span a.following{
+        color:white;
+    }
+    
+        
+    .following-state:hover{
+        background-position:0 -133px;
+    }
+    .following-state span a.following:hover{
+        background-position:7px -25px;
+        
+    }
+    p.help-icon{
+        
+        height: 22px;
+        margin: 2px 0;
+    }
+    
+    
+    
+    
+    
+    
+    /****************************
+     *      
+     * Create Social Profile 
+     * 
+     ***************************/
+    #social-profile{
+        font-size:1.2em;
+    }
+    #SocialUserProfile-form label{
+        clear: left;
+        display: block;
+        float: left;
+        font-size: 1 em;
+        line-height: 1.8em;
+        width: 80px;
+        font-weight: bold;
+        margin: 9px 0;
+    }
+    #SocialUserProfile-form .error-msg{
+        border:1px solid red;
+        clear:both;
+        display: none;
+    }
+    #SocialUserProfile-form .error-msg ul{
+
+    }
+    
+    #SocialUserProfile-form input{
+        clear: right;
+        float: left;
+        font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+        font-size: 1em;
+        margin: 10px 0;
+    }
+    #SocialUserProfile-form input[type="submit"]{
+        clear:both;
+        float:right;
+    }
+    
+    ul#link-social-accounts{
+        list-style: none outside none;
+        margin: 0 auto;
+        padding: 0;
+        width: 450px;        
+    }
+    
+    #link-social-accounts li{
+        -moz-border-radius: 15px 15px 15px 15px;
+        -webkit-border-radius: 15px 15px 15px 15px;
+        background-color: #FFEE7F;
+        border: 2px solid #FFCB04;
+        list-style: none outside none;
+        margin: 10px;
+        padding: 10px;
+    }
+    #link-social-accounts li:hover{
+        background-color: #FFCB04;
+    }
+
+    #link-social-accounts li a{       
+        color: black;
+        display: block;
+        font-size: 1.1em;
+        line-height: 32px;
+        padding-left: 40px;
+        text-decoration: none;
+    }
+    ul#link-social-accounts li a#google{
+        background: url("/static/facebookApp/img/sprite_social.png") no-repeat scroll 0 -32px transparent;
+    }
+    
+    ul#link-social-accounts li a#twitter{
+        background: url("/static/facebookApp/img/sprite_social.png") no-repeat scroll 0 0 transparent;
+    }
+    
+    
+    /****************************
+     *      
+     * ACCOUNT SETTINGS
+     * 
+     ***************************/
+    #right-col #profile{
+        font-size:1.1em
+    }
+    #profile dl{
+        line-height:2.5em;
+        padding-left: 5px;
+    }
+    #profile dl dd{
+        padding-left: 100px;
+    }
+    
+   #right-col #profile .section .header h2{
+        margin:5px;
+   }
+    #profile dl#mail-notifications dt{
+        display: list-item;
+        list-style: square outside none;
+        margin-left: 25px;
+        width: 350px;
+    }
+    #profile div#avatar{
+        border: 1px dotted #CCCCCC;
+        float: right;
+        font-size: 1.2em;
+        margin: 10px;
+        padding: 5px;
+        text-align: center;
+    }
+    #profile div#avatar img{
+        margin: 5px 5px 0;
+        width: 90px;
+        border:0;
+    }
+    #profile div#avatar a{
+        text-decoration:none;
+    }
+    div#right-col #profile ul{
+        list-style: none outside none;
+        margin: 5px 0;
+        padding: 0 5px;
+    }
+    div#right-col #profile li{
+        padding: 10px 0;
+    }
+    div#right-col #profile li span,#profile dl dt{
+        width:120px;
+        float:left;
+        clear:left;
+        font-weight:bold;
+    }
+    div#right-col #profile li a{
+        padding-left: 20px;
+    }
+    #desinstall{
+        float:right;
+        margin-right:10px;
+    }
+    
+    /****************************
+     *      
+     *  ACTIVITY
+     * 
+     ***************************/
+    
+    .avatar{
+        text-align: center;
+    }
+    ul#friends-to-follow{
+        list-style:none;
+        margin:0;
+        padding:5px;
+        font-size:1.1em
+    }
+    ul#friends-to-follow li{
+        width:50%; /*272px*/
+        float:left;
+    }
+    ul#friends-to-follow li div{
+        float:left;
+    }
+    ul#friends-to-follow div.user-data{
+        margin-left: 10px;
+        width:209px;
+        line-height:2em;
+    }
+    ul#friends-to-follow div.user-data a{
+        font-weight:bold;
+    }
+    ul#friends-to-follow div.user-data p{
+        margin:0;padding:0;
+    }
+    ul#friends-to-follow li div.follow-button{
+        float:right;
+        right: 10px;
+        position: relative;
+    }

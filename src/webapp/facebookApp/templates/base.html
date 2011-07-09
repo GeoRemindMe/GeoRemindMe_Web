@@ -1,0 +1,88 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+    <meta charset="utf-8">
+    <title>
+      {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
+    </title>
+    <meta name="description" content="Track and share your runs with friends.">
+    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/awesome-buttons.css">
+    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
+    
+    <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+    <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+
+    {% block extra_js %}{%endblock%}
+</head>
+<body>
+    <div id="container">
+
+
+        <div id="left-col">
+            <a id="logo" href="/fb/dashboard/"><img src="/static/facebookApp/img/header_logo.png" alt="GeoRemindMe logo"></a>
+        
+            {% block mainButton %} 
+            {% endblock %}
+            
+            <hr>
+        
+            {% block nav %} 
+                <ul>
+                    <li class="menu-icons fb-icons" id="active-section"><a id="fb-wall" href="/fb/dashboard/" title="Dashboard">Actividad</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="/fb/suggestions/">Notificaciones</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="/fb/suggestions/">Sugerencias</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="">Sitios</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="">Baúl</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="">Comunidad</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="/fb/profile">Cuenta en GeoRemindMe</a></li>
+                </ul>
+            {% endblock %}
+            <hr>
+            <p><strong>Facebook</strong>:</p>
+            <ul>
+                <li class="menu-icons fb-icons"><a id="fb-wall" href="">Muro</a></li>
+                <li class="menu-icons fb-icons"><a id="fb-last-news" href="">Últimas noticias</a></li>
+                <li class="menu-icons fb-icons"><a id="fb-events" href="">Eventos</a></li>
+            </ul>
+        </div>
+        
+        <div id="right-col">
+            {% block body %}{% endblock %}
+        </div>
+
+
+    </div>
+    
+    <div id="fb-root"></div>
+    <div id="templates"></div>
+
+    <script src="/static/facebookApp/js/main.js"></script>
+    <script>
+        <!-- async loading of facebook js sdk  -->
+        window.fbAsyncInit = function() { 
+            facebookInit({'appId':{{app_settings.appId}}, 'canvasName':'{{app_settings.canvasName}}'}) 
+        };
+
+        (function() {
+            var e = document.createElement('script');
+            e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+            document.getElementById('fb-root').appendChild(e);
+        }());
+
+
+
+        <!--  async loading of google analytics -->
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-19272923-3']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script');
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</body>
+</html>

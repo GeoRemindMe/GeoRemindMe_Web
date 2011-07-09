@@ -1,0 +1,1381 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-04-12 18:47+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: settings.py:139
+msgid "English"
+msgstr "Inglés"
+
+#: settings.py:140
+msgid "Spanish"
+msgstr "Español"
+
+#: geoajax/views.py:39
+#, fuzzy, python-format
+msgid ""
+"User registration complete, a confirmation email have been sent to %s. "
+"Redirecting to dashboard..."
+msgstr ""
+"Registro completo %s, un email de confirmación ha sido enviado a %s. "
+"Redirigiendo al escritorio"
+
+#: geoajax/views.py:80
+#, python-format
+msgid ""
+"Email not confirmed in %d days, your access isn't allowed.<br/>A new confirm "
+"email have been sent."
+msgstr ""
+"Su cuenta no ha sido confirmada en %d días, por favor revisa tu correo y "
+"confirma tu cuenta haciendo clic en el enlace que te hemos enviado "
+
+#: geoajax/views.py:91 geoajax/views.py:95 geoajax/views.py:99
+msgid ""
+"The email/password you entered is incorrect<br/>Please make sure your caps "
+"lock is off and try again"
+msgstr ""
+"El email o la contraseña que has introducido es incorrecta.<br>Por favor "
+"asegúrate de que no tienes las mayúsculas activadas y prueba de nuevo"
+
+#: georemindme/admin.py:32 georemindme/forms.py:123
+msgid "New password"
+msgstr "Nueva contraseña"
+
+#: georemindme/admin.py:33 georemindme/forms.py:124
+msgid "Repeat new password"
+msgstr "Repite la nueva contraseña"
+
+#: georemindme/admin.py:34
+msgid "Is active"
+msgstr "Está activo"
+
+#: georemindme/admin.py:35
+msgid "Is confirmed"
+msgstr "Está confirmado"
+
+#: georemindme/admin.py:36
+msgid "Is admin"
+msgstr "Es administrador"
+
+#: georemindme/admin.py:68 georemindme/forms.py:50 georemindme/forms.py:86
+#: georemindme/forms.py:139
+msgid "Passwords can't have white spaces"
+msgstr "Las contraseñas no pueden tener espacios en blanco"
+
+#: georemindme/admin.py:72 georemindme/forms.py:54 georemindme/forms.py:90
+#: georemindme/forms.py:142
+msgid "Passwords must be the same."
+msgstr "La contraseñas deben ser iguales."
+
+#: georemindme/forms.py:38 georemindme/forms.py:74
+msgid "Repeat password"
+msgstr "Repite la contraseña"
+
+#: georemindme/forms.py:65
+msgid "Remember me?"
+msgstr "Recordar contraseña"
+
+#: georemindme/forms.py:103
+msgid "Email already in use"
+msgstr "Esta cuenta ya está en uso."
+
+#: georemindme/forms.py:122
+msgid "Current password"
+msgstr "Contraseña actual"
+
+#: georemindme/forms.py:145
+msgid "Old password needed."
+msgstr "Contraseña antigua requerida."
+
+#: georemindme/forms.py:159
+msgid "Old password wrong."
+msgstr "Antigua contraseña incorrecta."
+
+#: georemindme/forms.py:170
+msgid "email already in use"
+msgstr "esta cuenta de correo ya está en uso"
+
+#: georemindme/forms.py:174
+msgid "A error ocurred, try again later"
+msgstr "Ha ocurrido un error, inténtalo de nuevo luego"
+
+#: georemindme/forms.py:198
+msgid "Alert distance (meters)"
+msgstr "Distancia de la alerta (metros)"
+
+#: georemindme/forms.py:220
+msgid "Distance must be a number"
+msgstr "La distancia tiene que ser un número"
+
+#: georemindme/forms.py:229
+msgid "Wrong dates"
+msgstr "Fechas incorrectas"
+
+#: georemindme/mails.py:32
+#, fuzzy, python-format
+msgid "<a href=\"%s\">Confirmation link</a>"
+msgstr "<a href=\"%s\">Enlace de confirmación</a>"
+
+#: georemindme/mails.py:56
+msgid "Confirm your registration at GeoRemindMe"
+msgstr "Confirma tu registro en GeoRemindMe"
+
+#: georemindme/mails.py:57
+#, python-format
+msgid ""
+"Confirm your registration at GeoRemindMe\n"
+"                    %(link)s\n"
+"                    If you don't see the link, copy and paste this url:\n"
+"                    %(url)s\n"
+"                    "
+msgstr ""
+"Confirma tu registro en GeoRemindMe\n"
+"                    %(link)s\n"
+"                    Si no ves el enlace, copia y pega esta url en tu "
+"navegador:\n"
+"                    %(url)s\n"
+"                    "
+
+#: georemindme/mails.py:69
+#, fuzzy, python-format
+msgid "<a href=\"%s\">Password reminder link</a>"
+msgstr "<a href=\"%s\">Enlace para recordar la contraseña</a>"
+
+#: georemindme/mails.py:88
+msgid "Set a new password at GeoRemindMe"
+msgstr "Establecer una nueva contraseña en GeoRemindMe"
+
+#: georemindme/mails.py:89
+#, python-format
+msgid ""
+"Set a new password at GeoRemindMe\n"
+"                    %(link)s\n"
+"                    If you don't see the link, copy and paste this url:\n"
+"                    %(url)s\n"
+"                    "
+msgstr ""
+"Establece una nueva contraseña en GeoRemindMe\n"
+"                    %(link)s\n"
+"                    Si no ves el enlace, copia y pega esta url:\n"
+"                    %(url)s\n"
+"                    "
+
+#: georemindme/models.py:184
+msgid "User already in use: %S"
+msgstr "El usuario ya está en uso: %S"
+
+#: georemindme/properties.py:37 georemindme/properties.py:46
+msgid "Password can't be empty"
+msgstr "La contraseña no puede estar vacía"
+
+#: georemindme/properties.py:48
+msgid "Password can't have white spaces"
+msgstr "El password no puede tener espacios en blanco"
+
+#: georemindme/templates/404.html:25
+msgid "Back to home"
+msgstr "Volver al inicio"
+
+#: georemindme/templates/forms/login.html:3
+msgid "Login using your Google account"
+msgstr "Identifícate usando tu cuenta de Google"
+
+#: georemindme/templates/webapp/base.html:8
+msgid "GeoRemindMe - Application for geolocated alerts"
+msgstr "GeoRemindMe - Aplicación para geolocalizar alertas"
+
+#: georemindme/templates/webapp/base.html:36
+msgid ""
+"Manage your geolocated alerts on your Android smartphone. Coming soon on "
+"your iPhone, iPad, Blackberry and other mobile devices."
+msgstr ""
+"Gestiona tus alertas geolocalizadas en tu teléfono Android. Próximamente en "
+"tu iPhone, iPad, Blackberry y otros dispositivos móviles"
+
+#: georemindme/templates/webapp/base.html:37
+msgid ""
+"geolocation application, geolocation app, geolocated alerts, geolocated "
+"reminders, android app alerts, android geolocation, iphone geolocation, "
+"iphone app alerts"
+msgstr ""
+"aplicación de geolocalización, alertas geolocalizadas, "
+"geolocalizaciónrecordatorios, aplicación android de alertas, geolocalización "
+"android, geolocalizacion iphone, aplicación iphone de geolocalización"
+
+#: georemindme/templates/webapp/base.html:49
+msgid "Go flying to the homepage. Tweet! Tweet!"
+msgstr "Ir volando a la página de inicio. Pio! Pio!"
+
+#: georemindme/templates/webapp/base.html:55
+msgid "Do you already have an account?"
+msgstr "¿Tienes ya una cuenta?"
+
+#: georemindme/templates/webapp/base.html:55
+msgid "Log in"
+msgstr "Identifícate"
+
+#: georemindme/templates/webapp/base.html:80
+msgid "Forgot your password?"
+msgstr "¿Olvidaste tu contraseña?"
+
+#: georemindme/templates/webapp/base.html:86
+msgid "Remember me on this computer"
+msgstr "Recuérdame en este ordenador"
+
+#: georemindme/templates/webapp/base.html:88
+msgid "Sign in"
+msgstr "Entrar"
+
+#: georemindme/templates/webapp/base.html:104
+msgid "Follow us on"
+msgstr "Síguenos en"
+
+#: georemindme/templates/webapp/base.html:106
+msgid "Visit our Blog"
+msgstr "Visita nuestro Blog"
+
+#: georemindme/templates/webapp/base.html:107
+msgid "Follow us on Twitter"
+msgstr "Síguenos en Twitter"
+
+#: georemindme/templates/webapp/base.html:108
+msgid "Follow us on Facebook"
+msgstr "Síguenos en Facebook"
+
+#: georemindme/templates/webapp/base.html:121
+msgid "More info"
+msgstr "Más información"
+
+#: georemindme/templates/webapp/base.html:123
+msgid "Contact"
+msgstr "Contacto"
+
+#: georemindme/templates/webapp/base.html:123
+#: georemindme/templates/webapp/dashboard.html:143
+msgid "Contact us"
+msgstr "Contáctanos"
+
+#: georemindme/templates/webapp/base.html:124
+msgid "How do we care about your data"
+msgstr "Como nos precupamos por tu seguridad"
+
+#: georemindme/templates/webapp/base.html:124
+msgid "Privacy Policy"
+msgstr "Política de privacidad"
+
+#: georemindme/templates/webapp/base.html:125
+msgid "Meet the requirements for using the application"
+msgstr "Conoce los requisitos para usar la aplicación"
+
+#: georemindme/templates/webapp/base.html:125
+msgid "Terms of Service"
+msgstr "Condiciones de uso"
+
+#: georemindme/templates/webapp/base.html:129
+msgid "They supports this project"
+msgstr "Nos apoyan"
+
+#: georemindme/templates/webapp/base.html:131
+msgid "http://blog.georemindme.com/codeko-sponsors-georemindme/"
+msgstr ""
+
+#: georemindme/templates/webapp/base.html:131
+msgid "Official Sponsor"
+msgstr "Patrocinador oficial"
+
+#: georemindme/templates/webapp/base.html:132
+msgid "Free Software Office UGR (Spain)"
+msgstr "Oficina de Sofware Libre UGR (España)"
+
+#: georemindme/templates/webapp/base.html:133
+msgid "http://blog.georemindme.com/georemindme-is-going-to-france/"
+msgstr ""
+
+#: georemindme/templates/webapp/base.html:133
+msgid "Forum Innovact Campus"
+msgstr ""
+
+#: georemindme/templates/webapp/base.html:134
+msgid "http://blog.georemindme.com/category/achievements/"
+msgstr ""
+
+#: georemindme/templates/webapp/base.html:134
+msgid "See who else support us"
+msgstr "Conoce quien más nos apoya"
+
+#: georemindme/templates/webapp/base.html:134
+msgid "See all"
+msgstr "Ver todos"
+
+#: georemindme/templates/webapp/base.html:140
+#: georemindme/templates/webapp/dashboard.html:152
+msgid "Language:"
+msgstr "Idioma:"
+
+#: georemindme/templates/webapp/contact.html:5
+msgid "Contact us - GeoRemindMe"
+msgstr "Contáctanos - GeoRemindMe"
+
+#: georemindme/templates/webapp/contact.html:34
+#: georemindme/templates/webapp/knowmore.html:33
+msgid "Message sent succesfully!"
+msgstr "¡El mensaje se ha enviado correctamente!"
+
+#: georemindme/templates/webapp/contact.html:35
+#: georemindme/templates/webapp/knowmore.html:34
+msgid "Error sending the message"
+msgstr "Se ha producido un error al enviar el mensaje"
+
+#: georemindme/templates/webapp/contact.html:51
+msgid "We are a rather nice and open bunch of people. Get in touch with us!"
+msgstr "Somos gente simpática y accesible. ¡Contacta con nosotros!"
+
+#: georemindme/templates/webapp/contact.html:53
+#: georemindme/templates/webapp/home.html:125
+msgid "Email"
+msgstr "Email"
+
+#: georemindme/templates/webapp/contact.html:55
+msgid "Telephone"
+msgstr "Teléfono"
+
+#: georemindme/templates/webapp/contact.html:56
+#: georemindme/templates/webapp/dashboard.html:91
+msgid "or"
+msgstr "o"
+
+#: georemindme/templates/webapp/contact.html:57
+msgid "Address"
+msgstr "Dirección"
+
+#: georemindme/templates/webapp/contact.html:58
+msgid "Spain"
+msgstr "España"
+
+#: georemindme/templates/webapp/contact.html:59
+msgid "Tech support"
+msgstr "Soporte técnico"
+
+#: georemindme/templates/webapp/contact.html:60
+msgid ""
+"Meet the <a href='http://getsatisfaction.com/georemindme'>user community</a> "
+"and share your questions, suggestions and problems."
+msgstr ""
+"Conoce a la <a href='http://getsatisfaction.com/georemindme'>comunidad de "
+"usuarios</a> y comparte tus sugerencias, preguntas y problemas."
+
+#: georemindme/templates/webapp/contact.html:70
+msgid "Business profile"
+msgstr "Perfil de negocio"
+
+#: georemindme/templates/webapp/contact.html:77
+msgid "You can also contact us using this form"
+msgstr "También puedes contactarnos usando este formulario "
+
+#: georemindme/templates/webapp/contact.html:79
+msgid "Enter your email address"
+msgstr "Introduce tu correo"
+
+#: georemindme/templates/webapp/contact.html:80
+msgid "email"
+msgstr "email"
+
+#: georemindme/templates/webapp/contact.html:83
+msgid "Write your message here..."
+msgstr "Escribe tu mensaje aquí..."
+
+#: georemindme/templates/webapp/contact.html:86
+msgid "Send"
+msgstr "Enviar"
+
+#: georemindme/templates/webapp/contact.html:86
+msgid "Please fill up all fields"
+msgstr "Por favor rellena todos los campos"
+
+#: georemindme/templates/webapp/contact.html:95
+msgid "Our team"
+msgstr "Nuestro equipo"
+
+#: georemindme/templates/webapp/contact.html:106
+msgid "Chief Executive Officer (CEO)"
+msgstr "Director Ejecutivo (CEO)"
+
+#: georemindme/templates/webapp/contact.html:114
+#: georemindme/templates/webapp/contact.html:144
+#: georemindme/templates/webapp/contact.html:171
+#: georemindme/templates/webapp/contact.html:197
+#: georemindme/templates/webapp/contact.html:227
+#: georemindme/templates/webapp/contact.html:253
+msgid "Linkedin profile"
+msgstr "Perfil en Linkedin"
+
+#: georemindme/templates/webapp/contact.html:117
+msgid ""
+"Compulsive entrepreneur, technologist, extrovert programmer, friend of his "
+"friends and last but not least a guy who dreams big."
+msgstr ""
+"Emprendedor compulsivo, tecnólogo, informático extrovertido, amigo de sus "
+"amigos y por último pero no menos importante una persona con grandes sueños."
+
+#: georemindme/templates/webapp/contact.html:136
+msgid "Chief Technology Office (CTO)"
+msgstr "Director de Técnico (CTO)"
+
+#: georemindme/templates/webapp/contact.html:147
+msgid ""
+"Always poking his nose in all things techy, he's an obdurate proponent of "
+"free software. Still thinks Windows is but a mere resource manager."
+msgstr ""
+"Irremediablemente meterá las zarpas “donde no le llamen”. Gran defensor del "
+"software libre. Sigue pensando que Windows es un vulgar gestor recursos."
+
+#: georemindme/templates/webapp/contact.html:163
+msgid "Product Manager"
+msgstr "Product Manager"
+
+#: georemindme/templates/webapp/contact.html:174
+msgid ""
+"A fan of foreign TV shows, sci-fi novels and a thorough geek, she's the one "
+"you want to be around in a zombie apocalypse scenario."
+msgstr ""
+"Amante de las series de televisión extranjeras, novelas Sci Fi y las nuevas "
+"tecnologías, está de sobra preparada para un apocalipsis Zombie."
+
+#: georemindme/templates/webapp/contact.html:190
+msgid "Chief Financial Officer (CFO)"
+msgstr "Director Financiero (CFO)"
+
+#: georemindme/templates/webapp/contact.html:200
+msgid ""
+"Social engineer, addicted to the strategy and willing to conquer the world."
+msgstr ""
+"Ingeniero social, adicto a la estrategia y dispuesto a conquistar el mundo."
+
+#: georemindme/templates/webapp/contact.html:219
+msgid "Chief of Mobile Development"
+msgstr "Director de Desarrollo Móvil"
+
+#: georemindme/templates/webapp/contact.html:230
+msgid ""
+"Self-taught and yet a great team player, with a passion for anything that "
+"can be programmed, particularly if you can carry it around in your pocket."
+msgstr ""
+"Autodidacta y con gran espíritu de grupo. Apasionado de todo lo que se pueda "
+"programar, especialmente si lo puedes llevar en el bolsillo."
+
+#: georemindme/templates/webapp/contact.html:246
+msgid "Senior Web Developer"
+msgstr "Desarrollador Web Senior"
+
+#: georemindme/templates/webapp/contact.html:256
+msgid ""
+"My main hobby in the project is to change the data model and often delete "
+"all users and alerts database except mine, of course."
+msgstr ""
+"Mi principal aficion en el proyecto es cambiar el modelo de los datos y "
+"borrar cada poco a todos los usuarios y alertas de la base de datos, menos "
+"el mio, claro."
+
+#: georemindme/templates/webapp/dashboard.html:34
+msgid ""
+"There are elements that could not be saved. If you leave the page you will "
+"lose it."
+msgstr ""
+"Hay elementos que no han podido ser guardados. Si sales de la página los "
+"perderá; por favor espere hasta recuperar la conexión."
+
+#: georemindme/templates/webapp/dashboard.html:35
+msgid "New task"
+msgstr "Nueva tarea"
+
+#: georemindme/templates/webapp/dashboard.html:36
+msgid "Sure you want to delete the task"
+msgstr "¿Estás seguro de que quieres borrar esta tarea?"
+
+#: georemindme/templates/webapp/dashboard.html:39
+msgid "January"
+msgstr "Enero"
+
+#: georemindme/templates/webapp/dashboard.html:40
+msgid "Febrary"
+msgstr "Febrero"
+
+#: georemindme/templates/webapp/dashboard.html:41
+msgid "March"
+msgstr "Marzo"
+
+#: georemindme/templates/webapp/dashboard.html:42
+msgid "April"
+msgstr "Abril"
+
+#: georemindme/templates/webapp/dashboard.html:43
+msgid "May"
+msgstr "Mayo"
+
+#: georemindme/templates/webapp/dashboard.html:44
+msgid "June"
+msgstr "Junio"
+
+#: georemindme/templates/webapp/dashboard.html:45
+msgid "July"
+msgstr "Julio"
+
+#: georemindme/templates/webapp/dashboard.html:46
+msgid "August"
+msgstr "Agosto"
+
+#: georemindme/templates/webapp/dashboard.html:47
+msgid "September"
+msgstr "Septiembre"
+
+#: georemindme/templates/webapp/dashboard.html:48
+msgid "October"
+msgstr "Octubre"
+
+#: georemindme/templates/webapp/dashboard.html:49
+msgid "November"
+msgstr "Noviembre"
+
+#: georemindme/templates/webapp/dashboard.html:50
+msgid "December"
+msgstr "Diciembre"
+
+#: georemindme/templates/webapp/dashboard.html:88
+msgid "Address:"
+msgstr "Dirección:"
+
+#: georemindme/templates/webapp/dashboard.html:89
+msgid "Description:"
+msgstr "Descripción"
+
+#: georemindme/templates/webapp/dashboard.html:90
+msgid "Range (meters):"
+msgstr "Distancia (metros):"
+
+#: georemindme/templates/webapp/dashboard.html:91
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: georemindme/templates/webapp/dashboard.html:105
+msgid "My profile"
+msgstr "Mi perfil"
+
+#: georemindme/templates/webapp/dashboard.html:105
+msgid "My account"
+msgstr "Mi cuenta"
+
+#: georemindme/templates/webapp/dashboard.html:105
+msgid "Help"
+msgstr "Ayuda"
+
+#: georemindme/templates/webapp/dashboard.html:105
+msgid "Show help"
+msgstr "Mostrar ayuda"
+
+#: georemindme/templates/webapp/dashboard.html:105
+msgid "Logout"
+msgstr "Salir"
+
+#: georemindme/templates/webapp/dashboard.html:109
+msgid "Pending tasks"
+msgstr "Tareas pendientes"
+
+#: georemindme/templates/webapp/dashboard.html:111
+msgid "Add a new task"
+msgstr "Añadir una nueva tarea"
+
+#: georemindme/templates/webapp/dashboard.html:112
+msgid "Where am I?"
+msgstr "¿Donde estoy?"
+
+#: georemindme/templates/webapp/dashboard.html:113
+msgid "Search:"
+msgstr "Buscar"
+
+#: georemindme/templates/webapp/dashboard.html:127
+msgid "Completed tasks:"
+msgstr "Tareas completadas:"
+
+#: georemindme/templates/webapp/dashboard.html:134
+msgid "Show me all the chickens"
+msgstr "Muéstrame todos los pollos"
+
+#: georemindme/templates/webapp/dashboard.html:144
+msgid "Contribute with us"
+msgstr "Colaboran con nosotros"
+
+#: georemindme/templates/webapp/dashboard.html:145
+#: georemindme/templates/webapp/knowmore.html:48
+msgid "Know more"
+msgstr "Saber más"
+
+#: georemindme/templates/webapp/dashboard.html:166
+msgid "How can we help you?"
+msgstr "¿Cómo podemos ayudarte?"
+
+#: georemindme/templates/webapp/dashboard.html:169
+msgid "Videos"
+msgstr "Videos"
+
+#: georemindme/templates/webapp/dashboard.html:170
+msgid "Ideas"
+msgstr "Ideas"
+
+#: georemindme/templates/webapp/dashboard.html:171
+msgid "FAQ"
+msgstr "FAQ"
+
+#: georemindme/templates/webapp/dashboard.html:172
+msgid "Tips"
+msgstr "Consejos"
+
+#: georemindme/templates/webapp/dashboard.html:173
+msgid "Requests"
+msgstr "Peticiones"
+
+#: georemindme/templates/webapp/dashboard.html:174
+msgid "Problems"
+msgstr "Problemas"
+
+#: georemindme/templates/webapp/home.html:116
+#: georemindme/templates/webapp/home_private_beta.html:60
+msgid "GeoRemindMe allows you to link alerts to places."
+msgstr "GeoRemindMe te permite vincular alertas a lugares."
+
+#: georemindme/templates/webapp/home.html:116
+#: georemindme/templates/webapp/home_private_beta.html:60
+msgid "Geolocate your reminders with GeoRemindMe!"
+msgstr "¡Geolocaliza tus recordatorios con GeoRemindMe!"
+
+#: georemindme/templates/webapp/home.html:119
+#: georemindme/templates/webapp/home_private_beta.html:64
+msgid "Screenshots, licenses, versions, etc."
+msgstr "Impresiones de pantalla, versiones, licencias, etc."
+
+#: georemindme/templates/webapp/home.html:119
+#: georemindme/templates/webapp/home_private_beta.html:64
+msgid "Learn more"
+msgstr "Saber más"
+
+#: georemindme/templates/webapp/home.html:122
+msgid "Are you new here?"
+msgstr "¿Eres nuevo?"
+
+#: georemindme/templates/webapp/home.html:130
+msgid "Enter and confirm your password"
+msgstr "Introduce y confirma tu contraseña"
+
+#: georemindme/templates/webapp/home.html:131
+msgid "Password"
+msgstr "Contraseña"
+
+#: georemindme/templates/webapp/home.html:132
+msgid "Confirm password"
+msgstr "Confirmar contraseña"
+
+#: georemindme/templates/webapp/home.html:134
+msgid "Passwords do not match"
+msgstr "Las contraseñas no coinciden"
+
+#: georemindme/templates/webapp/home.html:138
+msgid "Check this box if you agree"
+msgstr "Marca esta casilla si está de acuerdo"
+
+#: georemindme/templates/webapp/home.html:138
+msgid "I have read and I accept the <a href='/tos'>Terms of Service</a>"
+msgstr "He leido y acepto los <a href='/tos'>Términos y condiciones</a>"
+
+#: georemindme/templates/webapp/home.html:139
+msgid "Start!"
+msgstr "¡Empezar!"
+
+#: georemindme/templates/webapp/home.html:139
+msgid "Please first fill all the fields"
+msgstr "Por favor primero rellena todos los campos"
+
+#: georemindme/templates/webapp/home_private_beta.html:68
+msgid "Request an invitation for the <strong>Private Beta</strong>"
+msgstr "Solicita una invitación para la <strong>Beta Privada</strong>"
+
+#: georemindme/templates/webapp/home_private_beta.html:69
+msgid ""
+"The application is still under development, so it's not completely "
+"functional yet."
+msgstr "La aplicación está en fase de pruebas."
+
+#: georemindme/templates/webapp/home_private_beta.html:70
+msgid ""
+"<strong>If you are interested on helping us to test and improve the "
+"application</strong>, please <a href='https://spreadsheets.google.com/"
+"viewform?formkey=dEFPeHBiSktzeFluM3dRQnNvVnFCUXc6MQ'>fill this form</a> and "
+"we will send you and invitation as soon as possible."
+msgstr ""
+"<strong>Si estás interesado en ayudarnos a probarla y mejorarla</strong> , "
+"por favor <a href='https://spreadsheets.google.com/viewform?"
+"formkey=dEFPeHBiSktzeFluM3dRQnNvVnFCUXc6MQ'>rellena este formulario</a> y te "
+"enviaremos una invitación lo  antes posible."
+
+#: georemindme/templates/webapp/home_private_beta.html:71
+msgid "Request an invitation"
+msgstr "Solicitar invitación"
+
+#: georemindme/templates/webapp/home_private_beta.html:72
+msgid ""
+"<em>Or if you prefer we can contact you when the <a href='/knowmore/#keep-up-"
+"to-date'>version for you device</a> is available.</em>"
+msgstr ""
+"<em>También podemos contactarte cuando la aplicación esté <a href='/knowmore/"
+"#keep-up-to-date'>disponible para tu dispositivo</a>.</em>"
+
+#: georemindme/templates/webapp/knowmore.html:5
+msgid "Know more about GeoRemindMe"
+msgstr "Saber más sobre GeoRemindMe"
+
+#: georemindme/templates/webapp/knowmore.html:23
+msgid "Email wrong"
+msgstr "Email incorrecto"
+
+#: georemindme/templates/webapp/knowmore.html:46
+#: georemindme/templates/webapp/privacypolicy.html:24
+#: georemindme/templates/webapp/tos.html:24
+msgid "Home"
+msgstr "Inicio"
+
+#: georemindme/templates/webapp/knowmore.html:58
+#: georemindme/templates/webapp/knowmore.html:187
+#: georemindme/templates/webapp/knowmore.html:244
+#: georemindme/templates/webapp/knowmore.html:269
+#: georemindme/templates/webapp/knowmore.html:332
+#: georemindme/templates/webapp/knowmore.html:358
+msgid "Back to top"
+msgstr "Volver arriba"
+
+#: georemindme/templates/webapp/knowmore.html:59
+#: georemindme/templates/webapp/knowmore.html:70
+msgid "Available versions"
+msgstr "Versiones disponibles"
+
+#: georemindme/templates/webapp/knowmore.html:60
+#: georemindme/templates/webapp/knowmore.html:193
+msgid "WIP versions"
+msgstr "Estado de las versiones"
+
+#: georemindme/templates/webapp/knowmore.html:61
+#: georemindme/templates/webapp/knowmore.html:250
+msgid "Keep up to date"
+msgstr "Te mantenemos informado"
+
+#: georemindme/templates/webapp/knowmore.html:62
+#: georemindme/templates/webapp/knowmore.html:275
+msgid "Community"
+msgstr "Comunidad"
+
+#: georemindme/templates/webapp/knowmore.html:63
+msgid "Source code"
+msgstr "Código fuente"
+
+#: georemindme/templates/webapp/knowmore.html:71
+msgid ""
+"We want you to be able to use the app anytime you need it, so meet the "
+"<strong>three available options</strong>:"
+msgstr ""
+"Queremos que puedas usar la aplicación en cualquier momento, a continuación "
+"te presentamos las <strong>tres opciones disponibles</strong>:"
+
+#: georemindme/templates/webapp/knowmore.html:73
+msgid "Mobile app"
+msgstr "Aplicación móvil"
+
+#: georemindme/templates/webapp/knowmore.html:74
+msgid ""
+"The native app <strong>will alert you</strong> when you are near a place "
+"with a reminder. It has been specifically <em><strong>optimized to reduce "
+"battery usage</strong> and ease navigation in your reminder list</em>."
+msgstr ""
+"La aplicación nativa <strong>te avisará</strong> cuando estés cerca de un "
+"lugar donde tengas un recordatorio. Esta ha sido <em><strong>optimizada para "
+"reducir el consumo de batería</strong> y facilitar la navegación por tu "
+"lista de recordatorios</em>."
+
+#: georemindme/templates/webapp/knowmore.html:76
+#: georemindme/templates/webapp/knowmore.html:77
+msgid "Screenshot Android version: Add a reminder"
+msgstr "Pantallazo de la versión Android: Añadir un recordatorio"
+
+#: georemindme/templates/webapp/knowmore.html:78
+msgid "Screenshot Android version: Menu"
+msgstr "Pantallazo de la versión Android: Menu"
+
+#: georemindme/templates/webapp/knowmore.html:79
+msgid "Screenshot Android version: Settings"
+msgstr "Pantallazo de la versión Android: Configuraciones"
+
+#: georemindme/templates/webapp/knowmore.html:82
+msgid "Install it from:"
+msgstr "Instálala desde:"
+
+#: georemindme/templates/webapp/knowmore.html:83
+msgid ""
+"Android Market (<a href='#other-versions' class='anchor separator'>Coming "
+"soon</a>)"
+msgstr ""
+"Android Market (<a href='#other-versions' class='anchor "
+"separator'>Próximamente </a>)"
+
+#: georemindme/templates/webapp/knowmore.html:84
+msgid ""
+"App Store (<a href='#other-versions' class='anchor separator'>Coming soon</"
+"a>)"
+msgstr ""
+"App Store (<a href='#other-versions' class='anchor separator'>Próximamente</"
+"a>)"
+
+#: georemindme/templates/webapp/knowmore.html:91
+#: georemindme/templates/webapp/knowmore.html:205
+msgid "Desktop web app"
+msgstr "App. web escritorio"
+
+#: georemindme/templates/webapp/knowmore.html:92
+msgid ""
+"You can access the desktop web application from <em>any browser</em>* and "
+"<strong>easily manage</strong> your tasks."
+msgstr ""
+"Puedes acceder a la aplicación web de escritorio desde <em>cualquier "
+"navegador</em> y <strong>gestionar fácilmente un gran número de tareas</"
+"strong>."
+
+#: georemindme/templates/webapp/knowmore.html:94
+msgid "Screenshot Web Desktop version: Dahsboard"
+msgstr "Pantallazo de la versión web de escritorio: Dashboard"
+
+#: georemindme/templates/webapp/knowmore.html:96
+msgid "Sign in through the <a href='/'>home page</a>"
+msgstr "Regístrate desde la <a href='/'>página principal</a>"
+
+#: georemindme/templates/webapp/knowmore.html:97
+msgid "Minimum requirements: IE 9, FF 2.0, Chrome, Safari, Opera"
+msgstr "Requisitos mínimos: IE 9, FF 2.0, Chrome, Safari, Opera"
+
+#: georemindme/templates/webapp/knowmore.html:101
+#: georemindme/templates/webapp/knowmore.html:211
+msgid "Mobile web app"
+msgstr "Aplicación web móvil"
+
+#: georemindme/templates/webapp/knowmore.html:102
+msgid ""
+"If you are still waiting for a native version for your platform of choice, "
+"you can access the mobile web application through your 3G connection to "
+"<strong>check and manage your tasks</strong>."
+msgstr ""
+"Si aún no está disponible la aplicación nativa para tu plataforma, siempre "
+"puedes acceder a la aplicación web móvil desde tu conexión 3G para "
+"<strong>comprobar y gestionar tus tareas</strong>."
+
+#: georemindme/templates/webapp/knowmore.html:104
+msgid "Screenshot Web Mobile version: Home"
+msgstr "Pantallazo de la versión web móvil: Inicio"
+
+#: georemindme/templates/webapp/knowmore.html:105
+msgid "Screenshot Web Mobile version: Map"
+msgstr "Pantallazo de la versión web móvil: Mapa"
+
+#: georemindme/templates/webapp/knowmore.html:107
+msgid ""
+"Access through: <a href='http://m.georemindme.com'>http://m.georemindme.com</"
+"a>"
+msgstr ""
+"Accede a través: <a href='http://m.georemindme.com'>http://m.georemindme."
+"com</a>"
+
+#: georemindme/templates/webapp/knowmore.html:109
+msgid "Minimum requirements: an active account and enabled Javascript."
+msgstr "Requisitos mínimos: una cuenta activa y Javascript habilitado."
+
+#: georemindme/templates/webapp/knowmore.html:113
+msgid "Check this table to find the version that best suits your needs"
+msgstr ""
+"A continuación os dejamos una tabla comparativa para que podáis ver las "
+"ventajas de cada versión"
+
+#: georemindme/templates/webapp/knowmore.html:117
+msgid "Feature"
+msgstr "Característica"
+
+#: georemindme/templates/webapp/knowmore.html:118
+msgid "Mobile"
+msgstr "Móvil"
+
+#: georemindme/templates/webapp/knowmore.html:119
+msgid "Desktop web"
+msgstr "Web de escritorio"
+
+#: georemindme/templates/webapp/knowmore.html:120
+msgid "Mobile web"
+msgstr "Web móvil"
+
+#: georemindme/templates/webapp/knowmore.html:125
+msgid "Price"
+msgstr "Precio"
+
+#: georemindme/templates/webapp/knowmore.html:126
+#: georemindme/templates/webapp/knowmore.html:127
+#: georemindme/templates/webapp/knowmore.html:128
+msgid "Free!"
+msgstr "¡Gratis!"
+
+#: georemindme/templates/webapp/knowmore.html:132
+msgid "Manage (add, edit and delete) tasks"
+msgstr "Gestionar tareas(añadir, editar y elimninar)"
+
+#: georemindme/templates/webapp/knowmore.html:133
+#: georemindme/templates/webapp/knowmore.html:134
+#: georemindme/templates/webapp/knowmore.html:135
+#: georemindme/templates/webapp/knowmore.html:139
+#: georemindme/templates/webapp/knowmore.html:140
+#: georemindme/templates/webapp/knowmore.html:141
+#: georemindme/templates/webapp/knowmore.html:145
+#: georemindme/templates/webapp/knowmore.html:146
+#: georemindme/templates/webapp/knowmore.html:147
+#: georemindme/templates/webapp/knowmore.html:151
+#: georemindme/templates/webapp/knowmore.html:152
+#: georemindme/templates/webapp/knowmore.html:153
+#: georemindme/templates/webapp/knowmore.html:157
+#: georemindme/templates/webapp/knowmore.html:158
+#: georemindme/templates/webapp/knowmore.html:163
+#: georemindme/templates/webapp/knowmore.html:164
+#: georemindme/templates/webapp/knowmore.html:169
+#: georemindme/templates/webapp/knowmore.html:175
+msgid "Yes"
+msgstr "Sí"
+
+#: georemindme/templates/webapp/knowmore.html:138
+msgid "HTML5 location"
+msgstr "Localización HTML5"
+
+#: georemindme/templates/webapp/knowmore.html:144
+msgid "User login"
+msgstr "Login de usuario"
+
+#: georemindme/templates/webapp/knowmore.html:150
+msgid "Language choice"
+msgstr "Soporte para múltiple idiomas"
+
+#: georemindme/templates/webapp/knowmore.html:156
+msgid "Allows sign-up"
+msgstr "Permite registro"
+
+#: georemindme/templates/webapp/knowmore.html:159
+#: georemindme/templates/webapp/knowmore.html:165
+#: georemindme/templates/webapp/knowmore.html:170
+#: georemindme/templates/webapp/knowmore.html:171
+#: georemindme/templates/webapp/knowmore.html:176
+#: georemindme/templates/webapp/knowmore.html:177
+msgid "No"
+msgstr "No"
+
+#: georemindme/templates/webapp/knowmore.html:162
+msgid "Offline mode"
+msgstr "Modo sin conexión"
+
+#: georemindme/templates/webapp/knowmore.html:168
+msgid "Sound alarms"
+msgstr "Alarmas sonoras"
+
+#: georemindme/templates/webapp/knowmore.html:174
+msgid "GPS location"
+msgstr "Localización GPS"
+
+#: georemindme/templates/webapp/knowmore.html:180
+msgid "Max. number of tasks"
+msgstr "Número máx. de tareas"
+
+#: georemindme/templates/webapp/knowmore.html:181
+#: georemindme/templates/webapp/knowmore.html:182
+#: georemindme/templates/webapp/knowmore.html:183
+msgid "Unlimited"
+msgstr "Ilimitado"
+
+#: georemindme/templates/webapp/knowmore.html:194
+msgid ""
+"We are <a href='#0.1_team'>currently working</a> on other versions that "
+"users have requested through the <a href='#'>community forums</a>."
+msgstr ""
+"Actualmente <a href='#0.1_team'>estamos trabajando</a> en otras versiones "
+"que nos han pedido los usuarios a través de los <a href='#'>foros de la "
+"comunidad</a>."
+
+#: georemindme/templates/webapp/knowmore.html:198
+msgid "Application"
+msgstr "Aplicación"
+
+#: georemindme/templates/webapp/knowmore.html:199
+msgid "Scheduled<br> launch date"
+msgstr "Fecha de<br>lanzamiento"
+
+#: georemindme/templates/webapp/knowmore.html:200
+msgid "Version"
+msgstr "Versión"
+
+#: georemindme/templates/webapp/knowmore.html:201
+msgid "Compatible with"
+msgstr "Compatible con"
+
+#: georemindme/templates/webapp/knowmore.html:206
+msgid "Private beta"
+msgstr "Beta privada"
+
+#: georemindme/templates/webapp/knowmore.html:212
+msgid "Mid April"
+msgstr "Mediados de abril"
+
+#: georemindme/templates/webapp/knowmore.html:218
+#: georemindme/templates/webapp/knowmore.html:224
+msgid "Late May"
+msgstr "Finales de mayo"
+
+#: georemindme/templates/webapp/knowmore.html:230
+#: georemindme/templates/webapp/knowmore.html:236
+msgid "No launch date yet"
+msgstr "Sin fecha prevista"
+
+#: georemindme/templates/webapp/knowmore.html:231
+#: georemindme/templates/webapp/knowmore.html:237
+msgid "Queued"
+msgstr "En cola"
+
+#: georemindme/templates/webapp/knowmore.html:242
+msgid ""
+"(*) Supported versions of de FF (Firefox), IE (Internet Explorer), Google "
+"Chrome, Safari and Opera will be announced later."
+msgstr ""
+"(*) Las versiones soportadas de FF (Firefox), IE (Internet Explorer), Google "
+"Chrome, Safari y Opera serán anunciadas después."
+
+#: georemindme/templates/webapp/knowmore.html:251
+msgid ""
+"If you want to receive an e-mail when we have news on any of the versions, "
+"you can subscribe by simply filling up this form:"
+msgstr ""
+"Si quieres recibir un correo cuando tengamos novedades sobre alguna de las "
+"versiones, te puedes suscribir simplemente rellenando este formulario:"
+
+#: georemindme/templates/webapp/knowmore.html:253
+msgid "Email address: "
+msgstr "Dirección de correo: "
+
+#: georemindme/templates/webapp/knowmore.html:255
+msgid "Check the versions for the devices you&#39;re interested in:"
+msgstr "Marca las versiones para los dispositivos en los que estés interesado:"
+
+#: georemindme/templates/webapp/knowmore.html:266
+msgid "Subscribe to news & updates"
+msgstr "Suscríbete a las novedades y actualizaciones"
+
+#: georemindme/templates/webapp/knowmore.html:268
+msgid ""
+"You can also <a href='http://feeds.feedburner.com/GeoRemindMe'>subscribe to "
+"the RSS</a> of our blog so you won&#39;t miss anything juicy."
+msgstr ""
+"También puedes <a href='http://feeds.feedburner.com/"
+"GeoRemindMe'>subscribirte al RSS</a> de nuestro blog para que no te vuelvas "
+"a perder nada."
+
+#: georemindme/templates/webapp/knowmore.html:277
+msgid ""
+"If you want to join the community of contributors... do not be shy, let us "
+"know!, <strong>is a great place to learn and share</strong>. As we say in "
+"the <a href='contact.html'>contact page</a>; <em>we are people very "
+"accessible</em>, so if you have any questions, send us an email to <a "
+"href='mailto:community@georemindme.com'>community@georemindme.com</a> and we "
+"will contact you as soon as possible."
+msgstr ""
+"Si quieres unirte a la comunidad de colaboradores... ¡no seas timido, "
+"avísanos!, <strong>este es un magnífico sitio para aprender y compartir</"
+"strong>. Como decimos en la <a href='contact.html'>página de contacto</a>; "
+"<em>somos gente muy accesible</em>, por lo que si tienes alguna pregunta, "
+"mándanos un email a <a href='mailto:community@georemindme."
+"com'>community@georemindme.com</a> y te contactaremos lo antes posible."
+
+#: georemindme/templates/webapp/knowmore.html:280
+msgid "We would like to thank all the support to all our contributors:"
+msgstr ""
+"Desde aquí queremos reconocerles públicamente el apoyo a todos nuestros "
+"colaboradores:"
+
+#: georemindme/templates/webapp/knowmore.html:282
+msgid "Developers"
+msgstr "Desarrolladores"
+
+#: georemindme/templates/webapp/knowmore.html:283
+msgid ""
+"The great team of programmers who manage, develop and refactored the code "
+"that helps keep everything running:"
+msgstr ""
+"El magnífico equipo de programadores que arreglan, desarrollan y "
+"refactorizan el código que ayuda a que todo funcione:"
+
+#: georemindme/templates/webapp/knowmore.html:285
+#: georemindme/templates/webapp/knowmore.html:286
+msgid "HTML5 and CSS3 layout designer"
+msgstr "maquetadores HTML5 y CSS3"
+
+#: georemindme/templates/webapp/knowmore.html:287
+#: georemindme/templates/webapp/knowmore.html:288
+#: georemindme/templates/webapp/knowmore.html:289
+#: georemindme/templates/webapp/knowmore.html:290
+msgid "Android programmer"
+msgstr "programador Android"
+
+#: georemindme/templates/webapp/knowmore.html:291
+msgid "mobile programmer"
+msgstr "programador móvil"
+
+#: georemindme/templates/webapp/knowmore.html:292
+#: georemindme/templates/webapp/knowmore.html:293
+msgid "font-end programmer"
+msgstr "programador de front-end"
+
+#: georemindme/templates/webapp/knowmore.html:294
+msgid "perl  programmer"
+msgstr "programador perl"
+
+#: georemindme/templates/webapp/knowmore.html:295
+msgid "django  programmer"
+msgstr "programador django"
+
+#: georemindme/templates/webapp/knowmore.html:297
+msgid "Designers"
+msgstr "Diseñadores"
+
+#: georemindme/templates/webapp/knowmore.html:298
+msgid ""
+"Who have contributed in developing a nice interface, usable and clean and of "
+"course our brand image:"
+msgstr ""
+"El equipo de diseño que ha contribuido en el desarrollo de una interfaz "
+"agradable, fácil y limpia y por supuesto en nuestra imagen de marca "
+"(incluido nuestro pollo <em>Geo</em>):"
+
+#: georemindme/templates/webapp/knowmore.html:300
+msgid "brand image desing"
+msgstr "diseño de imagen corporativa"
+
+#: georemindme/templates/webapp/knowmore.html:301
+#: georemindme/templates/webapp/knowmore.html:303
+#: georemindme/templates/webapp/knowmore.html:304
+#: georemindme/templates/webapp/knowmore.html:305
+msgid "graphic design"
+msgstr "diseño gráfico"
+
+#: georemindme/templates/webapp/knowmore.html:302
+msgid "interaction desginer"
+msgstr "diseñador de interacción"
+
+#: georemindme/templates/webapp/knowmore.html:307
+msgid "Communicators"
+msgstr "Comunicadores"
+
+#: georemindme/templates/webapp/knowmore.html:308
+msgid ""
+"They help us spreading the project, either by writing articles, looking for "
+"collaborators or preparing documentation:"
+msgstr ""
+"La aportación de estas personas es vital para que el proyecto llegue a más "
+"personas y así pueda seguir creciendo:"
+
+#: georemindme/templates/webapp/knowmore.html:310
+#: georemindme/templates/webapp/knowmore.html:311
+#: georemindme/templates/webapp/knowmore.html:312
+msgid "communication"
+msgstr "comunicación"
+
+#: georemindme/templates/webapp/knowmore.html:314
+msgid "Translators"
+msgstr "Traductores"
+
+#: georemindme/templates/webapp/knowmore.html:315
+msgid ""
+"Without them it would not be possible to enjoy the: web, applications, news "
+"and documentation in different languages."
+msgstr ""
+"Sin ellos no sería posible disfrutar de la web, las aplicaciones y las "
+"noticias en varios idiomas"
+
+#: georemindme/templates/webapp/knowmore.html:317
+#: georemindme/templates/webapp/knowmore.html:318
+msgid "english translator"
+msgstr "traductor de inglés"
+
+#: georemindme/templates/webapp/knowmore.html:319
+msgid "basque translator"
+msgstr "traductor de vasco"
+
+#: georemindme/templates/webapp/knowmore.html:320
+msgid "polish translator"
+msgstr "traductor de polaco"
+
+#: georemindme/templates/webapp/knowmore.html:322
+msgid "Advisors"
+msgstr "Consultores"
+
+#: georemindme/templates/webapp/knowmore.html:323
+msgid ""
+"Last but not least thank people who helped us with expert advice in areas "
+"such as licensing, community management, business model, etc."
+msgstr ""
+"Por último pero no por ello menos importante gracias a las personas que nos "
+"ayudan con su consejo experto en areas como licencias, gestión de la "
+"comunidad, modelos de negocio, etc."
+
+#: georemindme/templates/webapp/knowmore.html:325
+msgid "licensing advice"
+msgstr "consultor en licencias"
+
+#: georemindme/templates/webapp/knowmore.html:326
+msgid "teams management consultant"
+msgstr "consultora en gestión de equipos"
+
+#: georemindme/templates/webapp/knowmore.html:327
+msgid "Free Software Support"
+msgstr "consultor en software libre"
+
+#: georemindme/templates/webapp/knowmore.html:328
+#: georemindme/templates/webapp/knowmore.html:329
+msgid "advice on free software business"
+msgstr "asesor de negocio"
+
+#: georemindme/templates/webapp/knowmore.html:338
+msgid ""
+"\n"
+"         <h2>Source code</h2>\n"
+"         <p>Download the set of open source applications <strong>developed "
+"and maintained together</strong> by the user community and <a href=\"contact."
+"html\">us</a>.\n"
+"         <p>Currently the two applications contained in this release are:</"
+"p>\n"
+"         <ul>\n"
+"            <li>\n"
+"               <strong>GeoRemindMe! Web Version 1.0</strong>: this "
+"application consists on 3 main parts: the mobile web application, web "
+"application, desktop and server that handles persistent data.<br>\n"
+"               Licensed under: <a href=\"http://www.fsf.org/licensing/"
+"licenses/agpl-3.0.html\" title=\"Affero GNU Public License\">AGPL v3</a>\n"
+"               <p class=\"footer-notes\">Proudly developed using: <a href="
+"\"http://dev.w3.org/html5/spec/Overview.html\">HTML5</a>, <a href=\"http://"
+"www.w3.org/TR/css3-roadmap/\">CSS3</a>, <a href=\"http://jqtouch.com/"
+"\">jQtouch</a>, <a href=\"http://jquery.com/\">jQuery</a>, <a href=\"http://"
+"code.google.com/intl/es/appengine/\">Google App Engine</a>, <a href=\"http://"
+"www.blueprintcss.org/\">Blueprint</a> y <a href=\"http://www.djangoproject."
+"com/\">Django</a>.</p>\n"
+"               <p><a href=\"#\" class=\"download-icon\">Download the source "
+"code of GeoRemindMe! Web Version 1.0</a></p>\n"
+"            </li>\n"
+"            <li>\n"
+"               <strong>GeoRemindMe! Android Version</strong>: the native "
+"application for Android phones to manage alerts, synchronized with the "
+"server, to track the user's position and course to sound alerts....<br>\n"
+"               Licensed under: <a href=\"http://www.gnu.org/copyleft/gpl.html"
+"\" title=\"GNU Public License v3\">GPL v3</a>\n"
+"               <p class=\"footer-notes\">Proudly developed using: Java SDK y "
+"<a href=\"http://developer.android.com/sdk/index.html\">Android SDK</a>.</"
+"p>\n"
+"               <p>The source code of GeoRemindMe! Android Version 1.0 it is "
+"not finished yet, if you want you can go directly to the <a href=\"#"
+"\">subversion repository</a> and download there the code.</p>\n"
+"            </li>\n"
+"         </ul>\n"
+"         \n"
+"         "
+msgstr ""
+"\n"
+"         <h2>Código fuente</h2>\n"
+"         <p>Descarga el conjunto de aplicaciones libres "
+"<strong>desarrolladas y mantenidas conjuntamente</strong> por los usuarios "
+"de la comunidad y <a href=\"contact.html\">nosotros</a>.\n"
+"         <p>Actualmente las dos aplicaciones contenidas en este paquete son:"
+"</p>\n"
+"         <ul>\n"
+"            <li>\n"
+"               <strong>GeoRemindMe! Web Version 1.0</strong>: esta "
+"aplicación está dividida en 3 partes principalmente: la aplicación web "
+"móvil, la aplicación web de escritorio, y el servidor que se encarga de "
+"gestionar los datos persistentes.<br>\n"
+"               Licencida bajo: <a href=\"http://www.fsf.org/licensing/"
+"licenses/agpl-3.0.html\" title=\"Affero GNU Public License\">AGPL v3</a>\n"
+"               <p class=\"footer-notes\">Desarrollada con: <a href=\"http://"
+"dev.w3.org/html5/spec/Overview.html\">HTML5</a>, <a href=\"http://www.w3.org/"
+"TR/css3-roadmap/\">CSS3</a>, <a href=\"http://jqtouch.com/\">jQtouch</a>, <a "
+"href=\"http://jquery.com/\">jQuery</a>, <a href=\"http://code.google.com/"
+"intl/es/appengine/\">Google App Engine</a>, <a href=\"http://www."
+"blueprintcss.org/\">Blueprint</a> y <a href=\"http://www.djangoproject.com/"
+"\">Django</a>.</p>\n"
+"               <p><a href=\"#\" class=\"download-icon\">Descargar el código "
+"fuente de GeoRemindMe! Web Version 1.0</a></p>\n"
+"            </li>\n"
+"            <li>\n"
+"               <strong>GeoRemindMe! Android Version</strong>: la aplicación "
+"nativa para teléfonos Android para gestionar alertas sincronizadas con el "
+"servidor , comprueba la posición del usuario para hacer sonar las alertas "
+"cuando haya una tarea cercana...<br>\n"
+"               Licenicada bajo: <a href=\"http://www.gnu.org/copyleft/gpl."
+"html\" title=\"GNU Public License v3\">GPL v3</a>\n"
+"               <p class=\"footer-notes\">Desarrollada usando: Java SDK y <a "
+"href=\"http://developer.android.com/sdk/index.html\">Android SDK</a>.</p>\n"
+"               <p>El código fuente de GeoRemindMe! Android Version 1.0 aún "
+"no está terminado , si quieres puedes acceder directamente al <a href=\"#"
+"\">repositorio subversion</a> y descargar allí el código.</p>\n"
+"            </li>\n"
+"         </ul>\n"
+"         \n"
+"         "
+
+#: georemindme/templates/webapp/privacypolicy.html:5
+msgid "Privacy policy - GeoRemindMe"
+msgstr "Política de privacidad - GeoRemindMe"
+
+#: georemindme/templates/webapp/privacypolicy.html:26
+#: georemindme/templates/webapp/tos.html:26
+msgid "Privacy policy"
+msgstr "Política de privacidad"
+
+#: georemindme/templates/webapp/tos.html:5
+msgid "Terms of Service of GeoRemindMe"
+msgstr "Terminos y condiciones"
+
+#~ msgid "Screenshot Android version: Task list"
+#~ msgstr "Pantallazo de la versión Android: Lista de tareas"
+
+#~ msgid "Chief Branding Officer (CBO)"
+#~ msgstr "Directora de Branding (CBO)"
+
+#~ msgid "Javi description"
+#~ msgstr "Sin descripción"
+
+#~ msgid "brand image design"
+#~ msgstr "diseño de imagen corporativa"
+
+#~ msgid "branding"
+#~ msgstr "branding"
+
+#~ msgid "Sin fecha prevista"
+#~ msgstr "Sin fecha prevista"
+
+#~ msgid "Actual password"
+#~ msgstr "Contraseña actual"
+
+#~ msgid "Have account?"
+#~ msgstr "¿Tienes cuenta?"

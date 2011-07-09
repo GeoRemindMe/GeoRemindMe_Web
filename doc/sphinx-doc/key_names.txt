@@ -1,0 +1,19 @@
+Estructura usada para los key_names de cada modelo:
+
+	RoutePoint
+		'rp%f%f' % (point.lat, point.lon)
+		
+	RoutePath
+		'rpa%s' % (encodedPoints)
+		
+	RouteUserPoint
+		'rup%s%f%f' % (str(user.key()), point.lat, point.lon)
+		
+	RouteUserPath
+		'rupa%s%s' % (str(user.key()), str(path.encodedPoints))
+		
+	RoutePathIndex
+		'rpai%s' % (encodedPoints)
+		
+	RouteUserPathIndex
+		'rupai%s%s' % (str(user.key()), str(path.encodedPoints))

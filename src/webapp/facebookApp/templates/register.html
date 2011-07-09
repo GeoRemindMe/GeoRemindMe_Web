@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+{% block nav %} 
+    {% include "register_menu.html" %}
+{% endblock %}
+
+
+{% block body %}
+    <div id="register-panel">
+        <h1>Aplicación GeoRemindMe</h1>
+        <h2>Crea, recibe y gestiona recomendaciones con tus amigos</h2>
+        <p>Y sincronízalas con tu teléfono móvil</p>
+        <div id="video">
+            <iframe width="399" height="257" src="http://www.youtube.com/embed/Sc42jveY8PI" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="left">
+            <a href="#">Más información</a>
+        </div>
+        <div class="right">
+                <fb:login-button perms="{{permissions}}" show-faces="true"></fb:login-button>
+        </div>
+    </div>
+    
+{% endblock %}

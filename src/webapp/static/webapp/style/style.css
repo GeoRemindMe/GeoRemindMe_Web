@@ -1,0 +1,451 @@
+@charset "utf-8";
+/* CSS Document */
+
+/********** ADDED */
+#wait-mask
+{
+    cursor:wait;
+    position:fixed;
+    z-index:999;
+    width:100%;
+    height:100%;
+    display:none;
+}
+/**************/
+
+
+body {
+   background: url(../img/bg.png) repeat-x;
+}
+
+fieldset {
+   border:none;
+}
+
+#logo{
+    display: block;
+    margin: 10px auto;
+    padding: 15px;
+    width: 322px;
+}
+
+div#error404 #logo{
+   
+   display: block;
+   padding: 15px 0;
+   float:left;
+   margin-bottom:15px;
+}
+
+
+#topnav{
+   display:block;
+   float: right;
+   height: 70px;
+   margin-right: 50px;
+   margin-top: 20px;
+}
+
+#signin-c {
+    display: inline;
+    position: relative;
+}
+
+#signin_controls {
+    position: relative;
+    top: 3px;
+   font-weight:normal;
+}
+#have_an_account span{
+   font-weight:bold;
+   margin-right:10px;
+}
+a.menu-open {
+    -moz-border-radius-leftbottom: 0;
+    -moz-border-radius-rightbottom: 0;
+    
+}
+
+#signinBtn.openedLoginBtn{
+   background: url("../img/loginBtn.png") no-repeat scroll 0 -42px transparent;
+}
+#signinBtn.openedLoginBtn:hover{
+   background: url("../img/loginBtn.png") no-repeat scroll 0 -63px transparent;
+}
+.closedLoginBtn{
+   background: url("../img/loginBtn.png") no-repeat scroll 0 0 transparent;
+}
+#signinBtn {
+
+    color: #FFFFFF;
+    display: block;
+    float: right;
+    height: 20px;
+    margin-left: 2px;
+    padding-right: 20px;
+    padding-top: 1px;
+    text-align: center;
+    text-decoration: none;
+    width: 84px;
+}
+
+#signinBtn.closedLoginBtn:hover {
+   background: url("../img/loginBtn.png") no-repeat scroll 0 -21px transparent;
+   color: #555;
+}
+
+#signin_submit{
+    background-image: url("../img/signInBtn.png");
+    border: 0 none;
+    color: white;
+    float: right;
+    font-size: 1.1em;
+    height: 21px;
+    margin-top: 5px;
+    width: 91px;
+}
+#signin_submit:hover{
+   background: url("../img/signInBtn.png") no-repeat scroll 0 -21px transparent;
+   color:black;
+}
+
+a.signin p{
+   margin-left: 5px;
+}
+
+#signinMenu {
+border: 1px solid #CCCCCC;
+    
+    line-height: 16px;
+    margin: 0 auto;
+    padding: 8px;
+    text-align: left;
+    top: 100%;
+    width: 350px;
+    z-index: 100;
+}
+
+#signin {
+    color: #666666;
+    font-size: 11px;
+    margin: 0;
+}
+
+#signin p {
+    margin: 10px 0 15px;
+}
+#signin p.loginPassword{
+   margin-bottom:5px;
+}
+
+.loginMail{
+   background-image: url("../img/mailInactive.png");
+   background-position: 100% 50%;
+   background-repeat: no-repeat;
+   height: 22px;
+   width: 33px;
+}
+
+.loginPassword{
+   background-image: url("../img/passIconInactive.png");
+   background-position: 100% 50%;
+   background-repeat: no-repeat;
+   height: 35px;
+   width: 31px;
+}
+
+nav{
+    clear: both;
+}
+
+#description {
+    clear: both;
+    float: left;
+    font-weight: bold;
+    margin-left: 70px;
+    text-align: center;
+    width: 500px;
+}
+#description h2,#description p{
+   font-size:1.4em;
+   font-weight: normal;
+}
+
+#register,#form-invitation-request{
+   border: 1px solid #DEDEDE;
+   
+   min-height: 175px;
+   margin: 0 auto;
+   padding: 10px;
+   width: 261px;
+}
+#signin hr{
+    visibility:hidden;
+}
+#register p.new_msg, #form-invitation-request p.new_msg,p.new_msg{
+    font-size: 1.6em;
+    margin: 0;
+    text-align: center;
+}
+#register form span{
+   display:block;
+   clear:both;
+}
+#register form span #container-pass1,#register form span #container-pass2{
+   clear:none;
+}
+#register form span img{
+   float:left;
+}
+#register form span input, p.loginMail input,p.loginPassword input{
+   color: gray;
+   float: right;
+    height: 22px;
+    margin-top: 15px;
+    padding: 1px 10px;
+    width: 190px;
+   font-style:italic;
+   font-size: 13px;
+}
+
+p.loginMail input{
+   margin-left: 50px;
+   width: 275px;
+   float:none;
+   margin-top:0;
+}
+
+p.loginPassword input{
+   margin-left: 50px;
+   width: 275px;
+   float:none;
+   margin-top:0;
+}
+
+#register form span input:focus{
+   background-color:#ffff88;
+}
+#register form #terms input{
+   float:left;
+   margin-top: 20px;
+   margin-left: 15px;
+}
+
+#register form #terms span{
+   line-height: 20px;
+    margin-top: 10px;
+   cursor:pointer;
+   text-align: left;
+}
+
+#errorTerms{
+   color:red;
+}
+
+#register form p.clear span{
+   clear: none;
+   display: block;
+   float: right;
+   width: 210px;
+}
+
+#startBtn{
+   clear: both;
+   display: block;
+   float: right;
+   font-size: 1.1em;
+   height: 27px;
+   width: 80px;
+   cursor:pointer;
+   border:0;
+}
+
+#startBtn.enabled{
+   background: url("../img/startBtn.png");
+   color:white;
+}
+#startBtn.disabled{
+   background: url("../img/startBtn.png") repeat scroll 0 -54px transparent;
+   color:black;
+}
+
+#startBtn.enabled:hover{
+   background: url("../img/startBtn.png") repeat scroll 0 -27px transparent;
+   color: #555;
+}
+
+iframe{
+   border:0;
+}
+
+#networks{
+    font-size: 1.5em;
+    font-weight: normal;
+    position: absolute;
+    text-align: right;
+    top: 110px;
+    width: 271px;
+}
+
+#networks p{
+   float: right;
+   margin-bottom: 10px;
+   text-align: left;
+   width: 130px;
+   color:#777;
+   font-size: 1em;
+}
+#private-beta div#networks,#main-container div#networks{
+   margin-left: 650px
+}
+ul{
+   margin:0;
+   padding:0;
+   clear:both;
+}
+ul li{
+   list-style:none;
+   display:inline;
+   margin-left: 7px;
+}
+
+#support {
+   display: block;
+   float: left;
+   width: 350px;
+   height:71px;
+   margin-left:20px;
+}
+
+#contact {
+   display: block;
+   float: left;
+/*
+   width: 360px;
+*/
+   height:71px;
+}
+
+#language {
+   display: block;
+   float: left;
+   width: 100px;
+   height:71px;
+   margin-left:20px
+}
+
+#footer {
+    background-color: #F1F1F1;
+    border-top: 2px solid #DDDDDD;
+    font-size: 12px;
+    margin: 25px 0 0;
+    padding: 20px 0 15px;
+}
+
+#footer-nav {
+	width:960px;
+	margin: 0 auto;
+}
+#footer-nav ul{
+	line-height: 35px;
+}
+#footer-nav p{
+	margin-left:7px;
+	color:#777;
+    font-size: 0.9em;
+}
+#footer-nav p a{
+	color:inherit;
+	text-decoration:none;
+}
+#footer-nav form{
+	float:right;
+}
+
+#language {
+   display: block;
+   float: left;
+   width: 100px;
+   height:71px;
+   margin-left:20px
+}
+
+#footer{
+    background-color: #F1F1F1;
+    border-top: 2px solid #DDDDDD;
+    font-size: 12px;
+    margin: 25px 0 0;
+    padding: 20px 0 15px;
+}
+
+
+#main-container {
+    clear: both;
+    float: left;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    
+}
+
+/* 
+ * *************************************************
+ * STYLE FOR CONFIRMATION AND 404 PAGE
+ * *************************************************
+ * */
+
+
+#big-text {
+   float: left;
+   width: 600px;
+   position: relative;
+   margin-top: 50px;
+   margin-bottom: 50px;
+}
+
+#big-text p {
+   font-size: 24px;
+}
+
+
+
+#signinMenu2 {
+   -moz-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
+   box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.3);
+   -moz-box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.3);
+   box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.3);
+   background: none repeat scroll 0 0 white;
+   border: 1px solid #DEDEDE;
+   line-height: 16px;
+   margin: 30px 30px 30px;
+   padding: 8px;
+   position: relative;
+   text-align: left;
+   width: 250px;
+   float: right;
+   overflow: visible;
+}
+
+#DizzyChicken {
+   margin: 30px 30px 30px;
+   padding: 8px;
+   position: relative;
+   text-align: left;
+   width: 250px;
+   float: right;
+   overflow: visible;
+}
+
+#DizzyImage {
+   -webkit-transition: -webkit-transform .6s ease-in-out;
+      -moz-transition:    -moz-transform .6s ease-in-out;
+        -o-transition:      -o-transform .6s ease-in-out;
+         transition:       transform .6s ease-in-out;
+}
+
+#DizzyImage:hover {
+   -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+         transform: rotate(360deg);
+}

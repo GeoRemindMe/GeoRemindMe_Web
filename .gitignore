@@ -1,0 +1,7 @@
+src/webapp/settings.py
+*.pyc
+.project
+.git
+.pydevproject
+/.settings
+virtualme/*

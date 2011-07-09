@@ -1,0 +1,635 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+   background: url(../img/bg.png) repeat-x;
+    background-attachment: fixed;
+   overflow:hidden;
+   overflow-y:scroll;
+}
+
+#bg_header {
+    background: url("../img/bg.png") repeat-x fixed 0 0 white;
+    height: 125px;
+    position: fixed;
+    width: 100%;
+    z-index: 0;
+}
+
+fieldset {
+         margin:0;
+         padding:0;
+}
+
+#main_container #header img {
+   
+}
+
+#header {
+   position: fixed;
+   /*background: url(../img/bg.png) repeat-x;*/
+   width:960px;
+}
+
+h1{
+   margin-bottom: 0;
+    margin-left: 20px;
+    position: fixed;
+    font-size:1.5em;
+    line-height:2em;
+   }
+
+#header,#footer,.col-left h1 {
+   
+}
+
+fieldset {
+   border: none;
+}
+
+select {
+   
+}
+
+#topnav {
+   display: block;
+   float: right;
+   width: 300px;
+   height: 70;
+   text-align: right;
+}
+
+#signin-c {
+   display: inline;
+   position: relative;
+}
+
+
+#footer div ul li a{
+   line-height: 23px;
+}
+
+#language {
+   float:right;
+   margin-top: 7px;
+   
+   /*display: block;
+   float: left;
+   width: 100px;
+   height: 71px;
+   margin-left: 20px*/
+}
+#language h3{
+   float: left;
+   line-height: 17px;
+   margin-right: 7px;
+}
+#language form {
+float: right;
+}
+   
+#language form select {
+   
+   font-size:11px;
+   margin:0;
+}
+
+#footer { 
+   background-color: white;
+   bottom: 10px;
+   display: block;
+   height: 0px;
+   overflow: visible;
+   padding-top: 10px;
+   position: fixed;
+   z-index: 0;
+   margin-bottom:10px;
+   text-align:center;
+}
+
+#footer div {
+   background-color: white;
+    display: block;
+    float: left;
+    height: 35px;
+}
+
+#split{
+   background: url("../img/bg_footer.jpg") repeat-x  scroll 0 0 white;
+   margin:0;
+   height: 20px;
+   cursor: pointer;
+   border: 1px dotted #CCCCCC;
+}
+#split span{
+   padding-right:5px;
+   text-align:right;
+   float:left;
+   width:920px;
+   color: #0066CC;
+}
+span#icon_split{
+   background: url("../img/sprite_show_hidden.png") no-repeat scroll 0 2px transparent;
+   display: block;
+   float: right;
+   height: 15px;
+   visibility: visible;
+   width: 20px;
+   padding-right: 0;
+}
+
+#bg_footer {
+   background-color: white;
+   bottom: 0;
+   height: 100px;
+   position: fixed;
+   width: 100%;
+   z-index: 1;
+   display: none;
+}
+
+#footer #support li {
+   list-style: none;
+   display: inline;
+   float: left;
+   margin-right: 10px;
+   padding-right: 15px;
+   line-height: 55px;
+}
+
+#footer div li {
+   list-style: none;
+   display: block;
+   float: left;
+   margin-right: 5px;
+   padding-right: 10px;
+   
+}
+
+.hr-especial {
+   
+   margin-left: auto;
+   margin-right: auto;
+   height: 6px;
+   
+}
+
+.vertical-ruler {
+   background: url("../img/separador-ver-small.png") no-repeat scroll right
+      center transparent;
+}
+
+.vertical-ruler-big {
+   background: url("../img/separador-ver-big.png") no-repeat scroll right
+      center transparent;
+   
+}
+
+/*
+#footer div{
+   float: left;
+    width: 25%;
+    height:120px;
+   }
+*/
+
+/*
+ * Dashboard styles 
+ */
+.cancelButton {
+   text-decoration: underline;
+   color: blue;
+   cursor: pointer;
+}
+
+.col-left {
+   float: left;
+    min-height: 450px;
+    width: 450px;
+    overflow: hidden;
+    position: fixed;
+    top: 50px;
+    z-index: 0;
+}
+
+.col-right {
+   float: right;
+   margin: 40px 0 0 500px;
+   min-height: 450px;
+   text-align: left;
+   width: 500px;
+}
+
+#map_canvas {
+   width: 450px;
+   height: 400px;
+   border: 1px solid #CCCCCC;
+   clear:both;
+}
+
+#task-list {
+   display: block;
+    float: right;
+    margin-top: 90px;
+/*
+    margin-bottom: 120px;
+*/
+    width: 100%;
+    overflow:hidden;
+}
+
+#task-list li:hover {
+   /*cursor: pointer;*/
+}
+
+.task {
+   display: inline-block;
+   line-height: 30px;
+   padding-left:5px;
+    width:360px;
+}
+
+#task-list .li-tarea {
+   list-style: none;
+   clear: both;
+   /*padding-left: 40px;*/
+}
+
+#task-list .li-tarea div {
+   list-style: none;
+   float: left;
+}
+
+.task-edit
+{
+   margin-left:40px;
+   padding:5px;
+   background-color:#EBEBEB;
+   /*float:left;*/
+   /*margin-top:-20px;*/
+   /*margin-bottom:1px;*/
+   border:1px solid #ABABAB;
+   border-collapse:collapse;
+   width:446px;
+}
+
+.task-highlight
+{
+   /*border:2px solid black;
+   -moz-border-radius: 5px;
+   border-radius: 5px;*/
+   background-color:#fff999;
+}
+
+ol {
+   margin: 0;
+   padding: 0;
+}
+
+textarea {
+   height: 80px;
+   width:434px;
+   margin:0;
+}
+
+.task-details {
+   /*padding: 5px 0;*/
+   width: 400px;
+   cursor:pointer;
+}
+
+#add-task {
+   display: block;
+   line-height: 15px;
+   background-color: #eee;
+   border: 1px solid #ccc;
+   padding: 5px;
+   margin: 10px;
+   clear: both;
+   text-align: center;
+   color: #3c6cd2;
+   cursor: pointer;
+   margin: 0.5em 10px 10px 20px;
+}
+
+#pointer
+{
+    cursor:pointer;
+    /*display:none;*/
+    height:32px;
+    width:32px;
+}
+
+#add-task:hover{
+   background-color: #ddd;
+   }
+
+#task-filter {
+   border-bottom: 1px solid #CCCCCC;
+    float: right;
+    margin-left: 20px;
+    padding-top: 35px;
+    position: fixed;
+    text-align: right;
+    width: 480px;
+}
+
+.hover-li-icons {
+   width: 40px;
+   float: left;
+   text-align: right;
+}
+
+.hover-li-icons img {
+   margin-top: 11px;
+   cursor:pointer;
+}
+
+#logged-menu {
+   float: right;
+   
+   text-align: right;
+   width:500px;
+   margin-top:20px;
+   z-index:5;
+}
+
+.task-done {
+   margin-top: 13px;
+   display:inline;
+}
+
+.location {
+   width: 320px;
+}
+
+.task-name {
+   width: 398px;
+   display:inline;
+}
+
+#contact #header,#support #header,#language #header {
+   background-color: white;
+   background-image: none;
+   padding: 0;
+}
+
+#container-add-task {
+   float: left;
+}
+
+#search {
+   float: right;
+   padding-right: 20px;
+}
+
+#logged-menu #help {
+   background-image: url(../img/help_icon_min.png);
+}
+#logout{
+   background-image: url(../img/icon_salir.png);
+}
+#profile{
+   background-image: url(../img/icon_perfil.png);
+}
+
+.icon-menu-bar,#logged-menu span{
+   background-repeat: no-repeat;
+   display: block;
+   float: right;
+   height: 20px;
+   margin-right: 17px;
+   padding-left: 24px;
+}
+
+#logo{
+   margin-top:10px;
+   float:left;
+   }
+/*
+
+#footer div{
+   border-top:1px solid #ccc;
+   background: url(../img/bg.png) repeat-x;
+   }
+#footer div #header {
+   font-size: 1.2em;
+    margin-left: 75px;
+    padding-top: 5px;
+    position: relative;
+}
+
+#footer div ul li {
+   float:left;
+   width:50%;
+   list-style:none;
+}
+#footer div ul{
+   margin: 7px;
+   padding:0;
+   line-height:2em;
+   padding:0 7px 0 70px;
+   height: 64px;
+*/
+}
+
+#open-source ul{
+   background: url("../img/nu.png") no-repeat scroll left
+   }
+   
+#about-us ul{
+    background: url("../img/community_icon.png") no-repeat scroll left
+    }
+    
+#help ul{
+    background: url("../img/icon_help.png") no-repeat scroll left
+    }
+#footer #header{
+   background: none;
+   }
+
+#help-toolbar{
+   position:fixed;
+   top:-150px;
+   border-bottom:1px solid #ccc;
+   border-left:1px solid #ccc;
+   border-right:1px solid #ccc;
+   width:540px;
+   margin:0 auto 20px 200px;
+   padding:0 5px;
+   
+   -moz-border-radius: 5px;
+   -moz-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
+   -webkit-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
+   -webkit-border-radius: 0 0 3px 3px;
+   height:100px;
+   background:url(../img/bg.png) repeat-x;
+}
+#help-toolbar p{
+   margin: 10px 0 5px 0;
+   text-align:center;
+   text-decoration:underline;
+}
+#help-toolbar ul li{
+   display: block;
+   width: 26%;
+   float: left;
+   padding-left: 30px;
+   line-height: 2em;
+   font-size: 1.1em;
+}
+
+#help-toolbar ul li#videos{
+   background: url("../img/icon_video.png") no-repeat scroll left   
+}
+#help-toolbar ul li#ideas{
+   background: url("../img/icon_idea.png") no-repeat scroll left
+}
+#help-toolbar ul li#faq{
+   background: url("../img/icon_faq.png") no-repeat scroll left
+}
+#help-toolbar ul li#advices{
+   background: url("../img/icon_consejos.png") no-repeat scroll left
+}
+#help-toolbar ul li#praises{
+   background: url("../img/icon_peticion.png") no-repeat scroll left
+}
+#help-toolbar ul li#problems{
+   background: url("../img/icon_problema.png") no-repeat scroll left
+}
+#closeBtn{
+float:right;
+}
+
+#done-tasks{
+margin-left: 0px;
+}
+#done-tasks p{
+   color: gray;
+   font-size: 1.5em;
+   margin: 10px 0 0 20px;
+}
+#done-tasks ul{
+   margin-left: 45px;
+   padding:0;
+}
+#done-tasks li{
+   list-style: none outside none;
+   color:gray;
+   font-size: 0.9em;
+   margin-left: 3px;
+   clear:both;
+   
+}
+
+#show-all
+{
+    clear: both;
+    cursor: pointer;
+    float: right;
+}
+
+#show-all input{
+    margin: 0;
+    margin-right: 3px;
+    float:right;
+}
+
+#show-all span
+{
+    float: right;
+    font-weight: bold;
+    line-height: 20px;
+}
+
+#done-tasks li:hover{
+   cursor:pointer;
+}
+#done-tasks span{
+   
+    display: block;
+    margin: 8px 8px 8px 20px;
+}
+#done-tasks li input{
+   display: block;
+   float: left;
+   
+   margin: 0px;
+}
+
+.date{
+margin-right:5px;
+}
+#closeBtn{
+ color:#3c6cd2;
+ cursor:pointer;
+ text-decoration:underline;
+}
+
+
+#footer h3{
+   color: #777777;
+   font-size: 11px;
+   margin: 0;
+}
+
+#footer #support li {
+   list-style:none;
+   display:inline;
+   float:left;
+   margin-right:10px;
+   padding-right:15px;
+   line-height:43px;
+}
+
+#footer #contact li {
+   list-style:none;
+   display:block;
+   float:left;
+   margin-right:5px;
+   padding-right:10px;
+   line-height:43px;
+   width:auto;
+}
+
+#tooltip h1
+{
+    font-size:14px;
+    font-weight:bold;
+    margin:0px;
+    padding:0px;
+    position:relative;
+    line-height:1em;
+}
+#tooltip h3
+{
+    font-size:12px;
+    font-style:italic;
+    font-weight:normal;
+    margin:0px;
+    padding:0px;
+    position:relative;
+    line-height:1em;
+}
+#tooltip hr
+{
+    margin:0;
+}
+#tooltip p
+{
+    padding:0.2em;
+    font-size:12px;
+    font-weight:normal;
+    margin:0px;
+    position:relative;
+    line-height:1em;
+}
+
+.ui-autocomplete
+{
+    text-align:left;
+}
+
+::-webkit-input-placeholder, input:-moz-placeholder
+{
+    font-style:italic;
+}

@@ -1,0 +1,137 @@
+{% extends "webapp/base.html" %}
+
+{% load i18n %}
+
+{%block extra_js%}
+<script type="text/javascript">
+
+function register(e)
+{
+   if (typeof(REQUEST) != "undefined" && REQUEST)
+      REQUEST.abort();
+   
+   e.preventDefault();
+   
+   if (!validateForm())
+      return;
+   
+   data = {
+      "user_register-email":$('#registerEmail').val(),
+      "user_register-password":$('#userRegisterPass1').val(),
+      "user_register-password2":$('#userRegisterPass2').val()
+      };
+   
+   $("#wait-mask").show();
+   
+   $('#msgRegisterEmail').hide();
+   $('#msgRegisterPass').hide();
+   
+   REQUEST = $.ajax({
+      url: AJAX_URL+"register/",
+      dataType: 'json',
+      data: data,
+      success: function(data){
+         if (typeof(data.errors)!="undefined")
+         {
+            if(typeof(data.errors.email)!="undefined"){
+               $('#msgRegisterEmail').removeClass('msgOK');
+               $('#msgRegisterEmail').addClass('msgNoOK');
+               $('#msgRegisterEmail').html('<span id="txtMsgRegisterEmail">'+data.errors.email+'</span>');
+               $('#msgRegisterEmail').show();
+            }
+            if (typeof(data.errors.password)!="undefined"){
+               $('#msgRegisterPass').removeClass('msgOK');
+               $('#msgRegisterPass').addClass('msgNoOK');
+               $('#msgRegisterPass').html('<span id="txtMsgRegisterPass">'+data.errors.password+'</span>');
+               $('#msgRegisterPass').show();
+            }
+            
+            $("#wait-mask").hide();
+         }
+         else
+         {
+            if(typeof(data._redirect)!="undefined")
+            {
+               REDIRECT = data._redirect;
+               setTimeout(function(){window.location = REDIRECT}, 1000);
+            }
+         }
+         
+         REQUEST=null;
+      },
+      error: function(data){$("#wait-mask").hide();REQUEST=null;},
+      type:"POST",
+      async:true
+      });
+   
+   // Si es correcto => Redirect
+}
+
+$(document).ready(function(){
+   /*
+    * Here the triggers with animations and validations of the 
+    * register form
+   */
+    $("input[name='registerEmail']")
+        .focus(function(){
+         if ($(this).val()=="email") 
+            $(this).val('');
+         $('#imgEmailLogin').attr('src','/static/webapp/img/mailActive.png');
+      })
+        .blur(checkEmail);
+    
+   
+    $("#userRegisterPass1,#userRegisterPass2")
+      .blur(checkPasswords)
+      .keyup(checkPasswords)
+      .focus(function(){$('#imgPasswordLogin').attr('src','/static/webapp/img/passIconActive.png')})
+      .blur(function(){$('#imgPasswordLogin').attr('src','/static/webapp/img/passIconInactive.png')});
+
+      
+   //With this you can check the terms making click on the text
+   $('#textTermsCheckbox').click(function(){
+      if(!$("#termsCheckbox").is(':checked'))
+         $("#termsCheckbox").attr('checked',true);
+      else
+         $("#termsCheckbox").attr('checked',false);
+   });
+   
+   $('#startBtn').click(register);
+   
+   {% if login%}setTimeout(function(){$('#signinBtn').click();},500);{%endif%}
+   
+});
+</script>
+{%endblock%}
+{% block content %}
+
+     <div id="description">
+      <h2>{% trans "GeoRemindMe allows you to link alerts to places." %}</h2><p>{% trans "Geolocate your reminders with GeoRemindMe!" %}</p>
+
+      <span id="iframeVideo"></span>
+     
+     </div>
+     <div id="register">
+     <p class="new_msg">{% trans "Are you new here?"%}</p>
+     <form action="." method="post" onsubmit="return validateForm();">
+        <span id="register_email">
+         <img src="/static/webapp/img/mailInactive.png" alt="Email icon" title="{% trans "Email"%}" id="imgEmailLogin">
+         <input type="text" value="email" name="registerEmail" id="registerEmail"  placeholder="email" autocomplete="off" accesskey="b">
+         <span id="msgRegisterEmail"><span id="txtMsgRegisterEmail"></span></span>
+      </span>
+        <span id="register_pass">
+          <img src="/static/webapp/img/passIconInactive.png" alt="Password icon" title="{% trans "Enter and confirm your password"%}" id="imgPasswordLogin">
+          <span id="container-pass1"><input type="password" value="" placeholder="{% trans "Password"%}" name="userRegisterPass1" id="userRegisterPass1" autocomplete="off" accesskey="n"></span>
+          <span id="container-pass2"><input type="password" value="" placeholder="{% trans "Confirm password"%}" name="userRegisterPass2" id="userRegisterPass2" autocomplete="off" accesskey="m"></span>
+
+        <span class="msgNoOK" style="display:none;">{% trans "Passwords do not match"%}</span>
+
+         <span id="msgRegisterPass" style="display:none;"></span>
+        </span>
+        <p class="clear" id="terms"><input type="checkbox" value="terms" title="{% trans "Check this box if you agree" %}" id="termsCheckbox"><span id="textTermsCheckbox">{% trans "I have read and I accept the <a href='/tos'>Terms of Service</a>" %}.</span> <span id="errorTerms"></span></p>
+        <div ><input type="submit" value="{% trans "Start!"%}" id="startBtn" title="{% trans "Please first fill all the fields" %}"></div>
+     </form>
+     </div>
+
+{%endblock%}
+

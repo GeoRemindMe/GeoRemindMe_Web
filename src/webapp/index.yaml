@@ -1,0 +1,7 @@
+indexes:
+    
+- kind: _Deleted_Alert
+  properties:
+  - name: user
+  - name: created
+    direction: desc

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block extra_js %}
+    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script src="/static/facebookApp/js/social.js"></script>
+{%endblock%}
+
+{% block title %}Dashboard{% endblock %}
+{% block body %}
+    <h1>Followers</h1>
+
+    <h2>Te siguen</h2>
+    {% for f in followers %}
+        {% if f.avatar%}
+            <img src="{{f.avatar}}" alt="{{f.username}} avatar"/>
+        {% else %}
+            <img src="/static/facebookApp/img/no_avatar.png" style="width:50px" alt="{{f.username}} avatar"/>
+        {% endif %}
+        Username={{f.username}}
+    {% endfor %}    
+    
+{% endblock %}

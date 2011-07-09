@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoUser Views &mdash; GeoRemindMe v0.1a documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="GeoRemindMe v0.1a documentation" href="index.html" />
+    <link rel="up" title="GeoUser" href="geouser.html" />
+    <link rel="next" title="GeoUser watchers" href="geouser.watchers.html" />
+    <link rel="prev" title="GeoUser models_social" href="geouser.models_social.html" /> 
+  </head>
+  <body>
+      <div class="header"><img class="rightlogo" src="_static/logo_doc.png" alt="Logo"/><h1 class="heading"><a href="index.html">
+          <span>GeoRemindMe v0.1a documentation</span></a></h1>
+        <h2 class="heading"><span>GeoUser Views</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="geouser.models_social.html">GeoUser models_social</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geouser.watchers.html">GeoUser watchers</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="module-geouser.views">
+<span id="geouser-views"></span><h1>GeoUser Views<a class="headerlink" href="#module-geouser.views" title="Enlazar permanentemente con este título">¶</a></h1>
+<dl class="function">
+<dt id="geouser.views.add_following">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">add_following</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.add_following" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>:        Añade un  nuevo usuario a la lista de following del usuario logeado</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>userid</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; id del usuario (user.id)</li>
+<li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre del usuario (user.username)</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">booleano con el resultado de la operación</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.confirm">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">confirm</tt><big>(</big><em>request</em>, <em>user</em>, <em>code</em><big>)</big><a class="headerlink" href="#geouser.views.confirm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: confirma el email de usuario</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre de usuario</li>
+<li><strong>code</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; código de confirmación</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">En caso de que todo vaya correctamente solicitar identificarse al usuario. En caso contrario devuelve un mensaje de error</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.dashboard">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">dashboard</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.dashboard" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Permite actualizar el email y la contraseña.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">Solo devuelve errores si el proceso falla.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.del_following">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">del_following</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.del_following" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Borra un usuario de la lista de following del usuario logeado</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>userid</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; id del usuario (user.id)</li>
+<li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre del usuario (user.username)</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">boolean con el resultado de la operacion</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.get_chronology">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">get_chronology</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.get_chronology" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Obtiene la lista de timeline de los followings del usuario logueado</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; número de página a mostrar</li>
+<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de búsqueda</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">lista de tuplas de la forma (id, username), None si el usuario tiene privacidad</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.get_followers">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">get_followers</tt><big>(</big><em>request</em>, <em>userid=None</em>, <em>username=None</em>, <em>page=1</em>, <em>query_id=None</em><big>)</big><a class="headerlink" href="#geouser.views.get_followers" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Obtiene la lista de followers de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>userid</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; id del usuario (user.id)</li>
+<li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre del usuario (user.username)</li>
+<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; número de página a mostrar</li>
+<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de búsqueda</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">lista de tuplas de la forma (id, username), None si el usuario tiene privacidad</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.get_followings">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">get_followings</tt><big>(</big><em>request</em>, <em>userid=None</em>, <em>username=None</em>, <em>page=1</em>, <em>query_id=None</em><big>)</big><a class="headerlink" href="#geouser.views.get_followings" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Obtiene la lista de followings de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>userid</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; id del usuario (user.id)</li>
+<li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre del usuario (user.username)</li>
+<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; número de página a mostrar</li>
+<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de búsqueda</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">lista de tuplas de la forma (id, username), None si el usuario tiene privacidad</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.get_timeline">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">get_timeline</tt><big>(</big><em>request</em>, <em>userid=None</em>, <em>username=None</em>, <em>page=1</em>, <em>query_id=None</em><big>)</big><a class="headerlink" href="#geouser.views.get_timeline" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Obtiene la lista de timeline de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>userid</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; id del usuario (user.id)</li>
+<li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre del usuario (user.username)</li>
+<li><strong>page</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; número de página a mostrar</li>
+<li><strong>query_id</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; identificador de búsqueda</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first last">lista de tuplas de la forma (id, username), None si el usuario tiene privacidad</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.login">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">login</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#geouser.views.login" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Recibe petición de autenticación vía POST y si los datos son correctos
+se llama a la función login_func que inicializa, crea la sesión y 
+devuelve un mensaje en caso de éxito.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">En caso de recibir el POST devuelve un string con posibles errores y redirect con la URL a la que habría que dirigir. En caso contrario renderiza la plantilla de login.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.login_facebook">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">login_facebook</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#geouser.views.login_facebook" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Utiliza el <a class="reference external" href="http://oauth.net/">protocolo OAuth</a> para solicitar al 
+usuario que confirme que podemos usar sus sesión de Facebook para identificarlo.
+Así si el usuario está identificado en Facebook no necesitará
+rellenar el formulario de login de GeoRemindMe. <a class="reference internal" href="#geouser.views.login_twitter" title="geouser.views.login_twitter"><tt class="xref py py-func docutils literal"><span class="pre">login_twitter()</span></tt></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">En caso de exito redirige al panel y en caso contrario redirige al panel de login.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.login_google">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">login_google</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#geouser.views.login_google" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Descripción</strong>: Comprueba si ya te has dado de alta en la App con tu cuenta de Google</dt>
+<dd>para entrar automáticamente y sino pedirte permiso para hacerlo.
+Además en caso de éxito inicializa la sesión para dicho usuario.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">En caso de exito llama a <a class="reference internal" href="geouser.funcs.html#geouser.funcs.login_func" title="geouser.funcs.login_func"><tt class="xref py py-func docutils literal"><span class="pre">geouser.funcs.login_func()</span></tt></a> y redirige al panel. En caso contrario renderiza la plantilla de login.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.login_twitter">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">login_twitter</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#geouser.views.login_twitter" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Utiliza el <a class="reference external" href="http://oauth.net/">protocolo OAuth</a> para solicitar al usuario que confirme
+que podemos usar sus sesión de Twitter para identificarlo.</p>
+<p>Así si el usuario está identificado en Twitter no necesitará
+rellenar el formulario de login de GeoRemindMe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">En caso de exito redirige al panel y en caso contrario redirige al panel de login.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.logout">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">logout</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#geouser.views.logout" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Elimina la sesión de usuario y redirige al usuario.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">Redirige al usuario a donde le diga la función login_panel.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.public_profile">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">public_profile</tt><big>(</big><em>request</em>, <em>username</em><big>)</big><a class="headerlink" href="#geouser.views.public_profile" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Perfil publico que veran los demas usuarios</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>username</strong> (<em>ni idea</em>) &#8211; nombre de usuario</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.register">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">register</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#geouser.views.register" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Recibe una petición de registro vía POST e intenta crear un usuario; en caso de éxito le enviará un email para confirmar su cuenta.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>request</strong> (array
+:return: En caso de éxito un <tt class="xref py py-class docutils literal"><span class="pre">google.appengine.api.user</span></tt> y un formulario de registro. En caso de que no se reciba POST redirige al panel de registro) &#8211; array con un email y dos contraseñas</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.remind_user">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">remind_user</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#geouser.views.remind_user" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Resetea la contraseña de usuario</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.remind_user_code">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">remind_user_code</tt><big>(</big><em>request</em>, <em>user</em>, <em>code</em><big>)</big><a class="headerlink" href="#geouser.views.remind_user_code" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Genera una nueva URL única para resetear la contraseña de usuario</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>user</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; nombre de usuario</li>
+<li><strong>code</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; código único para recuperar contraseña</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.update_profile">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">update_profile</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.update_profile" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Actualiza el nombre de usuario y el avatar.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">Solo devuelve errores si el proceso falla.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="geouser.views.update_user">
+<tt class="descclassname">geouser.views.</tt><tt class="descname">update_user</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#geouser.views.update_user" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Descripción</strong>: Permite actualizar el email y la contraseña.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Devuelve:</th><td class="field-body">Solo devuelve errores si el proceso falla.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="geouser.models_social.html">GeoUser models_social</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="geouser.watchers.html">GeoUser watchers</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright GFDL 2011, GeoRemindMe.
+      Creado con <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+    
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-19272923-1']);
+	  _gaq.push(['_setDomainName', '.georemindme.com']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+  </body>
+</html>
