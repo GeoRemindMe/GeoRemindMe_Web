@@ -151,9 +151,9 @@ class UserProfileForm(forms.Form):
     description = forms.CharField(widget=forms.TextInput())
     
     def save(self, user):
-        if file is not None:
-            if 'image/' in file.type:
-                user.profile.avatar = file
+#        if file is not None:
+#            if 'image/' in file.type:
+#                user.profile.avatar = file
         try:
             user.update(username=self.cleaned_data['username'], email=self.cleaned_data['email'], description=self.cleaned_data['description'])
             return True
