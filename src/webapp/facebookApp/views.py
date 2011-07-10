@@ -168,6 +168,7 @@ def edit_settings(request):
                                                                                   'time_notification_suggestion_comment': request.user.settings.time_notification_suggestion_comment,
                                                                                   'time_notification_account': request.user.settings.time_notification_account,
                                                                                   'show_public_profile': request.user.settings.show_public_profile,
+                                                                                  'language': request.user.settings.language,
                                                                                   })
         if f.is_valid():
             f.save(request.user)
@@ -179,6 +180,7 @@ def edit_settings(request):
                                                                   'time_notification_suggestion_comment': request.user.settings.time_notification_suggestion_comment,
                                                                   'time_notification_account': request.user.settings.time_notification_account,
                                                                   'show_public_profile': request.user.settings.show_public_profile,
+                                                                  'language': request.user.settings.language,
                                                                   })
     return  render_to_response('edit_settings.html',{'profile': request.user.profile,
                                                     'settings': request.user.settings,

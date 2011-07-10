@@ -255,6 +255,7 @@ class UserSettingsForm(forms.Form):
     time_notification_suggestion_follower = forms.ChoiceField(label=_('New follower on suggestions'), choices=CHOICES)
     time_notification_suggestion_comment = forms.ChoiceField(label=_('New comment on suggestions'), choices=CHOICES)
     time_notification_account = forms.ChoiceField(label=_('New account follower'), choices=CHOICES)
+    language = forms.ChoiceField(label=_('Language'), choices=settings.LANGUAGES)
     
     def save(self, user):
         try:
@@ -262,7 +263,7 @@ class UserSettingsForm(forms.Form):
             user.settings.time_notification_suggestion_follower = self.cleaned_data['time_notification_suggestion_follower']
             user.settings.time_notification_suggestion_comment = self.cleaned_data['time_notification_suggestion_comment']
             user.settings.time_notification_suggestion_account = self.cleaned_data['time_notification_suggestion_account']
-        
+            user.settings.language = self.cleaned_data['language']
             user.settings.put()
         except:
             return False

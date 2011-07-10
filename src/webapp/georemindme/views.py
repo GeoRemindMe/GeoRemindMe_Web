@@ -30,7 +30,7 @@ def set_language(request):
         if lang in available: #we have the lang_code
             request.session['LANGUAGE_CODE'] = lang
         if request.session.get('user', None):
-            settings = request.session['user'].settings
+            settings = request.user.settings
             settings.language = lang
             settings.put()
         return HttpResponseRedirect(next)
