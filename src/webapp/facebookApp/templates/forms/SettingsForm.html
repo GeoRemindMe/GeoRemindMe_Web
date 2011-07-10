@@ -16,27 +16,15 @@
             <dl id="mail-notifications">
                 <dt>Otro usuario empieza a seguir tus sugerencias</dt>
                 <dd>{{settings_form.time_notification_account}}</dd>
-                {% if settings_form.time_notification_account.errors %}
-                     <span class="error-msg" id="email-error">
-                        {{settings_form.time_notification_account.errors}}
-                    </span>
-                {% endif %}
+                
                 
                 <dt>Recibes un comentario en una sugerencia</dt>
                 <dd>{{settings_form.time_notification_suggestion_comment}}</dd>
-                {% if settings_form.time_notification_suggestion_comment.errors %}
-                     <span class="error-msg" id="email-error">
-                        {{settings_form.time_notification_suggestion_comment.errors}}
-                    </span>
-                {% endif %}
+                
                 
                 <dt>Persona guarda una sugerencia tuya</dt>
                 <dd>{{settings_form.time_notification_suggestion_follower}}</dd>
-                {% if settings_form.time_notification_suggestion_follower.errors %}
-                     <span class="error-msg" id="email-error">
-                        {{settings_form.time_notification_suggestion_follower.errors}}
-                    </span>
-                {% endif %}
+               
                 
 <!--
                 <dt>Otro usuario te envíe una sugerencia</dt>
@@ -58,6 +46,14 @@
                 </span>
             {% endif %}
             <p>Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.</p>
+		</div>
+		<div class="section">	
+			<div class="header">
+                <h2>Idioma</h2>
+                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+            </div>
+           Idioma de la interfaz:
+           {{settings_form.language}}
         </div>
 
     </div>
