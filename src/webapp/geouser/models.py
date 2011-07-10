@@ -373,6 +373,7 @@ class User(polymodel.PolyModel, HookedModel):
         backemail = self.email
         backusername = self.username
         backpassword = self.password
+
         if 'email' in kwargs:
             if self.email != kwargs['email']:
                 from django.core.validators import validate_email
@@ -389,6 +390,9 @@ class User(polymodel.PolyModel, HookedModel):
                     raise ValueError
             else:
                 raise ValueError
+        if 'description' in kwargs:
+            self.profile.description = kwargs['description']
+            
         try:
             put = db.put_async([self, self.profile])
             put.get_result()

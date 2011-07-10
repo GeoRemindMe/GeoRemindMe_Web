@@ -62,4 +62,6 @@ class Test(unittest.TestCase):
         assert isinstance(Alert.update_or_insert(id = None, name = 'alerta', description = 'DESC',
                                                 date_starts = None, date_ends = None, poi=poi,
                                                 user = u, active=None, done_when=None), Alert), 'Error creando la alerta'
+                                                
+
         

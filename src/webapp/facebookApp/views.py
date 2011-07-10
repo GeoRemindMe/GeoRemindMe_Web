@@ -104,7 +104,19 @@ def edit_profile (request):
     :param username: nombre de usuario
     :type username: ni idea
     """
-    return render_to_response('edit_profile.html', {}, context_instance=RequestContext(request))
+    from geouser.forms import UserProfileForm
+    if request.method == 'POST':
+        f = UserProfileForm(request.POST, prefix='user_set_profile')
+        if f.is_valid():
+            modified = f.save()
+    else:
+        f = UserProfileForm(initial={'username': request.user.username,
+                                     'email': request.user.email,
+                                     'description': request.user.profile.description, },
+                            prefix='user_set_profile'
+                            )
+        
+    return render_to_response('edit_profile.html', {'form': f}, context_instance=RequestContext(request))
 
 @facebook_required    
 def user_suggestions(request):

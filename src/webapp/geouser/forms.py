@@ -149,14 +149,20 @@ class SocialUserForm(forms.Form):
 
 class UserProfileForm(forms.Form):
     username = forms.CharField(label=_('Username'), required=True)
+    email = forms.EmailField(label=_('email'), required=True)
+    descripcion = forms.CharField(widget=forms.TextInput())
     
     def save(self, user, file=None):
         if file is not None:
             if 'image/' in file.type:
                 user.profile.avatar = file
         try:
-            user.update(username=self.cleaned_data['username'])
+            user.update(username=self.cleaned_data['username'], email=self.cleaned_data['email'], description=self.cleaned_data['description'])
             return True
+        except User.UniqueEmailConstraint:  # email already in use
+                msg = _("Email already in use")
+                self._errors['email'] = self.error_class([msg])
+                return None
         except User.UniqueUsernameConstraint, e:
             fail = _('Username already in use')
             self._errors['username'] = self.error_class([fail])
