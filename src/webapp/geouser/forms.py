@@ -104,17 +104,15 @@ class SocialUserForm(forms.Form):
     '''
     email = forms.EmailField(label=_('email'), required=True)
     username = forms.CharField(label=_('username'), required=True)
-    #~ '''
-    #~ password = forms.CharField(label=_("Password"), required=False,
-                               #~ max_length=settings.MAX_PWD_LENGTH,
-                               #~ min_length=settings.MIN_PWD_LENGTH,
-                               #~ widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
-                               #~ )
-    #~ password2 = forms.CharField(label=_("Repeat password"), required=False,
-                               #~ max_length=settings.MAX_PWD_LENGTH,
-                               #~ min_length=settings.MIN_PWD_LENGTH,
-                               #~ widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
-                               #~ )
+    password = forms.CharField(required=True, max_length=settings.MAX_PWD_LENGTH,
+                               min_length=settings.MIN_PWD_LENGTH,
+                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               )
+    password2 = forms.CharField(label=_("Repeat password"), required=True,
+                               max_length=settings.MAX_PWD_LENGTH,
+                               min_length=settings.MIN_PWD_LENGTH,
+                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               )
     
     def clean(self):
         """
@@ -136,7 +134,7 @@ class SocialUserForm(forms.Form):
         return cleaned_data
     def save(self, user):
         try:
-            return user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'])
+            return user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'], password=self.cleaned_data['password'])
         except User.UniqueEmailConstraint, e:
             fail = _('Email already in use')
             self._errors['email'] = self.error_class([fail])
@@ -152,7 +150,7 @@ class UserProfileForm(forms.Form):
     email = forms.EmailField(label=_('email'), required=True)
     descripcion = forms.CharField(widget=forms.TextInput())
     
-    def save(self, user, file=None):
+    def save(self, user):
         if file is not None:
             if 'image/' in file.type:
                 user.profile.avatar = file

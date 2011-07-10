@@ -43,7 +43,7 @@
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="#">Notificaciones</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="#">Sitios</a></li>
                     <li class="menu-icons fb-icons" id="{% ifequal user.username profile.parent.username %}{% active request public_profile %}{% endifequal %}"><a id="fb-wall" href="/fb{{user.get_absolute_url}}">Mi perfil</a></li>
-                    <li class="menu-icons fb-icons" id="{% active request profile_settings %}"><a id="fb-wall" href="/fb/settings">Configuración</a></li>
+                    <li class="menu-icons fb-icons" id="{% active request profile_settings %}"><a id="fb-wall" href="/fb/settings/">Configuración</a></li>
                 </ul>
             {% endblock %}
             <hr>

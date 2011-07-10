@@ -578,7 +578,7 @@ class User(polymodel.PolyModel, HookedModel):
         
     def get_absolute_url(self):
         if self.username is not None:
-            return '/user/%s' % str(self.username)
+            return '/user/%s/' % str(self.username)
         
 from watchers import *
 from models_acc import *

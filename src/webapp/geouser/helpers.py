@@ -19,6 +19,7 @@ class UserHelper(object):
     def get_by_username(self, username, keys_only=False):
         if username == '' or username is None:
             return None
+        username = username.lower()
         if keys_only:
             return db.GqlQuery('SELECT __key__ FROM User WHERE username = :1', username).get()
         return User.gql('WHERE username = :1', username).get()
