@@ -395,7 +395,7 @@ body{
      * ACCOUNT SETTINGS
      * 
      ***************************/
-    #right-col #profile{
+    #right-col #profile, #right-col #edit-profile {
         font-size:1.1em
     }
     #profile a.help-icon{
@@ -405,11 +405,11 @@ body{
         margin-left: 10px;
         vertical-align: top;
     }
-    #profile dl{
+    #profile dl,#edit-profile dl{
         line-height:2.5em;
         padding-left: 5px;
     }
-    #profile dl dd{
+    #profile dl dd, #edit-profile dl dd{
         padding-left: 100px;
     }
     
@@ -422,7 +422,7 @@ body{
         margin-left: 25px;
         width: 350px;
     }
-    #profile div#avatar{
+    #profile div#avatar,#edit-profile div#avatar{
         border: 1px dotted #CCCCCC;
         clear: both;
         float: right;
@@ -431,23 +431,23 @@ body{
         padding: 5px;
         text-align: center;
     }
-    #profile div#avatar img{
+    #profile div#avatar img,#edit-profile div#avatar img{
         margin: 5px 5px 0;
         width: 90px;
         border:0;
     }
-    #profile div#avatar a{
+    #profile div#avatar a,#edit-profile div#avatar a{
         text-decoration:none;
     }
-    div#right-col #profile ul{
+    div#right-col #profile ul,div#right-col #edit-profile ul{
         list-style: none outside none;
         margin: 5px 0;
         padding: 0 5px;
     }
-    div#right-col #profile li{
+    div#right-col #profile li,div#right-col #edit-profile li{
         padding: 10px 0;
     }
-    div#right-col #profile li span,#profile dl dt{
+    div#right-col #profile li span,div#right-col #edit-profile li span,#profile dl dt,#edit-profile dl dt{
         width:150px;
         float:left;
         clear:left;
@@ -460,15 +460,18 @@ body{
         float:right;
         margin-right:10px;
     }
-    div#right-col #profile li span#twitter-icon{
+    div#right-col #edit-profile li span#twitter-icon{
         background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 0px transparent;
         padding-left: 20px;
         width:110px;
     }
-    div#right-col #profile li span#google-icon{
+    div#right-col #edit-profile li span#google-icon{
         background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 -16px transparent;
         padding-left: 20px;
         width:110px;
+    }
+    #edit-profile input[type="submit"]{
+		float:none;
     }
     
     /****************************
@@ -742,3 +745,5 @@ body{
         .suggestionInLists{
             width:25%;
         }
+
+

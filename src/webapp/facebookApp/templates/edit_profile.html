@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}Datos personales{% endblock %}
 {% block goBack %}{%endblock%}
 {% block body %}
-    <div id="profile">
+    <div id="edit-profile">
         
         
         <h1>Editar perfil</h1>
@@ -15,27 +16,25 @@
                     <br>
                     Cambiar foto
                 </a>
-            </div>
-            <dl>
-                <dt>Nombre de usuario:</dt>
-                <dd>{{user.username}}</dd>
-                
-                <dt>Password:</dt>
-                <dd><a href="">Editar password</a></dd>
-                
-                <dt>Email:</dt>
-                <dd><a href="mailto:{{user.email}}">{{user.email}}</a></dd>
-                
-                <dt>Descripción:</dt>
-                <dd>
-                    {% if user.profile.description %}
-                        {{user.profile.description}}
-                    {% else %}
-                        Sin descripción
-                    {% endif %}
-                </dd>
-                
-            </dl>
+            </div>          
+            <form method="post" action=".">
+				{% csrf_token %}
+				<dl>
+					<dt><label for="id_user_set_profile-username">Nombre de usuario</label>:</dt>
+					<dd>{{form.username}}</dd>
+					
+					<dt>Password:</dt>
+					<dd><a href="">Editar password</a></dd>
+					
+					<dt><label for="id_user_set_profile-email">Email</label>:</dt>
+					<dd><a href="mailto:{{user.email}}">{{form.email}}</a></dd>
+					
+					<dt><label for="id_user_set_profile-description">Descripción</label>:</dt>
+					<dd>{{form.description}}</dd>
+					
+				</dl>
+				<input type="submit" value="{% trans "Guardar" %}" title="{% trans 'Guardar los cambios' %}">
+			</form>
             <p>Cuentas vinculadas:</p>
                 
             <ul>

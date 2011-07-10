@@ -150,7 +150,7 @@ class SocialUserForm(forms.Form):
 class UserProfileForm(forms.Form):
     username = forms.CharField(label=_('Username'), required=True)
     email = forms.EmailField(label=_('email'), required=True)
-    descripcion = forms.CharField(widget=forms.TextInput())
+    description = forms.CharField(widget=forms.TextInput())
     
     def save(self, user, file=None):
         if file is not None:
