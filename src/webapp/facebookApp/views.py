@@ -121,7 +121,7 @@ def edit_profile (request):
                                      'description': request.user.profile.description, },
                             prefix='user_set_profile'
                             )
-        
+    #~ raise Exception(f)
     return render_to_response('edit_profile.html', {'form': f}, context_instance=RequestContext(request))
 
 @facebook_required    
