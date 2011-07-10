@@ -158,6 +158,7 @@ def add_suggestion(request):
 def profile_settings(request):
     has_twitter = True if request.user.twitter_user is not None else False
     has_google = True if request.user.google_user is not None else False
+    
     return  render_to_response('settings.html',{'counters': request.user.counters,
                                                'profile': request.user.profile,
                                                'has_twitter': has_twitter,
@@ -188,6 +189,7 @@ def edit_settings(request):
                                                                   'show_public_profile': request.user.settings.show_public_profile,
                                                                   'language': request.user.settings.language,
                                                                   })
+	
     return  render_to_response('edit_settings.html',{'profile': request.user.profile,
                                                     'settings': request.user.settings,
                                                     'settings_form': f,

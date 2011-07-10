@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}Datos personales{% endblock %}
 {% block goBack %}{%endblock%}
@@ -53,7 +54,10 @@
                 <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
             </div>
            Idioma de la interfaz:
-           {{settings.language}}
+           {{settings.language}} y 
+           {% get_current_language as LANGUAGE_CODE %} y 
+           {% get_current_language as settings.language %} 
+           
         </div>
         <hr>
         <div id="desinstall">
