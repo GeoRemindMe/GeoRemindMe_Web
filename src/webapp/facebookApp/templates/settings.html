@@ -55,7 +55,9 @@
             </div>
            Idioma de la interfaz:
            {{settings.language}} y 
-           {% get_current_language as LANGUAGE_CODE %}
+           {% get_current_language as LANGUAGE_CODE %} y 
+           {% get_current_language as settings.language %} 
+           
         </div>
         <hr>
         <div id="desinstall">
