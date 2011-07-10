@@ -101,7 +101,7 @@ from georemindme.models_utils import VISIBILITY_CHOICES
 
 class SuggestionForm(forms.Form):
     name = forms.CharField(required=True)
-    place_id = forms.IntegerField(required=True, initial=-1)
+    poi_id = forms.IntegerField(required=True, initial=-1)
     starts = forms.DateTimeField(required=False, widget=SelectDateWidget())
     ends = forms.DateTimeField(required=False, widget=SelectDateWidget())
     description = forms.CharField(required=False,widget=forms.Textarea())    
@@ -132,6 +132,7 @@ class SuggestionForm(forms.Form):
     
     # only save if it is valid
     def save(self, **kwargs):
+        from geoalert.models import Suggestion
         poi = Place.objects.get_by_id(self.cleaned_data['poi_id'])
         suggestion = Suggestion.update_or_insert(
                          id = kwargs.get('id', None), name = self.cleaned_data['name'],

@@ -80,7 +80,7 @@ class User(polymodel.PolyModel, HookedModel):
             self._profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, self.id)))
             if self._profile is None:
                 self._profile = UserProfile.all().ancestor(self.key()).get()
-                memcache.set('%sprofile_%s' % (memcache.version, self.id), memcache.serialize_instances(self._profile))
+                memcache.set('%s%s' % (memcache.version, self._profile.key().name()), memcache.serialize_instances(self._profile))
         return self._profile
 
     @property
@@ -89,7 +89,7 @@ class User(polymodel.PolyModel, HookedModel):
             self._settings = memcache.deserialize_instances(memcache.get('%ssettings_%s' % (memcache.version, self.id)))
             if self._settings is None:
                 self._settings = UserSettings.all().ancestor(self.key()).get() 
-                memcache.set('%ssettings_%s' % (memcache.version, self.id), memcache.serialize_instances(self._settings))
+                memcache.set('%s%s' % (memcache.version, self._settings.key().name()), memcache.serialize_instances(self._settings))
         return self._settings
     
     @property
