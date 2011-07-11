@@ -18,7 +18,7 @@ class UserSettingsHelper(object):
         if settings is None:
             key = db.Key.from_path(User.kind(), userid, UserSettings.kind(), 'settings_%s' % userid)
             settings = db.get(key)
-            memcache.set('%ssettings_%s' % (memcache.version, userid), memcache.serialize_instances(settings))
+            memcache.set('%s%s' % (memcache.version, settings.key().name()), memcache.serialize_instances(settings))
         return settings
         """
         if async:
@@ -36,7 +36,7 @@ class UserProfileHelper(object):
         if profile is None:
             key = db.Key.from_path(User.kind(), userid, UserProfile.kind(), 'profile_%s' % userid)
             profile = db.get(key)
-            memcache.set('%sprofile_%s' % (memcache.version, userid), memcache.serialize_instances(profile))
+            memcache.set('%s%s' % (memcache.version, profile.key().name()), memcache.serialize_instances(profile))
         return profile
         """
         if async:
