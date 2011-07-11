@@ -132,6 +132,7 @@ class SocialUserForm(forms.Form):
                 self._errors['password'] = self.error_class([msg])
 
         return cleaned_data
+    
     def save(self, user):
         try:
             return user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'], password=self.cleaned_data['password'])

@@ -53,9 +53,17 @@
                 <h2>Idioma</h2>
                 <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
             </div>
+            {% get_available_languages as LANGUAGES %}
+            {% get_current_language as LANGUAGE_CODE %}
            Idioma de la interfaz:
+           <select onsubmit="this.form.submit()" onchange="this.form.submit()" id="language-bar" name="lang">
+    			{% for code, name in LANGUAGES %}
+                    <option {%if LANGUAGE_CODE == code %}selected="selected"{% endif %} value="{{code}}" hreflang="{{code}}">{{name}}</option>
+                {% endfor %}
+  			</select>
+  			
            {{settings.language}} y 
-           {% get_current_language as LANGUAGE_CODE %} y 
+            y 
            {% get_current_language as settings.language %} 
            
         </div>

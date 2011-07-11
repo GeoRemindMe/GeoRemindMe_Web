@@ -172,11 +172,11 @@ def report_bug(request, bugs):
 
 
 @jsonrpc_method('view_timeline', authenticated=need_authenticate)
-def view_timeline(request, userid=None, query_id=None, page=1):
-    if userid is None:
+def view_timeline(request, username, query_id=None, page=1):
+    if username == request.user.username:
         timelines = request.user.get_timelineALL(page=page, query_id=query_id)
         return timelines
-    
+    raise InvalidRequestError
 
 @jsonrpc_method('sync_alertlist', authenticated=need_authenticate)
 def sync_alertlist(request, last_sync, modified=[], deleted=[]): 
