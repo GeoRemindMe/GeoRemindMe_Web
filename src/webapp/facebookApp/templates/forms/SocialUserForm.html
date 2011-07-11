@@ -1,6 +1,99 @@
 {% load i18n %}
 <!-- It form is for the class SocialUserForm at geouser/forms -->
-
+{% block extra_js %}
+    <script type="text/javascript">
+    
+        function samePass(){
+            if($('#id_user_set_username-password').val()==$('#id_user_set_username-password2').val())
+                return true;
+            else
+                return false;
+        }
+        
+        function validUsername(){
+            username=$('#id_user_set_username-username').val();
+            if(username.length<6){
+                $('#username-error').text('Por favor utilice un nombre de usuario con más de 6 caracteres').fadeIn('slow');
+                return false;
+            }
+            else{
+                $('#username-error').fadeOut('slow');
+                return true;
+            }
+        }
+        
+        function validEmail() {
+            var regexp  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            var email=$('#id_user_set_username-email').val();
+            
+            if(regexp.test(email)==false){
+                $('#email-error').text('Por favor introduzca un email válido').fadeIn('slow');
+                return false;
+            }
+            $('#email-error').fadeOut('slow');
+            
+            return true;				
+        }
+        
+        $(document).ready(function(){
+            
+            //-------------------------------------
+            //ADDING TRIGGERS TO INPUT FIELDS
+            //-------------------------------------
+            //REALTIME checking Username Length
+            $('#id_user_set_username-email').blur(validEmail)
+            $('#id_user_set_username-username').blur(validUsername)
+            $('#id_user_set_username-username').keypress(function(){
+                if($(this).val().length>=6)
+                    $('#username-error').fadeOut('slow');
+            });
+            
+            //Checking pass length
+            $('#id_user_set_username-password').blur(function(){
+                pass=$(this).val();
+                if(pass.length<5 || pass.length>12){
+                    $('#password-error').text('La contraseña tiene que estar entre 5 y 12 caracteres').fadeIn('slow');
+                }else{
+                    $('#password-error').fadeOut('slow');
+                }
+            })
+            
+            //Checking pass length
+            $('#id_user_set_username-password2').blur(function(){
+                var pass=$(this).val();
+                if(pass.length<5 || pass.length>12){
+                    $('#password2-error').text('La contraseña tiene que estar entre 5 y 12 caracteres').fadeIn('slow');
+                }else{
+                    $('#password2-error').fadeOut('slow');
+                }
+            })
+            //-------------------------------------
+            
+            //Form validation
+            $("form").submit(function() {
+                var pass1=$('#id_user_set_username-password').val()
+                var pass2=$('#id_user_set_username-password2').val()
+                var validForm=false;
+                
+                if(validEmail() && validUsername()){
+                    validForm=true;
+                    console.log("Email y usuario validos")
+                }
+                if(!samePass()){
+                     $('#password2-error').text('Por favor revise las contraseñas, no coinciden').fadeIn('slow');
+                     validForm=false;
+                     console.log("Password invalidos")
+                }
+                
+                if(validForm)
+                    return true;
+                else
+                    return false;
+                
+            });
+        });
+    </script>
+{% endblock %}
 
 <form method="post" id="SocialUserProfile-form" action=".">
     {% csrf_token %}
@@ -8,18 +101,48 @@
         <label for="id_Email">Email:</label>
         <input id="id_{{form.prefix}}-email" type="text" value="{% if form.initial.email %}{{form.initial.email}}{% endif %}" name="{{form.prefix}}-email">
 
-        {% if form.email.errors and not user.email%}
-        <span class="error-msg" id="email-error">
+        
+        <div class="error-msg" id="email-error">
+            {% if form.email.errors and not user.email%}
                 {{form.email.errors}} {{form.email.value}}
-        </span>
-        {% endif %}
+            {% endif %}
+        </div>
+        
+        
+        
         <label for="id_username">Username:</label>
         <input id="id_{{form.prefix}}-username" type="text" value="{% if form.initial.username %}{{form.initial.username}}{% endif %}" name="{{form.prefix}}-username">
-       {% if form.username.errors and not user.username%}        
-        <span class="error-msg" id="username-error">
-                {{form.username.errors}}
-        </span>
-        {% endif %}
+        <div class="error-msg" id="username-error">
+            {% if form.username.errors%}        
+                {% for error in form.username.errors %}
+                    <strong>{{ error|escape }}</strong><br>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        
+        
+        <label for="id_password">Contraseña:</label>
+        <input id="id_{{form.prefix}}-password" type="password" value="{% if form.initial.password %}{{form.initial.password}}{% endif %}" name="{{form.prefix}}-password">
+        <div class="error-msg" id="password-error">
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                    <strong>{{ error|escape }}</strong><br>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <label for="id_password2">Repita:</label>
+        <input id="id_{{form.prefix}}-password2" type="password" value="{% if form.initial.password2 %}{{form.initial.password2}}{% endif %}" name="{{form.prefix}}-password2">
+        <div class="error-msg" id="password2-error">
+            {% if form.password2.errors %}
+                {% for error in form.password2.errors %}
+                    <strong>{{ error|escape }}</strong><br>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        
     </div>
     <input type="submit" value="{% trans "Continuar" %}" id="startBtn" title="{% trans 'Por favor rellena toso los campos' %}">
 </form>
