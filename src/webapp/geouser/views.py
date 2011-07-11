@@ -388,6 +388,9 @@ def get_contacts_google(request):
     el usuario puede seguir
     
     """
+    if 'oauth_token' in request.GET:
+        from geoauth.views import client_access_request
+        client_access_request(request, 'google')
     from geoauth.clients.google import GoogleClient
     try:
         c = GoogleClient(user=request.user)
