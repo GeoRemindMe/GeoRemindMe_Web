@@ -361,6 +361,8 @@ class User(polymodel.PolyModel, HookedModel):
         user = User(**kwargs)
         user.put()
         trans = db.run_in_transaction(_tx, user)
+        if not trans:
+            user.delete()
         from google.appengine.ext.deferred import defer
         user_new.send(sender=user, status=trans)
         return user
@@ -386,7 +388,8 @@ class User(polymodel.PolyModel, HookedModel):
             self.password = kwargs['password']
         if 'description' in kwargs:
             self.profile.description = kwargs['description']
-            
+        if 'sync_avatar_with_facebook' in kwargs:
+            self.profile.sync_avatar_with_facebook = kwargs['description']            
         try:
             put = db.put_async([self, self.profile])
             put.get_result()

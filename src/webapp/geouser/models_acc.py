@@ -31,7 +31,7 @@ class UserSettings(db.Model):
     show_timeline = db.BooleanProperty(indexed=False, default=True)
     show_lists = db.BooleanProperty(indexed=False, default=True)
     show_public_profile = db.BooleanProperty(indexed=False, default=True)
-    sync_avatar_with_facebook = db.BooleanProperty(indexed=False, default=False)
+    
     language = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
     
@@ -106,6 +106,7 @@ class UserProfile(db.Model):
     """Datos para el perfil del usuario"""
     username = db.TextProperty()
     avatar = db.URLProperty()
+    sync_avatar_with_facebook = db.BooleanProperty(indexed=False, default=False)
     description = db.TextProperty(required=False)
     created = db.DateTimeProperty(auto_now_add=True)
     
@@ -113,14 +114,9 @@ class UserProfile(db.Model):
     def objects(self):
         return UserProfileHelper()
         
-    
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
-        if self.parent().settings.sync_avatar_with_facebook:
-            self._update_facebook()
-        else:
-            self._update_gravatar()
-            
+           
     def _update_gravatar(self):
         parent = self.parent()
         if parent is not None and parent.email is not None:

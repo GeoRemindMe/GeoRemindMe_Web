@@ -492,7 +492,19 @@ def get_chronology(request, page=1, query_id=None):
     """
     return request.session['user'].get_chronology(page=page, query_id=query_id)
 
-        
     
-    
-        
+def get_avatar(request, username):
+    user = User.objects.get_by_username(username)
+    if user is None:
+        raise Http404
+    if user.profile.sync_avatar_with_facebook:
+        if user.facebook_user is not None:
+            return HttpResponseRedirect("https://graph.facebook.com/%s/picture/" % user.facebook_user.uid)
+    else:
+        email = user.email
+        default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
+        size = 50
+        # construct the url
+        gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+        gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
+        return HttpResponseRedirect(gravatar_url)

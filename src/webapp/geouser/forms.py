@@ -153,13 +153,16 @@ class UserProfileForm(forms.Form):
     username = forms.CharField(label=_('Username'), required=True)
     email = forms.EmailField(label=_('email'), required=True)
     description = forms.CharField(widget=forms.TextInput())
+    sync_avatar_with_facebook = forms.BooleanField(label=_('Sync your  avatar with facebook'), required=False)
     
     def save(self, user):
 #        if file is not None:
 #            if 'image/' in file.type:
 #                user.profile.avatar = file
         try:
-            user.update(username=self.cleaned_data['username'], email=self.cleaned_data['email'], description=self.cleaned_data['description'])
+            user.update(username=self.cleaned_data['username'], 
+                        email=self.cleaned_data['email'], description=self.cleaned_data['description'], 
+                        sync_avatar_with_facebook = self.cleaned_data['sync_avatar_with_facebook'])
             return True
         except User.UniqueEmailConstraint:  # email already in use
                 msg = _("Email already in use")
@@ -258,7 +261,7 @@ class UserSettingsForm(forms.Form):
     time_notification_suggestion_comment = forms.ChoiceField(label=_('New comment on suggestions'), choices=CHOICES)
     time_notification_account = forms.ChoiceField(label=_('New account follower'), choices=CHOICES)
     language = forms.ChoiceField(label=_('Language'), choices=settings.LANGUAGES)
-    sync_avatar_with_facebook = forms.BooleanField(label=_('Sync your  avatar with facebook'), required=False)
+    
     
     def save(self, user):
         try:
@@ -267,7 +270,7 @@ class UserSettingsForm(forms.Form):
             user.settings.time_notification_suggestion_comment = self.cleaned_data['time_notification_suggestion_comment']
             user.settings.time_notification_account = self.cleaned_data['time_notification_account']
             user.settings.language = self.cleaned_data['language']
-            user.settings.sync_avatar_with_facebook = self.cleaned_data['sync_avatar_with_facebook']
+            
             user.settings.put()
         except:
             return False
