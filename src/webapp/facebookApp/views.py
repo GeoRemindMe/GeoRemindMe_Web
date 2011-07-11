@@ -58,7 +58,7 @@ def dashboard(request):
 
 
 @facebook_required
-def public_profile(request, username):
+def profile(request, username):
     """**Descripción**: Perfil publico que veran los demas usuarios
     
     :param username: nombre de usuario
@@ -170,14 +170,9 @@ def edit_settings(request):
     if request.method == 'POST':
         
             
-        f = UserSettingsForm(request.POST, prefix='user_set_settings', initial = { 
-                                                                                  'time_notification_suggestion_follower': request.user.settings.time_notification_suggestion_follower,
-                                                                                  'time_notification_suggestion_comment': request.user.settings.time_notification_suggestion_comment,
-                                                                                  'time_notification_account': request.user.settings.time_notification_account,
-                                                                                  'show_public_profile': request.user.settings.show_public_profile,
-                                                                                  'language': request.user.settings.language,
-                                                                                  })
+        f = UserSettingsForm(request.POST, prefix='user_set_settings')
         if f.is_valid():
+            raise Exception("a")
             f.save(request.user)
 
     else:
