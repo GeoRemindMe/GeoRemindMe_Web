@@ -3,7 +3,7 @@
 {% url fb_dashboard as dashboard %}
 {% url fb_profile_settings as profile_settings %}
 {% url fb_user_suggestions as user_suggestions %}
-{% url fb_public_profile as public_profile %}
+{% url fb_public_profile request.user.username as public_profile %}
 
 
 <!doctype html>
@@ -39,11 +39,11 @@
                 <ul>
                     <li class="menu-icons fb-icons" id="{% active request dashboard %}"><a id="fb-wall" href="{{dashboard}}" title="Dashboard">Actividad</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="#">Baúl</a></li>
-                    <li class="menu-icons fb-icons" id="{% active request user_suggestions %}"><a id="fb-wall" href="/fb/suggestions/">Tus sugerencias</a></li>
+                    <li class="menu-icons fb-icons" id="{% active request user_suggestions %}"><a id="fb-wall" href="{{user_suggestions}}">Tus sugerencias</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="#">Notificaciones</a></li>
                     <li class="menu-icons fb-icons"><a id="fb-wall" href="#">Sitios</a></li>
-                    <li class="menu-icons fb-icons" id="{% ifequal user.username profile.parent.username %}{% active request public_profile %}{% endifequal %}"><a id="fb-wall" href="/fb{{user.get_absolute_url}}">Mi perfil</a></li>
-                    <li class="menu-icons fb-icons" id="{% active request profile_settings %}"><a id="fb-wall" href="/fb/settings/">Configuración</a></li>
+                    <li class="menu-icons fb-icons" id="{% active request public_profile %}"><a id="fb-wall" href="{{public_profile}}">Mi perfil</a></li>
+                    <li class="menu-icons fb-icons" id="{% active request profile_settings %}"><a id="fb-wall" href="{{profile_settings}}">Configuración</a></li>
                 </ul>
             {% endblock %}
             <hr>
