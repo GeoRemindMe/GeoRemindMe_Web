@@ -18,8 +18,11 @@ from decorators import facebook_required
 
 def login_panel(request):
     if hasattr(request, 'facebook'):
-        user = request.facebook['client'].authenticate()
-        init_user_session(request, user, is_from_facebook=True)
+        if not request.user.is_authenticated():
+            user = request.facebook['client'].authenticate()
+            init_user_session(request, user, is_from_facebook=True)
+        else:
+            user = request.user
         if user.username is None or user.email is None:
                 if request.method == 'POST':
                     f = SocialUserForm(request.POST, prefix='user_set_username', initial = { 
@@ -174,6 +177,8 @@ def edit_settings(request):
         if f.is_valid():
             raise Exception("a")
             f.save(request.user)
+            request.session['LANGUAGE_CODE'] = request.user.settings.language
+            return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
 
     else:
         

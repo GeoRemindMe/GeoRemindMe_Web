@@ -45,7 +45,7 @@ class LoginForm(forms.Form):
     """
         Form for the login process
     """
-    email = forms.EmailField(required=True)
+    email = forms.CharField(required=True)
     password = forms.CharField(required=True, max_length=settings.MAX_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
@@ -135,8 +135,7 @@ class SocialUserForm(forms.Form):
     
     def save(self, user):
         try:
-            if self.cleaned_data['password'] is not None:
-                raise Exception(self.cleaned_data['password'])
+            if self.cleaned_data['password'] != '':
                 return user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'], password=self.cleaned_data['password'])
             else:
                 return user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'])
@@ -147,7 +146,6 @@ class SocialUserForm(forms.Form):
             fail = _('Username already in use')
             self._errors['username'] = self.error_class([fail])
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
-            raise
             fail = _(e.message)
             self._errors['email'] = self.error_class([fail])
 
@@ -255,7 +253,7 @@ CHOICES = (
            ('monthly', _('Monthly')),
            )
 class UserSettingsForm(forms.Form):
-    show_public_profile = forms.BooleanField(label=_('Profile visibility'))
+    show_public_profile = forms.BooleanField(label=_('Profile visibility'), required=False)
     time_notification_suggestion_follower = forms.ChoiceField(label=_('New follower on suggestions'), choices=CHOICES)
     time_notification_suggestion_comment = forms.ChoiceField(label=_('New comment on suggestions'), choices=CHOICES)
     time_notification_account = forms.ChoiceField(label=_('New account follower'), choices=CHOICES)
@@ -266,8 +264,9 @@ class UserSettingsForm(forms.Form):
             user.settings.show_public_profile = self.cleaned_data['show_public_profile']
             user.settings.time_notification_suggestion_follower = self.cleaned_data['time_notification_suggestion_follower']
             user.settings.time_notification_suggestion_comment = self.cleaned_data['time_notification_suggestion_comment']
-            user.settings.time_notification_suggestion_account = self.cleaned_data['time_notification_suggestion_account']
+            user.settings.time_notification_account = self.cleaned_data['time_notification_account']
             user.settings.language = self.cleaned_data['language']
             user.settings.put()
         except:
+            raise
             return False
