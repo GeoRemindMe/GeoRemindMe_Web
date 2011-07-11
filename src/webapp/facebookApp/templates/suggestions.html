@@ -6,22 +6,37 @@
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript">
+        jQuery.expr[':'].regex = function(elem, index, match) {
+            var matchParams = match[3].split(','),
+                validLabels = /^(data|css):/,
+                attr = {
+                    method: matchParams[0].match(validLabels) ?
+                                matchParams[0].split(':')[0] : 'attr',
+                    property: matchParams.shift().replace(validLabels,'')
+                },
+                regexFlags = 'ig',
+                regex = new RegExp(matchParams.join('').replace(/^\s+|\s+$/g,''), regexFlags);
+            return regex.test(jQuery(elem)[attr.method](attr.property));
+        }
+        
         $(document).ready(function(){
             
-
-           
             //Asignamos comportamiento ONCLICK a cada fila
-            $('.suggestion').click(function(){
+            $('.suggestionName').click(function(){
                 if($(this).find('.checkBox')){
-                    //Cambiamos a modo edición
-                    var1=$(this)
-                    console.log("Hola")
-                    //suggestion_
-                    //$("#unfollowTemplate").tmpl( {id:userid} ).appendTo( "#following_state_"+userid );
+                    //Extraemos el ID de la sugerencia del campos id="" del div
+                    var suggestion_id=$(this).parent().attr('id').substr(11)
+                    location.href='edit/'+suggestion_id
+                    //console.log('edit/'+suggestion_id)
                 }
-                    //console.log($(this).children())
             });
             
+            $('#checkBox_all').click(function(){
+                if($('#checkBox_all').is(':checked'))
+                    $(':regex(id,^(checkBox_))').attr('checked',true);
+                else
+                    $(':regex(id,^(checkBox_))').attr('checked',false);
+            });
             
         });
     </script>
@@ -49,47 +64,47 @@
                     <span class="suggestionInLists">Turismo</span>
                 </div>
                 <div id="suggestion_2" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_1" value="Car" /></span>
+                    <span class="checkBox"><input type="checkbox" id="checkBox_2" value="Car" /></span>
                     <span class="suggestionName">Tomar una tapa "Bomba" en el Villa Magna</span>
                     <span class="suggestionInLists">divabajo</span>
                 </div>
                 <div id="suggestion_3" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_1" value="Car" /></span>
+                    <span class="checkBox"><input type="checkbox" id="checkBox_3" value="Car" /></span>
                     <span class="suggestionName">Ir al mirador de San Nicolás por la tarde</span>
                     <span class="suggestionInLists">Turismo</span>
                 </div>
                 <div id="suggestion_4" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_1" value="Car" /></span>
+                    <span class="checkBox"><input type="checkbox" id="checkBox_4" value="Car" /></span>
                     <span class="suggestionName">Tomar una tapa "Bomba" en el Villa Magna</span>
                     <span class="suggestionInLists">divabajo</span>
                 </div>
                 <div id="suggestion_5" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_1" value="Car" /></span>
+                    <span class="checkBox"><input type="checkbox" id="checkBox_5" value="Car" /></span>
                     <span class="suggestionName">Ir al mirador de San Nicolás por la tarde</span>
                     <span class="suggestionInLists">Turismo</span>
                 </div>
                 <div id="suggestion_6" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_1" value="Car" /></span>
+                    <span class="checkBox"><input type="checkbox" id="checkBox_6" value="Car" /></span>
                     <span class="suggestionName">Tomar una tapa "Bomba" en el Villa Magna</span>
                     <span class="suggestionInLists">divabajo</span>
                 </div>
                 <div id="suggestion_7" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_1" value="Car" /></span>
+                    <span class="checkBox"><input type="checkbox" id="checkBox_7" value="Car" /></span>
                     <span class="suggestionName">Ir al mirador de San Nicolás por la tarde</span>
                     <span class="suggestionInLists">Turismo</span>
                 </div>
                 <div id="suggestion_8" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_1" value="Car" /></span>
+                    <span class="checkBox"><input type="checkbox" id="checkBox_8" value="Car" /></span>
                     <span class="suggestionName">Tomar una tapa "Bomba" en el Villa Magna</span>
                     <span class="suggestionInLists">divabajo</span>
                 </div>
                 <div id="suggestion_9" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_1" value="Car" /></span>
+                    <span class="checkBox"><input type="checkbox" id="checkBox_9" value="Car" /></span>
                     <span class="suggestionName">Ir al mirador de San Nicolás por la tarde</span>
                     <span class="suggestionInLists">Turismo</span>
                 </div>
                 <div id="suggestion_3" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_1" value="Car" /></span>
+                    <span class="checkBox"><input type="checkbox" id="checkBox_10" value="Car" /></span>
                     <span class="suggestionName">Tomar una tapa "Bomba" en el Villa Magna</span>
                     <span class="suggestionInLists">divabajo</span>
                 </div>

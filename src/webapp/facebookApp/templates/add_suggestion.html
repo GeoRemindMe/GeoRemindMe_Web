@@ -7,6 +7,7 @@ $(document).ready(function() {
     $("form").submit(function() {
         $('#submit-button').val("Enviado...")
         $('#submit-button').addClass("waiting")
+        
         var params = { 
             name: $('#id_name').val(), 
             place_id: $('#id_place_id').val(), 
@@ -19,8 +20,6 @@ $(document).ready(function() {
             ends_year: $('#id_ends_year').val(),
             visibility: $('#id_visibility').val()
         };
-        
-        
         
         $.ajax({
             type: "POST",
@@ -39,6 +38,7 @@ $(document).ready(function() {
         return false;
     });
 });
+
 </script>
 
 {%endblock%}
@@ -49,7 +49,7 @@ $(document).ready(function() {
 {% block body %}
     <div id="add-suggestion">
         <h1>Añadir una sugerencia</h1> 
-        <form id="add-suggestion-form" action="javascript:alert('success!');" >
+        <form id="add-suggestion-form" action="javascript: return false;" >
     <!--
             name = forms.CharField(required=True)
             place_id = forms.IntegerField(required=True, initial=-1)
