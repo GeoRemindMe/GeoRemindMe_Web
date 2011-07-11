@@ -175,7 +175,7 @@ def edit_settings(request):
             
         f = UserSettingsForm(request.POST, prefix='user_set_settings')
         if f.is_valid():
-            raise Exception("a")
+            #~ raise Exception("a")
             f.save(request.user)
             request.session['LANGUAGE_CODE'] = request.user.settings.language
             return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))

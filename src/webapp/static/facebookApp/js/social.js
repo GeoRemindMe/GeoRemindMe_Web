@@ -14,6 +14,7 @@ $(document).ready(function(){
     }
 
     /* Preload Spinning icon if it is the first time */
+    var cache = [];
     var cacheImage = document.createElement('img');
     cacheImage.src ="/static/facebookApp/img/spinning-icons/wait16trans.gif";
     cache.push(cacheImage);
