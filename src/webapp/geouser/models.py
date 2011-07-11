@@ -383,13 +383,7 @@ class User(polymodel.PolyModel, HookedModel):
             self.username = kwargs['username']
             self.profile.username = self.username
         if 'password' in kwargs:
-            if 'oldpassword' in kwargs:
-                if self.check_password(kwargs['oldpassword']):
-                    self.password = kwargs['password']
-                else:
-                    raise ValueError
-            else:
-                raise ValueError
+            self.password = kwargs['password']
         if 'description' in kwargs:
             self.profile.description = kwargs['description']
             
