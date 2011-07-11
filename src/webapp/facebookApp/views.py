@@ -119,7 +119,7 @@ def edit_profile (request):
         if f.is_valid():
             modified = f.save(user=request.user)
             if modified:
-                return HttpResponseRedirect(reverse('facebookApp.views.profile'))
+                return HttpResponseRedirect('/fb/user/%s/' % request.user.username)
     else:
         f = UserProfileForm(initial={'username': request.user.username,
                                      'email': request.user.email,
