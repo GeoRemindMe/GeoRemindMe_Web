@@ -10,9 +10,7 @@
     <div id="public-profile">
         <div id="col-right-left">
             <span id="avatar-follow">
-                {% if profile.avatar %}
-                    <img src="{{profile.avatar}}" alt="{{profile.username}} avatar"/>
-                {% endif %}
+                <img src="/user/{{profile.username}}/picture/" alt="{{profile.username}} avatar"/>
                 <br>
                 {% ifnotequal user.username profile.parent.username %}
                     {% if is_follower %}

@@ -10,14 +10,16 @@
         <h1>Editar perfil</h1>
 
         <div class="section">
+            <form method="post" action=".">
             <div id="avatar">
-                <a href="">
-                    <img src="{{user.profile.avatar}}" alt="{{user.username}} avatar">
+                <span>
+                    <img src="/user/{{user.username}}/picture/" alt="{{user.username}} avatar">
                     <br>
                     Cambiar foto
-                </a>
+                </span> 
+                <div>{{form.sync_avatar_with_facebook}} Usar el avatar de Facebook</div>
             </div>          
-            <form method="post" action=".">
+            
 				{% csrf_token %}
 				<dl>
 					<dt><label for="id_user_set_profile-username">Nombre de usuario</label>:</dt>
@@ -33,13 +35,15 @@
 					<dd>{{form.description}}</dd>
 					
 				</dl>
-				<input type="submit" value="{% trans "Guardar" %}" title="{% trans 'Guardar los cambios' %}">
+                <hr>
+				<div id="save-button"><input type="submit" value="{% trans "Guardar" %}" title="{% trans 'Guardar los cambios' %}"></div>
 			</form>
-            <p>Cuentas vinculadas:</p>
+            
+            <p><strong>Cuentas vinculadas</strong>:</p>
                 
             <ul>
                 <li class="li-icon">
-                    <span id="twitter-icon">Facebook:</span> 
+                    <span id="facebook-icon">Facebook:</span> 
                     <a href="/fb/settings">configuración</a> 
                     
                 </li>

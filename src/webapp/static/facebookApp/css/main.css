@@ -5,6 +5,9 @@ body{
     font-size: 11px;
     text-align: left;
 }
+input{
+    font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+}
 #container {
   width: 760px;
   margin: 0 auto;
@@ -449,13 +452,23 @@ body{
         width: 350px;
     }
     #profile div#avatar,#edit-profile div#avatar{
-        border: 1px dotted #CCCCCC;
+        
         clear: both;
         float: right;
         font-size: 1.2em;
-        margin: 10px;
-        padding: 5px;
+        margin: 0;
+        padding: 0 5px;
         text-align: center;
+        width: 100px;
+    }
+    #profile div#avatar,#edit-profile div#avatar div{
+        font-size: 0.8em;
+        margin-top: 10px;
+        text-align: left;
+    }
+    #profile div#avatar,#edit-profile div#avatar div input{
+        display: block;
+        float: left;
     }
     #profile div#avatar img,#edit-profile div#avatar img{
         margin: 5px 5px 0;
@@ -486,18 +499,38 @@ body{
         float:right;
         margin-right:10px;
     }
-    div#right-col #edit-profile li span#twitter-icon{
-        background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 0px transparent;
+    div#right-col #edit-profile li span{
+        font-weight:normal;
+        background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 0 transparent;
         padding-left: 20px;
-        width:110px;
+        width:70px;
+    }
+    div#right-col #edit-profile li span#twitter-icon{
+        background-position: 0 0;
     }
     div#right-col #edit-profile li span#google-icon{
-        background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 -16px transparent;
-        padding-left: 20px;
-        width:110px;
+        background-position: 0 -16px;
+    }
+    div#right-col #edit-profile li span#facebook-icon{
+        background-position: 0 -32px;
+    }
+    #edit-profile form{
+        border: 1px dotted #AAAAAA;
+        padding: 0.5em;
     }
     #edit-profile input[type="submit"]{
 		float:none;
+    }
+    #edit-profile div#save-button{
+        margin: 0 auto;
+        text-align: center;
+        width: 300px;
+    }
+    #edit-profile input[type="text"]{
+        width: 240px;
+    }
+    #edit-profile hr{
+        visibility: hidden;
     }
     
     /****************************

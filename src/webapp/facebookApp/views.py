@@ -122,6 +122,7 @@ def edit_profile (request):
         if f.is_valid():
             modified = f.save(user=request.user)
             if modified:
+                raise Exception("el formulario es valido")
                 return HttpResponseRedirect('/fb/user/%s/' % request.user.username)
     else:
         f = UserProfileForm(initial={'username': request.user.username,
