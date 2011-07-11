@@ -152,7 +152,7 @@ class SocialUserForm(forms.Form):
 class UserProfileForm(forms.Form):
     username = forms.CharField(label=_('Username'), required=True)
     email = forms.EmailField(label=_('email'), required=True)
-    description = forms.CharField(widget=forms.TextInput())
+    description = forms.CharField(widget=forms.TextInput(), required=False)
     sync_avatar_with_facebook = forms.BooleanField(label=_('Sync your  avatar with facebook'), required=False)
     
     def save(self, user):

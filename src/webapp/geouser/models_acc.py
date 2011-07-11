@@ -105,7 +105,7 @@ class UserSettings(db.Model):
 class UserProfile(db.Model):
     """Datos para el perfil del usuario"""
     username = db.TextProperty()
-    avatar = db.URLProperty()
+    avatar = db.URLProperty(required=False)
     sync_avatar_with_facebook = db.BooleanProperty(indexed=False, default=False)
     description = db.TextProperty(required=False)
     created = db.DateTimeProperty(auto_now_add=True)

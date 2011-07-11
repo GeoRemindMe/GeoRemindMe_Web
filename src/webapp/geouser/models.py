@@ -389,7 +389,7 @@ class User(polymodel.PolyModel, HookedModel):
         if 'description' in kwargs:
             self.profile.description = kwargs['description']
         if 'sync_avatar_with_facebook' in kwargs:
-            self.profile.sync_avatar_with_facebook = kwargs['description']            
+            self.profile.sync_avatar_with_facebook = kwargs['sync_avatar_with_facebook']            
         try:
             put = db.put_async([self, self.profile])
             put.get_result()
