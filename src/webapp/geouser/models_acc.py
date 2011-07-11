@@ -116,7 +116,7 @@ class UserProfile(db.Model):
         
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
-           
+
     def _update_gravatar(self):
         parent = self.parent()
         if parent is not None and parent.email is not None:

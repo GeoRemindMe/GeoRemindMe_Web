@@ -30,7 +30,9 @@
             {% ifequal user.username profile.parent.username %}
                 <a href="/fb/user/edit/" class="help-icon">Editar</a> 
             {% endifequal %}
-            <p>descripción: {{profile.description}}</p>
+            {% if profile.description %}
+                <p>Descripción: {{profile.description}}</p>
+            {% endif %}
         
             
             

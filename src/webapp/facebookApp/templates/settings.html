@@ -57,11 +57,10 @@
             {% get_current_language as LANGUAGE_CODE %}
            Idioma de la interfaz:
     			{% for code, name in LANGUAGES %}
-    				{%if LANGUAGE_CODE == code %}
-                    {{name}}
-                    {% endif %}
+                    {%if LANGUAGE_CODE == code %}{{name}}{% endif %} 
+
                 {% endfor %}
-  			</select>
+  			
   			</div
         </div>
         <hr>
