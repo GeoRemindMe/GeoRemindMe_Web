@@ -4,10 +4,10 @@ $(document).ready(function(){
     //TEMPLATES
     if($('#followTemplate').length==0){
         var temp =  '<script id="followTemplate" type="text/x-jquery-tmpl">\
-                        <span  onclick="javascript:follow(\'follow\',${id})"><a href="#" class="no-following">Seguir</a></span>\
+                        <span  onclick="javascript:follow(\'follow\',${id})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>\
                     </script>\
                     <script id="unfollowTemplate" type="text/x-jquery-tmpl">\
-                        <span  onclick="javascript:follow(\'unfollow\',${id})"><a href="#" class="following">Seguiendo</a></span>\
+                        <span  onclick="javascript:follow(\'unfollow\',${id})"><a href="javascript:void(0)" class="following">Seguiendo</a></span>\
                     </script>'
         $('#templates').append(temp).ready()
         

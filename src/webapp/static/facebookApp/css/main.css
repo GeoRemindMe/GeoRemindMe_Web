@@ -4,6 +4,7 @@ body{
     font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
     font-size: 11px;
     text-align: left;
+    margin:0;
 }
 input{
     font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
@@ -35,16 +36,18 @@ input{
         padding: 0;
     }
     div#left-col li{
+/*
         padding: 5px 0;
+*/
         
     }
     div#left-col li a{
         color: black;
         display: block;
         line-height: 19px;
-        padding-left: 30px;
+        padding: 5px 0 5px 30px;
         text-decoration: none;
-        width: 155px;
+        width: 150px;
     }
     div#left-col li:hover{
         background-color:#eff2f7
@@ -80,25 +83,25 @@ input{
     }
     
     #activity-icon {
-        background-position: 5px 0;
+        background-position: 5px 5px;
     }
     #vault-icon {
-        background-position: 5px -27px;
+        background-position: 5px -22px;
     }
     #suggestions-icon {
-        background-position: 5px -50px;
+        background-position: 5px -45px;
     }
     #notifications-icon {
-        background-position: 5px -75px;
+        background-position: 5px -70px;
     }
     #places-icon {
-        background-position: 4px -100px;
+        background-position: 4px -95px;
     }
     #profile-icon {
-        background-position: 5px -125px;
+        background-position: 5px -120px;
     }
     #settings-icon {
-        background-position: 5px -150px;
+        background-position: 5px -145px;
     }
 
 /****************************
@@ -660,6 +663,7 @@ input{
     }
     #public-profile #col-right-left{
         float:left;
+        width: 330px;
     }
     #public-profile #col-right-left p{
         margin:0;

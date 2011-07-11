@@ -99,6 +99,7 @@ def profile(request, username):
         counters.get_result()
         show_followers = settings.show_followers,
         show_followings = settings.show_followings
+    
     return render_to_response('profile.html', {'profile': profile, 
                                                 'counters': counters,
                                                 'timeline': timeline, 
