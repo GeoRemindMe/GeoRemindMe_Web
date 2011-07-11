@@ -11,7 +11,7 @@ class GoogleClient(Client):
     _client = None
     
     def __init__(self, token=None, user=None):
-        if user is None and token is not None:
+        if user is None and token is None:
             raise AttributeError
         
         from libs.gdata.contacts.client import ContactsClient

@@ -56,6 +56,8 @@ def login_func(request, email = None, password = None, remember_me = False, user
         messages.success(request, _("Welcome, %s") % request.session['user'])
         return error, redirect
     user = User.objects.get_by_email(email)
+    if user is None:
+        user = User.objects.get_by_username(email)
     if user:
         if user.check_password(password):
             if not user.is_confirmed() and user.created + timedelta(days=settings.NO_CONFIRM_ALLOW_DAYS) < datetime.now():

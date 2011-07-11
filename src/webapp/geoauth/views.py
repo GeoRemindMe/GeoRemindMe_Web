@@ -152,11 +152,12 @@ def client_access_request(request, provider, next=None):
             user = client.authenticate()
             messages.success(request, _('Logged from %s' % provider))
             init_user_session(request, user)
+    
     elif provider == 'google':
         from clients.google import GoogleClient
         client = GoogleClient(token=oauth2.Token(token['oauth_token'], token['oauth_token_secret']))
-        if 'user' in request.session:#usuario ya esta logeado, guardamos el token de su cuenta
-            if client.authorize(request.session['user']):
+        if request.user.is_authenticated():#usuario ya esta logeado, guardamos el token de su cuenta
+            if client.authorize(request.user):
                 messages.success(request, _('Got access from %s' % provider))
         else:
             raise OAUTHException()

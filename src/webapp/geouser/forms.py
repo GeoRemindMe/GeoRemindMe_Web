@@ -104,11 +104,11 @@ class SocialUserForm(forms.Form):
     '''
     email = forms.EmailField(label=_('email'), required=True)
     username = forms.CharField(label=_('username'), required=True)
-    password = forms.CharField(required=True, max_length=settings.MAX_PWD_LENGTH,
+    password = forms.CharField(required=False, max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    password2 = forms.CharField(label=_("Repeat password"), required=True,
+    password2 = forms.CharField(label=_("Repeat password"), required=False,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
@@ -135,7 +135,11 @@ class SocialUserForm(forms.Form):
     
     def save(self, user):
         try:
-            return user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'], password=self.cleaned_data['password'])
+            if self.cleaned_data['password'] is not None:
+                raise Exception(self.cleaned_data['password'])
+                return user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'], password=self.cleaned_data['password'])
+            else:
+                return user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'])
         except User.UniqueEmailConstraint, e:
             fail = _('Email already in use')
             self._errors['email'] = self.error_class([fail])
@@ -143,6 +147,7 @@ class SocialUserForm(forms.Form):
             fail = _('Username already in use')
             self._errors['username'] = self.error_class([fail])
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
+            raise
             fail = _(e.message)
             self._errors['email'] = self.error_class([fail])
 
