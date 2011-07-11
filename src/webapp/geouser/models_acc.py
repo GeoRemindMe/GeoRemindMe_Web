@@ -31,6 +31,7 @@ class UserSettings(db.Model):
     show_timeline = db.BooleanProperty(indexed=False, default=True)
     show_lists = db.BooleanProperty(indexed=False, default=True)
     show_public_profile = db.BooleanProperty(indexed=False, default=True)
+    sync_avatar_with_facebook = db.BooleanProperty(indexed=False, default=False)
     language = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
     
@@ -115,7 +116,10 @@ class UserProfile(db.Model):
     
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
-        self._update_gravatar()
+        if self.parent().settings.sync_avatar_with_facebook:
+            self._update_facebook()
+        else:
+            self._update_gravatar()
             
     def _update_gravatar(self):
         parent = self.parent()
@@ -126,10 +130,20 @@ class UserProfile(db.Model):
             # construct the url
             gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
             gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
-            self.avatar = gravatar_url 
+            self.avatar = gravatar_url
+        
+    def _update_facebook(self):
+        parent = self.parent()
+        if parent.facebook_user is not None:
+            self.avatar = "https://graph.facebook.com/%s/picture/" % parent.facebook_user.uid
+        else:
+            self.avatar = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
             
     def put(self):
-        self._update_gravatar()
+#        if self.parent().settings.sync_avatar_with_facebook:
+#            self._update_facebook()
+#        else:
+#            self._update_gravatar()
         super(self.__class__, self).put()
         memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self),300)    
     
