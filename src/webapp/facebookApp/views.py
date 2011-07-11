@@ -118,6 +118,8 @@ def edit_profile (request):
         f = UserProfileForm(request.POST, prefix='user_set_profile')
         if f.is_valid():
             modified = f.save(user=request.user)
+            if modified:
+                return HttpResponseRedirect(reverse('facebookApp.views.profile'))
     else:
         f = UserProfileForm(initial={'username': request.user.username,
                                      'email': request.user.email,
