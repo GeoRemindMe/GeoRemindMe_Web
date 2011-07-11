@@ -661,6 +661,11 @@ body{
         border: 1px dotted black;
         padding: 0.5em;
     }
+    #add-suggestion form hr{
+        margin:0;
+        visibility: hidden;
+}
+    }
     #add-suggestion form fieldset{
         border: 0 none;
         font-size: 1.1em;

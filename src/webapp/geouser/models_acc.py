@@ -116,10 +116,10 @@ class UserProfile(db.Model):
     
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
-        if self.parent().settings.sync_avatar_with_facebook:
-            self._update_facebook()
-        else:
-            self._update_gravatar()
+        #~ if self.parent().settings.sync_avatar_with_facebook:
+            #~ self._update_facebook()
+        #~ else:
+            #~ self._update_gravatar()
             
     def _update_gravatar(self):
         parent = self.parent()

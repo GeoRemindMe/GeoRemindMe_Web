@@ -1,0 +1,52 @@
+{% load i18n %}
+<form id="add-suggestion-form" action="javascript: return false;" >
+<!--
+        name = forms.CharField(required=True)
+        place_id = forms.IntegerField(required=True, initial=-1)
+        starts = forms.DateTimeField(required=False, widget=SelectDateWidget())
+        ends = forms.DateTimeField(required=False, widget=SelectDateWidget())
+        description = forms.CharField(required=False,widget=forms.Textarea())    
+        done = forms.BooleanField(required=False)
+        visibility = forms.ChoiceField(required=True, choices=VISIBILITY_CHOICES)
+-->
+
+        <p>
+            <label>Sugiero que...</label>
+            {{f.name}}
+        </p>
+        <p>
+            <label>¿Dónde se puede hacer?:</label>
+            {{f.place_id}}
+            <span>Mostrar mapa</span>
+        </p>
+        
+        <span id="show-details" onclick="$('#more-details').toggle('fast')">Más detalles</span>
+        <div id="more-details">
+            <p>
+                <label>{{f.description.label}}:</label>
+                {{f.description}}
+            </p>
+            <p>
+                <label>{{f.visibility.label}}:</label>
+                {{f.visibility}}
+            </p>
+            <p>Si esta sugerencia solo es posible hacerla en unas fechas concretas por favor indícanos cuales son.</p>
+            <p>
+                <label>{{f.starts.label}}:</label>
+                {{f.starts}}
+            </p>
+            <p>
+                <label>{{f.ends.label}}:</label>
+                {{f.ends}}
+            </p>
+        </div>
+        
+        
+        
+        
+        <div>
+            <input type="submit" id="submit-button" value="{% trans 'Añadir' %}" title="{% trans 'Please fill up all fields' %}">
+        </div>
+        <div id="error-msg"></div>
+        <hr>
+    </form>

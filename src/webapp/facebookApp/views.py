@@ -12,6 +12,7 @@ from geouser.models import *
 from geouser.forms import *
 from geouser.funcs import init_user_session
 from geoalert.forms import *
+from geoalert.models import *
 from geoauth.clients.facebook import *
 from decorators import facebook_required
 
@@ -53,10 +54,12 @@ def dashboard(request):
     friends_to_follow=request.facebook['client'].get_friends_to_follow()    
     followers=request.user.get_followers()
     followings=request.user.get_followings()
+    timeline=request.user.get_timeline()
     
     return  render_to_response('dashboard.html', {'friends_to_follow': friends_to_follow,
                                                   'followers': followers,
                                                   'followings': followings, 
+                                                  'timeline':timeline,
                                                   } , RequestContext(request))
 
 
@@ -158,6 +161,19 @@ def add_suggestion(request):
                               #~ 'done': False,
                               #~ })
     return  render_to_response('add_suggestion.html',{'f': f}, context_instance=RequestContext(request))
+    
+@facebook_required    
+def edit_suggestion(request,suggestion_id):
+    s=Suggestion.objects.get_by_id(suggestion_id)
+    
+    f = SuggestionForm(prefix='edit_suggestion', initial = { 
+                                                                #~ 'poi_id': s.poi,
+                                                                #~ 'starts': s.date_starts,
+                                                                #~ 'ends': s.date_ends,
+                                                                #~ 'description': s.description, 
+                                                            })
+    
+    return  render_to_response('edit_suggestion.html',{'f': f}, context_instance=RequestContext(request))
 
 @facebook_required
 def profile_settings(request):
