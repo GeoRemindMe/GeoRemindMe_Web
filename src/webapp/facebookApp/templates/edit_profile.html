@@ -17,7 +17,7 @@
                     <br>
                     Cambiar foto
                 </span> 
-                <div>{{form.sync_avatar_with_facebook}} Usar el avatar de Facebook</div>
+                <div>Usar el avatar de: <br>{{form.sync_avatar_with}}</div>
             </div>          
             
 				{% csrf_token %}
@@ -38,32 +38,6 @@
                 <hr>
 				<div id="save-button"><input type="submit" value="{% trans "Guardar" %}" title="{% trans 'Guardar los cambios' %}"></div>
 			</form>
-            
-            <p><strong>Cuentas vinculadas</strong>:</p>
-                
-            <ul>
-                <li class="li-icon">
-                    <span id="facebook-icon">Facebook:</span> 
-                    <a href="/fb/settings">configuración</a> 
-                    
-                </li>
-                <li class="li-icon">
-                    <span id="twitter-icon">Twitter:</span> 
-                    {% if not has_twitter %}
-                        <a href="/login/twitter/?cls" target="_blank">vincular</a> 
-                    {% else %}
-                        <a href="/login/twitter/?cls">desvincular</a> | <a href="">Permisos</a>
-                    {% endif %}
-                </li>
-                <li class="li-icon">
-                    <span id="google-icon">Google:</span> 
-                    {% if not has_google %}
-                        <a href="/login/google/?cls">vincular</a>
-                    {% else %}
-                        <a href="/login/google/?cls">desvincular</a> | <a href="">Permisos</a>
-                    {% endif %}
-                </li>
-            </ul>
         </div>
     
 {% endblock %}
