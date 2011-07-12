@@ -53,17 +53,41 @@ input{
         background-color:#eff2f7
     }
     
+    .install-icons a {
+        background-image: url("/static/facebookApp/img/intro_icons.png");
+    }
+    
+    #introduction-icon{
+        background-position: 5px 5px;
+    }
+    #about-us-icon{
+        background-position: 5px -20px;
+    }
+    #community-icon{
+        background-position: 5px -45px;
+    }
+    #blog-icon{
+        background-position: 5px -70px;
+    }
+    #privacy-icon{
+        background-position: 5px -95px;
+    }
+    #tos-icon{
+        background-position: 5px -120px;
+    }
+    
+    
     #fb-wall {
-        background-position: 5px 0;
+        background-position: 5px 5px;
     }
     #fb-last-news {
-        background-position: 5px -22px;
+        background-position: 5px -20px;
     }
     #fb-events {
-        background-position: 5px -42px;
+        background-position: 5px -45px;
     }
     #fb-grm {
-        background-position: 5px -62px;
+        background-position: 5px -70px;
     }
     
     
@@ -332,6 +356,7 @@ input{
     .show-more{
         text-decoration:underline;
         cursor:pointer;
+        float:right;
     }
     #show-more-text{
         display:none;
