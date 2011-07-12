@@ -111,7 +111,7 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
     
     if type(modified) != type(list()) or type(deleted) != type(list()):
         raise InvalidParamsError
-    sync_deleted = set()
+    sync_deleted = []
     temp_alert = {}
     last_sync = parse_date(last_sync)
     parse_alertdeleted(deleted, request.user)
@@ -155,7 +155,7 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
     alertsDel =  _Deleted_Alert.objects.get_by_last_sync(request.user, last_sync)
     for a in alertsDel:
         sync_deleted.add({'id': a.id})
-    return [int(time.mktime(datetime.now().timetuple())), response, list(sync_deleted)]
+    return [int(time.mktime(datetime.now().timetuple())), response, sync_deleted]
 
 
 @jsonrpc_method('report_bug', authenticated=False)
@@ -200,7 +200,7 @@ def sync_alertlist(request, last_sync, modified=[], deleted=[]):
     
     if type(modified) != type(list()) or type(deleted) != type(list()):
         raise InvalidParamsError
-    sync_deleted = set()
+    sync_deleted = []
     temp_list = {}
     last_sync = parse_date(last_sync)
     parse_listdeleted(deleted, request.user)
@@ -238,6 +238,6 @@ def sync_alertlist(request, last_sync, modified=[], deleted=[]):
     for l in listsDel:
         sync_deleted.add({'id': l.id})
 
-    return [int(time.mktime(datetime.now().timetuple())), response, list(sync_deleted)]
+    return [int(time.mktime(datetime.now().timetuple())), response, sync_deleted]
     
 

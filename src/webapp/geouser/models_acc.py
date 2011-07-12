@@ -110,12 +110,24 @@ class UserProfile(db.Model):
     description = db.TextProperty(required=False)
     created = db.DateTimeProperty(auto_now_add=True)
     
+    _sociallinks = None
+    
     @classproperty
     def objects(self):
         return UserProfileHelper()
+    
+    @property
+    def sociallinks(self):
+        if self._sociallinks is None:
+            self._sociallinks = UserSocialLinks.all().ancestor(self.key()).get()
+        return self._sociallinks
+    
+    def sociallinks_async(self):
+        q = UserSocialLinks.all().ancestor(self.key())
+        return q.run()
         
-    def __init__(self, *args, **kwargs):
-        super(self.__class__, self).__init__(*args, **kwargs)
+#    def __init__(self, *args, **kwargs):
+#        super(self.__class__, self).__init__(*args, **kwargs)
 
     def _update_gravatar(self):
         parent = self.parent()
@@ -150,6 +162,17 @@ class UserSocialLinks(db.Model):
     twitter = db.TextProperty(indexed=False)
     foursquares = db.TextProperty(indexed=False)
     created = db.DateTimeProperty(auto_now_add=True)
+    
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(*args, **kwargs)
+        from models_social import FacebookUser, TwitterUser
+        parent = self.parent().parent()
+        facebook = FacebookUser.all().filter('user =', parent).run()
+        twitter = TwitterUser.all().filter('user =', parent).run()
+        for fb in facebook:
+            self.facebook = fb.profile_url
+        for tw in twitter:
+            self.twitter = 'http://www.twitter.com/%s' % tw.username
 
 
 class UserFollowingIndex(db.Model):

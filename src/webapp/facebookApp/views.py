@@ -73,19 +73,22 @@ def profile(request, username):
     
     if request.user.username.lower() == username.lower():
         profile = request.user.profile
+        counters = request.user.counters_async()
+        sociallinks = profile.sociallinks_async()
         timeline = UserTimeline.objects.get_by_id(request.user.id)
         is_following = True
         is_follower = True
-        counters = request.user.counters
         show_followers = True
         show_followings = True
+        
     else:
         profile_user = User.objects.get_by_username(username)
         if profile_user is None:
             raise Http404()
+        counters = UserCounter.objects.get_by_id(profile_user.id, async=True)
+        sociallinks = profile.sociallinks_async()
         settings = profile_user.settings
         profile = profile_user.profile
-        counters = UserCounter.objects.get_by_id(profile_user.id, async=True)
         if request.user.is_authenticated():
             is_following = profile_user.is_following(request.user)
             is_follower = request.user.is_following(profile_user)
@@ -96,12 +99,12 @@ def profile(request, username):
             timeline = UserTimeline.objects.get_by_id(profile_user.id, vis='shared')
         elif settings.show_timeline:
             timeline = UserTimeline.objects.get_by_id(profile_user.id)
-        counters.get_result()
         show_followers = settings.show_followers,
         show_followings = settings.show_followings
     
     return render_to_response('profile.html', {'profile': profile, 
-                                                'counters': counters,
+                                                'counters': counters.next(),
+                                                'sociallinks': sociallinks.next(),
                                                 'timeline': timeline, 
                                                 'is_following': is_following,
                                                 'is_follower': is_follower, 

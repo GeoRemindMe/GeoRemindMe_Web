@@ -48,6 +48,7 @@ class User(polymodel.PolyModel, HookedModel):
     _facebook_user = None
     _counters = None
     
+    
     @classproperty
     def objects(self):
         return UserHelper()
@@ -97,6 +98,8 @@ class User(polymodel.PolyModel, HookedModel):
         if self._counters is None:
             self._counters = UserCounter.all().ancestor(self.key()).get()
         return self._counters
+    
+
     
     def counters_async(self):
         q = UserCounter.all().ancestor(self.key())
