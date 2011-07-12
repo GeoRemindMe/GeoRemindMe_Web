@@ -51,7 +51,7 @@ def login_panel(request):
 
 @facebook_required
 def dashboard(request):
-    friends_to_follow=request.user.get_friends_to_follow()    
+    friends_to_follow=request.user.get_friends_to_follow()
     followers=request.user.get_followers()
     followings=request.user.get_followings()
     chronology = request.user.get_chronology()

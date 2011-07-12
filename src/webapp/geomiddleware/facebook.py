@@ -29,8 +29,8 @@ class FacebookMiddleware(object):
                 from facebookApp.watchers import disconnect_all
                 disconnect_all()  
         
-        if hasattr(request, 'facebook') and request.facebook['client'].user is None:
-            delattr(request, 'facebook') 
+#        if hasattr(request, 'facebook') and request.facebook['client'].user is None:
+#            delattr(request, 'facebook') 
 """                
     def _base64_url_decode(self, inp):
         # http://sunilarora.org/parsing-signedrequest-parameter-in-python-bas

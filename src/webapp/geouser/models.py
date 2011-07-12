@@ -351,13 +351,15 @@ class User(polymodel.PolyModel, HookedModel):
             :raise: :class:`UniqueUsernameConstraint` si el username ya esta en uso
         '''
         def _tx(user):
-            settings = UserSettings(key_name='settings_%s' % user.id, parent=user, language=language)
-            profile = UserProfile(key_name='profile_%s' % user.id, parent=user, username=user.username, email=user.email)
-            followings = UserFollowingIndex(parent=user)
-            counters = UserCounter(key_name='counters_%s' % user.id, parent=user)
-            sociallinks = UserSocialLinks(parent=profile, key_name='sociallinks_%s' % user.id)
-            db.put_async([settings, profile, followings, counters, sociallinks])
-            return True
+            try:
+                settings = UserSettings(key_name='settings_%s' % user.id, parent=user, language=language)
+                profile = UserProfile(key_name='profile_%s' % user.id, parent=user, username=user.username, email=user.email)
+                followings = UserFollowingIndex(parent=user)
+                counters = UserCounter(key_name='counters_%s' % user.id, parent=user)
+                db.put_async([settings, profile, followings, counters])
+                return True
+            except:
+                return False
         from django.core.validators import validate_email
         if 'email' in kwargs:
             validate_email(kwargs['email'].decode('utf8'))
@@ -366,9 +368,12 @@ class User(polymodel.PolyModel, HookedModel):
         trans = db.run_in_transaction(_tx, user)
         if not trans:
             user.delete()
-        from google.appengine.ext.deferred import defer
-        user_new.send(sender=user, status=trans)
-        return user
+        else:
+            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
+            sociallinks.put()
+            from google.appengine.ext.deferred import defer
+            user_new.send(sender=user, status=trans)
+            return user
     
     def update(self, **kwargs):
         '''
