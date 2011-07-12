@@ -132,7 +132,7 @@ def edit_profile (request):
         f = UserProfileForm(initial={'username': request.user.username,
                                      'email': request.user.email,
                                      'description': request.user.profile.description, 
-                                     'sync_avatar_with_facebook': request.user.profile.sync_avatar_with_facebook, },
+                                     'sync_avatar_with': request.user.profile.sync_avatar_with, },
                             prefix='user_set_profile'
                             )
     #~ raise Exception(f)
