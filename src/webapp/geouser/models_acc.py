@@ -101,12 +101,14 @@ class UserSettings(db.Model):
         super(UserSettings, self).put()
         memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)
         
-            
+
+AVATAR_CHOICES = ('none', 'gravatar', 'facebook', 'twitter')
 class UserProfile(db.Model):
     """Datos para el perfil del usuario"""
     username = db.TextProperty()
     avatar = db.URLProperty(required=False)
-    sync_avatar_with_facebook = db.BooleanProperty(indexed=False, default=False)
+    sync_avatar_with = db.StringProperty(required = True, choices = AVATAR_CHOICES,
+                                            default = 'gravatar')
     description = db.TextProperty(required=False)
     created = db.DateTimeProperty(auto_now_add=True)
     

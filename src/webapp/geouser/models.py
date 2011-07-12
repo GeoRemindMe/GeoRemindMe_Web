@@ -355,7 +355,7 @@ class User(polymodel.PolyModel, HookedModel):
             profile = UserProfile(key_name='profile_%s' % user.id, parent=user, username=user.username, email=user.email)
             followings = UserFollowingIndex(parent=user)
             counters = UserCounter(key_name='counters_%s' % user.id, parent=user)
-            sociallinks = UserSocialLinks(parent=profile)
+            sociallinks = UserSocialLinks(parent=profile, key_name='sociallinks_%s' % user.id)
             db.put_async([settings, profile, followings, counters, sociallinks])
             return True
         from django.core.validators import validate_email
@@ -391,8 +391,8 @@ class User(polymodel.PolyModel, HookedModel):
             self.password = kwargs['password']
         if 'description' in kwargs:
             self.profile.description = kwargs['description']
-        if 'sync_avatar_with_facebook' in kwargs:
-            self.profile.sync_avatar_with_facebook = kwargs['sync_avatar_with_facebook']            
+        if 'sync_avatar_with' in kwargs:
+            self.profile.sync_avatar_with = kwargs['sync_avatar_with']            
         try:
             put = db.put_async([self, self.profile])
             put.get_result()

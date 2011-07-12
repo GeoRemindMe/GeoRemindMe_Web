@@ -120,7 +120,7 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
         if id is not None:  # la alerta ya estaba sincronizada, la actualizamos
             old = Alert.objects.get_by_id_user(id, request.user)
             if not old:  # no existe en la BD, fue borrada.
-                sync_deleted.add({'id': id})
+                sync_deleted.append({'id': id})
                 continue
             if parse_date(a.get('modified')) <= old.modified:
                 continue
@@ -154,7 +154,7 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
             response.append(a.to_dict())
     alertsDel =  _Deleted_Alert.objects.get_by_last_sync(request.user, last_sync)
     for a in alertsDel:
-        sync_deleted.add({'id': a.id})
+        sync_deleted.append({'id': a.id})
     return [int(time.mktime(datetime.now().timetuple())), response, sync_deleted]
 
 
@@ -209,16 +209,16 @@ def sync_alertlist(request, last_sync, modified=[], deleted=[]):
         if id is not None:  # la alerta ya estaba sincronizada, la actualizamos
             old = List.objects.get_by_id_user(id, request.user)
             if not old:  # no existe en la BD, fue borrada.
-                sync_deleted.add({'id': id})
+                sync_deleted.append({'id': id})
                 continue
             if parse_date(l.get('modified')) <= old.modified:
                 continue
         keys_to_add = []
         for i in l.get('instances'):
-            keys_to_add.add(Alert.get_by_id_user(id, request.user))
+            keys_to_add.append(Alert.get_by_id_user(id, request.user))
         keys_to_del = []
         for i in l.get('delete_instances'):
-            keys_to_del.add(Alert.get_by_id_user(id, request.user))
+            keys_to_del.append(Alert.get_by_id_user(id, request.user))
         new_list = ListAlert.insert_list(request.user, id=id,
                                           name=l.get('name'),
                                           instances=keys_to_add)
@@ -236,7 +236,7 @@ def sync_alertlist(request, last_sync, modified=[], deleted=[]):
             response.append(alist.to_dict())
     listsDel =  _Deleted_List.objects.get_by_last_sync(request.user, last_sync, ListAlert.kind())
     for l in listsDel:
-        sync_deleted.add({'id': l.id})
+        sync_deleted.append({'id': l.id})
 
     return [int(time.mktime(datetime.now().timetuple())), response, sync_deleted]
     

@@ -133,7 +133,6 @@ class FacebookClient(object):
                                                email=facebookInfo['email'], realname=facebookInfo["name"],
                                                profile_url=facebookInfo["link"],
                                                access_token=self.consumer.access_token)
-                user.social
             else:
                 user.facebook_user.update(
                              realname = facebookInfo['name'],
@@ -156,7 +155,7 @@ class FacebookClient(object):
             self.user = User.objects.get_by_email(facebookInfo['email'])
             if self.user is None:
                 self.user = User.register(email=facebookInfo['email'], password=password if password is not None else make_random_string(length=6))
-                self.user.settings.sync_avatar_with_facebook = True #  por defecto, si el usuario es nuevo sincronizamos con facebook
+                self.user.settings.sync_avatar_with = 'facebook' #  por defecto, si el usuario es nuevo sincronizamos con facebook
                 self.user.settings.put()
         self.authorize(self.user)
         return self.user
