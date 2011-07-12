@@ -497,9 +497,12 @@ def get_avatar(request, username):
     user = User.objects.get_by_username(username)
     if user is None:
         raise Http404
-    if user.profile.sync_avatar_with_facebook:
+    if user.profile.sync_avatar_with == 'facebook':
         if user.facebook_user is not None:
             return HttpResponseRedirect("https://graph.facebook.com/%s/picture/" % user.facebook_user.uid)
+    elif user.profile.sync_avatar_with == 'twitter':
+        if user.twitter_user is not None:
+            return HttpResponseRedirect(user.twitter_user.picurl)
     else:
         email = user.email
         default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"

@@ -149,12 +149,19 @@ class SocialUserForm(forms.Form):
             fail = _(e.message)
             self._errors['email'] = self.error_class([fail])
 
+AVATAR_CHOICES = (
+          ('none', _('None')),
+          ('facebook', _('Facebook')),
+          ('twitter', _('Twitter')),
+          ('gravatar', _('Gravatar')),
+                 )
 class UserProfileForm(forms.Form):
     username = forms.CharField(label=_('Username'), required=True)
     email = forms.EmailField(label=_('email'), required=True)
     description = forms.CharField(widget=forms.TextInput(), required=False)
-    sync_avatar_with_facebook = forms.BooleanField(label=_('Sync your  avatar with facebook'), required=False)
+    sync_avatar_with = forms.ChoiceField(label=_('Sync your  avatar with'), choices=AVATAR_CHOICES)
     
+
     def save(self, user):
 #        if file is not None:
 #            if 'image/' in file.type:
@@ -162,7 +169,7 @@ class UserProfileForm(forms.Form):
         try:
             user.update(username=self.cleaned_data['username'], 
                         email=self.cleaned_data['email'], description=self.cleaned_data['description'], 
-                        sync_avatar_with_facebook = self.cleaned_data['sync_avatar_with_facebook'])
+                        sync_avatar_with = self.cleaned_data['sync_avatar_with'])
             return True
         except User.UniqueEmailConstraint:  # email already in use
                 msg = _("Email already in use")
