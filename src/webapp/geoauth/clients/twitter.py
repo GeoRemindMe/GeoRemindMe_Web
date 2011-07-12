@@ -63,14 +63,14 @@ class TwitterClient(Client):
         ids = self.get_friends()
         registered = []
         for i in ids:
-            user = TwitterUser.objects.get_by_id(i)
-            if user is not None and not self.user.is_following(user.user):
-                info = self.get_others_user_info(id=user.id)
-                registered.append({'id':user.id, 
-                                   'username': user.username, 
-                                   'avatar': user.profile.avatar,
-                                   'twittername': info['screen_name'], 
-                                   })
+            user_to_follow = TwitterUser.objects.get_by_id(i)
+            if user_to_follow is not None and not self.user.is_following(user_to_follow.user):
+                info = self.get_others_user_info(id=user_to_follow.id)
+                registered[user_to_follow.user.id] = { 
+                                               'username': user_to_follow.user.username, 
+                                               'avatar': user_to_follow.user.profile.avatar,
+                                               'twittername': info['screen_name'], 
+                                               }
         return registered
     def authorize(self, user=None):
         """Guarda el token de autorizacion"""

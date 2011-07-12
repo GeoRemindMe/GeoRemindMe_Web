@@ -63,11 +63,11 @@ class GoogleClient(Client):
         feed = self.get_contacts()
         for i, entry in enumerate(feed.entry):
             for email in entry.email:
-                user = User.objects.get_by_email(email.address)
-                if user is not None:
-                    registered.append({'id':user.id, 
-                                       'username': user.username, 
-                                       'avatar': user.profile.avatar, 
-                                       'email': user.email
-                                       })
+                user_to_follow = User.objects.get_by_email(email.address)
+                if user_to_follow is not None and not self.user.is_following(user_to_follow.user):
+                    registered[user_to_follow.id]={ 
+                                                'username': user_to_follow.username, 
+                                                'avatar': user_to_follow.profile.avatar, 
+                                                'email': user_to_follow.email
+                                                }
         return registered

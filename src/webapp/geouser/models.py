@@ -580,6 +580,31 @@ class User(polymodel.PolyModel, HookedModel):
         if self.username is not None:
             return '/user/%s/' % str(self.username)
         
+    def get_friends_to_follow(self):
+        friends = {}
+        from geoauth.clients.facebook import FacebookClient
+        try:
+            fbclient = FacebookClient(user=self)
+            if fbclient.user is not None:
+                friends = fbclient.get_friends_to_follow()
+        except:
+            pass
+        try:
+            from geoauth.clients.twitter import TwitterClient
+            twclient = TwitterClient(user=self)
+            if twclient.user is not None:
+                friends.update(twclient.get_friends_to_follow())
+        except:
+            pass
+        try:
+            from geoauth.clients.google import GoogleClient
+            goclient = GoogleClient(user=self)
+            if goclient.user is not None:
+                friends.update(goclient.get_contacts_to_follow())
+        except:
+            pass
+        return friends
+        
 from watchers import *
 from models_acc import *
 from helpers import UserHelper

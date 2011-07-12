@@ -51,15 +51,16 @@ def login_panel(request):
 
 @facebook_required
 def dashboard(request):
-    friends_to_follow=request.facebook['client'].get_friends_to_follow()    
+    friends_to_follow=request.user.get_friends_to_follow()    
     followers=request.user.get_followers()
     followings=request.user.get_followings()
-    timeline=request.user.get_timeline()
+    chronology = request.user.get_chronology()
+    ##timeline=request.user.get_timelineALL()
     
     return  render_to_response('dashboard.html', {'friends_to_follow': friends_to_follow,
                                                   'followers': followers,
                                                   'followings': followings, 
-                                                  'timeline':timeline,
+                                                  'chronology': chronology,
                                                   } , RequestContext(request))
 
 

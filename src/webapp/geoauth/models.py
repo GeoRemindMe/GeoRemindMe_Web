@@ -107,7 +107,6 @@ class OAUTH_Access(db.Model):
         """USE THIS METHOD TO CREATE A NEW TOKEN, USE KEY_NAME = None"""
         if key_name is None:
             key_name = 'atoken_%s' % kwargs['token_key']
-        
         return OAUTH_Access.get_or_insert(key_name, **kwargs)
     
     @classmethod
