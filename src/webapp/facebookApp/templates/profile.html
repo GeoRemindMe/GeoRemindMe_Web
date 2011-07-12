@@ -4,13 +4,19 @@
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>
+    <script type="text/javascript">
+    
+    $("#user-avatar").ready(function(){
+        $(this).load();
+    });
+    </script>
 {%endblock%}
 
 {% block body %}
     <div id="public-profile">
         <div id="col-right-left">
             <span id="avatar-follow">
-                <img src="/user/{{profile.username}}/picture/" alt="{{profile.username}} avatar"/>
+                <img id="user-avatar" src="/user/{{profile.username}}/picture/" alt="{{profile.username}} avatar"/>
                 <br>
                 {% ifnotequal user.username profile.parent.username %}
                     {% if is_follower %}

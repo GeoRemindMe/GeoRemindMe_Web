@@ -500,7 +500,7 @@ input{
     }
     #profile div#avatar img,#edit-profile div#avatar img{
         margin: 5px 5px 0;
-        width: 90px;
+        width: 50px;
         border:0;
     }
     #profile div#avatar a,#edit-profile div#avatar a{
@@ -699,7 +699,7 @@ input{
         text-align: center;
     }
     #col-right-left span img{
-        width:75px;
+        width:50px;
     }
     #public-profile #col-right-right{
         border-left: 1px dotted black;
