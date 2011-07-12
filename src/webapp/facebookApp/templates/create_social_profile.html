@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+
+{% block mainButton %}{% endblock %}
+
 {% block nav %} 
     {% include "register_menu.html" %}
 {% endblock %}
@@ -17,7 +20,7 @@
             <li><a id="twitter" href="/ext/twitter/contacts/" target="_blank"><strong>Buscar</strong> entre las personas que sigo en Twitter</a></li>
         </ul>
         <div class="note">
-            <strong>Nota</strong>: En ningún momento enviaremos mensajes a tus contacto <p id="show-more-text"> patapin, patapan</p><strong class="show-more" onclick="javascript:$('#show-more-text').toggle('slow')">[Ver más]</strong>
+            <strong class="show-more" onclick="javascript:$('#show-more-text').toggle('slow')">[Ver más]</strong><strong>Nota</strong>: En ningún momento enviaremos mensajes a tus contacto <p id="show-more-text"> patapin, patapan</p>
         </div>
         
         <p>
