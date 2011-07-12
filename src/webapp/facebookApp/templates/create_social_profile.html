@@ -8,6 +8,19 @@
     {% include "register_menu.html" %}
 {% endblock %}
 
+{% block extra_js %}
+<script type="text/javascript">
+    function toggle_showMore(){
+        if($('#show-more-text').css('display')!="none")
+            $('.show-more').html("[Ver más]")
+        else
+            $('.show-more').html("[Ocultar]")
+        
+        $('#show-more-text').toggle('slow')
+    }
+</script>
+{% endblock %}
+
 {% block body %}
     <div id="social-profile">
         <h1>Configuración inicial</h1>
@@ -20,7 +33,7 @@
             <li><a id="twitter" href="/ext/twitter/contacts/" target="_blank"><strong>Buscar</strong> entre las personas que sigo en Twitter</a></li>
         </ul>
         <div class="note">
-            <strong class="show-more" onclick="javascript:$('#show-more-text').toggle('slow')">[Ver más]</strong><strong>Nota</strong>: En ningún momento enviaremos mensajes a tus contacto <p id="show-more-text"> patapin, patapan</p>
+            <strong class="show-more" onclick="javascript:toggle_showMore()">[Ver más]</strong><strong>Nota</strong>: En ningún momento enviaremos mensajes a tus contacto <p id="show-more-text"> patapin, patapan</p>
         </div>
         
         <p>
