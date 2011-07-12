@@ -181,6 +181,9 @@ input{
         display: inline;
         line-height: 2.5em;
     }
+    #right-col .section{
+        clear:both;
+    }
     #right-col .section .header, .right-col .section .article .header{
         border-bottom: medium none;
         border-top: 1px solid #E2E2E2;
@@ -363,6 +366,9 @@ input{
         
     }
     
+    a:visited, a:active{
+        color:#01F;
+    }
     
     /****************************
      *      
@@ -578,7 +584,7 @@ input{
     
     /****************************
      *      
-     *  ACTIVITY
+     *  ACTIVITY - DASHBOARD
      * 
      ***************************/
     
@@ -602,7 +608,8 @@ input{
 */
     }
     ul#friends-to-follow li img{
-        width:75px;
+        width:50px;
+        margin: 1em 0;
     }
     ul#friends-to-follow div.user-data{
         margin-left: 10px;
@@ -628,6 +635,76 @@ input{
     ul#friends-to-follow span.waiting{
         padding: 0px 10px 0px 27px;
         background-position: 5px 4px;
+    }
+    
+    ul#chronology{
+        font-size: 1.1em;
+        line-height: 1.7em;
+        margin: 0 5px;
+        padding: 0;
+    }
+    
+    ul#chronology li{
+        border-bottom: 1px solid #DDDDDD;
+        clear: both;
+        list-style: none outside none;
+        margin: 0.5em 0;
+        padding: 0.5em 0;
+    }
+    
+    ul#chronology li:after{
+        clear: both;
+        content: ".";
+        display: block;
+        height: 0px;
+        visibility: hidden;
+    }
+    
+    ul#chronology li div.avatar{        
+        float: left;
+        margin: 0 1em 0 0;
+        text-align: left;
+    }
+    ul#chronology li div.avatar img{
+        width:50px
+    }
+    ul#chronology li span.timestamp{
+        color: #999;
+        display: block;
+        font-size: 0.9em;
+        float: left;
+    }
+    
+    ul#chronology li span.action-bar{
+        font-size: 0.9em;
+        padding-left: 0.5em;
+    }
+    ul#chronology li span.action-bar span{
+        color:#0011FF;
+        margin: 0 0.5em;
+    }
+    ul#chronology li span.action-bar span:hover{
+        text-decoration:underline;
+        cursor:pointer;
+    }
+    
+    ul#chronology li p{
+        margin:0;
+        padding:0;
+    }
+    
+    .load-more{
+        background-color: #3B5998;
+        border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
+        border-style: solid;
+        border-width: 1px;
+        color: white;
+        font-weight: bold;
+        margin: 1.5em auto;
+        padding: 2px 15px 3px;
+        text-align: center;
+        width: 100px;
+        cursor: pointer;
     }
 
     /****************************
@@ -902,3 +979,5 @@ input{
         #suggestions .selectCheckBox input[type="checkbox"]{
             margin:0;
         }
+    
+    

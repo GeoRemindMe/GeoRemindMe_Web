@@ -14,8 +14,52 @@
             <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
         </div>
     </div>
-    <p>Hola</p>
+<!--
     <p>{{chronology}}</p>
+-->
+    
+    <ul id="chronology">
+        <li>
+            <div class="avatar">
+                <a href="/fb/user/richard" title="Ver perfil en GeoRemindMe">
+                    <img src="/user/richard/picture/" alt="richard avatar"/>
+                </a>
+            </div>
+            <p>                
+                <a href="">hhkaos</a> sugiere que:<br>
+                Alguna vez vayas de tapas al Villa Magna y te pidas la tapa "Bomba"<br>
+                <span class="timestamp">06 de julio a las 18:44</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
+            </p>
+        </li>
+        
+        <li>
+            <div class="avatar">
+                <a href="/fb/user/susana" title="Ver perfil en GeoRemindMe">
+                    <img src="/user/susana/picture/" alt="susana avatar"/>
+                </a>
+            </div>
+            <p>                
+                A <a href="">Susana</a> le gusta la sugerencia de <a href="">Richard</a>:<br>
+                Sugiero que a los que os gusten los comics visiteis la tienda Neoterra<br>
+                <span class="timestamp">06 de julio a las 18:44</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
+            </p>
+        </li>
+        
+        <li>
+            <div class="avatar">
+                <a href="/fb/user/richard" title="Ver perfil en GeoRemindMe">
+                    <img src="/user/richard/picture/" alt="richard avatar"/>
+                </a>
+            </div>
+            <p>                
+                <a href="">hhkaos</a> ha comentado en "<a href="">Sugiero que a lo suqe os gusten los ...</a>":<br>
+                Yo además añadiría que preguntéis cuando son los próximos días de "demos".<br>
+                <span class="timestamp">06 de julio a las 18:44</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
+            </p>
+        </li>
+    </ul>
+    
+    <div class="load-more">Cargar más</div>
 
     {% if friends_to_follow %}
         
@@ -24,12 +68,10 @@
             <h2>Personas a las que podrías conocer</h2>
             <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
         </div>
-        <p>De tus amigos de facebook usan GeoRemindMe para hacer recomendaciones:</p>
         <ul id="friends-to-follow">
-            
             {% for id, f in friends_to_follow.items %}
                 
-                <li style="{% cycle 'clear:left' ''%}">
+                <li> <!--style="{% cycle 'clear:left' ''%}">-->
                     <div class="avatar">
                         <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
                         <br>
