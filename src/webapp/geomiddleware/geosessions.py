@@ -21,11 +21,11 @@ class geosession(object):
                                              )
         else:
             request.session = SessionStore.load(session_id=session_id)
-        
-        
+
         if 'user' in request.session:
             request.user = request.session['user']
             if request.session.is_from_facebook and not hasattr(request, 'facebook'):
+                request.session.delete()
                 request.user = AnonymousUser()
         else:
             request.user = AnonymousUser()
