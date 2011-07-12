@@ -108,12 +108,14 @@ class FacebookClient(object):
         registered = {}
         for f in friends:
             user_to_follow = FacebookUser.objects.get_by_id(f['id'])
+            
             if user_to_follow is not None and not self.user.is_following(user_to_follow.user):
-                registered.update(user_to_follow.user.id, {
+                registered[user_to_follow.user.id]= {
                                                    'username':user_to_follow.user.username, 
                                                    'avatar':user_to_follow.user.profile.avatar, 
                                                    'uid':user_to_follow.uid
-                                                   })
+                                                   }
+
         return registered
         
     def authorize(self, user):

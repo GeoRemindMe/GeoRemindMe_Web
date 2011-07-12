@@ -15,7 +15,8 @@
         </div>
     </div>
     <p>Hola</p>
-    <p>{{timeline}}</p>
+    <p>{{chronology}}</p>
+    {{friends_to_follow}}
     {% if friends_to_follow %}
         
     <div class="section">    
@@ -26,9 +27,10 @@
         <p>De tus amigos de facebook usan GeoRemindMe para hacer recomendaciones:</p>
         <ul id="friends-to-follow">
             
-            {% for f in friends_to_follow %}
+            {% for id, f in friends_to_follow.items %}
                 
                 <li style="{% cycle 'clear:left' ''%}">
+                    Valores={{id}},{{f}}
                     <div class="avatar">
                         <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
                             <img src="/user/{{f.username}}/picture/" alt="{{f.username}} avatar"/>
@@ -43,8 +45,8 @@
                         </ul>
                         
 
-                        <div id="following_state_{{ f.id }}" class="follow-button">
-                            <span  onclick="javascript:follow('follow',{{f.id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                        <div id="following_state_{{ id }}" class="follow-button">
+                            <span  onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
                         </div>
                     </div>
                 </li>

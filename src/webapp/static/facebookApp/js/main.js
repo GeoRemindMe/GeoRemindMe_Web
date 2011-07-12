@@ -31,23 +31,3 @@ function handleSessionChange(response) {
 function goHome() {
   top.location = 'http://apps.facebook.com/' + Config.canvasName + '/';
 }
-
-function publishRun(title) {
-  FB.ui({
-    method: 'stream.publish',
-    attachment: {
-      name: title,
-      caption: "I'm running!",
-      media: [{
-        type: 'image',
-        href: 'http://runwithfriends.appspot.com/',
-        src: 'http://runwithfriends.appspot.com/splash.jpg'
-      }]
-    },
-    action_links: [{
-      text: 'Join the Run',
-      href: 'http://runwithfriends.appspot.com/'
-    }],
-    user_message_prompt: 'Tell your friends about the run:'
-  });
-}
