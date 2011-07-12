@@ -590,22 +590,19 @@ class User(polymodel.PolyModel, HookedModel):
         from geoauth.clients.facebook import FacebookClient
         try:
             fbclient = FacebookClient(user=self)
-            if fbclient.user is not None:
-                friends = fbclient.get_friends_to_follow()
+            friends.update(fbclient.get_friends_to_follow())
         except:
             pass
         try:
             from geoauth.clients.twitter import TwitterClient
             twclient = TwitterClient(user=self)
-            if twclient.user is not None:
-                friends.update(twclient.get_friends_to_follow())
+            friends.update(twclient.get_friends_to_follow())
         except:
             pass
         try:
             from geoauth.clients.google import GoogleClient
             goclient = GoogleClient(user=self)
-            if goclient.user is not None:
-                friends.update(goclient.get_contacts_to_follow())
+            friends.update(goclient.get_contacts_to_follow())
         except:
             pass
         return friends
