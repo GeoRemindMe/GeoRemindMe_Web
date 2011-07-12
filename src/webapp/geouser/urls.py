@@ -18,4 +18,5 @@ urlpatterns = patterns('geouser.views',
     (r'^(?i)ext/google/contacts/$', 'get_contacts_google'),
     (r'^(?i)ext/twitter/perms/$', 'get_perms_twitter'),
     (r'^(?i)ext/twitter/contacts/$', 'get_friends_twitter'),
+    url(r'^(?i)ext/close_window/$', 'close_window', {}, 'close_window')
 )

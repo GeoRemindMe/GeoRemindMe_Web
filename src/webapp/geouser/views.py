@@ -123,8 +123,12 @@ def login_twitter(request):
         
         :return: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
     """
+    if 'cls' in request.GET:
+        callback_url = request.build_absolute_uri(reverse('geouser.views.close_window'))
+    else:
+        callback_url=None
     from geoauth.views import authenticate_request
-    return authenticate_request(request, 'twitter')
+    return authenticate_request(request, 'twitter', callback_url=callback_url)
 
 #===============================================================================
 # LOGOUT VIEW
@@ -511,3 +515,6 @@ def get_avatar(request, username):
         gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
         gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
         return HttpResponseRedirect(gravatar_url)
+    
+def close_window(request):
+    return render_to_response('webapp/close_window.html', {}, context_instance=RequestContext(request))
