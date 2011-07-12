@@ -16,7 +16,7 @@
     </div>
     <p>Hola</p>
     <p>{{chronology}}</p>
-    {{friends_to_follow}}
+
     {% if friends_to_follow %}
         
     <div class="section">    
@@ -30,21 +30,13 @@
             {% for id, f in friends_to_follow.items %}
                 
                 <li style="{% cycle 'clear:left' ''%}">
-                    Valores={{id}},{{f}}
                     <div class="avatar">
+                        <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
+                        <br>
                         <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
                             <img src="/user/{{f.username}}/picture/" alt="{{f.username}} avatar"/>
                         </a>
-                        <br>
-                        <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
-                    </div>
-                    <div class="user-data">
-                        <ul>
-                            <li><a href="/fb/user/{{f.username}}" title="Sugerencias hechas"><span>{{ f.counters.suggested }}</span>Sugerencias</a></li>
-                            <li><a href="/fb/user/{{f.username}}" title="Recomendaciones suyas que te han gustado"><span>{{ f.profile.parent.counters.influenced }}</span>Impactos</a></li>
-                        </ul>
                         
-
                         <div id="following_state_{{ id }}" class="follow-button">
                             <span  onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
                         </div>

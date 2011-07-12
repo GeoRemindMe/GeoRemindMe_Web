@@ -592,12 +592,17 @@ input{
         font-size:1.1em
     }
     ul#friends-to-follow li{
-        width:50%; /*272px*/
+        width:100px; /*272px*/
         float:left;
         margin: 10px 0;
     }
     ul#friends-to-follow li div{
+/*
         float:left;
+*/
+    }
+    ul#friends-to-follow li img{
+        width:75px;
     }
     ul#friends-to-follow div.user-data{
         margin-left: 10px;
@@ -611,11 +616,19 @@ input{
         margin:0;padding:0;
     }
     ul#friends-to-follow li div.follow-button{
+/*
         float:right;
         right: 10px;
         position: relative;
+*/
     }
-
+    ul#friends-to-follow li .follow-button a{
+        line-height: 25px;
+    }
+    ul#friends-to-follow span.waiting{
+        padding: 0px 10px 0px 27px;
+        background-position: 5px 4px;
+    }
 
     /****************************
      *      

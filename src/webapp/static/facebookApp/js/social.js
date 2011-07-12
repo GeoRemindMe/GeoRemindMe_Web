@@ -38,16 +38,16 @@ function follow(action,userid,username) {
         url: url,
         context: data,
         data: data,
-        success: function(data){
+        complete: function(msg){
             //console.log(data)
             $("#following_state_"+userid).children().remove()
             $("#following_state_"+userid).children().removeClass("waiting")
-            if(action=='follow' && data){
+            if(action=='follow' && data && msg.status==200){
                 $("#unfollowTemplate").tmpl( {id:userid} ).appendTo( "#following_state_"+userid );
             
                 $('#following_state_'+userid).addClass('following-state');
             }
-            else if (action=='unfollow' && data){
+            else{
                 $("#followTemplate").tmpl( {id:userid} ).appendTo( "#following_state_"+userid );
                 
                 $('#following_state_'+userid).removeClass('following-state');
