@@ -62,6 +62,12 @@ class GoogleUser(SocialUser):
         self.realname= realname
         self.email = email
         self.put()
+        
+    def has_perms(self, uid):
+        from geoauth.models import OAUTH_Access
+        if OAUTH_Access.get_token_user('google', self.user) is None:
+            return False
+        return True
 
     
 class FacebookUserHelper():
@@ -82,7 +88,13 @@ class FacebookUser(SocialUser):
     
     def is_facebook(self):
         return True
-    
+
+    def has_perms(self):
+        from geoauth.models import OAUTH_Access
+        if OAUTH_Access.get_token_user('facebook', self.user) is None:
+            return False
+        return True
+        
     @classmethod
     def register(cls, user, uid, email, realname, profile_url, access_token):
         def _tx():
@@ -121,6 +133,12 @@ class TwitterUser(SocialUser):
     objects = TwitterUserHelper()
     
     def is_twitter(self):
+        return True
+    
+    def has_perms(self, uid):
+        from geoauth.models import OAUTH_Access
+        if OAUTH_Access.get_token_user('twitter', self.user) is None:
+            return False
         return True
         
     @classmethod
