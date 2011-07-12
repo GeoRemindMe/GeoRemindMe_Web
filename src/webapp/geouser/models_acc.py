@@ -162,7 +162,7 @@ class UserSocialLinks(db.Model):
     """Enlaces a los perfiles de redes sociales del usuario"""
     facebook = db.TextProperty(indexed=False)
     twitter = db.TextProperty(indexed=False)
-    foursquares = db.TextProperty(indexed=False)
+    foursquare = db.TextProperty(indexed=False)
     created = db.DateTimeProperty(auto_now_add=True)
     
     def __init__(self, *args, **kwargs):

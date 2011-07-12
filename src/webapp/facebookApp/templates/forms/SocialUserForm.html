@@ -110,7 +110,7 @@
         
         
         
-        <label for="id_username">Username:</label>
+        <label for="id_username">Username: <sup>(1)</sup></label>
         <input id="id_{{form.prefix}}-username" type="text" value="{% if form.initial.username %}{{form.initial.username}}{% endif %}" name="{{form.prefix}}-username">
         <div class="error-msg" id="username-error">
             {% if form.username.errors%}        

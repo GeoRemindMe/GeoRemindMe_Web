@@ -42,14 +42,14 @@
             </p>
             <p>
                 <span>También está en:</span>
-                {% if profile.parent.facebook_user %}
-                    <a href="http://www.facebook.com/profile.php?id={{profile.parent.facebook_user.uid}}">Facebook</a>
+                {% if profile.sociallinks.facebook %}
+                    <a href="{{profile.sociallinks.facebook}}">Facebook</a>
                 {% endif %}
-                {% if profile.parent.google_user %}
-                    <a href="http://www.facebook.com/profile.php?id={{profile.parent.facebook_user.uid}}">Google</a>
+                {% if profile.sociallinks.twitter %}
+                    <a href="{{profile.sociallinks.twitter}}">Twitter</a>
                 {% endif %}
-                {% if profile.parent.twitter_user %}
-                    <a href="http://www.facebook.com/profile.php?id={{profile.parent.facebook_user.uid}}">Twitter</a>
+                {% if profile.sociallinks.foursquare %}
+                    <a href="{{profile.sociallinks.foursquare}}">Foursquare</a>
                 {% endif %}
             </p>
         </div>
