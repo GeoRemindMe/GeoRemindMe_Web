@@ -527,19 +527,34 @@ input{
         float:right;
         margin-right:10px;
     }
-    div#right-col #edit-profile li span{
+    div#right-col #profile table{
+        border-collapse: collapse;
+        margin: 0 0.5em 1em;
+        width: 535px;
+    }
+    div#right-col #profile table tr#head{
+        font-weight:bold;
+        background-color: #eee;
+    }
+    div#right-col #profile table td{
+        border:1px solid #ccc;
+        padding:0.5em;
+        
+    }
+    div#right-col #profile span{
         font-weight:normal;
         background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 0 transparent;
         padding-left: 20px;
         width:70px;
     }
-    div#right-col #edit-profile li span#twitter-icon{
+    div#right-col #profile span#twitter-icon{
         background-position: 0 0;
     }
-    div#right-col #edit-profile li span#google-icon{
+    div#right-col #profile span#google-icon{
         background-position: 0 -16px;
     }
-    div#right-col #edit-profile li span#facebook-icon{
+    div#right-col #profile span#facebook-icon{
+    
         background-position: 0 -32px;
     }
     #edit-profile form{

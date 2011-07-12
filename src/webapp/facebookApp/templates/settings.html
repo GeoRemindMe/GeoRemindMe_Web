@@ -30,6 +30,63 @@
                 <dd>{{user.settings.time_notification_suggestion_follower}}</dd>
             </dl>
         </div>
+        
+        <div class="section">
+            <div class="header">
+                <h2>Control de cuentas</h2>
+                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+            </div>
+            
+            <p>Tabla de permisosPara mejorar la potencia de tu cuenta, :</p>
+            
+            <table>
+                <tr id="head">
+                    <td>Red</td>
+                    <td>Login</td>
+                    <td>Comunicaciones</td>
+                </tr>
+                <tr>
+                    <td><span id="facebook-icon">Facebook</span></td>
+                    <td>Permitido</td>
+                    <td>Permitido</td>
+                </tr>
+                <tr>
+                    <td><span id="twitter-icon">Twitter</span> </td>
+                    <td>
+                        {% if not user.twitter_user %}
+                            <a href="/login/twitter/?cls" target="_blank">Autorizar</a> 
+                        {% else %}
+                            <a href="/login/twitter/?cls">Revocar</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not user.twitter_user.has_perms %}
+                            <a href="/ext/twitter/contacts" target="_blank">Autorizar</a> 
+                        {% else %}
+                            <a href="">Revocar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><span id="google-icon">Google</span> </td>
+                    <td>
+                        {% if not user.google_user %}
+                            <a href="/login/google/?cls">Autorizar</a>
+                        {% else %}
+                            <a href="/login/google/?cls">Revocar</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not user.google_user.has_perms %}
+                            <a href="/ext/google/contacts" target="_blank">Autorizar</a> 
+                        {% else %}
+                            <a href="">Revocar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
         <div class="section">
             <div class="header">
                 <h2>Privacidad</h2>
@@ -61,13 +118,17 @@
 
                 {% endfor %}
   			
-  			</div
         </div>
+    </div>
+        
+        
         <hr>
         <div id="desinstall">
             <a href="">Desinstalar la aplicación</a> | 
             <a href="">Cancelar mi cuenta en GeoRemindMe</a>
         </div>
     </div>
+    
+    
     
 {% endblock %}
