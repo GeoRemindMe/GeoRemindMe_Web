@@ -193,54 +193,7 @@ function updateAddressByMarker(marker)
     });
 }
 
-function autocompleteAddress()
-{
 
-    $(this)
-        .autocomplete({
-         //This bit uses the geocoder to fetch address values
-          autoFocus: true,
-          source: function(request, response) {
-            geocoder.geocode( {'address': request.term }, function(results, status) {
-            
-                if (status != google.maps.GeocoderStatus.OK)
-                    return;
-            
-              response($.map(results, function(item) {
-                return {
-                  label:  item.formatted_address,
-                  value: item.formatted_address,
-                  latitude: item.geometry.location.lat(),
-                  longitude: item.geometry.location.lng()
-                }
-              }));
-            })
-          },
-          //This bit is executed upon selection of an address
-          select: function(event, ui) {
-              
-            if (typeof(EDITING)!="undefined" && EDITING)
-            {
-                $('#edit-'+EDITING+' .location').val(ui.item.formatted_address);
-
-                var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
-                
-                if (typeof(tasks[EDITING].marker) == "undefined")
-                {
-                    tasks[EDITING]['marker'] = createMarker(EDITING,location.lat(),location.lng());
-                    tasks[EDITING].marker.setAnimation(google.maps.Animation.DROP);
-                    tasks[EDITING].marker.setIcon(new google.maps.MarkerImage("/static/webapp/img/marcador03.png"));
-                    tasks[EDITING].marker.setVisible(true);
-                    tasks[EDITING].marker.setDraggable(true);
-                }
-                else
-                    tasks[EDITING].marker.setPosition(location);
-                    
-                map.setCenter(location);
-            }
-          }
-        });
-}
 
 function setFormBehaviour(){
     $("form").submit(function() {
