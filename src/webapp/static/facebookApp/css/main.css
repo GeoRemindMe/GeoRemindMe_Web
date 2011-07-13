@@ -918,11 +918,11 @@ input{
         font-size: 1.5em;
         margin-right: 30px;
     }
-    #address-container{
+    #address-container,#place-container{
         border:1px solid #ccc;
         border-bottom:10px solid #ccc;
     }
-    #address-container input{
+    #address-container input,#place-container input{
         display: block;
         margin: 1em auto;
         width: 530px;
@@ -958,10 +958,13 @@ input{
         padding-top: 3px;
     }
     
+    #place-form{
+        display:none;
+    }
 
     /****************************
      *      
-     *  Add suggestion panel
+     *  Suggestion panel
      * 
      ***************************/
     #suggestions{

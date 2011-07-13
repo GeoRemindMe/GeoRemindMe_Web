@@ -3,6 +3,33 @@ $(document).ready(function() {
     //Set characters counter OnKeyUp
     setRemainingCharCounter();
     
+    
+     //~ key: 'AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710', // add your key here
+     
+     //~ google.maps.places.PlacesServices#search().
+ 
+
+    
+    
+    //Input Autocomplete address
+    $('#address').geo_autocomplete(new google.maps.Geocoder, {
+		mapkey: 'ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw', 
+		selectFirst: false,
+		minChars: 3,
+		cacheLength: 50,
+		width: 530,
+        mapwidth:0,
+        mapheight:0,
+		scroll: true,
+		scrollHeight: 150,
+        geocoder_region:'Spain',
+        geocoder_types: 'locality,street_address,sublocality,neighborhood,country',
+	}).result(function(_event, _data) {
+		if (_data) map.fitBounds(_data.geometry.viewport);
+	});
+    
+    
+    
     //Inicialize Google Maps
     //Buscamos la ciudad del residencia del usuario
     //~ $.get('http://maps.googleapis.com/maps/api/geocode/json?address=granada,spain&sensor=false', 
@@ -11,19 +38,10 @@ $(document).ready(function() {
             //~ console.log(data);
         //~ }, "json"
     //~ );
-    $('#address').geo_autocomplete(new google.maps.Geocoder, {
-		mapkey: 'ABQIAAAAbnvDoAoYOSW2iqoXiGTpYBTIx7cuHpcaq3fYV4NM0BaZl8OxDxS9pQpgJkMv0RxjVl6cDGhDNERjaQ', 
-		selectFirst: false,
-		minChars: 3,
-		cacheLength: 50,
-		width: 300,
-		scroll: true,
-		scrollHeight: 330
-	}).result(function(_event, _data) {
-		if (_data) map.fitBounds(_data.geometry.viewport);
-	});
     
     loadGMaps(37.176,-3.597,"map_canvas");
+    
+    
     
     //Set resizable canvas
         $('#address-container').resizable({
@@ -32,6 +50,7 @@ $(document).ready(function() {
              handles: 'n,s',
              alsoResize: "#map_canvas"
         });
+    
     
     //FORM
     setFormBehaviour();
@@ -56,7 +75,6 @@ function loadGMaps(defaultX,defaultY,canvas) {
     
     var myOptions = {
         zoom: 17,
-        //mapTypeId: 'satellite'
         center: new google.maps.LatLng(defaultX,defaultY),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         mapTypeControlOptions: { //Tipo: Mapa //Satelite
@@ -72,6 +90,8 @@ function loadGMaps(defaultX,defaultY,canvas) {
     geocoder = new google.maps.Geocoder();
     
     insertToolbar(map)
+    
+    placesAutocomplete(map);
 
 }
 
@@ -193,7 +213,19 @@ function updateAddressByMarker(marker)
     });
 }
 
-
+function activateTab(tab){
+    if(tab=='address'){
+        $('#address-form').css('display','block');
+        $('#place-form').css('display','none');
+        $('#place-tab').removeClass('active');
+        $('#address-tab').addClass('active');
+    }else{
+        $('#address-form').css('display','none');
+        $('#place-form').css('display','block');
+        $('#place-tab').addClass('active');
+        $('#address-tab').removeClass('active');
+    }
+}
 
 function setFormBehaviour(){
     $("form").submit(function() {
@@ -230,3 +262,64 @@ function setFormBehaviour(){
         return false;
     });
 }
+
+
+function placesAutocomplete(map){
+    var input = document.getElementById('place');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+
+    autocomplete.bindTo('bounds', map);
+
+    var infowindow = new google.maps.InfoWindow();
+    var marker = new google.maps.Marker({
+        map: map
+    });
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+        infowindow.close();
+        var place = autocomplete.getPlace();
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);  // Why 17? Because it looks good.
+        }
+
+        var image = new google.maps.MarkerImage(
+            place.icon,
+            new google.maps.Size(71, 71),
+            new google.maps.Point(0, 0),
+            new google.maps.Point(17, 34),
+            new google.maps.Size(35, 35));
+            marker.setIcon(image);
+            marker.setPosition(place.geometry.location);
+
+            var address = '';
+            if (place.address_components) {
+                address = [(place.address_components[0] &&
+                place.address_components[0].short_name || ''),
+                (place.address_components[1] &&
+                place.address_components[1].short_name || ''),
+                (place.address_components[2] &&
+                place.address_components[2].short_name || '')
+            ].join(' ');
+        }
+
+        infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+        infowindow.open(map, marker);
+    });
+
+    // Sets a listener on a radio button to change the filter type on Places
+    // Autocomplete.
+    function setupClickListener(id, types) {
+        var radioButton = document.getElementById(id);
+        google.maps.event.addDomListener(radioButton, 'click', function() {
+            autocomplete.setTypes(types);
+        });
+    }
+
+    setupClickListener('changetype-all', []);
+    setupClickListener('changetype-establishment', ['establishment']);
+    setupClickListener('changetype-geocode', ['geocode']);
+}
+

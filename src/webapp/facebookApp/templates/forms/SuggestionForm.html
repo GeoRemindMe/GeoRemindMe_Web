@@ -19,12 +19,23 @@
             <label>¿Dónde?</label>
             
             <ul id="tabMenu" class="clear">
-                <li class="active">Dirección</li>
-                <li>Sitio</li>
+                <li id="address-tab" class="active" onclick="javascript:activateTab('address')">Dirección</li>
+                <li id="place-tab" onclick="javascript:activateTab('place')">Sitio</li>
             </ul>
             <div id="address-container">
-                <input type="text" id="address" name="address">
-                
+                <div id="address-form">
+                    <input type="text" id="address" name="address">
+                </div>
+                <div id="place-form">
+                    Nombre: <input type="text" id="place" name="place">
+                    Tipo de local: 
+                    <select>
+                        <option>Cualquiera</option>
+                        <option>Farmacia</option>
+                        <option>Restaurante</option>
+                    </select>
+                    Marca: <input type="text" id="brand">
+                </div>
                 <div id="map_canvas" style="width:100%; height:300px;"></div>
             </div>
             
