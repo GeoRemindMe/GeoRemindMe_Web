@@ -28,7 +28,9 @@ class TwitterClient(Client):
                 raise OAUTHException()
             token= Token(access_token.token_key, access_token.token_secret)
         consumer = Consumer(key=settings.OAUTH['twitter']['app_key'], secret=settings.OAUTH['twitter']['app_secret'])
-        super(self.__class__, self).__init__(consumer, token=token)
+        from mapsServices.places.GPRequest import Client
+        mem = Client()
+        super(self.__class__, self).__init__(consumer, token=token, cache=mem)
     
     def get_user_info(self):
         """Obtiene la infomacion del perfil del usuario"""

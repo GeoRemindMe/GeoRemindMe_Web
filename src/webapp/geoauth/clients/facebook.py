@@ -52,7 +52,6 @@ from geouser.models import User
 from geouser.models_social import FacebookUser
 from georemindme.funcs import make_random_string
 
-
 class FacebookClient(object):
     _fb_id = None
     user = None
@@ -199,6 +198,9 @@ class GraphAPI(object):
     for the active user from the cookie saved by the SDK.
     """
     def __init__(self, access_token=None):
+        from mapsServices.places.GPRequest import Client
+        mem = Client()
+        self.req = httplib2.Http(cache=mem)
         self.access_token = access_token
 
     def get_object(self, id, **args):
@@ -307,8 +309,7 @@ class GraphAPI(object):
         
         content_type, body = self._encode_multipart_form(post_args, fxtype)
         headers = {'Content-Type' : content_type}
-        req = httplib2.Http()
-        response, content = req.request(self, "https://graph.facebook.com/%s/%s" % (object_id, fxtype),
+        response, content = self.req.request(self, "https://graph.facebook.com/%s/%s" % (object_id, fxtype),
                                                   method='POST', body=body, headers=headers)
         data = _parse_json(content)
         if response['status'] != 200:
@@ -365,10 +366,8 @@ class GraphAPI(object):
                 post_args["access_token"] = self.access_token
             else:
                 args["access_token"] = self.access_token
-        post_data = None if post_args is None else urllib.urlencode(post_args)
-        request = httplib2.Http()
-        
-        response, content = request.request("https://graph.facebook.com/" + path + "?" +
+        post_data = None if post_args is None else urllib.urlencode(post_args)        
+        response, content = self.req.request("https://graph.facebook.com/" + path + "?" +
                                             urllib.urlencode(args), 
                                             method='GET' if post_data is None else 'POST',
                                             body=post_data)
@@ -409,8 +408,7 @@ class GraphAPI(object):
         else:
             args["format"] = "json-strings"
         post_data = None if post_args is None else urllib.urlencode(post_args)
-        request = httplib2.Http()
-        response, content = request.request("https://api.facebook.com/" + path + "?" +
+        response, content = self.req.request("https://api.facebook.com/" + path + "?" +
                                             urllib.urlencode(args),
                                             method='GET' if post_data is None else 'POST',
                                             body=post_data)
@@ -439,8 +437,7 @@ class GraphAPI(object):
 
         args["query"] = query
         args["format"]="json"
-        request = httplib2.Http()
-        response, content = request.request("https://api.facebook.com/method/fql.query?" + 
+        response, content = self.req.request("https://api.facebook.com/method/fql.query?" + 
                                             urllib.urlencode(args),
                                             method='GET' if post_data is None else 'POST',
                                             body=post_data)
