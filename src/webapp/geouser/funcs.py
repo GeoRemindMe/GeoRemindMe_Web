@@ -36,6 +36,7 @@ def init_user_session(request, user, remember=False, from_rpc=False, is_from_fac
             :type remember: boolean
     """
     request.session.init_session(remember, lang=user.settings.language, user=user, from_rpc=from_rpc, is_from_facebook=is_from_facebook)
+    request.user = user
     user.settings.put()
     user.last_login = datetime.now()
     user.put()

@@ -592,7 +592,7 @@ class User(polymodel.PolyModel, HookedModel):
             fbclient = FacebookClient(user=self)
             friends.update(fbclient.get_friends_to_follow())
         except:
-            raise
+            pass
         try:
             from geoauth.clients.twitter import TwitterClient
             twclient = TwitterClient(user=self)
