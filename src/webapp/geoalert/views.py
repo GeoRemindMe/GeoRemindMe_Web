@@ -168,20 +168,15 @@ def add_from_google_reference(request, reference):
     if place is not None:  # ya existe, hacemos una redireccion permanente
         return redirect(place.get_absolute_url(), permanent=True)
     from mapsServices.places.GPRequest import *
-    try:
-        search = GPRequest().retrieve_reference(reference)
-    except GPAPIError, e:
-        return render_to_response('webapp/placeerror.html', {'error': e},
-                                  context_instance=RequestContext(request))
-    except:
-        return HttpResponseServerError
+#    try:
+#        search = GPRequest().retrieve_reference(reference)
+#    except GPAPIError, e:
+#        return render_to_response('webapp/placeerror.html', {'error': e},
+#                                  context_instance=RequestContext(request))
+#    except:
+#        return HttpResponseServerError
 
-    place = Place.insert_or_update_google(name=search['result']['name'],
-                                address=search['result']['formatted_address'], 
-                                city=_get_city(search['result']['address_components']),
-                                location=db.GeoPt(search['result']['geometry']['location']['lat'], search['result']['geometry']['location']['lng']),
-                                google_places_reference=search['result']['reference'],
-                                google_places_id=search['result']['id'],
+    place = Place.insert_or_update_google(google_places_reference=reference,
                                 user = request.user
                                 )
     

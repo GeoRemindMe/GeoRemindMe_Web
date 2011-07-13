@@ -10,7 +10,12 @@ from georemindme.models_utils import Visibility
 from geouser.models import User
 from signals import *
 
-
+def _get_city(components):
+    for i in components:
+        if 'locality' in i['types']:
+            return i['short_name']
+        
+        
 class Business(db.Model):
     '''Nombres genericos para un place (farmacia, supermercado, ...)'''
     name = db.StringProperty()
@@ -281,7 +286,7 @@ class Place(POI):
     
     
     @classmethod
-    def insert_or_update_google(cls, name, address, city, location, google_places_reference, google_places_id, user):
+    def insert_or_update_google(cls, user, google_places_reference=None, name=None, address=None, city=None, location=None, google_places_id=None):
         """
             Añade o actualiza un nuevo punto publico a la BD
             
@@ -301,13 +306,23 @@ class Place(POI):
                 :returns: :class:`geoalert.models_poi.PrivatePlace`
                 :raises: AttributeError
         """
-
+        if google_places_id is None and google_places_reference is not None:
+                from mapsServices.places.GPRequest import GPRequest
+                search = GPRequest().retrieve_reference(google_places_reference)
+                return Place.insert_or_update_google(name=search['result']['name'],
+                                address=search['result']['formatted_address'], 
+                                city=_get_city(search['result']['address_components']),
+                                location=db.GeoPt(search['result']['geometry']['location']['lat'], search['result']['geometry']['location']['lng']),
+                                google_places_reference=search['result']['reference'],
+                                google_places_id=search['result']['id'],
+                                user = user
+                                )
         place = cls.objects.get_by_google_id(google_places_id)
         if not isinstance(location, db.GeoPt):
             location = db.GeoPt(location)
         if place is not None:
             place.update(name, address, city, location, google_places_reference, google_places_id)    
-        else:
+        else:    
             place = Place(name=name, address=address,
                           city=city, location=location, 
                           google_places_reference=google_places_reference,

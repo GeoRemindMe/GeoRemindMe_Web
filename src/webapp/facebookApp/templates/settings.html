@@ -56,14 +56,14 @@
                         {% if not user.twitter_user %}
                             <a href="/login/twitter/?cls" target="_blank">Autorizar</a> 
                         {% else %}
-                            <a href="/login/twitter/?cls">Revocar</a>
+                            <a href="/oauth/revocate/twitter" target="_blank">Revocar</a>
                         {% endif %}
                     </td>
                     <td>
                         {% if not user.twitter_user.has_perms %}
-                            <a href="/ext/twitter/contacts" target="_blank">Autorizar</a> 
+                            <a href="/ext/twitter/contacts?cls&nologin" target="_blank">Autorizar</a> 
                         {% else %}
-                            <a href="">Revocar</a>
+                            <a href="/oauth/revocate/twitter" target="_blank">Revocar</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -73,14 +73,14 @@
                         {% if not user.google_user %}
                             <a href="/login/google/?cls">Autorizar</a>
                         {% else %}
-                            <a href="/login/google/?cls">Revocar</a>
+                            <a href="/oauth/revocate/google" target="_blank">Revocar</a>
                         {% endif %}
                     </td>
                     <td>
                         {% if not user.google_user.has_perms %}
-                            <a href="/ext/google/contacts" target="_blank">Autorizar</a> 
+                            <a href="/ext/google/contacts?cls" target="_blank">Autorizar</a> 
                         {% else %}
-                            <a href="">Revocar</a>
+                            <a href=""/oauth/revocate/google" target="_blank">Revocar</a>
                         {% endif %}
                     </td>
                 </tr>
