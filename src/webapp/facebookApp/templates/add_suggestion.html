@@ -2,40 +2,26 @@
 {% load i18n %}
 
 {% block extra_js %}
-<script src="/static/facebookApp/js/suggestion.js"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=es&region=ES"></script>
+    <link rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css"> 
+    <script src="/static/facebookApp/js/suggestion.js"></script>
+    <!--<script src="/static/webapp/js/dashboard.js"></script>-->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=es&region=ES"></script>
+    <script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.core.js"></script>
+    <script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.mouse.js"></script>
+    <script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.resizable.js"></script>
 
 
-<script type="text/javascript">
-    $(document).ready(function(){
-        
-        
-        $('#id_name').keyup(function(){
-            $('#counter').text(500-$('#id_name').val().length);
-        })
-        $('#id_name').trigger('keyup');
-        
-        //Inicialize Google Maps
-        //Buscamos la ciudad del residencia del usuario
-        $.get('http://maps.googleapis.com/maps/api/geocode/json?address=granada,spain&sensor=false', 
-            {},
-            function(data){
-                console.log(data);
-            }, "json"
-        );
 
+    <script type="text/javascript">
+
+        I18N = {}
+
+        I18N['There are elements that could not be saved. If you leave the page you will lose it.'] = "{% trans "There are elements that could not be saved. If you leave the page you will lose it." %}";
+        I18N['New task'] = "{% trans "New task" %}";
+        I18N["Sure you want to delete the task"] = "{% trans "Sure you want to delete the task" %}";
         
-        var latlng = new google.maps.LatLng(-34.397, 150.644);
-        var myOptions = {
-          zoom: 8,
-          center: latlng,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(  document.getElementById("map_canvas"),
-                                        myOptions);
-        
-    });
-</script>
+    </script>
 {%endblock%}
 
 {% block title %}Add new suggestion{% endblock %}

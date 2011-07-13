@@ -919,12 +919,40 @@ input{
         margin-right: 30px;
     }
     #address-container{
-        border:1px solid #ccc
+        border:1px solid #ccc;
+        border-bottom:10px solid #ccc;
     }
     #address-container input{
         display: block;
         margin: 1em auto;
         width: 530px;
+    }
+    .btnGmaps{
+        -moz-border-radius: 2px 2px 2px 2px;
+        -moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+        -moz-user-select: none;
+        border-radius: 2px 2px 2px 2px;
+        box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+        -webkit-user-select: none;
+        
+        background: -moz-linear-gradient(center top , #FEFEFE, #F3F3F3) repeat scroll 0 0 transparent;
+        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FEFEFE), to(#F3F3F3));
+        border: 1px solid #A9BBDF;
+        color: black;
+        direction: ltr;
+        font-family: Arial,sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        
+        overflow: hidden;
+        padding: 0 6px;
+        position: relative;
+        text-align: left;
+        cursor:pointer;
+    }
+    .btnGmaps img{
+        height:16px;
+        padding-top: 3px;
     }
     
 
