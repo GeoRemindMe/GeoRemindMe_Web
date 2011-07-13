@@ -25,23 +25,23 @@ def login_panel(request):
         else:
             user = request.user
         if user.username is None or user.email is None:
-                if request.method == 'POST':
-                    f = SocialUserForm(request.POST, prefix='user_set_username', initial = { 
-                                                                          'email': user.email,
-                                                                          'username': user.username,
-                                                                          })
-                    if f.is_valid():
-                        user = f.save(user)
-                        if user:
-                            request.user = user
-                            return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
-                else:
-                    f = SocialUserForm(prefix='user_set_username', initial = { 
-                                                                          'email': request.user.email,
-                                                                          'username': request.user.username,
-                                                                          })
-                
-                return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
+            if request.method == 'POST':
+                f = SocialUserForm(request.POST, prefix='user_set_username', initial = { 
+                                                                      'email': user.email,
+                                                                      'username': user.username,
+                                                                      })
+                if f.is_valid():
+                    user = f.save(user)
+                    if user:
+                        request.user = user
+                        return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+            else:
+                f = SocialUserForm(prefix='user_set_username', initial = { 
+                                                                      'email': request.user.email,
+                                                                      'username': request.user.username,
+                                                                      })
+            
+            return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
         return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
         
     #Identificarse o registrarse

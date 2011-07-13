@@ -27,6 +27,18 @@ class geosession(object):
             if request.session.is_from_facebook and not hasattr(request, 'facebook'):
                 request.session.delete()
                 request.user = AnonymousUser()
+            elif hasattr(request, 'facebook'):
+                fbuser = request.user.facebook_user
+                if fbuser is None:
+                    if request.facebook['client'].user is not None:
+                        delattr(request, 'facebook')
+                        request.session.delete()
+                        request.user = AnonymousUser()
+                else:
+                    if request.facebook['uid'] != fbuser.uid:
+                        delattr(request, 'facebook')
+                        request.session.delete()  
+                        request.user = AnonymousUser()
         else:
             request.user = AnonymousUser()
 
@@ -74,5 +86,8 @@ class geosession(object):
                                          secure=settings.SESSION_COOKIE_SECURE,
                                          #httponly=settings.COOKIE_SESSION_HTTPONLY or None
                                          )
+        
+        #if hasattr(request, 'facebook'):
+            #response.delete_cookie("fbs_" + settings.OAUTH['facebook']['app_key'])
         return response
 

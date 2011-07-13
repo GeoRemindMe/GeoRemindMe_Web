@@ -72,7 +72,10 @@
     <script>
         <!-- async loading of facebook js sdk  -->
         window.fbAsyncInit = function() { 
-            facebookInit({'appId':{{app_settings.appId}}, 'canvasName':'{{app_settings.canvasName}}'}) 
+            facebookInit({'appId':{{app_settings.appId}}, 
+            status : true,
+            cookie: true,
+            'canvasName':'{{app_settings.canvasName}}'}) 
         };
         
         <!--  async loading of google analytics -->

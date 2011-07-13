@@ -115,7 +115,6 @@ class FacebookClient(object):
                                                    'avatar':user_to_follow.user.profile.avatar, 
                                                    'uid':user_to_follow.uid
                                                    }
-
         return registered
         
     def authorize(self, user):
