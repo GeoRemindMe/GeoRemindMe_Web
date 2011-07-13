@@ -29,5 +29,5 @@ function handleSessionChange(response) {
 }
 
 function goHome() {
-  top.location = 'http://apps.facebook.com/' + Config.canvasName + '/';
+    top.location = 'http://apps.facebook.com/' + Config.canvasName + '/';
 }

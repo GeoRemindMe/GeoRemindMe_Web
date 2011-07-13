@@ -10,14 +10,29 @@
         visibility = forms.ChoiceField(required=True, choices=VISIBILITY_CHOICES)
 -->
 
-        <p>
-            <label>Sugiero que...</label>
-            {{f.name}}
+        <p id="suggestion-item">
+            <label>¿Qué sugieres?</label>
+            <textarea id="id_name" name="name"></textarea>
+            <span id="counter"></span>
         </p>
-        <p>
-            <label>¿Dónde se puede hacer?:</label>
+        <p id="suggestion-place">
+            <label>¿Dónde?</label>
+            
+            <ul id="tabMenu" class="clear">
+                <li class="active">Dirección</li>
+                <li>Sitio</li>
+            </ul>
+            <div id="address-container">
+                <input type="text" id="address" name="address">
+                
+                <div id="map_canvas" style="width:100%; height:150px;"></div>
+
+            </div>
+            
+<!--
             {{f.place_id}}
-            <span>Mostrar mapa</span>
+-->
+            
         </p>
         
         <span id="show-details" onclick="$('#more-details').toggle('fast')">Más detalles</span>
@@ -25,6 +40,7 @@
             <p>
                 <label>{{f.description.label}}:</label>
                 {{f.description}}
+                <span id="counter"></span>
             </p>
             <p>
                 <label>{{f.visibility.label}}:</label>

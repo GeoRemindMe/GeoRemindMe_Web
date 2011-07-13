@@ -824,9 +824,7 @@ input{
      ***************************/
 
     #add-suggestion form{
-        background-color: #EFF3FF;
-        border: 1px dotted black;
-        padding: 0.5em;
+
     }
     #add-suggestion form hr{
         margin:0;
@@ -876,6 +874,59 @@ input{
         display: none;
         text-align: center;
     }
+    #suggestion-item{
+        height: 175px;
+    }
+    #suggestion-item label,#suggestion-place{
+        color: #555555;
+        display: block;
+        font-family: Helvetica Neue,Helvetica,sans-serif;
+        font-size: 1.7em;
+        margin: 0.6em 0.4em;
+    }
+    #suggestion-item textarea#id_name{
+        font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+        font-size: 1.1em;
+        height: 80px;
+        line-height: 1.7em;
+        margin: 11px;
+        padding: 0.7em;
+        width: 488px;
+        
+        border: 1px solid #CCC;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+    }
+    #suggestion-item textarea#id_name:focus{
+        border: 1px solid #CCC;
+        height: 80px;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+
+        -moz-box-shadow: 0 0 5px blue;
+        -webkit-box-shadow: 0 0 5px blue;
+        box-shadow: 0 0 5px blue;
+        margin: 1.2em;
+        padding: 0.7em;
+        margin: 11px;
+    }
+    #suggestion-item span#counter{
+        color: #777777;
+        float: right;
+        font-size: 1.5em;
+        margin-right: 30px;
+    }
+    #address-container{
+        border:1px solid #ccc
+    }
+    #address-container input{
+        display: block;
+        margin: 1em auto;
+        width: 530px;
+    }
+    
 
     /****************************
      *      
