@@ -11,7 +11,18 @@ $(document).ready(function() {
             //~ console.log(data);
         //~ }, "json"
     //~ );
-
+    $('#address').geo_autocomplete(new google.maps.Geocoder, {
+		mapkey: 'ABQIAAAAbnvDoAoYOSW2iqoXiGTpYBTIx7cuHpcaq3fYV4NM0BaZl8OxDxS9pQpgJkMv0RxjVl6cDGhDNERjaQ', 
+		selectFirst: false,
+		minChars: 3,
+		cacheLength: 50,
+		width: 300,
+		scroll: true,
+		scrollHeight: 330
+	}).result(function(_event, _data) {
+		if (_data) map.fitBounds(_data.geometry.viewport);
+	});
+    
     loadGMaps(37.176,-3.597,"map_canvas");
     
     //Set resizable canvas
@@ -60,33 +71,7 @@ function loadGMaps(defaultX,defaultY,canvas) {
     map = new google.maps.Map(document.getElementById(canvas), myOptions);
     geocoder = new google.maps.Geocoder();
     
-    //Creamos el contenedor del toolbar
-    var toolbar = document.createElement('DIV');
-    $(toolbar).css('padding', '5px');
-    
-    //Creamos el boton de la mirilla
-    var mirilla = document.createElement('DIV');
-    $(mirilla).addClass("btnGmaps")
-    $(mirilla).attr('title','My location');
-    $(mirilla).html('<img src="/static/webapp/img/mirilla.png">');
-    
-    //Asignamos el comportamiento
-    google.maps.event.addDomListener(mirilla, 'click', function() {   
-        centerOnMyLocation()
-    });
-    
-    $(toolbar).append(mirilla);
-    
- 
-    
-    
-    
-    
-    // Add the control to the map at a designated control position
-    // by pushing it on the position's array. This code will
-    // implicitly add the control to the DOM, through the Map
-    // object. You should not attach the control manually.
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(toolbar);
+    insertToolbar(map)
 
 }
 
@@ -134,6 +119,128 @@ function centerOnMyLocation(){
     }
 }
 
+function insertToolbar(map){
+    
+    
+    //Creamos el boton de la mirilla
+    //------------------------------------------------------------------
+    var mirilla = document.createElement('DIV');
+    $(mirilla).addClass("btnGmaps")
+    $(mirilla).attr('title','My location');
+    $(mirilla).html('<img src="/static/webapp/img/mirilla.png">');
+    
+    //Asignamos el comportamiento
+    google.maps.event.addDomListener(mirilla, 'click', function() {   
+        centerOnMyLocation()
+    });
+    
+    //Creamos el boton del pollo
+    //------------------------------------------------------------------
+    var btnPollo = document.createElement('DIV');
+    $(btnPollo).addClass("btnGmaps")
+    $(btnPollo).attr('title','Get the marker');
+    $(btnPollo).html('<img src="/static/webapp/img/marcador03.png">');
+    
+    //Creamos el contenedor del marcador
+    var marker;
+    
+    //Asignamos el comportamiento
+    google.maps.event.addDomListener(btnPollo, 'click', function() {   
+        var pos = map.getCenter();   
+        var myLatlng = new google.maps.LatLng(pos.lat(),pos.lng());
+        
+        if(marker==undefined){
+            //En caso de que no se haya inicializado nunca creamos un
+            //nuevo marcador
+            marker = new google.maps.Marker({
+                map: map,
+                draggable: false,
+                position: myLatlng,
+                icon: new google.maps.MarkerImage("/static/webapp/img/marcador02.png")
+            });
+            google.maps.event.addListener(marker, 'dragend', function(){updateAddressByMarker(this);});
+        }else{
+            //Sino tan solo actualizamos la posición
+            marker.setPosition(myLatlng);
+        }
+            
+        //Centramos el marcador
+        marker.setIcon(new google.maps.MarkerImage("/static/webapp/img/marcador03.png"));
+        marker.setAnimation(google.maps.Animation.DROP);
+        marker.setDraggable(true);
+        marker.setFlat(false);
+    });
+    
+
+    //Creamos el contenedor del toolbar
+    var toolbar = document.createElement('DIV');
+    $(toolbar).css('padding', '5px');
+    //Le añadimos los botones
+    $(toolbar).append(btnPollo);
+    $(toolbar).append(mirilla);
+    //Los metemos en el mapa
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(toolbar);
+}
+
+function updateAddressByMarker(marker)
+{
+    geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results && results[0]) {
+          $('#address').val(results[0].formatted_address);
+        }
+      }
+    });
+}
+
+function autocompleteAddress()
+{
+
+    $(this)
+        .autocomplete({
+         //This bit uses the geocoder to fetch address values
+          autoFocus: true,
+          source: function(request, response) {
+            geocoder.geocode( {'address': request.term }, function(results, status) {
+            
+                if (status != google.maps.GeocoderStatus.OK)
+                    return;
+            
+              response($.map(results, function(item) {
+                return {
+                  label:  item.formatted_address,
+                  value: item.formatted_address,
+                  latitude: item.geometry.location.lat(),
+                  longitude: item.geometry.location.lng()
+                }
+              }));
+            })
+          },
+          //This bit is executed upon selection of an address
+          select: function(event, ui) {
+              
+            if (typeof(EDITING)!="undefined" && EDITING)
+            {
+                $('#edit-'+EDITING+' .location').val(ui.item.formatted_address);
+
+                var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+                
+                if (typeof(tasks[EDITING].marker) == "undefined")
+                {
+                    tasks[EDITING]['marker'] = createMarker(EDITING,location.lat(),location.lng());
+                    tasks[EDITING].marker.setAnimation(google.maps.Animation.DROP);
+                    tasks[EDITING].marker.setIcon(new google.maps.MarkerImage("/static/webapp/img/marcador03.png"));
+                    tasks[EDITING].marker.setVisible(true);
+                    tasks[EDITING].marker.setDraggable(true);
+                }
+                else
+                    tasks[EDITING].marker.setPosition(location);
+                    
+                map.setCenter(location);
+            }
+          }
+        });
+}
 
 function setFormBehaviour(){
     $("form").submit(function() {

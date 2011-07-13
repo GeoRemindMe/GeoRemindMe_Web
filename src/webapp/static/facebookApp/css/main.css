@@ -949,6 +949,9 @@ input{
         position: relative;
         text-align: left;
         cursor:pointer;
+        
+        float:left;
+        margin-left:10px;
     }
     .btnGmaps img{
         height:16px;
