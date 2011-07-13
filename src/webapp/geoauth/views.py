@@ -146,7 +146,7 @@ def client_access_request(request, provider, next=None):
         from clients.twitter import TwitterClient
         client = TwitterClient(token=oauth2.Token(token['oauth_token'], token['oauth_token_secret']))
         if 'user' in request.session:#usuario ya esta logeado, guardamos el token de su cuenta
-            if client.authorize(request.session['user']):
+            if client.authorize(request.session['user'], login = False if 'nologin' in request.GET else True):
                 messages.success(request, _('Got access from %s' % provider))
         else:
             user = client.authenticate()
@@ -163,6 +163,8 @@ def client_access_request(request, provider, next=None):
             raise OAUTHException()
     else:
         raise OAUTHException("Invalid server.")
+    if 'cls' in request.GET:
+        return HttpResponseRedirect(reverse('geouser.views.close_window'))
     if next is None:
         next = reverse('geouser.views.dashboard')
     return HttpResponseRedirect(next)
@@ -171,7 +173,7 @@ def client_access_request(request, provider, next=None):
 #===============================================================================
 # LOGIN WITH OAUTH
 #===============================================================================
-def authenticate_request(request, provider, callback_url=None):
+def authenticate_request(request, provider, callback_url=None, cls=False):
     #normalmente la diferencia con client_token_request es que peticion se hace a la url /authenticate en vez de /authorize
     OAUTH = settings.OAUTH
     provider = provider.lower()
@@ -179,6 +181,8 @@ def authenticate_request(request, provider, callback_url=None):
     client = oauth2.Client(consumer)
     if callback_url is None:
         callback_url = OAUTH[provider]['callback_url']
+        if cls:
+            callback_url = callback_url + '?cls'
     response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
     if response['status'] != 200:
         raise Exception("Invalid response from server.")

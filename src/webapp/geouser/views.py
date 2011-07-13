@@ -124,11 +124,14 @@ def login_twitter(request):
         :return: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
     """
     if 'cls' in request.GET:
-        callback_url = request.build_absolute_uri(reverse('geouser.views.close_window'))
+        cls = True
+        #callback_url = request.build_absolute_uri(reverse('geouser.views.close_window'))
     else:
-        callback_url=None
-    from geoauth.views import authenticate_request
-    return authenticate_request(request, 'twitter', callback_url=callback_url)
+        cls = False
+        #callback_url=None
+    from geoauth.views import client_token_request, authenticate_request
+    #client_token_request(request, 'twitter', callback_url=callback_url)
+    return authenticate_request(request, 'twitter', cls=True)
 
 #===============================================================================
 # LOGOUT VIEW
@@ -395,13 +398,16 @@ def get_contacts_google(request):
     if 'oauth_token' in request.GET:
         from geoauth.views import client_access_request
         client_access_request(request, 'google')
+        if 'cls' in request.GET:
+            return HttpResponseRedirect(reverse('geouser.views.close_window'))
+    
     from geoauth.clients.google import GoogleClient
     try:
         c = GoogleClient(user=request.user)
         contacts = c.get_contacts_to_follow()
     except:
         return HttpResponseRedirect(reverse('geouser.views.get_perms_google'))
-    
+
     return render_to_response('webapp/contacts_google.html', {'contacts' : contacts, },
                               context_instance=RequestContext(request))
 
@@ -411,7 +417,7 @@ def get_perms_google(request):
     
     """
     from geoauth.views import client_token_request
-    return client_token_request(request, 'google', callback_url=request.build_absolute_uri(reverse('geouser.views.get_contacts_google') ))
+    return client_token_request(request, 'google', callback_url=request.build_absolute_uri(reverse('geouser.views.get_contacts_google')+'?cls' ))
 
 
 @login_required
@@ -431,7 +437,7 @@ def get_perms_twitter(request):
     
     """
     from geoauth.views import client_token_request
-    return client_token_request(request, 'twitter', callback_url=request.build_absolute_uri(reverse('geouser.views.get_friends_twitter')))
+    return client_token_request(request, 'twitter', callback_url=request.build_absolute_uri(reverse('geouser.views.get_friends_twitter')+'?cls&nologin'))
 
 @login_required
 def get_friends_twitter(request):
@@ -442,6 +448,8 @@ def get_friends_twitter(request):
     from geoauth.views import client_access_request
     if 'oauth_token' in request.GET:
         client_access_request(request, 'twitter')
+        if 'cls' in request.GET:
+            return HttpResponseRedirect(reverse('geouser.views.close_window'))
     from geoauth.clients.twitter import *
     try:
         c = TwitterClient(user=request.user)

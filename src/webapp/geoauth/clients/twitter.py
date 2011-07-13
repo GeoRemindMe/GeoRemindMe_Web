@@ -74,7 +74,7 @@ class TwitterClient(Client):
                                                'twittername': info['screen_name'], 
                                                }
         return registered
-    def authorize(self, user=None):
+    def authorize(self, user=None, login=True):
         """Guarda el token de autorizacion"""
         if user is not None:#el usuario ya esta conectado, pero pide permisos
             if OAUTH_Access.get_token(self.token.key) is None: 
@@ -85,20 +85,21 @@ class TwitterClient(Client):
                                                 provider='twitter',
                                                 user=user,
                                                 )
-            twitterInfo = self.get_user_info()
-            if user.twitter_user is None:
-                TwitterUser.register(user=user,
-                                 uid=twitterInfo['id'], 
-                                 username = twitterInfo['screen_name'],
-                                 realname = twitterInfo['name'],
-                                 picurl = twitterInfo['profile_image_url'],
-                                 )
-            else:
-                user.twitter_user.update(
-                                         username = twitterInfo['screen_name'],
-                                         realname = twitterInfo['name'],
-                                         picurl = twitterInfo['profile_image_url']
-                                         )
+            if login:
+                twitterInfo = self.get_user_info()
+                if user.twitter_user is None:
+                    TwitterUser.register(user=user,
+                                     uid=twitterInfo['id'], 
+                                     username = twitterInfo['screen_name'],
+                                     realname = twitterInfo['name'],
+                                     picurl = twitterInfo['profile_image_url'],
+                                     )
+                else:
+                    user.twitter_user.update(
+                                             username = twitterInfo['screen_name'],
+                                             realname = twitterInfo['name'],
+                                             picurl = twitterInfo['profile_image_url']
+                                             )
             return True
         return False
     
