@@ -341,7 +341,7 @@ class UserTimelineFollowersIndex(db.Model):
 class SearchConfig(db.polymodel.PolyModel):
     region_code = db.TextProperty(default='ES')
     location = db.GeoPtProperty(default='37.175071,-3.598534')
-    radio = db.IntegerProperty(default=2000)
+    radius = db.IntegerProperty(default=2000)
     
     
 class SearchConfigGooglePlaces(SearchConfig):

@@ -160,6 +160,7 @@ def user_suggestions(request):
 @facebook_required    
 def add_suggestion(request):
     f = SuggestionForm();
+
     return  render_to_response('add_suggestion.html',{'f': f,}, context_instance=RequestContext(request))
     
 
