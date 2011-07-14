@@ -31,3 +31,12 @@ function handleSessionChange(response) {
 function goHome() {
     top.location = 'http://apps.facebook.com/' + Config.canvasName + '/';
 }
+
+function resizeIframe() {
+    var tam=$('#bottom-bar').position().top; //Get height of the iframe
+    tam=tam+250;
+    //~ console.log(tam);
+    FB.Canvas.setSize({ height: tam });
+
+    
+}

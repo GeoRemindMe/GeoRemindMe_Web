@@ -63,7 +63,7 @@
                         <label for="">Radio de acción:</label>
                         <input type="text" value="{{user.settings.searchconfig_google.radius}}" id="radius">  (metros)
                         <p class="clear"> 
-                            <span class="btn">Guardar</span>
+                            <span class="btn" onclick="saveSettings('google-places')">Guardar</span>
                             <span onclick="javascript:showSettings()" id="minimizeSettings">Minimizar</span> 
                         </p>
                     </div>
@@ -81,7 +81,7 @@
             
         </p>
         
-        <span id="show-details" onclick="$('#more-details').toggle('fast')">Más detalles</span>
+        <span id="show-details" onclick="$('#more-details').toggle('fast').ready(resizeIframe())">Más detalles</span>
         <div id="more-details">
             <p>
                 <label>{{f.description.label}}:</label>

@@ -64,7 +64,7 @@
 
 
     </div>
-    
+    <hr id="bottom-bar">
     <div id="fb-root"></div>
     <div id="templates"></div>
 
@@ -75,7 +75,9 @@
             facebookInit({'appId':{{app_settings.appId}}, 
             status : true,
             cookie: true,
-            'canvasName':'{{app_settings.canvasName}}'}) 
+            'canvasName':'{{app_settings.canvasName}}'})
+            FB.Canvas.setSize();
+
         };
         
         <!--  async loading of google analytics -->

@@ -1024,6 +1024,7 @@ input{
         #google-places-settings label{
             display: inline-block;
             float: left;
+            clear:left;
             margin: 5px;
             width: 120px;
         }
