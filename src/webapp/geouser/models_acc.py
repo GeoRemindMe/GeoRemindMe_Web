@@ -35,6 +35,13 @@ class UserSettings(db.Model):
     language = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
     
+    _scgoogleplaces = None
+    
+    @property
+    def searchconfig_google(self):
+        if self._scgoogleplaces is None:
+            self._scgoogleplaces = SearchConfigGooglePlaces.all().ancestor(self.key()).get()
+        return self._scgoogleplaces
     
     @classproperty
     def objects(self):
@@ -329,5 +336,15 @@ class UserTimeline(UserTimelineBase, Visibility):
 class UserTimelineFollowersIndex(db.Model):
     followers = db.ListProperty(db.Key)
     created = db.DateTimeProperty(auto_now_add=True) 
+
+
+class SearchConfig(db.polymodel.PolyModel):
+    region_code = db.TextProperty(default='ES')
+    location = db.GeoPtProperty(default='37.175071,-3.598534')
+    radius = db.IntegerProperty(default=2000)
+    
+    
+class SearchConfigGooglePlaces(SearchConfig):
+    type = db.TextProperty(choices = ('all', 'geocode', 'establishment'), default='all')
     
 from helpers_acc import *

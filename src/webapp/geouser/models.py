@@ -370,9 +370,11 @@ class User(polymodel.PolyModel, HookedModel):
             user.delete()
         else:
             sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
-            sociallinks.put()
+            scgoogleplaces = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
+            save = db.put_async([sociallinks, scgoogleplaces])
             from google.appengine.ext.deferred import defer
             user_new.send(sender=user, status=trans)
+            save.get_result()
             return user
     
     def update(self, **kwargs):
