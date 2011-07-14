@@ -370,6 +370,19 @@ input{
         color:#01F;
     }
     
+    .btn{
+        background-color: #3B5998;
+        border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
+        border-style: solid;
+        border-width: 1px;
+        color: white;
+        float: right;
+        padding: 2px 15px 3px;
+        text-align: center;
+        font-weight:normal;
+        cursor:pointer;
+    }
+    
     /****************************
      *      
      * Create Social Profile 
@@ -918,14 +931,18 @@ input{
         font-size: 1.5em;
         margin-right: 30px;
     }
-    #address-container,#place-container{
+    #address-container{
         border:1px solid #ccc;
         border-bottom:10px solid #ccc;
     }
-    #address-container input,#place-container input{
-        display: block;
-        margin: 1em auto;
-        width: 530px;
+    #address-container input[type="text"]{
+/*
+        margin: 10px 0 0 5px;
+*/
+        font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+        font-size: 1.1em;
+        width: 450px;
+
     }
     .btnGmaps{
         -moz-border-radius: 2px 2px 2px 2px;
@@ -958,10 +975,71 @@ input{
         padding-top: 3px;
     }
     
-    #place-form{
+    #address-form{
         display:none;
     }
+    #place-form label{
+        clear: left;
+        display: inline-block;
+        margin: 10px;    
+        font-weight: bold;
+    }
+    #search-engine-layer{
+        margin: 10px;
+    }
+        #engineSettings{
+            color: #777777;
+            cursor: pointer;
+            margin-left: 105px;
+            text-decoration: underline;
+        }
+        #minimizeSettings{
+            color: #777777;
+            cursor: pointer;
+            float: right;
+            font-weight: normal;
+            line-height: 26px;
+            margin-right: 15px;
+            text-decoration: underline;
+        }
+        #google-places-settings,#foursquare-settings{
+            background-color: #EEEEEE;
+            border: 1px dotted #CCCCCC;
+            margin: 1em;
+            padding: 0.5em;
+            display:none;
+        }
+        #google-places-settings:after{
+            clear: both;
+            content: ".";
+            display: block;
+            height: 0px;
+            visibility: hidden;
+        }
+        #google-places-settings input[type="text"]{
+            margin: 5px;
+            width: 340px;
 
+        }
+        #google-places-settings label{
+            display: inline-block;
+            float: left;
+            margin: 5px;
+            width: 120px;
+        }
+        #google-places-settings p,#google-places-settings label{
+            margin:5px;
+            font-size: 1.1em;
+            font-weight:normal;
+            padding: 0.2em;
+        }
+        #google-places-settings p{
+            font-weight: bold;
+            margin: 11px 5px;
+        }
+        #google-places-settings input[type="text"]#radius{   
+            width:60px;
+        }
     /****************************
      *      
      *  Suggestion panel
