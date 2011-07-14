@@ -1016,7 +1016,7 @@ input{
             height: 0px;
             visibility: hidden;
         }
-        #google-places-settings input[type="text"]{
+        #google-places-settings input[type="text"],#google-places-settings select{
             margin: 5px;
             width: 340px;
 

@@ -3,6 +3,24 @@
 
 {% block extra_js %}
     <link rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css"> 
+    
+    <script type="text/javascript">
+
+        I18N = {}
+
+        I18N['There are elements that could not be saved. If you leave the page you will lose it.'] = "{% trans "There are elements that could not be saved. If you leave the page you will lose it." %}";
+        I18N['New task'] = "{% trans "New task" %}";
+        I18N["Sure you want to delete the task"] = "{% trans "Sure you want to delete the task" %}";
+        
+        /* 
+            Variables usadas durante la inicialización del formulario 
+            de configuración de Google Places con los datos de la BD
+        */
+        searchconfig_google={}
+        searchconfig_google['region_code']='{{user.settings.searchconfig_google.region_code}}'
+        searchconfig_google['location']='{{user.settings.searchconfig_google.location}}'
+        searchconfig_google['type']='{{user.settings.searchconfig_google.type}}'
+    </script>
     <script src="/static/facebookApp/js/suggestion.js"></script>
     <!--<script src="/static/webapp/js/dashboard.js"></script>-->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=es&region=ES"></script>
@@ -29,15 +47,7 @@
     <script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
 
 
-    <script type="text/javascript">
-
-        I18N = {}
-
-        I18N['There are elements that could not be saved. If you leave the page you will lose it.'] = "{% trans "There are elements that could not be saved. If you leave the page you will lose it." %}";
-        I18N['New task'] = "{% trans "New task" %}";
-        I18N["Sure you want to delete the task"] = "{% trans "Sure you want to delete the task" %}";
-        
-    </script>
+    
 {%endblock%}
 
 {% block title %}Add new suggestion{% endblock %}

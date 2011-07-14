@@ -710,9 +710,9 @@ def get_vote_comment(request):
 @ajax_request
 def mod_searchconfig_google(request):
     sconfig = request.user.settings.searchconfig_google
-    sconfig.region_code = request.GET['region_code']
-    sconfig.location = request.GET['location']
-    sconfig.radius = request.GET['radius']
-    sconfig.type = request.GET['type']
+    sconfig.region_code = request.POST['region_code']
+    sconfig.location = request.POST['location']
+    sconfig.radius = request.POST['radius']
+    sconfig.type = request.POST['type']
     sconfig.put()
     return HttpResponse()

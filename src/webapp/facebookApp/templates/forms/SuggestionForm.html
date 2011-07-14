@@ -42,6 +42,9 @@
                     
                     <!--Google Places Settings-->
                     <div id="google-places-settings">
+                        
+                        
+                        
                         <label for="">Tipo de resultados:</label>
                         <input type="radio" name="place-type" value="establishment" checked /> Establecimientos
                         <input type="radio" name="place-type" value="geocode" /> Calles
@@ -49,11 +52,16 @@
                         
                         <p class="clear">Devolver resultados de:</p>
                         <label for="">País:</label>
+<!--
                         <input type="text" id="google-region" value="">
+-->
+                        <select id="google-region">
+                        
+                        </select>
                         <label for="">Ciudad:</label>
-                        <input type="text" id="google-city" value="" disabled="disabled">
+                        <input type="text" id="google-city" value="">
                         <label for="">Radio de acción:</label>
-                        <input type="text" value="2000" id="radius">  (metros)
+                        <input type="text" value="{{user.settings.searchconfig_google.radius}}" id="radius">  (metros)
                         <p class="clear"> 
                             <span class="btn">Guardar</span>
                             <span onclick="javascript:showSettings()" id="minimizeSettings">Minimizar</span> 

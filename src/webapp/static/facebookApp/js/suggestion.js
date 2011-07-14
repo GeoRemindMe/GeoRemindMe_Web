@@ -20,6 +20,23 @@ function loadCountryNames(format){
     })
     return data;
 }
+function getCountryCode(name){
+    index=jQuery.inArray(name, loadCountryNames() )
+    if(index!=-1)
+        return countries[index].code;
+    else
+        return null;
+}
+
+function getCountryName(code){
+    countryName=null;
+    $.each(countries,function(index, value){
+        
+        if(value.code==code)
+            countryName=value.name
+    })
+    return countryName;
+}
 
 $(document).ready(function() {
     
@@ -30,9 +47,6 @@ $(document).ready(function() {
      //~ key: 'AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710', // add your key here
      
      //~ google.maps.places.PlacesServices#search().
- 
-
-    
     
     //Google Maps - Direction Input Autocomplete address
     $('#address').geo_autocomplete(new google.maps.Geocoder, {
@@ -61,86 +75,74 @@ $(document).ready(function() {
     
 
     
-    //~ https://maps.googleapis.com/maps/api/place/autocomplete/json?input=Gran&types=geocode&region=es&language=ES&sensor=true&key=AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710
-    //~ $('#google-city').keyup(function(){
-        //~ //.autocomplete  
-        //~ console.log("cambiamos autocomplete "+$(this).val())
-//~ 
-        //~ url="https://maps.googleapis.com/maps/api/place/autocomplete/json?input="+$(this).val()+"&types=geocode&region=es&language=ES&sensor=true&key=AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710"
-        //~ $.getJSON(url, function(data) {
-            //~ var items = [];
-            //~ 
-            //~ $.each(data, function(key, val) {
-                //~ console.log("Key="+key," val="+val)
-            //~ });
-//~ 
-        //~ });
-    //~ })
     
-    $("#google-region").change(function(){
-        if($(this).val()){
-            index=jQuery.inArray( $(this).val(), loadCountryNames() )
-            //~ if(index!=-1)
-            $('#google-city').removeAttr('disabled');
-            console.log($(this).val())
-            
-            $('#google-city').geo_autocomplete(new google.maps.Geocoder, {
-                mapkey: 'ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw', 
-                selectFirst: false,
-                minChars: 3,
-                cacheLength: 50,
-                width: 340,
-                mapwidth:0,
-                mapheight:0,
-                scroll: true,
-                scrollHeight: 150,
-                geocoder_region:$(this).val(),
-                geocoder_types: 'locality,sublocality',
-            }).result(function(_event, _data) {
-                if (_data) 
-                    map.fitBounds(_data.geometry.viewport);
-            });
-        }
-        else{
-            //~ console.log(ui)
-            $('#google-city').attr('disabled', true);
-            //Mostrar mensaje de advertencia de que selecciones 1 país
-        }
-    })
-    $("#google-region").autocomplete({
-        source:loadCountryNames(),
-        change: function(event, ui) { 
-            
-            
-    
-        
-            //~ console.log("Index="+index)
-            
-        }
-    });
-    
-    //~ $("input#autocomplete").autocomplete({
-        //~ source: ["c++", "java", "php", "coldfusion", "javascript", "asp", "ruby"]
-    //~ });
-    
-    //Inicialize Google Maps
-    //Buscamos la ciudad del residencia del usuario
-    //~ $.get('http://maps.googleapis.com/maps/api/geocode/json?address=granada,spain&sensor=false', 
-        //~ {},
-        //~ function(data){
-            //~ console.log(data);
-        //~ }, "json"
-    //~ );
-    
-    loadGMaps(37.176,-3.597,"map_canvas");
-    
-    
+    loadGMaps(37.176,-3.597,"map_canvas").ready();
     
     
     
     //FORM
     setFormBehaviour();
 });
+
+
+function loadGoogleSettings(){
+    
+    $("input[name='place-type']:checked").removeAttr('checked')
+    if(searchconfig_google['type']=='establishment')
+        $($("input[name='place-type']")[0]).attr("checked","checked");
+    else if(searchconfig_google['type']=='geocode')
+        $($("input[name='place-type']")[1]).attr("checked","checked");
+    else
+        $($("input[name='place-type']")[2]).attr("checked","checked");
+        
+    //LOAD AND INITIALIZE COUNTRY OPTIONS
+    var countryOptions="";
+    $.each(countries,function(index, item){
+        countryOptions=countryOptions+'<option value="'+item.code+'">'+item.name+'</option>';
+    })
+    $('#google-region').append(countryOptions)
+    $('#google-region').val(searchconfig_google['region_code'])
+    
+    
+    //LOAD CITY NAME USING LAT,LON on #google-city input field
+    var input = searchconfig_google['location'];
+    var latlngStr = input.split(",",2);
+    var lat = parseFloat(latlngStr[0]);
+    var lng = parseFloat(latlngStr[1]);
+    var latlng = new google.maps.LatLng(lat, lng);
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+
+            $.each(results,function(key,value){
+                if(jQuery.inArray('locality', value.types )!=-1)
+                    $('#google-city').val(value.formatted_address)
+            });
+            
+        } else {
+            alert("Geocoder failed due to: " + status);
+        }
+    });
+
+    //LOAD THE AUTOCOMPLETE CITY FIELD
+    $("#google-region").change(function(){
+        $('#google-city').geo_autocomplete(new google.maps.Geocoder, {
+            mapkey: 'ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw', 
+            selectFirst: false,
+            minChars: 3,
+            cacheLength: 50,
+            width: 340,
+            mapwidth:0,
+            mapheight:0,
+            scroll: true,
+            scrollHeight: 150,
+            geocoder_region:$(this).val(),
+            geocoder_types: 'locality,sublocality',
+        }).result(function(_event, _data) {
+            if (_data) 
+                map.fitBounds(_data.geometry.viewport);
+        });
+    })
+}
 
 function setRemainingCharCounter(){
     $('#id_name').keyup(function(){
@@ -180,6 +182,29 @@ function loadGMaps(defaultX,defaultY,canvas) {
     placesAutocomplete(map);
 
 }
+
+function codeLatLng(input) {
+    //~ var input = document.getElementById("latlng").value;
+    var latlngStr = input.split(",",2);
+    var lat = parseFloat(latlngStr[0]);
+    var lng = parseFloat(latlngStr[1]);
+    var latlng = new google.maps.LatLng(lat, lng);
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[1]) {
+          map.setZoom(11);
+          marker = new google.maps.Marker({
+              position: latlng,
+              map: map
+          });
+          infowindow.setContent(results[1].formatted_address);
+          infowindow.open(map, marker);
+        }
+      } else {
+        alert("Geocoder failed due to: " + status);
+      }
+    });
+  }
 
 function centerOnMyLocation(){
     var initialLocation;
@@ -349,6 +374,8 @@ function setFormBehaviour(){
     });
 }
 function showSettings(){
+    loadGoogleSettings()
+    
     //Primero cerramos cualquier settings abierto
     $("input[name='engine']").each(function(){
         engine=$(this).val()
