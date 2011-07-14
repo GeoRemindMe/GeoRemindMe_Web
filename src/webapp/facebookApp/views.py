@@ -40,14 +40,11 @@ def login_panel(request):
                                                                       'email': request.user.email,
                                                                       'username': request.user.username,
                                                                       })
-            
             return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
-        return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
-        
+        return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))        
     #Identificarse o registrarse
     return render_to_response('register.html', {"permissions":settings.OAUTH['facebook']['scope']}, context_instance=RequestContext(request))
     
-
 
 @facebook_required
 def dashboard(request):
@@ -81,7 +78,6 @@ def profile(request, username):
         is_follower = True
         show_followers = True
         show_followings = True
-        
     else:
         profile_user = User.objects.get_by_username(username)
         if profile_user is None:
@@ -139,6 +135,7 @@ def edit_profile (request):
     #~ raise Exception(f)
     return render_to_response('edit_profile.html', {'form': f}, context_instance=RequestContext(request))
 
+
 @facebook_required    
 def user_suggestions(request):
     """
@@ -159,20 +156,18 @@ def user_suggestions(request):
                               })
     return  render_to_response('suggestions.html',{'form': f}, context_instance=RequestContext(request))
 
+
 @facebook_required    
 def add_suggestion(request):
     f = SuggestionForm();
-    #~ initial = { 
-                              #~ # 'location' : [1,2] <<- coordenadas por defecto,
-                              #~ 'name': 'Recomiendo...',
-                              #~ 'done': False,
-                              #~ })
-    return  render_to_response('add_suggestion.html',{'f': f}, context_instance=RequestContext(request))
+    from geoalert.models_utils import SearchConfigGooglePlaces
+    config_places = SearchConfigGooglePlaces.get_or_insert(request.user)
+    return  render_to_response('add_suggestion.html',{'f': f, 'config_places': config_places}, context_instance=RequestContext(request))
     
+
 @facebook_required    
 def edit_suggestion(request,suggestion_id):
-    s=Suggestion.objects.get_by_id(suggestion_id)
-    
+    s = Suggestion.objects.get_by_id(suggestion_id)
     f = SuggestionForm(prefix='edit_suggestion', initial = { 
                                                                 #~ 'poi_id': s.poi,
                                                                 #~ 'starts': s.date_starts,
@@ -181,6 +176,7 @@ def edit_suggestion(request,suggestion_id):
                                                             })
     
     return  render_to_response('edit_suggestion.html',{'f': f}, context_instance=RequestContext(request))
+
 
 @facebook_required
 def profile_settings(request):
@@ -193,20 +189,17 @@ def profile_settings(request):
                                                'has_google': has_google,
                                                'settings': request.user.settings,
                                                 }, context_instance=RequestContext(request))
+   
+
 @facebook_required
 def edit_settings(request):
     if request.method == 'POST':
-        
-            
         f = UserSettingsForm(request.POST, prefix='user_set_settings')
         if f.is_valid():
-            #~ raise Exception("a")
             f.save(request.user)
             request.session['LANGUAGE_CODE'] = request.user.settings.language
             return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
-
     else:
-        
         f = UserSettingsForm(prefix='user_set_settings', initial = { 
                                                                   'time_notification_suggestion_follower': request.user.settings.time_notification_suggestion_follower,
                                                                   'time_notification_suggestion_comment': request.user.settings.time_notification_suggestion_comment,
@@ -214,11 +207,11 @@ def edit_settings(request):
                                                                   'show_public_profile': request.user.settings.show_public_profile,
                                                                   'language': request.user.settings.language,
                                                                   })
-	
     return  render_to_response('edit_settings.html',{'profile': request.user.profile,
                                                     'settings': request.user.settings,
                                                     'settings_form': f,
                                                     }, context_instance=RequestContext(request))
+
 
 @facebook_required
 def followers_panel(request, username):
@@ -242,7 +235,6 @@ def followings_panel(request, username):
         user=request.user
     else:
         user = User.objects.get_by_username(username)
-        #~ raise Exception("Entramos con ", username)
         if user is None:
             raise Http404
         if user.settings.show_followings:
@@ -252,10 +244,12 @@ def followings_panel(request, username):
     
     return  render_to_response('followings.html', {'followings': followings[1],'username_page':username}, context_instance=RequestContext(request))
 
+
 def test_users(request):
     from geoauth.clients.facebook import add_test_users
     user = add_test_users()
     return HttpResponse(user)
+
 
 def get_test_users(request):
     from geoauth.clients.facebook import get_test_users

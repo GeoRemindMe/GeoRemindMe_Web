@@ -526,3 +526,16 @@ def get_avatar(request, username):
     
 def close_window(request):
     return render_to_response('webapp/close_window.html', {}, context_instance=RequestContext(request))
+
+
+def update(request):
+    users = User.all()
+    for user in users:
+        profile = user.profile
+        settings = user.settings
+        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
+        if sc is None:
+            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
+        db.put([profile, settings, sc])
+        
+    return HttpResponse()
