@@ -160,9 +160,7 @@ def user_suggestions(request):
 @facebook_required    
 def add_suggestion(request):
     f = SuggestionForm();
-    from geoalert.models_utils import SearchConfigGooglePlaces
-    config_places = SearchConfigGooglePlaces.get_or_insert(request.user)
-    return  render_to_response('add_suggestion.html',{'f': f, 'config_places': config_places}, context_instance=RequestContext(request))
+    return  render_to_response('add_suggestion.html',{'f': f,}, context_instance=RequestContext(request))
     
 
 @facebook_required    
