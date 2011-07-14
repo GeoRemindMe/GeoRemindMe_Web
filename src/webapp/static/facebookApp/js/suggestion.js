@@ -28,6 +28,13 @@ $(document).ready(function() {
 		if (_data) map.fitBounds(_data.geometry.viewport);
 	});
     
+    //Set resizable canvas
+    $('#address-container').resizable({
+         maxWidth: 550 ,
+         minWidth: 550,
+         handles: 'n,s',
+         alsoResize: "#map_canvas"
+    });
     
     
     //Inicialize Google Maps
@@ -43,13 +50,6 @@ $(document).ready(function() {
     
     
     
-    //Set resizable canvas
-        $('#address-container').resizable({
-             maxWidth: 550 ,
-             minWidth: 550,
-             handles: 'n,s',
-             alsoResize: "#map_canvas"
-        });
     
     
     //FORM
@@ -262,7 +262,20 @@ function setFormBehaviour(){
         return false;
     });
 }
-
+function showSettings(){
+    //Primero cerramos cualquier settings abierto
+    $("input[name='engine']").each(function(){
+        engine=$(this).val()
+        if(engine!=$("input[name='engine']:checked").val())
+            if($('#'+engine+'-settings').css('display')=='block')
+                $('#'+engine+'-settings').fadeOut('slow')
+    })
+    
+    //Luego cambiamos el estado del pulsado
+    var engine=$("input[name='engine']:checked").val()
+    //$('#'+engine+'-settings').fadeToggle('slow')
+    $('#'+engine+'-settings').toggle('slow')
+}
 
 function placesAutocomplete(map){
     var input = document.getElementById('place');

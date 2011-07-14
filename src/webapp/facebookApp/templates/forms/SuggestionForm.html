@@ -19,24 +19,52 @@
             <label>¿Dónde?</label>
             
             <ul id="tabMenu" class="clear">
-                <li id="address-tab" class="active" onclick="javascript:activateTab('address')">Dirección</li>
-                <li id="place-tab" onclick="javascript:activateTab('place')">Sitio</li>
+                <li id="place-tab" class="active" onclick="javascript:activateTab('place')">Establecimiento</li>
+                <li id="address-tab" onclick="javascript:activateTab('address')">Dirección</li>
             </ul>
             <div id="address-container">
                 <div id="address-form">
                     <input type="text" id="address" name="address">
                 </div>
                 <div id="place-form">
-                    Nombre: <input type="text" id="place" name="place">
-                    Tipo de local: 
-                    <select>
-                        <option>Cualquiera</option>
-                        <option>Farmacia</option>
-                        <option>Restaurante</option>
-                    </select>
-                    Marca: <input type="text" id="brand">
+                    <label for="place">Nombre:</label> <input type="text" id="place" name="place">
                 </div>
+                
+                <!-- GOOGLE MAPS CANVAS -->
                 <div id="map_canvas" style="width:100%; height:300px;"></div>
+                
+                <!-- SEARCH ENGINE -->
+                <div id="search-engine-layer">
+                    <label for="searchEngine"><strong>Motor de búsqueda:</strong></label>
+                    <input type="radio" name="engine" value="foursquare" /> Foursquare
+                    <input type="radio" name="engine" value="google-places" checked /> Google Places
+                    <span onclick="javascript:showSettings()" id="engineSettings">Configuración del motor</span>
+                    
+                    <!--Google Places Settings-->
+                    <div id="google-places-settings">
+                        <label for="">Tipo de resultados:</label>
+                        <input type="radio" name="place-type" value="establishment" checked /> Establecimientos
+                        <input type="radio" name="place-type" value="geocode" /> Calles
+                        <input type="radio" name="place-type" value="all" /> Ambos
+                        
+                        <p class="clear">Devolver resultados de:</p>
+                        <label for="">País:</label>
+                        <input type="text" value="Spain">
+                        <label for="">Ciudad:</label>
+                        <input type="text" value="Granada">
+                        <label for="">Radio de acción:</label>
+                        <input type="text" value="2000" id="radius">  (metros)
+                        <p class="clear"> 
+                            <span class="btn">Guardar</span>
+                            <span onclick="javascript:showSettings()" id="minimizeSettings">Minimizar</span> 
+                        </p>
+                    </div>
+                    
+                    <!--Foursquare Settings-->
+                    <div id="foursquare-settings">
+                        <p>Foursquare settings</p>
+                    </div>
+                </div>
             </div>
             
 <!--
