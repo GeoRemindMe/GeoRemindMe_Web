@@ -134,9 +134,9 @@ class SuggestionForm(forms.Form):
     # only save if it is valid
     def save(self, **kwargs):
         from geoalert.models import Suggestion
-        if 'poi_id' in self.cleaned_data:
+        if 'poi_id' in self.cleaned_data and self.cleaned_data['poi_id'] != '':
             poi = Place.objects.get_by_id(self.cleaned_data['poi_id'])
-        elif 'place_reference' in self.cleaned_data:
+        elif 'place_reference' in self.cleaned_data and self.cleaned_data['place_reference']:
             poi = Place.insert_or_update_google(user=kwargs['user'],
                                                 google_places_reference=self.cleaned_data['place_reference']
                                                 )
