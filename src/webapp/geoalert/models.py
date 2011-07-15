@@ -298,7 +298,6 @@ class Suggestion(Event, Visibility):
             if sugg.is_active() != active:
                 sugg.toggle_active()
             sugg.put()
-            suggestion_modified.send(sender=sugg, user=user)
             return sugg
         else:
             sugg = Suggestion(name = name, description = description, date_starts = date_starts,
@@ -308,7 +307,6 @@ class Suggestion(Event, Visibility):
             sugg.put()
             counter = SuggestionCounter(parent=sugg)
             counter.put()
-            suggestion_new.send(sender=sugg, user=user)
             return sugg
         
     def add_follower(self, user):

@@ -149,12 +149,13 @@ def user_suggestions(request):
     active = forms.BooleanField(required=False, initial=True)
     done = forms.BooleanField(required=False)
     """
-    f = RemindForm(initial = { 
-                              # 'location' : [1,2] <<- coordenadas por defecto,
-                              'name': 'Recomiendo...',
-                              'done': False,
-                              })
-    return  render_to_response('suggestions.html',{'form': f}, context_instance=RequestContext(request))
+    from geoalert.views import get_suggestion
+    suggestions = get_suggestion(request, id=None,
+                                wanted_user=request.user,
+                                private_profile=True,
+                                page = 1, query_id = None
+                                )
+    return  render_to_response('suggestions.html',{'suggestions': suggestions}, context_instance=RequestContext(request))
 
 
 @facebook_required    

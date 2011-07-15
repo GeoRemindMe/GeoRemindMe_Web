@@ -291,6 +291,7 @@ class UserTimelineSystem(UserTimelineBase):
 
 class UserTimeline(UserTimelineBase, Visibility):
     msg = db.TextProperty(required=True)
+    msg_id = db.TextProperty(required=False)
     instance = db.ReferenceProperty(None)
     
     @classproperty
