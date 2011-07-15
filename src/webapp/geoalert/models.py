@@ -419,7 +419,7 @@ class Suggestion(Event, Visibility):
                     'poi_id': self.poi.key().id(),
                     'x': self.poi.location.lat,
                     'y': self.poi.location.lon,
-                    'address': unicode(self.poi.address),
+                    'address': self.poi.address,
                     'created': long(time.mktime(self.created.timetuple())) if self.created else 0,
                     'modified': long(time.mktime(self.modified.timetuple())) if self.modified else 0,
                     'starts': long(time.mktime(self.date_starts.timetuple())) if self.date_starts else 0,
