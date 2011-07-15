@@ -140,6 +140,8 @@ class SuggestionForm(forms.Form):
             poi = Place.insert_or_update_google(user=kwargs['user'],
                                                 google_places_reference=self.cleaned_data['place_reference']
                                                 )
+        if poi is None:
+            raise AttributeError
         suggestion = Suggestion.update_or_insert(
                          id = kwargs.get('id', None), name = self.cleaned_data['name'],
                          description = self.cleaned_data['description'], 
