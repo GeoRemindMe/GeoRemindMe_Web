@@ -1,6 +1,6 @@
 # coding=utf-8
 
-import libs.httplib2 as httplib2
+from libs.httplib2 import Http
 from xml.etree import ElementTree
 
 from django.conf import settings
@@ -16,14 +16,14 @@ class GPAPIError(Exception):
         Exception.__init__(self, message)
         self.type = type
 
-class GPRequest(httplib2.Http):
+class GPRequest(Http):
     '''
         encapsulates the queries
     '''
     _search_url = 'https://maps.googleapis.com/maps/api/place/search/json?'
     _details_url = 'https://maps.googleapis.com/maps/api/place/details/json?'
     _checkin_url = 'https://maps.googleapis.com/maps/api/place/check-in/json?'
-    headers = { 'User-Agent' : 'Georemindme v.0.1 - georemindme.appspot.com' }
+    headers = { 'User-Agent' : 'Georemindme:0.1' }
 
     
     def __init__(self, *args, **kwargs):

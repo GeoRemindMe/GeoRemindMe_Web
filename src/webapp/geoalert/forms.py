@@ -101,7 +101,6 @@ from georemindme.models_utils import VISIBILITY_CHOICES
 
 class SuggestionForm(forms.Form):
     name = forms.CharField(required=True)
-    location = LocationField(required=False)
     poi_id = forms.IntegerField(required=False)
     place_reference = forms.CharField(required=False)
     starts = forms.DateTimeField(required=False, widget=SelectDateWidget())

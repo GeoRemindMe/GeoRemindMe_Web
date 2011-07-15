@@ -90,7 +90,24 @@ class PlaceHelper(POIHelper):
         if id == '' :
             raise AttributeError()
         return self._klass.gql('WHERE google_places_id = :1', id).get()
-
+    
+    def get_nearest(self, location, limit=50):
+        if not isinstance(location, db.GeoPt):
+            location = db.GeoPt(location)
+        from mapsServices.fusiontable import ftclient, sqlbuilder
+        from django.conf import settings
+        try:
+            ftclient = ftclient.OAuthFTClient()
+            ftclient.query(sqlbuilder.SQL().select(settings.FUSIONTABLES['TABLE_PLACES'],
+                                                    {'bus_id': self.business.id if self.business is not None else -1,
+                                                    'location': '%s,%s' % (self.location.lat, self.location.lon),
+                                                    'place_id': self.id,
+                                                    'modified': self.modified.__str__(),
+                                                     }
+                                                   )
+                           )
+        except:
+            None
 
 class BusinessHelper(object):
     def get_by_name(self, business):

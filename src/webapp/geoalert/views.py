@@ -167,19 +167,29 @@ def add_from_google_reference(request, reference):
     place = Place.objects.get_by_google_reference(reference)
     if place is not None:  # ya existe, hacemos una redireccion permanente
         return redirect(place.get_absolute_url(), permanent=True)
-    from mapsServices.places.GPRequest import *
-#    try:
-#        search = GPRequest().retrieve_reference(reference)
-#    except GPAPIError, e:
-#        return render_to_response('webapp/placeerror.html', {'error': e},
-#                                  context_instance=RequestContext(request))
-#    except:
-#        return HttpResponseServerError
-
-    place = Place.insert_or_update_google(google_places_reference=reference,
-                                user = request.user
-                                )
+    try:
+        place = Place.insert_or_update_google(google_places_reference=reference,
+                                              user = request.user
+                                              )
+    except Exception, e:
+        return render_to_response('webapp/placeerror.html', {'error': e},
+                                  context_instance=RequestContext(request))
     
+    return redirect(place.get_absolute_url(), permanent=True)
+
+
+@login_required
+def add_from_foursquare_id(request, venueid):
+    place = Place.objects.get_by_foursquare_id(venueid)
+    if place is not None:
+        return redirect(place.get_absolute_url(), permanent=True)
+    try:
+        place = Place.insert_or_update_foursquare(foursquare_id=venueid,
+                                                  user = request.user
+                                                  )
+    except Exception, e:
+        return render_to_response('webapp/placeerror.html', {'error': e},
+                                  context_instance=RequestContext(request))
     return redirect(place.get_absolute_url(), permanent=True)
 
 

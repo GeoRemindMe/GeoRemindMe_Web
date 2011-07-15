@@ -50,7 +50,7 @@ class OSMRequest(httplib2.Http):
     '''
     _base_url = 'http://open.mapquestapi.com/xapi/api/0.6/'
     #_base_url = 'http://jxapi.openstreetmap.org/xapi/api/0.6/'
-    headers = { 'User-Agent' : 'Georemindme v.0.1 - georemindme.appengine.com' }
+    headers = { 'User-Agent' : 'Georemindme:0.1' }
     
     def __init__(self, *args, **kwargs):
         mem = Client()
