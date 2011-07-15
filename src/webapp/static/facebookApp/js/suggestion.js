@@ -143,27 +143,79 @@ function loadGoogleSettings(){
 
 function saveSettings(engine){
     if(engine=='google-places'){
-        data={};
-        data['type']=$('input[name="place-type"]:checked').val();
-        data['radius']=Number($('#radius').val());
-        data['location']=searchconfig_google['location'];
-        data['region_code']=$('#google-region').val();
-        console.log(data)
-        
-        $.ajax({
-          type: 'POST',
-          url: '/ajax/searchconfgoogle/',
-          data: data,
-          complete: function(msg){
-                if (msg.status !=200){
+        $('#savingSettings').text("Guardando...")
+        //Primero buscamos la latitud y longitud de la ciudad
+        geocoder.geocode( 
+            {
+                'address':$('#google-city').val(),
+                'region':$('#google-region').val()
+            }, 
+            function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
                     
-                }else{
-                    showSettings()
+                    //Si todo va correcto enviamos los datos al servidor
+                    var latlong=results[0].geometry.location.Ja+','+results[0].geometry.location.Ka;
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        url: '/ajax/searchconfgoogle/',
+                        data: {
+                            'type': $('input[name="place-type"]:checked').val(),
+                            'radius': Number($('#radius').val()),
+                            'location': latlong,
+                            'region_code': $('#google-region').val()
+                        },
+                        complete: function(msg){
+                            if (msg.status !=200){
+                                
+                            }else{
+                                //Sobreescribimos los valores anteriores para que cuando volvamos
+                                //a desplegar la configuración salga bien
+                                searchconfig_google['region_code']=$('#google-region').val()
+                                searchconfig_google['location']=latlong
+                                searchconfig_google['type']=$('input[name="place-type"]:checked').val();
+                                searchconfig_google['radius']=$('#radius').val();
+                                
+                                //Minimizamos el menu de configuración
+                                showSettings()
+                                
+                            }
+                            $('#savingSettings').text("Guardar")
+                        }
+                    });//End AJAX
+                } else {
+                    alert("Geocode was not successful for the following reason: " + status);
                 }
             }
-        });
+        );
+        
+        
+        
     }
+    
+    
 }
+
+function latLonFromAddress(address,region) {
+    var data={};
+    if(address)
+        data['address']=address;
+    if(region)
+        data['region']=region;
+
+    geocoder.geocode( 
+        data, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var LatLon=results[0].geometry.location.Ja+','+results[0].geometry.location.Ka;
+                console.log(LatLon)
+                return LatLon;
+            } else {
+                alert("Geocode was not successful for the following reason: " + status);
+            }
+        }
+    );
+}
+
 
 function setRemainingCharCounter(){
     $('#id_name').keyup(function(){
