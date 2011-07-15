@@ -424,8 +424,6 @@ class Suggestion(Event, Visibility):
                     'modified': long(time.mktime(self.modified.timetuple())) if self.modified else 0,
                     'starts': long(time.mktime(self.date_starts.timetuple())) if self.date_starts else 0,
                     'ends': long(time.mktime(self.date_ends.timetuple())) if self.date_ends else 0,
-                    'done_when': long(time.mktime(self.done_when.timetuple())) if self.done_when else 0,
-                    'done': self.is_done(),
                     'active': self.is_active(),
                     }
             
