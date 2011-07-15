@@ -38,13 +38,51 @@
                     $(':regex(id,^(checkBox_))').attr('checked',false);
             });
             
+            
         });
+        
+        function loadPage(page){
+            $.ajax({
+                type: 'POST',
+                url: "/ajax/get/suggestion/",
+                data:{
+                    'query_id':{{suggestions.0}},
+                    'page':page
+                },
+                success: function(data){
+                    
+                    $('#suggestion-list').empty()
+                    $.each(data[1], function(index,suggestion){
+                        $("#suggestionTemplate").tmpl( {id:suggestion.id, name:suggestion.name} ).appendTo( "#suggestion-list");
+                    });
+                    
+                    //Ocultamos los botones de siguiente y anterior si es necesario
+                    if(page>1)
+                        $('#prev-page').removeClass('hidden')
+                    else
+                        $('#prev-page').addClass('hidden')
+                        
+                    //Establecemos el comportamiento de ambos botones
+                    var nextPage=page+1
+                    var prevPage=page-1
+                    $('#next-page').attr('onclick','javascript:loadPage('+nextPage+')')
+                    $('#prev-page').attr('onclick','javascript:loadPage('+prevPage+')')
+                    
+                        
+                }
+            });
+        }
+        
     </script>
 {%endblock%}
 
 {% block goBack %}{%endblock%}
 {% block body %}
     <div id="suggestions">
+<!--
+    Sugeridas={{user.counters.suggested}}
+    Sugeridas={{user.counters}}
+-->
         <h1>Tus sugerencias</h1>
         <ul id="tabMenu">
             <li class="active">Sugerencias</li>
@@ -53,21 +91,24 @@
         <div id="content">
                 <div id="header">
                     <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" value="Car" /></span>
-                    <span class="btn">Eliminar</span>
-                    <span class="btn">Mover a</span>
-                    <span class="btn right nextBtn">Siguiente</span>
-                    <span class="btn right prevBtn">Anterior</span>
+                    <span class="btn right nextBtn" id="next-page" onclick="javascript:loadPage(2)">Siguiente</span>
+                    <span class="btn right prevBtn hidden" id="prev-page">Anterior</span>
+                    
+                    <span class="btn removeBtn">Eliminar</span>
+                    <span class="btn mvBtn">Mover a</span>
+                    
                 </div>
-                <!-- Objetos Suggestion-->
-                {% for k in suggestions.1%}
-
-                    <div id="suggestion_{{k.id}}" class="suggestion">
-                        <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" /></span>
-                        <span class="suggestionName">{{k}}</span>
-                        <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
-                    </div>
-                {% endfor%}              
-
+                <span id="suggestion-list">
+                    <!-- Objetos Suggestion-->
+                    {% for k in suggestions.1%}
+                        <div id="suggestion_{{k.id}}" class="suggestion">
+                            <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" /></span>
+                            <span class="suggestionName">{{k}}</span>
+                            <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
+                        </div>
+                    {% endfor%}   
+                </span>           
+                Página: <span onclick="javascript:loadPage(1)" class="link">1</span> | <span onclick="javascript:loadPage(2)" class="link">2</span>
             </table>
         </div>
     </div>
@@ -79,5 +120,13 @@
     </script>
     <script id="expandedSuggestion" type="text/x-jquery-tmpl">
         Sugieron que...
+    </script>
+    
+    <script id="suggestionTemplate" type="text/x-jquery-tmpl">
+        <div id="suggestion_${id}" class="suggestion">
+            <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="${id}" /></span>
+            <span class="suggestionName">${name}</span>
+            <span class="suggestionInLists">Lista ${id}</span>
+        </div>
     </script>
 {% endblock %}
