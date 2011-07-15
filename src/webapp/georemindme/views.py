@@ -6,8 +6,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 
-from cron import *
-from tasks import *
+from tasks import list_notify_worker, timelinefollowers_worker, email_worker
+from cron import report_notify, clean_sessions
 
 def register_panel(request, login=False):
     if request.session.get('user'):

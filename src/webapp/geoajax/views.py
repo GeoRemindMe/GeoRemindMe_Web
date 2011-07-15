@@ -711,7 +711,7 @@ def get_vote_comment(request):
 def mod_searchconfig_google(request):
     sconfig = request.user.settings.searchconfig_google
     sconfig.region_code = request.POST['region_code']
-    sconfig.location = request.POST['location']
+    sconfig.location = db.GeoPt(request.POST['location'])
     sconfig.radius = int(request.POST['radius'])
     sconfig.type = request.POST['type']
     sconfig.put()

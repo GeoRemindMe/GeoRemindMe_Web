@@ -156,13 +156,13 @@ class UserProfile(db.Model):
         else:
             self.avatar = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
             
-    def put(self):
+    def put(self, **kwargs):
 #        if self.parent().settings.sync_avatar_with_facebook:
 #            self._update_facebook()
 #        else:
 #            self._update_gravatar()
-        super(self.__class__, self).put()
-        memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self),300)    
+        super(UserProfile, self).put()
+        memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)    
     
 
 class UserSocialLinks(db.Model):
@@ -345,6 +345,6 @@ class SearchConfig(db.polymodel.PolyModel):
     
     
 class SearchConfigGooglePlaces(SearchConfig):
-    type = db.TextProperty(choices = ('all', 'geocode', 'establishment'), default='all')
+    type = db.TextProperty(choices = ('all', 'geocode', 'establishment'), default='establishment')
     
 from helpers_acc import *

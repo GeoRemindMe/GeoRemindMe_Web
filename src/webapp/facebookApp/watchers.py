@@ -13,7 +13,6 @@ def new_follower_notification(sender, **kwargs):
     '''
     user_followed=db.get(kwargs['following'])
     fb_client=FacebookClient(user=kwargs['following'])
-    #~ raise Exception(fb_client.consumer.access_token)
     params= {
         "name": "Link name",
         "link": "http://www.example.com/",
@@ -23,10 +22,6 @@ def new_follower_notification(sender, **kwargs):
         "privacy": {'value':'CUSTOM','friends':'SELF'}
     }
     fb_client.consumer.put_wall_post("%(id)s (%(username)s) ha empezado a seguirte" % {'id':sender.id, 'username':sender.username}, params);
-    #~ friends_to_follow=fb_client.get_friends_to_follow()
-    
-    #~ raise Exception(user_followed.facebook_user.uid)
-    
 user_follower_new.connect(new_follower_notification)   
 
 def disconnect_all():

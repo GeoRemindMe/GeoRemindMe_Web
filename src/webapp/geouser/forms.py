@@ -179,6 +179,7 @@ class UserProfileForm(forms.Form):
             fail = _('Username already in use')
             self._errors['username'] = self.error_class([fail])
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
+            raise
             fail = _(e.message)
             self._errors['email'] = self.error_class([fail])
         

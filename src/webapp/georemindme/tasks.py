@@ -4,7 +4,7 @@ import os
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 
-from google.appengine.api.taskqueue import *
+from google.appengine.api.taskqueue import Task
 from google.appengine.ext import db
 from google.appengine.api import mail
 
