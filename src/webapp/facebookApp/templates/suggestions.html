@@ -57,57 +57,17 @@
                     <span class="btn">Mover a</span>
                     <span class="btn right nextBtn">Siguiente</span>
                     <span class="btn right prevBtn">Anterior</span>
-                </div>               
-                <div id="suggestion_1" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_1" value="Car" /></span>
-                    <span class="suggestionName">Ir al mirador de San Nicolás por la tarde</span>
-                    <span class="suggestionInLists">Turismo</span>
                 </div>
-                <div id="suggestion_2" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_2" value="Car" /></span>
-                    <span class="suggestionName">Tomar una tapa "Bomba" en el Villa Magna</span>
-                    <span class="suggestionInLists">divabajo</span>
-                </div>
-                <div id="suggestion_3" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_3" value="Car" /></span>
-                    <span class="suggestionName">Ir al mirador de San Nicolás por la tarde</span>
-                    <span class="suggestionInLists">Turismo</span>
-                </div>
-                <div id="suggestion_4" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_4" value="Car" /></span>
-                    <span class="suggestionName">Tomar una tapa "Bomba" en el Villa Magna</span>
-                    <span class="suggestionInLists">divabajo</span>
-                </div>
-                <div id="suggestion_5" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_5" value="Car" /></span>
-                    <span class="suggestionName">Ir al mirador de San Nicolás por la tarde</span>
-                    <span class="suggestionInLists">Turismo</span>
-                </div>
-                <div id="suggestion_6" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_6" value="Car" /></span>
-                    <span class="suggestionName">Tomar una tapa "Bomba" en el Villa Magna</span>
-                    <span class="suggestionInLists">divabajo</span>
-                </div>
-                <div id="suggestion_7" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_7" value="Car" /></span>
-                    <span class="suggestionName">Ir al mirador de San Nicolás por la tarde</span>
-                    <span class="suggestionInLists">Turismo</span>
-                </div>
-                <div id="suggestion_8" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_8" value="Car" /></span>
-                    <span class="suggestionName">Tomar una tapa "Bomba" en el Villa Magna</span>
-                    <span class="suggestionInLists">divabajo</span>
-                </div>
-                <div id="suggestion_9" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_9" value="Car" /></span>
-                    <span class="suggestionName">Ir al mirador de San Nicolás por la tarde</span>
-                    <span class="suggestionInLists">Turismo</span>
-                </div>
-                <div id="suggestion_3" class="suggestion">
-                    <span class="checkBox"><input type="checkbox" id="checkBox_10" value="Car" /></span>
-                    <span class="suggestionName">Tomar una tapa "Bomba" en el Villa Magna</span>
-                    <span class="suggestionInLists">divabajo</span>
-                </div>
+                <!-- Objetos Suggestion-->
+                {% for k in suggestions.1%}
+
+                    <div id="suggestion_{{k.id}}" class="suggestion">
+                        <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" /></span>
+                        <span class="suggestionName">{{k}}</span>
+                        <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
+                    </div>
+                {% endfor%}              
+
             </table>
         </div>
     </div>
