@@ -413,19 +413,19 @@ class Suggestion(Event, Visibility):
     
         
     def to_dict(self):
-            return {'id': self.id,
-                    'name': self.name,
-                    'description': self.description,
-                    'poi_id': self.poi.key().id(),
-                    'x': self.poi.location.lat,
-                    'y': self.poi.location.lon,
-                    'address': self.poi.address,
-                    'created': long(time.mktime(self.created.timetuple())) if self.created else 0,
-                    'modified': long(time.mktime(self.modified.timetuple())) if self.modified else 0,
-                    'starts': long(time.mktime(self.date_starts.timetuple())) if self.date_starts else 0,
-                    'ends': long(time.mktime(self.date_ends.timetuple())) if self.date_ends else 0,
-                    'active': self.is_active(),
-                    }
+        return {'id': self.id,
+                'name': self.name,
+                'description': self.description,
+                'poi_id': self.poi.key().id(),
+                'x': self.poi.location.lat,
+                'y': self.poi.location.lon,
+                'address': self.poi.address,
+                'created': long(time.mktime(self.created.timetuple())) if self.created else 0,
+                'modified': long(time.mktime(self.modified.timetuple())) if self.modified else 0,
+                'starts': long(time.mktime(self.date_starts.timetuple())) if self.date_starts else 0,
+                'ends': long(time.mktime(self.date_ends.timetuple())) if self.date_ends else 0,
+                'active': self.is_active(),
+                }
             
     def to_json(self):
         return simplejson.dumps(self.to_dict())
