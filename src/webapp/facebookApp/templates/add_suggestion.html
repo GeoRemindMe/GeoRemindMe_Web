@@ -17,9 +17,10 @@
             de configuración de Google Places con los datos de la BD
         */
         searchconfig_google={}
-        searchconfig_google['region_code']='{{user.settings.searchconfig_google.region_code}}'
-        searchconfig_google['location']='{{user.settings.searchconfig_google.location}}'
-        searchconfig_google['type']='{{user.settings.searchconfig_google.type}}'
+        searchconfig_google['radius']={{user.settings.searchconfig_google.radius}};
+        searchconfig_google['region_code']='{{user.settings.searchconfig_google.region_code}}';
+        searchconfig_google['location']='{{user.settings.searchconfig_google.location}}';
+        searchconfig_google['type']='{{user.settings.searchconfig_google.type}}';
     </script>
     <script src="/static/facebookApp/js/suggestion.js"></script>
     <!--<script src="/static/webapp/js/dashboard.js"></script>-->
