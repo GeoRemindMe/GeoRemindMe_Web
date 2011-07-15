@@ -137,6 +137,7 @@ class SuggestionForm(forms.Form):
         if 'poi_id' in self.cleaned_data:
             poi = Place.objects.get_by_id(self.cleaned_data['poi_id'])
         elif 'place_reference' in self.cleaned_data:
+            raise Exception(self.cleaned_data['place_reference'])
             poi = Place.insert_or_update_google(user=kwargs['user'],
                                                 google_places_reference=self.cleaned_data['place_reference']
                                                 )

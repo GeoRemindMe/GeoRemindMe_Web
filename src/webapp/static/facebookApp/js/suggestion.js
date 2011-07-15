@@ -83,7 +83,7 @@ $(document).ready(function() {
     });
     
     //FORM
-    setFormBehaviour();
+    //~ setFormBehaviour();
     
     var latlngStr = searchconfig_google['location'].split(",",2);
     var lat = parseFloat(latlngStr[0]);
@@ -454,9 +454,9 @@ function activateTab(tab){
     }
 }
 
-function setFormBehaviour(){
+function saveSuggestion(){
     
-    $("form").submit(function() {
+    
         $('#submit-button').val("Enviado...")
         $('#submit-button').addClass("waiting")
         
@@ -468,7 +468,7 @@ function setFormBehaviour(){
         
         var params = { 
             name: $('#id_name').val(), 
-            place_id: placeReference, 
+            place_reference: placeReference, 
             description: $('#id_description').val(),
             starts_month: $('#id_starts_month').val(),
             starts_day: $('#id_starts_day').val(),
@@ -494,7 +494,7 @@ function setFormBehaviour(){
         });
          
         return false;
-    });
+    
 }
 function showSettings(){
     loadGoogleSettings()

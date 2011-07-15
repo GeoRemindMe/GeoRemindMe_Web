@@ -9,7 +9,7 @@
         done = forms.BooleanField(required=False)
         visibility = forms.ChoiceField(required=True, choices=VISIBILITY_CHOICES)
 -->
-
+    
         <p id="suggestion-item">
             <label>¿Qué sugieres?</label>
             <textarea id="id_name" name="name"></textarea>
@@ -110,7 +110,7 @@
         
         
         <div>
-            <input type="submit" id="submit-button" value="{% trans 'Añadir' %}" title="{% trans 'Please fill up all fields' %}">
+            <span class="btn" id="submit-button" onclick="saveSuggestion()">Enviar</span>
         </div>
         <div id="error-msg"></div>
         <hr>
