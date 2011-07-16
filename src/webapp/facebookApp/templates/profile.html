@@ -3,11 +3,13 @@
 {% block title %}Perfil público de {{profile.username}}{% endblock %}
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script src="/static/facebookApp/js/grm.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>
     <script type="text/javascript">
     
     $("#user-avatar").ready(function(){
         $(this).load();
+        
     });
     </script>
 {%endblock%}
@@ -65,4 +67,13 @@
 		<li>Valoraciones</li>
 		<li>Listas</li>
 	</ul>
+    <span id="suggestion-list">
+    </span>
+    
+    <script id="suggestionTemplate" type="text/x-jquery-tmpl">
+        <div id="suggestion_${element.id}" class="suggestion">
+            <span class="suggestionName">${element.name}</span>
+            <span class="suggestionInLists">Lista ${element.id}</span>
+        </div>
+    </script>
 {% endblock %}

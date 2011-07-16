@@ -4,6 +4,7 @@
 
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript">
         jQuery.expr[':'].regex = function(elem, index, match) {
@@ -41,37 +42,21 @@
             
         });
         
-        function loadPage(page){
-            $.ajax({
-                type: 'POST',
-                url: "/ajax/get/suggestion/",
+        function loadSuggestionsPage(page){
+            loadPage({
+                page:page,
+                container:'#suggestion-list',
+                url:'/ajax/get/suggestion/',
+                template: "#suggestionTemplate",
                 data:{
-                    'query_id':{{suggestions.0}},
-                    'page':page
-                },
-                success: function(data){
-                    
-                    $('#suggestion-list').empty()
-                    $.each(data[1], function(index,suggestion){
-                        $("#suggestionTemplate").tmpl( {id:suggestion.id, name:suggestion.name} ).appendTo( "#suggestion-list");
-                    });
-                    
-                    //Ocultamos los botones de siguiente y anterior si es necesario
-                    if(page>1)
-                        $('#prev-page').removeClass('hidden')
-                    else
-                        $('#prev-page').addClass('hidden')
-                        
-                    //Establecemos el comportamiento de ambos botones
-                    var nextPage=page+1
-                    var prevPage=page-1
-                    $('#next-page').attr('onclick','javascript:loadPage('+nextPage+')')
-                    $('#prev-page').attr('onclick','javascript:loadPage('+prevPage+')')
-                    
-                        
-                }
+                        'query_id':{{suggestions.0}},
+                    }                
             });
         }
+        
+        
+        
+        
         
     </script>
 {%endblock%}
@@ -79,25 +64,26 @@
 {% block goBack %}{%endblock%}
 {% block body %}
     <div id="suggestions">
+    
 <!--
-    Sugeridas={{user.counters.suggested}}
     Sugeridas={{user.counters}}
 -->
         <h1>Tus sugerencias</h1>
         <ul id="tabMenu">
-            <li class="active">Sugerencias</li>
+            <li class="active">Sugerencias ({{user.counters.suggested}})</li>
             <li>Listas</li>
         </ul>
         <div id="content">
                 <div id="header">
                     <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" value="Car" /></span>
-                    <span class="btn right nextBtn" id="next-page" onclick="javascript:loadPage(2)">Siguiente</span>
-                    <span class="btn right prevBtn hidden" id="prev-page">Anterior</span>
+                    <span class="btn right nextBtn" id="next-page" onclick="javascript:loadSuggestionsPage('next')">Siguiente</span>
+                    <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
                     
                     <span class="btn removeBtn">Eliminar</span>
                     <span class="btn mvBtn">Mover a</span>
                     
                 </div>
+
                 <span id="suggestion-list">
                     <!-- Objetos Suggestion-->
                     {% for k in suggestions.1%}
@@ -108,7 +94,8 @@
                         </div>
                     {% endfor%}   
                 </span>           
-                Página: <span onclick="javascript:loadPage(1)" class="link">1</span> | <span onclick="javascript:loadPage(2)" class="link">2</span>
+                Página: <span onclick="javascript:loadSuggestionsPage(1)" class="link">1</span> | <span onclick="javascript:loadSuggestionsPage(2)" class="link">2</span>
+
             </table>
         </div>
     </div>
@@ -123,10 +110,10 @@
     </script>
     
     <script id="suggestionTemplate" type="text/x-jquery-tmpl">
-        <div id="suggestion_${id}" class="suggestion">
-            <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="${id}" /></span>
-            <span class="suggestionName">${name}</span>
-            <span class="suggestionInLists">Lista ${id}</span>
+        <div id="suggestion_${element.id}" class="suggestion">
+            <span class="checkBox"><input type="checkbox" id="checkBox_{{element.id}}" value="${element.id}" /></span>
+            <span class="suggestionName">${element.name}</span>
+            <span class="suggestionInLists">Lista ${element.id}</span>
         </div>
     </script>
 {% endblock %}

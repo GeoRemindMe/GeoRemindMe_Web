@@ -61,11 +61,13 @@ alert_done.connect(done_alert)
 def new_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=300)
     timeline.put()
+    sender.user.counters.set_suggested()
 suggestion_new.connect(new_suggestion)
 
 def modified_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=301)
     timeline.put()
+    sender.user.counters.set_suggested(value=-1)
 suggestion_modified.connect(new_suggestion)
 
 def deleted_suggestion(sender, **kwargs):
