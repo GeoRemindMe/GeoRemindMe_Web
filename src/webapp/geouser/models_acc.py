@@ -354,7 +354,7 @@ class UserTimeline(UserTimelineBase, Visibility):
                 return True
             followers = self.user.get_followers()
             query_id = followers[0]
-            followers = followers[1]
+            followers = followers#[1]
             page = 1
             while len(followers) > 0:
                 page = page+1
