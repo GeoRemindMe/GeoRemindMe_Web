@@ -189,6 +189,7 @@ class UserCounter(db.Model):
         Podriamos actualizarlos en tiempo real o con algun proceso de background?
     """ 
     suggested = db.IntegerProperty(default=0)
+    alerts = db.IntegerProperty(default=0)
     supported = db.IntegerProperty(default=0)
     influenced = db.IntegerProperty(default=0)
     followings = db.IntegerProperty(default=0)
@@ -211,6 +212,9 @@ class UserCounter(db.Model):
         
     def set_suggested(self, value=1):
         return db.run_in_transaction(self._change_counter, 'suggested', value)
+    
+    def set_alerts(self, value=1):
+        return db.run_in_transaction(self._change_counter, 'alerts', value)
     
     def set_supported(self, value=1):
         return db.run_in_transaction(self._change_counter, 'supported', value)

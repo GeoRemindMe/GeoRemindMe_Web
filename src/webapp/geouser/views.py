@@ -533,9 +533,10 @@ def update(request):
     for user in users:
         profile = user.profile
         settings = user.settings
+        counters = user.counters
         sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
         if sc is None:
             sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
-        db.put([profile, settings, sc])
+        db.put([profile, settings, sc, counters])
         
     return HttpResponse()

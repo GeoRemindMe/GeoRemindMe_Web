@@ -289,7 +289,7 @@ def del_suggestion(request, id = None):
     """
     if id is None:
         raise AttributeError()
-    sug = request.user.suggestions.filter('id =', id).get()
+    sug = Suggestion.objects.get_by_id_user(id, request.user, request.user)
     if not sug:
         raise AttributeError()
     sug.delete()    
