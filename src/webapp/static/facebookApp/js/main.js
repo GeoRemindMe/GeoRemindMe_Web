@@ -11,7 +11,7 @@ function facebookInit(config) {
   FB.Event.subscribe('auth.sessionChange', handleSessionChange);
 
   FB.Canvas.setAutoResize();
-
+  resizeIframe();
   // ensure we're always running on apps.facebook.com
   // if we are opening http://localhost:8080/fb/ or
   // georemindme.appspot.com/fb we will be redirected
@@ -33,9 +33,9 @@ function goHome() {
 }
 
 function resizeIframe() {
-    var tam=$('#bottom-bar').position().top; //Get height of the iframe
-    tam=tam+250;
-    //~ console.log(tam);
+    var tam=$('#right-col').height(); //Get height of the iframe
+    //~ tam=tam+250;
+    //~ console.log('Resize to '+tam);
     FB.Canvas.setSize({ height: tam });
 
     

@@ -77,7 +77,7 @@
         <div id="content">
                 <div id="header">
                     <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" value="Car" /></span>
-                    <span class="btn right nextBtn" id="next-page" onclick="javascript:loadSuggestionsPage('next')">Siguiente</span>
+                    <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="javascript:loadSuggestionsPage('next')">Siguiente</span>
                     <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
                     
                     <span class="btn removeBtn">Eliminar</span>
@@ -98,11 +98,10 @@
                         {% for k in suggestions.1%}
                             <div id="suggestion_{{k.id}}" class="suggestion">
                                 <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" /></span>
-                                <span class="suggestionName">{{k}}</span>
+                                <span class="suggestionName">{{k.name}}</span>
                                 <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
                             </div>
                         {% endfor%}   
-                        Página: <span onclick="javascript:loadSuggestionsPage(1)" class="link">1</span> | <span onclick="javascript:loadSuggestionsPage(2)" class="link">2</span>
                     </span>           
                     {% endif %}
 
