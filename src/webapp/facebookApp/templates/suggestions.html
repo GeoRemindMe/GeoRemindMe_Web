@@ -4,6 +4,7 @@
 
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript">
         jQuery.expr[':'].regex = function(elem, index, match) {
@@ -38,35 +39,72 @@
                     $(':regex(id,^(checkBox_))').attr('checked',false);
             });
             
+            
         });
+        
+        function loadSuggestionsPage(page){
+            loadPage({
+                page:page,
+                container:'#suggestion-list',
+                url:'/ajax/get/suggestion/',
+                template: "#suggestionTemplate",
+                data:{
+                        'query_id':{{suggestions.0}},
+                    }                
+            });
+        }
+        
+        
+        
+        
+        
     </script>
 {%endblock%}
 
 {% block goBack %}{%endblock%}
 {% block body %}
     <div id="suggestions">
-        <h1>Tus sugerencias</h1>
+    
+<!--
+    Sugeridas={{user.counters}}
+-->
+        <h1>Baúl de sugerencias</h1>
         <ul id="tabMenu">
-            <li class="active">Sugerencias</li>
+            <li class="active">Tus sugerencias ({{user.counters.suggested}})</li>
+            <li class="active">Todas</li>
             <li>Listas</li>
         </ul>
         <div id="content">
                 <div id="header">
                     <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" value="Car" /></span>
-                    <span class="btn">Eliminar</span>
-                    <span class="btn">Mover a</span>
-                    <span class="btn right nextBtn">Siguiente</span>
-                    <span class="btn right prevBtn">Anterior</span>
+                    <span class="btn right nextBtn" id="next-page" onclick="javascript:loadSuggestionsPage('next')">Siguiente</span>
+                    <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
+                    
+                    <span class="btn removeBtn">Eliminar</span>
+                    <span class="btn mvBtn">Mover a</span>
+                    
                 </div>
-                <!-- Objetos Suggestion-->
-                {% for k in suggestions.1%}
-
-                    <div id="suggestion_{{k.id}}" class="suggestion">
-                        <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" /></span>
-                        <span class="suggestionName">{{k}}</span>
-                        <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
-                    </div>
-                {% endfor%}              
+                
+                    <!-- Objetos Suggestion-->
+                    {% if user.counters.suggested == 0 %}
+                        <div id="noSuggestions">
+                            <span>
+                                Aún no has hecho ninguna sugerencia, para empezar:<br>
+                                <a href="{% url fb_add_suggestion %}" id="btn-add-suggestion">Añade una sugerencia</a>
+                            </span>
+                        </div>
+                    {% else %}
+                    <span id="suggestion-list">
+                        {% for k in suggestions.1%}
+                            <div id="suggestion_{{k.id}}" class="suggestion">
+                                <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" /></span>
+                                <span class="suggestionName">{{k}}</span>
+                                <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
+                            </div>
+                        {% endfor%}   
+                        Página: <span onclick="javascript:loadSuggestionsPage(1)" class="link">1</span> | <span onclick="javascript:loadSuggestionsPage(2)" class="link">2</span>
+                    </span>           
+                    {% endif %}
 
             </table>
         </div>
@@ -79,5 +117,13 @@
     </script>
     <script id="expandedSuggestion" type="text/x-jquery-tmpl">
         Sugieron que...
+    </script>
+    
+    <script id="suggestionTemplate" type="text/x-jquery-tmpl">
+        <div id="suggestion_${element.id}" class="suggestion">
+            <span class="checkBox"><input type="checkbox" id="checkBox_{{element.id}}" value="${element.id}" /></span>
+            <span class="suggestionName">${element.name}</span>
+            <span class="suggestionInLists">Lista ${element.id}</span>
+        </div>
     </script>
 {% endblock %}
