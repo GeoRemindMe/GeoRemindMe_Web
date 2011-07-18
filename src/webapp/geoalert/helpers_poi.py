@@ -102,7 +102,8 @@ class PlaceHelper(POIHelper):
                                                condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s))' % (location, radius)
                                                )
                        )
-        return list(query[9:].split()) #  chapuza :)
+        results = list(query[9:].split()) #  chapuza :)
+        return results # TODO: acabar
     
 
 class BusinessHelper(object):

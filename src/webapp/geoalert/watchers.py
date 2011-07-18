@@ -20,6 +20,7 @@ def new_alert(sender, **kwargs):
     else:
         return
     timeline.put()
+    sender.user.counters.set_alerts(value=+1)
 alert_new.connect(new_alert)
 
 def modified_alert(sender, **kwargs):
@@ -46,6 +47,7 @@ def deleted_alert(sender, **kwargs):
     else:
         return
     timeline.put()
+    sender.user.counters.set_alerts(value=-1)
 alert_deleted.connect(deleted_alert)
 
 def done_alert(sender, **kwargs):

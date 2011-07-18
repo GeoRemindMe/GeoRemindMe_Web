@@ -154,12 +154,14 @@ def user_suggestions(request):
     done = forms.BooleanField(required=False)
     """
     from geoalert.views import get_suggestion
+    counters = request.user.counters_async()
     suggestions = get_suggestion(request, id=None,
                                 wanted_user=request.user,
                                 private_profile=True,
                                 page = 1, query_id = None
                                 )
-    return  render_to_response('suggestions.html',{'suggestions': suggestions}, context_instance=RequestContext(request))
+    return  render_to_response('suggestions.html',{'suggestions': suggestions,
+                                                   'counters': counters.next()}, context_instance=RequestContext(request))
 
 
 @facebook_required    
@@ -184,10 +186,11 @@ def edit_suggestion(request,suggestion_id):
 
 @facebook_required
 def profile_settings(request):
+    counters = request.user.counters_async()
     has_twitter = True if request.user.twitter_user is not None else False
     has_google = True if request.user.google_user is not None else False
     
-    return  render_to_response('settings.html',{'counters': request.user.counters,
+    return  render_to_response('settings.html',{'counters': counters.next(),
                                                'profile': request.user.profile,
                                                'has_twitter': has_twitter,
                                                'has_google': has_google,
