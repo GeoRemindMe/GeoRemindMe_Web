@@ -42,10 +42,13 @@
             
             //Adding behaviour to tab content
             $('#tabMenu li').click(function(){
-                $('#tabMenu li.active').css('display','none');
+                tab_id=$('#tabMenu li.active').attr('id')
+                $('#'+tab_id+'_content').addClass('hidden');
                 $('#tabMenu li.active').removeClass('active');
+                
+                tab_id=$(this).attr('id')
+                $('#'+tab_id+'_content').removeClass('hidden');
                 $(this).addClass('active');
-                $(this).addClass('active')
             })
             
         });
@@ -100,7 +103,7 @@
         <ul id="tabMenu">
             <li id="your_suggestions" class="active">Tus sugerencias ({{user.counters.suggested}})</li>
             <li id="all_suggestions">Todas</li>
-            <li id="suggesitions_lists">Listas</li>
+            <li id="suggestions_lists">Listas</li>
         </ul>
         <div id="content">
                 <!-- YOUR SUGGESTIONS -->
@@ -117,14 +120,14 @@
                     
                         <!-- Objetos Suggestion-->
                         {% if user.counters.suggested == 0 %}
-                            <div id="noSuggestions">
+                            <div id="noSuggestions" class="tab-content">
                                 <span>
                                     Aún no has hecho ninguna sugerencia, para empezar:<br>
                                     <a href="{% url fb_add_suggestion %}" id="btn-add-suggestion">Añade una sugerencia</a>
                                 </span>
                             </div>
                         {% else %}
-                        <span id="suggestion-list">
+                        <span id="suggestion-list" class="tab-content">
                             {% for k in suggestions.1%}
                                 <div id="suggestion_{{k.id}}" class="suggestion">
                                     <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
@@ -141,13 +144,13 @@
                     
                     
                     <!-- ALL SUGGESTIONS -->
-                    <span id="all_suggestions_content" class="tab-content">
+                    <span id="all_suggestions_content" class="tab-content hidden">
                         <p>Todas las sugerencias</p>
                     </span>
                     <!-- END ALL SUGGESTIONS -->
                     
                     <!-- ALL SUGGESTIONS -->
-                    <span id="suggesitions_lists" class="tab-content">
+                    <span id="suggestions_lists_content" class="tab-content hidden">
                         <p>Listas de sugerencias</p>
                     </span>
                     <!-- END ALL SUGGESTIONS -->

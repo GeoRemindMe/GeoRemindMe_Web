@@ -354,14 +354,14 @@ class UserTimeline(UserTimelineBase, Visibility):
                 return True
             followers = self.user.get_followers()
             query_id = followers[0]
-            followers = followers#[1]
+            followers = followers[1]
             page = 1
             while len(followers) > 0:
                 page = page+1
                 index = UserTimelineFollowersIndex.all().ancestor(self.key()).order('-created').get()
                 if index is None or len(index.followers) > 80:  # o no existen indices o hemos alcanzado el maximo
                     index = UserTimelineFollowersIndex(parent=self)
-                index.followers.extend(db.Key.from_path(User.kind(), str(follower['id'])) for follower in followers)
+                index.followers.extend(db.Key.from_path(User.kind(), follower['id']) for follower in followers)
                 index.put()
                 followers = self.user.get_followers(page=page, query_id=query_id)[1]
             return True
