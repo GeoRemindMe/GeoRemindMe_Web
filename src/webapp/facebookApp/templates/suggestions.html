@@ -40,7 +40,8 @@
             });
             
             $('#tabMenu li').click(function(){
-                $('#tabMenu li.active')
+                $('#tabMenu li.active').removeClass('active');
+                $(this).addClass('active');
             })
             
         });
@@ -93,11 +94,12 @@
 -->
         <h1>Baúl de sugerencias</h1>
         <ul id="tabMenu">
-            <li class="active">Tus sugerencias ({{user.counters.suggested}})</li>
-            <li>Todas</li>
-            <li>Listas</li>
+            <li id="your_suggestions" class="active">Tus sugerencias ({{user.counters.suggested}})</li>
+            <li id="all">Todas</li>
+            <li id="lists">Listas</li>
         </ul>
         <div id="content">
+                <!-- -->
                 <div id="header">
                     <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" value="Car" /></span>
                     <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="javascript:loadSuggestionsPage('next')">Siguiente</span>
