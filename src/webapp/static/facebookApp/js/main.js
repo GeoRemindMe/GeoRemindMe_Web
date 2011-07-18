@@ -1,5 +1,9 @@
 Config = null;
 
+//~ $(document).ready(function() {
+    //~ resizeIframe();
+//~ });
+
 function facebookInit(config) {
   Config = config;
 

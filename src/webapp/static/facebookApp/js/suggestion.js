@@ -634,3 +634,7 @@ function showMoreDetails(){
     )
     
 }
+/*
+ * Baul de sugerencias
+ */
+
