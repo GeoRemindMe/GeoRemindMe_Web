@@ -9,7 +9,19 @@
     
     $("#user-avatar").ready(function(){
         $(this).load();
+    });
+    $(document).ready(function(){
         
+        //Adding behaviour to tab content
+        $('#tabMenu li').click(function(){
+            tab_id=$('#tabMenu li.active').attr('id')
+            $('#'+tab_id+'_content').addClass('hidden');
+            $('#tabMenu li.active').removeClass('active');
+            
+            tab_id=$(this).attr('id')
+            $('#'+tab_id+'_content').removeClass('hidden');
+            $(this).addClass('active');
+        })
     });
     </script>
 {%endblock%}
@@ -34,7 +46,7 @@
             </span>
             <h1>{{profile.parent.username}}</h1>
             {% ifequal user.username profile.parent.username %}
-                <a href="/fb/user/edit/" class="help-icon">Editar</a> 
+                <a href="/fb/user/edit/" class="rounded-button" id="edit-profile-btn">Editar</a> 
             {% endifequal %}
             {% if profile.description %}
                 <p>{{profile.description}}</p>
@@ -51,23 +63,41 @@
             <p>
                 <span>También está en:</span>
                 {% if profile.sociallinks.facebook %}
-                    <a href="{{profile.sociallinks.facebook}}">Facebook</a>
+                    <a href="{{profile.sociallinks.facebook}}" id="facebook-icon">Facebook</a>
                 {% endif %}
                 {% if profile.sociallinks.twitter %}
-                    <a href="{{profile.sociallinks.twitter}}">Twitter</a>
+                    <a href="{{profile.sociallinks.twitter}}"  id="twitter-icon">Twitter</a>
                 {% endif %}
                 {% if profile.sociallinks.foursquare %}
-                    <a href="{{profile.sociallinks.foursquare}}">Foursquare</a>
+                    <a href="{{profile.sociallinks.foursquare}}" id="foursquare-icon">Foursquare</a>
                 {% endif %}
             </p>
         </div>
     </div>
     <ul id="tabMenu" class="clear">
-		<li class="active">Sugerencias ({{counters.suggested}})</li>
-		<li>Valoraciones</li>
-		<li>Listas</li>
+		<li id="his_suggestions" class="active">Sugerencias ({{counters.suggested}})</li>
+		<li id="his_votes">Valoraciones ({{counters.supported}})</li>
+		<li id="his_lists">Listas</li>
 	</ul>
     <span id="suggestion-list">
+            
+            <!-- ALL SUGGESTIONS -->
+            <span id="his_suggestions_content" class="tab-content ">
+                <p>Sus sugerencias</p>
+            </span>
+            <!-- END ALL SUGGESTIONS -->
+            
+            <!-- ALL SUGGESTIONS -->
+            <span id="his_votes_content" class="tab-content hidden">
+                <p>Sus valoraciones</p>
+            </span>
+            <!-- END ALL SUGGESTIONS -->
+            
+            <!-- ALL SUGGESTIONS -->
+            <span id="his_lists_content" class="tab-content hidden">
+                <p>Sus listas</p>
+            </span>
+            <!-- END ALL SUGGESTIONS -->
     </span>
     
     <script id="suggestionTemplate" type="text/x-jquery-tmpl">

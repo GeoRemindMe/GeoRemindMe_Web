@@ -4,6 +4,27 @@
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>
+    <script type="text/javascript">
+        function vote(id){
+            
+            $.ajax({
+                    type: "POST",
+                    url: "/vote/suggestion/",
+                    data: {
+                        instance_id:id
+                    },
+                    complete: function(msg){
+                        if (msg.status !=200){
+                            $(this).text("Error "+msg.status)
+                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+                        }else{
+                            $('#suggestion_'+value.value).fadeOut('slow').remove()
+                        }
+                        
+                    }
+                });
+        }
+    </script>
 {%endblock%}
 
 {% block title %}Dashboard{% endblock %}
@@ -29,13 +50,19 @@
                     </a>
                 </div>
                 <p>                
-                    <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}}<br>
-                    <span class="timestamp">{{obj.created|timesince}} | {{obj.created}}</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
+                    <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}} <br>
+                    <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.name|escape|urlencode}}">{{obj.instance.poi.name}}</a></span><br>
+                    <span class="timestamp">{{obj.created|timesince}} ago</span> <span class="action-bar">| <span onclick="vote('{{obj.id}}')">Me gusta</span> <!--| Le gusta a otras {{obj.instance.counters.followers}}--> | <a href="/fb/suggestion/{{obj.id|urlencode}}">Ver detalles</a> | <span onclick="">Comentar</span> | <span onclick="" title="Guardar en favoritos">Guardar</span></span>
                 </p>
             </li>
         {% endfor %}
         </ul>
     
+        <!-- Si hay más ... -->
+        {% if chronology.1|length == 15%}
+            <div class="load-more">Cargar más</div>
+        {% endif %}    
+    {% endif %}    
 <!--
         
         <li>
@@ -66,8 +93,7 @@
 -->
     
     
-    <div class="load-more">Cargar más</div>
-    {% endif %}
+    
     
     
     {% if friends_to_follow|length %}

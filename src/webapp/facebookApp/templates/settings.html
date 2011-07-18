@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}Datos personales{% endblock %}
+{% block title %}Configuración de la cuenta{% endblock %}
 {% block goBack %}{%endblock%}
 {% block body %}
     <div id="profile">
         
         <h1>Configuración de la cuenta</h1>
-        <a href="edit/" class="help-icon">Editar</a> 
+        <a href="edit/" class="rounded-button" id="edit-settings-btn">Editar</a> 
         
         <div class="section">
             <div class="header">
@@ -37,12 +37,19 @@
                 <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
             </div>
             
-            <p>Tabla de permisosPara mejorar la potencia de tu cuenta, :</p>
+            <p>
+                No queremos ser <em>otra red social más</em>; sino una herramienta de enlace entre tus redes actuales para gestionar tus recomendaciones.<br>
+                Por ello, para una mejor experiencia puede autorizarnos para:
+            </p>
+            <ul>
+                <li><strong>Identificación</strong>: si quieres que no te pidamos que te identifiques si ya estás identificado en otra red.</li>
+                <li><strong>Comunicación</strong>: si quieres que tus sugerencias lleguen a tus amigos, followers, etc. y para poder sugerirte conocidos tuyos a los que podrías seguir para no perderte sus sugerencias.</li>
+            </ul>
             
             <table>
                 <tr id="head">
                     <td>Red</td>
-                    <td>Login</td>
+                    <td>Identificación</td>
                     <td>Comunicaciones</td>
                 </tr>
                 <tr>
