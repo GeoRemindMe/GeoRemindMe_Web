@@ -39,9 +39,13 @@
                     $(':regex(id,^(checkBox_))').attr('checked',false);
             });
             
+            
+            //Adding behaviour to tab content
             $('#tabMenu li').click(function(){
+                $('#tabMenu li.active').css('display','none');
                 $('#tabMenu li.active').removeClass('active');
                 $(this).addClass('active');
+                $(this).addClass('active')
             })
             
         });
@@ -95,41 +99,58 @@
         <h1>Baúl de sugerencias</h1>
         <ul id="tabMenu">
             <li id="your_suggestions" class="active">Tus sugerencias ({{user.counters.suggested}})</li>
-            <li id="all">Todas</li>
-            <li id="lists">Listas</li>
+            <li id="all_suggestions">Todas</li>
+            <li id="suggesitions_lists">Listas</li>
         </ul>
         <div id="content">
-                <!-- -->
-                <div id="header">
-                    <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" value="Car" /></span>
-                    <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="javascript:loadSuggestionsPage('next')">Siguiente</span>
-                    <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
+                <!-- YOUR SUGGESTIONS -->
+                <span id="your_suggestions_content" class="tab-content">
+                    <div id="header">
+                        <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" value="Car" /></span>
+                        <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="javascript:loadSuggestionsPage('next')">Siguiente</span>
+                        <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
+                        
+                        <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
+                        <span class="btn mvBtn">Mover a</span>
+                        
+                    </div>
                     
-                    <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
-                    <span class="btn mvBtn">Mover a</span>
-                    
-                </div>
-                
-                    <!-- Objetos Suggestion-->
-                    {% if user.counters.suggested == 0 %}
-                        <div id="noSuggestions">
-                            <span>
-                                Aún no has hecho ninguna sugerencia, para empezar:<br>
-                                <a href="{% url fb_add_suggestion %}" id="btn-add-suggestion">Añade una sugerencia</a>
-                            </span>
-                        </div>
-                    {% else %}
-                    <span id="suggestion-list">
-                        {% for k in suggestions.1%}
-                            <div id="suggestion_{{k.id}}" class="suggestion">
-                                <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
-                                <span class="suggestionName">{{k.name}}</span>
-                                <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
+                        <!-- Objetos Suggestion-->
+                        {% if user.counters.suggested == 0 %}
+                            <div id="noSuggestions">
+                                <span>
+                                    Aún no has hecho ninguna sugerencia, para empezar:<br>
+                                    <a href="{% url fb_add_suggestion %}" id="btn-add-suggestion">Añade una sugerencia</a>
+                                </span>
                             </div>
-                        {% endfor%}   
-                    </span>           
-                    {% endif %}
-
+                        {% else %}
+                        <span id="suggestion-list">
+                            {% for k in suggestions.1%}
+                                <div id="suggestion_{{k.id}}" class="suggestion">
+                                    <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
+                                    <span class="suggestionName">{{k.name}}</span>
+                                    <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
+                                </div>
+                            {% endfor%}   
+                        </span>           
+                        {% endif %}
+                    </span>
+                    <!-- END YOUR SUGGESTIONS -->
+                    
+                    
+                    
+                    
+                    <!-- ALL SUGGESTIONS -->
+                    <span id="all_suggestions_content" class="tab-content">
+                        <p>Todas las sugerencias</p>
+                    </span>
+                    <!-- END ALL SUGGESTIONS -->
+                    
+                    <!-- ALL SUGGESTIONS -->
+                    <span id="suggesitions_lists" class="tab-content">
+                        <p>Listas de sugerencias</p>
+                    </span>
+                    <!-- END ALL SUGGESTIONS -->
             </table>
         </div>
     </div>
