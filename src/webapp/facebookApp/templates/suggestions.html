@@ -55,7 +55,27 @@
         }
         
         
-        
+        function removeSuggestions(){
+            temp=$("input[name='suggestions']:checked")
+            $.each(temp, function(index,value){
+                $.ajax({
+                    type: "POST",
+                    url: "/ajax/delete/suggestion/",
+                    data: {
+                        eventid:value.value
+                    },
+                    complete: function(msg){
+                        if (msg.status !=200){
+                            $('#error-msg').text("Error "+msg.status)
+                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+                        }else{
+                            $('#suggestion_'+value.value).fadeOut('slow').remove()
+                        }
+                        
+                    }
+                });
+            })
+        }
         
         
     </script>
@@ -71,7 +91,7 @@
         <h1>Baúl de sugerencias</h1>
         <ul id="tabMenu">
             <li class="active">Tus sugerencias ({{user.counters.suggested}})</li>
-            <li class="active">Todas</li>
+            <li>Todas</li>
             <li>Listas</li>
         </ul>
         <div id="content">
@@ -80,7 +100,7 @@
                     <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="javascript:loadSuggestionsPage('next')">Siguiente</span>
                     <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
                     
-                    <span class="btn removeBtn">Eliminar</span>
+                    <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
                     <span class="btn mvBtn">Mover a</span>
                     
                 </div>
@@ -97,7 +117,7 @@
                     <span id="suggestion-list">
                         {% for k in suggestions.1%}
                             <div id="suggestion_{{k.id}}" class="suggestion">
-                                <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" /></span>
+                                <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
                                 <span class="suggestionName">{{k.name}}</span>
                                 <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
                             </div>
