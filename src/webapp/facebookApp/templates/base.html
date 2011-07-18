@@ -39,8 +39,10 @@
             {% block nav %} 
                 <ul>
                     <li class="menu-icons main-menu-icons" id="{% active request dashboard %}"><a id="activity-icon" href="{{dashboard}}" title="Dashboard">Actividad</a></li>
-                    <li class="menu-icons main-menu-icons"><a id="vault-icon" href="#">Baúl</a></li>
-                    <li class="menu-icons main-menu-icons" id="{% active request user_suggestions %}"><a id="suggestions-icon" href="{{user_suggestions}}">Tus sugerencias</a></li>
+                    <li class="menu-icons main-menu-icons" id="{% active request user_suggestions %}"><a id="vault-icon" href="{{user_suggestions}}">Baúl de sugerencias</a></li>
+<!--
+                    <li class="menu-icons main-menu-icons"><a id="suggestions-icon" href="{{user_suggestions}}">Tus sugerencias</a></li>
+-->
                     <li class="menu-icons main-menu-icons"><a id="notifications-icon" href="#">Notificaciones</a></li>
                     <li class="menu-icons main-menu-icons"><a id="places-icon" href="#">Sitios</a></li>
                     <li class="menu-icons main-menu-icons" id="{% active request public_profile %}"><a id="profile-icon" href="{{public_profile}}">Mi perfil</a></li>

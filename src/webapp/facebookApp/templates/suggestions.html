@@ -68,9 +68,10 @@
 <!--
     Sugeridas={{user.counters}}
 -->
-        <h1>Tus sugerencias</h1>
+        <h1>Baúl de sugerencias</h1>
         <ul id="tabMenu">
-            <li class="active">Sugerencias ({{user.counters.suggested}})</li>
+            <li class="active">Tus sugerencias ({{user.counters.suggested}})</li>
+            <li class="active">Todas</li>
             <li>Listas</li>
         </ul>
         <div id="content">
@@ -84,17 +85,29 @@
                     
                 </div>
 
-                <span id="suggestion-list">
+                
                     <!-- Objetos Suggestion-->
-                    {% for k in suggestions.1%}
-                        <div id="suggestion_{{k.id}}" class="suggestion">
-                            <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" /></span>
-                            <span class="suggestionName">{{k}}</span>
-                            <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
+                    {% if user.counters.suggested == 0 %}
+                        <div id="noSuggestions">
+                            <span>
+                                Aún no has hecho ninguna sugerencia, para empezar:<br>
+                                <a href="{% url fb_add_suggestion %}" id="btn-add-suggestion">Añade una sugerencia</a>
+                            </span>
                         </div>
-                    {% endfor%}   
-                </span>           
-                Página: <span onclick="javascript:loadSuggestionsPage(1)" class="link">1</span> | <span onclick="javascript:loadSuggestionsPage(2)" class="link">2</span>
+                    {% else %}
+                    <span id="suggestion-list">
+                        {% for k in suggestions.1%}
+                            <div id="suggestion_{{k.id}}" class="suggestion">
+                                <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" /></span>
+                                <span class="suggestionName">{{k}}</span>
+                                <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
+                            </div>
+                        {% endfor%}   
+                        Página: <span onclick="javascript:loadSuggestionsPage(1)" class="link">1</span> | <span onclick="javascript:loadSuggestionsPage(2)" class="link">2</span>
+                    </span>           
+                    {% endif %}
+                
+                
 
             </table>
         </div>

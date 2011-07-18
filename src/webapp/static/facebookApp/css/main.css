@@ -899,19 +899,20 @@ input{
         text-align: center;
     }
     #suggestion-item{
-        height: 175px;
+        height: 145px;
+        margin-bottom:0;
     }
     #suggestion-item label,#suggestion-place{
         color: #555555;
         display: block;
         font-family: Helvetica Neue,Helvetica,sans-serif;
         font-size: 1.7em;
-        margin: 0.6em 0.4em;
+        margin: 0 0.4em 0.6em;
     }
     #suggestion-item textarea#id_name{
         font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
         font-size: 1.1em;
-        height: 80px;
+        height: 65px;
         line-height: 1.7em;
         margin: 11px;
         padding: 0.7em;
@@ -1164,4 +1165,14 @@ input{
     }
     .mvBtn{
         float:none;
+    }
+    div#content div#noSuggestions{
+        border-left: 1px solid #CCCCCC;
+        border-right: 1px solid #CCCCCC;
+        padding: 1em;
+        text-align: center;
+    }
+    div#content div#noSuggestions:hover{
+        background-color: inherit;
+        cursor:default;
     }

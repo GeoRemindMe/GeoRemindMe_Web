@@ -287,6 +287,7 @@ function loadGMaps(defaultX,defaultY,canvas) {
             position: google.maps.ControlPosition.RIGHT_BOTTOM
         },
         scaleControl: true,
+        scrollwheel:false,
         zoomControl: true,
         zoomControlOptions: {
             style: google.maps.ZoomControlStyle.LARGE

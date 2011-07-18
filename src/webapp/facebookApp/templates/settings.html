@@ -112,12 +112,13 @@
             </div>
             {% get_available_languages as LANGUAGES %}
             {% get_current_language as LANGUAGE_CODE %}
-           Idioma de la interfaz:
-    			{% for code, name in LANGUAGES %}
+            <p>
+                <strong>Idioma de la interfaz:</strong>
+                {% for code, name in LANGUAGES %}
                     {%if LANGUAGE_CODE == code %}{{name}}{% endif %} 
 
                 {% endfor %}
-  			
+            </p>
         </div>
     </div>
         
