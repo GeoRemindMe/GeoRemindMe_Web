@@ -21,7 +21,7 @@ class EventHelper(object):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
+        q = self._klass.gql('WHERE user = :1 ORDER BY modified ASC', user)
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
     
@@ -123,7 +123,7 @@ class AlertHelper(EventHelper):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        q = self._klass.gql('WHERE user = :1 AND has = "done:T" ORDER BY modified DESC', user)
+        q = self._klass.gql('WHERE user = :1 AND has = "done:T" ORDER BY modified ASC', user)
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
         
@@ -135,7 +135,7 @@ class AlertHelper(EventHelper):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        q = self._klass.gql('WHERE user = :1 AND has = "done:F" ORDER BY modified DESC', user)
+        q = self._klass.gql('WHERE user = :1 AND has = "done:F" ORDER BY modified ASC', user)
         return [l for l in q]
       
 
@@ -150,9 +150,9 @@ class SuggestionHelper(EventHelper):
         if not isinstance(user, User) or not isinstance(querier, User):
             raise TypeError()
         if user.id == querier:
-            q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
+            q = self._klass.gql('WHERE user = :1 ORDER BY modified ASC', user)
         else:
-            q = self._klass.gql('WHERE user = :1 AND _vis = :2 ORDER BY modified DESC', user, 'public')
+            q = self._klass.gql('WHERE user = :1 AND _vis = :2 ORDER BY modified ASC', user, 'public')
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
     
@@ -163,7 +163,7 @@ class SuggestionHelper(EventHelper):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
+        q = self._klass.gql('WHERE user = :1 ORDER BY modified ASC', user)
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
 
