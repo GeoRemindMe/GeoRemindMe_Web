@@ -17,7 +17,6 @@ class FacebookMiddleware(object):
                 import facebookApp.watchers
                 request.csrf_processing_done = True
             except:
-                raise
                 request.csrf_processing_done = False
         else:
             cookie = get_user_from_cookie(request.COOKIES)

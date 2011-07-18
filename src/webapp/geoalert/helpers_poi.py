@@ -91,23 +91,19 @@ class PlaceHelper(POIHelper):
             raise AttributeError()
         return self._klass.gql('WHERE google_places_id = :1', id).get()
     
-    def get_nearest(self, location, limit=50):
+    def get_nearest(self, location, radius = 5000):
         if not isinstance(location, db.GeoPt):
             location = db.GeoPt(location)
         from mapsServices.fusiontable import ftclient, sqlbuilder
         from django.conf import settings
-        try:
-            ftclient = ftclient.OAuthFTClient()
-            ftclient.query(sqlbuilder.SQL().select(settings.FUSIONTABLES['TABLE_PLACES'],
-                                                    {'bus_id': self.business.id if self.business is not None else -1,
-                                                    'location': '%s,%s' % (self.location.lat, self.location.lon),
-                                                    'place_id': self.id,
-                                                    'modified': self.modified.__str__(),
-                                                     }
-                                                   )
-                           )
-        except:
-            None
+        
+        ftclient = ftclient.OAuthFTClient()
+        query = ftclient.query(sqlbuilder.SQL().select(settings.FUSIONTABLES['TABLE_PLACES'], cols=['place_id'],
+                                               condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s))' % (location, radius)
+                                               )
+                       )
+        return list(query[9:].split())
+    
 
 class BusinessHelper(object):
     def get_by_name(self, business):

@@ -242,6 +242,9 @@ class Alert(Event):
     
     def __str__(self):
         return self.name
+    
+    def __unicode__(self):
+        return self.name
 
 
 class Suggestion(Event, Visibility):
@@ -431,6 +434,9 @@ class Suggestion(Event, Visibility):
         return simplejson.dumps(self.to_dict())
     
     def __str__(self):
+        return unicode(self.name)
+    
+    def __unicode__(self):
         return self.name
         
 

@@ -75,8 +75,8 @@
         <!-- async loading of facebook js sdk  -->
         window.fbAsyncInit = function() { 
             facebookInit({'appId':{{app_settings.appId}}, 
-            status : true,
-            cookie: true,
+            'status' : true,
+            'cookie': true,
             'canvasName':'{{app_settings.canvasName}}'})
             FB.Canvas.setSize();
 
