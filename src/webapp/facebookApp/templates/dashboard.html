@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load i18n %}
+{% load humanize %}
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>
@@ -8,27 +10,33 @@
 {% block goBack %}{%endblock%}
 {% block body %}
     <h1>Actividad</h1>
-    <div class="section">
-        <div class="header">
-            <h2>Actividad en tu red</h2>
-            <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
-        </div>
-    </div>
-    <p>{{chronology}}</p>
+    {% if chronology.1|length %}
     
-    <ul id="chronology">
-        <li>
-            <div class="avatar">
-                <a href="/fb/user/richard" title="Ver perfil en GeoRemindMe">
-                    <img src="/user/richard/picture/" alt="richard avatar"/>
-                </a>
+        <div class="section">
+            <div class="header">
+                <h2>Actividad en tu red</h2>
+                <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
             </div>
-            <p>                
-                <a href="">hhkaos</a> sugiere que:<br>
-                Alguna vez vayas de tapas al Villa Magna y te pidas la tapa "Bomba"<br>
-                <span class="timestamp">06 de julio a las 18:44</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
-            </p>
-        </li>
+        </div>
+    
+        <p>{{chronology.1.0}} mensajes</p>
+        <ul id="chronology">
+        {% for obj in chronology.1 %}
+            <li>
+                <div class="avatar">
+                    <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
+                        <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
+                    </a>
+                </div>
+                <p>                
+                    <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}}<br>
+                    <span class="timestamp">{{obj.created|timesince}} | {{obj.created}}</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
+                </p>
+            </li>
+        {% endfor %}
+        </ul>
+    
+<!--
         
         <li>
             <div class="avatar">
@@ -55,15 +63,24 @@
                 <span class="timestamp">06 de julio a las 18:44</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
             </p>
         </li>
-    </ul>
+-->
+    
     
     <div class="load-more">Cargar más</div>
-
-    {% if friends_to_follow %}
+    {% endif %}
+    
+    
+    {% if friends_to_follow|length %}
         
     <div class="section">    
         <div class="header">
-            <h2>Personas a las que podrías conocer</h2>
+            <h2>
+                {% blocktrans count friends_to_follow|length as counter %}
+                    {{ counter }} persona a la que podrías conocer
+                {% plural %}
+                    {{ counter }} personas a las que podrías conocer
+                {% endblocktrans %}
+            </h2>
             <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
         </div>
         <ul id="friends-to-follow">

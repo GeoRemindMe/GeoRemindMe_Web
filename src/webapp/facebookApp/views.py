@@ -84,10 +84,12 @@ def profile(request, username):
         profile_user = User.objects.get_by_username(username)
         if profile_user is None:
             raise Http404()
-        counters = UserCounter.objects.get_by_id(profile_user.id, async=True)
-        sociallinks = profile.sociallinks_async()
+        counters = profile_user.counters_async()#UserCounter.objects.get_by_id(profile_user.id, async=True)
+        
         settings = profile_user.settings
         profile = profile_user.profile
+        sociallinks = profile.sociallinks_async()
+        
         if request.user.is_authenticated():
             is_following = profile_user.is_following(request.user)
             is_follower = request.user.is_following(profile_user)
