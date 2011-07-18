@@ -5,7 +5,7 @@ import memcache
 from django.utils.translation import ugettext as _
 from google.appengine.ext import db
 
-from georemindme.models_utils import Visibility
+from georemindme.models_utils import *
 from georemindme.decorators import classproperty
 from signals import user_timeline_new
 from models import User
@@ -14,7 +14,7 @@ from models import User
 import urllib, hashlib
 
 TIME_CHOICES = ('never', 'instant', 'daily', 'weekly', 'monthly')
-class UserSettings(db.Model):
+class UserSettings(HookedModel):
     """Configuracion del usuario (privacidad, etc.)"""
     
     notification_invitation = db.BooleanProperty(indexed=False, default=True)
@@ -104,13 +104,12 @@ class UserSettings(db.Model):
             from geouser.models_utils import _Report_Suggestion_commented
             _Report_Suggestion_commented.insert_or_update(self.parent().key(), comment.instance, comment.created)
                 
-    def put(self, **kwargs):
-        super(UserSettings, self).put()
+    def _post_put(self, **kwargs):
         memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)
         
 
 AVATAR_CHOICES = ('none', 'gravatar', 'facebook', 'twitter')
-class UserProfile(db.Model):
+class UserProfile(HookedModel):
     """Datos para el perfil del usuario"""
     username = db.TextProperty()
     avatar = db.URLProperty(required=False)
@@ -156,16 +155,11 @@ class UserProfile(db.Model):
         else:
             self.avatar = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
             
-    def put(self, **kwargs):
-#        if self.parent().settings.sync_avatar_with_facebook:
-#            self._update_facebook()
-#        else:
-#            self._update_gravatar()
-        super(UserProfile, self).put()
+    def _post_put(self, **kwargs):
         memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)    
     
 
-class UserSocialLinks(db.Model):
+class UserSocialLinks(HookedModel):
     """Enlaces a los perfiles de redes sociales del usuario"""
     facebook = db.TextProperty(indexed=False)
     twitter = db.TextProperty(indexed=False)
@@ -290,9 +284,57 @@ class UserTimelineSystem(UserTimelineBase):
         return _msg_ids[self.msg_id]
 
 class UserTimeline(UserTimelineBase, Visibility):
-    msg = db.TextProperty(required=True)
-    msg_id = db.TextProperty(required=False)
+    msg = db.TextProperty(required=False)
+    msg_id = db.IntegerProperty(required=False, default=-1)
     instance = db.ReferenceProperty(None)
+    
+    @property
+    def msg(self):
+        if self.msg_id != -1:
+            _msg_ids = {
+                    0: _('Welcome to GeoRemindMe!'),
+                    1: _('Now, you can log with your Google account'),
+                    2: _('Now, you can log with your Facebook account'),
+                    3: _('Now, you can log with your Twitter account'),
+                    100: _('You are now following %s') % self.instance,
+                    101: _('%s is now following you') % self.instance,
+                    102: _('You stopped following %s') % self.instance,
+                    110: _('You invited %s to:') % self.instance,
+                    111: _('%s invited you to %s') % (self.instance, self.instance),
+                    150: _('New user list created: %s') % self.instance,
+                    151: _('User list modified: %s') % self.instance,
+                    152: _('User list removed: %s') % self.instance,
+                    200: _('New alert: %s') % self.instance,
+                    201: _('Alert modified: %s') % self.instance,
+                    202: _('Alert deleted: %s') % self.instance,
+                    203: _('Alert done: %s') % self.instance,
+                    250: _('New alert list created: %s') % self.instance,
+                    251: _('Alert list modified: %s') % self.instance,
+                    252: _('Alert list removed: %s') % self.instance,
+                    300: _('New suggestion: %s') % self.instance,
+                    301: _('Suggestion modified: %s') % self.instance,
+                    302: _('Suggestion removed: %s') % self.instance,
+                    303: _('You are following: %s') % self.instance,
+                    304: _('You stopped following: %s') % self.instance,
+                    320: _('New alert: %s') % self.instance,
+                    321: _('Alert modified: %s') % self.instance,
+                    322: _('Alert deleted: %s') % self.instance,
+                    323: _('Alert done: %s') % self.instance,
+                    350: _('New suggestions list created: %s') % self.instance,
+                    351: _('Suggestions list modified: %s') % self.instance,
+                    352: _('Suggestion list removed: %s') % self.instance,
+                    353: _('You are following: %s') % self.instance,
+                    354: _('You stopped following: %s') % self.instance,
+                    400: _('New private place: %s') % self.instance,
+                    401: _('Private place modified: %s') % self.instance,
+                    402: _('Private place deleted: %s') % self.instance,
+                    450: _('New public place: %s') % self.instance,
+                    451: _('Public place modified: %s') % self.instance,
+                    452: _('Public place deleted: %s') % self.instance,
+                    }
+            return _msg_ids[self.msg_id]
+        else:
+            return self.msg
     
     @classproperty
     def objects(self):
@@ -300,6 +342,7 @@ class UserTimeline(UserTimelineBase, Visibility):
     
     def __str__(self):
         return '%s - %s' % (self.created.strftime("%B %d, %Y"), self.msg)
+
     
     def notify_followers(self):
         if self._is_public():
@@ -307,6 +350,7 @@ class UserTimeline(UserTimelineBase, Visibility):
                 return True
             followers = self.user.get_followers()
             query_id = followers[0]
+            followers = followers[1]
             page = 1
             while len(followers) > 0:
                 page = page+1

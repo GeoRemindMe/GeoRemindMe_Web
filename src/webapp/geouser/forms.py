@@ -258,6 +258,7 @@ class UserForm(forms.Form):
     
 CHOICES = (
            ('never', _('Never')),
+           ('instant', _('Instant')),
            ('daily', _('Daily')),
            ('weekly', _('Weekly')),
            ('monthly', _('Monthly')),

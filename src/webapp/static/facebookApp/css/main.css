@@ -382,7 +382,18 @@ input{
         font-weight:normal;
         cursor:pointer;
     }
+    .hidden{
+        visibility:hidden;
+    }
+    .visible{
+        visibility:visible;
+    }
     
+    .link{
+        color:blue;
+        text-decoration:underline;
+        cursor:pointer;
+    }
     /****************************
      *      
      * Create Social Profile 
@@ -1144,4 +1155,13 @@ input{
             margin:0;
         }
     
-    
+    .prevBtn{
+    }
+    .nextBtn{
+    }
+    .removeBtn{
+        float:none;
+    }
+    .mvBtn{
+        float:none;
+    }

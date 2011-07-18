@@ -70,6 +70,7 @@ def profile(request, username):
     """
     
     if request.user.username.lower() == username.lower():
+        # Si el usuario esta viendo su propio perfil
         profile = request.user.profile
         counters = request.user.counters_async()
         sociallinks = profile.sociallinks_async()
@@ -79,6 +80,7 @@ def profile(request, username):
         show_followers = True
         show_followings = True
     else:
+        # Si esta viendo el perfil de otro
         profile_user = User.objects.get_by_username(username)
         if profile_user is None:
             raise Http404()
