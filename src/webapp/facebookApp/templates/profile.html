@@ -28,9 +28,11 @@
 
 {% block body %}
     <div id="public-profile">
+<!--
         <div id="col-right-left">
-            <span id="avatar-follow">
-                <img id="user-avatar" src="/user/{{profile.username}}/picture/" alt="{{profile.username}} avatar"/>
+-->
+            <div id="avatar-follow">
+                <a href="/user/{{profile.username}}/picture/"><img id="user-avatar" src="/user/{{profile.username}}/picture/" alt="{{profile.username}} avatar"/></a>
                 <br>
                 {% ifnotequal user.username profile.parent.username %}
                     {% if is_follower %}
@@ -43,19 +45,25 @@
                         </div>
                     {% endif %}
                 {% endifnotequal %}
-            </span>
-            <h1>{{profile.parent.username}}</h1>
-            {% ifequal user.username profile.parent.username %}
-                <a href="/fb/user/edit/" class="rounded-button" id="edit-profile-btn">Editar</a> 
-            {% endifequal %}
-            {% if profile.description %}
-                <p>{{profile.description}}</p>
-            {% endif %}
+            </div>
+            <div id="user-info">
+                <h1>{{profile.parent.username}}</h1>
+                {% ifequal user.username profile.parent.username %}
+                    <a href="/fb/user/edit/" class="rounded-button" id="edit-profile-btn">Editar</a> 
+                {% endifequal %}
+                {% if profile.description %}
+                    <p>{{profile.description}}</p>
+                {% endif %}
+            
         
             
             
+<!--
         </div>
+-->
+<!--
         <div id="col-right-right">
+-->
             <p>
                 <a href="/fb/user/{{profile.parent.username}}/followers/">{{counters.followers}} seguidores.</a>
                 <a href="/fb/user/{{profile.parent.username}}/followings/">{{counters.followings}} siguiendo.</a>
@@ -73,13 +81,16 @@
                 {% endif %}
             </p>
         </div>
+<!--
+        </div>
+-->
     </div>
     <ul id="tabMenu" class="clear">
 		<li id="his_suggestions" class="active">Sugerencias ({{counters.suggested}})</li>
 		<li id="his_votes">Valoraciones ({{counters.supported}})</li>
 		<li id="his_lists">Listas</li>
 	</ul>
-    <span id="suggestion-list">
+    <div id="content">
             
             <!-- ALL SUGGESTIONS -->
             <span id="his_suggestions_content" class="tab-content ">
@@ -98,7 +109,7 @@
                 <p>Sus listas</p>
             </span>
             <!-- END ALL SUGGESTIONS -->
-    </span>
+    </div>
     
     <script id="suggestionTemplate" type="text/x-jquery-tmpl">
         <div id="suggestion_${element.id}" class="suggestion">

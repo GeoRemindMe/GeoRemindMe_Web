@@ -875,22 +875,28 @@ input{
     #public-profile{
     }
     #public-profile h1{
+/*
         margin-top: 2em;
+*/
     }
-    #public-profile #col-right-left{
+    #public-profile{
         float: left;
-        margin-top: 15px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+/*
         width: 330px;
+*/
     }
-    #public-profile #col-right-left p{
+    #public-profile p{
         margin:0;
     }
-    #col-right-left span#avatar-follow{
-        float:left;
-        margin:5px 15px 5px 0;
+    div#avatar-follow{
+        display: inline-block;
+        margin: 15px 15px 5px 0;
         text-align: center;
+        float:left;
     }
-    #col-right-left span img{
+    span img{
         width:50px;
     }
     #public-profile #col-right-right{
@@ -904,15 +910,25 @@ input{
     }
     
     #suggestion-list{
-        border: 1px solid #CCCCCC;
+/*
+        border-right: 1px solid #CCCCCC;
+        border-left: 1px solid #CCCCCC;
+*/
         display: block;
+/*
         padding: 0.5em;
+*/
     }
     #edit-profile-btn{
         color: black;
         font-size: 1.2em;
         margin-left: 1em;
         padding: 0.3em 1em;
+    }
+    #user-info{
+        display: block;
+        float: left;
+        width: 475px;
     }
     /****************************
      *      
@@ -1162,6 +1178,8 @@ input{
         
     div#content{
         border-top:1px dotted #aaa;
+        border-right:1px dotted #aaa;
+        border-left:1px dotted #aaa;
     }
         div#content div.tab-content{
         }
