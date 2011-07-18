@@ -81,6 +81,7 @@ $(document).ready(function() {
             resizeIframe()     
         }
     });
+
     
     //FORM
     //~ setFormBehaviour();
@@ -197,12 +198,18 @@ function saveSettings(engine){
                             'type': $('input[name="place-type"]:checked').val(),
                             'radius': Number($('#radius').val()),
                             'location': latlong,
-                            'region_code': searchconfig_google['region_code']
+                            //~ 'region_code': searchconfig_google['region_code']
                         },
                         complete: function(msg){
                             if (msg.status !=200){
-                                
+                                $('#answerMessage').removeClass('success');
+                                $('#answerMessage').addClass('error');
+                                $('#answerMessage').text("Ha habido un error al añadir la sugerencia, estamos trabajando para solucionarlo.").fadeIn('slow').delay(2000).fadeOut('slow');
                             }else{
+                                $('#answerMessage').removeClass('error');
+                                $('#answerMessage').addClass('success');
+                                $('#answerMessage').text("La sugerencia ha sido añadida con éxito").fadeIn('slow').delay(2000).fadeOut('slow');
+                                
                                 //Sobreescribimos los valores anteriores para que cuando volvamos
                                 //a desplegar la configuración salga bien
                                 searchconfig_google['location']=latlong
@@ -512,7 +519,10 @@ function showSettings(){
     var engine=$("input[name='engine']:checked").val()
     //$('#'+engine+'-settings').fadeToggle('slow')
     
-    $('#'+engine+'-settings').toggle('slow').ready(resizeIframe())
+    $('#'+engine+'-settings').toggle('slow',function(){
+        resizeIframe();
+        }
+    );
     
 }
 
@@ -614,5 +624,13 @@ function resetMapZoom(val){
         }
     });
     return zoom;
+    
+}
+
+function showMoreDetails(){
+    $('#more-details').toggle('fast',function(){
+            resizeIframe()
+        }
+    )
     
 }

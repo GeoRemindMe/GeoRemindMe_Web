@@ -394,6 +394,24 @@ input{
         text-decoration:underline;
         cursor:pointer;
     }
+    .error{
+        background-color: #FCC7C7;
+        border: 1px dotted red;
+    }
+    .success{
+        background-color: #C4FF89;
+        border: 1px dotted green;
+    }
+    #answerMessage{
+        display:none;
+        clear: both;
+        font-size: 1.1em;
+        margin: 1em 0;
+        padding: 0.5em;
+        position: relative;
+        text-align: center;
+        top: 5px;
+    }
     /****************************
      *      
      * Create Social Profile 
@@ -902,7 +920,7 @@ input{
         height: 145px;
         margin-bottom:0;
     }
-    #suggestion-item label,#suggestion-place{
+    #suggestion-item label,#suggestion-place,#add-more-details{
         color: #555555;
         display: block;
         font-family: Helvetica Neue,Helvetica,sans-serif;
@@ -1129,7 +1147,11 @@ input{
         
         #suggestions #content .btn, .selectCheckBox{
             -moz-border-radius: 3px 3px 3px 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
             background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
+            background: -webkit-gradient(linear,0% 40%,0% 70%,from(#F9F9F9),to(#E3E3E3));
+            border-radius: 3px 3px 3px 3px;
             border-color: #BBBBBB #BBBBBB #A0A0A0;
             border-style: solid;
             border-width: 1px;
@@ -1175,4 +1197,15 @@ input{
     div#content div#noSuggestions:hover{
         background-color: inherit;
         cursor:default;
+    }
+    
+    #add-more-details{
+        -moz-border-radius: 4px 4px 4px 4px;
+        background-color: #EEEEEE;
+        border: 2px dotted #DDDDDD;
+        display: inline-block;
+        font-size: 1.2em;
+        margin: 0.5em 0;
+        padding: 0.3em;
+        cursor:pointer;
     }

@@ -84,7 +84,7 @@
             
         </p>
         
-        <span id="show-details" onclick="$('#more-details').toggle('fast').ready(resizeIframe())">Más detalles</span>
+        <span id="add-more-details" onclick="javascript:showMoreDetails()">Añadir más detalles</span>
         <div id="more-details">
             <p>
                 <label>{{f.description.label}}:</label>
@@ -112,6 +112,6 @@
         <div>
             <span class="btn" id="submit-button" onclick="saveSuggestion()">Enviar</span>
         </div>
-        <div id="error-msg"></div>
+        <div id="answerMessage"></div>
         <hr>
     </form>
