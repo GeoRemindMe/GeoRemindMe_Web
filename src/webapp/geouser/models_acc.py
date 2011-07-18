@@ -404,6 +404,12 @@ class UserTimeline(UserTimelineBase, Visibility):
         else:  # si ya estaba guardada, no hay que volver a notificar
             super(self.__class__, self).put()
             user_timeline_new.send(sender=self)
+            
+    def delete(self):
+        query = UserTimelineFollowersIndex.all().ancestor(self.key())
+        for timeline in query:
+            timeline.delete()
+        super(UserTimeline, self).delete()
     
 
 class UserTimelineFollowersIndex(db.Model):

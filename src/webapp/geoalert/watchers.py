@@ -79,8 +79,10 @@ def modified_suggestion(sender, **kwargs):
 suggestion_modified.connect(modified_suggestion)
 
 def deleted_suggestion(sender, **kwargs):
-    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=302)
-    timeline.put()
+    from geouser.models_acc import UserTimelineBase
+    query = UserTimelineBase.all().filter('instance =', sender.key())
+    for q in query:
+        q.delete()
 suggestion_deleted.connect(deleted_suggestion)
 
 def new_following_suggestion(sender, **kwargs):
