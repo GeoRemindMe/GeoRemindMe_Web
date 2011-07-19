@@ -12,6 +12,57 @@
 
 {% block body %}
     <div id="view-suggestion">
-        view suggestion
+        <div id="autor">
+            <img src="/user/susana/picture/" alt="user avatar">
+            <p>
+                <a href="">hhkaos</a>
+                sugiere:
+            </p>
+        </div>
+        <div class="suggestion">
+            <h1>Visitar el mirador de San Nicolás un día al atardecer</h1>
+            <p><strong>Instrucciones/explicación</strong>: lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+
+            <img src="http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=11&size=210x100&maptype=roadmap
+&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&sensor=false">
+            
+            <p>
+                <strong>Sitio</strong>: <a href="">Plaza de San Nicolás</a>, (Granada)<br>
+                <strong>Fecha</strong>: [25/04/2011 al 30/05/2011]<br>
+                <strong>Palabras clave</strong>: <a href="">ocio</a> | <a href="">granada</a><br>
+            </p>
+
+            <p>Reportar localización errónea</p>
+<!--
+            <p>Reportar sugerencia duplicada</p>
+-->
+        </div>
+        <span class="btn likeBtn">Me gusta</span>
+        <p class="popular">Comentario más popular</p>
+        <div class="comments">
+            <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
+            <span class="msg">Deberíais tomar unas cerveza mientras</span>
+            <span class="timestamp">hace 5 min</span>
+        </div>
+        <p class="clear big">¿Tienes algo que añadir a esta sugerencia?</p>
+        <textarea></textarea>
+        <ul id="feeling">
+            <li>Happy</li>
+            <li>Glad</li>
+            <li>Sad</li>
+        </ul>
+        <span class="btn">Comentar</span>
+        <ul class="comments">
+            <li>
+                <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
+                <span class="msg">Deberíais tomar unas cerveza mientras</span>
+                <span class="timestamp">hace 5 min</span>
+            </li>
+            <li>
+                <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
+                <span class="msg">Deberíais tomar unas cerveza mientras</span>
+                <span class="timestamp">hace 5 min</span>
+            </li>
+        </ul>
     </div>
 {% endblock %}

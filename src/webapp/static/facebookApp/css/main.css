@@ -1326,3 +1326,116 @@ input{
         padding: 0.3em;
         cursor:pointer;
     }
+    
+    /****************************
+     *      
+     *  View suggestion details
+     * 
+     ***************************/
+    #view-suggestion{
+    }
+    #view-suggestion #autor{
+        font-size: 1.5em;
+        margin: 1em 0;
+    }
+    #view-suggestion #autor img{
+        height:50px;
+        width:50px;
+        float:left;
+    }
+    #view-suggestion #autor p{
+        display: inline-block;
+        line-height: 50px;
+        margin: 0;
+        padding: 0 0 0 10px;
+        vertical-align: middle;
+    }
+    #view-suggestion div.suggestion{
+        border: 1px solid #CCCCCC;
+        padding: 1em;
+    }
+    #view-suggestion div.suggestion h1{
+        line-height: 1em;
+        margin: 0.2em 0;
+    }
+    #view-suggestion div.suggestion p{
+        font-size: 1.1em;
+        line-height: 1.7em;
+    }
+    #view-suggestion div.suggestion img{
+        float:right;
+    }
+    #view-suggestion .likeBtn{
+        margin:1em 0;
+    }
+    #view-suggestion textarea{
+        width:100%
+    }
+    #view-suggestion .comments .user{
+        text-align:center;
+        display:block;
+        float:left;
+    }
+    #view-suggestion .comments .user img{
+        width:25px;
+        height:25px;
+    }
+    #view-suggestion .comments .msg{
+        display: block;
+        float: left;
+        font-size: 1.1em;
+        line-height: 2.5em;
+        padding: 0 1em;
+        width: 420px;
+    }
+    #view-suggestion .comments .timestamp{
+        display: block;
+        float: left;
+        line-height: 2.5em;
+        text-align: right;
+        width: 75px;
+        
+    }
+    #view-suggestion p.popular{
+        font-size:1.3em;
+        font-weight:bold;
+    }
+    #view-suggestion p.big{
+        font-size: 1.5em;
+        line-height: 3em;
+        margin: 0;
+    }
+    
+    #view-suggestion ul.comments{
+        clear: both;
+        list-style: none outside none;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        top:10px;
+        border-top: 1px dotted #BBBBBB;
+    }
+    
+    #view-suggestion ul.comments li{
+        border-bottom: 1px dotted #BBBBBB;
+        clear: both;
+        padding: 1em 0;
+    }
+    
+    #view-suggestion ul.comments li:after{           
+        clear: both;
+        content: ".";
+        display: block;
+        height: 0px;
+        visibility: hidden;
+    }
+    
+    #view-suggestion ul#feeling{
+        float: left;
+        margin: 0;
+        padding: 0;
+    }
+    #view-suggestion ul#feeling li{
+        display:inline-block;
+        padding:0 1em;
+    }
