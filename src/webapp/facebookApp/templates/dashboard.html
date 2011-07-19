@@ -31,16 +31,16 @@
 {% block goBack %}{%endblock%}
 {% block body %}
     <h1>Actividad</h1>
-    {% if chronology.1|length %}
-    
-        <div class="section">
-            <div class="header">
-                <h2>Actividad en tu red</h2>
-                <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
-            </div>
+    <div class="section">
+        <div class="header">
+            <h2>Actividad en tu red</h2>
+            <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
         </div>
-    
+    </div>
+    {% if chronology.1|length %}    
+<!--
         <p>{{chronology.1.0}} mensajes</p>
+-->
         <ul id="chronology">
         {% for obj in chronology.1 %}
             <li>
@@ -62,6 +62,12 @@
         {% if chronology.1|length == 15%}
             <div class="load-more">Cargar más</div>
         {% endif %}    
+    {% else %}
+        {% if not user.counters.followings %}
+            <p>Para poder ver actividad en tu red primero tienes que empezar a seguir a otros usuarios.</p>
+        {% else %}
+            <p>Aún no hay actividad en tu red</p>
+        {% endif %}
     {% endif %}    
 <!--
         
