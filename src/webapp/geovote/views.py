@@ -119,7 +119,7 @@ def do_vote_suggestion(request, instance_id, vote=1):
         :param vote: valoracion del voto (siempre positivo)
         :type vote: :class:`integer`
     """
-    event = Suggestion.objects.get_by_id_user(id=instance_id, user=request.user, querier=request.user)
+    event = Suggestion.objects.get_by_id_querier(id=instance_id, querier=request.user)
     if event is None:
         return None
     vote = Vote.do_vote(user=request.user, instance=event, count=vote)
