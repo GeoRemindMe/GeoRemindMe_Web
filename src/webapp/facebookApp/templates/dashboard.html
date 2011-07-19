@@ -9,16 +9,25 @@
             
             $.ajax({
                     type: "POST",
-                    url: "/vote/suggestion/",
+                    url: "/ajax/vote/suggestion/",
                     data: {
-                        instance_id:id
+                        instance_id:id,
+                        puntuation: $('#suggestion_113').find('.like').attr('value'),
                     },
                     complete: function(msg){
                         if (msg.status !=200){
-                            $(this).text("Error "+msg.status)
-                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+//                            $(this).text("Error "+msg.status)
+//                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
                         }else{
-                            $('#suggestion_'+value.value).fadeOut('slow').remove()
+                            if($('#suggestion_'+id).find('.like').attr('value')==1){
+                            //$('#suggestion_'+value.value).fadeOut('slow').remove()
+                                $('#suggestion_'+id).find('.like').text("Ya no me gusta");
+                                $('#suggestion_'+id).find('.like').attr('value',-1);
+                            }
+                            else{
+                                $('#suggestion_'+id).find('.like').text("Me gusta");
+                                $('#suggestion_'+id).find('.like').attr('value',1);
+                            }
                         }
                         
                     }
@@ -43,7 +52,7 @@
         <p>{{chronology.1.0}} mensajes</p>
         <ul id="chronology">
         {% for obj in chronology.1 %}
-            <li>
+            <li id="suggestion_{{obj.id}}">
                 <div class="avatar">
                     <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
                         <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
@@ -52,7 +61,7 @@
                 <p>                
                     <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}} <br>
                     <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.name|escape|urlencode}}">{{obj.instance.poi.name}}</a></span><br>
-                    <span class="timestamp">{{obj.created|timesince}} ago</span> <span class="action-bar">| <span onclick="vote('{{obj.id}}')">Me gusta</span> <!--| Le gusta a otras {{obj.instance.counters.followers}}--> | <a href="/fb/suggestion/{{obj.id|urlencode}}">Ver detalles</a> | <span onclick="">Comentar</span> | <span onclick="" title="Guardar en favoritos">Guardar</span></span>
+                    <span class="timestamp">{{obj.created|timesince}} ago</span> <span class="action-bar">| <span onclick="vote('{{obj.id}}')" class="like" value="1">Me gusta</span> <!--| Le gusta a otras {{obj.instance.counters.followers}}--> | <a href="/fb/suggestion/{{obj.id|urlencode}}">Ver detalles</a> | <span onclick="">Comentar</span> | <span onclick="" title="Guardar en favoritos">Guardar</span></span>
                 </p>
             </li>
         {% endfor %}

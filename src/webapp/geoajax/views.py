@@ -647,7 +647,7 @@ def do_vote_suggestion(request):
         query_id: id de la consulta de pagina
     """
     instance_id = request.POST['instance_id']
-    msg = request.POST['msg']
+    msg = request.POST['puntuation']
     
     return HttpResponse(geovote.do_vote_suggestion(request, instance_id, msg),
                          mimetype="application/json")

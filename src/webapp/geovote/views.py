@@ -120,7 +120,7 @@ def do_vote_suggestion(request, instance_id, vote):
         :type vote: :class:`integer`
     """
     user = request.session['user']
-    event = Suggestion.objects.get_by_id_user(id=instance_id, user=user)
+    event = Suggestion.objects.get_by_id_user(id=instance_id, user=user, querier=request.user)
     if event is None:
         return None
     vote = Vote.do_vote(user=user, instance=event, count=vote)

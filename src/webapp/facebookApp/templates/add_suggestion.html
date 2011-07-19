@@ -12,6 +12,12 @@
         I18N['New task'] = "{% trans "New task" %}";
         I18N["Sure you want to delete the task"] = "{% trans "Sure you want to delete the task" %}";
         
+        {% if eventid %}
+            eventID={{eventid}};
+            eventLocation='{{poi_location}}'
+            poi_reference='{{poi_reference}}'
+        {% endif %}
+        
         /* 
             Variables usadas durante la inicialización del formulario 
             de configuración de Google Places con los datos de la BD

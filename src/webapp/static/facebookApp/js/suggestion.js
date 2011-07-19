@@ -86,7 +86,11 @@ $(document).ready(function() {
     //FORM
     //~ setFormBehaviour();
     
-    var latlngStr = searchconfig_google['location'].split(",",2);
+    if(typeof eventID == 'undefined')
+        var latlngStr = searchconfig_google['location'].split(",",2);
+    else
+        var latlngStr = eventLocation.split(",",2);
+        
     var lat = parseFloat(latlngStr[0]);
     var lng = parseFloat(latlngStr[1]);
     loadGMaps(lat,lng,"map_canvas").ready();
@@ -282,8 +286,8 @@ function loadGMaps(defaultX,defaultY,canvas) {
         }
     });
         
-    if(canvas==null)
-        canvas="map_canvas"
+    //~ if(canvas==null)
+        //~ canvas="map_canvas"
     
     var myOptions = {
         zoom: zoom,
@@ -494,6 +498,10 @@ function saveSuggestion(){
             visibility: $('#id_visibility').val()
         };
         
+        //Si estamos editando una sugerencia añadimos el ID.
+        if(typeof eventID != 'undefined')
+            params['eventid']=eventID;
+        
         $.ajax({
             type: "POST",
             url: "/ajax/add/suggestion/",
@@ -538,29 +546,21 @@ function showSettings(){
     
 }
 
+//Asociamos al elemento #place el autocompletar
 function placesAutocomplete(){
     
     var input = document.getElementById('place');
     
-    //Cargamos nuestras opciones
+    //Cargamos nuestras opciones de búsqueda
     var options = {
         region: searchconfig_google['region_code'],
     }
-    //searchconfig_google['location']
-    //searchconfig_google['radius']
-    //~ var bounds = new google.maps.LatLngBounds(
-        //~ new google.maps.LatLng(-33.8902, 151.1759),
-        //~ new google.maps.LatLng(-33.8474, 151.2631)
-    //~ );
-    //~ options['bounds']=bounds
     
     if(searchconfig_google['type']!='all')
       options['types']=searchconfig_google['type']
-    //Opciones cargadas
+    //Fin cargamos opciones
 
     var autocomplete = new google.maps.places.Autocomplete(input,options);
-
-    
 
     autocomplete.bindTo('bounds', map);
 
@@ -569,6 +569,7 @@ function placesAutocomplete(){
         map: map
     });
 
+    //Añadimos un listener al campo
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
         infowindow.close();
         var place = autocomplete.getPlace();
@@ -582,7 +583,7 @@ function placesAutocomplete(){
         placeReference=place.reference;
 
         var image = new google.maps.MarkerImage(
-            place.icon,
+            '/static/webapp/img/marcador03.png',
             new google.maps.Size(71, 71),
             new google.maps.Point(0, 0),
             new google.maps.Point(17, 34),
@@ -600,6 +601,12 @@ function placesAutocomplete(){
                 place.address_components[2].short_name || '')
             ].join(' ');
         }
+        
+        
+        marker.setIcon(image);
+        marker.setPosition(place.geometry.location);
+        
+        console.log(marker)
 
         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
         infowindow.open(map, marker);
@@ -617,6 +624,30 @@ function placesAutocomplete(){
     setupClickListener('changetype-all', []);
     setupClickListener('changetype-establishment', ['establishment']);
     setupClickListener('changetype-geocode', ['geocode']);
+}
+
+function getEventPlace(){
+    var latlngStr = eventLocation.split(",",2);
+    var pyrmont = new google.maps.LatLng(latlngStr[0],latlngStr[1]);
+
+    var request = {
+        reference:poi_reference,
+        location: pyrmont,
+        radius: '50',
+        //~ types: ['store']
+    };
+    
+    service = new google.maps.places.PlacesService(map);
+    service.search(request, function callback(results, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+            for (var i = 0; i < results.length; i++) {
+                var place = results[i];
+                //~ createMarker(results[i]); 
+                if(results[i].reference==poi_reference)
+                    console.log(results[i])
+            }
+        }
+    });
 }
 
 function resetMapZoom(val){

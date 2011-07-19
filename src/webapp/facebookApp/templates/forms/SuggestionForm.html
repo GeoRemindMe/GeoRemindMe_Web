@@ -12,7 +12,7 @@
     
         <p id="suggestion-item">
             <label>¿Qué sugieres?</label>
-            <textarea id="id_name" name="name"></textarea>
+            <textarea id="id_name" name="name">{{name}}</textarea>
             <span id="counter"></span>
         </p>
         <p id="suggestion-place">
@@ -27,7 +27,7 @@
                     <input type="text" id="address" name="address">
                 </div>
                 <div id="place-form">
-                    <label for="place">Nombre:</label> <input type="text" id="place" name="place">
+                    <label for="place">Nombre:</label> <input type="text" id="place" name="place" value="{{poi_name}}">
                 </div>
                 
                 <!-- GOOGLE MAPS CANVAS -->

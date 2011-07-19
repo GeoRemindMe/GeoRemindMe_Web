@@ -174,16 +174,28 @@ def add_suggestion(request):
 def edit_suggestion(request,suggestion_id):
     from geoalert.forms import SuggestionForm
     s = Suggestion.objects.get_by_id(suggestion_id)
-    f = SuggestionForm(prefix='edit_suggestion', initial = {    'name': s.name,
-                                                                'poi_id': s.poi.id,
-                                                                'starts': s.date_starts,
-                                                                'ends': s.date_ends,
-                                                                'description': s.description, 
-                                                                'visibility': s._vis,
-                                                            }
-                       )
-    
-    return  render_to_response('edit_suggestion.html', {'f': f,
+    #~ raise Exception(s.name)
+    #~ f = SuggestionForm(prefix='edit_suggestion', initial = {    
+                                                                #~ 'eventid':suggestion_id,
+                                                                #~ 'name': s.name,
+                                                                #~ 'poi_id': s.poi.id,
+                                                                #~ 'starts': s.date_starts,
+                                                                #~ 'ends': s.date_ends,
+                                                                #~ 'description': s.description, 
+                                                                #~ 'visibility': s._vis,
+                                                            #~ }
+                       #~ )
+    #~ 
+    return  render_to_response('add_suggestion.html', {
+                                                        
+                                                        'eventid':suggestion_id,
+                                                        'name': s.name,
+                                                        'poi_id': s.poi.id,
+                                                        'poi_reference': s.poi.google_places_reference,
+                                                        'starts': s.date_starts,
+                                                        'ends': s.date_ends,
+                                                        'description': s.description, 
+                                                        'visibility': s._vis,
                                                         'poi_location': s.poi.location,
                                                         'poi_name': s.poi.name,
                                                         'poi_address': s.poi.address,
