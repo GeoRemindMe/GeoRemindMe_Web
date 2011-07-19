@@ -1217,7 +1217,6 @@ input{
                 clear:both
             }
             
-/*
             div#content div.expanded:after{           
                 clear: both;
                 content: ".";
@@ -1225,7 +1224,6 @@ input{
                 height: 0px;
                 visibility: hidden;
             }
-*/
     }
             
         div#content div.suggestion:hover{
@@ -1275,6 +1273,11 @@ input{
             vertical-align: middle;
             white-space: nowrap;
         }
+        
+        #suggestions #content .collapseBtn{
+            float: left;
+        }
+        
         #suggestions #content .btn:hover, .selectCheckBox:hover{
             border-style: dotted;
             border-color: black;

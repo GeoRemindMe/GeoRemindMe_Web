@@ -27,9 +27,9 @@
                     $(this).parent().parent().find('div.collapsed').toggle()
                     $(this).parent().parent().find('div.expanded').toggle()
             });
-            $('.expanded').click(function(){
-                    $(this).parent().find('div.collapsed').toggle()
-                    $(this).parent().find('div.expanded').toggle()
+            $('.collapseBtn').click(function(){
+                    $(this).parent().parent().find('div.collapsed').toggle()
+                    $(this).parent().parent().find('div.expanded').toggle()
             });
             
             $('#checkBox_all').click(function(){
@@ -153,20 +153,22 @@
                                             {% endif %}
                                             
                                             <dt>Lugar:</dt>
-                                            <dd>{{k.poi.name}}</dd>
+                                            <dd><a href="">{{k.poi.name}}</a> ({{k.poi.address}})</dd>
                                             
-                                            <dt>Dirección:</dt>
-                                            <dd>{{k.poi.address}}</dd>
+                                            {% if k.date_starts != None or k.date_ends != None%}
+                                                <dt>Fecha:</dt>
                                             
-                                            {% if k.date_starts != None %}
-                                                <dt>Fecha inicio:</dt>
-                                                <dd>{{k.date_starts}}</dd>
+                                            <dd>
+                                                {% if k.date_starts != None %}
+                                                    {{k.date_starts}}
+                                                {% endif %}
+                                                {% if k.date_ends != None %}
+                                                    {{k.date_ends}}
+                                                {% endif %}    
+                                            </dd>
+                                            
                                             {% endif %}
                                             
-                                            {% if k.date_ends != None %}
-                                                <dt>Fecha fin:</dt>
-                                                <dd>{{k.date_ends}}</dd>
-                                            {% endif %}    
                                             
                                             <dt>Fecha de la última modificación:</dt>
                                             <dd>{{k.modified}}</dd>
@@ -177,7 +179,8 @@
                                             <dt>Comentarios recibidos:</dt>
                                             <dd>{{k.counters.comments}}</dd>
                                         </dl>
-                                        <a href="edit/{{k.id}}" class="btn">Editar</a>
+                                        <span class="btn collapseBtn">Contraer</span>
+                                        <a href="edit/{{k.id}}" class="btn" style="clear:none">Editar</a>
                                     </div>
                                     
                                 </div>
