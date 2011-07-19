@@ -175,10 +175,11 @@ def add_suggestion(request):
 def edit_suggestion(request,suggestion_id):
     s = Suggestion.objects.get_by_id(suggestion_id)
     f = SuggestionForm(prefix='edit_suggestion', initial = { 
-                                                                #~ 'poi_id': s.poi,
-                                                                #~ 'starts': s.date_starts,
-                                                                #~ 'ends': s.date_ends,
-                                                                #~ 'description': s.description, 
+                                                                'name': s.name,
+                                                                'poi_id': s.poi,
+                                                                'starts': s.date_starts,
+                                                                'ends': s.date_ends,
+                                                                'description': s.description, 
                                                             })
     
     return  render_to_response('edit_suggestion.html',{'f': f}, context_instance=RequestContext(request))

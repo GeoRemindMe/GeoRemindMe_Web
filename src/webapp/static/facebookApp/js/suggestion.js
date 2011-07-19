@@ -465,14 +465,21 @@ function activateTab(tab){
 function saveSuggestion(){
     
     
-        $('#submit-button').val("Enviado...")
-        $('#submit-button').addClass("waiting")
+        
         
         if(placeReference==null){
             $('#error-msg').text("Por favor selecciona un sitio antes")
             $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+            
+            $('#answerMessage').text("Por favor indique el sitio")
+            $('#answerMessage').addClass('error')
+            $('#answerMessage').fadeIn('slow').delay(2000).fadeOut('slow')
             return false;
         }
+        
+        
+        $('#submit-button').val("Enviado...")
+        $('#submit-button').addClass("waiting")
         
         var params = { 
             name: $('#id_name').val(), 
@@ -493,14 +500,19 @@ function saveSuggestion(){
             data: jQuery.param(params),
             complete: function(msg){
                 if (msg.status !=200){
-                    $('#error-msg').text("Error "+msg.status)
-                    $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+                    $('#answerMessage').text("Error "+msg.status)
+                    $('#answerMessage').addClass('error')
+                    $('#answerMessage').fadeIn('slow').delay(2000).fadeOut('slow')
+                }else{
+                    $('#answerMessage').text("La sugerencia ha sido añadida con éxito")
+                    $('#answerMessage').addClass('success')
+                    $('#answerMessage').fadeIn('slow').delay(2000).fadeOut('slow')
                 }
                 $('#submit-button').val("Enviar")
                 $('#submit-button').removeClass("waiting")
             }
         });
-         
+        
         return false;
     
 }

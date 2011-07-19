@@ -928,7 +928,9 @@ input{
     #user-info{
         display: block;
         float: left;
+/*
         width: 475px;
+*/
     }
     /****************************
      *      
@@ -1195,7 +1197,38 @@ input{
             cursor:pointer;
             border-bottom: 1px solid #CCCCCC;
         }
-        div#content div:hover{
+        div#content div.collapsed,div#content div.expanded{
+            border:0;
+        }
+            div#content div.expanded dl{
+                margin: 0;
+                padding: 1em;
+            }
+            div#content div.expanded dt{
+                display: block;
+                float: left;
+                font-weight: bold;
+                margin-right: 1em;
+            }
+            div#content div.expanded dd{
+                display: block;
+            }
+            div#content div.expanded a.btn{
+                clear:both
+            }
+            
+/*
+            div#content div.expanded:after{           
+                clear: both;
+                content: ".";
+                display: block;
+                height: 0px;
+                visibility: hidden;
+            }
+*/
+    }
+            
+        div#content div.suggestion:hover{
             background-color: #CCCCCC;
         }
         
