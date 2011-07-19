@@ -111,6 +111,7 @@ class VoteCounter(db.Model):
             Returns the value of the counter, is counters is not in memcache, 
             counts all the sharded counters
         ''' 
+        from google.appengine.api import memcache
         instance=str(instance)
         total = memcache.get(instance)
         if not total:
@@ -126,6 +127,7 @@ class VoteCounter(db.Model):
         '''
             Increment the counter of given key
         '''
+        from google.appengine.api import memcache
         instance=str(instance)
         def increase():
             import random
