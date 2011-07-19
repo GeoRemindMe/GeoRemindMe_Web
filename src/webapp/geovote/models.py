@@ -208,9 +208,10 @@ class Vote(db.Model):
             :returns: True si se realizo el voto, False si ya se habia votado
         '''
         count = int(count)
-        vote = cls.objects.user_has_voted(user, instance.key())
+        vote = cls.objects.get_user_vote(user, instance.key())
         if vote is not None:
             if count < 0:
+                VoteCounter.increase_counter(self.instance.key(), -1)
                 vote.delete()
                 return True
             return False
