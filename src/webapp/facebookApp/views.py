@@ -9,15 +9,13 @@ from django.template import RequestContext
 from django.conf import settings
 
 from geouser.models import *
-from geouser.forms import *
 from geouser.funcs import init_user_session
-from geoalert.forms import *
 from geoalert.models import *
-from geoauth.clients.facebook import *
 from decorators import facebook_required
 
 
 def login_panel(request):
+    from geouser.forms import SocialUserForm
     if hasattr(request, 'facebook'):
         if not request.user.is_authenticated():
             user = request.facebook['client'].authenticate()
@@ -166,6 +164,7 @@ def user_suggestions(request):
 
 @facebook_required    
 def add_suggestion(request):
+    from geoalert.forms import SuggestionForm
     f = SuggestionForm();
 
     return  render_to_response('add_suggestion.html',{'f': f,}, context_instance=RequestContext(request))
@@ -173,16 +172,23 @@ def add_suggestion(request):
 
 @facebook_required    
 def edit_suggestion(request,suggestion_id):
+    from geoalert.forms import SuggestionForm
     s = Suggestion.objects.get_by_id(suggestion_id)
-    f = SuggestionForm(prefix='edit_suggestion', initial = { 
-                                                                'name': s.name,
-                                                                'poi_id': s.poi,
+    f = SuggestionForm(prefix='edit_suggestion', initial = {    'name': s.name,
+                                                                'poi_id': s.poi.id,
                                                                 'starts': s.date_starts,
                                                                 'ends': s.date_ends,
                                                                 'description': s.description, 
-                                                            })
+                                                                'visibility': s._vis,
+                                                            }
+                       )
     
-    return  render_to_response('edit_suggestion.html',{'f': f}, context_instance=RequestContext(request))
+    return  render_to_response('edit_suggestion.html', {'f': f,
+                                                        'poi_location': s.poi.location,
+                                                        'poi_name': s.poi.name,
+                                                        'poi_address': s.poi.address,
+                                                        }, context_instance=RequestContext(request)
+                               )
 
 
 @facebook_required
@@ -201,6 +207,7 @@ def profile_settings(request):
 
 @facebook_required
 def edit_settings(request):
+    from geouser.forms import UserSettingsForm
     if request.method == 'POST':
         f = UserSettingsForm(request.POST, prefix='user_set_settings')
         if f.is_valid():
