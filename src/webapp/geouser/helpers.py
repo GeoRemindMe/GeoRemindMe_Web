@@ -79,7 +79,6 @@ class UserHelper(object):
             raise AttributeError()
         followers = UserFollowingIndex.gql('WHERE following = :1 ORDER BY created DESC', userkey)
         p = PagedQuery(followers, id = query_id)
-        ##users = [(u.id, u.username, u.profile.avatar) for u in (index.parent() for index in p.fetch_page(page))]
         return [p.id, [{'id':u.id, 
                         'username':u.username, 
                         'avatar': u.profile.avatar,
@@ -111,7 +110,6 @@ class UserHelper(object):
         followings = UserFollowingIndex.all().ancestor(userkey).order('-created')
         p = PagedQuery(followings, id = query_id)
         users = [db.get(index.following) for index in p.fetch_page(page)]  # devuelve una lista anidada con otra
-
         return [p.id, [{'id':u.id, 'username':u.username, 
                         'avatar':u.profile.avatar, 'profile':u.profile }
                         for sublist in users for u in sublist]]

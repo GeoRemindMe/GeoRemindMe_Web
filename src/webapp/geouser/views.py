@@ -364,6 +364,13 @@ def get_followings(request, userid=None, username=None, page=1, query_id=None):
         if settings.show_followings:
             return User.objects.get_followings(userid=userid, username=username, page=page, query_id=query_id)
     return None
+
+@login_required
+def get_friends(request):
+    users = request.user.get_friends().get_result()
+    if len(users) > 0:
+        return [(u.id, u.username) for u in users]
+    return None
     
 @login_required
 def add_following(request, userid=None, username=None):

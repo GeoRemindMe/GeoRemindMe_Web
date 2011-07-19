@@ -111,6 +111,7 @@ class VoteCounter(db.Model):
             Returns the value of the counter, is counters is not in memcache, 
             counts all the sharded counters
         ''' 
+        from google.appengine.api import memcache
         instance=str(instance)
         total = memcache.get(instance)
         if not total:
@@ -126,6 +127,7 @@ class VoteCounter(db.Model):
         '''
             Increment the counter of given key
         '''
+        from google.appengine.api import memcache
         instance=str(instance)
         def increase():
             import random
@@ -152,7 +154,7 @@ class VoteHelper(object):
             
             :returns: True si ya ha votado, False en caso contrario
         '''
-        vote = db.GqlQuery('SELECT __KEY__ FROM Vote WHERE instance = :ins AND to = :user', ins=instance_key, user=user.key()).get()
+        vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND to = :user', ins=instance_key, user=user.key()).get()
         if vote is not None:
             return True
         return False
@@ -207,9 +209,15 @@ class Vote(db.Model):
             
             :returns: True si se realizo el voto, False si ya se habia votado
         '''
-        if cls.objects.user_has_voted(user, instance.key()):
+        count = int(count)
+        vote = cls.objects.get_user_vote(user, instance.key())
+        if vote is not None:
+            if count < 0:
+                VoteCounter.increase_counter(vote.instance.key(), -1)
+                vote.delete()
+                return True
             return False
-        vote = Vote(user=user, instance=instance, count=count)
+        vote = Vote(user=user, instance=instance, count=1)
         vote.put()
         return True
     

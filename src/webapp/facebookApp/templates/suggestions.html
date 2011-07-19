@@ -24,12 +24,12 @@
             
             //Asignamos comportamiento ONCLICK a cada fila
             $('.suggestionName').click(function(){
-                if($(this).find('.checkBox')){
-                    //Extraemos el ID de la sugerencia del campos id="" del div
-                    var suggestion_id=$(this).parent().attr('id').substr(11)
-                    location.href='edit/'+suggestion_id
-                    //console.log('edit/'+suggestion_id)
-                }
+                    $(this).parent().parent().find('div.collapsed').toggle()
+                    $(this).parent().parent().find('div.expanded').toggle()
+            });
+            $('.collapseBtn').click(function(){
+                    $(this).parent().parent().find('div.collapsed').toggle()
+                    $(this).parent().parent().find('div.expanded').toggle()
             });
             
             $('#checkBox_all').click(function(){
@@ -52,7 +52,14 @@
             })
             
         });
-        
+        function toogleSuggestion(obj){
+            var suggestion_id=$(obj).parent().attr('id').substr(11)
+            var temp=$(obj).parent()
+            console.log("Entro")
+            
+            temp.parent().find('div.expanded').toggle()
+            temp.parent().find('div.collapsed').toggle()
+        }
         function loadSuggestionsPage(page){
             loadPage({
                 page:page,
@@ -130,10 +137,55 @@
                         <span id="suggestion-list" class="tab-content">
                             {% for k in suggestions.1%}
                                 <div id="suggestion_{{k.id}}" class="suggestion">
-                                    <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
-                                    <span class="suggestionName">{{k.name}}</span>
-                                    <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
+                                    <div class="collapsed">
+                                        <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
+                                        <span class="suggestionName">{{k.name}}</span>
+                                        <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
+                                    </div>
+                                    <div class="expanded" style="display:none">
+                                        <dl>
+                                            <dt>Nombre:</dt>
+                                            <dd>{{k.name}}</dd>
+                                            
+                                            {% if k.description%}
+                                                <dt>Descripción:</dt>
+                                                <dd>{{k.description}}</dd>
+                                            {% endif %}
+                                            
+                                            <dt>Lugar:</dt>
+                                            <dd><a href="">{{k.poi.name}}</a> ({{k.poi.address}})</dd>
+                                            
+                                            {% if k.date_starts != None or k.date_ends != None%}
+                                                <dt>Fecha:</dt>
+                                            
+                                            <dd>
+                                                {% if k.date_starts != None %}
+                                                    {{k.date_starts}}
+                                                {% endif %}
+                                                {% if k.date_ends != None %}
+                                                    {{k.date_ends}}
+                                                {% endif %}    
+                                            </dd>
+                                            
+                                            {% endif %}
+                                            
+                                            
+                                            <dt>Fecha de la última modificación:</dt>
+                                            <dd>{{k.modified}}</dd>
+                                            
+                                            <dt>Personas a las que les gusta: </dt>
+                                            <dd>{{k.counters.followers}}</dd>
+                                            
+                                            <dt>Comentarios recibidos:</dt>
+                                            <dd>{{k.counters.comments}}</dd>
+                                        </dl>
+                                        <span class="btn collapseBtn">Contraer</span>
+                                        <a href="edit/{{k.id}}" class="btn" style="clear:none">Editar</a>
+                                    </div>
+                                    
                                 </div>
+                                
+                                
                             {% endfor%}   
                         </span>           
                         {% endif %}
@@ -158,20 +210,17 @@
         </div>
     </div>
     
-    <script id="collapsedSuggestion" type="text/x-jquery-tmpl">
-        <span class="checkBox">${id}</span>
-        <span class="suggestionName">${suggestion}</span>
-        <span class="suggestionInLists">${lists}</span>
-    </script>
-    <script id="expandedSuggestion" type="text/x-jquery-tmpl">
-        Sugieron que...
-    </script>
     
     <script id="suggestionTemplate" type="text/x-jquery-tmpl">
         <div id="suggestion_${element.id}" class="suggestion">
-            <span class="checkBox"><input type="checkbox" id="checkBox_{{element.id}}" value="${element.id}" /></span>
-            <span class="suggestionName">${element.name}</span>
-            <span class="suggestionInLists">Lista ${element.id}</span>
+            <div class="collapsed">
+                <span class="checkBox"><input type="checkbox" id="checkBox_{{element.id}}" value="${element.id}" /></span>
+                <span class="suggestionName">${element.name}</span>
+                <span class="suggestionInLists">Lista ${element.id}</span>
+            </div>
+            <div class="expanded hidden">
+                Id:${element.id}<br>
+            </div>
         </div>
     </script>
 {% endblock %}

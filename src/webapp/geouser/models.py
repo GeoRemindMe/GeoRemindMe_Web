@@ -219,11 +219,19 @@ class User(polymodel.PolyModel, HookedModel):
         '''
         return self.objects.get_followers(userid=self.id, page=page, query_id=query_id)
     
-    """
-    @property
-    def twitter_user(self):
-        return self.twitteruser_set.get()
-    """
+    def get_friends(self):
+        indexes = UserFollowingIndex.all().ancestor(self.key())
+        # cargo la lista completa de todos a los que sigue el usuario
+        followings = []
+        followings.extend([following for index in indexes for following in index.following])
+        friends = []
+        for follow in followings:
+            key = db.GqlQuery('SELECT __key__ FROM UserFollowingIndex WHERE ANCESTOR IS :1 AND following =:2', follow, self.key()).get()
+            if key is not None:
+                friends.append(follow)
+        return db.get_async(friends)
+            
+    
       
     def is_authenticated(self):
         return True
@@ -451,7 +459,7 @@ class User(polymodel.PolyModel, HookedModel):
         else:
             raise AttributeError()
         if following is not None:
-            if following.id == self.id:
+            if following == self.key():
                 return True
             is_following = UserFollowingIndex.all().filter('following =', following).ancestor(self.key()).count()
             if is_following != 0:  # en este caso, el usuario ya esta siguiendo al otro, no hacemos nada mas.
@@ -483,7 +491,7 @@ class User(polymodel.PolyModel, HookedModel):
         else:
             raise AttributeError()
         if following is not None:
-            if following.id == self.id:
+            if following == self.key():
                 return True
             if self._del_follows(following):
                 user_following_deleted.send(sender=self, following=following)

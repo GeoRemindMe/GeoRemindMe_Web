@@ -79,7 +79,28 @@ class EventHelper(object):
             elif hasattr(event, '_vis'):
                 if event._is_public():
                     return event
-            elif event._is_shared() and event.user_invited(user):
+            elif event._is_shared() and event.user_invited(querier):
+                return event
+        return None
+    
+    def get_by_id_querier(self, id, querier):
+        '''
+        Obtiene el evento con ese id comprobando que
+        pertenece al usuario
+        
+            :raises: :class:`geoalert.exceptions.ForbiddenAccess`
+        '''
+        if not isinstance(querier, User):
+            raise TypeError()
+        event = self._klass.get_by_id(int(id))
+        if event is None:
+            return None
+        if event.user.key() == querier.key():
+            return event
+        elif hasattr(event, '_vis'):
+            if event._is_public():
+                return event
+            elif event._is_shared() and event.user_invited(querier):
                 return event
         return None
     
