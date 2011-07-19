@@ -206,6 +206,10 @@ def view_suggestion(request,suggestion_id):
     return  render_to_response('view_suggestion.html', {}, context_instance=RequestContext(request))
 
 @facebook_required
+def view_place(request,place_id):
+    return  render_to_response('view_place.html', {}, context_instance=RequestContext(request))
+
+@facebook_required
 def profile_settings(request):
     counters = request.user.counters_async()
     has_twitter = True if request.user.twitter_user is not None else False

@@ -213,7 +213,7 @@ class Vote(db.Model):
         vote = cls.objects.get_user_vote(user, instance.key())
         if vote is not None:
             if count < 0:
-                VoteCounter.increase_counter(self.instance.key(), -1)
+                VoteCounter.increase_counter(vote.instance.key(), -1)
                 vote.delete()
                 return True
             return False

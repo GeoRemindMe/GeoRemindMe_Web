@@ -321,7 +321,12 @@ input{
     p.help-icon{
         
         height: 22px;
-        margin: 2px 0;
+        margin: 6px 0;
+    }
+    p.help-icon a img{
+        width:16px;
+        height:16px;
+        
     }
     #btn-add-suggestion{
         -moz-border-radius: 3px 3px 3px 3px;
