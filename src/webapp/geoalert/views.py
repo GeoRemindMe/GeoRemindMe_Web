@@ -240,6 +240,25 @@ def add_suggestion(request, form):
     sug = form.save(user = request.user)
     return sug
 
+@login_required
+def add_suggestion_invitation(request, eventid, userid):
+    """Envia una invitacion a un usuario
+    
+        :param eventid: identificador del evento
+        :type eventid: :class:`Integer`
+        :param userid: identificador del usuario
+        :type userid: :class:`Integer`
+        
+        :returns: :class:`Boolean`
+    """
+    user_to = User.objects.get_by_id(userid)
+    if user_to is None:
+        raise Http404
+    event = Suggestion.objects.get_by_id(eventid, request.user, request.user)
+    if event is None:
+        raise Http404
+    
+    return event.send_invitation(request.user, user_to)
 
 @login_required
 def edit_suggestion(request, id, form):

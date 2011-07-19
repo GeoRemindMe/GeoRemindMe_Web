@@ -400,6 +400,7 @@ class Suggestion(Event, Visibility):
             
             :returns: True si esta invitado, False en caso contrario
         '''
+        from georemindme.models_indexes import Invitation
         if set_status is None:
             invitation = Invitation.objects.is_user_invited(self, user)
             return invitation
@@ -438,6 +439,17 @@ class Suggestion(Event, Visibility):
     
     def __unicode__(self):
         return self.name
+    
+    def send_invitation(self, sender, to):
+        if sender.key() == self.user.key():
+            from georemindme.models_indexes import Invitation
+            invitation = Invitation.send_invitation(sender=sender, to=to, instance=self)
+            if invitation is not None:
+                return True
+            return False
+        else:
+            raise ForbiddenAccess
+        
         
 
 class AlertSuggestion(Event):

@@ -174,6 +174,17 @@ def add_suggestion(request):
     else:
         return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
+
+def add_suggestion_invitation(request):
+    """
+        Envia una invitacion a un usuario
+        Parametros en POST:
+            eventid: el id del evento a donde invitar al usuario
+            userid: el id del usuario a invitar
+    """
+    userid = request.POST.get('userid')
+    return geoalert.add_suggestion_invitation(request, eventid, userid)
+
 @ajax_request
 def get_suggestion(request):
     """
@@ -247,6 +258,16 @@ def get_followings(request):
     username = request.POST.get('username', None)
     followings = geouser.get_followings(request, userid, username, page, query_id)
     return HttpResponse(simplejson.dumps(followings), mimetype="application/json")
+
+@ajax_request
+def get_friends(request):
+    """
+    Devuelve una lista con los usuarios que siguen y sigue el usuario
+    
+        :returns: lista de la forma (id, username)
+    """
+    friends = geouser.get_friends(request)
+    return HttpResponse(simplejson.dumps(friends), mimetype="application/json")
 
 @ajax_request
 def add_following(request):
