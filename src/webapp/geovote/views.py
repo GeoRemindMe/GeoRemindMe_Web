@@ -110,7 +110,7 @@ def _get_comments(instance, query_id=None, page=1):
 # VOTACIONES
 #===========================================================================
 @login_required
-def do_vote_suggestion(request, instance_id, vote):
+def do_vote_suggestion(request, instance_id, vote=1):
     """
     Realiza un voto a una sugerencia
     
@@ -124,7 +124,6 @@ def do_vote_suggestion(request, instance_id, vote):
     if event is None:
         return None
     vote = Vote.do_vote(user=user, instance=event, count=vote)
-    
     return vote
 
 
