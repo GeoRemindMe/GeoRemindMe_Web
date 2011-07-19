@@ -31,6 +31,7 @@ urlpatterns = patterns('facebookApp.views',
     url(r'^suggestions/$', 'user_suggestions', {}, 'fb_user_suggestions'),
     url(r'^suggestions/edit/(?P<suggestion_id>\d+)/$', 'edit_suggestion', {}, 'fb_edit_suggestions'),
     url(r'^suggestions/add/$', 'add_suggestion',{},'fb_add_suggestion'),
+    url(r'^suggestion/(?P<suggestion_id>\d+)/$', 'view_suggestion',{},'fb_view_suggestion'),
     #url(r'^test_user/$', 'test_users', {}, 'fb_test_user'),
     #url(r'^get_test_user/$', 'get_test_users', {}, 'fb_get_test_user'),
 )

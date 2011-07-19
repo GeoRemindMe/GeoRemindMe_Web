@@ -61,7 +61,7 @@
                 <p>                
                     <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}} <br>
                     <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.name|escape|urlencode}}">{{obj.instance.poi.name}}</a></span><br>
-                    <span class="timestamp">{{obj.created|timesince}} ago</span> <span class="action-bar">| <span onclick="vote('{{obj.id}}')" class="like" value="1">Me gusta</span> <!--| Le gusta a otras {{obj.instance.counters.followers}}--> | <a href="/fb/suggestion/{{obj.id|urlencode}}">Ver detalles</a> | <span onclick="">Comentar</span> | <span onclick="" title="Guardar en favoritos">Guardar</span></span>
+                    <span class="timestamp">{{obj.created|timesince}} ago</span> <span class="action-bar">| <span onclick="vote('{{obj.instance.id}}')" class="like" value="1">Me gusta</span> <!--| Le gusta a otras {{obj.instance.counters.followers}}--> | <a href="/fb/suggestion/{{obj.id|urlencode}}">Ver detalles</a> | <span onclick="">Comentar</span> | <span onclick="" title="Guardar en favoritos">Guardar</span></span>
                 </p>
             </li>
         {% endfor %}

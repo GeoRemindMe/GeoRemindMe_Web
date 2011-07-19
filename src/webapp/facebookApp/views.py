@@ -201,7 +201,9 @@ def edit_suggestion(request,suggestion_id):
                                                         'poi_address': s.poi.address,
                                                         }, context_instance=RequestContext(request)
                                )
-
+@facebook_required
+def view_suggestion(request,suggestion_id):
+    return  render_to_response('view_suggestion.html', {}, context_instance=RequestContext(request))
 
 @facebook_required
 def profile_settings(request):
