@@ -650,9 +650,11 @@ def do_vote_suggestion(request):
         query_id: id de la consulta de pagina
     """
     instance_id = request.POST['instance_id']
-    msg = request.POST['puntuation']
+    puntuation = request.POST['puntuation']
     
-    return HttpResponse(geovote.do_vote_suggestion(request, instance_id, msg),
+    vote = geovote.do_vote_suggestion(request, instance_id, puntuation)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
                          mimetype="application/json")
     
 @ajax_request

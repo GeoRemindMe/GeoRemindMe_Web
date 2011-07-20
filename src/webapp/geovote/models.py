@@ -118,6 +118,14 @@ class Comment(Visibility):
         if getattr(instance, 'counter', None) is not None:
             instance.counter.set_comments()
         return comment
+    
+    def to_dict(self):
+        return {'id': self.id if self.is_saved() else -1,
+                'instance': self.instance.id,
+                'created': self.created,
+                'modified': self.modified,
+                'msg': self.msg
+                }
         
     
 SHARDS = 5

@@ -15,5 +15,8 @@ class JSONEncoder(simplejson.JSONEncoder):
         from geoalert.models_poi import POI
         if isinstance(obj, POI):
             return obj.to_dict()
+        from geovote.models import Comment
+        if isinstance(obj, Comment):
+            return obj.to_dict()
         else:
             return super(self.__class__, self).default(obj)
