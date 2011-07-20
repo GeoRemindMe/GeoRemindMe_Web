@@ -773,19 +773,23 @@ input{
             }
             #activity ul#chronology li span.action-bar span, span.action-bar a{
                 color:#0011FF;
-                margin: 0 0.5em;
+                margin: 0 0.3em;
                 text-decoration:none;
             }
             #activity ul#chronology li span.action-bar span:hover, span.action-bar a:hover{
                 text-decoration:underline;
                 cursor:pointer;
             }
-            #activity ul#chronology li span.action-bar span.like-text{
+            #activity ul#chronology li span.like-text, 
+            #view-suggestion ul#comment-list li span.like-text{
                 background: url("/static/facebookApp/img/icons/like_min.png") no-repeat scroll -2px 1px transparent;
                 color: black;
                 display: inline-block;
                 margin-left: 0;
                 padding-left: 15px;
+            }
+            #view-suggestion ul#comment-list li span.like-text{
+                background-position:-2px -3px;
             }
             #activity ul#chronology li span.action-bar span.like-text:hover{
                 text-decoration:none;
@@ -833,7 +837,10 @@ input{
                     margin-right: 10px;
                     width: 25px;
                 }
-                #activity ul#chronology div.comment-box ul li .timestamp,#activity ul#chronology div.comment-box ul li .like{
+                #activity ul#chronology div.comment-box ul li .timestamp,
+                #activity ul#chronology div.comment-box ul li .like,
+                #activity ul#chronology div.comment-box ul li .dontLikeComment,
+                #activity ul#chronology div.comment-box ul li .LikeComment{
                     font-size:0.9em;
                 }
                 
@@ -1458,6 +1465,9 @@ input{
     #view-suggestion .likeBtn{
         margin:1em 0;
     }
+    
+    #view-suggestion .dontLikeSuggestion.likebtn.btn{
+    }
     #view-suggestion textarea{
         width:100%
     }
@@ -1465,14 +1475,10 @@ input{
     #view-suggestion .suggestion-element{
         padding: 0.5em;
     }
-
+    
     #view-suggestion .suggestion-element:hover{
         background-color: #EEEEEE;
-        
-        
-        
     }
-    
     #view-suggestion .suggestion-element:after{
         clear: both;
         content: ".";
@@ -1480,9 +1486,12 @@ input{
         height: 0px;
         visibility: hidden;
     }
-        #view-suggestion .comments span.timestamp span{
-            visibility:hidden;
-            display:block;
+    
+        #view-suggestion .comments span.timestamp span.LikeComment,
+        #view-suggestion .comments span.timestamp span.dontLikeComment{
+/*
+            display:none;
+*/
             line-height: 1em;
         }
         
@@ -1508,9 +1517,16 @@ input{
         #view-suggestion .comments .timestamp,#view-place .comments .timestamp{
             display: block;
             float: right;
+/*
             line-height: 2.5em;
+*/
             text-align: right;
+            position: relative;
+            top:5px;
             
+        }
+        
+        #view-suggestion .suggestion-element span.votes{
             
         }
     #view-suggestion p.popular{
@@ -1530,7 +1546,9 @@ input{
         padding: 0;
         position: relative;
         top:10px;
+/*
         border-top: 1px dotted #BBBBBB;
+*/
     }
     
     #view-suggestion ul.comments li,#view-place ul.comments li{

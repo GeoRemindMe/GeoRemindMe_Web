@@ -12,13 +12,63 @@
        
        
         setBehaviourToSuggestion();
+        
+        
+        $('.LikeComment').click(function(){
+            vote('comment',$(this),1)
+        });
+        $('.dontLikeComment').click(function(){
+            vote('comment',$(this),-1)
+        });
+        
+        $('.LikeSuggestion').click(function(){
+            vote('suggestion',$(this),1)
+        });
+        $('.dontLikeSuggestion').click(function(){
+            vote('suggestion',$(this),-1)
+        });
     });
+    
+    function vote(type,obj,value){
+        var element_id=obj.attr('value')
+        
+        $.ajax({
+                type: "POST",
+                url: "/ajax/vote/"+type+"/",
+                data: {
+                    instance_id:element_id,
+                    puntuation: value,
+                },
+                complete: function(msg){
+                    if (msg.status !=200){
+
+                    }else{
+                        console.log(msg.responseText)
+                        //if(msg.responseText!=false){
+                            action=obj.attr('class')
+                            obj.addClass('hidden')
+                            
+                            if(action=="LikeComment")
+                                obj.parent().find(".dontLikeComment").removeClass('hidden')
+                            else if (action=="dontLikeComment")
+                                obj.parent().find(".LikeComment").removeClass('hidden')
+                                
+                            if(action=="LikeSuggestion likeBtn btn")
+                                obj.parent().find(".dontLikeSuggestion").removeClass('hidden')
+                            else if (action=="dontLikeSuggestion likeBtn btn")
+                                obj.parent().find(".LikeSuggestion").removeClass('hidden')
+                        //}
+                    }
+                    
+                }
+            });    
+    }
     
     function setBehaviourToSuggestion(){
         //Behaviour to: show and hide "Like" text on class suggestion-element
        $('.suggestion-element').hover(
-           function(){$(this).find('.like').css('visibility','visible');},
-            function(){$(this).find('.like').css('visibility','hidden');}
+           function(){$(this).find('.votes').removeClass('hidden');},
+           function(){$(this).find('.votes').addClass('hidden');}
         );
     }
     
@@ -46,12 +96,22 @@
                     
                     
                     //console.log(response.msg)
-                    $('#commentTemplate').tmpl( {
+                    c=$('#commentTemplate').tmpl( {
                         msg: response.msg,
                         comment_id: response.id,
                     }).prependTo('#comment-list');
                     
                     setBehaviourToSuggestion();
+                    var objeto=$(c).find('.LikeComment')
+
+                    c.find('.LikeComment').click(function(){
+                        vote('comment',objeto,1)
+                    });
+                    c.find('.dontLikeComment').click(function(){
+                        vote('comment',objeto,-1)
+                    });
+
+                    
                 }
                 $(obj).val("Enviar")
                 $(obj).removeClass("waiting")
@@ -59,7 +119,7 @@
         });
     }
     
-    function vote(id,puntuation){
+    function voteSuggestion(id,puntuation){
             
             $.ajax({
                     type: "POST",
@@ -126,11 +186,29 @@
             <p>Reportar sugerencia duplicada</p>
 -->
         </div>
-        {% if not has_vote %}
-            <span onclick="vote({{suggestion.id}},1)" class="btn">Me gusta</span> 
+
+        
+        
+        {% if has_voted %}
+            <span class="dontLikeSuggestion likeBtn btn" value="{{suggestion.id}}">
+                Ya no me gusta
+            </span>
+            
+            <span class="LikeSuggestion hidden likeBtn btn" value="{{suggestion.id}}">
+                Me gusta
+            </span>
+
         {% else %}
-            <span onclick="vote({{suggestion.id}},-1)" class="btn">Ya no me gusta</span> 
-            <span class="like-text">{{vote_counter}} personas</span>
+            
+            <span class="dontLikeSuggestion hidden likeBtn btn" value="{{suggestion.id}}">
+                Ya no me gusta
+            </span>
+            
+            <span class="LikeSuggestion likeBtn btn" value="{{suggestion.id}}">
+                Me gusta
+            </span>
+
+            
         {% endif %}
         <span class="btn likeBtn">Recordar</span>
         
@@ -148,11 +226,13 @@
 -->
         <p class="clear big">¿Tienes algo que añadir a esta sugerencia?</p>
         <textarea id="msg"></textarea>
+<!--
         <ul id="feeling">
             <li>Happy</li>
             <li>Glad</li>
             <li>Sad</li>
         </ul>
+-->
         <span class="btn" onclick="sendComment(this)">Comentar</span>
         
         {% if comments %}
@@ -163,24 +243,37 @@
                     <span class="msg">{{c.msg}}</span>
                     <span class="timestamp">
                         {{c.created|timesince}}
+                        <br>
+                        <span class="votes hidden">
                         {% if c.has_voted %}
-                            <span class="hoverlink like">Ya no me gusta</span>
+                            <span class="dontLikeComment" value="{{c.id}}">
+                                <span class="hoverlink">Ya no me gusta</span> 
+                                <span class="text like-text">{{c.vote_counter}}</span> personas
+                            </span>
+                            
+                            <span class="LikeComment hidden" value="{{c.id}}">
+                                <span class="hoverlink">Me gusta</span> 
+                            </span>
+
                         {% else %}
-                            <span class="hoverlink like">Me gusta</span>
+                            
+                            <span class="dontLikeComment hidden" value="{{c.id}}">
+                                <span class="hoverlink">Ya no me gusta</span> 
+                                <span class="text increase like-text">{{c.vote_counter}}</span> personas
+                            </span>
+                            
+                            <span class="LikeComment" value="{{c.id}}">
+                                <span class="hoverlink">Me gusta</span> 
+                            </span>
+
+                            
                         {% endif %}
                     </span>
+                    </span>
+                    
                 </li>
             {% endfor %}
-<!--
-            <li class="suggestion-element">
-                <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
-                <span class="msg">Deberíais tomar unas cerveza mientras</span>
-                <span class="timestamp">
-                    hace 5 min
-                    <span class="hoverlink like">Me gusta</span>
-                </span>
-            </li>
--->
+
         </ul>
         {% endif %}
     </div>
@@ -190,8 +283,17 @@
                 <span class="user"><img src="/user/{{user.username}}/picture/" alt="user avatar"><br><a href="">{{user.username}}</a></span>
                 <span class="msg">${msg}</span>
                 <span class="timestamp">
-                    hace 0 min
-                    <span class="hoverlink like">Me gusta</span>
+                    hace 0 min<br>
+                    <span class="votes hidden">
+                        <span class="dontLikeComment hidden" value="${comment_id}">
+                            <span class="hoverlink">Ya no me gusta</span> 
+                            <span class="text increase like-text">1</span> persona
+                        </span>
+                        
+                        <span class="LikeComment" value="${comment_id}">
+                            <span class="hoverlink">Me gusta</span> 
+                        </span>
+                    </span>
                 </span>
             </li>
     </script>
