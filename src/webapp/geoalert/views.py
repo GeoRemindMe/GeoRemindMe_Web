@@ -206,6 +206,14 @@ def view_place(request, slug, template='webapp/place.html'):
            :param slug: slug identificativo del lugar
            :type slug: string
     """
+    def load_suggestions_async(suggestions):
+        suggestions_loaded = []
+        for suggestion in suggestions:
+            suggestions_loaded.append(suggestion)
+            if len(suggestions_loaded) > 7:
+                break
+        return suggestions_loaded
+    
     place = Place.objects.get_by_slug(slug)
     if place is None:
         raise Http404
@@ -214,15 +222,20 @@ def view_place(request, slug, template='webapp/place.html'):
         has_voted = Vote.objects.user_has_voted(request.user, place.key())
     else:
         has_voted = False
+    query_id, suggestions_async = Suggestion.objects.get_by_place(place, 
+                                                  querier=request.user if request.user.is_authenticated() else None,
+                                                  async = True
+                                                  )
     vote_counter = Vote.objects.get_vote_counter(place.key())
     
-    from mapsServices.places.GPRequest import *
+    from mapsServices.places.GPRequest import GPRequest
     try:
         search = GPRequest().retrieve_reference(place.google_places_reference)
     except: 
         return render_to_response(template, {'place': place,
                                              'has_voted': has_voted,
                                              'vote_counter': vote_counter,
+                                             'suggestions': [query_id, load_suggestions_async(suggestions_async)],
                                               },
                                   context_instance=RequestContext(request)
                                   )
@@ -238,6 +251,7 @@ def view_place(request, slug, template='webapp/place.html'):
                                          'google': search['result'],
                                          'has_voted': has_voted,
                                          'vote_counter': vote_counter,
+                                         'suggestions': [query_id, load_suggestions_async(suggestions_async)],
                                          },
                               context_instance=RequestContext(request)
                               )
