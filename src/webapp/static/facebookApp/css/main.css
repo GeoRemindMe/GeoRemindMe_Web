@@ -404,6 +404,15 @@ input{
         text-decoration:underline;
         cursor:pointer;
     }
+    .hoverlink{
+        color:blue;
+        text-decoration:none;
+    }
+    .hoverlink:hover{
+        text-decoration:underline;
+        cursor:pointer;
+    }
+    
     .error{
         background-color: #FCC7C7;
         border: 1px dotted red;
@@ -720,7 +729,9 @@ input{
     }
     
     #activity ul#chronology li{
+/*
         border-bottom: 1px solid #DDDDDD;
+*/
         clear: both;
         list-style: none outside none;
         margin: 0.5em 0;
@@ -733,6 +744,8 @@ input{
         display: block;
         height: 0px;
         visibility: hidden;
+    }
+    #activity ul#chronology li hr{
     }
     
     #activity ul#chronology li div.avatar{        
@@ -784,11 +797,42 @@ input{
             padding-left: 20px;
         }
         
+        /* Comments in the chronology */
+        #activity ul#chronology div.comment-box{
+            padding-left: 50px;
+        }
+        #activity ul#chronology div.comment-box ul{
+            margin:0;
+            padding:0;
+        }
+            #activity ul#chronology div.comment-box ul li,#activity ul#chronology div.input-box{
+                border-bottom: 1px solid #DDDDDD;
+                background-color: #EDEFF4;
+                margin: 2px 0;
+                padding: 0.5em;
+            }
+            #activity ul#chronology div.comment-box ul li img{
+                float: left;
+                height: 25px;
+                margin-right: 10px;
+                width: 25px;
+            }
+            #activity ul#chronology div.comment-box ul li .timestamp,#activity ul#chronology div.comment-box ul li .like{
+                font-size:0.9em;
+            }
+            
+        
+        #activity ul#chronology div.input-box input{
+            border: 1px solid #BDC7D8;
+            color: #555555;
+            font-size: 0.9em;
+            margin: 0 auto;
+            padding: 0.3em;
+            width: 470px;
+        }
 /*
-        #activity ul#chronology li span.action-bar span.save{
-            background: url("/static/facebookApp/img/icons/save.png") no-repeat scroll 0 2px transparent;
-            display: inline-block;
-            padding-left: 20px;
+        #activity ul#chronology div.comment-box ul li .like{
+            font-size:0.9em;
         }
 */
     

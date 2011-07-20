@@ -5,6 +5,15 @@
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+            //Incrementamos el numero de personas al que le van a gustar
+            //la sugerencia si es votada
+            $('.like-text').each(function(index,element){
+                counter=parseInt($(element).text())
+                $(element).text(counter+1)
+            })
+        });
+    
         function vote(id){
             
             $.ajax({
@@ -55,7 +64,7 @@
     -->
             <ul id="chronology">
             {% for obj in chronology.1 %}
-                <li id="suggestion_{{obj.instance.id}}">
+                <li id="suggestion_{{obj.instance.id}}" {%if not forloop.last %}style="border-bottom: 1px solid #DDDDDD;"{% endif %}>
                     <div class="avatar">
                         <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
                             <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
@@ -64,38 +73,42 @@
                     <p>                
                         <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}} <br>
                         <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
-<!--
-                        <div class="comment-box">
-                            <ul>
-                                <li>
-                                    <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
-                                    <span class="msg">Deberíais tomar unas cerveza mientras</span>
-                                    <span class="timestamp">{{obj.created|timesince}} ago</span> | 
-                                    <span onclick="vote('{{obj.instance.id}}')" class="like" value="1">Me gusta</span> <!--| Le gusta a otras {{obj.instance.counters.followers}}--> | 
-                                </li>
-                                <li>
-                                    <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
-                                    <span class="msg">Deberíais tomar unas cerveza mientras</span>
-                                    <span class="timestamp">{{obj.created|timesince}} ago</span> | 
-                                    <span onclick="vote('{{obj.instance.id}}')" class="like" value="1">Me gusta</span> <!--| Le gusta a otras {{obj.instance.counters.followers}}--> | 
-                                </li>
-                            </ul>
-                            <input type="text" value="Escribe un comentario...">
-                        </div>
--->
-                        <!-- Botonera -->
+                        
+                        <!--Botonera -->
                         <span class="action-bar">
                             <span class="timestamp">{{obj.created|timesince}} ago</span> | 
                             <span onclick="showCommentBox()">Comentar</span> | 
-                            <a href="/fb/suggestion/{{obj.id|urlencode}}">Detalles</a> | 
+                            <a href="/fb/suggestion/{{obj.instance.id|urlencode}}">Detalles</a> | 
                             {% if obj.has_voted %}
-                                <span onclick="vote('{{obj.instance.id}}')" class="like" value="-1">Ya no me gusta</span> <span class="like-text">{{obj.vote_counter}} personas | </span>
+                                <span onclick="vote('{{obj.instance.id}}')" class="like" value="-1">Ya no me gusta</span> 
+                                <span class="like-text">{{obj.vote_counter}} personas</span>
                             {% else %}
-                                <span onclick="vote('{{obj.instance.id}}')" class="like" value="1">Me gusta</span> <span class="like-text" style="display:none">{{obj.vote_counter}} personas</span> | 
+                                <span onclick="vote('{{obj.instance.id}}')" class="like" value="1">Me gusta</span> 
+                                <span class="like-text" style="display:none">{{obj.vote_counter}}</span> 
                             {% endif %}
-                            <span onclick="" title="Guardar en favoritos" class="save">Guardar</span>
+                            | <span onclick="" title="Guardar en favoritos" class="save">Guardar</span>
                         </span>
+                        
+                        <div class="comment-box">
+                            <ul>
+                                <li>
+                                    <img src="/user/susana/picture/" alt="user avatar"><a href="">Pack</a>: Deberíais tomar unas cerveza mientras<br>
+                                    <span class="timestamp">{{obj.created|timesince}} ago</span> - 
+                                    <span onclick="vote('commentID')" class="like hoverlink" value="1">Me gusta</span>
+                                </li>
+                                <li>
+                                    <img src="/user/susana/picture/" alt="user avatar"><a href="">Pack</a>: Deberíais tomar unas cerveza mientras<br>
+                                    <span class="timestamp">{{obj.created|timesince}} ago</span> - 
+                                    <span onclick="vote('commentID')" class="like hoverlink" value="1">Me gusta</span> 
+                                </li>
+                            </ul>
+                            <div class="input-box">
+                                <input type="text" value="Escribe un comentario...">
+                            </div>
+                        </div>
+
                     </p>
+                    
                 </li>
             {% endfor %}
             </ul>
