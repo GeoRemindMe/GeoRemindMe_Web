@@ -113,7 +113,7 @@ class Comment(Visibility):
         
         if msg is None or msg == '':
             raise TypeError('msg is empty')
-        comment = Comment(user, instance, msg)
+        comment = Comment(user=user, instance=instance, msg=msg)
         comment.put()
         if getattr(instance, 'counter', None) is not None:
             instance.counter.set_comments()
