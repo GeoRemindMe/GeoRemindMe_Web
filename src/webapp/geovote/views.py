@@ -2,8 +2,9 @@
 
 from models import *
 from geouser.decorators import login_required
-from geoalert.models import Suggestion
+from geoalert.models import Suggestion,Event
 from geolist.models import *
+
 
 #===============================================================================
 # COMENTARIOS
@@ -19,7 +20,7 @@ def do_comment_event(request, instance_id, msg):
         :type msg: :class:`string`
     """
     user = request.session['user']
-    event = Event.objects.get_by_id_user(id=instance_id, user=user)
+    event = Event.objects.get_by_id_querier(id=instance_id, querier=user)
     if event is None:
         return None
     comment = Comment.do_comment(user=user, instance=event, msg=msg)
@@ -57,15 +58,14 @@ def get_comments_event(request, instance_id, query_id=None, page=1):
         :param page: pagina a buscar
         :type page: :class:`integer`
     """
-    user = request.session.get('user', None)
-    if user is not None:
-        event = Event.objects.get_by_id_user(instance_id, user)
-    else:
+    if not request.user.is_authenticated():
         event = Event.objects.get_by_id(instance_id)
+    else:
+        event = Event.objects.get_by_id_querier(instance_id, request.user)
     if event is None:
         return None
     
-    return _get_comments(event, query_id=query_id, page=page)
+    return _get_comments(event, query_id=query_id, page=page, querier=request.user)
 
 
 def get_comments_list(request, instance_id, query_id=None, page=1):
@@ -90,7 +90,7 @@ def get_comments_list(request, instance_id, query_id=None, page=1):
     return _get_comments(list, query_id=query_id, page=page)        
 
 
-def _get_comments(instance, query_id=None, page=1):
+def _get_comments(instance, query_id=None, page=1, querier=None):
     """
     Obtiene los comentarios de cualquier objeto
     
@@ -102,8 +102,10 @@ def _get_comments(instance, query_id=None, page=1):
         :type page: :class:`integer`
         
     """
-    comments = Comment.objects.get_by_instance(instance, query_id=query_id, page=page)
-    
+    if querier.is_authenticated():
+        comments = Comment.objects.get_by_instance(instance, query_id=query_id, page=page, querier=querier)
+    else:
+        comments = Comment.objects.get_by_instance(instance, query_id=query_id, page=page)
     return comments
     
 #===========================================================================
@@ -119,9 +121,9 @@ def do_vote_suggestion(request, instance_id, vote=1):
         :param vote: valoracion del voto (siempre positivo)
         :type vote: :class:`integer`
     """
-    
+    if vote > 1 or vote < -1:
+        return False
     event = Suggestion.objects.get_by_id_querier(id=instance_id, querier=request.user)
-    #~ raise Exception(instance_id)
     if event is None:
         return None
     vote = Vote.do_vote(user=request.user, instance=event, count=vote)
@@ -129,7 +131,7 @@ def do_vote_suggestion(request, instance_id, vote=1):
 
 
 @login_required
-def do_vote_list(request, instance_id, vote):
+def do_vote_list(request, instance_id, vote=1):
     """
     Realiza un voto a una lista
     
@@ -148,21 +150,21 @@ def do_vote_list(request, instance_id, vote):
 
 
 @login_required
-def do_vote_comment(request, instance_id, vote):
+def do_vote_comment(request, instance_id, vote=1):
     """
-    Realiza un voto a una lista
+    Realiza un voto a un comentarion
     
         :param instance_id: ID del objeto a comentar
         :type instance_id: :class:`long`
-        :param vote: valoracion del voto (siempre positivo)
+        :param vote: valoracion del voto
         :type vote: :class:`integer`
     """
-    user = request.session['user']
-    comment = Comment.objects.get_by_id_user(id=instance_id, user=user)
+    if vote > 1 or vote < -1:
+        return False
+    comment = Comment.objects.get_by_id_querier(id=instance_id, querier=request.user)
     if comment is None:
         return None
     vote = Vote.do_vote(user=user, instance=comment, count=vote)
-    
     return vote
 
 
@@ -173,9 +175,8 @@ def get_vote_suggestion(request, instance_id):
         :param instance_id: ID del evento
         :type instance_key: :class:`long`
     """
-    user = request.session['user']
-    if user is not None:
-        suggestion = Suggestion.objects.get_by_id_user(instance_id, user)
+    if request.user.is_authenticated():
+        suggestion = Suggestion.objects.get_by_id_querier(instance_id, request.user)
     else:
         suggestion = Suggestion.objects.get_by_id(instance_id)
     if suggestion is None:
@@ -190,9 +191,8 @@ def get_vote_list(request, instance_id):
         :param instance_id: ID del evento
         :type instance_key: :class:`long`
     """
-    user = request.session['user']
-    if user is not None:
-        list = List.objects.get_by_id_user(instance_id, user)
+    if request.user.is_authenticated():
+        list = List.objects.get_by_id_querier(instance_id, request.user)
     else:
         list = List.objects.get_by_id(instance_id)
     if list is None:
@@ -207,9 +207,8 @@ def get_vote_comment(request, instance_id):
         :param instance_id: ID del evento
         :type instance_key: :class:`long`
     """
-    user = request.session['user']
-    if user is not None:
-        comment = Comment.objects.get_by_id_user(instance_id, user)
+    if request.user.is_authenticated():
+        comment = Comment.objects.get_by_id_querier(instance_id, request.user)
     else:
         comment = Comment.objects.get_by_id(instance_id)
     if suggestion is None:

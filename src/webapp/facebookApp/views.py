@@ -95,7 +95,7 @@ def profile(request, username):
             is_following = None
             is_follower = None
         if is_following:  # el usuario logueado, sigue al del perfil
-            timeline = UserTimeline.objects.get_by_id(profile_user.id, vis='shared')
+            timeline = UserTimeline.objects.get_by_id(profile_user.id, querier=request.user)
         elif settings.show_timeline:
             timeline = UserTimeline.objects.get_by_id(profile_user.id)
         show_followers = settings.show_followers,
@@ -174,18 +174,6 @@ def add_suggestion(request):
 def edit_suggestion(request,suggestion_id):
     from geoalert.forms import SuggestionForm
     s = Suggestion.objects.get_by_id(suggestion_id)
-    #~ raise Exception(s.name)
-    #~ f = SuggestionForm(prefix='edit_suggestion', initial = {    
-                                                                #~ 'eventid':suggestion_id,
-                                                                #~ 'name': s.name,
-                                                                #~ 'poi_id': s.poi.id,
-                                                                #~ 'starts': s.date_starts,
-                                                                #~ 'ends': s.date_ends,
-                                                                #~ 'description': s.description, 
-                                                                #~ 'visibility': s._vis,
-                                                            #~ }
-                       #~ )
-    #~ 
     return  render_to_response('add_suggestion.html', {
                                                         
                                                         'eventid':suggestion_id,
@@ -203,11 +191,16 @@ def edit_suggestion(request,suggestion_id):
                                )
 @facebook_required
 def view_suggestion(request,suggestion_id):
-    return  render_to_response('view_suggestion.html', {}, context_instance=RequestContext(request))
+    from geoalert.views import suggestion_profile
+    return suggestion_profile(request, suggestion_id, template='view_suggestion.html')
+    
+
 
 @facebook_required
-def view_place(request,place_id):
-    return  render_to_response('view_place.html', {}, context_instance=RequestContext(request))
+def view_place(request, place_id):
+    from geoalert.views import view_place
+    return view_place(request, place_id, template='view_place.html')
+
 
 @facebook_required
 def profile_settings(request):

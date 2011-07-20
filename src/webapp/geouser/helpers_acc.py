@@ -56,7 +56,7 @@ class UserCounterHelper(object):
         return db.get(key)
     
 class UserTimelineHelper(object):
-    def get_by_id(self, userid, page=1, query_id = None, vis='public'):
+    def get_by_id(self, userid, page=1, query_id = None, querier=None):
         '''
         Obtiene la lista de ultimos timeline del usuario
 
@@ -72,16 +72,31 @@ class UserTimelineHelper(object):
             userid = long(userid)
         except:
             return None
+        from geovote.models import Vote
         q = UserTimeline.all().filter('user =', db.Key.from_path(User.kind(), userid)).order('-created')
         p = PagedQuery(q, id = query_id, page_size=42)
         timelines = p.fetch_page(page)
-        if vis.lower()=='public':
+        if querier is None:
             return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                             'msg': timeline.msg, 'username':timeline.user.username, 
-                            'instance': timeline.instance if timeline.instance is not None else None} 
+                            'instance': timeline.instance if timeline.instance is not None else None,
+                            'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
+                            } 
                            for timeline in timelines if timeline._is_public()]]
-        if vis.lower()=='shared':
+            
+        elif not querier.are_friends(db.Key.from_path(User.kind(), userid)):
             return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                             'msg': timeline.msg, 'username':timeline.user.username, 
-                            'instance': timeline.instance if timeline.instance is not None else None}
-                            for timeline in timelines if timeline._is_shared() or timeline._is_public()]]
+                            'instance': timeline.instance if timeline.instance is not None else None,
+                            'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None else None,
+                            'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
+                            }
+                           for timeline in timelines if timeline._is_public()]]
+        
+        return [p.id, [{'id': timeline.id, 'created': timeline.created, 
+                        'msg': timeline.msg, 'username':timeline.user.username, 
+                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None else None,
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
+                        }
+                        for timeline in timelines if timeline._is_shared() or timeline._is_public()]]

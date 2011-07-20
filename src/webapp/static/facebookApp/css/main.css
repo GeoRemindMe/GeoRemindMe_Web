@@ -404,6 +404,15 @@ input{
         text-decoration:underline;
         cursor:pointer;
     }
+    .hoverlink{
+        color:blue;
+        text-decoration:none;
+    }
+    .hoverlink:hover{
+        text-decoration:underline;
+        cursor:pointer;
+    }
+    
     .error{
         background-color: #FCC7C7;
         border: 1px dotted red;
@@ -663,116 +672,199 @@ input{
      * 
      ***************************/
     
-    .avatar{
+    #activity .avatar{
         text-align: center;
     }
-    ul#friends-to-follow{
+    #activity ul#friends-to-follow{
         list-style:none;
         margin:0;
         padding:5px;
         font-size:1.1em
     }
-    ul#friends-to-follow li{
+    #activity ul#friends-to-follow li{
         width:100px; /*272px*/
         float:left;
         margin: 10px 0;
     }
-    ul#friends-to-follow li div{
+    #activity ul#friends-to-follow li div{
 /*
         float:left;
 */
     }
-    ul#friends-to-follow li img{
+    #activity ul#friends-to-follow li img{
         width:50px;
         margin: 1em 0;
     }
-    ul#friends-to-follow div.user-data{
+    #activity ul#friends-to-follow div.user-data{
         margin-left: 10px;
         width:190px;
         line-height:2em;
     }
-    ul#friends-to-follow div.user-data a{
+    #activity ul#friends-to-follow div.user-data a{
         font-weight:bold;
     }
-    ul#friends-to-follow div.user-data p{
+    #activity ul#friends-to-follow div.user-data p{
         margin:0;padding:0;
     }
-    ul#friends-to-follow li div.follow-button{
+    #activity ul#friends-to-follow li div.follow-button{
 /*
         float:right;
         right: 10px;
         position: relative;
 */
     }
-    ul#friends-to-follow li .follow-button a{
+    #activity ul#friends-to-follow li .follow-button a{
         line-height: 25px;
     }
-    ul#friends-to-follow span.waiting{
+    #activity ul#friends-to-follow span.waiting{
         padding: 0px 10px 0px 27px;
         background-position: 5px 4px;
     }
     
-    ul#chronology{
+    #activity ul#chronology{
         font-size: 1.1em;
         line-height: 1.7em;
         margin: 0 5px;
         padding: 0;
     }
     
-    ul#chronology li{
-        border-bottom: 1px solid #DDDDDD;
-        clear: both;
-        list-style: none outside none;
-        margin: 0.5em 0;
-        padding: 0.5em 0;
-    }
+        #activity ul#chronology li{
+    /*
+            border-bottom: 1px solid #DDDDDD;
+    */
+            clear: both;
+            list-style: none outside none;
+            margin: 0.5em 0;
+            padding: 0.5em 0;
+        }
+        
+        #activity ul#chronology li:after{
+            clear: both;
+            content: ".";
+            display: block;
+            height: 0px;
+            visibility: hidden;
+        }
+        #activity ul#chronology li hr{
+        }
+        
+        #activity ul#chronology li div.avatar{        
+            display: block;
+            float: left;
+            margin: 0 1em 0 0;
+            text-align: left;
+            width: 50px;
+            height:50px;
+        }
+        #activity ul#chronology li div.avatar img{
+            width:50px
+        }
+        
+        
+        #activity ul#chronology li span.action-bar{
+            font-size: 0.9em;
+            padding-left: 0.5em;
+        }
+            #activity ul#chronology li span.action-bar span.timestamp{
+                color: #999;
+                display: block;
+                font-size: 1em;
+                float: left;
+            }
+            #activity ul#chronology li span.action-bar span, span.action-bar a{
+                color:#0011FF;
+                margin: 0 0.3em;
+                text-decoration:none;
+            }
+            #activity ul#chronology li span.action-bar span:hover, span.action-bar a:hover{
+                text-decoration:underline;
+                cursor:pointer;
+            }
+            #activity ul#chronology li span.like-text, 
+            #view-suggestion ul#comment-list li span.like-text{
+                background: url("/static/facebookApp/img/icons/like_min.png") no-repeat scroll -2px 1px transparent;
+                color: black;
+                display: inline-block;
+                margin-left: 0;
+                padding-left: 15px;
+            }
+            #view-suggestion ul#comment-list li span.like-text{
+                background-position:-2px -3px;
+            }
+            #activity ul#chronology li span.action-bar span.like-text:hover{
+                text-decoration:none;
+                cursor:default;
+            }
+            #activity ul#chronology li span.action-bar a.comment{
+                background: url("/static/facebookApp/img/icons/comments.png") no-repeat scroll 0 2px transparent;
+                display: inline-block;
+                padding-left: 20px;
+            }
+            
+            /* Comments in the chronology */
+            #activity ul#chronology div.comment-box{
+                padding-left: 50px;
+            }
+            #activity ul#chronology div.comment-box ul{
+                margin:0;
+                padding:0;
+            }
+                #activity ul#chronology li.long-list{
+                    display:none;
+                }
+                #activity ul#chronology div.comment-box ul li,
+                #activity ul#chronology div.input-box,
+                #activity div.show-all-comments{
+                    border-bottom: 1px solid #DDDDDD;
+                    background-color: #EDEFF4;
+                    margin: 2px 0;
+                    padding: 0.5em;
+                }
+                
+                #activity div.show-all-comments{
+                    color: blue;
+                    font-size: 0.9em;
+                    line-height: 1em;
+                    padding: 0.3em;
+                    text-align: center;
+                }
+                #activity div.show-all-comments:hover{
+                    cursor:pointer;
+                }
+                #activity ul#chronology div.comment-box ul li img{
+                    float: left;
+                    height: 25px;
+                    margin-right: 10px;
+                    width: 25px;
+                }
+                #activity ul#chronology div.comment-box ul li .timestamp,
+                #activity ul#chronology div.comment-box ul li .like,
+                #activity ul#chronology div.comment-box ul li .dontLikeComment,
+                #activity ul#chronology div.comment-box ul li .LikeComment{
+                    font-size:0.9em;
+                }
+                
+        
+        #activity ul#chronology div.input-box input{
+            border: 1px solid #BDC7D8;
+            color: #555555;
+            font-size: 0.9em;
+            margin: 0 auto;
+            padding: 0.3em;
+            width: 470px;
+        }
+/*
+        #activity ul#chronology div.comment-box ul li .like{
+            font-size:0.9em;
+        }
+*/
     
-    ul#chronology li:after{
-        clear: both;
-        content: ".";
-        display: block;
-        height: 0px;
-        visibility: hidden;
-    }
-    
-    ul#chronology li div.avatar{        
-        display: block;
-        float: left;
-        margin: 0 1em 0 0;
-        text-align: left;
-        width: 50px;
-        height:50px;
-    }
-    ul#chronology li div.avatar img{
-        width:50px
-    }
-    ul#chronology li span.timestamp{
-        color: #999;
-        display: block;
-        font-size: 0.9em;
-        float: left;
-    }
-    
-    ul#chronology li span.action-bar{
-        font-size: 0.9em;
-        padding-left: 0.5em;
-    }
-    ul#chronology li span.action-bar span, span.action-bar a{
-        color:#0011FF;
-        margin: 0 0.5em;
-        text-decoration:none;
-    }
-    ul#chronology li span.action-bar span:hover, span.action-bar a:hover{
-        text-decoration:underline;
-        cursor:pointer;
-    }
-    
-    ul#chronology li p{
+    #activity ul#chronology li p{
         margin:0;
         padding:0;
     }
     
-    .load-more{
+    #activity .load-more{
         background-color: #3B5998;
         border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
         border-style: solid;
@@ -785,18 +877,19 @@ input{
         width: 100px;
         cursor: pointer;
     }
-    .suggestionPlace{
+    #activity .suggestionPlace{
         font-size:0.9em;
         color: #555555;
     }
-    .suggestionPlace a{
+    #activity .suggestionPlace a{
         color: #555555;
         font-weight:bold;
         text-decoration:none;
     }
-    .suggestionPlace a:hover{
+    #activity .suggestionPlace a:hover{
         text-decoration:underline;
     }
+    
 
     /****************************
      *      
@@ -1204,6 +1297,7 @@ input{
         }
         div#content div.collapsed,div#content div.expanded{
             border:0;
+            cursor:default;
         }
             div#content div.expanded dl{
                 margin: 0;
@@ -1357,45 +1451,84 @@ input{
     #view-suggestion div.suggestion h1{
         line-height: 1em;
         margin: 0.2em 0;
+        display:block;
     }
     #view-suggestion div.suggestion p{
         font-size: 1.1em;
         line-height: 1.7em;
     }
     #view-suggestion div.suggestion img{
-        float:right;
+        float: right;
+        margin-top: 15px;
+        border: 1px solid #AAAAAA;
     }
     #view-suggestion .likeBtn{
         margin:1em 0;
     }
+    
+    #view-suggestion .dontLikeSuggestion.likebtn.btn{
+    }
     #view-suggestion textarea{
         width:100%
     }
-    #view-suggestion .comments .user,#view-place .comments .user{
-        text-align:center;
-        display:block;
-        float:left;
+    
+    #view-suggestion .suggestion-element{
+        padding: 0.5em;
     }
-    #view-suggestion .comments .user img,#view-place .comments .user img{
-        width:25px;
-        height:25px;
+    
+    #view-suggestion .suggestion-element:hover{
+        background-color: #EEEEEE;
     }
-    #view-suggestion .comments .msg,#view-place .comments .msg{
+    #view-suggestion .suggestion-element:after{
+        clear: both;
+        content: ".";
         display: block;
-        float: left;
-        font-size: 1.1em;
-        line-height: 2.5em;
-        padding: 0 1em;
-        width: 420px;
+        height: 0px;
+        visibility: hidden;
     }
-    #view-suggestion .comments .timestamp,#view-place .comments .timestamp{
-        display: block;
-        float: left;
-        line-height: 2.5em;
-        text-align: right;
-        width: 75px;
+    
+        #view-suggestion .comments span.timestamp span.LikeComment,
+        #view-suggestion .comments span.timestamp span.dontLikeComment{
+/*
+            display:none;
+*/
+            line-height: 1em;
+        }
         
-    }
+        
+        #view-suggestion .comments .user,#view-place .comments .user{
+            text-align:center;
+            display:block;
+            float:left;
+            width: 40px;
+        }
+        #view-suggestion .comments .user img,#view-place .comments .user img{
+            width:25px;
+            height:25px;
+        }
+        #view-suggestion .comments .msg,#view-place .comments .msg{
+            display: block;
+            float: left;
+            font-size: 1.1em;
+            line-height: 2.5em;
+            padding: 0 1em;
+            
+        }
+        #view-suggestion .comments .timestamp,#view-place .comments .timestamp{
+            display: block;
+            float: right;
+/*
+            line-height: 2.5em;
+*/
+            text-align: right;
+            position: relative;
+            top:5px;
+            
+        }
+        
+        #view-suggestion .suggestion-element span.votes{
+            
+        }
     #view-suggestion p.popular{
         font-size:1.3em;
         font-weight:bold;
@@ -1413,13 +1546,15 @@ input{
         padding: 0;
         position: relative;
         top:10px;
+/*
         border-top: 1px dotted #BBBBBB;
+*/
     }
     
     #view-suggestion ul.comments li,#view-place ul.comments li{
         border-bottom: 1px dotted #BBBBBB;
         clear: both;
-        padding: 1em 0;
+        padding: 1em 0.5em;
     }
     
     #view-suggestion ul.comments li:after, #view-place ul.comments li:after{           
@@ -1429,6 +1564,7 @@ input{
         height: 0px;
         visibility: hidden;
     }
+    
     
     #view-suggestion ul#feeling{
         float: left;

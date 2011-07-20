@@ -1,23 +1,21 @@
 # coding=utf-8
 
-from google.appengine.ext import db, search
+from google.appengine.ext import db
 
-from georemindme.decorators import classproperty
 from georemindme.paging import *
 from georemindme.models_utils import Visibility
-from geoalert.models import *
-from geolist.models import *
+from geouser.models import User
 
 class CommentHelper(object):
     
     def get_by_key(self, key):
-        '''
+        """
         Obtiene el evento con ese key
-        '''
+        """
         return Comment.get(key)
     
-    def get_by_user(self, user, query_id = None, page=1):
-        '''
+    def get_by_user(self, user, query_id = None, page=1, querier=None):
+        """
         Obtiene una lista con todos los comentarios hechos por un usuario
         
             :param user: usuario a buscar
@@ -28,13 +26,25 @@ class CommentHelper(object):
             :type page: :class:`integer`
             
             :returns: [query_id, [:class:`geovote.models.Comment`]]
-        '''
-        q = Comment.all().filter('user =', user)
-        p = PagedQuery(q, id = query_id, page_size=15)
-        return [p.id, p.fetch_page(page)]
+        """
+        if querier is not None and not isinstance(querier, User):
+            raise TypeError
+        q = Comment.all().filter('user =', user).order('-created')
+        p = PagedQuery(q, id = query_id, page_size=7)
+        comments = p.fetch_page(page)
+        return [p.id,  [{'id': comment.id,
+                        'created': comment.created,
+                        'modified': comment.modified, 
+                        'msg': comment.msg,
+                        'username': comment.user.username,
+                        'instance': comment.instance if comment.instance is not None else None,
+                        'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                        'vote_counter': Vote.objects.get_vote_counter(comment.key()),
+                        }
+                       for comment in comments]]
     
-    def get_by_instance(self, instance, query_id=None, page=1):
-        '''
+    def get_by_instance(self, instance, query_id=None, page=1, querier = None):
+        """
         Obtiene una lista con todos los comentarios hechos en una instancia
         
             :param instance: objeto al que buscar los comentarios
@@ -45,12 +55,30 @@ class CommentHelper(object):
             :type page: :class:`integer`
             
             :returns: [query_id, [:class:`geovote.models.Comment`]]
-        '''
-        q = Comment.all().filter('instance =', instance)
-        p = PagedQuery(q, id = query_id, page_size=15)
-        return [p.id, p.fetch_page(page)]
+        """
+        if querier is not None and not isinstance(querier, User):
+            raise TypeError
+        q = Comment.all().filter('instance =', instance).order('-created')
+        p = PagedQuery(q, id = query_id, page_size=7)
+        comments = p.fetch_page(page)
+        return [p.id, [{'id': comment.id,
+                        'created': comment.created,
+                        'modified': comment.modified, 
+                        'msg': comment.msg,
+                        'username': comment.user.username,
+                        'instance': comment.instance if comment.instance is not None else None,
+                        'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                        'vote_counter': Vote.objects.get_vote_counter(comment.key()),
+                        }
+                       for comment in comments]]
     
     def get_by_id_user(self, id, user):
+        try:
+            id = long(id)
+        except:
+            return None
+        if not isinstance(user, User):
+            raise AttributeError()
         comment = Comment.get_by_id(int(id))
         if comment.user.key() == user.key():
             return comment
@@ -61,9 +89,29 @@ class CommentHelper(object):
                 return comment
             elif comment.instance._is_shared() and comment.instance.user_invited(user):
                 return comment
-        return None        
-        
+        return None      
     
+    def get_by_id_querier(self, id, querier):
+        try:
+            id = long(id)
+        except:
+            return None
+        if not isinstance(querier, User):
+            raise AttributeError()
+        
+        comment = Comment.get_by_id(id)
+        if comment.user.key() == querier.key():
+            return comment
+        if comment._is_public():
+            if comment.instance.user.key() == querier.key():
+                return comment
+            elif comment.instance._is_public():
+                return comment
+            elif comment.instance._is_shared() and comment.instance.user_invited(querier):
+                return comment
+        return None     
+        
+
 class Comment(Visibility):
     '''
     Se puede comentar cualquier objeto del modelo
@@ -89,11 +137,19 @@ class Comment(Visibility):
         
         if msg is None or msg == '':
             raise TypeError('msg is empty')
-        comment = Comment(user, instance, msg)
+        comment = Comment(user=user, instance=instance, msg=msg)
         comment.put()
         if getattr(instance, 'counter', None) is not None:
             instance.counter.set_comments()
         return comment
+    
+    def to_dict(self):
+        return {'id': self.id if self.is_saved() else -1,
+                'instance': self.instance.id,
+                'created': self.created,
+                'modified': self.modified,
+                'msg': self.msg
+                }
         
     
 SHARDS = 5
@@ -139,7 +195,10 @@ class VoteCounter(db.Model):
             counter.count += count
             counter.put()
         db.run_in_transaction(increase)
-        memcache.incr(instance, initial_value=0)
+        if count > 0:
+            memcache.incr(instance, initial_value=0)
+        else:
+            memcache.decr(instance, initial_value=0)
 
 
 class VoteHelper(object):
@@ -154,7 +213,7 @@ class VoteHelper(object):
             
             :returns: True si ya ha votado, False en caso contrario
         '''
-        vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND to = :user', ins=instance_key, user=user.key()).get()
+        vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND user = :user', ins=instance_key, user=user.key()).get()
         if vote is not None:
             return True
         return False

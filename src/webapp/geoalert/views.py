@@ -19,7 +19,7 @@ import memcache
 #===============================================================================
 # PERFIL DE EVENTOS
 #===============================================================================
-def suggestion_profile(request, id):
+def suggestion_profile(request, id, template='webapp/suggestionprofile.html'):
     """Devuelve el perfil de una sugerencia, comprueba la visibilidad de una funcion
         
             :param id: identificador de la sugerencia
@@ -33,8 +33,15 @@ def suggestion_profile(request, id):
         raise Http404
     elif suggestion._is_shared() and not suggestion.user_invited(request.user):
         raise Http404 
-    
-    return render_to_response('webapp/suggestionprofile.html', {'suggestion':suggestion},
+    from geovote.views import get_comments_event
+    comments = get_comments_event(request, id)
+    from geovote.models import Vote
+    return render_to_response(template, {
+                                        'suggestion': suggestion,
+                                        'comments': comments,
+                                        'has_voted': Vote.objects.user_has_voted(request.user, suggestion.key()),
+                                        'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
+                                        },
                                context_instance=RequestContext(request))
 
     
@@ -193,20 +200,43 @@ def add_from_foursquare_id(request, venueid):
     return redirect(place.get_absolute_url(), permanent=True)
 
 
-def view_place(request, slug):
+def view_place(request, slug, template='webapp/place.html'):
     """ Devuelve la vista con informacion de un lugar
        
            :param slug: slug identificativo del lugar
            :type slug: string
     """
+    def load_suggestions_async(suggestions):
+        suggestions_loaded = []
+        for suggestion in suggestions:
+            suggestions_loaded.append(suggestion)
+            if len(suggestions_loaded) > 7:
+                break
+        return suggestions_loaded
+    
     place = Place.objects.get_by_slug(slug)
     if place is None:
         raise Http404
-    from mapsServices.places.GPRequest import *
+    from geovote.models import Vote
+    if request.user.is_authenticated():
+        has_voted = Vote.objects.user_has_voted(request.user, place.key())
+    else:
+        has_voted = False
+    query_id, suggestions_async = Suggestion.objects.get_by_place(place, 
+                                                  querier=request.user if request.user.is_authenticated() else None,
+                                                  async = True
+                                                  )
+    vote_counter = Vote.objects.get_vote_counter(place.key())
+    
+    from mapsServices.places.GPRequest import GPRequest
     try:
         search = GPRequest().retrieve_reference(place.google_places_reference)
     except: 
-        return render_to_response('webapp/place.html', {'place': place},
+        return render_to_response(template, {'place': place,
+                                             'has_voted': has_voted,
+                                             'vote_counter': vote_counter,
+                                             'suggestions': [query_id, load_suggestions_async(suggestions_async)],
+                                              },
                                   context_instance=RequestContext(request)
                                   )
     
@@ -217,8 +247,12 @@ def view_place(request, slug):
                         google_places_reference=search['result']['reference'],
                         google_places_id=search['result']['id']
                         )
-    return render_to_response('webapp/place.html',
-                              {'place': place, 'google': search['result']},
+    return render_to_response(template, {'place': place, 
+                                         'google': search['result'],
+                                         'has_voted': has_voted,
+                                         'vote_counter': vote_counter,
+                                         'suggestions': [query_id, load_suggestions_async(suggestions_async)],
+                                         },
                               context_instance=RequestContext(request)
                               )
         

@@ -5,149 +5,249 @@
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>
     <script type="text/javascript">
-        function vote(id){
+        $(document).ready(function(){
+            //Incrementamos el numero de personas al que le van a gustar
+            //la sugerencia si es votada
+
+            
+            $('.show-all-comments').click(function(){
+                $(this).parent().find('.long-list').toggle('slow');
+                if($(this).text()=="Mostrar todos")
+                    $(this).text("Ocultar");
+                else
+                    $(this).text("Mostrar todos");
+            });
+            
+            $('.LikeComment').click(function(){
+                vote('comment',$(this),1)
+            });
+            $('.dontLikeComment').click(function(){
+                vote('comment',$(this),-1)
+            });
+            
+            $('.LikeSuggestion').click(function(){
+                vote('suggestion',$(this),1)
+            });
+            $('.dontLikeSuggestion').click(function(){
+                vote('suggestion',$(this),-1)
+            });
+            
+            
+            
+            //Aumentamos los me gusta antes de mostrarlos
+            $('.increase').text(parseInt($('.increase').text())+1);
+        });
+        
+        
+        function vote(type,obj,value){
+            var element_id=obj.attr('value')
             
             $.ajax({
                     type: "POST",
-                    url: "/ajax/vote/suggestion/",
+                    url: "/ajax/vote/"+type+"/",
                     data: {
-                        instance_id:id,
-                        puntuation: $('#suggestion_'+id).find('.like').attr('value'),
+                        instance_id:element_id,
+                        puntuation: value,
                     },
                     complete: function(msg){
                         if (msg.status !=200){
-//                            $(this).text("Error "+msg.status)
-//                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+
                         }else{
-                            if($('#suggestion_'+id).find('.like').attr('value')==1){
-                            //$('#suggestion_'+value.value).fadeOut('slow').remove()
-                                $('#suggestion_'+id).find('.like').text("Ya no me gusta");
-                                $('#suggestion_'+id).find('.like').attr('value',-1);
-                            }
-                            else{
-                                $('#suggestion_'+id).find('.like').text("Me gusta");
-                                $('#suggestion_'+id).find('.like').attr('value',1);
-                            }
+                            console.log(msg.responseText)
+                            //if(msg.responseText!=false){
+                                action=obj.attr('class')
+                                obj.addClass('hidden')
+                                
+                                if(action=="LikeComment")
+                                    obj.parent().find(".dontLikeComment").removeClass('hidden')
+                                else if (action=="dontLikeComment")
+                                    obj.parent().find(".LikeComment").removeClass('hidden')
+                                    
+                                if(action=="LikeSuggestion")
+                                    obj.parent().find(".dontLikeSuggestion").removeClass('hidden')
+                                else if (action=="dontLikeSuggestion")
+                                    obj.parent().find(".LikeSuggestion").removeClass('hidden')
+                            //}
                         }
                         
                     }
-                });
+                });    
         }
+    
     </script>
 {%endblock%}
 
 {% block title %}Dashboard{% endblock %}
 {% block goBack %}{%endblock%}
 {% block body %}
-    <h1>Actividad</h1>
-    <div class="section">
-        <div class="header">
-            <h2>Actividad en tu red</h2>
-            <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
-        </div>
+    <div id="activity">
+        <h1>Actividad</h1>
+        <div class="section">
+            <div class="header">
+                <h2>Actividad en tu red</h2>
+                <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+            </div>
 
-    </div>
-    {% if chronology.1|length %}    
-<!--
-        <p>{{chronology.1.0}} mensajes</p>
--->
-        <ul id="chronology">
-        {% for obj in chronology.1 %}
-            <li id="suggestion_{{obj.instance.id}}">
-                <div class="avatar">
-                    <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
-                        <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
-                    </a>
-                </div>
-                <p>                
-                    <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}} <br>
-                    <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
-                    <span class="timestamp">{{obj.created|timesince}} ago</span> <span class="action-bar">| <span onclick="vote('{{obj.instance.id}}')" class="like" value="1">Me gusta</span> <!--| Le gusta a otras {{obj.instance.counters.followers}}--> | <a href="/fb/suggestion/{{obj.id|urlencode}}">Ver detalles</a> | <span onclick="">Comentar</span> | <span onclick="" title="Guardar en favoritos">Guardar</span></span>
-                </p>
-            </li>
-        {% endfor %}
-        </ul>
-    
-        <!-- Si hay más ... -->
-        {% if chronology.1|length == 15%}
-            <div class="load-more">Cargar más</div>
-        {% endif %}    
-    {% else %}
-        {% if not user.counters.followings %}
-            <p>Para poder ver actividad en tu red primero tienes que empezar a seguir a otros usuarios.</p>
-        {% else %}
-            <p>Aún no hay actividad en tu red</p>
-        {% endif %}
-    {% endif %}    
-<!--
-        
-        <li>
-            <div class="avatar">
-                <a href="/fb/user/susana" title="Ver perfil en GeoRemindMe">
-                    <img src="/user/susana/picture/" alt="susana avatar"/>
-                </a>
-            </div>
-            <p>                
-                A <a href="">Susana</a> le gusta la sugerencia de <a href="">Richard</a>:<br>
-                Sugiero que a los que os gusten los comics visiteis la tienda Neoterra<br>
-                <span class="timestamp">06 de julio a las 18:44</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
-            </p>
-        </li>
-        
-        <li>
-            <div class="avatar">
-                <a href="/fb/user/richard" title="Ver perfil en GeoRemindMe">
-                    <img src="/user/richard/picture/" alt="richard avatar"/>
-                </a>
-            </div>
-            <p>                
-                <a href="">hhkaos</a> ha comentado en "<a href="">Sugiero que a lo suqe os gusten los ...</a>":<br>
-                Yo además añadiría que preguntéis cuando son los próximos días de "demos".<br>
-                <span class="timestamp">06 de julio a las 18:44</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
-            </p>
-        </li>
--->
-    
-    
-    
-    
-    
-    {% if friends_to_follow|length %}
-        
-    <div class="section">    
-        <div class="header">
-            <h2>
-                {% blocktrans count friends_to_follow|length as counter %}
-                    Hemos encontrado {{ counter }} persona a la que podrías conocer
-                {% plural %}
-                    Hemos encontrado {{ counter }} personas a las que podrías conocer
-                {% endblocktrans %}
-            </h2>
-            <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
         </div>
-        <ul id="friends-to-follow">
-            {% for id, f in friends_to_follow.items %}
-                
-                <li> <!--style="{% cycle 'clear:left' ''%}">-->
+        {% if chronology.1|length %}    
+    <!--
+            <p>{{chronology.1.0}} mensajes</p>
+    -->
+            <ul id="chronology">
+            {% for obj in chronology.1 %}
+                <li id="suggestion_{{obj.instance.id}}" {%if not forloop.last %}style="border-bottom: 1px solid #DDDDDD;"{% endif %}>
                     <div class="avatar">
-                        <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
-                        <br>
-                        <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
-                            <img src="/user/{{f.username}}/picture/" alt="{{f.username}} avatar"/>
+                        <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
+                            <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
                         </a>
-                        
-                        <div id="following_state_{{ id }}" class="follow-button">
-                            <span  onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
-                        </div>
                     </div>
+                    <p>                
+                        <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}} <br>
+                        <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
+                        
+                        <!--Botonera -->
+                        <span class="action-bar">
+                            <span class="timestamp">{{obj.created|timesince}} ago</span> | 
+                            <span onclick="showCommentBox()">Comentar</span> | 
+                            <a href="/fb/suggestion/{{obj.instance.id|urlencode}}">Detalles</a> | 
+                            
+                            
+                            
+                            {% if obj.has_voted %}
+                                <span class="dontLikeSuggestion" value="{{obj.instance.id}}">
+                                    <span class="hoverlink">Ya no me gusta</span> 
+                                    <span class="text like-text">{{obj.vote_counter}}</span> personas
+                                </span>
+                                
+                                <span class="LikeSuggestion hidden" value="{{obj.instance.id}}">
+                                    <span class="hoverlink">Me gusta</span> 
+                                </span>
+
+                            {% else %}
+                                
+                                <span class="dontLikeSuggestion hidden" value="{{obj.instance.id}}">
+                                    <span class="hoverlink">Ya no me gusta</span> 
+                                    <span class="text increase like-text">{{obj.vote_counter}}</span> personas
+                                </span>
+                                
+                                <span class="LikeSuggestion" value="{{obj.instance.id}}">
+                                    <span class="hoverlink">Me gusta</span> 
+                                </span>
+
+                                
+                            {% endif %}
+                            
+                            | <span onclick="" title="Guardar en favoritos" class="save">Recordar</span>
+                        </span>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <!-- Si hay comentarios en la sugerencia -->
+                        {% if obj.comments.1 %}
+                            <div class="comment-box">
+                                <ul>
+                                    {% for c in obj.comments.1 %}
+                                        <li {% if forloop.counter > 2 %} class="long-list" {% endif %}>
+                                            <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
+                                            <span class="timestamp">{{c.created|timesince}} ago</span> - 
+                                            {% if c.has_voted %}
+                                                <span class="dontLikeComment" value="{{c.id}}">
+                                                    <span class="hoverlink">Ya no me gusta</span> 
+                                                    <span class="text like-text">{{c.vote_counter}}</span> personas
+                                                </span>
+                                                
+                                                <span class="LikeComment hidden" value="{{c.id}}">
+                                                    <span class="hoverlink">Me gusta</span> 
+                                                </span>
+
+                                            {% else %}
+                                                
+                                                <span class="dontLikeComment hidden" value="{{c.id}}">
+                                                    <span class="hoverlink">Ya no me gusta</span> 
+                                                    <span class="text increase like-text">{{c.vote_counter}}</span> personas
+                                                </span>
+                                                
+                                                <span class="LikeComment" value="{{c.id}}">
+                                                    <span class="hoverlink">Me gusta</span> 
+                                                </span>
+
+                                                
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                {% if obj.comments.1|length > 2%}
+                                    <div class="show-all-comments">Mostrar todos</div>
+                                {% endif %}
+                                <div class="input-box">
+                                    <input type="text" value="Escribe un comentario...">
+                                </div>
+                                
+                            </div>
+                        {% endif %}
+                    </p>
+                    
                 </li>
             {% endfor %}
+            </ul>
+        
+            <!-- Si hay más mensajes -->
+            {% if chronology.1|length == 15%}
+                <div class="load-more">Cargar más</div>
+            {% endif %}    
             
-        </ul>
+            
+        {% else %}
+            {% if not user.counters.followings %}
+                <p>Para poder ver actividad en tu red primero tienes que empezar a seguir a otros usuarios.</p>
+            {% else %}
+                <p>Aún no hay actividad en tu red</p>
+            {% endif %}
+        {% endif %}    
+    
+        
+        
+        
+        {% if friends_to_follow|length %}
+            
+        <div class="section">    
+            <div class="header">
+                <h2>
+                    {% blocktrans count friends_to_follow|length as counter %}
+                        Hemos encontrado {{ counter }} persona a la que podrías conocer
+                    {% plural %}
+                        Hemos encontrado {{ counter }} personas a las que podrías conocer
+                    {% endblocktrans %}
+                </h2>
+                <p class="help-icon"><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+            </div>
+            <ul id="friends-to-follow">
+                {% for id, f in friends_to_follow.items %}
+                    
+                    <li> <!--style="{% cycle 'clear:left' ''%}">-->
+                        <div class="avatar">
+                            <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
+                            <br>
+                            <a href="/fb/user/{{f.username}}" title="Ver perfil en GeoRemindMe">
+                                <img src="/user/{{f.username}}/picture/" alt="{{f.username}} avatar"/>
+                            </a>
+                            
+                            <div id="following_state_{{ id }}" class="follow-button">
+                                <span  onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+                
+            </ul>
+        </div>
+        {% endif %}
+
     </div>
-    {% endif %}
-
-
 
 
     

@@ -217,7 +217,7 @@ class JSONRPCSite(object):
                 try:
                     D = loads(request.raw_post_data)
                 except Exception, e:
-					raise InvalidRequestError
+                    raise InvalidRequestError
                     #return HttpResponse('%s - %s' % (e, request.raw_post_data), status=500)
                     #raise ParseError(message='%s %s' % (e, request.raw_post_data))#InvalidRequestError
             

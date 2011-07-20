@@ -117,13 +117,16 @@ class User(polymodel.PolyModel, HookedModel):
             :type query_id: int
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
-
+        from geovote.models import Vote
         q = UserTimelineBase.all().filter('user =', self.key()).order('-created')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'msg': timeline.msg, 'username':timeline.user.username, 
-                        'instance': timeline.instance if timeline.instance is not None else None }
+                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
+                        }
                         for timeline in timelines]]
         
     def get_timelinesystem(self, page=1, query_id=None):
@@ -138,12 +141,16 @@ class User(polymodel.PolyModel, HookedModel):
             :type query_id: int
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
+        from geovote.models import Vote
         q = UserTimelineSystem.all().filter('user =', self.key()).order('-created')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'msg': timeline.msg, 'username':timeline.user.username, 
-                        'instance': timeline.instance if timeline.instance is not None else None}
+                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
+                        }
                        for timeline in timelines]]
     
     def get_timeline(self, page=1, query_id=None):
@@ -172,14 +179,18 @@ class User(polymodel.PolyModel, HookedModel):
             :type query_id: int
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
-        
+        from geovote.models import Vote, Comment
         q = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
         timelines = [db.get(timeline.parent()) for timeline in timelines]
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'msg': timeline.msg, 'username':timeline.user.username, 
-                        'instance': timeline.instance if timeline.instance is not None else None}
+                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
+                        'comments': Comment.objects.get_by_instance(timeline.instance, querier=self),
+                        }
                         for timeline in timelines if timeline is not None ]]
         
         
@@ -231,7 +242,22 @@ class User(polymodel.PolyModel, HookedModel):
                 friends.append(follow)
         return db.get_async(friends)
             
-    
+    def are_friends(self, friend):
+        if isinstance(friend, db.Key):
+            user_following = UserFollowingIndex.all().filter('following =', friend).ancestor(self.key()).count()
+            if user_following == 0:
+                return False
+            friend_following = UserFollowingIndex.all().filter('following =', self.key()).ancestor(friend).count()
+            if friend_following == 0:
+                return False
+        else:
+            user_following = UserFollowingIndex.all().filter('following =', friend.key()).ancestor(self.key()).count()
+            if user_following == 0:
+                return False
+            friend_following = UserFollowingIndex.all().filter('following =', self.key()).ancestor(friend.key()).count()
+            if friend_following == 0:
+                return False
+        return True
       
     def is_authenticated(self):
         return True

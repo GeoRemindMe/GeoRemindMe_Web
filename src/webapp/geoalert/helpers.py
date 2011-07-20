@@ -86,7 +86,7 @@ class EventHelper(object):
     def get_by_id_querier(self, id, querier):
         '''
         Obtiene el evento con ese id comprobando que
-        pertenece al usuario
+        el usuario tiene acceso a el
         
             :raises: :class:`geoalert.exceptions.ForbiddenAccess`
         '''
@@ -187,6 +187,18 @@ class SuggestionHelper(EventHelper):
         q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
+    
+    def get_by_place(self, place, page=1, query_id=None, async=False, querier=None):
+        if not isinstance(querier, User):
+            raise TypeError()
+        q = self._klass.all().filter('poi =', place.key())
+        p = PagedQuery(q, id = query_id)
+        if async:
+            return p.id, q.run()
+        else:
+            [p.id, p.fetch_page(page)]
+            
+            
 
 class AlertSuggestionHelper(AlertHelper):
     _klass = AlertSuggestion

@@ -266,7 +266,10 @@ class Place(POI):
         """
         from georemindme.funcs import u_slugify
         if self.slug is None:
-            self.slug = u_slugify('%s-%s'% (self.name, self.city))
+            if self.city is not None:
+                self.slug = u_slugify('%s-%s'% (self.name, self.city))
+            else:
+                self.slug = u_slugify('%s' % self.name)
         p = Place.all().filter('slug =', self.slug).get()
         if p is not None:
             if not self.is_saved() or p.key() != self.key():
@@ -282,6 +285,7 @@ class Place(POI):
             super(Place, self).put()
             place_new.send(sender=self)
         
+
     def get_absolute_url(self):
         return '/place/%s' % self.slug
     
