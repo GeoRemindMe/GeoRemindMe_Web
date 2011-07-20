@@ -206,7 +206,7 @@ def get_vote_comment(request, instance_id):
         :param instance_id: ID del evento
         :type instance_key: :class:`long`
     """
-    if request.user.is_authenticated()
+    if request.user.is_authenticated():
         comment = Comment.objects.get_by_id_querier(instance_id, request.user)
     else:
         comment = Comment.objects.get_by_id(instance_id)
