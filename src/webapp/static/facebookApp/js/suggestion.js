@@ -606,7 +606,7 @@ function placesAutocomplete(){
         marker.setIcon(image);
         marker.setPosition(place.geometry.location);
         
-        console.log(marker)
+        //~ console.log(marker)
 
         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
         infowindow.open(map, marker);
