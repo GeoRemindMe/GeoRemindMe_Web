@@ -8,10 +8,7 @@
         $(document).ready(function(){
             //Incrementamos el numero de personas al que le van a gustar
             //la sugerencia si es votada
-            $('.like-text').each(function(index,element){
-                counter=parseInt($(element).text())
-                $(element).text(counter+1)
-            })
+
             
             $('.show-all-comments').click(function(){
                 $(this).parent().find('.long-list').toggle('slow');
@@ -20,37 +17,63 @@
                 else
                     $(this).text("Mostrar todos");
             });
+            
+            $('.LikeComment').click(function(){
+                vote('comment',$(this),1)
+            });
+            $('.dontLikeComment').click(function(){
+                vote('comment',$(this),-1)
+            });
+            
+            $('.LikeSuggestion').click(function(){
+                vote('suggestion',$(this),1)
+            });
+            $('.dontLikeSuggestion').click(function(){
+                vote('suggestion',$(this),-1)
+            });
+            
+            
+            
+            //Aumentamos los me gusta antes de mostrarlos
+            $('.increase').text(parseInt($('.increase').text())+1);
         });
-    
-        function vote(id){
+        
+        
+        function vote(type,obj,value){
+            var element_id=obj.attr('value')
             
             $.ajax({
                     type: "POST",
-                    url: "/ajax/vote/suggestion/",
+                    url: "/ajax/vote/"+type+"/",
                     data: {
-                        instance_id:id,
-                        puntuation: $('#suggestion_'+id).find('.like').attr('value'),
+                        instance_id:element_id,
+                        puntuation: value,
                     },
                     complete: function(msg){
                         if (msg.status !=200){
-//                            $(this).text("Error "+msg.status)
-//                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+
                         }else{
-                            if($('#suggestion_'+id).find('.like').attr('value')==1){
-                            //$('#suggestion_'+value.value).fadeOut('slow').remove()
-                                $('#suggestion_'+id).find('.like').text("Ya no me gusta");
-                                $('#suggestion_'+id).find('.like').attr('value',-1);
-                            }
-                            else{
-                                $('#suggestion_'+id).find('.like').text("Me gusta");
-                                $('#suggestion_'+id).find('.like').attr('value',1);
-                            }
-                            $('#suggestion_'+id).find('.like-text').toggle();
+                            console.log(msg.responseText)
+                            //if(msg.responseText!=false){
+                                action=obj.attr('class')
+                                obj.addClass('hidden')
+                                
+                                if(action=="LikeComment")
+                                    obj.parent().find(".dontLikeComment").removeClass('hidden')
+                                else if (action=="dontLikeComment")
+                                    obj.parent().find(".LikeComment").removeClass('hidden')
+                                    
+                                if(action=="LikeSuggestion")
+                                    obj.parent().find(".dontLikeSuggestion").removeClass('hidden')
+                                else if (action=="dontLikeSuggestion")
+                                    obj.parent().find(".LikeSuggestion").removeClass('hidden')
+                            //}
                         }
                         
                     }
-                });
+                });    
         }
+    
     </script>
 {%endblock%}
 
@@ -87,38 +110,75 @@
                             <span class="timestamp">{{obj.created|timesince}} ago</span> | 
                             <span onclick="showCommentBox()">Comentar</span> | 
                             <a href="/fb/suggestion/{{obj.instance.id|urlencode}}">Detalles</a> | 
+                            
+                            
+                            
                             {% if obj.has_voted %}
-                                <span onclick="vote('{{obj.instance.id}}')" class="like" value="-1">Ya no me gusta</span> 
-                                <span class="like-text">{{obj.vote_counter}} personas</span>
+                                <span class="dontLikeSuggestion" value="{{obj.instance.id}}">
+                                    <span class="hoverlink">Ya no me gusta</span> 
+                                    <span class="text like-text">{{obj.vote_counter}}</span> personas
+                                </span>
+                                
+                                <span class="LikeSuggestion hidden" value="{{obj.instance.id}}">
+                                    <span class="hoverlink">Me gusta</span> 
+                                </span>
+
                             {% else %}
-                                <span onclick="vote('{{obj.instance.id}}')" class="like" value="1">Me gusta</span> 
-                                <span class="like-text" style="display:none">{{obj.vote_counter}}</span> 
+                                
+                                <span class="dontLikeSuggestion hidden" value="{{obj.instance.id}}">
+                                    <span class="hoverlink">Ya no me gusta</span> 
+                                    <span class="text increase like-text">{{obj.vote_counter}}</span> personas
+                                </span>
+                                
+                                <span class="LikeSuggestion" value="{{obj.instance.id}}">
+                                    <span class="hoverlink">Me gusta</span> 
+                                </span>
+
+                                
                             {% endif %}
+                            
                             | <span onclick="" title="Guardar en favoritos" class="save">Recordar</span>
                         </span>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         <!-- Si hay comentarios en la sugerencia -->
                         {% if obj.comments.1 %}
                             <div class="comment-box">
                                 <ul>
                                     {% for c in obj.comments.1 %}
-                                        
                                         <li {% if forloop.counter > 2 %} class="long-list" {% endif %}>
                                             <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
                                             <span class="timestamp">{{c.created|timesince}} ago</span> - 
                                             {% if c.has_voted %}
-                                                <span onclick="vote('commentID')" class="like hoverlink" value="1">Me gusta</span> 
+                                                <span class="dontLikeComment" value="{{c.id}}">
+                                                    <span class="hoverlink">Ya no me gusta</span> 
+                                                    <span class="text like-text">{{c.vote_counter}}</span> personas
+                                                </span>
+                                                
+                                                <span class="LikeComment hidden" value="{{c.id}}">
+                                                    <span class="hoverlink">Me gusta</span> 
+                                                </span>
+
                                             {% else %}
-                                                <span onclick="vote('commentID')" class="like hoverlink" value="-1">Ya no gusta</span> 
+                                                
+                                                <span class="dontLikeComment hidden" value="{{c.id}}">
+                                                    <span class="hoverlink">Ya no me gusta</span> 
+                                                    <span class="text increase like-text">{{c.vote_counter}}</span> personas
+                                                </span>
+                                                
+                                                <span class="LikeComment" value="{{c.id}}">
+                                                    <span class="hoverlink">Me gusta</span> 
+                                                </span>
+
+                                                
                                             {% endif %}
                                         </li>
                                     {% endfor %}
-<!--
-                                        <li>
-                                            <img src="/user/susana/picture/" alt="user avatar"><a href="">Pack</a>: Deberíais tomar unas cerveza mientras<br>
-                                            <span class="timestamp">{{obj.created|timesince}} ago</span> - 
-                                            <span onclick="vote('commentID')" class="like hoverlink" value="1">Me gusta</span> 
-                                        </li>
--->
                                 </ul>
                                 {% if obj.comments.1|length > 2%}
                                     <div class="show-all-comments">Mostrar todos</div>
@@ -135,10 +195,12 @@
             {% endfor %}
             </ul>
         
-            <!-- Si hay más ... -->
+            <!-- Si hay más mensajes -->
             {% if chronology.1|length == 15%}
                 <div class="load-more">Cargar más</div>
             {% endif %}    
+            
+            
         {% else %}
             {% if not user.counters.followings %}
                 <p>Para poder ver actividad en tu red primero tienes que empezar a seguir a otros usuarios.</p>
@@ -146,36 +208,7 @@
                 <p>Aún no hay actividad en tu red</p>
             {% endif %}
         {% endif %}    
-    <!--
-            
-            <li>
-                <div class="avatar">
-                    <a href="/fb/user/susana" title="Ver perfil en GeoRemindMe">
-                        <img src="/user/susana/picture/" alt="susana avatar"/>
-                    </a>
-                </div>
-                <p>                
-                    A <a href="">Susana</a> le gusta la sugerencia de <a href="">Richard</a>:<br>
-                    Sugiero que a los que os gusten los comics visiteis la tienda Neoterra<br>
-                    <span class="timestamp">06 de julio a las 18:44</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
-                </p>
-            </li>
-            
-            <li>
-                <div class="avatar">
-                    <a href="/fb/user/richard" title="Ver perfil en GeoRemindMe">
-                        <img src="/user/richard/picture/" alt="richard avatar"/>
-                    </a>
-                </div>
-                <p>                
-                    <a href="">hhkaos</a> ha comentado en "<a href="">Sugiero que a lo suqe os gusten los ...</a>":<br>
-                    Yo además añadiría que preguntéis cuando son los próximos días de "demos".<br>
-                    <span class="timestamp">06 de julio a las 18:44</span> <span class="action-bar">| <span onclick="">Me gusta</span> | <span onclick="">Comentar</span> | <span onclick="">Guardar</span></span>
-                </p>
-            </li>
-    -->
-        
-        
+    
         
         
         
