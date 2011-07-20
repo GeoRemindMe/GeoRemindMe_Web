@@ -1274,6 +1274,7 @@ input{
         }
         div#content div.collapsed,div#content div.expanded{
             border:0;
+            cursor:default;
         }
             div#content div.expanded dl{
                 margin: 0;
