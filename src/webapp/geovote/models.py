@@ -139,7 +139,10 @@ class VoteCounter(db.Model):
             counter.count += count
             counter.put()
         db.run_in_transaction(increase)
-        memcache.incr(instance, initial_value=0)
+        if count > 0:
+            memcache.incr(instance, initial_value=0)
+        else:
+            memcache.decr(instance, initial_value=0)
 
 
 class VoteHelper(object):
