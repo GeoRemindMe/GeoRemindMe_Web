@@ -16,7 +16,7 @@ class CommentHelper(object):
         '''
         return Comment.get(key)
     
-    def get_by_user(self, user, query_id = None, page=1):
+    def get_by_user(self, user, query_id = None, page=1, querier=None):
         '''
         Obtiene una lista con todos los comentarios hechos por un usuario
         
@@ -29,11 +29,23 @@ class CommentHelper(object):
             
             :returns: [query_id, [:class:`geovote.models.Comment`]]
         '''
+        if querier is not None and not isinstance(querier, User):
+            raise TypeError
         q = Comment.all().filter('user =', user)
         p = PagedQuery(q, id = query_id, page_size=15)
-        return [p.id, p.fetch_page(page)]
+        comments = p.fetch_page(page)
+        return [p.id,  [{'id': comment.id,
+                        'created': comment.created,
+                        'modified': comment.modified, 
+                        'msg': comment.msg,
+                        'username': comment.user.username,
+                        'instance': comment.instance if comment.instance is not None else None,
+                        'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                        'vote_counter': Vote.objects.get_vote_counter(comment.key()),
+                        }
+                       for comment in comments]]
     
-    def get_by_instance(self, instance, query_id=None, page=1):
+    def get_by_instance(self, instance, query_id=None, page=1, querier = None):
         '''
         Obtiene una lista con todos los comentarios hechos en una instancia
         
@@ -46,9 +58,21 @@ class CommentHelper(object):
             
             :returns: [query_id, [:class:`geovote.models.Comment`]]
         '''
+        if querier is not None and not isinstance(querier, User):
+            raise TypeError
         q = Comment.all().filter('instance =', instance)
         p = PagedQuery(q, id = query_id, page_size=15)
-        return [p.id, p.fetch_page(page)]
+        comments = p.fetch_page(page)
+        return [p.id, [{'id': comment.id,
+                        'created': comment.created,
+                        'modified': comment.modified, 
+                        'msg': comment.msg,
+                        'username': comment.user.username,
+                        'instance': comment.instance if comment.instance is not None else None,
+                        'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                        'vote_counter': Vote.objects.get_vote_counter(comment.key()),
+                        }
+                       for comment in comments]]
     
     def get_by_id_user(self, id, user):
         comment = Comment.get_by_id(int(id))

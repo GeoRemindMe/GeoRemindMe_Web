@@ -33,9 +33,12 @@ def suggestion_profile(request, id, template='webapp/suggestionprofile.html'):
         raise Http404
     elif suggestion._is_shared() and not suggestion.user_invited(request.user):
         raise Http404 
+    from geovote.views import get_comments_event
+    comments = get_comments_event(request, id)
     from geovote.models import Vote
     return render_to_response(template, {
                                         'suggestion': suggestion,
+                                        'comments': comments
                                         'has_voted': Vote.objects.user_has_voted(request.user, suggestion.key()),
                                         'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
                                         },

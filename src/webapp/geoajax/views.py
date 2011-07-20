@@ -587,22 +587,9 @@ def do_comment_event(request):
     """
     instance_id = request.POST['instance_id']
     msg = request.POST['msg']
-    
-    return HttpResponse(geovote.do_comment_event(request, instance_id, msg),
-                         mimetype="application/json")
-    
-@ajax_request
-def do_comment_list(request):
-    """
-    Realiza un comentario a una lista
-    Parametros POST
-        instance_id: lista a comentar
-        msg: mensaje
-    """
-    instance_id = request.POST['instance_id']
-    msg = request.POST['msg']
-    
-    return HttpResponse(geovote.do_comment_list(request, instance_id, msg),
+    comment = geovote.do_comment_event(request, instance_id, msg)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(comment, cls=JSONEncoder),
                          mimetype="application/json")
     
 @ajax_request
@@ -619,7 +606,23 @@ def get_comments_event(request):
     page = request.POST.get('page', 1)
     comments = geovote.get_comments_event(request, instance_id, query_id, page) 
     
-    return HttpResponse(comments, mimetype="application/json") 
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(comments, cls=JSONEncoder),
+                         mimetype="application/json")
+
+@ajax_request
+def do_comment_list(request):
+    """
+    Realiza un comentario a una lista
+    Parametros POST
+        instance_id: lista a comentar
+        msg: mensaje
+    """
+    instance_id = request.POST['instance_id']
+    msg = request.POST['msg']
+    
+    return HttpResponse(geovote.do_comment_list(request, instance_id, msg),
+                         mimetype="application/json")
 
 @ajax_request
 def get_comments_list(request):

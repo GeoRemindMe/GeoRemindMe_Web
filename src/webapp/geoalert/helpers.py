@@ -86,7 +86,7 @@ class EventHelper(object):
     def get_by_id_querier(self, id, querier):
         '''
         Obtiene el evento con ese id comprobando que
-        pertenece al usuario
+        el usuario tiene acceso a el
         
             :raises: :class:`geoalert.exceptions.ForbiddenAccess`
         '''

@@ -19,7 +19,7 @@ def do_comment_event(request, instance_id, msg):
         :type msg: :class:`string`
     """
     user = request.session['user']
-    event = Event.objects.get_by_id_user(id=instance_id, user=user)
+    event = Event.objects.get_by_id_querier(id=instance_id, querier=user)
     if event is None:
         return None
     comment = Comment.do_comment(user=user, instance=event, msg=msg)
@@ -57,15 +57,14 @@ def get_comments_event(request, instance_id, query_id=None, page=1):
         :param page: pagina a buscar
         :type page: :class:`integer`
     """
-    user = request.session.get('user', None)
-    if user is not None:
-        event = Event.objects.get_by_id_user(instance_id, user)
-    else:
+    if not request.user.is_authenticated():
         event = Event.objects.get_by_id(instance_id)
+    else:
+        event = Event.objects.get_by_id_querier(instance_id, request.user)
     if event is None:
         return None
     
-    return _get_comments(event, query_id=query_id, page=page)
+    return _get_comments(event, query_id=query_id, page=page, querier=request.user)
 
 
 def get_comments_list(request, instance_id, query_id=None, page=1):
@@ -90,7 +89,7 @@ def get_comments_list(request, instance_id, query_id=None, page=1):
     return _get_comments(list, query_id=query_id, page=page)        
 
 
-def _get_comments(instance, query_id=None, page=1):
+def _get_comments(instance, query_id=None, page=1, querier=None):
     """
     Obtiene los comentarios de cualquier objeto
     
@@ -102,8 +101,10 @@ def _get_comments(instance, query_id=None, page=1):
         :type page: :class:`integer`
         
     """
-    comments = Comment.objects.get_by_instance(instance, query_id=query_id, page=page)
-    
+    if querier.is_authenticated():
+        comments = Comment.objects.get_by_instance(instance, query_id=query_id, page=page, querier=querier)
+    else:
+        comments = Comment.objects.get_by_instance(instance, query_id=query_id, page=page)
     return comments
     
 #===========================================================================
@@ -121,7 +122,6 @@ def do_vote_suggestion(request, instance_id, vote=1):
     """
     
     event = Suggestion.objects.get_by_id_querier(id=instance_id, querier=request.user)
-    #~ raise Exception(instance_id)
     if event is None:
         return None
     vote = Vote.do_vote(user=request.user, instance=event, count=vote)
