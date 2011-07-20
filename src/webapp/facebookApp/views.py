@@ -95,7 +95,7 @@ def profile(request, username):
             is_following = None
             is_follower = None
         if is_following:  # el usuario logueado, sigue al del perfil
-            timeline = UserTimeline.objects.get_by_id(profile_user.id, vis='shared')
+            timeline = UserTimeline.objects.get_by_id(profile_user.id, querier=request.user)
         elif settings.show_timeline:
             timeline = UserTimeline.objects.get_by_id(profile_user.id)
         show_followers = settings.show_followers,

@@ -1428,13 +1428,15 @@ input{
     #view-suggestion div.suggestion h1{
         line-height: 1em;
         margin: 0.2em 0;
+        display:block;
     }
     #view-suggestion div.suggestion p{
         font-size: 1.1em;
         line-height: 1.7em;
     }
     #view-suggestion div.suggestion img{
-        float:right;
+        float: right;
+        margin-top: 15px;
     }
     #view-suggestion .likeBtn{
         margin:1em 0;
@@ -1442,31 +1444,58 @@ input{
     #view-suggestion textarea{
         width:100%
     }
-    #view-suggestion .comments .user,#view-place .comments .user{
-        text-align:center;
-        display:block;
-        float:left;
+    
+    #view-suggestion .suggestion-element{
+        padding: 0.5em;
     }
-    #view-suggestion .comments .user img,#view-place .comments .user img{
-        width:25px;
-        height:25px;
-    }
-    #view-suggestion .comments .msg,#view-place .comments .msg{
-        display: block;
-        float: left;
-        font-size: 1.1em;
-        line-height: 2.5em;
-        padding: 0 1em;
-        width: 420px;
-    }
-    #view-suggestion .comments .timestamp,#view-place .comments .timestamp{
-        display: block;
-        float: left;
-        line-height: 2.5em;
-        text-align: right;
-        width: 75px;
+
+    #view-suggestion .suggestion-element:hover{
+        background-color: #EEEEEE;
+        
+        
         
     }
+    
+    #view-suggestion .suggestion-element:after{
+        clear: both;
+        content: ".";
+        display: block;
+        height: 0px;
+        visibility: hidden;
+    }
+        #view-suggestion .comments span.timestamp span{
+            visibility:hidden;
+            display:block;
+            line-height: 1em;
+        }
+        
+        
+        #view-suggestion .comments .user,#view-place .comments .user{
+            text-align:center;
+            display:block;
+            float:left;
+            width: 40px;
+        }
+        #view-suggestion .comments .user img,#view-place .comments .user img{
+            width:25px;
+            height:25px;
+        }
+        #view-suggestion .comments .msg,#view-place .comments .msg{
+            display: block;
+            float: left;
+            font-size: 1.1em;
+            line-height: 2.5em;
+            padding: 0 1em;
+            
+        }
+        #view-suggestion .comments .timestamp,#view-place .comments .timestamp{
+            display: block;
+            float: right;
+            line-height: 2.5em;
+            text-align: right;
+            
+            
+        }
     #view-suggestion p.popular{
         font-size:1.3em;
         font-weight:bold;
@@ -1490,7 +1519,7 @@ input{
     #view-suggestion ul.comments li,#view-place ul.comments li{
         border-bottom: 1px dotted #BBBBBB;
         clear: both;
-        padding: 1em 0;
+        padding: 1em 0.5em;
     }
     
     #view-suggestion ul.comments li:after, #view-place ul.comments li:after{           
@@ -1500,6 +1529,7 @@ input{
         height: 0px;
         visibility: hidden;
     }
+    
     
     #view-suggestion ul#feeling{
         float: left;
