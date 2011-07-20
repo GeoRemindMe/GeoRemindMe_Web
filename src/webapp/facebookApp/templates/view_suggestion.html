@@ -6,6 +6,7 @@
 {% block title %}Ver sugerencia{% endblock %}
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
        
@@ -57,13 +58,43 @@
             }
         });
     }
+    
+    function vote(id,puntuation){
+            
+            $.ajax({
+                    type: "POST",
+                    url: "/ajax/vote/suggestion/",
+                    data: {
+                        instance_id:id,
+                        puntuation: puntuation,//$('#suggestion_'+id).find('.like').attr('value'),
+                    },
+                    complete: function(msg){
+                        if (msg.status !=200){
+//                            $(this).text("Error "+msg.status)
+//                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+                        }else{
+                            if($('#suggestion_'+id).find('.like').attr('value')==1){
+                            //$('#suggestion_'+value.value).fadeOut('slow').remove()
+                                $('#suggestion_'+id).find('.like').text("Ya no me gusta");
+                                $('#suggestion_'+id).find('.like').attr('value',-1);
+                            }
+                            else{
+                                $('#suggestion_'+id).find('.like').text("Me gusta");
+                                $('#suggestion_'+id).find('.like').attr('value',1);
+                            }
+                            $(document).find('.like-text').toggle();
+                        }
+                        
+                    }
+                });
+        }
     </script>
 {%endblock%}
 
 {% block body %}
     <div id="view-suggestion">
         <div id="autor">
-            <img src="/user/{{suggestion.user.username}}/picture/" alt="{{suggestion.user.username}} avatar">
+            <a href="/user/{{suggestion.user.username}}/picture/"><img src="/user/{{suggestion.user.username}}/picture/" alt="{{suggestion.user.username}} avatar"></a>
             <p>
                 <a href="/fb{{suggestion.user.get_absolute_url}}">{{suggestion.user.username}}</a>
                 sugiere:
@@ -81,7 +112,12 @@
             <p>
                 <strong>Lugar</strong>: <a href="/fb{{suggestion.poi.get_absolute_url}}">{{suggestion.poi.name}}</a>, <br>
                 <strong>Dirección</strong>: {{suggestion.poi.address}}<br>
-                <strong>Fecha</strong>: [25/04/2011 al 30/05/2011]<br>
+                {% if suggestion.date_starts or suggestion.date_ends %}
+                    <strong>Fecha</strong>: 
+                    [25/04/2011 al 30/05/2011]<br>
+                {% endif %}
+                
+                
                 <strong>Palabras clave</strong>: <a href="">ocio</a> | <a href="">granada</a><br>
             </p>
 
@@ -90,10 +126,16 @@
             <p>Reportar sugerencia duplicada</p>
 -->
         </div>
-        <span class="btn likeBtn">Me gusta</span>
+        {% if not has_vote %}
+            <span onclick="vote({{suggestion.id}},1)" class="btn">Me gusta</span> 
+        {% else %}
+            <span onclick="vote({{suggestion.id}},-1)" class="btn">Ya no me gusta</span> 
+            <span class="like-text">{{vote_counter}} personas</span>
+        {% endif %}
         <span class="btn likeBtn">Recordar</span>
         
         
+<!--
         <p class="popular">Comentario más popular</p>
         <div id="comments" class="comments suggestion-element">
             <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
@@ -103,6 +145,7 @@
                 <span class="hoverlink like">Me gusta</span>
             </span>
         </div>
+-->
         <p class="clear big">¿Tienes algo que añadir a esta sugerencia?</p>
         <textarea id="msg"></textarea>
         <ul id="feeling">

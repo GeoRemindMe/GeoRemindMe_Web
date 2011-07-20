@@ -12,6 +12,14 @@
                 counter=parseInt($(element).text())
                 $(element).text(counter+1)
             })
+            
+            $('.show-all-comments').click(function(){
+                $(this).parent().find('.long-list').toggle('slow');
+                if($(this).text()=="Mostrar todos")
+                    $(this).text("Ocultar");
+                else
+                    $(this).text("Mostrar todos");
+            });
         });
     
         function vote(id){
@@ -88,25 +96,39 @@
                             {% endif %}
                             | <span onclick="" title="Guardar en favoritos" class="save">Recordar</span>
                         </span>
-                        
-                        <div class="comment-box">
-                            <ul>
-                                <li>
-                                    <img src="/user/susana/picture/" alt="user avatar"><a href="">Pack</a>: Deberíais tomar unas cerveza mientras<br>
-                                    <span class="timestamp">{{obj.created|timesince}} ago</span> - 
-                                    <span onclick="vote('commentID')" class="like hoverlink" value="1">Me gusta</span>
-                                </li>
-                                <li>
-                                    <img src="/user/susana/picture/" alt="user avatar"><a href="">Pack</a>: Deberíais tomar unas cerveza mientras<br>
-                                    <span class="timestamp">{{obj.created|timesince}} ago</span> - 
-                                    <span onclick="vote('commentID')" class="like hoverlink" value="1">Me gusta</span> 
-                                </li>
-                            </ul>
-                            <div class="input-box">
-                                <input type="text" value="Escribe un comentario...">
+                        <!-- Si hay comentarios en la sugerencia -->
+                        {% if obj.comments.1 %}
+                            <div class="comment-box">
+                                <ul>
+                                    {% for c in obj.comments.1 %}
+                                        
+                                        <li {% if forloop.counter > 2 %} class="long-list" {% endif %}>
+                                            <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
+                                            <span class="timestamp">{{c.created|timesince}} ago</span> - 
+                                            {% if c.has_voted %}
+                                                <span onclick="vote('commentID')" class="like hoverlink" value="1">Me gusta</span> 
+                                            {% else %}
+                                                <span onclick="vote('commentID')" class="like hoverlink" value="-1">Ya no gusta</span> 
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+<!--
+                                        <li>
+                                            <img src="/user/susana/picture/" alt="user avatar"><a href="">Pack</a>: Deberíais tomar unas cerveza mientras<br>
+                                            <span class="timestamp">{{obj.created|timesince}} ago</span> - 
+                                            <span onclick="vote('commentID')" class="like hoverlink" value="1">Me gusta</span> 
+                                        </li>
+-->
+                                </ul>
+                                {% if obj.comments.1|length > 2%}
+                                    <div class="show-all-comments">Mostrar todos</div>
+                                {% endif %}
+                                <div class="input-box">
+                                    <input type="text" value="Escribe un comentario...">
+                                </div>
+                                
                             </div>
-                        </div>
-
+                        {% endif %}
                     </p>
                     
                 </li>

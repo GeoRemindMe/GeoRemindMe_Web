@@ -728,99 +728,115 @@ input{
         padding: 0;
     }
     
-    #activity ul#chronology li{
-/*
-        border-bottom: 1px solid #DDDDDD;
-*/
-        clear: both;
-        list-style: none outside none;
-        margin: 0.5em 0;
-        padding: 0.5em 0;
-    }
-    
-    #activity ul#chronology li:after{
-        clear: both;
-        content: ".";
-        display: block;
-        height: 0px;
-        visibility: hidden;
-    }
-    #activity ul#chronology li hr{
-    }
-    
-    #activity ul#chronology li div.avatar{        
-        display: block;
-        float: left;
-        margin: 0 1em 0 0;
-        text-align: left;
-        width: 50px;
-        height:50px;
-    }
-    #activity ul#chronology li div.avatar img{
-        width:50px
-    }
-    
-    
-    #activity ul#chronology li span.action-bar{
-        font-size: 0.9em;
-        padding-left: 0.5em;
-    }
-        #activity ul#chronology li span.action-bar span.timestamp{
-            color: #999;
-            display: block;
-            font-size: 1em;
-            float: left;
-        }
-        #activity ul#chronology li span.action-bar span, span.action-bar a{
-            color:#0011FF;
-            margin: 0 0.5em;
-            text-decoration:none;
-        }
-        #activity ul#chronology li span.action-bar span:hover, span.action-bar a:hover{
-            text-decoration:underline;
-            cursor:pointer;
-        }
-        #activity ul#chronology li span.action-bar span.like-text{
-            background: url("/static/facebookApp/img/icons/like_min.png") no-repeat scroll -2px 1px transparent;
-            color: black;
-            display: inline-block;
-            margin-left: 0;
-            padding-left: 15px;
-        }
-        #activity ul#chronology li span.action-bar span.like-text:hover{
-            text-decoration:none;
-            cursor:default;
-        }
-        #activity ul#chronology li span.action-bar a.comment{
-            background: url("/static/facebookApp/img/icons/comments.png") no-repeat scroll 0 2px transparent;
-            display: inline-block;
-            padding-left: 20px;
+        #activity ul#chronology li{
+    /*
+            border-bottom: 1px solid #DDDDDD;
+    */
+            clear: both;
+            list-style: none outside none;
+            margin: 0.5em 0;
+            padding: 0.5em 0;
         }
         
-        /* Comments in the chronology */
-        #activity ul#chronology div.comment-box{
-            padding-left: 50px;
+        #activity ul#chronology li:after{
+            clear: both;
+            content: ".";
+            display: block;
+            height: 0px;
+            visibility: hidden;
         }
-        #activity ul#chronology div.comment-box ul{
-            margin:0;
-            padding:0;
+        #activity ul#chronology li hr{
         }
-            #activity ul#chronology div.comment-box ul li,#activity ul#chronology div.input-box{
-                border-bottom: 1px solid #DDDDDD;
-                background-color: #EDEFF4;
-                margin: 2px 0;
-                padding: 0.5em;
-            }
-            #activity ul#chronology div.comment-box ul li img{
+        
+        #activity ul#chronology li div.avatar{        
+            display: block;
+            float: left;
+            margin: 0 1em 0 0;
+            text-align: left;
+            width: 50px;
+            height:50px;
+        }
+        #activity ul#chronology li div.avatar img{
+            width:50px
+        }
+        
+        
+        #activity ul#chronology li span.action-bar{
+            font-size: 0.9em;
+            padding-left: 0.5em;
+        }
+            #activity ul#chronology li span.action-bar span.timestamp{
+                color: #999;
+                display: block;
+                font-size: 1em;
                 float: left;
-                height: 25px;
-                margin-right: 10px;
-                width: 25px;
             }
-            #activity ul#chronology div.comment-box ul li .timestamp,#activity ul#chronology div.comment-box ul li .like{
-                font-size:0.9em;
+            #activity ul#chronology li span.action-bar span, span.action-bar a{
+                color:#0011FF;
+                margin: 0 0.5em;
+                text-decoration:none;
+            }
+            #activity ul#chronology li span.action-bar span:hover, span.action-bar a:hover{
+                text-decoration:underline;
+                cursor:pointer;
+            }
+            #activity ul#chronology li span.action-bar span.like-text{
+                background: url("/static/facebookApp/img/icons/like_min.png") no-repeat scroll -2px 1px transparent;
+                color: black;
+                display: inline-block;
+                margin-left: 0;
+                padding-left: 15px;
+            }
+            #activity ul#chronology li span.action-bar span.like-text:hover{
+                text-decoration:none;
+                cursor:default;
+            }
+            #activity ul#chronology li span.action-bar a.comment{
+                background: url("/static/facebookApp/img/icons/comments.png") no-repeat scroll 0 2px transparent;
+                display: inline-block;
+                padding-left: 20px;
             }
             
+            /* Comments in the chronology */
+            #activity ul#chronology div.comment-box{
+                padding-left: 50px;
+            }
+            #activity ul#chronology div.comment-box ul{
+                margin:0;
+                padding:0;
+            }
+                #activity ul#chronology li.long-list{
+                    display:none;
+                }
+                #activity ul#chronology div.comment-box ul li,
+                #activity ul#chronology div.input-box,
+                #activity div.show-all-comments{
+                    border-bottom: 1px solid #DDDDDD;
+                    background-color: #EDEFF4;
+                    margin: 2px 0;
+                    padding: 0.5em;
+                }
+                
+                #activity div.show-all-comments{
+                    color: blue;
+                    font-size: 0.9em;
+                    line-height: 1em;
+                    padding: 0.3em;
+                    text-align: center;
+                }
+                #activity div.show-all-comments:hover{
+                    cursor:pointer;
+                }
+                #activity ul#chronology div.comment-box ul li img{
+                    float: left;
+                    height: 25px;
+                    margin-right: 10px;
+                    width: 25px;
+                }
+                #activity ul#chronology div.comment-box ul li .timestamp,#activity ul#chronology div.comment-box ul li .like{
+                    font-size:0.9em;
+                }
+                
         
         #activity ul#chronology div.input-box input{
             border: 1px solid #BDC7D8;
@@ -1437,6 +1453,7 @@ input{
     #view-suggestion div.suggestion img{
         float: right;
         margin-top: 15px;
+        border: 1px solid #AAAAAA;
     }
     #view-suggestion .likeBtn{
         margin:1em 0;
