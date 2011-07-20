@@ -174,9 +174,8 @@ def get_vote_suggestion(request, instance_id):
         :param instance_id: ID del evento
         :type instance_key: :class:`long`
     """
-    user = request.session['user']
-    if user is not None:
-        suggestion = Suggestion.objects.get_by_id_user(instance_id, user)
+    if request.user.is_authenticated():
+        suggestion = Suggestion.objects.get_by_id_querier(instance_id, request.user)
     else:
         suggestion = Suggestion.objects.get_by_id(instance_id)
     if suggestion is None:
@@ -191,9 +190,8 @@ def get_vote_list(request, instance_id):
         :param instance_id: ID del evento
         :type instance_key: :class:`long`
     """
-    user = request.session['user']
-    if user is not None:
-        list = List.objects.get_by_id_user(instance_id, user)
+    if request.user.is_authenticated():
+        list = List.objects.get_by_id_querier(instance_id, request.user)
     else:
         list = List.objects.get_by_id(instance_id)
     if list is None:
@@ -208,9 +206,8 @@ def get_vote_comment(request, instance_id):
         :param instance_id: ID del evento
         :type instance_key: :class:`long`
     """
-    user = request.session['user']
-    if user is not None:
-        comment = Comment.objects.get_by_id_user(instance_id, user)
+    if request.user.is_authenticated()
+        comment = Comment.objects.get_by_id_querier(instance_id, request.user)
     else:
         comment = Comment.objects.get_by_id(instance_id)
     if suggestion is None:

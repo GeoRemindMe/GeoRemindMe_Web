@@ -1,23 +1,21 @@
 # coding=utf-8
 
-from google.appengine.ext import db, search
+from google.appengine.ext import db
 
-from georemindme.decorators import classproperty
 from georemindme.paging import *
 from georemindme.models_utils import Visibility
-from geoalert.models import *
-from geolist.models import *
+from geouser.models import User
 
 class CommentHelper(object):
     
     def get_by_key(self, key):
-        '''
+        """
         Obtiene el evento con ese key
-        '''
+        """
         return Comment.get(key)
     
     def get_by_user(self, user, query_id = None, page=1, querier=None):
-        '''
+        """
         Obtiene una lista con todos los comentarios hechos por un usuario
         
             :param user: usuario a buscar
@@ -28,11 +26,11 @@ class CommentHelper(object):
             :type page: :class:`integer`
             
             :returns: [query_id, [:class:`geovote.models.Comment`]]
-        '''
+        """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
-        q = Comment.all().filter('user =', user)
-        p = PagedQuery(q, id = query_id, page_size=15)
+        q = Comment.all().filter('user =', user).order('-created')
+        p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
         return [p.id,  [{'id': comment.id,
                         'created': comment.created,
@@ -46,7 +44,7 @@ class CommentHelper(object):
                        for comment in comments]]
     
     def get_by_instance(self, instance, query_id=None, page=1, querier = None):
-        '''
+        """
         Obtiene una lista con todos los comentarios hechos en una instancia
         
             :param instance: objeto al que buscar los comentarios
@@ -57,11 +55,11 @@ class CommentHelper(object):
             :type page: :class:`integer`
             
             :returns: [query_id, [:class:`geovote.models.Comment`]]
-        '''
+        """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
-        q = Comment.all().filter('instance =', instance)
-        p = PagedQuery(q, id = query_id, page_size=15)
+        q = Comment.all().filter('instance =', instance).order('-created')
+        p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
         return [p.id, [{'id': comment.id,
                         'created': comment.created,
