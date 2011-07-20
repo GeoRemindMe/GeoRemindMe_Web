@@ -2,8 +2,9 @@
 
 from models import *
 from geouser.decorators import login_required
-from geoalert.models import Suggestion
+from geoalert.models import Suggestion,Event
 from geolist.models import *
+
 
 #===============================================================================
 # COMENTARIOS

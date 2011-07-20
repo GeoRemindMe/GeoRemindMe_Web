@@ -1,33 +1,86 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+{% load humanize %}
+
 {% block title %}Ver sugerencia{% endblock %}
 {% block extra_js %}
-
+    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
-
+       
+       
+        setBehaviourToSuggestion();
     });
+    
+    function setBehaviourToSuggestion(){
+        //Behaviour to: show and hide "Like" text on class suggestion-element
+       $('.suggestion-element').hover(
+           function(){$(this).find('.like').css('visibility','visible');},
+            function(){$(this).find('.like').css('visibility','hidden');}
+        );
+    }
+    
+    function sendComment(obj){
+        if($('#msg').val()=="")
+            return false;
+        $(obj).text("Enviando")
+        $(obj).addClass("waiting")
+        
+        $.ajax({
+            type: "POST",
+            url: "/ajax/add/comment/event/",
+            data: {
+                instance_id:{{suggestion.id}},
+                msg:$('#msg').val()
+            },
+            complete: function(msg){
+                if (msg.status !=200){
+
+                }else{
+                    var message=$('#msg').val()
+                    $('#msg').val("")
+                    
+                    var response=jQuery.parseJSON(msg.responseText);
+                    
+                    
+                    //console.log(response.msg)
+                    $('#commentTemplate').tmpl( {
+                        msg: response.msg,
+                        comment_id: response.id,
+                    }).prependTo('#comment-list');
+                    
+                    setBehaviourToSuggestion();
+                }
+                $(obj).val("Enviar")
+                $(obj).removeClass("waiting")
+            }
+        });
+    }
     </script>
 {%endblock%}
 
 {% block body %}
     <div id="view-suggestion">
         <div id="autor">
-            <img src="/user/susana/picture/" alt="user avatar">
+            <img src="/user/{{suggestion.user.username}}/picture/" alt="{{suggestion.user.username}} avatar">
             <p>
-                <a href="">hhkaos</a>
+                <a href="/fb{{suggestion.user.get_absolute_url}}">{{suggestion.user.username}}</a>
                 sugiere:
             </p>
         </div>
         <div class="suggestion">
-            <h1>Visitar el mirador de San Nicolás un día al atardecer</h1>
-            <p><strong>Instrucciones/explicación</strong>: lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+            <h1>{{suggestion.name}}</h1>
+            {% if suggestion.description %}
+                <p><strong>Instrucciones/explicación</strong>: {{suggestion.description}} </p>
+            {% endif %}    
 
-            <img src="http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=11&size=210x100&maptype=roadmap
-&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&sensor=false">
+            <a title="Más detalles sobre: {{suggestion.poi.name}}" href="/fb{{suggestion.poi.get_absolute_url}}"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x100&maptype=roadmap
+&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false"></a>
             
             <p>
-                <strong>Sitio</strong>: <a href="">Plaza de San Nicolás</a>, (Granada)<br>
+                <strong>Lugar</strong>: <a href="/fb{{suggestion.poi.get_absolute_url}}">{{suggestion.poi.name}}</a>, <br>
+                <strong>Dirección</strong>: {{suggestion.poi.address}}<br>
                 <strong>Fecha</strong>: [25/04/2011 al 30/05/2011]<br>
                 <strong>Palabras clave</strong>: <a href="">ocio</a> | <a href="">granada</a><br>
             </p>
@@ -38,31 +91,65 @@
 -->
         </div>
         <span class="btn likeBtn">Me gusta</span>
+        <span class="btn likeBtn">Recordar</span>
+        
+        
         <p class="popular">Comentario más popular</p>
-        <div id="comments" class="comments">
+        <div id="comments" class="comments suggestion-element">
             <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
             <span class="msg">Deberíais tomar unas cerveza mientras</span>
-            <span class="timestamp">hace 5 min</span>
+            <span class="timestamp">
+                hace 5 min
+                <span class="hoverlink like">Me gusta</span>
+            </span>
         </div>
         <p class="clear big">¿Tienes algo que añadir a esta sugerencia?</p>
-        <textarea></textarea>
+        <textarea id="msg"></textarea>
         <ul id="feeling">
             <li>Happy</li>
             <li>Glad</li>
             <li>Sad</li>
         </ul>
-        <span class="btn">Comentar</span>
-        <ul class="comments">
-            <li>
+        <span class="btn" onclick="sendComment(this)">Comentar</span>
+        
+        {% if comments %}
+        <ul class="comments" id="comment-list">
+            {% for c in comments.1 %}
+                <li class="suggestion-element">
+                    <span class="user"><img src="/user/{{c.username}}/picture/" alt="{{c.username}} avatar"><br><a href="">{{c.username}}</a></span>
+                    <span class="msg">{{c.msg}}</span>
+                    <span class="timestamp">
+                        {{c.created|timesince}}
+                        {% if c.has_voted %}
+                            <span class="hoverlink like">Ya no me gusta</span>
+                        {% else %}
+                            <span class="hoverlink like">Me gusta</span>
+                        {% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+<!--
+            <li class="suggestion-element">
                 <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
                 <span class="msg">Deberíais tomar unas cerveza mientras</span>
-                <span class="timestamp">hace 5 min</span>
+                <span class="timestamp">
+                    hace 5 min
+                    <span class="hoverlink like">Me gusta</span>
+                </span>
             </li>
-            <li>
-                <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
-                <span class="msg">Deberíais tomar unas cerveza mientras</span>
-                <span class="timestamp">hace 5 min</span>
-            </li>
+-->
         </ul>
+        {% endif %}
     </div>
+    
+    <script id="commentTemplate" type="text/x-jquery-tmpl">
+        <li class="suggestion-element">
+                <span class="user"><img src="/user/{{user.username}}/picture/" alt="user avatar"><br><a href="">{{user.username}}</a></span>
+                <span class="msg">${msg}</span>
+                <span class="timestamp">
+                    hace 0 min
+                    <span class="hoverlink like">Me gusta</span>
+                </span>
+            </li>
+    </script>
 {% endblock %}
