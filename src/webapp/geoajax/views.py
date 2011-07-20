@@ -739,3 +739,21 @@ def mod_searchconfig_google(request):
     sconfig.type = request.POST['type']
     sconfig.put()
     return HttpResponse()
+
+
+@ajax_request
+def get_place_near(request):
+    """
+    Obtiene places cercanos a una localizacion dada
+    Parametros POST:
+        location: punto donde buscar
+        radius: radio para las busquedas, en metros (opcional)
+        
+        return 
+    """
+    location = request.POST['location']
+    radius = request.POST.get('radius', 2000)
+    from geoalert.models_poi import Place
+    places = Place.objects.get_nearest(location, radius)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(places, cls=JSONEncoder), mimetype='application/json')

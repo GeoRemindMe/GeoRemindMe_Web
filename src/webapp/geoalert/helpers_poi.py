@@ -62,11 +62,18 @@ class PlaceHelper(POIHelper):
     _klass = Place
     
     def get_by_id(self, id):
+        import memcache
         try:
             id = long(id)
         except:
             return None
-        return self._klass.get_by_id(id)
+        place = memcache.deserialize_instances(memcache.get('%splace_%s' % (memcache.version, id)), _search_class=Place)
+        if place is None:
+            place = self._klass.get_by_id(id)
+            if place is None:
+                return None
+            memcache.set('%splace_%s' % (memcache.version, id), memcache.serialize_instances(place), 300)
+        return place
     
     def get_by_slug(self, slug):
         if not isinstance(slug, basestring):
@@ -103,7 +110,8 @@ class PlaceHelper(POIHelper):
                                                )
                        )
         results = list(query[9:].split()) #  chapuza :)
-        return results # TODO: acabar
+        places = [self.get_by_id(result) for result in results]
+        return places # TODO: acabar
     
 
 class BusinessHelper(object):
