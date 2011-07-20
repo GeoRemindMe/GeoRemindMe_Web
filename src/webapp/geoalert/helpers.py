@@ -191,7 +191,7 @@ class SuggestionHelper(EventHelper):
     def get_by_place(self, place, page=1, query_id=None, async=False, querier=None):
         if not isinstance(querier, User):
             raise TypeError()
-        q = self._klass.gql('poi =', place.key())
+        q = self._klass.all().filter('poi =', place.key())
         p = PagedQuery(q, id = query_id)
         if async:
             return p.id, q.run()
