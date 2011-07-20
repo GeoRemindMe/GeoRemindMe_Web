@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}Ver sitio{% endblock %}
 {% block extra_js %}
@@ -6,9 +7,37 @@
 
     <script type="text/javascript">
     $(document).ready(function(){
+        //'rect': {'sw': {'lat': 37.180031, 'lng': -3.595448}, 'ne': {'lat': 37.182442, 'lng': -3.590877}}
+        
+        //orig 37.180879,-3.593139
+        
+        //ne { lat=37.177775, lng=-3.595443}
+        //sw { lat=37.177062, lng=-3.595436}
+        //'tag': 'sunset',
+          var latlngStr = "{{place.location}}".split(",",2);
+          var ne={}
+          var sw={}
+          
+          
+          
+          
+          
+          //orig 37.180879,-3.593139
+          //ne { lat=37.177775, lng=-3.595443}
+          //ne Object { lat=37.179316, lng=-3.595401}
+          
+          //37.177379,-3.596499
+          ne['lat']=parseFloat(latlngStr[0])+0.001504;
+          ne['lng']=parseFloat(latlngStr[1])+0.001304;
+          
+          //orig 37.180879,-3.593139
+          //'sw': {'lat': 37.180031, 'lng': -3.595448}
+          //sw Obj  { lat=37.17706, lng=-3.595396}
+          sw['lat']=parseFloat(latlngStr[0])-0.000448;
+          sw['lng']=parseFloat(latlngStr[1])-0.001309;
+        
         var myRequest = new panoramio.PhotoRequest({
-          //'tag': 'sunset',
-          'rect': {'sw': {'lat': 37.180031, 'lng': -3.595448}, 'ne': {'lat': 37.182442, 'lng': -3.590877}}
+          'rect': {'sw': {'lat': sw['lat'], 'lng': sw['lng']}, 'ne': {'lat': ne['lat'], 'lng': ne['lng']}}
         });
         
         var myOptions = {
@@ -32,30 +61,29 @@
     <div id="view-place">
         <div id="place-container">
             <div id="place-details">
-                <h1>Mirador de San Nicolás</h1>
-                <p><strong>Dirección</strong>: Plaza de San Nicolás, (Granada)</p>
-                <a href=""><img src="http://maps.googleapis.com/maps/api/staticmap?center=37.180879,-3.593139&zoom=14&size=270x150&maptype=roadmap
-    &markers=color:red%7C37.180879,-3.593139&sensor=false"></a>
-                <p><a href="">Obtener direcciones</a></p>
+                <h1>{{place.name}}</h1>
+                <p><strong>Dirección</strong>: {{place.address}}</p>
+                <a href="http://maps.google.com/maps?q={{place.address}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=14&size=270x200&maptype=roadmap
+    &markers=color:red%7C{{place.location}}&sensor=false"></a>
             </div>
             <div id="place-pictures">
+                <p>Fotos de la zona</p>
                 <div id="wapiblock"></div>
             </div>
         </div>
         <div>
-            <p class="big">Los usuarios han hecho 2 sugerencias en este sitio</p>
-            {{suggestions}}
+            <p class="big">Los usuarios han hecho {{suggestions.1|length}} sugerencias en este sitio</p>
+            
             <ul class="comments">
-                <li>
-                    <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
-                    <span class="msg">Deberíais tomar unas cerveza mientras</span>
-                    <span class="timestamp">hace 5 min</span>
-                </li>
-                <li>
-                    <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
-                    <span class="msg">Deberíais tomar unas cerveza mientras</span>
-                    <span class="timestamp">hace 5 min</span>
-                </li>
+                {% for k in suggestions.1%}
+                    <li>
+
+                        <span class="user"><img src="/user/{{k.user.username}}/picture/" alt="user avatar"><br><a href="">{{k.user.username}}</a></span>
+                        <span class="msg">{{k.name}}</span>
+                        <span class="timestamp">{{k.created|timesince}}</span>
+
+                    </li>
+                {% endfor %}
             </ul>
         </div>
     </div>
