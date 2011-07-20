@@ -646,8 +646,7 @@ def do_vote_suggestion(request):
     Vota una sugerencia
     Parametros POST
         instance_id: sugerencia a votar
-        page: pagina a mostrar
-        query_id: id de la consulta de pagina
+        puntuation: puntuacion a añadir
     """
     instance_id = request.POST['instance_id']
     puntuation = request.POST['puntuation']
@@ -663,13 +662,13 @@ def do_vote_list(request):
     Vota una lista
     Parametros POST
         instance_id: lista a votar
-        page: pagina a mostrar
-        query_id: id de la consulta de pagina
+        puntuation: puntuacion a añadir
     """
     instance_id = request.POST['instance_id']
-    msg = request.POST['msg']
-    
-    return HttpResponse(geovote.do_vote_list(request, instance_id, msg),
+    puntuation = request.POST['puntuation']
+    vote = geovote.do_vote_list(request, instance_id, puntuation)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
                          mimetype="application/json")
     
 @ajax_request
@@ -678,13 +677,13 @@ def do_vote_comment(request):
     Vota un comentario
     Parametros POST
         instance_id: comentario
-        page: pagina a mostrar
-        query_id: id de la consulta de pagina
+        puntuation: puntuacion a añadir
     """
     instance_id = request.POST['instance_id']
-    msg = request.POST['msg']
-    
-    return HttpResponse(geovote.do_vote_comment(request, instance_id, msg),
+    puntuation = request.POST['puntuation']
+    vote = geovote.do_vote_comment(request, instance_id, puntuation)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
                          mimetype="application/json")
     
 @ajax_request
@@ -693,13 +692,9 @@ def get_vote_suggestion(request):
     Obtiene el contador de votos de una sugerencia
     Parametros POST
         instance_id: sugerencia a mostrar
-        page: pagina a mostrar
-        query_id: id de la consulta de pagina
     """
     instance_id = request.POST['instance_id']
-    query_id = request.POST.get('query_id', None)
-    page = request.POST.get('page', 1)
-    vote = geovote.get_vote_comment(request, instance_id, query_id, page) 
+    vote = geovote.get_vote_suggestion(request, instance_id) 
     
     return HttpResponse(simplejson.dumps(vote), mimetype="application/json")
 
@@ -709,13 +704,9 @@ def get_vote_list(request):
     Obtiene el contador de votos de una lista
     Parametros POST
         instance_id: sugerencia a mostrar
-        page: pagina a mostrar
-        query_id: id de la consulta de pagina
     """
     instance_id = request.POST['instance_id']
-    query_id = request.POST.get('query_id', None)
-    page = request.POST.get('page', 1)
-    vote = geovote.get_vote_list(request, instance_id, query_id, page) 
+    vote = geovote.get_vote_list(request, instance_id) 
     
     return HttpResponse(simplejson.dumps(vote), mimetype="application/json")
 
@@ -725,13 +716,9 @@ def get_vote_comment(request):
     Obtiene el contador de votos de un comentario
     Parametros POST
         instance_id: sugerencia a mostrar
-        page: pagina a mostrar
-        query_id: id de la consulta de pagina
     """
     instance_id = request.POST['instance_id']
-    query_id = request.POST.get('query_id', None)
-    page = request.POST.get('page', 1)
-    vote = geovote.get_vote_comment(request, instance_id, query_id, page) 
+    vote = geovote.get_vote_comment(request, instance_id) 
     
     return HttpResponse(simplejson.dumps(vote), mimetype="application/json")
 

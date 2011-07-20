@@ -75,6 +75,12 @@ class CommentHelper(object):
                        for comment in comments]]
     
     def get_by_id_user(self, id, user):
+        try:
+            id = long(id)
+        except:
+            return None
+        if not isinstance(user, User):
+            raise AttributeError()
         comment = Comment.get_by_id(int(id))
         if comment.user.key() == user.key():
             return comment
@@ -85,9 +91,29 @@ class CommentHelper(object):
                 return comment
             elif comment.instance._is_shared() and comment.instance.user_invited(user):
                 return comment
-        return None        
-        
+        return None      
     
+    def get_by_id_querier(self, id, querier):
+        try:
+            id = long(id)
+        except:
+            return None
+        if not isinstance(querier, User):
+            raise AttributeError()
+        
+        comment = Comment.get_by_id(id)
+        if comment.user.key() == querier.key():
+            return comment
+        if comment._is_public():
+            if comment.instance.user.key() == querier.key():
+                return comment
+            elif comment.instance._is_public():
+                return comment
+            elif comment.instance._is_shared() and comment.instance.user_invited(querier):
+                return comment
+        return None     
+        
+
 class Comment(Visibility):
     '''
     Se puede comentar cualquier objeto del modelo

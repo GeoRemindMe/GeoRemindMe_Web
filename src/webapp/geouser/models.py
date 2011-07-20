@@ -179,7 +179,7 @@ class User(polymodel.PolyModel, HookedModel):
             :type query_id: int
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
-        from geovote.models import Vote
+        from geovote.models import Vote, Comment
         q = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
@@ -188,7 +188,8 @@ class User(polymodel.PolyModel, HookedModel):
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'instance': timeline.instance if timeline.instance is not None else None,
                         'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
+                        'comments': Comment.objects.get_by_instance(timeline.instance, querier=self),
                         }
                         for timeline in timelines if timeline is not None ]]
         
