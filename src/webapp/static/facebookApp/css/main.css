@@ -787,6 +787,13 @@ input{
                 text-decoration:underline;
                 cursor:pointer;
             }
+            #activity ul#chronology li span.action-bar span.like-dislike{
+                margin:0;
+            }
+            #activity ul#chronology li span.action-bar span.like-dislike:hover{
+                text-decoration:none;
+            }
+            
             #activity ul#chronology li span.like-text, 
             #view-suggestion ul#comment-list li span.like-text{
                 background: url("/static/facebookApp/img/icons/like_min.png") no-repeat scroll -2px 1px transparent;
@@ -856,8 +863,7 @@ input{
                 }
                 #activity ul#chronology div.comment-box ul li .timestamp,
                 #activity ul#chronology div.comment-box ul li .like,
-                #activity ul#chronology div.comment-box ul li .dontLikeComment,
-                #activity ul#chronology div.comment-box ul li .LikeComment{
+                #activity ul#chronology div.comment-box ul li .dislike{
                     font-size:0.9em;
                 }
                 
