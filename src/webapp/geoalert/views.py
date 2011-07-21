@@ -214,7 +214,7 @@ def view_place(request, slug, template='webapp/place.html'):
                                     'has_voted':  Vote.objects.user_has_voted(request.user, suggestion.key()) if request.user.is_authenticated() else False,
                                     'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
                                    }
-            )
+                                  )
             if len(suggestions_loaded) > 7:
                 break
         return suggestions_loaded
