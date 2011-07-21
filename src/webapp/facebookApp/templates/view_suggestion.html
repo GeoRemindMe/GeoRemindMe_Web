@@ -24,6 +24,7 @@
         $('.dontLikeSuggestion').click(function(){
             vote('suggestion',$(this),-1)
         });
+        resizeIframe();
     });
     
     function vote(type,obj,value){
@@ -84,7 +85,7 @@
                 c=$('#commentTemplate').tmpl(response).prependTo('#comment-list');
             
                 c.find(".like-dislike").like();
-
+                resizeIframe()
                     
                 $(obj).text("Comentar")
                 $(obj).removeClass("waiting")
