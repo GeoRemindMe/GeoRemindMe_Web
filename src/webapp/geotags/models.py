@@ -8,7 +8,7 @@ SEPARATOR = ','
 
 class TagHelper(object):
     def get_by_name(self, name):
-        return Tag.get_by_key_name('tag_%s' % name)
+        return Tag.get_by_key_name('tag_%s' % name.lower())
     
     def order_by_frequency(self):
         list = Tag.gql('WHERE count > 0 ORDER BY count DESC')
@@ -22,7 +22,7 @@ class Tag(db.Model):
     
     @staticmethod
     def __key_name(name):
-        return 'tag_%s' % name
+        return 'tag_%s' % name.lower()
     
     @classmethod
     def get_or_insert(cls, key_name=None, **kwargs):
@@ -68,6 +68,7 @@ class Taggable(db.Model):
         if type(tags) is StringType:
             tags = split(tags, SEPARATOR)
         if type(tags) is ListType:
+            tags = [t.lower() for t in tags]
             loaded_tags = db.get_async(self._tags_list)  # carga todos los tags existentes en una lista
             for tagInstance in loaded_tags.get_result():
                 if tagInstance.name not in tags:  #  un tag ya no esta en la lista nueva, lo borramos
