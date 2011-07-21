@@ -2,12 +2,16 @@
 {% load i18n %}
 {% load humanize %}
 {% block extra_js %}
-    <script type="text/javascript" src="/static/webapp/js/jquery.tmpl.min.js"></script>
-    <script type="text/javascript" src="/static/facebookApp/js/social.js"></script>
-    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
-    <script type="text/javascript" src="/static/facebookApp/js/jquery.autogrowtextarea.js"></script>
+
+    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script src="/static/facebookApp/js/social.js"></script>
+    <script src="/static/facebookApp/js/grm.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function(){
+            
+            $(".like-dislike").like();
+            
             //Incrementamos el numero de personas al que le van a gustar
             //la sugerencia si es votada
 
@@ -34,6 +38,7 @@
                 vote('suggestion',$(this),-1)
             });
             
+
             //Al pulsar en comentar ponemos el foco en el input
             $('.focusInput').click(function(){
                 $(this).parent().parent().parent().find('textarea').focus()
@@ -44,11 +49,10 @@
             setCommentFormsBehaviour()
             
             //Aumentamos los me gusta antes de mostrarlos
-            $('.increase').text(parseInt($('.increase').text())+1);
+            //$('.increase').text(parseInt($('.increase').text())+1);
         });
         
-        function showCommentBox(){
-        }
+        
         
         
         function setCommentFormsBehaviour(){
@@ -141,6 +145,10 @@
                     }
                 });    
         }
+
+        
+        
+
     
         function sendComment2(textarea,suggestion_id){
             if(textarea.val()=="")
@@ -201,28 +209,19 @@
                             <span class="focusInput">Comentar</span> | 
                             <a href="/fb/suggestion/{{obj.instance.id|urlencode}}">Detalles</a> | 
                             
-                            {% if obj.has_voted %}
-                                <span class="dontLikeSuggestion" value="{{obj.instance.id}}">
+                            
+                            
+                            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
+                            
+                                <span class="dislike" {% if not obj.has_voted %}style="display:none;"{%endif%} >
                                     <span class="hoverlink">Ya no me gusta</span> 
-                                    <span class="text like-text">{{obj.vote_counter}}</span> personas
+                                    <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
                                 </span>
                                 
-                                <span class="LikeSuggestion hidden" value="{{obj.instance.id}}">
+                                <span class="like" {% if obj.has_voted %}style="display:none;"{%endif%} >
                                     <span class="hoverlink">Me gusta</span> 
                                 </span>
-                            {% else %}
-                                
-                                <span class="dontLikeSuggestion hidden" value="{{obj.instance.id}}">
-                                    <span class="hoverlink">Ya no me gusta</span> 
-                                    <span class="text increase like-text">{{obj.vote_counter}}</span> personas
-                                </span>
-                                
-                                <span class="LikeSuggestion" value="{{obj.instance.id}}">
-                                    <span class="hoverlink">Me gusta</span> 
-                                </span>
-
-                                
-                            {% endif %}
+                            </span>
                             
                             | <span onclick="" title="Guardar en favoritos" class="save">Recordar</span>
                         </span>
@@ -244,29 +243,21 @@
                                         <li {% if forloop.revcounter > 2 %} class="long-list" {% endif %}>
                                             <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
                                             <span class="timestamp">{{c.created|timesince}} ago</span> - 
-                                            {% if c.has_voted %}
-                                                <span class="dontLikeComment" value="{{c.id}}">
+                                            
+                                            
+                                            <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
+                            
+                                                <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
                                                     <span class="hoverlink">Ya no me gusta</span> 
-                                                    <span class="text like-text">{{c.vote_counter}}</span> personas
+                                                    <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
                                                 </span>
                                                 
-                                                <span class="LikeComment hidden" value="{{c.id}}">
+                                                <span class="like" {% if c.has_voted %}style="display:none;"{%endif%} >
                                                     <span class="hoverlink">Me gusta</span> 
                                                 </span>
-
-                                            {% else %}
-                                                
-                                                <span class="dontLikeComment hidden" value="{{c.id}}">
-                                                    <span class="hoverlink">Ya no me gusta</span> 
-                                                    <span class="text increase like-text">{{c.vote_counter}}</span> personas
-                                                </span>
-                                                
-                                                <span class="LikeComment" value="{{c.id}}">
-                                                    <span class="hoverlink">Me gusta</span> 
-                                                </span>
-
-                                                
-                                            {% endif %}
+                                            </span>
+                                            
+                                            
                                         </li>
                                     {% endfor %}
                                 </ul>
