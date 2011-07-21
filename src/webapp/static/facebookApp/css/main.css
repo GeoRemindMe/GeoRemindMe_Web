@@ -1533,7 +1533,7 @@ input{
         #view-suggestion .comments .user img,#view-place .comments .user img{
             height: 25px;
             position: relative;
-            top: 10px;
+            top: 5px;
             width: 25px;
         }
         #view-suggestion .comments .msg,#view-place .comments .msg{
@@ -1542,7 +1542,7 @@ input{
             float: left;
 */
             font-size: 1.1em;
-            line-height: 2.5em;
+            line-height: 2 em;
 
             
         }
@@ -1571,9 +1571,13 @@ input{
     }
     
     #view-suggestion ul.comments li,#view-place ul.comments li{
-        border-bottom: 1px dotted #BBBBBB;
+        border-top: 1px dotted #BBBBBB;
         clear: both;
         padding: 1em 0.5em;
+        cursor:pointer;
+    }
+    #view-place ul.comments li{
+        padding: 0.5em 0.5em;
     }
     
     #view-suggestion ul.comments li:after, #view-place ul.comments li:after{           
@@ -1583,7 +1587,9 @@ input{
         height: 0px;
         visibility: hidden;
     }
-    
+    #view-suggestion ul.comments li:hover,#view-place ul.comments li:hover{
+        background-color: #eee;
+    }
     
     #view-suggestion ul#feeling{
         float: left;

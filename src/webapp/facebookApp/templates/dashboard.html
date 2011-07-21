@@ -8,6 +8,9 @@
     <script src="/static/facebookApp/js/grm.js"></script>
 
     <script type="text/javascript">
+    
+        
+
         $(document).ready(function(){
             
             $(".like-dislike").like();
@@ -19,7 +22,8 @@
             $('.show-all-comments').click(function(){
                 //Después de mostrar los comentarios ocultamos el botón
                 $(this).parent().find('.long-list').show('slow', function(){
-                    $(this).parentsUntil('#suggestion_*').find('.show-all-comments').hide('slow');
+                    $(this).parentsUntil('.suggestion-element').parent().find('.show-all-comments').hide('slow');
+                    
                 });
                 
             });
@@ -29,7 +33,7 @@
             //Al pulsar en comentar ponemos el foco en el input
             $('.focusInput').click(function(){
                 
-                var commentBox=$(this).parentsUntil('#suggestion_*').find('.input-box')
+                var commentBox=$(this).parentsUntil('.suggestion-element').parent().find('.input-box')
                 
                 if(commentBox.hasClass('hidden'))
                     commentBox.removeClass('hidden');
@@ -195,7 +199,7 @@
     -->
             <ul id="chronology">
             {% for obj in chronology.1 %}
-                <li id="suggestion_{{obj.instance.id}}" {%if not forloop.last %}style="border-bottom: 1px solid #DDDDDD;"{% endif %}>
+                <li id="suggestion_{{obj.instance.id}}" class="suggestion-element" {%if not forloop.last %}style="border-bottom: 1px solid #DDDDDD;"{% endif %}>
                     <div class="avatar">
                         <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
                             <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
@@ -265,7 +269,7 @@
                             </ul>
                             
                             <div class="input-box {% if not obj.comments.1 %} hidden {% endif %}">
-                                <img alt="user avatar" src="/user/annalogik/picture/" class="min-img hidden">
+                                <img alt="user avatar" src="/user/{{user.username}}/picture/" class="min-img hidden">
                                 <form class="commentForm"><textarea empty="true" class="autogrow">Escribe un comentario</textarea></form>
                             </div>
                             

@@ -4,37 +4,23 @@
 {% block title %}Ver sitio{% endblock %}
 {% block extra_js %}
     <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl={{user.settings.language}}"></script>
-
+    <script src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
-        //'rect': {'sw': {'lat': 37.180031, 'lng': -3.595448}, 'ne': {'lat': 37.182442, 'lng': -3.590877}}
         
-        //orig 37.180879,-3.593139
+        //Set like & dislike behaviour
+        $(".like-dislike").like();
         
-        //ne { lat=37.177775, lng=-3.595443}
-        //sw { lat=37.177062, lng=-3.595436}
-        //'tag': 'sunset',
-          var latlngStr = "{{place.location}}".split(",",2);
-          var ne={}
-          var sw={}
-          
-          
-          
-          
-          
-          //orig 37.180879,-3.593139
-          //ne { lat=37.177775, lng=-3.595443}
-          //ne Object { lat=37.179316, lng=-3.595401}
-          
-          //37.177379,-3.596499
-          ne['lat']=parseFloat(latlngStr[0])+0.001504;
-          ne['lng']=parseFloat(latlngStr[1])+0.001304;
-          
-          //orig 37.180879,-3.593139
-          //'sw': {'lat': 37.180031, 'lng': -3.595448}
-          //sw Obj  { lat=37.17706, lng=-3.595396}
-          sw['lat']=parseFloat(latlngStr[0])-0.000448;
-          sw['lng']=parseFloat(latlngStr[1])-0.001309;
+        //Load Panoramios photos
+        var latlngStr = "{{place.location}}".split(",",2);
+        var ne={}
+        var sw={}
+
+        ne['lat']=parseFloat(latlngStr[0])+0.001504;
+        ne['lng']=parseFloat(latlngStr[1])+0.001304;
+
+        sw['lat']=parseFloat(latlngStr[0])-0.000448;
+        sw['lng']=parseFloat(latlngStr[1])-0.001309;
         
         var myRequest = new panoramio.PhotoRequest({
           'rect': {'sw': {'lat': sw['lat'], 'lng': sw['lng']}, 'ne': {'lat': ne['lat'], 'lng': ne['lng']}}
@@ -51,6 +37,7 @@
         var wapiblock = document.getElementById('wapiblock');
         var widget = new panoramio.PhotoListWidget(wapiblock, myRequest, myOptions);
         widget.setPosition(0);
+        //END: Load Panoramios photos
     });
     
     
@@ -75,15 +62,29 @@
             <p class="big">Los usuarios han hecho {{suggestions.1|length}} sugerencias en este sitio</p>
             
             <ul class="comments">
-                {% for k in suggestions.1%}
-                    <li>
-
-                        <span class="user"><img src="/user/{{k.user.username}}/picture/" alt="user avatar"><br><a href="">{{k.user.username}}</a></span>
-                        <span class="msg">{{k.name}}</span>
-                        <span class="timestamp">{{k.created|timesince}}</span>
-
-                    </li>
+                {% for s in suggestions.1%}
+                has_voted={{s.has_voted}}
+                <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
+                    <span class="user"><img src="/user/{{s.user.username}}/picture/" alt="{{s.user.username}} avatar"></span>
+                    <div style="float:left">
+                        <span class="msg"><a href="">{{s.user.username}}</a> sugiere:<br> {{s.name}}</span>
+                        <span class="timestamp">{{s.created|timesince}} - </span>
+                        <span class="like-dislike" value="{{s.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion">
+                            <span class="dislike" {% if not s.has_voted %}style="display:none;"{%endif%} >
+                                <span class="hoverlink">Ya no me gusta</span> 
+                                <span class="text like-text {% if not s.has_voted %}increase{% endif %}">{{s.counters.followers}}</span> personas
+                            </span>
+                            
+                            <span class="like" {% if s.has_voted %}style="display:none;"{%endif%} >
+                                <span class="hoverlink">Me gusta</span> 
+                            </span>
+                        </span>
+                        - <a href="/fb/suggestion/{{s.id}}" class="hoverlink">Ver más</a>
+                    </div>
+                </li>
                 {% endfor %}
+                
+                
             </ul>
         </div>
     </div>

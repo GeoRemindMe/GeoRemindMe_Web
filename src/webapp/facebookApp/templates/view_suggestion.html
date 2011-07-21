@@ -215,7 +215,7 @@
         {% if comments %}
         <ul class="comments" id="comment-list">
             {% for c in comments.1 %}
-                <li class="suggestion-element">
+                <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
                     <span class="user"><img src="/user/{{c.username}}/picture/" alt="{{c.username}} avatar"></span>
                     <div style="float:left">
                         <span class="msg"><a href="">{{c.username}}</a>: {{c.msg}}</span>
