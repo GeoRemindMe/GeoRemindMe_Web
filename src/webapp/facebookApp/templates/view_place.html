@@ -61,10 +61,10 @@
         </div>
         <div>
             <p class="big">Los usuarios han hecho {{suggestions.1|length}} sugerencias en este sitio</p>
-            
+            {{suggestions}}
             <ul class="comments">
-                {% for s in suggestions.1%}
-                has_voted={{s.has_voted}}
+            
+                {% for s in suggestions.1%}                
                 <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
                     <span class="user"><img src="/user/{{s.user.username}}/picture/" alt="{{s.user.username}} avatar"></span>
                     <div style="float:left">

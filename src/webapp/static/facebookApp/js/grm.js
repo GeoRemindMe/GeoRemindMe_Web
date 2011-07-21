@@ -34,9 +34,9 @@ GRM.like = function(settings) {
 
         // auto-init show/hide
         if (state)
-            $(this).find('.dislike').hide();
-        else
             $(this).find('.like').hide();
+        else
+            $(this).find('.dislike').hide();
 
 
         // counter incremental
