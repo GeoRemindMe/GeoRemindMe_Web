@@ -17,11 +17,11 @@
 
             
             $('.show-all-comments').click(function(){
-                $(this).parent().find('.long-list').toggle('slow');
-                if($(this).text()=="Mostrar todos")
-                    $(this).text("Ocultar");
-                else
-                    $(this).text("Mostrar todos");
+                //Después de mostrar los comentarios ocultamos el botón
+                $(this).parent().find('.long-list').show('slow', function(){
+                    $(this).parentsUntil('#suggestion_*').find('.show-all-comments').hide('slow');
+                });
+                
             });
             
             $('.LikeComment').click(function(){
@@ -88,6 +88,7 @@
                     $(this).val("");
                     resetInput(this)
                     console.log('Trigger Submit');
+                    
                 }else{
                     var height=(parseInt($(this).val().length/55)+1)*1.2;
                     if($(this).css('height')!=height)
@@ -153,6 +154,10 @@
         function sendComment2(textarea,suggestion_id){
             if(textarea.val()=="")
                 return false;
+            else{
+                msg=textarea.val();
+                msg=msg.substring(0,msg.length-1);
+            }
                         
             $.ajax({
                 type: "POST",
@@ -160,12 +165,14 @@
                 dataType:'json',
                 data: {
                     instance_id:suggestion_id,
-                    msg:textarea.val()
+                    msg:msg
                 },
-                success: function(msg){
+                success: function(response){
 
-                    console.log(msg)
-                       
+                    console.log(response)
+                    textarea.parent()
+                    c=$('#commentTemplate').tmpl(response).appendTo('#commentList-'+suggestion_id);
+                    c.find(".like-dislike").like();
                     
                 },
                 error:{
@@ -238,7 +245,7 @@
                                 {% if obj.comments.1|length > 2%}
                                     <div class="show-all-comments">Ver los {{obj.comments.1|length}} comentarios</div>
                                 {% endif %}
-                                <ul>
+                                <ul id="commentList-{{obj.instance.id}}">
                                     {% for c in obj.comments.1 %}
                                         <li {% if forloop.revcounter > 2 %} class="long-list" {% endif %}>
                                             <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
@@ -256,8 +263,6 @@
                                                     <span class="hoverlink">Me gusta</span> 
                                                 </span>
                                             </span>
-                                            
-                                            
                                         </li>
                                     {% endfor %}
                                 </ul>
@@ -330,15 +335,22 @@
     
     
     <script id="commentTemplate" type="text/x-jquery-tmpl">
-        <div id="comment_${element.id}" class="suggestion">
-            <div class="collapsed">
-                <span class="checkBox"><input type="checkbox" id="checkBox_{{element.id}}" value="${element.id}" /></span>
-                <span class="suggestionName">${element.name}</span>
-                <span class="suggestionInLists">Lista ${element.id}</span>
-            </div>
-            <div class="expanded hidden">
-                Id:${element.id}<br>
-            </div>
-        </div>
+        <li>
+            <img src="/user/{{user.username}}/picture/" alt="user avatar"><a href="/fb/user/{{user.username}}/">{{user.username}}</a>: ${msg}<br>
+            <span class="timestamp">0 minutes ago</span> - 
+            
+            
+            <span class="like-dislike" value="${id}" type="comment">
+
+                <span class="dislike" style="display:none;">
+                    <span class="hoverlink">Ya no me gusta</span> 
+                    <span class="text like-text">1</span> personas
+                </span>
+                
+                <span class="like">
+                    <span class="hoverlink">Me gusta</span> 
+                </span>
+            </span>
+        </li>
     </script>    
 {% endblock %}
