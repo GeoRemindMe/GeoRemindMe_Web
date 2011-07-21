@@ -218,7 +218,13 @@ class SuggestionHelper(EventHelper):
         if async:
             return p.id, q.run()
         else:
-            [p.id, p.fetch_page(page)]
+            from geovote.models import Vote
+            [p.id, [{'instance': suggestion,
+                     'has_voted':  Vote.objects.user_has_voted(querier, suggestion.key()),
+                     'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
+                     } for suggestion in p.fetch_page(page)
+                    ]
+             ]
             
             
 
