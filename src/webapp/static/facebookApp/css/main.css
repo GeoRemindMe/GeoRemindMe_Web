@@ -1468,6 +1468,14 @@ input{
         border: 1px solid #CCCCCC;
         padding: 1em;
     }
+    
+    #view-suggestion div.suggestion:after{
+        clear: both;
+        content: ".";
+        display: block;
+        height: 0px;
+        visibility: hidden;
+    }
     #view-suggestion div.suggestion h1{
         line-height: 1em;
         margin: 0.2em 0;
@@ -1523,32 +1531,23 @@ input{
             width: 40px;
         }
         #view-suggestion .comments .user img,#view-place .comments .user img{
-            width:25px;
-            height:25px;
+            height: 25px;
+            position: relative;
+            top: 10px;
+            width: 25px;
         }
         #view-suggestion .comments .msg,#view-place .comments .msg{
             display: block;
+/*
             float: left;
+*/
             font-size: 1.1em;
             line-height: 2.5em;
-            padding: 0 1em;
+
             
         }
-        #view-suggestion .comments .timestamp,#view-place .comments .timestamp{
-            display: block;
-            float: right;
-/*
-            line-height: 2.5em;
-*/
-            text-align: right;
-            position: relative;
-            top:5px;
-            
-        }
+
         
-        #view-suggestion .suggestion-element span.votes{
-            
-        }
     #view-suggestion p.popular{
         font-size:1.3em;
         font-weight:bold;

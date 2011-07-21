@@ -24,24 +24,19 @@
                 
             });
             
-            $('.LikeComment').click(function(){
-                vote('comment',$(this),1)
-            });
-            $('.dontLikeComment').click(function(){
-                vote('comment',$(this),-1)
-            });
-            
-            $('.LikeSuggestion').click(function(){
-                vote('suggestion',$(this),1)
-            });
-            $('.dontLikeSuggestion').click(function(){
-                vote('suggestion',$(this),-1)
-            });
-            
+          
 
             //Al pulsar en comentar ponemos el foco en el input
             $('.focusInput').click(function(){
-                $(this).parent().parent().parent().find('textarea').focus()
+                
+                var commentBox=$(this).parentsUntil('#suggestion_*').find('.input-box')
+                
+                if(commentBox.hasClass('hidden'))
+                    commentBox.removeClass('hidden');
+                //console.log($(this).parentsUntil('#suggestion_*').find('.input-box').attr('class'))
+                //like-dislike
+                
+                commentBox.find('textarea').focus()
             });
         
             //$("[placeholder]").placeholder();
@@ -240,12 +235,13 @@
                         
                         
                         <!-- Si hay comentarios en la sugerencia -->
-                        {% if obj.comments.1 %}
-                            <div class="comment-box" value="{{obj.instance.id}}">
-                                {% if obj.comments.1|length > 2%}
-                                    <div class="show-all-comments">Ver los {{obj.comments.1|length}} comentarios</div>
-                                {% endif %}
-                                <ul id="commentList-{{obj.instance.id}}">
+                        
+                        <div class="comment-box" value="{{obj.instance.id}}">
+                            {% if obj.comments.1|length > 2%}
+                                <div class="show-all-comments">Ver los {{obj.comments.1|length}} comentarios</div>
+                            {% endif %}
+                            <ul id="commentList-{{obj.instance.id}}">
+                                {% if obj.comments.1 %}
                                     {% for c in obj.comments.1 %}
                                         <li {% if forloop.revcounter > 2 %} class="long-list" {% endif %}>
                                             <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
@@ -265,15 +261,15 @@
                                             </span>
                                         </li>
                                     {% endfor %}
-                                </ul>
-                                
-                                <div class="input-box">
-                                    <img alt="user avatar" src="/user/annalogik/picture/" class="min-img hidden">
-                                    <form class="commentForm"><textarea empty="true" class="autogrow">Escribe un comentario</textarea></form>
-                                </div>
-                                
+                                {% endif %}
+                            </ul>
+                            
+                            <div class="input-box {% if not obj.comments.1 %} hidden {% endif %}">
+                                <img alt="user avatar" src="/user/annalogik/picture/" class="min-img hidden">
+                                <form class="commentForm"><textarea empty="true" class="autogrow">Escribe un comentario</textarea></form>
                             </div>
-                        {% endif %}
+                            
+                        </div>
                     </p>
                     
                 </li>

@@ -13,15 +13,10 @@
     $(document).ready(function(){
        
        
-        setBehaviourToSuggestion();
+        $(".like-dislike").like();
         
         
-        $('.LikeComment').click(function(){
-            vote('comment',$(this),1)
-        });
-        $('.dontLikeComment').click(function(){
-            vote('comment',$(this),-1)
-        });
+       
         
         $('.LikeSuggestion').click(function(){
             vote('suggestion',$(this),1)
@@ -66,13 +61,6 @@
             });
     }
     
-    function setBehaviourToSuggestion(){
-        //Behaviour to: show and hide "Like" text on class suggestion-element
-       $('.suggestion-element').hover(
-           function(){$(this).find('.votes').removeClass('hidden');},
-           function(){$(this).find('.votes').addClass('hidden');}
-        );
-    }
     
     function sendComment(obj){
         if($('#msg').val()=="")
@@ -87,36 +75,21 @@
                 instance_id:{{suggestion.id}},
                 msg:$('#msg').val()
             },
-            complete: function(msg){
-                if (msg.status !=200){
-
-                }else{
-                    var message=$('#msg').val()
-                    $('#msg').val("")
-                    
-                    var response=jQuery.parseJSON(msg.responseText);
-                    
-                    
-                    //console.log(response.msg)
-                    c=$('#commentTemplate').tmpl( {
-                        msg: response.msg,
-                        comment_id: response.id,
-                    }).prependTo('#comment-list');
-                    
-                    setBehaviourToSuggestion();
-                    var objeto=$(c).find('.LikeComment')
-
-                    c.find('.LikeComment').click(function(){
-                        vote('comment',objeto,1)
-                    });
-                    c.find('.dontLikeComment').click(function(){
-                        vote('comment',objeto,-1)
-                    });
+            dataType:'json',
+            success: function(response){
+                
+                var message=$('#msg').val()
+                $('#msg').val("")
+                
+                c=$('#commentTemplate').tmpl(response).prependTo('#comment-list');
+            
+                c.find(".like-dislike").like();
 
                     
-                }
-                $(obj).val("Enviar")
+                $(obj).text("Comentar")
                 $(obj).removeClass("waiting")
+            },
+            error:function(){
             }
         });
     }
@@ -181,10 +154,14 @@
                 {% endif %}
                 
                 
+<!--
                 <strong>Palabras clave</strong>: <a href="">ocio</a> | <a href="">granada</a><br>
+-->
             </p>
 
+<!--
             <p>Reportar localización errónea</p>
+-->
 <!--
             <p>Reportar sugerencia duplicada</p>
 -->
@@ -239,38 +216,21 @@
         <ul class="comments" id="comment-list">
             {% for c in comments.1 %}
                 <li class="suggestion-element">
-                    <span class="user"><img src="/user/{{c.username}}/picture/" alt="{{c.username}} avatar"><br><a href="">{{c.username}}</a></span>
-                    <span class="msg">{{c.msg}}</span>
-                    <span class="timestamp">
-                        {{c.created|timesince}}
-                        <br>
-                        <span class="votes hidden">
-                        {% if c.has_voted %}
-                            <span class="dontLikeComment" value="{{c.id}}">
+                    <span class="user"><img src="/user/{{c.username}}/picture/" alt="{{c.username}} avatar"></span>
+                    <div style="float:left">
+                        <span class="msg"><a href="">{{c.username}}</a>: {{c.msg}}</span>
+                        <span class="timestamp">{{c.created|timesince}}</span>
+                        <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
+                            <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
                                 <span class="hoverlink">Ya no me gusta</span> 
-                                <span class="text like-text">{{c.vote_counter}}</span> personas
+                                <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
                             </span>
                             
-                            <span class="LikeComment hidden" value="{{c.id}}">
+                            <span class="like" {% if c.has_voted %}style="display:none;"{%endif%} >
                                 <span class="hoverlink">Me gusta</span> 
                             </span>
-
-                        {% else %}
-                            
-                            <span class="dontLikeComment hidden" value="{{c.id}}">
-                                <span class="hoverlink">Ya no me gusta</span> 
-                                <span class="text increase like-text">{{c.vote_counter}}</span> personas
-                            </span>
-                            
-                            <span class="LikeComment" value="{{c.id}}">
-                                <span class="hoverlink">Me gusta</span> 
-                            </span>
-
-                            
-                        {% endif %}
-                    </span>
-                    </span>
-                    
+                        </span>
+                    </div>
                 </li>
             {% endfor %}
 
@@ -280,21 +240,21 @@
     
     <script id="commentTemplate" type="text/x-jquery-tmpl">
         <li class="suggestion-element">
-                <span class="user"><img src="/user/{{user.username}}/picture/" alt="user avatar"><br><a href="">{{user.username}}</a></span>
-                <span class="msg">${msg}</span>
-                <span class="timestamp">
-                    hace 0 min<br>
-                    <span class="votes hidden">
-                        <span class="dontLikeComment hidden" value="${comment_id}">
-                            <span class="hoverlink">Ya no me gusta</span> 
-                            <span class="text increase like-text">1</span> persona
-                        </span>
-                        
-                        <span class="LikeComment" value="${comment_id}">
-                            <span class="hoverlink">Me gusta</span> 
-                        </span>
+            <span class="user"><img src="/user/{{user.username}}/picture/" alt="{{user.username}} avatar"></span>
+            <div style="float:left">
+                <span class="msg"><a href="">{{user.username}}</a>: ${msg}</span>
+                <span class="timestamp">0 minutes ago</span>
+                <span class="like-dislike" value="${id}" type="comment">
+                    <span class="dislike" style="display:none;">
+                        <span class="hoverlink">Ya no me gusta</span> 
+                        <span class="text like-text">1</span> personas
+                    </span>
+                    
+                    <span class="like">
+                        <span class="hoverlink">Me gusta</span> 
                     </span>
                 </span>
-            </li>
+            </div>
+        </li>
     </script>
 {% endblock %}
