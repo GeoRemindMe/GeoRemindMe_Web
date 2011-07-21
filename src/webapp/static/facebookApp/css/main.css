@@ -431,6 +431,13 @@ input{
         text-align: center;
         top: 5px;
     }
+    
+    .min-img{
+        width:25px;
+        height:25px;
+        float:left;
+    }
+    
     /****************************
      *      
      * Create Social Profile 
@@ -820,7 +827,17 @@ input{
                     margin: 2px 0;
                     padding: 0.5em;
                 }
-                
+                    #activity ul#chronology div.input-box form{
+                        float:right;
+                    }
+                    #activity ul#chronology div.input-box:after{
+                        clear: both;
+                        content: ".";
+                        display: block;
+                        height: 0px;
+                        visibility: hidden;
+                    }
+                    
                 #activity div.show-all-comments{
                     color: blue;
                     font-size: 0.9em;
@@ -845,13 +862,16 @@ input{
                 }
                 
         
-        #activity ul#chronology div.input-box input{
+        #activity ul#chronology div.input-box textarea{
             border: 1px solid #BDC7D8;
             color: #555555;
             font-size: 0.9em;
-            margin: 0 auto;
+            margin: 0;
             padding: 0.3em;
             width: 470px;
+            height:1.2em;
+            font-style:italic;
+            font-family: courier,"lucida grande",tahoma,verdana,arial,sans-serif
         }
 /*
         #activity ul#chronology div.comment-box ul li .like{

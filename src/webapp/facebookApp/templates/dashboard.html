@@ -2,8 +2,10 @@
 {% load i18n %}
 {% load humanize %}
 {% block extra_js %}
-    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
-    <script src="/static/facebookApp/js/social.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/social.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/jquery.autogrowtextarea.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
             //Incrementamos el numero de personas al que le van a gustar
@@ -32,13 +34,79 @@
                 vote('suggestion',$(this),-1)
             });
             
+            //Al pulsar en comentar ponemos el foco en el input
+            $('.focusInput').click(function(){
+                $(this).parent().parent().parent().find('textarea').focus()
+            });
+        
+            //$("[placeholder]").placeholder();
             
+            setCommentFormsBehaviour()
             
             //Aumentamos los me gusta antes de mostrarlos
             $('.increase').text(parseInt($('.increase').text())+1);
         });
         
+        function showCommentBox(){
+        }
         
+        
+        function setCommentFormsBehaviour(){
+            
+            $('.commentForm').find("textarea").focus(function(){
+                $(this).css('color','black');
+                if($(this).attr('empty')=="true"){
+                    $(this).css('width','430px');
+                    $(this).css('font-style','normal');
+                    $(this).css('font-size','1.1em');
+                    $(this).parent().parent().find("img").removeClass('hidden');
+                    //Guardamos y machamos el mensaje
+                    $(this).attr('msg',$(this).text())
+                    $(this).text("");
+                }
+            })
+            
+            $('.commentForm').find("textarea").blur(function(){
+                if($(this).attr('empty')=="true"){
+                    resetInput(this)
+                }
+            })
+            
+            $('.commentForm').find("textarea").keyup(function(e) {
+                e.preventDefault();
+                if(e.keyCode == 13) {
+                    //If keypress==enter -> submit
+                    
+                    
+                    suggestion_id=$(this).parent().parent().parent().attr('value')
+                    sendComment2($(this),suggestion_id);
+                    
+                    $(this).val("");
+                    resetInput(this)
+                    console.log('Trigger Submit');
+                }else{
+                    var height=(parseInt($(this).val().length/55)+1)*1.2;
+                    if($(this).css('height')!=height)
+                        $(this).css('height',height+'em');
+                    if($(this).val().length>0)
+                        $(this).attr('empty',"false")
+                    else
+                        $(this).attr('empty',"true")
+                }
+            });
+        }
+        
+        function resetInput(obj){
+            $(obj).css('width','470px');
+            $(obj).css('color','#999');
+            $(obj).css('font-style','italic');
+            $(obj).css('font-size','0.9em');
+            $(obj).parent().parent().find("img").addClass('hidden');
+            
+            //Reestablecemos el mensaje
+            $(this).attr('empty',"true")
+            $(obj).text($(obj).attr('msg'));
+        }
         function vote(type,obj,value){
             var element_id=obj.attr('value')
             
@@ -74,6 +142,28 @@
                 });    
         }
     
+        function sendComment2(textarea,suggestion_id){
+            if(textarea.val()=="")
+                return false;
+                        
+            $.ajax({
+                type: "POST",
+                url: "/ajax/add/comment/event/",
+                dataType:'json',
+                data: {
+                    instance_id:suggestion_id,
+                    msg:textarea.val()
+                },
+                success: function(msg){
+
+                    console.log(msg)
+                       
+                    
+                },
+                error:{
+                }
+            });
+        }
     </script>
 {%endblock%}
 
@@ -108,10 +198,8 @@
                         <!--Botonera -->
                         <span class="action-bar">
                             <span class="timestamp">{{obj.created|timesince}} ago</span> | 
-                            <span onclick="showCommentBox()">Comentar</span> | 
+                            <span class="focusInput">Comentar</span> | 
                             <a href="/fb/suggestion/{{obj.instance.id|urlencode}}">Detalles</a> | 
-                            
-                            
                             
                             {% if obj.has_voted %}
                                 <span class="dontLikeSuggestion" value="{{obj.instance.id}}">
@@ -122,7 +210,6 @@
                                 <span class="LikeSuggestion hidden" value="{{obj.instance.id}}">
                                     <span class="hoverlink">Me gusta</span> 
                                 </span>
-
                             {% else %}
                                 
                                 <span class="dontLikeSuggestion hidden" value="{{obj.instance.id}}">
@@ -148,10 +235,13 @@
                         
                         <!-- Si hay comentarios en la sugerencia -->
                         {% if obj.comments.1 %}
-                            <div class="comment-box">
+                            <div class="comment-box" value="{{obj.instance.id}}">
+                                {% if obj.comments.1|length > 2%}
+                                    <div class="show-all-comments">Ver los {{obj.comments.1|length}} comentarios</div>
+                                {% endif %}
                                 <ul>
                                     {% for c in obj.comments.1 %}
-                                        <li {% if forloop.counter > 2 %} class="long-list" {% endif %}>
+                                        <li {% if forloop.revcounter > 2 %} class="long-list" {% endif %}>
                                             <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
                                             <span class="timestamp">{{c.created|timesince}} ago</span> - 
                                             {% if c.has_voted %}
@@ -180,11 +270,10 @@
                                         </li>
                                     {% endfor %}
                                 </ul>
-                                {% if obj.comments.1|length > 2%}
-                                    <div class="show-all-comments">Mostrar todos</div>
-                                {% endif %}
+                                
                                 <div class="input-box">
-                                    <input type="text" value="Escribe un comentario...">
+                                    <img alt="user avatar" src="/user/annalogik/picture/" class="min-img hidden">
+                                    <form class="commentForm"><textarea empty="true" class="autogrow">Escribe un comentario</textarea></form>
                                 </div>
                                 
                             </div>
@@ -210,10 +299,7 @@
         {% endif %}    
     
         
-        
-        
-        {% if friends_to_follow|length %}
-            
+        {% if friends_to_follow|length %}        
         <div class="section">    
             <div class="header">
                 <h2>
@@ -252,5 +338,16 @@
 
     
     
-    
+    <script id="commentTemplate" type="text/x-jquery-tmpl">
+        <div id="comment_${element.id}" class="suggestion">
+            <div class="collapsed">
+                <span class="checkBox"><input type="checkbox" id="checkBox_{{element.id}}" value="${element.id}" /></span>
+                <span class="suggestionName">${element.name}</span>
+                <span class="suggestionInLists">Lista ${element.id}</span>
+            </div>
+            <div class="expanded hidden">
+                Id:${element.id}<br>
+            </div>
+        </div>
+    </script>    
 {% endblock %}
