@@ -121,6 +121,7 @@ def do_vote_suggestion(request, instance_id, vote=1):
         :param vote: valoracion del voto (siempre positivo)
         :type vote: :class:`integer`
     """
+    vote = int(vote)
     if vote > 1 or vote < -1:
         return False
     event = Suggestion.objects.get_by_id_querier(id=instance_id, querier=request.user)
@@ -140,11 +141,11 @@ def do_vote_list(request, instance_id, vote=1):
         :param vote: valoracion del voto (siempre positivo)
         :type vote: :class:`integer`
     """
-    user = request.session['user']
-    list = List.objects.get_by_id_user(id=instance_id, user=user)
+    vote = int(vote)
+    list = List.objects.get_by_id_user(id=instance_id, user=request.user)
     if list is None:
         return None
-    vote = Vote.do_vote(user=user, instance=list, count=vote)
+    vote = Vote.do_vote(user=request.user, instance=list, count=vote)
     
     return vote
 
@@ -159,12 +160,13 @@ def do_vote_comment(request, instance_id, vote=1):
         :param vote: valoracion del voto
         :type vote: :class:`integer`
     """
+    vote = int(vote)
     if vote > 1 or vote < -1:
         return False
     comment = Comment.objects.get_by_id_querier(id=instance_id, querier=request.user)
     if comment is None:
         return None
-    vote = Vote.do_vote(user=user, instance=comment, count=vote)
+    vote = Vote.do_vote(user=request.user, instance=comment, count=vote)
     return vote
 
 
@@ -211,13 +213,12 @@ def get_vote_comment(request, instance_id):
         comment = Comment.objects.get_by_id_querier(instance_id, request.user)
     else:
         comment = Comment.objects.get_by_id(instance_id)
-    if suggestion is None:
+    if comment is None:
         return None
     return _get_vote(comment.key())
 
     
 def _get_vote(instance_key):
-    Vote.objects.get_vote_counter(instance_key)
-    
+    counter = Vote.objects.get_vote_counter(instance_key)
     return counter
     

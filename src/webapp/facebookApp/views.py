@@ -20,6 +20,7 @@ def login_panel(request):
         if not request.user.is_authenticated():
             user = request.facebook['client'].authenticate()
             init_user_session(request, user, is_from_facebook=True)
+
         else:
             user = request.user
         if user.username is None or user.email is None:
@@ -39,7 +40,8 @@ def login_panel(request):
                                                                       'username': request.user.username,
                                                                       })
             return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
-        return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))        
+        else:
+            return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
     return render_to_response('register.html', {"permissions":settings.OAUTH['facebook']['scope']}, context_instance=RequestContext(request))
     

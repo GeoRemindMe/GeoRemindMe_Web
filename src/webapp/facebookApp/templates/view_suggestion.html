@@ -7,6 +7,8 @@
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/grm.js"></script>
+    
+    
     <script type="text/javascript">
     $(document).ready(function(){
        
@@ -61,7 +63,7 @@
                     }
                     
                 }
-            });    
+            });
     }
     
     function setBehaviourToSuggestion(){
@@ -119,6 +121,7 @@
         });
     }
     
+    // not used
     function voteSuggestion(id,puntuation){
             
             $.ajax({
@@ -197,9 +200,7 @@
             <span class="LikeSuggestion hidden likeBtn btn" value="{{suggestion.id}}">
                 Me gusta
             </span>
-
         {% else %}
-            
             <span class="dontLikeSuggestion hidden likeBtn btn" value="{{suggestion.id}}">
                 Ya no me gusta
             </span>
@@ -207,9 +208,8 @@
             <span class="LikeSuggestion likeBtn btn" value="{{suggestion.id}}">
                 Me gusta
             </span>
-
-            
         {% endif %}
+        
         <span class="btn likeBtn">Recordar</span>
         
         

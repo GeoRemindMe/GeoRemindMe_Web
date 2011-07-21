@@ -76,10 +76,14 @@
     <script>
         <!-- async loading of facebook js sdk  -->
         window.fbAsyncInit = function() { 
-            facebookInit({'appId':{{app_settings.appId}}, 
-            'canvasName':'{{app_settings.canvasName}}'})
-            FB.Canvas.setSize();
-
+            facebookInit({
+				'appId': {{app_settings.appId}}, 
+				'status' : true, // check login status
+				'cookie' : true, // enable cookies to allow the server to access the session
+				'xfbml'  : true,  // parse XFBML
+				'canvasName'  : '{{app_settings.canvasName}}',
+            });
+            
         };
         
         <!--  async loading of google analytics -->

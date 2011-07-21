@@ -29,7 +29,7 @@ class CommentHelper(object):
         """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
-        q = Comment.all().filter('user =', user).order('-created')
+        q = Comment.all().filter('user =', user).order('created')
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
         return [p.id,  [{'id': comment.id,
@@ -58,7 +58,7 @@ class CommentHelper(object):
         """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
-        q = Comment.all().filter('instance =', instance).order('-created')
+        q = Comment.all().filter('instance =', instance).order('created')
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
         return [p.id, [{'id': comment.id,

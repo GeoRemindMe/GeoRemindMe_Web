@@ -509,7 +509,7 @@ def get_chronology(request, page=1, query_id=None):
 		:type query_id: int
 		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """
-    return request.session['user'].get_chronology(page=page, query_id=query_id)
+    return request.user.get_chronology(page=page, query_id=query_id)
 
     
 def get_avatar(request, username):
@@ -522,15 +522,15 @@ def get_avatar(request, username):
     elif user.profile.sync_avatar_with == 'twitter':
         if user.twitter_user is not None:
             return HttpResponseRedirect(user.twitter_user.picurl)
-    else:
-        email = user.email
-        default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
-        size = 50
-        # construct the url
-        gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
-        gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
-        return HttpResponseRedirect(gravatar_url)
-    
+
+    email = user.email
+    default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
+    size = 50
+    # construct the url
+    gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+    gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
+    return HttpResponseRedirect(gravatar_url)
+
 def close_window(request):
     return render_to_response('webapp/close_window.html', {}, context_instance=RequestContext(request))
 

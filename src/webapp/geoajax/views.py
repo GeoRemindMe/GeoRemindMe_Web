@@ -183,6 +183,7 @@ def add_suggestion_invitation(request):
             userid: el id del usuario a invitar
     """
     userid = request.POST.get('userid')
+    eventid = request.POST.get('eventid')
     return geoalert.add_suggestion_invitation(request, eventid, userid)
 
 @ajax_request
@@ -590,7 +591,7 @@ def do_comment_event(request):
     comment = geovote.do_comment_event(request, instance_id, msg)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(comment, cls=JSONEncoder),
-                         mimetype="application/json")
+                        mimetype="application/json")
     
 @ajax_request
 def get_comments_event(request):
@@ -608,7 +609,7 @@ def get_comments_event(request):
     
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(comments, cls=JSONEncoder),
-                         mimetype="application/json")
+                        mimetype="application/json")
 
 @ajax_request
 def do_comment_list(request):
@@ -620,9 +621,10 @@ def do_comment_list(request):
     """
     instance_id = request.POST['instance_id']
     msg = request.POST['msg']
+    comment = geovote.do_comment_list(request, instance_id, msg),
     
-    return HttpResponse(geovote.do_comment_list(request, instance_id, msg),
-                         mimetype="application/json")
+    return HttpResponse(simplejson.dumps(comment),
+                        mimetype="application/json")
 
 @ajax_request
 def get_comments_list(request):
@@ -638,7 +640,8 @@ def get_comments_list(request):
     page = request.POST.get('page', 1)
     comments = geovote.get_comments_list(request, instance_id, query_id, page) 
     
-    return HttpResponse(comments, mimetype="application/json")
+    return HttpResponse(simplejson.dumps(comments),
+                        mimetype="application/json")
 
 @ajax_request
 def do_vote_suggestion(request):
@@ -654,7 +657,7 @@ def do_vote_suggestion(request):
     vote = geovote.do_vote_suggestion(request, instance_id, puntuation)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                         mimetype="application/json")
+                        mimetype="application/json")
     
 @ajax_request
 def do_vote_list(request):
@@ -669,7 +672,7 @@ def do_vote_list(request):
     vote = geovote.do_vote_list(request, instance_id, puntuation)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                         mimetype="application/json")
+                        mimetype="application/json")
     
 @ajax_request
 def do_vote_comment(request):
@@ -684,7 +687,7 @@ def do_vote_comment(request):
     vote = geovote.do_vote_comment(request, instance_id, puntuation)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                         mimetype="application/json")
+                        mimetype="application/json")
     
 @ajax_request
 def get_vote_suggestion(request):
@@ -695,8 +698,9 @@ def get_vote_suggestion(request):
     """
     instance_id = request.POST['instance_id']
     vote = geovote.get_vote_suggestion(request, instance_id) 
-    
-    return HttpResponse(simplejson.dumps(vote), mimetype="application/json")
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
+                        mimetype="application/json")
 
 @ajax_request
 def get_vote_list(request):
@@ -707,8 +711,9 @@ def get_vote_list(request):
     """
     instance_id = request.POST['instance_id']
     vote = geovote.get_vote_list(request, instance_id) 
-    
-    return HttpResponse(simplejson.dumps(vote), mimetype="application/json")
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
+                        mimetype="application/json")
 
 @ajax_request
 def get_vote_comment(request):
@@ -719,8 +724,9 @@ def get_vote_comment(request):
     """
     instance_id = request.POST['instance_id']
     vote = geovote.get_vote_comment(request, instance_id) 
-    
-    return HttpResponse(simplejson.dumps(vote), mimetype="application/json")
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder), 
+                        mimetype="application/json")
 
 @ajax_request
 def mod_searchconfig_google(request):
@@ -748,4 +754,5 @@ def get_place_near(request):
     from geoalert.models_poi import Place
     places = Place.objects.get_nearest(location, radius)
     from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(places, cls=JSONEncoder), mimetype='application/json')
+    return HttpResponse(simplejson.dumps(places, cls=JSONEncoder),
+                        mimetype='application/json')

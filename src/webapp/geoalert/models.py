@@ -247,7 +247,7 @@ class Alert(Event):
         return self.name
 
 
-class Suggestion(Event, Visibility):
+class Suggestion(Event, Visibility, Taggable):
     '''
         Recomendaciones de los usuarios que otros pueden
         convertir en Alert

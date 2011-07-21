@@ -1,3 +1,70 @@
+GRM = { common : {} };
+
+GRM.common.extend = function(m, e){
+    var e = e || this;
+    for (var x in m) e[x] = m[x];
+    return e;
+};
+
+GRM.common.get = function(s){
+    if (typeof(s) == "string")
+        return $(s);
+    
+    return s;
+};
+
+GRM.like = function(settings) {
+    
+    settings = jQuery.extend({
+        classes: []
+    }, settings);
+    
+    return this.each(function(){
+        
+        // counter incremental
+        var inc = $(this).find('.increase');
+        $.each(inc, function(index,item){
+            $(item).text(parseInt($(item).text())+1);
+        });
+        
+        $(this).click(function() {
+            
+            var type = $(this).attr('type'), id = $(this).attr('value'), vote = (typeof $(this).attr('like') != "undefined" )?-1:1;
+                        
+            $.ajax({
+                    type: "POST",
+                    url: "/ajax/vote/"+type+"/",
+                    data: {
+                        instance_id:id,
+                        puntuation: vote
+                    },
+                    context: $(this),
+                    success: function(){
+                        
+                        // disliking
+                        if (typeof $(this).attr('like') != "undefined" ) {
+                            // send vote -1
+                            $(this).find('.dislike').hide();
+                            $(this).find('.like').show();
+                            $(this).removeAttr("like");
+                        }
+                        
+                        // liking
+                        else {
+                            // send vote +1
+                            $(this).find('.like').hide();
+                            $(this).find('.dislike').show();
+                            $(this).attr("like","true");
+                            }
+                        
+                    }
+                });
+        });
+    });
+};
+
+jQuery.fn.like = GRM.like;
+
 function loadPage(dict){
             var page=dict['page'];
             var container=dict['container']
