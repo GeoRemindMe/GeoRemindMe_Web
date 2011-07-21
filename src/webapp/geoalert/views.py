@@ -210,7 +210,7 @@ def view_place(request, slug, template='webapp/place.html'):
         suggestions_loaded = []
         for suggestion in suggestions:
             suggestions_loaded.append({
-                                    'instance': suggestions_loaded.append(suggestion),
+                                    'instance': suggestion,
                                     'has_voted':  Vote.objects.user_has_voted(request.user, suggestion.key()) if request.user.is_authenticated() else False,
                                     'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
                                    }
