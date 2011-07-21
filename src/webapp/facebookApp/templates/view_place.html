@@ -71,12 +71,12 @@
                         <span class="msg"><a href="">{{s.user.username}}</a> sugiere:<br> {{s.name}}</span>
                         <span class="timestamp">{{s.created|timesince}} - </span>
                         <span class="like-dislike" value="{{s.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion">
-                            <span class="dislike" {% if not s.has_voted %}style="display:none;"{%endif%} >
+                            <span class="dislike">
                                 <span class="hoverlink">Ya no me gusta</span> 
                                 <span class="text like-text {% if not s.has_voted %}increase{% endif %}">{{s.counters.followers}}</span> personas
                             </span>
                             
-                            <span class="like" {% if s.has_voted %}style="display:none;"{%endif%} >
+                            <span class="like">
                                 <span class="hoverlink">Me gusta</span> 
                             </span>
                         </span>
