@@ -61,7 +61,7 @@
                     }
                     
                 }
-            });    
+            });
     }
     
     function setBehaviourToSuggestion(){
@@ -119,6 +119,7 @@
         });
     }
     
+    // not used
     function voteSuggestion(id,puntuation){
             
             $.ajax({
@@ -197,9 +198,7 @@
             <span class="LikeSuggestion hidden likeBtn btn" value="{{suggestion.id}}">
                 Me gusta
             </span>
-
         {% else %}
-            
             <span class="dontLikeSuggestion hidden likeBtn btn" value="{{suggestion.id}}">
                 Ya no me gusta
             </span>
@@ -207,9 +206,8 @@
             <span class="LikeSuggestion likeBtn btn" value="{{suggestion.id}}">
                 Me gusta
             </span>
-
-            
         {% endif %}
+        
         <span class="btn likeBtn">Recordar</span>
         
         

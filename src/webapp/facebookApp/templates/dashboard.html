@@ -4,8 +4,12 @@
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>
+    <script src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
+            
+            $(".like-dislike").like();
+            
             //Incrementamos el numero de personas al que le van a gustar
             //la sugerencia si es votada
 
@@ -32,47 +36,8 @@
                 vote('suggestion',$(this),-1)
             });
             
-            
-            
-            //Aumentamos los me gusta antes de mostrarlos
-            $('.increase').text(parseInt($('.increase').text())+1);
         });
         
-        
-        function vote(type,obj,value){
-            var element_id=obj.attr('value')
-            
-            $.ajax({
-                    type: "POST",
-                    url: "/ajax/vote/"+type+"/",
-                    data: {
-                        instance_id:element_id,
-                        puntuation: value,
-                    },
-                    complete: function(msg){
-                        if (msg.status !=200){
-
-                        }else{
-                            console.log(msg.responseText)
-                            //if(msg.responseText!=false){
-                                action=obj.attr('class')
-                                obj.addClass('hidden')
-                                
-                                if(action=="LikeComment")
-                                    obj.parent().find(".dontLikeComment").removeClass('hidden')
-                                else if (action=="dontLikeComment")
-                                    obj.parent().find(".LikeComment").removeClass('hidden')
-                                    
-                                if(action=="LikeSuggestion")
-                                    obj.parent().find(".dontLikeSuggestion").removeClass('hidden')
-                                else if (action=="dontLikeSuggestion")
-                                    obj.parent().find(".LikeSuggestion").removeClass('hidden')
-                            //}
-                        }
-                        
-                    }
-                });    
-        }
     
     </script>
 {%endblock%}
@@ -113,29 +78,17 @@
                             
                             
                             
-                            {% if obj.has_voted %}
-                                <span class="dontLikeSuggestion" value="{{obj.instance.id}}">
+                            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
+                            
+                                <span class="dislike" {% if not obj.has_voted %}style="display:none;"{%endif%} >
                                     <span class="hoverlink">Ya no me gusta</span> 
-                                    <span class="text like-text">{{obj.vote_counter}}</span> personas
+                                    <span class="text like-text increase">{{obj.vote_counter}}</span> personas
                                 </span>
                                 
-                                <span class="LikeSuggestion hidden" value="{{obj.instance.id}}">
+                                <span class="like" {% if obj.has_voted %}style="display:none;"{%endif%} >
                                     <span class="hoverlink">Me gusta</span> 
                                 </span>
-
-                            {% else %}
-                                
-                                <span class="dontLikeSuggestion hidden" value="{{obj.instance.id}}">
-                                    <span class="hoverlink">Ya no me gusta</span> 
-                                    <span class="text increase like-text">{{obj.vote_counter}}</span> personas
-                                </span>
-                                
-                                <span class="LikeSuggestion" value="{{obj.instance.id}}">
-                                    <span class="hoverlink">Me gusta</span> 
-                                </span>
-
-                                
-                            {% endif %}
+                            </span>
                             
                             | <span onclick="" title="Guardar en favoritos" class="save">Recordar</span>
                         </span>
