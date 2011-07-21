@@ -16,11 +16,29 @@ GRM.common.get = function(s){
 GRM.like = function(settings) {
     
     settings = jQuery.extend({
-        classes: []
+        like_class: null,
+        dislike_class: null,
+        progress_class: null        
     }, settings);
-    
+       
     return this.each(function(){
-        
+
+        // get init state
+        var state = (typeof $(this).attr('like') != "undefined" );
+
+        // auto-init classes
+        if (state && settings.dislike_class)
+            $(this).addClass(settings.dislike_class);
+        if (!state && settings.like_class)
+            $(this).addClass(settings.like_class);
+
+        // auto-init show/hide
+        if (state)
+            $(this).find('.dislike').hide();
+        else
+            $(this).find('.like').hide();
+
+
         // counter incremental
         var inc = $(this).find('.increase');
         $.each(inc, function(index,item){
@@ -30,7 +48,10 @@ GRM.like = function(settings) {
         $(this).click(function() {
             
             var type = $(this).attr('type'), id = $(this).attr('value'), vote = (typeof $(this).attr('like') != "undefined" )?-1:1;
-                        
+            
+            if (settings.progress_class)
+                $(this).addClass(settings.progress_class);
+            
             $.ajax({
                     type: "POST",
                     url: "/ajax/vote/"+type+"/",
@@ -47,6 +68,13 @@ GRM.like = function(settings) {
                             $(this).find('.dislike').hide();
                             $(this).find('.like').show();
                             $(this).removeAttr("like");
+                            
+                            if (settings.dislike_class)
+                                $(this).removeClass(settings.dislike_class);
+                            
+                            if (settings.like_class)
+                                $(this).addClass(settings.like_class);
+                                
                         }
                         
                         // liking
@@ -55,8 +83,19 @@ GRM.like = function(settings) {
                             $(this).find('.like').hide();
                             $(this).find('.dislike').show();
                             $(this).attr("like","true");
+                            
+                            if (settings.like_class)
+                                $(this).removeClass(settings.like_class);
+                            
+                            if (settings.dislike_class)
+                                $(this).addClass(settings.dislike_class);
                             }
                         
+                    },
+                    complete: function()
+                    {
+                        if (settings.progress_class)
+                            $(this).removeClass(settings.progress_class);
                     }
                 });
         });
