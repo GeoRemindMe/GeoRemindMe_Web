@@ -219,13 +219,12 @@
                             
                             
                             <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
-                            
-                                <span class="dislike" {% if not obj.has_voted %}style="display:none;"{%endif%} >
+                                <span class="dislike">
                                     <span class="hoverlink">Ya no me gusta</span> 
                                     <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
                                 </span>
                                 
-                                <span class="like" {% if obj.has_voted %}style="display:none;"{%endif%} >
+                                <span class="like">
                                     Me gusta
                                 </span>
                             </span>

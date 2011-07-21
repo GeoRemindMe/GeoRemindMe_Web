@@ -61,22 +61,22 @@
         </div>
         <div>
             <p class="big">Los usuarios han hecho {{suggestions.1|length}} sugerencias en este sitio</p>
-            
+            {{suggestions}}
             <ul class="comments">
-                {% for s in suggestions.1%}
-                has_voted={{s.has_voted}}
+            
+                {% for s in suggestions.1%}                
                 <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
                     <span class="user"><img src="/user/{{s.user.username}}/picture/" alt="{{s.user.username}} avatar"></span>
                     <div style="float:left">
                         <span class="msg"><a href="">{{s.user.username}}</a> sugiere:<br> {{s.name}}</span>
                         <span class="timestamp">{{s.created|timesince}} - </span>
                         <span class="like-dislike" value="{{s.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion">
-                            <span class="dislike" {% if not s.has_voted %}style="display:none;"{%endif%} >
+                            <span class="dislike">
                                 <span class="hoverlink">Ya no me gusta</span> 
                                 <span class="text like-text {% if not s.has_voted %}increase{% endif %}">{{s.counters.followers}}</span> personas
                             </span>
                             
-                            <span class="like" {% if s.has_voted %}style="display:none;"{%endif%} >
+                            <span class="like">
                                 <span class="hoverlink">Me gusta</span> 
                             </span>
                         </span>
