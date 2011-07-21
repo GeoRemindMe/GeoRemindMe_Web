@@ -104,6 +104,28 @@ class EventHelper(object):
                 return event
         return None
     
+    def get_by_tag_querier(self, tagname, querier, page=1, query_id=None):
+        if not isinstance(querier, User):
+            raise TypeError()
+        from geotags.models import Tag
+        tagInstance = Tag.objects.get_by_name(tagname)
+        if tagInstance is None:
+            return None
+        events = self._klass.all().filter('_tags_list =', tagInstance.key())
+        p = PagedQuery(events, id = query_id)
+        events_lists = []
+        for event in p.fetch_page(page):
+            if event.user.key() == querier.key():
+                events_lists.append(event)
+            elif hasattr(event, '_vis'):
+                if event._is_public():
+                    events_lists.append(event)
+                elif event._is_shared() and event.user_invited(querier):
+                    events_lists.append(event)
+        if len(events_lists) != 0:
+            return [p.id, events_lists] 
+        return None
+    
     def get_by_last_sync(self, user, last_sync):
         '''
         Obtiene los ultimos eventos a partir

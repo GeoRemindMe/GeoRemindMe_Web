@@ -75,7 +75,6 @@ def modified_suggestion(sender, **kwargs):
     if sender._is_public():
         timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=301)
         timelinePublic.put()
-    sender.user.counters.set_suggested(value=-1)
 suggestion_modified.connect(modified_suggestion)
 
 def deleted_suggestion(sender, **kwargs):

@@ -201,11 +201,10 @@ class UserCounter(db.Model):
         return UserCounterHelper()
     
     def _change_counter(self, prop, value):
+        value = int(value)
         obj = UserCounter.get(self.key())
         oldValue = getattr(obj, prop)
         value = oldValue+value
-        if value < 0:
-            raise ValueError
         setattr(obj, prop, value)
         db.put_async(obj)
         return value
