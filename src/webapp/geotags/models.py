@@ -8,13 +8,13 @@ SEPARATOR = ','
 
 class TagHelper(object):
     def get_by_name(self, name):
-        return Tag.get_by_key_name(Tag.__key_name(name))
+        return Tag.get_by_key_name('tag_%s' % name)
     
     def order_by_frequency(self):
         list = Tag.gql('WHERE count > 0 ORDER BY count DESC')
 
 
-class Tag(search.SearchableModel):
+class Tag(db.Model):
     name = db.StringProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     count = db.IntegerProperty(default=0)
@@ -32,17 +32,17 @@ class Tag(search.SearchableModel):
         tag = Tag.get_by_key_name(key_name)
         if tag is not None:
             return tag
-        super(Tag, cls).get_or_insert(key_name, **kwargs)
+        return super(Tag, cls).get_or_insert(key_name, **kwargs)
     
     def desc_count(self, value=1):
-        def _tx(value):
-            self.count -= value
+        def _tx():
+            self.count -= int(value)
             self.put()
         db.run_in_transaction(_tx)
             
     def inc_count(self, value=1):
-        def _tx(value):
-            self.count += value
+        def _tx():
+            self.count += int(value)
             self.put()
         db.run_in_transaction(_tx)
 
@@ -52,15 +52,13 @@ class Taggable(db.Model):
         hay que poner __Tagabble antes del atributo.
         usar: object.__Tagabble__tags_list
     '''
-    __tags_list = db.ListProperty(db.Key, default=[])
+    _tags_list = db.ListProperty(db.Key, default=[])
     __tags = None
     
     @property
     def _tags(self):
         """Lee la lista de tags y devuelve las instancias"""
-        if self.__tags_list is None or len(self.__tags_list) == 0:
-            return None
-        self.__tags = Tag.get(self.__tags_list)
+        self.__tags = Tag.get(self._tags_list)
         return self.__tags
     
     def _tags_setter(self, tags):
@@ -70,29 +68,33 @@ class Taggable(db.Model):
         if type(tags) is StringType:
             tags = split(tags, SEPARATOR)
         if type(tags) is ListType:
-            self._tags()  # carga todos los tags existentes en una lista
-            for tag in self.__tags:
-                if tag not in tags:  #  un tag ya no esta en la lista nueva, lo borramos
-                    self._remove_tag(tag)
+            loaded_tags = db.get_async(self._tags_list)  # carga todos los tags existentes en una lista
+            for tagInstance in loaded_tags.get_result():
+                if tagInstance.name not in tags:  #  un tag ya no esta en la lista nueva, lo borramos
+                    self._tags_list.remove(tagInstance.key())
+                    tagInstance.desc_count()
             for tag in tags:  # recorremos toda la lista de tags y añadirmos los que sean nuevos
-                if tag not in self.__tags:
-                    self._add_tag(tag)
+                tagInstance = Tag.get_or_insert(name=tag)
+                if not tagInstance.key() in self._tags_list:
+                    self._tags_list.append(tagInstance.key())
+                    tagInstance.inc_count()
+            self.put()
         else:
-            raise Exception()
-    _tags = property(_tags, _tags_setter)
-        
+            raise AttributeError
+    # FIXME: LOS CONTADORES DE CADA TAGS SE MODIFICAN SIEMPRE, AUNQUE _TAG_LISTS ESTE VACIO, SE MOFICAN EL RESTO DE TAGS
+
     def _remove_tag(self, name):
         tagInstance = Tag.objects.get_by_name(name)
         if tagInstance is None:
-            return
-        self.__tags.remove(tagInstance)
+            return False
         self.__tags_list.remove(tagInstance.key())
         tagInstance.desc_count()
-        self.put()
+        return True
         
-    def _add_tag(self, tag):
-        tagInstance = Tag.get_or_insert(name=tag)
+    def _add_tag(self, name):
+        tagInstance = Tag.get_or_insert(name=name)
         if tagInstance is None:
             return False
         self.__tags_list.append(tagInstance.key())
-        self.put()
+        tagInstance.inc_count()
+        return True
