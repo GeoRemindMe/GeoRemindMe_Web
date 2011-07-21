@@ -13,6 +13,7 @@ class TagHelper(object):
     def order_by_frequency(self):
         list = Tag.gql('WHERE count > 0 ORDER BY count DESC')
 
+
 class Tag(search.SearchableModel):
     name = db.StringProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
@@ -51,7 +52,7 @@ class Taggable(db.Model):
         hay que poner __Tagabble antes del atributo.
         usar: object.__Tagabble__tags_list
     '''
-    __tags_list = db.ListProperty(db.Key)
+    __tags_list = db.ListProperty(db.Key, default=[])
     __tags = None
     
     @property
@@ -80,16 +81,18 @@ class Taggable(db.Model):
             raise Exception()
     _tags = property(_tags, _tags_setter)
         
-    def _remove_tag(self, tag):
-        tagInstance = Tag.objects.get_by_name(tag)
-        if tag is None:
-            return
-        self.__tags.remove(tag)
-        self.__tags_list.remove(tagInstance)
-        tagInstance.desc_count()
-        
-    def _add_tag(self, tag):
-        tagInstance = Tag.get_or_insert(tag)
+    def _remove_tag(self, name):
+        tagInstance = Tag.objects.get_by_name(name)
         if tagInstance is None:
             return
-        self.__tags_list.append(tagInstance)
+        self.__tags.remove(tagInstance)
+        self.__tags_list.remove(tagInstance.key())
+        tagInstance.desc_count()
+        self.put()
+        
+    def _add_tag(self, tag):
+        tagInstance = Tag.get_or_insert(name=tag)
+        if tagInstance is None:
+            return False
+        self.__tags_list.append(tagInstance.key())
+        self.put()
