@@ -12,7 +12,7 @@
         
 
         $(document).ready(function(){
-            
+            resizeIframe();
             $(".like-dislike").like();
             
             //Incrementamos el numero de personas al que le van a gustar
@@ -22,6 +22,7 @@
             $('.show-all-comments').click(function(){
                 //Después de mostrar los comentarios ocultamos el botón
                 $(this).parent().find('.long-list').show('slow', function(){
+                    resizeIframe();
                     $(this).parentsUntil('.suggestion-element').parent().find('.show-all-comments').hide('slow');
                     
                 });
@@ -172,7 +173,7 @@
                     textarea.parent()
                     c=$('#commentTemplate').tmpl(response).appendTo('#commentList-'+suggestion_id);
                     c.find(".like-dislike").like();
-                    
+                    resizeIframe();
                 },
                 error:{
                 }
