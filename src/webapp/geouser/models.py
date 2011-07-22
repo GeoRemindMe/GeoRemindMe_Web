@@ -185,6 +185,7 @@ class User(polymodel.PolyModel, HookedModel):
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
         from geovote.models import Vote, Comment
+        from geoalert.models import Suggestion
         q = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
@@ -196,6 +197,7 @@ class User(polymodel.PolyModel, HookedModel):
                         'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance, querier=self),
+                        'user_follower': timeline.instance.has_follower(self) if isinstance(timeline.instance, Suggestion) else None
                         }
                         for timeline in timelines if timeline is not None ]]
         

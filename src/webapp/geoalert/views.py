@@ -40,7 +40,8 @@ def suggestion_profile(request, id, template='webapp/suggestionprofile.html'):
                                         'suggestion': suggestion,
                                         'comments': comments,
                                         'has_voted': Vote.objects.user_has_voted(request.user, suggestion.key()),
-                                        'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
+                                        'vote_counter': Vote.objects.get_vote_counter(suggestion.key()),
+                                        'user_follower': suggestion.has_follower(request.user),
                                         },
                                context_instance=RequestContext(request))
 
