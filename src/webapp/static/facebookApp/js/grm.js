@@ -108,23 +108,46 @@ function initRemovable(){
 
     $(".removable").hide();
     $(".removable").parent().hover(
-        function(){$(this).find(".removable").show()},
-        function(){$(this).find(".removable").hide()}
+        function(){$(this).find(".removable:first").show()},
+        function(){$(this).find(".removable:first").hide()}
     )
     $(".removable").click(function(){
         var id=$(this).attr('value');
         var type=$(this).attr('type');
+        
+        if(type=="suggestion"){
+            data={eventid:id};
+        }else if (type=="comment"){
+            data={comment_id:id};
+        }
         var elem=$(this)
         $.ajax({
             type: "POST",
             url: "/ajax/delete/"+type+"/",
-            data: {
-                comment_id:id,
-            },
+            data: data,
             dataType:'json',
             success: function(msg){
-                if(msg==true)
-                    elem.parent().remove()
+                if(msg==true){
+                    
+                    parentTree=elem.parentsUntil('.suggestion-element');
+                    
+                    if (type=="comment"){
+                        //Si al borrar el comentario ya no quedan más elementos
+                        //Ocultamos la caja de comentarios
+                        commentList=Array.pop(parentTree)
+                        commentList=Array.pop(parentTree)
+                        if($(commentList).children().length==1)
+                            $(commentList).next().addClass('hidden')
+                    
+                        //Eliminamos el comentario
+                        elem.parent().remove()
+                    }else if(type=="suggestion")
+                        elem.parent().parent().remove()
+                }
+                
+                if(type=="comment"){
+                    //En caso de que fuera el último comentario ocultamos la caja de comentar
+                }
             },
             error:function(){
             }

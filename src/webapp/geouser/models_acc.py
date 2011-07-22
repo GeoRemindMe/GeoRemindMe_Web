@@ -272,7 +272,11 @@ class UserTimelineSystem(UserTimelineBase):
                     252: _('Alert list removed: %s') % self.instance,
                     
                     #Suggestions
-                    300: _('New suggestion: %s') % self.instance,
+                    300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
+                        'url':self.instance.user.get_absolute_url(), 
+                        'username':self.instance.user.username, 
+                        'message':self.instance
+                    },
                     301: _('Suggestion modified: %s') % self.instance,
                     302: _('Suggestion removed: %s') % self.instance,
                     303: _('You are following: %s') % self.instance,
@@ -299,6 +303,7 @@ class UserTimelineSystem(UserTimelineBase):
                 }
         return _msg_ids[self.msg_id]
 
+#Equivale al Muro o a los del Perfil
 class UserTimeline(UserTimelineBase, Visibility):
     msg = db.TextProperty(required=False)
     msg_id = db.IntegerProperty(required=False, default=-1)
@@ -335,7 +340,11 @@ class UserTimeline(UserTimelineBase, Visibility):
                     252: _('Alert list removed: %s') % self.instance,
                     
                     #Suggestions
-                    300: _('suggests:<br> %s') % self.instance,
+                    300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
+                        'url':self.instance.user.get_absolute_url(), 
+                        'username':self.instance.user.username, 
+                        'message':self.instance
+                    },
                     301: _('Suggestion modified: %s') % self.instance,
                     302: _('Suggestion removed: %s') % self.instance,
                     303: _('You are following: %s') % self.instance,
