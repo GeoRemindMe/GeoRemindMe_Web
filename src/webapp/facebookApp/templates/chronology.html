@@ -6,22 +6,15 @@
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/grm.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>
+    
     <script type="text/javascript">
     
-        
-
         $(document).ready(function(){
             resizeIframe();
             $(".like-dislike").like();
             
             initRemovable();
 
-            
-            
-            //Incrementamos el numero de personas al que le van a gustar
-            //la sugerencia si es votada
-
-            
             $('.show-all-comments').click(function(){
                 //Después de mostrar los comentarios ocultamos el botón
                 $(this).parent().find('.long-list').slideDown('fast', function(){
@@ -31,31 +24,20 @@
                 });
                 
             });
-            
-          
+
 
             //Al pulsar en comentar ponemos el foco en el input
             $('.focusInput').click(function(){
-                
                 var commentBox=$(this).parentsUntil('.suggestion-element').parent().find('.input-box')
                 
                 if(commentBox.hasClass('hidden'))
                     commentBox.removeClass('hidden');
-                //console.log($(this).parentsUntil('#suggestion_*').find('.input-box').attr('class'))
-                //like-dislike
                 
                 commentBox.find('textarea').focus()
             });
-        
-            //$("[placeholder]").placeholder();
             
             setCommentFormsBehaviour()
-            
-            //Aumentamos los me gusta antes de mostrarlos
-            //$('.increase').text(parseInt($('.increase').text())+1);
         });
-        
-        
         
         
         function setCommentFormsBehaviour(){
@@ -89,6 +71,7 @@
                     sendComment2($(this),suggestion_id);
                     
                     $(this).val("");
+                    $(this).blur();
                     resetInput(this)
                     
                     
@@ -199,6 +182,7 @@
             <ul id="chronology">
             {% for obj in chronology.1 %}
                 <li id="suggestion_{{obj.instance.id}}" class="suggestion-element" {%if not forloop.last %}style="border-bottom: 1px solid #DDDDDD;"{% endif %}>
+<div>
 <!--
                 {{obj}}
 -->
@@ -207,14 +191,14 @@
                             <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
                         </a>
                     </div>
-                    <p> 
+                    
                         <!--Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar-->
                         {% if not obj.is_private %}
                             {% if obj.username = user.username %}
-                                <div class="removable" value="{{c.id}}" type="suggestion"><a href="#">Remove</a></div>
+                                <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
                             {% endif %}
                         {% endif %}
-                        <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}} <br>
+                        {{obj.msg|safe}} <br>
                         {% if obj.instance.poi.slug %}
                             <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
                         {% endif %}
@@ -249,7 +233,7 @@
                             
                             
                             
-                            
+                            </div>
                             
                             <!-- Si hay comentarios en la sugerencia -->
                             
@@ -294,7 +278,7 @@
                                 
                             </div>
                         {% endif %}
-                    </p>
+                    
                     
                 </li>
             {% endfor %}
