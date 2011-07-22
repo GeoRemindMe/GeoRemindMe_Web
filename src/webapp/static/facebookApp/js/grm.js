@@ -131,15 +131,18 @@ function initRemovable(){
                     
                     parentTree=elem.parentsUntil('.suggestion-element');
                     
-                    //Si al borrar el comentario ya no quedan más elementos
-                    //Ocultamos la caja de comentarios
-                    commentList=Array.pop(parentTree)
-                    commentList=Array.pop(parentTree)
-                    if($(commentList).children().length==1)
-                        $(commentList).next().addClass('hidden')
+                    if (type=="comment"){
+                        //Si al borrar el comentario ya no quedan más elementos
+                        //Ocultamos la caja de comentarios
+                        commentList=Array.pop(parentTree)
+                        commentList=Array.pop(parentTree)
+                        if($(commentList).children().length==1)
+                            $(commentList).next().addClass('hidden')
                     
-                    //Eliminamos el comentario
-                    elem.parent().remove()
+                        //Eliminamos el comentario
+                        elem.parent().remove()
+                    }else if(type=="suggestion")
+                        elem.parent().parent().remove()
                 }
                 
                 if(type=="comment"){
