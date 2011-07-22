@@ -156,7 +156,7 @@ class Comment(Visibility):
         if getattr(instance, 'counter', None) is not None:
             instance.counter.set_comments()
         from signals import comment_new
-        comment_new.send(sender=self)
+        comment_new.send(sender=comment)
         return comment
     
     def to_dict(self):

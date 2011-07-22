@@ -104,6 +104,35 @@ GRM.like = function(settings) {
 
 jQuery.fn.like = GRM.like;
 
+function initRemovable(){
+
+    $(".removable").hide();
+    $(".removable").parent().hover(
+        function(){$(this).find(".removable").show()},
+        function(){$(this).find(".removable").hide()}
+    )
+    $(".removable").click(function(){
+        var id=$(this).attr('value');
+        var type=$(this).attr('type');
+        var elem=$(this)
+        $.ajax({
+            type: "POST",
+            url: "/ajax/delete/"+type+"/",
+            data: {
+                comment_id:id,
+            },
+            dataType:'json',
+            success: function(msg){
+                if(msg==true)
+                    elem.parent().remove()
+            },
+            error:function(){
+            }
+            
+        });
+    });
+}
+
 function loadPage(dict){
             var page=dict['page'];
             var container=dict['container']
