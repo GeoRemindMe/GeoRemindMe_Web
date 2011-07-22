@@ -64,7 +64,6 @@
             <ul class="comments">
 
                 {% for s in suggestions.1%}                
-                            {{s}}
                 <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
                     <span class="user"><img src="/user/{{s.instance.user.username}}/picture/" alt="{{s.instance.user.username}} avatar"></span>
                     <div style="float:left">

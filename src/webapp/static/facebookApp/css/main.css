@@ -1132,7 +1132,7 @@ input{
         text-align: center;
     }
     #suggestion-item{
-        height: 145px;
+        height: 110px;
         margin-bottom:0;
     }
     #suggestion-item label,#suggestion-place,#add-more-details{
@@ -1145,11 +1145,12 @@ input{
     #suggestion-item textarea#id_name{
         font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
         font-size: 1.1em;
-        height: 65px;
+        height: 45px;
         line-height: 1.7em;
-        margin: 11px;
+        margin: 11px auto;
+        display:block;
         padding: 0.7em;
-        width: 488px;
+        width: 525px;
         
         border: 1px solid #CCC;
         border-radius: 4px;
@@ -1158,7 +1159,9 @@ input{
     }
     #suggestion-item textarea#id_name:focus{
         border: 1px solid #CCC;
-        height: 65px;
+/*
+        height: 40px;
+*/
         border-radius: 4px;
         -moz-border-radius: 4px;
         -webkit-border-radius: 4px;
@@ -1166,15 +1169,16 @@ input{
         -moz-box-shadow: 0 0 5px blue;
         -webkit-box-shadow: 0 0 5px blue;
         box-shadow: 0 0 5px blue;
-        margin: 1.2em;
+        
         padding: 0.7em;
-        margin: 11px;
+        margin: 11px auto;
+        display:block;
     }
     #suggestion-item span#counter{
         color: #777777;
         float: right;
         font-size: 1.5em;
-        margin-right: 30px;
+        margin-right: 5px;
     }
     #address-container{
         border:1px solid #ccc;
