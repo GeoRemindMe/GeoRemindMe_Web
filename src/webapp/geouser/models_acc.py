@@ -231,6 +231,7 @@ class UserCounter(db.Model):
 class UserTimelineBase(db.polymodel.PolyModel):
     user = db.ReferenceProperty(User)
     created = db.DateTimeProperty(auto_now_add=True)
+    modified = db.DateTimeProperty(auto_now=True)
     
     @property
     def id(self):

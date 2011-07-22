@@ -187,7 +187,7 @@ class User(polymodel.PolyModel, HookedModel):
         timelines = p.fetch_page(page)
         timelines = [db.get(timeline.parent()) for timeline in timelines]
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
-                        'modified': timeline.modified,
+                        'modified': timeline.modified if hasattr(timeline,'modified') else timeline.created,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'instance': timeline.instance if timeline.instance is not None else None,
                         'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
