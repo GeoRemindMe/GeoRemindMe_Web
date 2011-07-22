@@ -193,7 +193,6 @@ def edit_suggestion(request,suggestion_id):
     from geoalert.forms import SuggestionForm
     s = Suggestion.objects.get_by_id(suggestion_id)
     return  render_to_response('add_suggestion.html', {
-                                                        
                                                         'eventid':suggestion_id,
                                                         'name': s.name,
                                                         'poi_id': s.poi.id,
