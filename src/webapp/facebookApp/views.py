@@ -60,7 +60,7 @@ def dashboard(request):
                                                   'followings': followings, 
                                                   'chronology': chronology,
                                                   } , RequestContext(request))
-                                                  
+         
 @facebook_required
 def notifications(request):
     friends_to_follow=request.user.get_friends_to_follow()

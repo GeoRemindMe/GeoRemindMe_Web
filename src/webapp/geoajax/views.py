@@ -215,8 +215,8 @@ def delete_suggestion(request):
             eventid : el id de la sugerencia a borrar
     """
     eventid = request.POST.get('eventid', None)
-    geoalert.del_suggestion(request, eventid)    
-    return HttpResponse()
+    deleted = geoalert.del_suggestion(request, eventid)
+    return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
 
 
 #===============================================================================

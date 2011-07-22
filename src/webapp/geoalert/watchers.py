@@ -34,7 +34,7 @@ def modified_alert(sender, **kwargs):
     else:
         return
     timeline.put()
-#alert_modified.connect(modified_alert)
+alert_modified.connect(modified_alert)
 
 def deleted_alert(sender, **kwargs):
     '''
@@ -76,7 +76,7 @@ def modified_suggestion(sender, **kwargs):
     if sender._is_public():
         timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=301)
         timelinePublic.put()
-#suggestion_modified.connect(modified_suggestion)
+suggestion_modified.connect(modified_suggestion)
 
 def deleted_suggestion(sender, **kwargs):
     from geouser.models_acc import UserTimelineBase
