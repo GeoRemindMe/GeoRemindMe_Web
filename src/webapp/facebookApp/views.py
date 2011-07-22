@@ -60,6 +60,21 @@ def dashboard(request):
                                                   'followings': followings, 
                                                   'chronology': chronology,
                                                   } , RequestContext(request))
+                                                  
+@facebook_required
+def notifications(request):
+    friends_to_follow=request.user.get_friends_to_follow()
+    followers=request.user.get_followers()
+    followings=request.user.get_followings()
+    chronology = request.user.get_chronology()
+    timeline = request.user.get_timelineALL()
+    chronology[1].extend(timeline[1])
+    chronology[1].sort(key=lambda x: x['modified'], reverse=True)
+    return  render_to_response('notifications.html', {'friends_to_follow': friends_to_follow,
+                                                  'followers': followers,
+                                                  'followings': followings, 
+                                                  'chronology': chronology,
+                                                  } , RequestContext(request))
 
 
 @facebook_required

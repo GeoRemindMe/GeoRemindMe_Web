@@ -22,6 +22,7 @@ from django.views.generic.simple import direct_to_template, redirect_to
 urlpatterns = patterns('facebookApp.views',
     url(r'^$', 'login_panel', {}, 'fb_login_panel'),
     url(r'^dashboard/$', 'dashboard', {}, 'fb_dashboard'),
+    url(r'^notifications/$', 'notifications', {}, 'fb_notifications'),
     url(r'^settings/$', 'profile_settings', {}, 'fb_profile_settings'),
     url(r'^settings/edit/$', 'edit_settings', {}, 'fb_edit_settings'),
     url(r'^user/edit/$', 'edit_profile', {}, 'fb_edit_profile'),
