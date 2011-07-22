@@ -48,8 +48,8 @@
 {% block body %}
     <div id="view-place">
         <div id="place-container">
+            <h1>{{place.name}} ({{suggestions.1|length}} sugerencias)</h1>
             <div id="place-details">
-                <h1>{{place.name}}</h1>
                 <p><strong>Dirección</strong>: {{place.address}}</p>
                 <a href="http://maps.google.com/maps?q={{place.address}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=14&size=270x200&maptype=roadmap
     &markers=color:red%7C{{place.location}}&sensor=false"></a>
@@ -60,27 +60,27 @@
             </div>
         </div>
         <div>
-            <p class="big">Los usuarios han hecho {{suggestions.1|length}} sugerencias en este sitio</p>
-            {{suggestions}}
+            <p class="big"><strong>Sugerencias</strong></p>
             <ul class="comments">
-            
+
                 {% for s in suggestions.1%}                
+                            {{s}}
                 <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
-                    <span class="user"><img src="/user/{{s.user.username}}/picture/" alt="{{s.user.username}} avatar"></span>
+                    <span class="user"><img src="/user/{{s.instance.user.username}}/picture/" alt="{{s.instance.user.username}} avatar"></span>
                     <div style="float:left">
-                        <span class="msg"><a href="">{{s.user.username}}</a> sugiere:<br> {{s.name}}</span>
-                        <span class="timestamp">{{s.created|timesince}} - </span>
-                        <span class="like-dislike" value="{{s.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion">
+                        <span class="msg"><a href="">{{s.instance.user.username}}</a> sugiere:<br> {{s.instance.name}}</span>
+                        <span class="timestamp">{{s.instance.created|timesince}} - </span>
+                        <span class="like-dislike" value="{{s.instance.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion">
                             <span class="dislike">
                                 <span class="hoverlink">Ya no me gusta</span> 
-                                <span class="text like-text {% if not s.has_voted %}increase{% endif %}">{{s.counters.followers}}</span> personas
+                                <span class="text like-text {% if not s.has_voted %}increase{% endif %}">{{s.vote_counter}}</span> personas
                             </span>
                             
                             <span class="like">
                                 <span class="hoverlink">Me gusta</span> 
                             </span>
                         </span>
-                        - <a href="/fb/suggestion/{{s.id}}" class="hoverlink">Ver más</a>
+                        - <a href="/fb/suggestion/{{s.instance.id}}" class="hoverlink">Ver más</a>
                     </div>
                 </li>
                 {% endfor %}
