@@ -1580,7 +1580,9 @@ input{
         border-top: 1px dotted #BBBBBB;
         clear: both;
         padding: 1em 0.5em;
+/*
         cursor:pointer;
+*/
     }
     #view-place ul.comments li{
         padding: 0.5em 0.5em;

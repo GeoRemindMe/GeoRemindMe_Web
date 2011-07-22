@@ -5,7 +5,11 @@
     <link rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css"> 
     
     <script type="text/javascript">
-
+        
+        $(document).ready(function(){
+            resizeIframe();
+        });
+        
         I18N = {}
 
         I18N['There are elements that could not be saved. If you leave the page you will lose it.'] = "{% trans "There are elements that could not be saved. If you leave the page you will lose it." %}";
