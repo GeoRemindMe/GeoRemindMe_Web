@@ -42,7 +42,7 @@ class CommentHelper(object):
         """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
-        q = Comment.all().filter('user =', user).filter('deleted =', False).order('created')
+        q = Comment.all().filter('user =', user).filter('deleted =', False).order('-created')
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
         return [p.id,  [{'id': comment.id,
@@ -71,7 +71,7 @@ class CommentHelper(object):
         """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
-        q = Comment.all().filter('instance =', instance).filter('deleted =', False).order('created')
+        q = Comment.all().filter('instance =', instance).filter('deleted =', False).order('-created')
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
         return [p.id, [{'id': comment.id,
@@ -156,7 +156,7 @@ class Comment(Visibility):
         if getattr(instance, 'counter', None) is not None:
             instance.counter.set_comments()
         from signals import comment_new
-        comment_new.send(sender=self)
+        comment_new.send(sender=comment)
         return comment
     
     def to_dict(self):

@@ -52,8 +52,9 @@ def dashboard(request):
     followers=request.user.get_followers()
     followings=request.user.get_followings()
     chronology = request.user.get_chronology()
-    ##timeline=request.user.get_timelineALL()
-    
+    timeline = request.user.get_timelineALL()
+    chronology[1].extend(timeline[1])
+    chronology[1].sort(key=lambda x: x['modified'])
     return  render_to_response('dashboard.html', {'friends_to_follow': friends_to_follow,
                                                   'followers': followers,
                                                   'followings': followings, 
