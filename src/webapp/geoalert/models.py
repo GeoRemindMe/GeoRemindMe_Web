@@ -332,7 +332,7 @@ class Suggestion(Event, Visibility, Taggable):
                 index = SuggestionFollowersIndex(parent=sug)
             index.keys.append(user_key)
             index.count += 1
-            db.put_async([sug, index])
+            index.put()
         if SuggestionFollowersIndex.all().ancestor(self).filter('keys =', user.key()).count() != 0:
             a = AlertSuggestion.objects.get_by_sugid_user(self.id, user)
             if a is None:
@@ -347,7 +347,6 @@ class Suggestion(Event, Visibility, Taggable):
             else:
                 raise ForbiddenAccess()
         self.user_invited(user, set_status=1) 
-        self.counters.set_followers(+1)  # incrementar contadores
         alert = AlertSuggestion.update_or_insert(suggestion = self, user = user)
         suggestion_following_new.send(sender=self, user=user)
 
@@ -371,7 +370,6 @@ class Suggestion(Event, Visibility, Taggable):
         index = SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get()
         if index is not None:
             db.run_in_transaction(_tx, self.key(), index.key(), user.key())
-            self.counters.set_followers(-1)
             suggestion_following_deleted.send(sender=self, user=user)
             return True
         return False

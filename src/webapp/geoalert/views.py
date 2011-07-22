@@ -335,6 +335,15 @@ def get_suggestion(request, id, wanted_user=None, private_profile=False, page = 
         return Suggestion.objects.get_by_user(wanted_user, request.user, page, query_id)
 
 
+@login_required
+def add_suggestion_follower(request, id):
+    suggestion = Suggestion.objects.get_by_id_querier(id, request.user)
+    if suggestion is not None:
+        suggestion.add_follower(request.user)
+        return True
+    return False
+
+
 @login_required    
 def del_suggestion(request, id = None):
     """ Borra una sugerencia
@@ -352,10 +361,4 @@ def del_suggestion(request, id = None):
         raise AttributeError()
     sug.delete()    
     return True
-    
-    
-    
-        
-    
-    
-        
+

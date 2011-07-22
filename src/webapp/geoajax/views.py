@@ -184,7 +184,13 @@ def add_suggestion_invitation(request):
     """
     userid = request.POST.get('userid')
     eventid = request.POST.get('eventid')
-    return geoalert.add_suggestion_invitation(request, eventid, userid)
+    invitation = geoalert.add_suggestion_invitation(request, eventid, userid)
+    return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
+
+def add_suggestion_following(request):
+    eventid = request.POST.get('eventid')
+    result = geoalert.add_suggestion_follower(request, eventid)
+    return HttpResponse(simplejson.dumps(result), mimetype="application/json")
 
 @ajax_request
 def get_suggestion(request):

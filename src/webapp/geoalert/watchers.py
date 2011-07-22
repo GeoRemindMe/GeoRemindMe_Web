@@ -89,6 +89,7 @@ suggestion_deleted.connect(deleted_suggestion)
 def new_following_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=333)
     timeline.put()
+    sender.counters.set_followers(+1)
     from google.appengine.ext.deferred import defer
     defer(sender.user.settings.notify_suggestion_follower, sender.key(), kwargs['user'].key())
 suggestion_following_new.connect(new_following_suggestion)
@@ -96,6 +97,7 @@ suggestion_following_new.connect(new_following_suggestion)
 def deleted_following_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=304)
     timeline.put()
+    self.counters.set_followers(-1)
 suggestion_following_deleted.connect(deleted_following_suggestion)
 
 def new_privateplace(sender, **kwargs):
