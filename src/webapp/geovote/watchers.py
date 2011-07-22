@@ -2,10 +2,10 @@
 
 from signals import *
 
-def new_comment_event(sender, **kwargs):
+def new_comment(sender, **kwargs):
     from geouser.models_acc import UserSettings
     from google.appengine.ext.deferred import defer
-    defer(sender.user.settings.notify_suggestion_comment, sender.key())
-comment_event_new.connect(new_comment_event)
-
-from models import *
+    from geoalert.models import Event
+    if isinstance(sender.instance, Event):
+        defer(sender.user.settings.notify_suggestion_comment, sender.key())
+comment_new.connect(new_comment)

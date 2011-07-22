@@ -8,6 +8,19 @@ from geouser.models import User
 
 class CommentHelper(object):
     
+    def get_by_id(self, id):
+        try:
+            id = long(id)
+        except:
+            return None
+        comment = Comment.get_by_id(id)
+        if comment is not None:
+            if comment.deleted:
+                return None
+            if comment._is_public():
+                return comment
+        return None
+        
     def get_by_key(self, key):
         """
         Obtiene el evento con ese key
@@ -29,7 +42,7 @@ class CommentHelper(object):
         """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
-        q = Comment.all().filter('user =', user).order('created')
+        q = Comment.all().filter('user =', user).filter('deleted =', False).order('created')
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
         return [p.id,  [{'id': comment.id,
@@ -58,7 +71,7 @@ class CommentHelper(object):
         """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
-        q = Comment.all().filter('instance =', instance).order('created')
+        q = Comment.all().filter('instance =', instance).filter('deleted =', False).order('created')
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
         return [p.id, [{'id': comment.id,
@@ -80,14 +93,10 @@ class CommentHelper(object):
         if not isinstance(user, User):
             raise AttributeError()
         comment = Comment.get_by_id(int(id))
-        if comment.user.key() == user.key():
-            return comment
-        if comment._is_public():
-            if comment.instance.user.key() == user.key():
-                return comment
-            elif comment.instance._is_public():
-                return comment
-            elif comment.instance._is_shared() and comment.instance.user_invited(user):
+        if comment is not None:
+            if comment.deleted:
+                return None
+            if comment.user.key() == user.key():
                 return comment
         return None      
     
@@ -100,14 +109,18 @@ class CommentHelper(object):
             raise AttributeError()
         
         comment = Comment.get_by_id(id)
-        if comment.user.key() == querier.key():
-            return comment
-        if comment._is_public():
-            if comment.instance.user.key() == querier.key():
+        if comment is not None:
+            if comment.deleted:
+                return None
+            if comment.user.key() == querier.key():
                 return comment
-            elif comment.instance._is_public():
+            elif comment._is_public(): # comentario publico
                 return comment
-            elif comment.instance._is_shared() and comment.instance.user_invited(querier):
+            elif comment.instance.user.key() == querier.key(): # comentario en un objeto publico
+                return comment
+            elif comment.instance._is_public(): # la instancia es publica, sus comentarios son publicos
+                return comment
+            elif comment.instance._is_shared() and comment.instance.user_invited(querier): # instancia compartida, usuario invitado
                 return comment
         return None     
         
@@ -121,6 +134,7 @@ class Comment(Visibility):
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty(auto_now = True)
     msg = db.TextProperty(required=True)
+    deleted = db.BooleanProperty(default=False)
     
     objects = CommentHelper()
     """
@@ -141,6 +155,8 @@ class Comment(Visibility):
         comment.put()
         if getattr(instance, 'counter', None) is not None:
             instance.counter.set_comments()
+        from signals import comment_new
+        comment_new.send(sender=self)
         return comment
     
     def to_dict(self):

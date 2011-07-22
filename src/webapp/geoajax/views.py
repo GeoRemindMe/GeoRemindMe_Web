@@ -579,6 +579,17 @@ def get_all_shared_list_suggestion(request):
 # COMENTARIOS Y VOTOS
 #===============================================================================
 @ajax_request
+def delete_comment(request):
+    """
+    Borra un comentario
+    Parametros POST:
+        commentid: id del comentario a borrar
+    """
+    commentid = request.POST['comment_id']
+    comment = geovote.delete_comment(request, commentid)
+    return HttpResponse(simplejson.dumps(comment), mimetype="application/json")
+
+@ajax_request
 def do_comment_event(request):
     """
     Realiza un comentario a un evento (alerta, sugerencia, etc.)

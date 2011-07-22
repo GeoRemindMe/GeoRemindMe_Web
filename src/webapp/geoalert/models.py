@@ -241,7 +241,7 @@ class Alert(Event):
         return simplejson.dumps(self.to_dict())
     
     def __str__(self):
-        return self.name
+        return unicode(self.name)
     
     def __unicode__(self):
         return self.name

@@ -39,7 +39,7 @@ def do_comment_list(request, instance_id, msg):
         :type msg: :class:`string`
     """
     user = request.session['user']
-    list = List.objects.get_by_id_user(id=instance_id, user=user)
+    list = List.objects.get_by_id_querier(id=instance_id, user=user)
     if list is None:
         return None
     comment = Comment.do_comment(user=user, instance=list, msg=msg)
@@ -81,7 +81,7 @@ def get_comments_list(request, instance_id, query_id=None, page=1):
     """
     user = request.session.get('user', None)
     if user is not None:
-        list = List.objects.get_by_id_user(instance_id, user)
+        list = List.objects.get_by_id_querier(instance_id, user)
     else:
         list = List.objects.get_by_id(instance_id)
     if list is None:
@@ -142,7 +142,7 @@ def do_vote_list(request, instance_id, vote=1):
         :type vote: :class:`integer`
     """
     vote = int(vote)
-    list = List.objects.get_by_id_user(id=instance_id, user=request.user)
+    list = List.objects.get_by_id_querier(id=instance_id, user=request.user)
     if list is None:
         return None
     vote = Vote.do_vote(user=request.user, instance=list, count=vote)
@@ -222,3 +222,12 @@ def _get_vote(instance_key):
     counter = Vote.objects.get_vote_counter(instance_key)
     return counter
     
+
+@login_required    
+def delete_comment(request, commentid):
+    comment = Comment.objects.get_by_id_user(commentid, request.user)
+    if comment is not None:
+        comment.deleted = True
+        comment.put()
+        return True
+    return False

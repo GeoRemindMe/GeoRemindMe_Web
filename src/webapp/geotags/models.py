@@ -52,6 +52,12 @@ class Tag(db.Model):
             obj.count += value
             obj.put()
         db.run_in_transaction(_tx, value)
+        
+    def __str__(self):
+        return unicode(self.name)
+    
+    def __unicode__(self):
+        return self.name
 
 class Taggable(db.Model):
     '''
