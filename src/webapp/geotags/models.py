@@ -27,6 +27,8 @@ class Tag(db.Model):
     @classmethod
     def get_or_insert(cls, key_name=None, **kwargs):
         """USE THIS METHOD TO CREATE A NEW TAG, USE KEY_NAME = None"""
+        if kwargs['name'] is None or kwargs['name'] == '':
+            return None
         if key_name is None:
             key_name = Tag.__key_name(kwargs['name'])
         tag = Tag.get_by_key_name(key_name)
@@ -35,16 +37,21 @@ class Tag(db.Model):
         return super(Tag, cls).get_or_insert(key_name, **kwargs)
     
     def desc_count(self, value=1):
-        def _tx():
-            self.count -= int(value)
-            self.put()
-        db.run_in_transaction(_tx)
+        def _tx(value):
+            value = int(value)
+            obj = Tag.get(self.key())
+            if obj.count > 0:
+                obj.count -= value
+                obj.put()
+        db.run_in_transaction(_tx, value)
             
     def inc_count(self, value=1):
-        def _tx():
-            self.count += int(value)
-            self.put()
-        db.run_in_transaction(_tx)
+        def _tx(value):
+            value = int(value)
+            obj = Tag.get(self.key())
+            obj.count += value
+            obj.put()
+        db.run_in_transaction(_tx, value)
 
 class Taggable(db.Model):
     '''
@@ -76,7 +83,7 @@ class Taggable(db.Model):
                     tagInstance.desc_count()
             for tag in tags:  # recorremos toda la lista de tags y añadirmos los que sean nuevos
                 tagInstance = Tag.get_or_insert(name=tag)
-                if not tagInstance.key() in self._tags_list:
+                if tagInstance is not None and not tagInstance.key() in self._tags_list:
                     self._tags_list.append(tagInstance.key())
                     tagInstance.inc_count()
             self.put()
