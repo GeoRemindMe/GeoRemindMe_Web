@@ -208,7 +208,7 @@
         
         {% if comments %}
         <ul class="comments" id="comment-list">
-            {% for c in comments.1 reversed %}
+            {% for c in comments.1 %}
                 <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
                     
                     <!-- Añadimos el botón de borrar comentario-->

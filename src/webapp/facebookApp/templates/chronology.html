@@ -56,9 +56,12 @@
             })
             
             $('.commentForm').find("textarea").blur(function(){
-                if($(this).attr('empty')=="true"){
+                if($(this).val()=="")
+                    $(this).attr('empty',"true");
+                
+                if($(this).attr('empty')=="true")
                     resetInput(this)
-                }
+                
             })
             
             $('.commentForm').find("textarea").keyup(function(e) {
@@ -88,6 +91,7 @@
         }
         
         function resetInput(obj){
+            
             $(obj).css('width','470px');
             $(obj).css('color','#999');
             $(obj).css('font-style','italic');
@@ -95,8 +99,10 @@
             $(obj).parent().parent().find("img").addClass('hidden');
             
             //Reestablecemos el mensaje
-            $(this).attr('empty',"true")
+            $(obj).attr('empty',"true")
             $(obj).text($(obj).attr('msg'));
+            
+            $(obj).focusout()
         }
         function vote(type,obj,value){
             var element_id=obj.attr('value')
@@ -158,6 +164,7 @@
                     textarea.parent()
                     c=$('#commentTemplate').tmpl(response).appendTo('#commentList-'+suggestion_id);
                     c.find(".like-dislike").like();
+                    //resetInput(textarea);
                     initRemovable();
                     resizeIframe();
                 },
@@ -243,7 +250,7 @@
                                 {% endif %}
                                 <ul id="commentList-{{obj.instance.id}}">
                                     {% if obj.comments.1 %}
-                                        {% for c in obj.comments.1 %}
+                                        {% for c in obj.comments.1 reversed %}
                                             <li {% if forloop.revcounter > 2 %} class="long-list" {% endif %}>
                                                 
                                                 <!-- Añadimos el botón de borrar comentario-->

@@ -128,25 +128,22 @@ function initRemovable(){
             dataType:'json',
             success: function(msg){
                 if(msg==true){
-                    
-                    parentTree=elem.parentsUntil('.suggestion-element');
-                    
+
                     if (type=="comment"){
-                        //Si al borrar el comentario ya no quedan más elementos
-                        //Ocultamos la caja de comentarios
-                        commentList=Array.pop(parentTree)
-                        commentList=Array.pop(parentTree)
-                        if($(commentList).children().length==1)
-                            $(commentList).next().addClass('hidden')
-                    
                         //Eliminamos el comentario
+                        var preElem=elem.parent().prev();
+                        var posElem=elem.parent().next();
+                        //parentTree=elem.parentsUntil('.suggestion-element');
+                        if(preElem.size()==0 && posElem.size()==0){
+                            //Si al borrar el comentario ya no quedan más elementos
+                            //Ocultamos la caja de comentarios
+                            elem.parent().parent().next().addClass('hidden');
+                            
+                        }
                         elem.parent().remove()
+                        
                     }else if(type=="suggestion")
                         elem.parent().parent().remove()
-                }
-                
-                if(type=="comment"){
-                    //En caso de que fuera el último comentario ocultamos la caja de comentar
                 }
             },
             error:function(){
