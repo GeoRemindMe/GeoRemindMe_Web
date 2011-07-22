@@ -121,12 +121,14 @@ class User(polymodel.PolyModel, HookedModel):
         q = UserTimelineBase.all().filter('user =', self.key()).order('-modified')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
+        from geovote.models import Comment
         return [p.id, [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'instance': timeline.instance if timeline.instance is not None else None,
                         'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
+                        'comments': Comment.objects.get_by_instance(timeline.instance, querier=self) if not isinstance(timeline, UserTimelineSystem) else None,
                         'is_private': isinstance(timeline, UserTimelineSystem),
                         }
                         for timeline in timelines]]

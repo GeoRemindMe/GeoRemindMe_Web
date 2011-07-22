@@ -61,11 +61,12 @@ def done_alert(sender, **kwargs):
 alert_done.connect(done_alert)
 
 def new_suggestion(sender, **kwargs):
-    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=300)
-    timeline.put()
     if sender._is_public():
         timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=300)
         timelinePublic.put()
+    else:
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=300)
+        timeline.put()
     sender.user.counters.set_suggested()
 suggestion_new.connect(new_suggestion)
 
