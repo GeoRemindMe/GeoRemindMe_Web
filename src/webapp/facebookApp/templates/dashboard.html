@@ -15,15 +15,19 @@
             resizeIframe();
             $(".like-dislike").like();
             
+            initRemovable();
+
+            
+            
             //Incrementamos el numero de personas al que le van a gustar
             //la sugerencia si es votada
 
             
             $('.show-all-comments').click(function(){
                 //Después de mostrar los comentarios ocultamos el botón
-                $(this).parent().find('.long-list').show('slow', function(){
+                $(this).parent().find('.long-list').slideDown('fast', function(){
                     resizeIframe();
-                    $(this).parentsUntil('.suggestion-element').parent().find('.show-all-comments').hide('slow');
+                    $(this).parentsUntil('.suggestion-element').parent().find('.show-all-comments').remove();
                     
                 });
                 
@@ -87,7 +91,7 @@
                     
                     $(this).val("");
                     resetInput(this)
-                    console.log('Trigger Submit');
+                    
                     
                 }else{
                     var height=(parseInt($(this).val().length/55)+1)*1.2;
@@ -122,29 +126,28 @@
                         instance_id:element_id,
                         puntuation: value,
                     },
-                    complete: function(msg){
-                        if (msg.status !=200){
-
-                        }else{
-                            console.log(msg.responseText)
-                            //if(msg.responseText!=false){
-                                action=obj.attr('class')
-                                obj.addClass('hidden')
+                    dataType:'json',
+                    success: function(msg){
+                        //console.log(msg)
+                        //if(msg!=false){
+                            action=obj.attr('class')
+                            obj.addClass('hidden')
+                            
+                            if(action=="LikeComment")
+                                obj.parent().find(".dontLikeComment").removeClass('hidden')
+                            else if (action=="dontLikeComment")
+                                obj.parent().find(".LikeComment").removeClass('hidden')
                                 
-                                if(action=="LikeComment")
-                                    obj.parent().find(".dontLikeComment").removeClass('hidden')
-                                else if (action=="dontLikeComment")
-                                    obj.parent().find(".LikeComment").removeClass('hidden')
-                                    
-                                if(action=="LikeSuggestion")
-                                    obj.parent().find(".dontLikeSuggestion").removeClass('hidden')
-                                else if (action=="dontLikeSuggestion")
-                                    obj.parent().find(".LikeSuggestion").removeClass('hidden')
-                            //}
-                        }
-                        
+                            if(action=="LikeSuggestion")
+                                obj.parent().find(".dontLikeSuggestion").removeClass('hidden')
+                            else if (action=="dontLikeSuggestion")
+                                obj.parent().find(".LikeSuggestion").removeClass('hidden')
+                        //}
+                    },
+                    error:function(){
                     }
-                });    
+                    
+                });   
         }
 
         
@@ -169,10 +172,11 @@
                 },
                 success: function(response){
 
-                    console.log(response)
+                    //console.log(response)
                     textarea.parent()
                     c=$('#commentTemplate').tmpl(response).appendTo('#commentList-'+suggestion_id);
                     c.find(".like-dislike").like();
+                    initRemovable();
                     resizeIframe();
                 },
                 error:{
@@ -206,7 +210,10 @@
                             <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
                         </a>
                     </div>
-                    <p>                
+                    <p> 
+                        {% if obj.username = user.username %}
+                            <div class="removable" value="{{c.id}}" type="suggestion"><a href="#">Remove</a></div>
+                        {% endif %}
                         <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}} <br>
                         <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
                         
@@ -248,6 +255,12 @@
                                 {% if obj.comments.1 %}
                                     {% for c in obj.comments.1 %}
                                         <li {% if forloop.revcounter > 2 %} class="long-list" {% endif %}>
+                                            
+                                            <!-- Añadimos el botón de borrar comentario-->
+                                            {% if c.username = user.username %}
+                                                <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
+                                            {% endif %}
+                                        
                                             <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
                                             <span class="timestamp">{{c.created|timesince}} ago</span> - 
                                             

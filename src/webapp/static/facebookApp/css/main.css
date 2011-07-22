@@ -438,6 +438,20 @@ input{
         float:left;
     }
     
+    div.removable{
+        width:15px;
+        height:15px;
+        background-image: url('/static/facebookApp/img/delete.png');
+        float:right;
+        cursor:pointer;
+    }
+    div.removable:hover{
+        background-position: 0 32px;
+    }
+    div.removable a{
+        display:none;
+    }
+    
     /****************************
      *      
      * Create Social Profile 
@@ -796,7 +810,7 @@ input{
             
             #activity ul#chronology li span.like-text, 
             #view-suggestion ul#comment-list li span.like-text{
-                background: url("/static/facebookApp/img/icons/like_min.png") no-repeat scroll -2px 1px transparent;
+                background: url("/static/facebookApp/img/like_min.png") no-repeat scroll -2px 1px transparent;
                 color: black;
                 display: inline-block;
                 margin-left: 0;
@@ -834,6 +848,10 @@ input{
                     margin: 2px 0;
                     padding: 0.5em;
                 }
+                #activity ul#chronology div.comment-box ul li{
+                    cursor:pointer;
+                }
+                
                     #activity ul#chronology div.input-box form{
                         float:right;
                     }
