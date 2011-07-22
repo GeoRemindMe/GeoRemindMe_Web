@@ -201,9 +201,11 @@ class Alert(Event):
             alert.put()
             return alert
         
-    def put(self):
+    def put(self, from_comment=False):
         if self.is_saved():
             super(Alert, self).put()
+            if from_comment:
+                return self 
             if self._done:
                 alert_done.send(sender=self)
             else:
@@ -374,9 +376,11 @@ class Suggestion(Event, Visibility, Taggable):
             return True
         return False
     
-    def put(self):
+    def put(self, from_comment=False):
         if self.is_saved():
             super(Suggestion, self).put()
+            if from_comment:
+                return self
             suggestion_modified.send(sender=self)
         else:
             super(Suggestion, self).put()
@@ -523,9 +527,11 @@ class AlertSuggestion(Event):
             alert.put()
             return alert
         
-    def put(self):
+    def put(self, from_comment=False):
         if self.is_saved():
             super(AlertSuggestion, self).put()
+            if from_comment:
+                return self
             if self._done:
                 alert_done.send(sender=self)
             else:

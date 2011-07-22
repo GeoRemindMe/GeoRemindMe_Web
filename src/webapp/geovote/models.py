@@ -5,6 +5,7 @@ from google.appengine.ext import db
 from georemindme.paging import *
 from georemindme.models_utils import Visibility
 from geouser.models import User
+from watchers import *
 
 class CommentHelper(object):
     
@@ -284,16 +285,19 @@ class Vote(db.Model):
             
             :returns: True si se realizo el voto, False si ya se habia votado
         '''
+        from signals import vote_new, vote_deleted
         count = int(count)
         vote = cls.objects.get_user_vote(user, instance.key())
         if vote is not None:
             if count < 0:
                 VoteCounter.increase_counter(vote.instance.key(), -1)
+                vote_deleted.send(sender=vote)
                 vote.delete()
                 return True
             return False
         vote = Vote(user=user, instance=instance, count=1)
         vote.put()
+        vote_new.send(sender=vote)
         return True
     
     def put(self):

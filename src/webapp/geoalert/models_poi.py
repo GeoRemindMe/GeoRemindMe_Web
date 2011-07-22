@@ -208,10 +208,12 @@ class PrivatePlace(POI):
         self.put()
             
     
-    def put(self):
+    def put(self, from_comment=False):
         self.update_location()
         if self.is_saved():
             super(PrivatePlace, self).put()
+            if from_comment:
+                return self
             privateplace_modified.send(sender=self)
         else:
             super(PrivatePlace, self).put()
@@ -260,10 +262,13 @@ class Place(POI):
         pass
  
     
-    def put(self):
+    def put(self, from_comment=False):
         """
             Comprueba que el slug es unico
         """
+        if from_comment:
+            super(Place, self).put()
+            return self
         from georemindme.funcs import u_slugify
         if self.slug is None:
             if self.city is not None:
@@ -279,7 +284,6 @@ class Place(POI):
                     p = Place.all().filter('slug =', slug).get()
                 self.slug = self.slug + '-%s' % i
         if self.is_saved():
-            super(Place, self).put()
             place_modified.send(sender=self)
         else:
             super(Place, self).put()
