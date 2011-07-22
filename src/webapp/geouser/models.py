@@ -185,7 +185,7 @@ class User(polymodel.PolyModel, HookedModel):
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
         from geovote.models import Vote, Comment
-        q = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY modified DESC', user=self.key())
+        q = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
         timelines = [db.get(timeline.parent()) for timeline in timelines]
