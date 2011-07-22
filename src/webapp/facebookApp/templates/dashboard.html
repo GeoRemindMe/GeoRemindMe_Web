@@ -205,88 +205,101 @@
             <ul id="chronology">
             {% for obj in chronology.1 %}
                 <li id="suggestion_{{obj.instance.id}}" class="suggestion-element" {%if not forloop.last %}style="border-bottom: 1px solid #DDDDDD;"{% endif %}>
+<!--
+                {{obj}}
+-->
                     <div class="avatar">
                         <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
                             <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
                         </a>
                     </div>
                     <p> 
-                        {% if obj.username = user.username %}
-                            <div class="removable" value="{{c.id}}" type="suggestion"><a href="#">Remove</a></div>
+                        <!--Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar-->
+                        {% if not obj.is_private %}
+                            {% if obj.username = user.username %}
+                                <div class="removable" value="{{c.id}}" type="suggestion"><a href="#">Remove</a></div>
+                            {% endif %}
                         {% endif %}
                         <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> {{obj.msg|safe}} <br>
-                        <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
+                        {% if obj.instance.poi.slug %}
+                            <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
+                        {% endif %}
                         
-                        <!--Botonera -->
-                        <span class="action-bar">
-                            <span class="timestamp">{{obj.created|timesince}} ago</span> | 
-                            <span class="focusInput">Comentar</span> | 
-                            <a href="/fb/suggestion/{{obj.instance.id|urlencode}}">Detalles</a> | 
-                            
-                            
-                            
-                            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
-                                <span class="dislike">
-                                    <span class="hoverlink">Ya no me gusta</span> 
-                                    <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
+                        
+                        <span class="timestamp">{{obj.created|timesince}} ago</span>  
+                        
+                        <!--Si el mensaje lo leen más personas se añade una barra de acciones -->
+                        {% if not obj.is_private %}
+                        
+                            <span class="action-bar">
+                                | <span class="focusInput">Comentar</span> | 
+                                <a href="/fb/suggestion/{{obj.instance.id|urlencode}}">Detalles</a> | 
+                                
+                                
+                                
+                                <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
+                                    <span class="dislike">
+                                        <span class="hoverlink">Ya no me gusta</span> 
+                                        <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
+                                    </span>
+                                    
+                                    <span class="like">
+                                        Me gusta
+                                    </span>
                                 </span>
                                 
-                                <span class="like">
-                                    Me gusta
-                                </span>
+                                | <span onclick="" title="Guardar en favoritos" class="save">Recordar</span>
                             </span>
                             
-                            | <span onclick="" title="Guardar en favoritos" class="save">Recordar</span>
-                        </span>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <!-- Si hay comentarios en la sugerencia -->
-                        
-                        <div class="comment-box" value="{{obj.instance.id}}">
-                            {% if obj.comments.1|length > 2%}
-                                <div class="show-all-comments">Ver los {{obj.comments.1|length}} comentarios</div>
-                            {% endif %}
-                            <ul id="commentList-{{obj.instance.id}}">
-                                {% if obj.comments.1 %}
-                                    {% for c in obj.comments.1 %}
-                                        <li {% if forloop.revcounter > 2 %} class="long-list" {% endif %}>
-                                            
-                                            <!-- Añadimos el botón de borrar comentario-->
-                                            {% if c.username = user.username %}
-                                                <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
-                                            {% endif %}
-                                        
-                                            <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
-                                            <span class="timestamp">{{c.created|timesince}} ago</span> - 
-                                            
-                                            
-                                            <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
                             
-                                                <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
-                                                    <span class="hoverlink">Ya no me gusta</span> 
-                                                    <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
-                                                </span>
-                                                
-                                                <span class="like" {% if c.has_voted %}style="display:none;"{%endif%} >
-                                                    <span class="hoverlink">Me gusta</span> 
-                                                </span>
-                                            </span>
-                                        </li>
-                                    {% endfor %}
+                            
+                            
+                            
+                            
+                            
+                            <!-- Si hay comentarios en la sugerencia -->
+                            
+                            <div class="comment-box" value="{{obj.instance.id}}">
+                                {% if obj.comments.1|length > 2%}
+                                    <div class="show-all-comments">Ver los {{obj.comments.1|length}} comentarios</div>
                                 {% endif %}
-                            </ul>
-                            
-                            <div class="input-box {% if not obj.comments.1 %} hidden {% endif %}">
-                                <img alt="user avatar" src="/user/{{user.username}}/picture/" class="min-img hidden">
-                                <form class="commentForm"><textarea empty="true" class="autogrow">Escribe un comentario</textarea></form>
+                                <ul id="commentList-{{obj.instance.id}}">
+                                    {% if obj.comments.1 %}
+                                        {% for c in obj.comments.1 %}
+                                            <li {% if forloop.revcounter > 2 %} class="long-list" {% endif %}>
+                                                
+                                                <!-- Añadimos el botón de borrar comentario-->
+                                                {% if c.username = user.username %}
+                                                    <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
+                                                {% endif %}
+                                            
+                                                <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
+                                                <span class="timestamp">{{c.created|timesince}} ago</span> - 
+                                                
+                                                
+                                                <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
+                                
+                                                    <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
+                                                        <span class="hoverlink">Ya no me gusta</span> 
+                                                        <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+                                                    </span>
+                                                    
+                                                    <span class="like" {% if c.has_voted %}style="display:none;"{%endif%} >
+                                                        <span class="hoverlink">Me gusta</span> 
+                                                    </span>
+                                                </span>
+                                            </li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                                
+                                <div class="input-box {% if not obj.comments.1 %} hidden {% endif %}">
+                                    <img alt="user avatar" src="/user/{{user.username}}/picture/" class="min-img hidden">
+                                    <form class="commentForm"><textarea empty="true" class="autogrow">Escribe un comentario</textarea></form>
+                                </div>
+                                
                             </div>
-                            
-                        </div>
+                        {% endif %}
                     </p>
                     
                 </li>

@@ -786,7 +786,7 @@ input{
             font-size: 0.9em;
             padding-left: 0.5em;
         }
-            #activity ul#chronology li span.action-bar span.timestamp{
+            #activity ul#chronology li span.timestamp{
                 color: #999;
                 display: block;
                 font-size: 1em;
