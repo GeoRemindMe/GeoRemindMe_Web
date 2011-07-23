@@ -169,54 +169,13 @@ class Comment(Visibility):
                 }
         
     
-SHARDS = 5
-class VoteCounter(db.Model):
+from georemindme.models_utils import ShardedCounter
+class VoteCounter(ShardedCounter):
     '''
         Contador sharded
         instance es el key del objeto al que apunta
     '''
-    instance = db.TextProperty(required=True)
-    count = db.IntegerProperty(required=True, default=0)
-    
-    @classmethod
-    def get_count(cls, instance):
-        '''
-            Returns the value of the counter, is counters is not in memcache, 
-            counts all the sharded counters
-        ''' 
-        from google.appengine.api import memcache
-        instance=str(instance)
-        total = memcache.get(instance)
-        if not total:
-            total = 0
-            counters = VoteCounter.gql('WHERE instance = :1', instance)
-            for counter in counters:
-                total += counter.count
-            memcache.add(instance, str(total), 60)
-        return int(total)
-    
-    @classmethod
-    def increase_counter(cls, instance, count):
-        '''
-            Increment the counter of given key
-        '''
-        from google.appengine.api import memcache
-        instance=str(instance)
-        def increase():
-            import random
-            index = random.randint(0, SHARDS-1)#select a random shard to increases
-            shard_key = instance + str(index)#creates key_name
-            counter = VoteCounter.get_by_key_name(shard_key)
-            if not counter:#if counter doesn't exist, create a new one
-                counter = VoteCounter(key_name=shard_key, instance=instance)
-            counter.count += count
-            counter.put()
-        db.run_in_transaction(increase)
-        if count > 0:
-            memcache.incr(instance, initial_value=0)
-        else:
-            memcache.decr(instance, initial_value=0)
-
+    pass
 
 class VoteHelper(object):
     def user_has_voted(self, user, instance_key):

@@ -17,6 +17,7 @@ class FacebookMiddleware(object):
                 import facebookApp.watchers
                 request.csrf_processing_done = True
             except:
+                raise
                 request.csrf_processing_done = False
         else:
             cookie = get_user_from_cookie(request.COOKIES)
@@ -27,8 +28,8 @@ class FacebookMiddleware(object):
                 request.csrf_processing_done = True
             else:  # no es un usuario de facebook, desconectar señales
                 from facebookApp.watchers import disconnect_all
-                disconnect_all()  
-        
+                disconnect_all()
+
 #        if hasattr(request, 'facebook') and request.facebook['client'].user is None:
 #            delattr(request, 'facebook') 
 """                

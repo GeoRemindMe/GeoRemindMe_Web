@@ -97,7 +97,7 @@ suggestion_following_new.connect(new_following_suggestion)
 def deleted_following_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=304)
     timeline.put()
-    self.counters.set_followers(-1)
+    sender.counters.set_followers(-1)
 suggestion_following_deleted.connect(deleted_following_suggestion)
 
 def new_privateplace(sender, **kwargs):

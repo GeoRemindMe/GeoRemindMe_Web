@@ -4,10 +4,11 @@ from signals import comment_new, vote_new, vote_deleted
 
 def new_comment(sender, **kwargs):
     from google.appengine.ext.deferred import defer
-    from geoalert.models import Event
+    from geoalert.models import Suggestion
     sender.instance.put(from_comment=True)
-    if isinstance(sender.instance, Event):
+    if isinstance(sender.instance, Suggestion):
         defer(sender.user.settings.notify_suggestion_comment, sender.key())
+        sender.instance.counters.set_comments()
 comment_new.connect(new_comment)
 
 def new_vote(sender, **kwargs):

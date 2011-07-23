@@ -339,25 +339,25 @@ class Place(POI):
             place.put()
         return place
     
-    @classmethod
-    def insert_or_update_foursquare(cls, user, foursquare_id):
-        place = cls.objects.get_by_foursquare_id(foursquare_id)
-        from mapsServices.places.FSRequest import FSRequest
-        search = FSRequest().retrieve_reference(foursquare_id)
-        if place is not None:
-            place.update(name=search['name'], 
-                         address=search['location'].get('address', ''), 
-                         city=search['location'].get('city', ''), 
-                         location=db.GeoPt(search['location'].get('lat', 0), search['location'].get('lng', 0))
-                         )    
-        else:    
-            place = Place(name=search['name'], 
-                         address=search['location'].get('address', ''), 
-                         city=search['location'].get('city', ''), 
-                         location=db.GeoPt(search['location'].get('lat', 0), search['location'].get('lng', 0))
-                         )
-            place.put()
-        return place
+#    @classmethod
+#    def insert_or_update_foursquare(cls, user, foursquare_id):
+#        place = cls.objects.get_by_foursquare_id(foursquare_id)
+#        from mapsServices.places.FSRequest import FSRequest
+#        search = FSRequest().retrieve_reference(foursquare_id)
+#        if place is not None:
+#            place.update(name=search['name'], 
+#                         address=search['location'].get('address', ''), 
+#                         city=search['location'].get('city', ''), 
+#                         location=db.GeoPt(search['location'].get('lat', 0), search['location'].get('lng', 0))
+#                         )    
+#        else:    
+#            place = Place(name=search['name'], 
+#                         address=search['location'].get('address', ''), 
+#                         city=search['location'].get('city', ''), 
+#                         location=db.GeoPt(search['location'].get('lat', 0), search['location'].get('lng', 0))
+#                         )
+#            place.put()
+#        return place
     
     def update(self, name, address, city, location, google_places_reference, google_places_id):
         self.name = name

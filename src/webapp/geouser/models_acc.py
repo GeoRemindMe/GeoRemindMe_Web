@@ -190,8 +190,6 @@ class UserCounter(db.Model):
     """ 
     suggested = db.IntegerProperty(default=0)
     alerts = db.IntegerProperty(default=0)
-    supported = db.IntegerProperty(default=0)
-    influenced = db.IntegerProperty(default=0)
     followings = db.IntegerProperty(default=0)
     followers = db.IntegerProperty(default=0)
     created = db.DateTimeProperty(auto_now_add=True)
@@ -199,6 +197,16 @@ class UserCounter(db.Model):
     @classproperty
     def objects(self):
         return UserCounterHelper()
+    
+    @property
+    def supported(self):
+        from georemindme.models_utils import ShardedCounter
+        return ShardedCounter.get_count('%s_supported'% self.parent().key())
+    
+    @property
+    def influenced(self):
+        from georemindme.models_utils import ShardedCounter
+        return ShardedCounter.get_count('%s_influenced'% self.parent().key())
     
     def _change_counter(self, prop, value):
         value = int(value)
@@ -216,11 +224,13 @@ class UserCounter(db.Model):
         return db.run_in_transaction(self._change_counter, 'alerts', value)
     
     def set_supported(self, value=1):
-        return db.run_in_transaction(self._change_counter, 'supported', value)
+        from georemindme.models_utils import ShardedCounter
+        return ShardedCounter.increase_counter('%s_supported'% self.parent().key(), value)
     
     def set_influenced(self, value=1):
-        return db.run_in_transaction(self._change_counter, 'influenced', value)
-    
+        from georemindme.models_utils import ShardedCounter
+        return ShardedCounter.increase_counter('%s_influenced'% self.parent().key(), value)
+        
     def set_followings(self, value=1):
         return db.run_in_transaction(self._change_counter, 'followings', value)
     
@@ -273,8 +283,8 @@ class UserTimelineSystem(UserTimelineBase):
                     
                     #Suggestions
                     300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
-                        'url':self.instance.user.get_absolute_url(), 
-                        'username':self.instance.user.username, 
+                        'url':self.instance.user.get_absolute_url() if self.instance is not None else None, 
+                        'username':self.instance.user.username if self.instance is not None else None, 
                         'message':self.instance
                     },
                     301: _('Suggestion modified: %s') % self.instance,
@@ -341,8 +351,8 @@ class UserTimeline(UserTimelineBase, Visibility):
                     
                     #Suggestions
                     300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
-                        'url':self.instance.user.get_absolute_url(), 
-                        'username':self.instance.user.username, 
+                        'url':self.instance.user.get_absolute_url() if self.instance is not None else None, 
+                        'username':self.instance.user.username if self.instance is not None else None, 
                         'message':self.instance
                     },
                     301: _('Suggestion modified: %s') % self.instance,

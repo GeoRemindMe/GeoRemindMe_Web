@@ -25,27 +25,53 @@ class _Do_later_ft(db.Model):
             except:
                 q.put()
 
-class Counter(db.Model):
-    counter = db.IntegerProperty()
-    model = db.StringProperty()
+SHARDS = 5
+class ShardedCounter(db.Model):
+    '''
+        Contador sharded
+        instance es el key del objeto al que apunta
+    '''
+    instance = db.TextProperty(required=True)
+    count = db.IntegerProperty(required=True, default=0)
     
     @classmethod
-    def get_counter(cls, model):
+    def get_count(cls, instance):
         '''
-        return the new counter incremented
+            Returns the value of the counter, is counters is not in memcache, 
+            counts all the sharded counters
+        ''' 
+        from google.appengine.api import memcache
+        instance=str(instance)
+        total = memcache.get(instance)
+        if not total:
+            total = 0
+            counters = cls.gql('WHERE instance = :1', instance)
+            for counter in counters:
+                total += counter.count
+            memcache.add(instance, str(total), 60)
+        return int(total)
+    
+    @classmethod
+    def increase_counter(cls, instance, count):
         '''
-        def _increment_counter(key):
-            obj = Counter.get(key)
-            obj.counter += 1
-            obj.put()
-            return obj.counter
-        
-        counter = Counter.all(keys_only=True).filter('model =', model).get()  # load only the counter key, for the model
-        if not counter:  # new model, create a new counter
-            counter = Counter(counter=0, model=model)
+            Increment the counter of given key
+        '''
+        from google.appengine.api import memcache
+        instance=str(instance)
+        def increase():
+            import random
+            index = random.randint(0, SHARDS-1)#select a random shard to increases
+            shard_key = instance + str(index)#creates key_name
+            counter = cls.get_by_key_name(shard_key)
+            if not counter:#if counter doesn't exist, create a new one
+                counter = cls(key_name=shard_key, instance=instance)
+            counter.count += count
             counter.put()
-            counter = counter.key()
-        return db.run_in_transaction(_increment_counter, counter)
+        db.run_in_transaction(increase)
+        if count > 0:
+            memcache.incr(instance, initial_value=0)
+        else:
+            memcache.decr(instance, initial_value=0)
     
 VISIBILITY_CHOICES = (
           ('public', _('Public')),
