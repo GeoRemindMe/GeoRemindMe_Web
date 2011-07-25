@@ -265,9 +265,18 @@ class UserTimelineSystem(UserTimelineBase):
                 3: _('Now, you can log with your Twitter account'),
                 
                     #User messages
-                    100: _('You are now following %s') % self.instance,
-                    101: _('%s is now following you') % self.instance,
-                    102: _('You stopped following %s') % self.instance,
+                    100: _('You are now following <a href="%(profile_url)s">%(username)s</a>') % {
+                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'username':self.instance
+                    },
+                    101: _('<a href="%(profile_url)s">%(username)s</a> is now following you')  % {
+                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'username':self.instance
+                    },
+                    102: _('You are no longer following <a href="%(profile_url)s">%(username)s</a> anymore') % {
+                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'username':self.instance
+                    },
                     110: _('You invited %s to:') % self.instance,
                     111: _('%s invited you to %s') % (self.instance, self.instance),
                     150: _('New user list created: %s') % self.instance,
@@ -305,7 +314,7 @@ class UserTimelineSystem(UserTimelineBase):
                     351: _('Suggestions list modified: %s') % self.instance,
                     352: _('Suggestion list removed: %s') % self.instance,
                     353: _('You are following: %s') % self.instance,
-                    354: _('You stopped following: %s') % self.instance,
+                    354: _('You are not following %s anymore') % self.instance,
                     
                     #Places
                     400: _('New private place: %s') % self.instance,
@@ -337,9 +346,18 @@ class UserTimeline(UserTimelineBase, Visibility):
                     3: _('Now, you can log with your Twitter account'),
                     
                     #User messages
-                    100: _('You are now following %s') % self.instance,
-                    101: _('%s is now following you') % self.instance,
-                    102: _('You stopped following %s') % self.instance,
+                    100: _('You are now following <a href="%(profile_url)s">%(username)s</a>') % {
+                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'username':self.instance
+                    },
+                    101: _('<a href="%(profile_url)s">%(username)s</a> is now following you')  % {
+                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'username':self.instance
+                    },
+                    102: _('You are no longer following <a href="%(profile_url)s">%(username)s</a> anymore') % {
+                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'username':self.instance
+                    },
                     110: _('You invited %s to:') % self.instance,
                     111: _('%s invited you to %s') % (self.instance, self.instance),
                     150: _('New user list created: %s') % self.instance,
@@ -377,7 +395,7 @@ class UserTimeline(UserTimelineBase, Visibility):
                     351: _('Suggestions list modified: %s') % self.instance,
                     352: _('Suggestion list removed: %s') % self.instance,
                     353: _('You are following: %s') % self.instance,
-                    354: _('You stopped following: %s') % self.instance,
+                    354: _('You are not following %s anymore') % self.instance,
                     
                     #Places
                     400: _('New private place: %s') % self.instance,
