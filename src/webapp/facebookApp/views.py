@@ -20,7 +20,6 @@ def login_panel(request):
         if not request.user.is_authenticated():
             user = request.facebook['client'].authenticate()
             init_user_session(request, user, is_from_facebook=True)
-
         else:
             user = request.user
         if user.username is None or user.email is None:
@@ -60,17 +59,9 @@ def dashboard(request):
          
 @facebook_required
 def notifications(request):
-    friends_to_follow=request.user.get_friends_to_follow()
-    followers=request.user.get_followers()
-    followings=request.user.get_followings()
-    chronology = request.user.get_chronology()
-    timeline = request.user.get_timelineALL()
-    chronology[1].extend(timeline[1])
-    chronology[1].sort(key=lambda x: x['modified'], reverse=True)
-    return  render_to_response('notifications.html', {'friends_to_follow': friends_to_follow,
-                                                  'followers': followers,
-                                                  'followings': followings, 
-                                                  'chronology': chronology,
+    timeline = request.user.get_notifications_timeline()
+    return  render_to_response('notifications.html', {
+                                                      'chronology': timeline
                                                   } , RequestContext(request))
 
 

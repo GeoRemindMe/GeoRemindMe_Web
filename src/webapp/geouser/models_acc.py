@@ -279,6 +279,8 @@ class UserTimelineSystem(UserTimelineBase):
                     },
                     110: _('You invited %s to:') % self.instance,
                     111: _('%s invited you to %s') % (self.instance, self.instance),
+                    112: _('%s accepted your invitation to %s') % (self.user, self.instance),
+                    113: _('%s rejected your invitation to %s') % (self.user, self.instance),
                     120: _('commented %s') % self.instance,
                     125: _('likes a comment: %s') % self.instance,
                     150: _('New user list created: %s') % self.instance,
@@ -331,7 +333,7 @@ class UserTimelineSystem(UserTimelineBase):
 
 #Equivale al Muro o a los del Perfil
 class UserTimeline(UserTimelineBase, Visibility):
-    msg = db.TextProperty(required=False)
+    _msg = db.TextProperty(required=False)
     msg_id = db.IntegerProperty(required=False, default=-1)
     instance = db.ReferenceProperty(None)
     
@@ -363,6 +365,8 @@ class UserTimeline(UserTimelineBase, Visibility):
                     },
                     110: _('You invited %s to:') % self.instance,
                     111: _('%s invited you to %s') % (self.instance, self.instance),
+                    112: _('%s accepted your invitation to %s') % (self.instance.user, self.instance),
+                    113: _('%s rejected your invitation to %s') % (self.instance.user, self.instance),
                     120: _('commented %s') % self.instance,
                     125: _('likes a comment: %s') % self.instance,
                     150: _('New user list created: %s') % self.instance,
@@ -413,7 +417,7 @@ class UserTimeline(UserTimelineBase, Visibility):
                     }
             return _msg_ids[self.msg_id]
         else:
-            return self.msg
+            return self._msg
     
     @classproperty
     def objects(self):
@@ -445,7 +449,7 @@ class UserTimeline(UserTimelineBase, Visibility):
     def insert(self, msg, user, instance=None):
         if msg == '' or not isinstance(msg, basestring):
             raise AttributeError()
-        timeline = UserTimeline(msg=msg, user=user, instance=instance)
+        timeline = UserTimeline(_msg=msg, user=user, instance=instance)
         timeline.put()
         return timeline
     

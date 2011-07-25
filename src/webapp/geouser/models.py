@@ -120,7 +120,6 @@ class User(polymodel.PolyModel, HookedModel):
         from geovote.models import Vote
         q = UserTimelineBase.all().filter('user =', self.key()).order('-modified')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
-        timelines = p.fetch_page(page)
         from geovote.models import Comment
         return [p.id, [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
@@ -132,7 +131,7 @@ class User(polymodel.PolyModel, HookedModel):
                         'comments': Comment.objects.get_by_instance(timeline.instance, querier=self) if not isinstance(timeline, UserTimelineSystem) else None,
                         'is_private': isinstance(timeline, UserTimelineSystem),
                         }
-                        for timeline in timelines]]
+                        for timeline in p.fetch_page(page)]]
         
     def get_timelinesystem(self, page=1, query_id=None):
         '''
@@ -149,7 +148,6 @@ class User(polymodel.PolyModel, HookedModel):
         from geovote.models import Vote
         q = UserTimelineSystem.all().filter('user =', self.key()).order('-modified')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
-        timelines = p.fetch_page(page)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
@@ -158,7 +156,7 @@ class User(polymodel.PolyModel, HookedModel):
                         'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
                         }
-                       for timeline in timelines]]
+                       for timeline in p.fetch_page(page)]]
     
     def get_profile_timeline(self, page=1, query_id=None, querier=None):
         '''
@@ -218,6 +216,17 @@ class User(polymodel.PolyModel, HookedModel):
         chronology[1].sort(key=lambda x: x['modified'], reverse=True)
         chronology[0] = '%s_%s' % (chronology[0], timeline[0])
         return chronology
+    
+    def get_notifications_timeline(self, page=1, query_id=None):
+        q = UserTimelineSystem.gql('WHERE user = :1 AND msg_id IN (111,112, 113, 101) ORDER BY modified DESC', self)
+        p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
+        return [p.id, [{'id': timeline.id, 'created': timeline.created, 
+                        'modified': timeline.modified,
+                        'msg': timeline.msg, 'username':timeline.user.username, 
+                        'msg_id': timeline.msg_id,
+                        'instance': timeline.instance if timeline.instance is not None else None,
+                        }
+                        for timeline in p.fetch_page(page)]]
         
         
     def following(self, async=False):
