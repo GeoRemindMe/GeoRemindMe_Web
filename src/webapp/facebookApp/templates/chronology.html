@@ -189,13 +189,26 @@
             <ul id="chronology">
             {% for obj in chronology.1 %}
                 <li id="suggestion_{{obj.instance.id}}" class="suggestion-element" {%if not forloop.last %}style="border-bottom: 1px solid #DDDDDD;"{% endif %}>
-<div>
-<!--
-                {{obj}}
--->
+                
+                <!--Tipo de mensaje {{obj.msg_id}}-->
+                {% if obj.msg_id < 100 %}
+                    <!-- Mensajes de GeoRemindMe-->
                     <div class="avatar">
-                        <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
-                            <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
+                        <a href="/fb/user/hhkaos" title="Ver perfil en GeoRemindMe">
+                            <img src="/user/hhkaos/picture/" alt="hhkaos avatar"/>
+                        </a>
+                    </div>
+                    
+                    {{obj.msg|safe}} <br>
+                        
+                        
+                    <span class="timestamp">{{obj.created|timesince}} ago</span>  
+                        
+                {% else %}{% if obj.msg_id < 200 %}
+                    
+                    <div class="avatar">
+                        <a href="/fb/user/{{obj.instance.username}}" title="Ver perfil en GeoRemindMe">
+                            <img src="/user/{{obj.instance.username}}/picture/" alt="{{obj.username}} avatar"/>
                         </a>
                     </div>
                     
@@ -285,7 +298,7 @@
                                 
                             </div>
                         {% endif %}
-                    
+                  {% endif %}{% endif %}
                     
                 </li>
             {% endfor %}
