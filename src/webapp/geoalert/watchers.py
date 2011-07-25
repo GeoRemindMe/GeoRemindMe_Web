@@ -71,10 +71,10 @@ suggestion_new.connect(new_suggestion)
 
 def modified_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=301)
-    timeline.put()
-    if sender._is_public():
-        timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=301)
-        timelinePublic.put()
+    p = db.put_async([timeline])
+    timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=301, _vis=sender._get_visibility())
+    timelinePublic.put()
+    p.get_result()
 suggestion_modified.connect(modified_suggestion)
 
 def deleted_suggestion(sender, **kwargs):

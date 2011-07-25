@@ -19,11 +19,10 @@ def do_comment_event(request, instance_id, msg):
         :param msg: mensaje del comentario
         :type msg: :class:`string`
     """
-    user = request.session['user']
-    event = Event.objects.get_by_id_querier(id=instance_id, querier=user)
+    event = Event.objects.get_by_id_querier(id=instance_id, querier=request.user)
     if event is None:
         return None
-    comment = Comment.do_comment(user=user, instance=event, msg=msg)
+    comment = Comment.do_comment(user=request.user, instance=event, msg=msg)
     
     return comment
 

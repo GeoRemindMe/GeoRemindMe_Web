@@ -27,6 +27,7 @@ class FacebookMiddleware(object):
                 import facebookApp.watchers
                 request.csrf_processing_done = True
             else:  # no es un usuario de facebook, desconectar señales
+                request.csrf_processing_done = True
                 from facebookApp.watchers import disconnect_all
                 disconnect_all()
 

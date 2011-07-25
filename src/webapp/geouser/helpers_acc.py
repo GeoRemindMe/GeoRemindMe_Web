@@ -78,25 +78,29 @@ class UserTimelineHelper(object):
         timelines = p.fetch_page(page)
         if querier is None:
             return [p.id, [{'id': timeline.id, 'created': timeline.created, 
-                            'msg': timeline.msg, 'username':timeline.user.username,
-                            'msg_id': timeline.msg_id,
-                            'instance': timeline.instance if timeline.instance is not None else None,
-                            'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
+                        'modified': timeline.modified,
+                        'msg': timeline.msg, 'username':timeline.user.username, 
+                        'msg_id': timeline.msg_id,
+                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'has_voted':  Vote.objects.user_has_voted(db.Key.from_path(User.kind(), userid), timeline.instance.key()) if timeline.instance is not None else None,
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
                             } 
-                           for timeline in timelines if timeline._is_public()]]
+                           for timeline in timelines]]
             
         elif not querier.are_friends(db.Key.from_path(User.kind(), userid)):
             return [p.id, [{'id': timeline.id, 'created': timeline.created, 
-                            'msg': timeline.msg, 'username':timeline.user.username,
-                            'msg_id': timeline.msg_id,
-                            'instance': timeline.instance if timeline.instance is not None else None,
-                            'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None else None,
-                            'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
+                        'modified': timeline.modified,
+                        'msg': timeline.msg, 'username':timeline.user.username, 
+                        'msg_id': timeline.msg_id,
+                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None else None,
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
                             }
                            for timeline in timelines if timeline._is_public()]]
         
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
-                        'msg': timeline.msg, 'username':timeline.user.username,
+                        'modified': timeline.modified,
+                        'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
                         'instance': timeline.instance if timeline.instance is not None else None,
                         'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None else None,

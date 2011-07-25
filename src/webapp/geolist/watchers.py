@@ -5,7 +5,7 @@ import logging
 from signals import *
 from exceptions import *
 
-from geouser.models_acc import UserTimelineSystem
+from geouser.models_acc import UserTimelineSystem, UserTimeline
 
 
 def new_list(sender, **kwargs):
@@ -14,7 +14,9 @@ def new_list(sender, **kwargs):
     elif isinstance(sender, ListUser):
         timeline = UserTimelineSystem(user=sender.user.key(), msg_id=150, instance=sender)
     elif isinstance(sender, ListSuggestion):
-        timeline = UserTimelineSystem(user=sender.user.key(), msg_id=350, instance=sender)
+        timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=350, _vis=sender._get_visibility())
+        timelinePublic.put()
+        timeline = UserTimelineSystem(user=sender.user, msg_id=350, instance=sender)
     else:
         return
     timeline.put()
@@ -26,6 +28,8 @@ def modified_list(sender, **kwargs):
     elif isinstance(sender, ListUser):
         timeline = UserTimelineSystem(user=sender.user.key(), msg_id=151, instance=sender)
     elif isinstance(sender, ListSuggestion):
+        timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=351, _vis=sender._get_visibility())
+        timelinePublic.put()
         timeline = UserTimelineSystem(user=sender.user.key(), msg_id=351, instance=sender)
         from georemindme.tasks import NotificationHandler
         NotificationHandler().list_followers_notify(sender)

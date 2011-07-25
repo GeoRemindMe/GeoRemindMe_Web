@@ -189,7 +189,10 @@ class VoteHelper(object):
             
             :returns: True si ya ha votado, False en caso contrario
         '''
-        vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND user = :user', ins=instance_key, user=user.key()).get()
+        if isinstance(user, db.Key):
+            vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND user = :user', ins=instance_key, user=user).get()
+        else:
+            vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND user = :user', ins=instance_key, user=user.key()).get()
         if vote is not None:
             return True
         return False

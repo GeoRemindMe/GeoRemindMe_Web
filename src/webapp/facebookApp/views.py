@@ -51,10 +51,7 @@ def dashboard(request):
     friends_to_follow=request.user.get_friends_to_follow()
     followers=request.user.get_followers()
     followings=request.user.get_followings()
-    chronology = request.user.get_chronology()
-    timeline = request.user.get_timelineALL()
-    chronology[1].extend(timeline[1])
-    chronology[1].sort(key=lambda x: x['modified'], reverse=True)
+    chronology = request.user.get_activity_timeline()
     return  render_to_response('dashboard.html', {'friends_to_follow': friends_to_follow,
                                                   'followers': followers,
                                                   'followings': followings, 
@@ -90,7 +87,7 @@ def profile(request, username):
         profile = request.user.profile
         counters = request.user.counters_async()
         sociallinks = profile.sociallinks_async()
-        timeline = UserTimeline.objects.get_by_id(request.user.id)
+        timeline = request.user.get_profile_timeline()
         is_following = True
         is_follower = True
         show_followers = True
@@ -112,10 +109,8 @@ def profile(request, username):
         else:
             is_following = None
             is_follower = None
-        if is_following:  # el usuario logueado, sigue al del perfil
-            timeline = UserTimeline.objects.get_by_id(profile_user.id, querier=request.user)
-        elif settings.show_timeline:
-            timeline = UserTimeline.objects.get_by_id(profile_user.id)
+        if is_following or settings.show_timeline:  # el usuario logueado, sigue al del perfil
+            timeline = profile_user.get_profile_timeline(querier=request.user)
         show_followers = settings.show_followers,
         show_followings = settings.show_followings
     

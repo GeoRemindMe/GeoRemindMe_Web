@@ -36,7 +36,7 @@ class EventHelper(object):
                 return None
             if not event._is_public():
                 return None
-            memcache.set('%sEVENT%s' % (memcache.version, id), memcache.serialize_instances(event))
+            memcache.set('%sEVENT%s' % (memcache.version, id), memcache.serialize_instances(event),300)
         return event     
     
     def get_by_key(self, key):

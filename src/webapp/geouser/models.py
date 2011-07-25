@@ -160,7 +160,7 @@ class User(polymodel.PolyModel, HookedModel):
                         }
                        for timeline in timelines]]
     
-    def get_timeline(self, page=1, query_id=None):
+    def get_profile_timeline(self, page=1, query_id=None, querier=None):
         '''
         (Wrapper del metodo UserTimeline.objects.get_by_id(...)
         Obtiene la lista de ultimos timeline publicos del usuario
@@ -173,7 +173,7 @@ class User(polymodel.PolyModel, HookedModel):
             :type query_id: int
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
-        return UserTimeline.objects.get_by_id(self.id)
+        return UserTimeline.objects.get_by_id(self.id, querier=querier, page=page, query_id=query_id)
     
     def get_chronology(self, page=1, query_id=None):
         '''
@@ -203,6 +203,30 @@ class User(polymodel.PolyModel, HookedModel):
                         'user_follower': timeline.instance.has_follower(self) if isinstance(timeline.instance, Suggestion) else None
                         }
                         for timeline in timelines if timeline is not None ]]
+        
+    def get_activity_timeline(self, page=1, query_id=None):
+        if query_id is not None:
+            dict_id = memcache.get(memcache.get('%squery_%s' % (memcache.version, query_id)))
+            if dict_id is not None:
+                chrono_id = dict_id['chronology']
+                time_id = dict_id['timeline']
+            else:
+                chrono_id = None
+                time_id = None
+        else:
+            chrono_id = None
+            time_id = None
+        chronology = self.get_chronology(page=page, query_id=chrono_id)
+        timeline = self.get_timelineALL(page=page, query_id=time_id)
+        chronology[1].extend(timeline[1])
+        chronology[1].sort(key=lambda x: x['modified'], reverse=True)
+        dict_id = {
+                   'chronology': chronology[0],
+                   'timeline': timeline[0]
+                   }
+        memcache.set('%squery_%s_%s' % (memcache.version, chronology[0], timeline[0]), dict_id)
+        chronology[0] = '%s_%s' % (chronology[0], timeline[0])
+        return chronology
         
         
     def following(self, async=False):
