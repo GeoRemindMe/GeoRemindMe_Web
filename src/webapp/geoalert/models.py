@@ -3,7 +3,7 @@
 from datetime import datetime
 import time
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy as _
 from django.utils import simplejson
 from google.appengine.ext import db, search
 from google.appengine.ext.db import polymodel

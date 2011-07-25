@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from google.appengine.ext import db
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy as _
 
 
 class _Do_later_ft(db.Model):

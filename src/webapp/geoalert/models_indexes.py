@@ -1,3 +1,7 @@
+# coding=utf-8
+
+from django.utils.translation import gettext_lazy as _
+
 from google.appengine.ext import db
 
 from georemindme.models_indexes import Invitation

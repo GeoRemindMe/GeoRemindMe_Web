@@ -1,5 +1,7 @@
 # coding=utf-8
 
+from django.utils.translation import gettext_lazy as _
+
 from types import UnicodeType, StringType, ListType
 from string import split
 from google.appengine.ext import db, search
