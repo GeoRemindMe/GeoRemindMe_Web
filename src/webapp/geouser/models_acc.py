@@ -2,7 +2,7 @@
 
 import memcache
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
 
 from georemindme.models_utils import *
@@ -266,15 +266,15 @@ class UserTimelineSystem(UserTimelineBase):
                 
                     #User messages
                     100: _('You are now following <a href="%(profile_url)s">%(username)s</a>') % {
-                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'profile_url':self.user.get_absolute_url(),
                         'username':self.instance
                     },
                     101: _('<a href="%(profile_url)s">%(username)s</a> is now following you')  % {
-                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'profile_url':self.user.get_absolute_url(),
                         'username':self.instance
                     },
                     102: _('You are no longer following <a href="%(profile_url)s">%(username)s</a> anymore') % {
-                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'profile_url':self.user.get_absolute_url(),
                         'username':self.instance
                     },
                     110: _('You invited %s to:') % self.instance,
@@ -300,8 +300,8 @@ class UserTimelineSystem(UserTimelineBase):
                     
                     #Suggestions
                     300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
-                        'url':self.user.get_absolute_url() if self.user.username is not None else None, 
-                        'username':self.user.username if self.user is not None else None, 
+                        'url':self.user.get_absolute_url(), 
+                        'username':self.user.username, 
                         'message':self.instance
                     },
                     301: _('Suggestion modified: %s') % self.instance,
@@ -352,15 +352,15 @@ class UserTimeline(UserTimelineBase, Visibility):
                     
                     #User messages
                     100: _('You are now following <a href="%(profile_url)s">%(username)s</a>') % {
-                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'profile_url':self.user.get_absolute_url(),
                         'username':self.instance
                     },
                     101: _('<a href="%(profile_url)s">%(username)s</a> is now following you')  % {
-                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'profile_url':self.user.get_absolute_url(),
                         'username':self.instance
                     },
                     102: _('You are no longer following <a href="%(profile_url)s">%(username)s</a> anymore') % {
-                        'profile_url':self.user.get_absolute_url() if self.user is not None else None,
+                        'profile_url':self.user.get_absolute_url(),
                         'username':self.instance
                     },
                     110: _('You invited %s to:') % self.instance,
@@ -386,8 +386,8 @@ class UserTimeline(UserTimelineBase, Visibility):
                     
                     #Suggestions
                     300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
-                        'url':self.user.get_absolute_url() if self.user is not None else None, 
-                        'username':self.user.username if self.user is not None else None, 
+                        'url':self.user.get_absolute_url(), 
+                        'username':self.user.username, 
                         'message':self.instance
                     },
                     301: _('Suggestion modified: %s') % self.instance,
