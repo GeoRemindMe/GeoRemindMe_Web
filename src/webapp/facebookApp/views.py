@@ -108,7 +108,7 @@ def profile(request, username):
     return render_to_response('profile.html', {'profile': profile, 
                                                 'counters': counters.next(),
                                                 'sociallinks': sociallinks.next(),
-                                                'timeline': timeline, 
+                                                'chronology': timeline, 
                                                 'is_following': is_following,
                                                 'is_follower': is_follower, 
                                                 'show_followers': show_followers,
