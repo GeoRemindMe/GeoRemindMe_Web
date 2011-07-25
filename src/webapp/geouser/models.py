@@ -217,7 +217,7 @@ class User(polymodel.PolyModel, HookedModel):
             chrono_id = None
             time_id = None
         chronology = self.get_chronology(page=page, query_id=chrono_id)
-        timeline = self.get_timelineALL(page=page, query_id=time_id)
+        timeline = self.get_timelinesystem(page=page, query_id=time_id)
         chronology[1].extend(timeline[1])
         chronology[1].sort(key=lambda x: x['modified'], reverse=True)
         dict_id = {
