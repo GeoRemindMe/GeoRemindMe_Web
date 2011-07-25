@@ -255,9 +255,13 @@ class UserTimelineSystem(UserTimelineBase):
     @property
     def msg(self):
         _msg_ids = {
-                0: _('Welcome to GeoRemindMe!'),
+                0: _('Welcome to GeoRemindMe you can share your public profile: \
+                          <a href="http://www.georemindme.com/user/%(username)s/">\
+                          http://www.georemindme.com/user/%(username)s/</a>') %{
+                        'username':self.user.username,
+                    },
                 1: _('Now, you can log with your Google account'),
-                2: _('Now, you can log with your Facebook account'),
+                2: _('Now, you can log from Facebook and from <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a>'),
                 3: _('Now, you can log with your Twitter account'),
                 
                     #User messages
@@ -283,8 +287,8 @@ class UserTimelineSystem(UserTimelineBase):
                     
                     #Suggestions
                     300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
-                        'url':self.instance.user.get_absolute_url() if self.instance is not None else None, 
-                        'username':self.instance.user.username if self.instance is not None else None, 
+                        'url':self.user.get_absolute_url() if self.user.username is not None else None, 
+                        'username':self.user.username if self.user is not None else None, 
                         'message':self.instance
                     },
                     301: _('Suggestion modified: %s') % self.instance,
@@ -323,9 +327,13 @@ class UserTimeline(UserTimelineBase, Visibility):
     def msg(self):
         if self.msg_id != -1:
             _msg_ids = {
-                    0: _('Welcome to GeoRemindMe!'),
+                    0: _('Welcome to GeoRemindMe you can share your public profile: \
+                          <a href="http://www.georemindme.com/user/%(username)s/">\
+                          http://www.georemindme.com/user/%(username)s/</a>') %{
+                        'username':self.user.username,
+                    },
                     1: _('Now, you can log with your Google account'),
-                    2: _('Now, you can log with your Facebook account'),
+                    2: _('Now, you can log from Facebook and from <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a>'),
                     3: _('Now, you can log with your Twitter account'),
                     
                     #User messages
@@ -351,8 +359,8 @@ class UserTimeline(UserTimelineBase, Visibility):
                     
                     #Suggestions
                     300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
-                        'url':self.instance.user.get_absolute_url() if self.instance is not None else None, 
-                        'username':self.instance.user.username if self.instance is not None else None, 
+                        'url':self.user.get_absolute_url() if self.user is not None else None, 
+                        'username':self.user.username if self.user is not None else None, 
                         'message':self.instance
                     },
                     301: _('Suggestion modified: %s') % self.instance,
