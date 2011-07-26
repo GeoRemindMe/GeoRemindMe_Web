@@ -750,13 +750,11 @@ input{
     }
     
         #activity ul#chronology li{
-    /*
             border-bottom: 1px solid #DDDDDD;
-    */
             clear: both;
             list-style: none outside none;
             margin: 0.5em 0;
-            padding: 0.5em 0;
+            padding: 1em 0;
         }
         
         #activity ul#chronology li:after{

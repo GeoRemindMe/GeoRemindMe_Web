@@ -12,7 +12,10 @@
 {% endif %}
 
 
-{{obj.msg|safe}} <br>
+{{obj|safe}} <br>
+<a href="/fb/user/{{obj.username}}">{{obj.username}}</a> sugiere: <br>
+{{obj.instance}}
+
 {% if obj.instance.poi.slug %}
     <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
 {% endif %}
