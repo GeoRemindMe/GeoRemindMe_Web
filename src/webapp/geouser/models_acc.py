@@ -284,8 +284,6 @@ class UserTimelineSystem(UserTimelineBase):
                     120: _('<a href="%(profile_url)s">%(username)s</a> ha hecho un comentario en la sugerencia: <br><a href="/fb/suggestion/%(suggestion_id)s/">%(suggestion)s</a>') % {
                         'profile_url':self.user.get_absolute_url(),
                         'username':self.user,
-                        #'owner':self.instance.user,
-                        #'owner_url':self.instance.user.get_absolute_url(),
                         'suggestion':self.instance,
                         'suggestion_id':self.instance,
                     },
@@ -374,9 +372,11 @@ class UserTimeline(UserTimelineBase, Visibility):
                     111: _('%s invited you to %s') % (self.instance, self.instance),
                     112: _('%s accepted your invitation to %s') % (self.instance, self.instance),
                     113: _('%s rejected your invitation to %s') % (self.instance, self.instance),
-                    120: _('<a href="%(profile_url)s">%(username)s</a> ha hecho un comentario en la sugerencia: <br><a href="/fb/suggestion/%(suggestion_id)s/">%(suggestion)s</a>') % {
+                    120: _('<a href="%(profile_url)s">%(username)s</a> ha hecho un comentario en la sugerencia de <a href="%(owner_url)s">%(owner)s</a>: <br><a href="/fb/suggestion/%(suggestion_id)s/">%(suggestion)s</a>') % {
                         'profile_url':self.user.get_absolute_url(),
                         'username':self.user,
+                        'owner':self.instance.user,
+                        'owner_url':self.instance.user.get_absolute_url(),
                         'suggestion':self.instance,
                         'suggestion_id':self.instance.id,
                     },
