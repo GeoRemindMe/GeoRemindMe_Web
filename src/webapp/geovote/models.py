@@ -237,6 +237,10 @@ class Vote(db.Model):
     
     objects = VoteHelper()
     
+    @property
+    def id(self):
+        return self.key().id()
+    
     @classmethod
     def do_vote(cls, user, instance, count=1):
         '''
