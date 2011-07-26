@@ -266,6 +266,15 @@ class Suggestion(Event, Visibility, Taggable):
     
     _counters = None
     
+    @classmethod
+    def SearchableProperties(cls):
+        '''
+        Por defecto, SearchableModel indexa todos las propiedades de texto
+        del modelo, asi que aqui indicamos las que realmente necesitamos
+        '''
+        return [[], 'name', 'description', 'poi']
+    
+    
     @property
     def counters(self):
         if self._counters is None:

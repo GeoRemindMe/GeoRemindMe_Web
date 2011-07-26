@@ -61,7 +61,7 @@ class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
         Por defecto, SearchableModel indexa todos las propiedades de texto
         del modelo, asi que aqui indicamos las que realmente necesitamos
         '''
-        return [[],['name']]
+        return [ ['address'], ['business'], ['point'], ['name', 'address', 'business', 'point']]
     
     
     @property

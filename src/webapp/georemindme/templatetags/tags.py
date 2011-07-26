@@ -24,8 +24,9 @@ class RenderTimelineNode(template.Node):
         self.item = template.Variable(item)
         
     def render(self, context):
-        from django.template import Context
+        from django.template import Context, RequestContext
         item = self.item.resolve(context)
         t = template.loader.get_template('timeline/%s.html' % item['msg_id'])
-        return t.render(Context({'obj': item}))
+        context['obj'] = item
+        return t.render(context)
         
