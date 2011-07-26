@@ -281,7 +281,7 @@ class UserTimelineSystem(UserTimelineBase):
                     111: _('%s invited you to %s') % (self.instance, self.instance),
                     112: _('%s accepted your invitation to %s') % (self.user, self.instance),
                     113: _('%s rejected your invitation to %s') % (self.user, self.instance),
-                    120: _('<a href="%(profile_url)s">%(username)s</a> ha hecho un comentario en la sugerencia: <br><a href="/fb/suggestion/%(suggestion_id)s/">%(suggestion)s</a>') % {
+                    120: _('<a href="%(profile_url)s">%(username)s</a> ha hecho un comentario en la sugerencia de <a href="%(owner_url)s">%(owner)s</a>: <br><a href="/fb/suggestion/%(suggestion_id)s/">%(suggestion)s</a>') % {
                         'profile_url':self.user.get_absolute_url(),
                         'username':self.user,
                         'suggestion':self.instance,
@@ -340,7 +340,7 @@ class UserTimelineSystem(UserTimelineBase):
 class UserTimeline(UserTimelineBase, Visibility):
     _msg = db.TextProperty(required=False)
     msg_id = db.IntegerProperty(required=False, default=-1)
-    instance = db.ReferenceProperty(None)
+    instance = db.ReferenceProperty(None) 
     
     @property
     def msg(self):
@@ -356,6 +356,7 @@ class UserTimeline(UserTimelineBase, Visibility):
                     3: _('Now, you can log with your Twitter account'),
                     
                     #User messages
+                    # self.instance --> User
                     100: _('You are now following <a href="%(profile_url)s">%(username)s</a>') % {
                         'profile_url':self.user.get_absolute_url(),
                         'username':self.instance
@@ -372,14 +373,17 @@ class UserTimeline(UserTimelineBase, Visibility):
                     111: _('%s invited you to %s') % (self.instance, self.instance),
                     112: _('%s accepted your invitation to %s') % (self.instance, self.instance),
                     113: _('%s rejected your invitation to %s') % (self.instance, self.instance),
-                    120: _('<a href="%(profile_url)s">%(username)s</a> ha hecho un comentario en la sugerencia de <a href="%(owner_url)s">%(owner)s</a>: <br><a href="/fb/suggestion/%(suggestion_id)s/">%(suggestion)s</a>') % {
+                    
+                    # self.instance --> Comment
+                    120: _('<a href="%(profile_url)s">%(username)s</a> ha hecho un comentario en la sugerencia de: <br><a href="/fb/suggestion/%(suggestion_id)s/">%(suggestion)s</a>') % {
                         'profile_url':self.user.get_absolute_url(),
-                        'username':self.user,
-                        'owner':self.instance.user,
-                        'owner_url':self.instance.user.get_absolute_url(),
+                        'username':self.user.username,
+                        'owner':self.instance.instance.user,
+                        'owner_url':self.instance.instance.user.get_absolute_url(),
                         'suggestion':self.instance,
                         'suggestion_id':self.instance.id,
                     },
+                    # self.instance --> Comment
                     125: _('likes a comment: %s') % self.instance,
                     150: _('New user list created: %s') % self.instance,
                     151: _('User list modified: %s') % self.instance,
