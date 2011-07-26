@@ -41,7 +41,7 @@ def deleted_alert(sender, **kwargs):
     Se borra una alerta
     '''
     if isinstance(sender, Alert):
-        timeline = UserTimelineSystem(user = sender.user, instancem = sender, msg_id=202)
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=202)
     elif isinstance(sender, AlertSuggestion):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=322)
     else:
