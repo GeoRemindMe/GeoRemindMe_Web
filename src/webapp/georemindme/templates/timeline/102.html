@@ -1,0 +1,18 @@
+{% load humanize %}
+
+Mensaje nº 102
+<!--
+102: Dejas de seguir
+-->
+
+
+
+    <div class="avatar">
+        <a href="/fb/user/{{obj.instance}}" title="{{obj.instance}}">
+            <img src="/user/{{obj.instance}}/picture/" alt="{{obj.instance}} avatar"/>
+        </a>
+    </div>
+    has dejado de seguir a <a href="/fb/user/{{obj.instance}}">{{obj.instance}}</a>.<br>
+
+
+<span class="timestamp"> hace {{obj.created|timesince}}</span>  
