@@ -413,6 +413,8 @@ class Suggestion(Event, Visibility, Taggable):
         return invitation
     
     def has_follower(self, user):
+        if not user.is_authenticated():
+            return False
         if SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).count() != 0:
             return True
         return False   

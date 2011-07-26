@@ -627,6 +627,8 @@ class User(polymodel.PolyModel, HookedModel):
         if userkey is not None:
             if UserFollowingIndex.all().ancestor(userkey).filter('following =', self.key()).count() != 0:
                 return True
+        elif not user.is_authenticated():
+            return False
         elif UserFollowingIndex.all().ancestor(user.key()).filter('following =', self.key()).count() != 0:
             return True
         return False       

@@ -194,6 +194,8 @@ class VoteHelper(object):
         if isinstance(user, db.Key):
             vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND user = :user', ins=instance_key, user=user).get()
         else:
+            if not user.is_authenticated():
+                return False
             vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND user = :user', ins=instance_key, user=user.key()).get()
         if vote is not None:
             return True
