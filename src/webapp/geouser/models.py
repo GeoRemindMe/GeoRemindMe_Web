@@ -218,7 +218,7 @@ class User(polymodel.PolyModel, HookedModel):
         return chronology
     
     def get_notifications_timeline(self, page=1, query_id=None):
-        q = UserTimelineSystem.gql('WHERE user = :1 AND msg_id IN (111,112, 113, 101) ORDER BY modified DESC', self)
+        q = UserTimelineSystem.gql('WHERE user = :1 AND msg_id IN (0, 111,112, 113, 101) ORDER BY modified DESC', self)
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
@@ -627,6 +627,8 @@ class User(polymodel.PolyModel, HookedModel):
         if userkey is not None:
             if UserFollowingIndex.all().ancestor(userkey).filter('following =', self.key()).count() != 0:
                 return True
+        elif not user.is_authenticated():
+            return False
         elif UserFollowingIndex.all().ancestor(user.key()).filter('following =', self.key()).count() != 0:
             return True
         return False       

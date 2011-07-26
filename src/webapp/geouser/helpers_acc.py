@@ -72,7 +72,8 @@ class UserTimelineHelper(object):
             userid = long(userid)
         except:
             return None
-        from geovote.models import Vote
+        from geovote.models import Vote, Comment
+        from geoalert.models import Suggestion
         q = UserTimeline.all().filter('user =', db.Key.from_path(User.kind(), userid)).order('-created')
         p = PagedQuery(q, id = query_id, page_size=42)
         timelines = p.fetch_page(page)
@@ -83,27 +84,30 @@ class UserTimelineHelper(object):
                         'msg_id': timeline.msg_id,
                         'instance': timeline.instance if timeline.instance is not None else None,
                         'has_voted':  Vote.objects.user_has_voted(db.Key.from_path(User.kind(), userid), timeline.instance.key()) if timeline.instance is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
-                            } 
-                           for timeline in timelines]]
-            
-        elif not querier.are_friends(db.Key.from_path(User.kind(), userid)):
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
+                        'comments': Comment.objects.get_by_instance(timeline.instance),
+                        } 
+                       for timeline in timelines]]
+        elif querier.is_authenticated() and querier.are_friends(db.Key.from_path(User.kind(), userid)):
             return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
                         'instance': timeline.instance if timeline.instance is not None else None,
                         'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
-                            }
-                           for timeline in timelines if timeline._is_public()]]
-        
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
+                        'comments': Comment.objects.get_by_instance(timeline.instance, querier=querier),
+                        'user_follower': timeline.instance.has_follower(querier) if isinstance(timeline.instance, Suggestion) and querier.is_authenticated() else None
+                        }
+                        for timeline in timelines if timeline._is_shared() or timeline._is_public()]]
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
                         'instance': timeline.instance if timeline.instance is not None else None,
-                        'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
+                        'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None and querier.is_authenticated()else None,
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
+                        'comments': Comment.objects.get_by_instance(timeline.instance, querier=querier),
+                        'user_follower': timeline.instance.has_follower(querier) if isinstance(timeline.instance, Suggestion) and querier.is_authenticated() else None
                         }
-                        for timeline in timelines if timeline._is_shared() or timeline._is_public()]]
+                       for timeline in timelines if timeline._is_public()]]
