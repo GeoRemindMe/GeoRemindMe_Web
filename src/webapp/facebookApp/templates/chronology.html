@@ -190,8 +190,8 @@
             {% for obj in chronology.1 %}
                 <li id="suggestion_{{obj.instance.id}}" class="suggestion-element" {%if not forloop.last %}style="border-bottom: 1px solid #DDDDDD;"{% endif %}>
                 
-                <!--Tipo de mensaje {{obj.msg_id}}-->
-                {% if obj.msg_id < 100 %}
+                
+                {% if obj.msg_id < 300 %}
                     <!-- Mensajes de GeoRemindMe-->
                     <div class="avatar">
                         <a href="/fb/user/hhkaos" title="Ver perfil en GeoRemindMe">
@@ -204,11 +204,11 @@
                         
                     <span class="timestamp">{{obj.created|timesince}} ago</span>  
                         
-                {% else %}{% if obj.msg_id < 200 %}
+                {% else %}{% if obj.msg_id < 500 %}
                     
                     <div class="avatar">
-                        <a href="/fb/user/{{obj.instance.username}}" title="Ver perfil en GeoRemindMe">
-                            <img src="/user/{{obj.instance.username}}/picture/" alt="{{obj.username}} avatar"/>
+                        <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
+                            <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
                         </a>
                     </div>
                     
@@ -253,13 +253,14 @@
                             
                             
                             
-                            </div>
+                            
                             
                             <!-- Si hay comentarios en la sugerencia -->
                             
                             <div class="comment-box" value="{{obj.instance.id}}">
-                                {% if obj.comments.1|length > 2%}
-                                    <div class="show-all-comments">Ver los {{obj.comments.1|length}} comentarios</div>
+                            
+                                {% if obj.comments.1|length and obj.comments.1|length > 2 %}
+                                    <div class="show-all-comments">Veros los {{obj.comments.1|length}} comentarios</div>
                                 {% endif %}
                                 <ul id="commentList-{{obj.instance.id}}">
                                     {% if obj.comments.1 %}
