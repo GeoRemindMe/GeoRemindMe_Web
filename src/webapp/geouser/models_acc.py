@@ -250,6 +250,7 @@ class UserTimelineBase(db.polymodel.PolyModel):
 
 class UserTimelineSystem(UserTimelineBase):
     msg_id = db.IntegerProperty()
+    msg = db.TextProperty(required=False)
     instance = db.ReferenceProperty(db.Model)
     
 #    @property
