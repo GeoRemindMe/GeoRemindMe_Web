@@ -188,9 +188,11 @@
     -->
             <ul id="chronology">
             {% for obj in chronology.1 %}
-                <li {% if forloop.last %} style="border:0" {% endif %}>
-                    {% timeline_item obj %}
-                </li>
+                {% if not obj.msg_id = 100 or not obj.is_private %}
+                    <li {% if forloop.last %} style="border:0" {% endif %}>
+                        {% timeline_item obj %}
+                    </li>
+                {% endif %}
             {% endfor %}
             </ul>
         

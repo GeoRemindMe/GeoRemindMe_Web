@@ -1,49 +1,61 @@
+Mensaje nº 300
+<!--
+300: Nueva sugerencia
+-->
+
 <div class="avatar">
     <a href="/fb/user/{{obj.username}}" title="{{obj.username}}">
         <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
     </a>
 </div>
+<div class="timeline-msg">
+    <!--Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar-->
+    {% if not obj.is_private %}
 
-<!--Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar-->
-{% if not obj.is_private %}
-    {% if obj.username = user.username %}
-        <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
-    {% endif %}
-{% endif %}
+            
 
-
-
-<a href="/fb/user/{{obj.username}}">{{obj.username}}</a> sugiere: <br>
-{{obj.instance}}
-
-{% if obj.instance.poi.slug %}
-    <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
-{% endif %}
-
-
-<span class="timestamp"> hace {{obj.created|timesince}}</span>  
-
-<span class="action-bar">
-    | <span class="focusInput">Comentar</span> | 
-    <a href="/fb/suggestion/{{obj.instance.id|urlencode}}">Detalles</a> | 
-    
-    
-    
-    <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
-        <span class="dislike">
-            <span class="hoverlink">Ya no me gusta</span> 
-            <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
-        </span>
         
-        <span class="like">
-            Me gusta
-        </span>
+        <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> sugiere: 
+    {% else %}
+        <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
+        has creado la sugerencia: 
+    {% endif %}
+
+
+
+    <br>{{obj.instance}}<br>
+
+    {% if obj.instance.poi.slug %}
+        <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
+    {% endif %}
+
+
+    <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+
+    <span class="action-bar">
+        | <span class="focusInput">Comentar</span> | 
+        <a href="/fb/suggestion/{{obj.instance.id|urlencode}}">Detalles</a>  
+        
+        
+        
+        {% if not obj.is_private %}
+            | 
+            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
+                <span class="dislike">
+                    <span class="hoverlink">Ya no me gusta</span> 
+                    <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
+                </span>
+                
+                <span class="like">
+                    Me gusta
+                </span>
+            </span>
+            
+            | <span onclick="" title="Guardar en favoritos" class="save">Recordar</span>
+        {% endif %}
     </span>
-    
-    | <span onclick="" title="Guardar en favoritos" class="save">Recordar</span>
-</span>
 
-
+</div>
 <!-- Si hay comentarios en la sugerencia -->
 
 <div class="comment-box" value="{{obj.instance.id}}">

@@ -1,2 +1,25 @@
+{% load humanize %}
+
 Mensaje nº 101
-<a href="%(profile_url)s">%(username)s</a> is now following you
+<!--
+101: Te han empezado a seguir
+-->
+
+
+{% if obj.is_private %}
+    <div class="avatar">
+        <a href="/fb/user/{{obj.instance}}" title="{{obj.instance}}">
+            <img src="/user/{{obj.instance}}/picture/" alt="{{obj.instance}} avatar"/>
+        </a>
+    </div>
+    <a href="/fb/user/{{obj.instance}}">{{obj.instance}}</a> ahora te está siguiendo.<br>
+{% else %}
+    <div class="avatar">
+        <a href="/fb/user/{{obj.username}}" title="{{obj.username}}">
+            <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
+        </a>
+    </div>
+    Ahora estás siguiendo a <a href="/fb/user/{{obj.username}}">{{obj.username}}</a><br>
+{% endif %}
+
+<span class="timestamp"> hace {{obj.created|timesince}}</span>  

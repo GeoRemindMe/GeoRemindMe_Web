@@ -1,2 +1,50 @@
-Mensaje nº 101
-<a href="%(profile_url)s">%(username)s</a> is now following you
+{% load humanize %}
+
+Mensaje nº 120
+<!--
+120: Ha hecho un comentario en una sugerencia | UT
+-->
+
+{% if obj.is_private %}
+    <div class="avatar">
+        <a href="/fb/user/{{request.user}}" title="{{request.user}}">
+            <img src="/user/{{request.user}}/picture/" alt="{{request.user}} avatar"/>
+        </a>
+    </div>
+    <div class="timeline-msg">
+        <strong>Has añadido</strong>:
+{% else %}
+    <div class="avatar">
+        <a href="/fb/user/{{obj.instance.user.username}}" title="{{obj.instance.user.username}}">
+            <img src="/user/{{obj.instance.user.username}}/picture/" alt="{{obj.instance.user.username}} avatar"/>
+        </a>
+    </div>
+    <div class="timeline-msg">
+        <strong><a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a> ha añadido</strong>:
+{% endif %}
+
+{{obj.instance.msg}}<br>
+
+
+    <span class="suggestionPlace">En la sugerencia: {{obj.instance.instance.name|truncatewords:10}} </span><br>
+    
+    
+    <span class="timestamp"> hace {{obj.created|timesince}}</span>
+    <span class="action-bar">
+        | <a href="/fb/suggestion/{{obj.instance.instance.id}}">Ver sugerencia</a> 
+        {% if not obj.is_private %}
+            | 
+            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="comment">
+                <span class="dislike">
+                    <span class="hoverlink">Ya no me gusta</span> 
+                    <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
+                </span>
+                
+                <span class="like">
+                    Me gusta
+                </span>
+            </span>
+        {% endif %}
+    </span>
+</div>
+
