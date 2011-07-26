@@ -1,0 +1,35 @@
+<!--
+{
+    'username': u'hhkaos', 
+    'created': datetime.datetime(2011, 7, 26, 7, 28, 21, 579627), 
+    'msg_id': 100L, 
+    'modified': datetime.datetime(2011, 7, 26, 7, 28, 21, 580113), 
+    'comments': [2072941899, []], 
+    'instance': <geouser.models.User object at 0xcbd2c4c>, 
+    'user_follower': None, 
+    'has_voted': False, 
+    'msg': None, 
+    'vote_counter': 0, 
+    'id': 12, 
+    'is_private': False
+}
+-->
+{% load humanize %}
+
+{% if obj.is_private %}
+    <div class="avatar">
+        <a href="/fb/user/{{obj.instance}}" title="{{obj.instance}}">
+            <img src="/user/{{obj.instance}}/picture/" alt="{{obj.instance}} avatar"/>
+        </a>
+    </div>
+    <a href="/fb/user/{{obj.instance}}">{{obj.instance}}</a> is following you.<br>
+{% else %}
+    <div class="avatar">
+        <a href="/fb/user/{{obj.username}}" title="{{obj.username}}">
+            <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
+        </a>
+    </div>
+    You are following <a href="/fb/user/{{obj.username}}">{{obj.username}}</a><br>
+{% endif %}
+
+<span class="timestamp"> hace {{obj.created|timesince}}</span>  
