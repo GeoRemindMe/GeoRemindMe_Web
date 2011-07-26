@@ -1,0 +1,45 @@
+{% load humanize %}
+Mensaje nº 125
+<!--
+125: A [X] le gusta un comentario | UT
+-->
+
+{%if not obj.instance.user.username = obj.instance.instance.user.username %}
+    <!--
+        Si me gusta un comentario mío no se muestra
+    -->
+    {% if obj.is_private %}
+        <div class="avatar">
+            <a href="/fb/user/{{request.user}}" title="{{request.user}}">
+                <img src="/user/{{request.user}}/picture/" alt="{{request.user}} avatar"/>
+            </a>
+        </div>
+        <div class="timeline-msg">
+            Te ha gustado el comentario  de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>: <br>
+        
+    {% else %}
+        <div class="avatar">
+            <a href="/fb/user/{{obj.instance.user.username}}" title="{{obj.instance.user.username}}">
+                <img src="/user/{{obj.instance.user.username}}/picture/" alt="{{obj.instance.user.username}} avatar"/>
+            </a>
+        </div>
+        <div class="timeline-msg">
+            A <a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a> le ha gustado 
+            {% if obj.instance.instance.user.username = request.user.username %}
+                <strong>tu comentario</strong>:<br>
+            {% else %}
+                el comentario  de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>:<br>
+            {% endif %}
+            
+    {% endif %}
+            <em>{{obj.instance.instance.msg}}</em><br>
+            <span class="suggestionPlace">
+                En la sugerencia: {{obj.instance.instance.instance.name|truncatewords:10}} <br>
+            </span>
+
+            <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+            <span class="action-bar">
+                | <a href="/fb/suggestion/{{obj.instance.instance.instance.id}}">Ver sugerencia</a> 
+            </span
+        </div>
+{% endif %}

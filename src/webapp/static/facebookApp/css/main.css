@@ -750,13 +750,11 @@ input{
     }
     
         #activity ul#chronology li{
-    /*
             border-bottom: 1px solid #DDDDDD;
-    */
             clear: both;
             list-style: none outside none;
             margin: 0.5em 0;
-            padding: 0.5em 0;
+            padding: 1em 0;
         }
         
         #activity ul#chronology li:after{
@@ -786,10 +784,10 @@ input{
             font-size: 0.9em;
             padding-left: 0.5em;
         }
-            #activity ul#chronology li span.timestamp{
+            .timestamp{
                 color: #999;
                 display: block;
-                font-size: 1em;
+                font-size: 11px;
                 float: left;
             }
             #activity ul#chronology li span.action-bar span, span.action-bar a{
@@ -878,6 +876,10 @@ input{
                     height: 25px;
                     margin-right: 10px;
                     width: 25px;
+                }
+                #activity ul#chronology li div.timeline-msg{
+                    float:left;
+                    width:470px;
                 }
                 #activity ul#chronology div.comment-box ul li .timestamp,
                 #activity ul#chronology div.comment-box ul li .like,

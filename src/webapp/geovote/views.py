@@ -127,7 +127,7 @@ def do_vote_suggestion(request, instance_id, vote=1):
     if event is None:
         return None
     vote = Vote.do_vote(user=request.user, instance=event, count=vote)
-    return vote
+    return {'vote': vote, 'votes': _get_vote(event.key())}
 
 
 @login_required
@@ -146,7 +146,7 @@ def do_vote_list(request, instance_id, vote=1):
         return None
     vote = Vote.do_vote(user=request.user, instance=list, count=vote)
     
-    return vote
+    return {'vote': vote, 'votes': _get_vote(list.key())}
 
 
 @login_required
@@ -166,7 +166,7 @@ def do_vote_comment(request, instance_id, vote=1):
     if comment is None:
         return None
     vote = Vote.do_vote(user=request.user, instance=comment, count=vote)
-    return vote
+    return {'vote': vote, 'votes': _get_vote(comment.key())}
 
 
 def get_vote_suggestion(request, instance_id):

@@ -152,9 +152,10 @@ class User(polymodel.PolyModel, HookedModel):
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
-                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'instance': timeline.instance,
                         'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
+                        'is_private': True,
                         }
                        for timeline in p.fetch_page(page)]]
     
@@ -194,11 +195,12 @@ class User(polymodel.PolyModel, HookedModel):
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
-                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'instance': timeline.instance,
                         'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance, querier=self),
-                        'user_follower': timeline.instance.has_follower(self) if isinstance(timeline.instance, Suggestion) else None
+                        'user_follower': timeline.instance.has_follower(self) if isinstance(timeline.instance, Suggestion) else None,
+                        'is_private': False,
                         }
                         for timeline in timelines if timeline is not None ]]
         
@@ -218,13 +220,14 @@ class User(polymodel.PolyModel, HookedModel):
         return chronology
     
     def get_notifications_timeline(self, page=1, query_id=None):
-        q = UserTimelineSystem.gql('WHERE user = :1 AND msg_id IN (111,112, 113, 101) ORDER BY modified DESC', self)
+        q = UserTimelineSystem.gql('WHERE user = :1 AND msg_id IN (0, 111,112, 113, 101) ORDER BY modified DESC', self)
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
                         'instance': timeline.instance if timeline.instance is not None else None,
+                        'is_private': True,
                         }
                         for timeline in p.fetch_page(page)]]
         
@@ -627,6 +630,8 @@ class User(polymodel.PolyModel, HookedModel):
         if userkey is not None:
             if UserFollowingIndex.all().ancestor(userkey).filter('following =', self.key()).count() != 0:
                 return True
+        elif not user.is_authenticated():
+            return False
         elif UserFollowingIndex.all().ancestor(user.key()).filter('following =', self.key()).count() != 0:
             return True
         return False       

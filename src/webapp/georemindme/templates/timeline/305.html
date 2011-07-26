@@ -1,0 +1,39 @@
+Mensaje nº 305:
+<!--
+Te gusta una sugerencia
+obj.instance==geovote.models.Vote
+-->
+
+{% if obj.is_private = false and obj.username = request.user %}
+    Evitamos que se muestre duplicado un "Te gusta la sugerencia X"
+{% else %}
+
+    {% if obj.is_private %}
+        <!-- Es de mi timeline -->        
+        <div class="avatar">
+            <a href="/fb/user/request.user" title="Ver perfil en GeoRemindMe">
+                <img src="/user/request.user/picture/" alt="request.user avatar"/>
+            </a>
+        </div>
+        <div class="timeline-msg">
+            Te gusta la sugerencia de <a href="/fb{{obj.instance.instance.user.get_absolute_url}}">{{obj.instance.instance.user}}</a>:<br>
+    {% else %}
+        <div class="avatar">
+            <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
+                <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
+            </a>
+        </div>
+        <div class="timeline-msg">
+            A <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> le ha gustado 
+            {% if obj.instance.instance.user.username = request.user.username %}
+                <strong>tu sugerencia</strong>:<br>
+            {% else %}
+                la sugerencia de <a href="/fb{{obj.instance.instance.user.get_absolute_url}}">{{obj.instance.instance.user}}</a>:<br>
+            {% endif %}
+    {% endif %}
+            
+            {{obj.instance.instance}} <br>
+            <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.instance.poi.slug}}">{{obj.instance.instance.poi.name}}</a></span><br>
+            <span class="timestamp">hace {{obj.created|timesince}}</span> <span class="action-bar">| <a href="/fb/suggestion/{{obj.instance.instance.id}}">Ver sugerencia</a></span>
+        </div>
+{% endif %}

@@ -326,7 +326,7 @@ def get_friends_twitter(request):
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
 @ajax_request
-def get_timeline(request):
+def get_profile_timeline(request):
     """
         Devuelve la lista de timeline de un usuario.
         Si no se especifica userid o username, se devuelve el timeline completo del usuario
@@ -342,11 +342,11 @@ def get_timeline(request):
     username = request.POST.get('username', None)
     page = request.POST.get('page', 1)
     query_id = request.POST.get('query_id', None)
-    timeline = geouser.get_timeline(request, userid, username, page=page, query_id=query_id)
+    timeline = geouser.get_profile_timeline(request, userid, username, page=page, query_id=query_id)
     return HttpResponse(simplejson.dumps(timeline), mimetype="application/json")
 
 @ajax_request
-def get_chronology(request):
+def get_activity_timeline(request):
     """
         Devuelve la lista de timeline de los followings del usuario logueado.
         Parametros en POST
@@ -357,7 +357,22 @@ def get_chronology(request):
     """ 
     page = request.POST.get('page', 1)
     query_id = request.POST.get('query_id', None)
-    chronology = geouser.get_chronology(request, page=page, query_id=query_id)
+    chronology = geouser.get_activity_timeline(request, page=page, query_id=query_id)
+    return HttpResponse(simplejson.dumps(chronology), mimetype="application/json")
+
+@ajax_request
+def get_notifications_timeline(request):
+    """
+        Devuelve la lista de timeline de los followings del usuario logueado.
+        Parametros en POST
+            page : pagina a mostrar
+            query_id: id de la consulta de pagina
+        
+        :returns: lista de la forma [query_id, [(id, username, avatar)]]
+    """ 
+    page = request.POST.get('page', 1)
+    query_id = request.POST.get('query_id', None)
+    chronology = geouser.get_notifications_timeline(request, page=page, query_id=query_id)
     return HttpResponse(simplejson.dumps(chronology), mimetype="application/json")
     
 

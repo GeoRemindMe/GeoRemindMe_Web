@@ -1,0 +1,20 @@
+{% load humanize %}
+Mensaje nº 100
+<!--
+100: Usuario empieza a seguirte | UT
+-->
+
+
+{% if obj.is_private %}
+    NO entra porque en chronology está puesto que no
+{% else %}
+    <div class="avatar">
+        <a href="/fb/user/{{obj.username}}" title="{{obj.username}}">
+            <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
+        </a>
+    </div>
+    Ahora estás siguiendo a <a href="/fb/user/{{obj.username}}">{{obj.username}}</a><br>
+{% endif %}
+
+<span class="timestamp"> hace {{obj.created|timesince}}</span>  
+

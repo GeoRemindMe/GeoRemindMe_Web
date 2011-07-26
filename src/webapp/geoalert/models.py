@@ -266,6 +266,15 @@ class Suggestion(Event, Visibility, Taggable):
     
     _counters = None
     
+    @classmethod
+    def SearchableProperties(cls):
+        '''
+        Por defecto, SearchableModel indexa todos las propiedades de texto
+        del modelo, asi que aqui indicamos las que realmente necesitamos
+        '''
+        return [[], 'name', 'description', 'poi']
+    
+    
     @property
     def counters(self):
         if self._counters is None:
@@ -413,6 +422,8 @@ class Suggestion(Event, Visibility, Taggable):
         return invitation
     
     def has_follower(self, user):
+        if not user.is_authenticated():
+            return False
         if SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).count() != 0:
             return True
         return False   

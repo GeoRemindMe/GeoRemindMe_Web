@@ -472,7 +472,7 @@ def get_friends_twitter(request):
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
-def get_timeline(request, userid = None, username = None, page=1, query_id=None):
+def get_profile_timeline(request, userid = None, username = None, page=1, query_id=None):
     """**Descripción**: Obtiene la lista de timeline de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado
         
 		:param userid: id del usuario (user.id)
@@ -486,21 +486,20 @@ def get_timeline(request, userid = None, username = None, page=1, query_id=None)
 		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad            
     """
     if userid is None and username is None:
-        if request.session.get('user', None):
-            return request.session['user'].get_timelineALL(page=page, query_id=query_id)
+        if request.user.is_authenticated():
+            return request.user.get_profile_timeline(page=page, query_id=query_id)
         return None
     else:
         if userid:
-            user_key = User.objects.get_by_id(userid, keys_only=True)
+            user_profile = User.objects.get_by_id(userid)
         elif username:
-            user_key = User.objects.get_by_username(username, keys_only=True)
-        settings = UserSettings.objects.get_by_id(user_key.name())
-        if settings.show_timeline:
-            return UserTimeline.objects.get_by_id(user_key.name(), page=page, query_id=query_id)
+            user_profile = User.objects.get_by_username(username)
+        if user_profile.settings.show_timeline:
+            return user_profile.get_profile_timeline(page=page, query_id=query_id, querier=request.user)
     return None
 
 @login_required
-def get_chronology(request, page=1, query_id=None):
+def get_notifications_timeline(request, page=1, query_id=None):
     """**Descripción**: Obtiene la lista de timeline de los followings del usuario logueado
 
 		:param page: número de página a mostrar
@@ -509,7 +508,19 @@ def get_chronology(request, page=1, query_id=None):
 		:type query_id: int
 		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """
-    return request.user.get_chronology(page=page, query_id=query_id)
+    return request.user.notifications_timeline(page=page, query_id=query_id)
+
+@login_required
+def get_activity_timeline(request, page=1, query_id=None):
+    """**Descripción**: Obtiene la lista de timeline de actividad del usuario logueado
+
+        :param page: número de página a mostrar
+        :type page: int
+        :param query_id: identificador de búsqueda
+        :type query_id: int
+        :return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
+    """
+    return request.user.get_activity_timeline(page=page, query_id=query_id)
 
     
 def get_avatar(request, username):

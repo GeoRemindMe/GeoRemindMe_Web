@@ -41,7 +41,7 @@ def deleted_alert(sender, **kwargs):
     Se borra una alerta
     '''
     if isinstance(sender, Alert):
-        timeline = UserTimelineSystem(user = sender.user, instancem = sender, msg_id=202)
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=202)
     elif isinstance(sender, AlertSuggestion):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=322)
     else:
@@ -86,7 +86,7 @@ def deleted_suggestion(sender, **kwargs):
 suggestion_deleted.connect(deleted_suggestion)
 
 def new_following_suggestion(sender, **kwargs):
-    timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=333)
+    timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=303)
     timeline.put()
     sender.counters.set_followers(+1)
     from google.appengine.ext.deferred import defer
