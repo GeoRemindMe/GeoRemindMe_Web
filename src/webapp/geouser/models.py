@@ -154,7 +154,8 @@ class User(polymodel.PolyModel, HookedModel):
                         'msg_id': timeline.msg_id,
                         'instance': timeline.instance if timeline.instance is not None else None,
                         'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None
+                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
+                        'is_private': True,
                         }
                        for timeline in p.fetch_page(page)]]
     
@@ -198,7 +199,8 @@ class User(polymodel.PolyModel, HookedModel):
                         'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance, querier=self),
-                        'user_follower': timeline.instance.has_follower(self) if isinstance(timeline.instance, Suggestion) else None
+                        'user_follower': timeline.instance.has_follower(self) if isinstance(timeline.instance, Suggestion) else None,
+                        'is_private': False,
                         }
                         for timeline in timelines if timeline is not None ]]
         
@@ -225,6 +227,7 @@ class User(polymodel.PolyModel, HookedModel):
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
                         'instance': timeline.instance if timeline.instance is not None else None,
+                        'is_private': True,
                         }
                         for timeline in p.fetch_page(page)]]
         

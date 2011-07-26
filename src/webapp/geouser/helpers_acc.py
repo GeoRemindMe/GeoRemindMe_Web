@@ -86,6 +86,7 @@ class UserTimelineHelper(object):
                         'has_voted':  Vote.objects.user_has_voted(db.Key.from_path(User.kind(), userid), timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance),
+                        'is_private': isinstance(timeline, UserTimelineSystem),
                         } 
                        for timeline in timelines]]
         elif querier.is_authenticated() and querier.are_friends(db.Key.from_path(User.kind(), userid)):
@@ -97,7 +98,8 @@ class UserTimelineHelper(object):
                         'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance, querier=querier),
-                        'user_follower': timeline.instance.has_follower(querier) if isinstance(timeline.instance, Suggestion) and querier.is_authenticated() else None
+                        'user_follower': timeline.instance.has_follower(querier) if isinstance(timeline.instance, Suggestion) and querier.is_authenticated() else None,
+                        'is_private': False,
                         }
                         for timeline in timelines if timeline._is_shared() or timeline._is_public()]]
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
@@ -108,6 +110,7 @@ class UserTimelineHelper(object):
                         'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None and querier.is_authenticated()else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance, querier=querier),
-                        'user_follower': timeline.instance.has_follower(querier) if isinstance(timeline.instance, Suggestion) and querier.is_authenticated() else None
+                        'user_follower': timeline.instance.has_follower(querier) if isinstance(timeline.instance, Suggestion) and querier.is_authenticated() else None,
+                        'is_private': False,
                         }
                        for timeline in timelines if timeline._is_public()]]
