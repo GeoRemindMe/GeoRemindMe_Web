@@ -13,7 +13,11 @@ Mensaje nº 100
             <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
         </a>
     </div>
-    Ahora estás siguiendo a <a href="/fb/user/{{obj.username}}">{{obj.username}}</a><br>
+    {% if obj.username = request.username %}
+        Ahora estás a <a href="/fb/user/{{obj.instance.username}}">{{obj.instance.username}}</a><br>
+    {% else %}
+        <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> ahora sigue a <a href="/fb/user/{{obj.instance.username}}">{{obj.instance.username}}</a><br>
+    {% endif %}
 {% endif %}
 
 <span class="timestamp"> hace {{obj.created|timesince}}</span>  

@@ -12,7 +12,7 @@ Mensaje nº 120
         </a>
     </div>
     <div class="timeline-msg">
-        <strong>Has añadido</strong>:
+        Has añadido:<br>
 {% else %}
     <div class="avatar">
         <a href="/fb/user/{{obj.instance.user.username}}" title="{{obj.instance.user.username}}">
@@ -20,10 +20,10 @@ Mensaje nº 120
         </a>
     </div>
     <div class="timeline-msg">
-        <strong><a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a> ha añadido</strong>:
+        <a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a> ha añadido:<br>
 {% endif %}
 
-{{obj.instance.msg}}<br>
+    <em class="comment">{{obj.instance.msg}}</em><br>
 
 
     <span class="suggestionPlace">En la sugerencia: {{obj.instance.instance.name|truncatewords:10}} </span><br>
