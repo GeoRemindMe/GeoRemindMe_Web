@@ -38,24 +38,36 @@ def new_vote(sender, **kwargs):
 vote_new.connect(new_vote)
 
 def deleted_comment(sender, **kwargs):
+    from geovote.models import Vote
     timeline = UserTimeline.objects.get_by_instance_user(sender, sender.user)
+    votes = Vote.all().filter('instance =', sender).run()
     for t in timeline:
         t.delete()
+    for vote in votes:
+        vote.delete()
 comment_deleted.connect(deleted_comment)
     
 def deleted_vote(sender, **kwargs):
     from geoalert.models import Suggestion
+    from geouser.models_acc import UserTimelineBase
     if isinstance(sender.instance, Suggestion):
         influenced = sender.instance.user.counters_async()
         sender.user.counters.set_supported(-1)
         i = influenced.next()
         i.set_influenced(-1)
+    timelines = UserTimelineBase.all().filter('instance =', sender).run()
+    for timeline in timelines:
+        timeline.delete()
+        
 vote_deleted.connect(deleted_vote)
 
 def deleted_suggestion(sender, **kwargs):
     from geouser.models_acc import UserTimelineBase
-    from geovote.models import Comment
+    from geovote.models import Comment, Vote
     comments = Comment.all().filter('instance =', sender).run()
+    votes = Vote.all().filter('instance =', sender).run()
     for comment in comments:
         comment.delete()
+    for vote in votes:
+        vote.delete()
 suggestion_deleted.connect(deleted_suggestion)

@@ -271,8 +271,6 @@ class Vote(db.Model):
         vote = cls.objects.get_user_vote(user, instance.key())
         if vote is not None:
             if count < 0:
-                VoteCounter.increase_counter(vote.instance.key(), -1)
-                vote_deleted.send(sender=vote)
                 vote.delete()
                 return True
             return False
@@ -285,5 +283,12 @@ class Vote(db.Model):
         if not self.is_saved():
             contador = VoteCounter.increase_counter(self.instance.key(), self.count)
         super(Vote, self).put()
+        
+    def delete(self):
+        VoteCounter.increase_counter(self.instance.key(), -1)
+        vote_deleted.send(self)
+        super(Vote, self).delete()
+                
+        
         
     

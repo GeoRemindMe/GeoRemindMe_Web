@@ -66,9 +66,12 @@ def deleted_following(sender, **kwargs):
     '''
     timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=102)
     timeline.put()
+    timelines = UserTimeline.all().filter('user =', sender).filter('msg_id =', 100).filter('instance =', kwargs['following']).run()
     from geouser.models_utils import _Report_Account_follower
     from google.appengine.ext.deferred import defer
     defer(_Report_Account_follower.insert_or_update, kwargs['following'], add=None, delete = sender.key())
+    for timeline in timelines:
+        timeline.delete()
 user_following_deleted.connect(deleted_following)
 
 def new_timeline(sender, **kwargs):
