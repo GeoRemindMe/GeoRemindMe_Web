@@ -18,6 +18,10 @@ def new_comment(sender, **kwargs):
         defer(sender.user.settings.notify_suggestion_comment, sender.key())
         sender.instance.counters.set_comments()
     p.get_result()
+    if sender.user.key() != sender.instance.user.key():
+        from geouser.models_utils import _Notification
+        notification = _Notification(owner=sender.instance.user, timeline=timeline)
+        notification.put()
 comment_new.connect(new_comment)
 
 def new_vote(sender, **kwargs):
@@ -35,6 +39,12 @@ def new_vote(sender, **kwargs):
     elif isinstance(sender.instance, Comment):
         timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=125, _vis=sender.instance._get_visibility())
         timelinePublic.put()
+    else:
+        return
+    if sender.user.key() != sender.instance.user.key():
+        from geouser.models_utils import _Notification
+        notification = _Notification(owner=sender.instance.user, timeline=timelinePublic)
+        notification.put()
 vote_new.connect(new_vote)
 
 def deleted_comment(sender, **kwargs):

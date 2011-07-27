@@ -79,6 +79,7 @@ def profile(request, username):
         counters = request.user.counters_async()
         sociallinks = profile.sociallinks_async()
         timeline = request.user.get_profile_timeline()
+        suggestions = Suggestion.objects.get_by_user(user=request.user, querier=request.user)
         is_following = True
         is_follower = True
         show_followers = True
@@ -93,6 +94,7 @@ def profile(request, username):
         settings = profile_user.settings
         profile = profile_user.profile
         sociallinks = profile.sociallinks_async()
+        suggestions = Suggestion.objects.get_by_user(user=profile_user, querier=request.user)
         
         if request.user.is_authenticated():
             is_following = profile_user.is_following(request.user)
@@ -109,6 +111,7 @@ def profile(request, username):
                                                 'counters': counters.next(),
                                                 'sociallinks': sociallinks.next(),
                                                 'chronology': timeline, 
+                                                'suggestions': suggestions,
                                                 'is_following': is_following,
                                                 'is_follower': is_follower, 
                                                 'show_followers': show_followers,

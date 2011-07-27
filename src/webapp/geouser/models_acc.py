@@ -247,6 +247,16 @@ class UserTimelineBase(db.polymodel.PolyModel):
     def id(self):
         return int(self.key().id())
     
+    def delete(self):
+        timelines = UserTimelineFollowersIndex.all().ancestor(self.key()).run()
+        from models_utils import _Notification
+        notifications = _Notification.all().filter('timeline =', self)
+        for timeline in timelines:
+            timeline.delete()
+        for notification in notifications:
+            notification.delete()
+        super(UserTimelineBase, self).delete()
+    
 
 class UserTimelineSystem(UserTimelineBase):
     msg_id = db.IntegerProperty()
@@ -477,11 +487,7 @@ class UserTimeline(UserTimelineBase, Visibility):
             super(self.__class__, self).put()
             user_timeline_new.send(sender=self)
             
-    def delete(self):
-        query = UserTimelineFollowersIndex.all().ancestor(self.key())
-        for timeline in query:
-            timeline.delete()
-        super(UserTimeline, self).delete()
+
     
 
 class UserTimelineFollowersIndex(db.Model):

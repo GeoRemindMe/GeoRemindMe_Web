@@ -6,6 +6,40 @@ from google.appengine.ext import db
 from models import User
 from google.appengine.ext import deferred
 
+class _Notification(db.Model):
+    from models_acc import UserTimelineBase
+    owner = db.ReferenceProperty(User, required=True)
+    timeline = db.ReferenceProperty(UserTimelineBase, required=True)
+    _created = db.DateTimeProperty(auto_now_add=True)
+    
+    @property
+    def user(self):
+        return self.timeline.user
+    
+    @property
+    def msg_id(self):
+        return self.timeline.msg_id
+    
+    @property
+    def msg(self):
+        return self.timeline.msg
+    
+    @property
+    def instance(self):
+        return self.timeline.instance
+    
+    @property
+    def modified(self):
+        return self.timeline.modified
+    
+    @property
+    def created(self):
+        return self.timeline.created
+    
+    @property
+    def id(self):
+        return self.timeline.id
+
 class _Report_Account_follower(db.Model):
     """
         Guarda la lista de nuevos followers para posteriormente ser

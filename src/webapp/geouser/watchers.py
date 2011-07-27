@@ -57,6 +57,10 @@ def new_follower(sender, **kwargs):
         timelinePublic = UserTimeline(user = sender, instance = kwargs['following'], msg_id=100)
         timelinePublic.put()
     put.get_result()
+    if sender.user.key() != sender.instance.user.key():
+        from geouser.models_utils import _Notification
+        notification = _Notification(owner=sender.instance.user, timeline=timelineFollowing)
+        notification.put()
 user_follower_new.connect(new_follower)   
 
 

@@ -221,7 +221,8 @@ class User(polymodel.PolyModel, HookedModel):
         return chronology
     
     def get_notifications_timeline(self, page=1, query_id=None):
-        q = UserTimelineSystem.gql('WHERE user = :1 AND msg_id IN (0, 1, 2, 111,112, 113, 101) ORDER BY modified DESC', self)
+        from models_utils import _Notification
+        q = _Notification.all().filter('owner =', self)
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
