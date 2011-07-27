@@ -229,7 +229,7 @@ class User(polymodel.PolyModel, HookedModel):
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
                         'instance': timeline.instance if timeline.instance is not None else None,
-                        'is_private': True,
+                        'is_private': False,
                         }
                         for timeline in p.fetch_page(page)]]
         
