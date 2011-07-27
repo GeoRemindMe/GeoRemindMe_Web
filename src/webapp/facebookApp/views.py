@@ -72,14 +72,18 @@ def profile(request, username):
     :param username: nombre de usuario
     :type username: ni idea
     """
-    
+    from geoalert.views import get_suggestion
     if request.user.username.lower() == username.lower():
         # Si el usuario esta viendo su propio perfil
         profile = request.user.profile
         counters = request.user.counters_async()
         sociallinks = profile.sociallinks_async()
         timeline = request.user.get_profile_timeline()
-        suggestions = Suggestion.objects.get_by_user(user=request.user, querier=request.user)
+        suggestions = get_suggestion(request, id=None,
+                                     wanted_user=request.user,
+                                     private_profile=True,
+                                     page = 1, query_id = None
+                                     )
         is_following = True
         is_follower = True
         show_followers = True
@@ -94,7 +98,11 @@ def profile(request, username):
         settings = profile_user.settings
         profile = profile_user.profile
         sociallinks = profile.sociallinks_async()
-        suggestions = Suggestion.objects.get_by_user(user=profile_user, querier=request.user)
+        suggestions = get_suggestion(request, id=None,
+                                     wanted_user=profile_user,
+                                     private_profile=False,
+                                     page = 1, query_id = None
+                                     )
         
         if request.user.is_authenticated():
             is_following = profile_user.is_following(request.user)
