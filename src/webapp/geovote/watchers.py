@@ -1,6 +1,7 @@
 # coding=utf-8
 
-from signals import comment_new, vote_new, vote_deleted
+from signals import comment_new, comment_deleted, vote_new, vote_deleted
+from geoalert.signals import suggestion_deleted
 from geouser.models_acc import UserTimeline, UserTimelineSystem
 
 def new_comment(sender, **kwargs):
@@ -36,7 +37,12 @@ def new_vote(sender, **kwargs):
         timelinePublic.put()
 vote_new.connect(new_vote)
 
-
+def deleted_comment(sender, **kwargs):
+    timeline = UserTimeline.objects.get_by_instance_user(sender, sender.user)
+    for t in timeline:
+        t.delete()
+comment_deleted.connect(deleted_comment)
+    
 def deleted_vote(sender, **kwargs):
     from geoalert.models import Suggestion
     if isinstance(sender.instance, Suggestion):
@@ -45,3 +51,11 @@ def deleted_vote(sender, **kwargs):
         i = influenced.next()
         i.set_influenced(-1)
 vote_deleted.connect(deleted_vote)
+
+def deleted_suggestion(sender, **kwargs):
+    from geouser.models_acc import UserTimelineBase
+    from geovote.models import Comment
+    comments = Comment.all().filter('instance =', sender).run()
+    for comment in comments:
+        comment.delete()
+suggestion_deleted.connect(deleted_suggestion)

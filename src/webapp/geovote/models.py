@@ -170,6 +170,17 @@ class Comment(Visibility):
                 'msg': self.msg
                 }
         
+    def delete(self, force=False):
+        from signals import comment_deleted
+        if force:
+            comment_deleted.send(self)
+            super(Comment, self).deleted()
+        else:
+            self.deleted = True
+            self.put()
+            comment_deleted.send(self)
+            
+        
     
 from georemindme.models_utils import ShardedCounter
 class VoteCounter(ShardedCounter):

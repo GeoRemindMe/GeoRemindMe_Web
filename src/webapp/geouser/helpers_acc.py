@@ -56,6 +56,12 @@ class UserCounterHelper(object):
         return db.get(key)
     
 class UserTimelineHelper(object):
+    def get_by_instance_user(self, instance, user):
+        if not isinstance(user, User):
+            raise TypeError
+        return UserTimelineBase.all().filter('user =', user).filter('instance =', instance).run()
+
+        
     def get_by_id(self, userid, page=1, query_id = None, querier=None):
         '''
         Obtiene la lista de ultimos timeline del usuario

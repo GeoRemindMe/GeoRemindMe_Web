@@ -226,7 +226,6 @@ def _get_vote(instance_key):
 def delete_comment(request, commentid):
     comment = Comment.objects.get_by_id_user(commentid, request.user)
     if comment is not None:
-        comment.deleted = True
-        comment.put()
+        comment.delete()
         return True
     return False
