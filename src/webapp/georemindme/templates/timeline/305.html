@@ -27,9 +27,9 @@ obj.instance==geovote.models.Vote
         </div>
         <div class="timeline-msg">
             <span class="small-text">
-                A <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> le ha gustado 
+                <a href="/fb/user/{{obj.username}}">{{obj.username}}</a>: me gusta 
                 {% if obj.instance.instance.user.username = request.user.username %}
-                    <strong>tu sugerencia</strong>:<br>
+                    <strong>tu sugerencia</strong>:
                 {% else %}
                     la sugerencia de <a href="/fb{{obj.instance.instance.user.get_absolute_url}}">{{obj.instance.instance.user}}</a>:
                 {% endif %}

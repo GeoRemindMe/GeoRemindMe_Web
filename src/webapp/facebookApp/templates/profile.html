@@ -79,16 +79,18 @@
                     <p>{{profile.description}}</p>
                 {% endif %}
             <p>
-                <span>También está en:</span>
-                {% if profile.sociallinks.facebook %}
-                    <a href="{{profile.sociallinks.facebook}}" id="facebook-icon">Facebook</a>
+                <span>También está en:</span><br>
+                <ul id="social-networks">
+                    {% if profile.sociallinks.facebook %}
+                        <li><a href="{{profile.sociallinks.facebook}}" id="facebook-icon">Facebook</a></li>
+                    {% endif %}
+                    {% if profile.sociallinks.twitter %}
+                        <li><a href="{{profile.sociallinks.twitter}}"  id="twitter-icon">Twitter</a></li>
+                    {% endif %}
+                    {% if profile.sociallinks.foursquare %}
+                        <li><a href="{{profile.sociallinks.foursquare}}" id="foursquare-icon">Foursquare</a></li>
                 {% endif %}
-                {% if profile.sociallinks.twitter %}
-                    <a href="{{profile.sociallinks.twitter}}"  id="twitter-icon">Twitter</a>
-                {% endif %}
-                {% if profile.sociallinks.foursquare %}
-                    <a href="{{profile.sociallinks.foursquare}}" id="foursquare-icon">Foursquare</a>
-                {% endif %}
+                </ul>
             </p>
         </div>
 <!--
@@ -133,7 +135,43 @@
             
             <!-- ALL SUGGESTIONS -->
             <span id="his_suggestions_content" class="tab-content hidden">
-                <p>Sus sugerencias</p>
+                <ul>
+                    {% if suggestions.1|length = 0 %}
+                        <li><p>Este usuario aún no ha hecho ninguna sugerencia</p></li>
+                    {% else %}
+                        {% for obj in suggestions.1 %}                        
+                            <li {% if forloop.last %} style="border:0" {% endif %}>
+                                <div class="avatar">
+                                    <a href="/fb/user/{{obj.user.username}}" title="{{obj.user.username}}">
+                                        <img src="/user/{{obj.user.username}}/picture/" alt="{{obj.user.username}} avatar"/>
+                                    </a>
+                                </div>
+                                <div class="timeline-msg">
+                                    <a href="">{{obj}}</a><br>
+                                
+                                    <span class="small-text">En <a href="/fb/place/{{obj.poi.slug}}">{{obj.poi.name}}</a></span><br>
+                                    <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+                                    <span class="action-bar">
+                                        {% if request.user != obj.user.username %}
+                                            |
+                                            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
+                                                <span class="dislike">
+                                                    <span class="hoverlink">Ya no me gusta</span> 
+                                                    <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
+                                                </span>
+                                                
+                                                <span class="like">
+                                                    Me gusta
+                                                </span>
+                                            </span>
+                                        {% endif %}
+                                    </span>
+                                
+                                </div>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
             </span>
             <!-- END ALL SUGGESTIONS -->
             

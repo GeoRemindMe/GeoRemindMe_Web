@@ -136,7 +136,7 @@ input{
 #right-col{
     border-left: 1px solid #B3B3B3;
     float: left;
-    padding-left: 20px;
+    padding-left: 15px;
     width: 550px;
     min-height:500px;
     font-size: 1em;
@@ -318,14 +318,15 @@ input{
         background-position:7px -25px;
         
     }
-    p.help-icon{
-        
+    div.help-icon{
+        float:right;
         height: 22px;
         margin: 6px 0;
     }
-    p.help-icon a img{
+    div.help-icon img{
         width:16px;
         height:16px;
+        cursor:pointer;
         
     }
     #btn-add-suggestion{
@@ -509,6 +510,7 @@ input{
         ul#chronology li span.action-bar{
             font-size: 0.9em;
             padding-left: 0.5em;
+            visibility:hidden;
         }
             .timestamp{
                 color: #999;
@@ -887,7 +889,7 @@ input{
     #activity ul#friends-to-follow{
         list-style:none;
         margin:0;
-        padding:5px;
+        padding:0;
         font-size:1.1em
     }
     #activity ul#friends-to-follow li{
@@ -902,7 +904,7 @@ input{
     }
     #activity ul#friends-to-follow li img{
         width:50px;
-        margin: 1em 0;
+        margin: 0.2em 0;
     }
     #activity ul#friends-to-follow div.user-data{
         margin-left: 10px;
@@ -1043,6 +1045,41 @@ input{
     #public-profile p{
         margin:0;
     }
+    
+    #his_suggestions_content div.avatar img{
+        margin-top: 5px;
+        
+    }
+    #his_suggestions_content div.timeline-msg{
+        border:0;
+    }
+    #his_suggestions_content div.avatar{
+        border-bottom: 0 none;
+        display: block;
+        float: left;
+        height: 50px;
+        margin: 0 1em 0 0;
+        text-align: left;
+        width: 50px;
+        border:0;
+    }
+    #his_suggestions_content span.small-text a{
+        color:#555;
+        text-decoration:none;
+        font-weight:bold;
+    }
+    
+    
+    #his_suggestions_content ul{
+        list-style: none outside none;
+        padding: 0;
+        margin: 0;
+    }
+    #his_suggestions_content ul li{
+        border-bottom: 1px solid #CCCCCC;
+        font-size: 1.1em;
+        padding: 0.5em 1em;
+    }
     div#avatar-follow{
         display: inline-block;
         margin: 15px 15px 5px 0;
@@ -1087,6 +1124,37 @@ input{
         color:#555;
         text-decoration:none;
     }
+    ul#user-resume li:hover{
+        
+        background-color:#eee;
+    }
+    
+    div#right-col #public-profile ul#social-networks{
+        list-style: none outside none;
+        margin: 5px 0;
+        padding: 0;
+    }
+    div#right-col #public-profile ul#social-networks li{
+        display: inline-block;
+        margin-right: 1em;
+    }
+    div#right-col #public-profile ul#social-networks li a{
+        font-weight:normal;
+        background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 0 transparent;
+        padding-left: 20px;
+        width:70px;
+    }
+    
+    div#right-col #public-profile ul#social-networks li a#twitter-icon{
+        background-position: 0 0;
+    }
+    div#right-col #public-profile ul#social-networks li a#google-icon{
+        background-position: 0 -16px;
+    }
+    div#right-col #public-profile ul#social-networks li a#facebook-icon{
+    
+        background-position: 0 -32px;
+    }
     
     #suggestion-list{
 /*
@@ -1119,6 +1187,8 @@ input{
     }
     #user-info{
         display: block;
+        float: left;
+        width: 425px;
 /*
         float: left;
 */
@@ -1126,6 +1196,42 @@ input{
         width: 475px;
 */
     }
+    
+            span#his_suggestions_content span.action-bar span{
+                color:#0011FF;
+                margin: 0 0.3em;
+                text-decoration:none;
+                font-size:11px;
+            }
+            span#his_suggestions_content ul li span.action-bar span:hover, span.action-bar a:hover{
+                text-decoration:underline;
+                cursor:pointer;
+            }
+            span#his_suggestions_content ul li span.action-bar span.like-dislike{
+                margin:0;
+            }
+            span#his_suggestions_content ul li span.action-bar span.like-dislike:hover{
+                text-decoration:none;
+            }
+            
+            span#his_suggestions_content ul li span.like-text{
+                background: url("/static/facebookApp/img/like_min.png") no-repeat scroll -2px 1px transparent;
+                color: black;
+                display: inline-block;
+                margin-left: 0;
+                padding-left: 15px;
+            }
+            span#his_suggestions_content ul li span.action-bar span.like-text:hover{
+                text-decoration:none;
+                cursor:default;
+            }
+            span#his_suggestions_content ul li span.action-bar a.comment{
+                background: url("/static/facebookApp/img/icons/comments.png") no-repeat scroll 0 2px transparent;
+                display: inline-block;
+                padding-left: 20px;
+            }
+    
+    
     /****************************
      *      
      *  Add suggestion panel
@@ -1356,17 +1462,17 @@ input{
     ul#tabMenu{
         margin:0;
         padding:0;
+        border-bottom: 1px dotted #DDDDDD;
         
     }
         ul#tabMenu li{
-            border-left: 1px dotted #aaa;
-            border-right: 1px dotted #aaa;
-            border-top: 1px dotted #aaa;
+            background-color: #EEEEEE;
+            border: 1px dotted #DDDDDD;
+            color: blue;
+            cursor: pointer;
             display: inline-block;
+            font-weight: normal;
             padding: 0.5em 1em 0.2em;
-            font-weight:bold;
-            background-color: #ccc;
-            cursor:pointer;
         }
         ul#tabMenu li:hover{
             text-decoration:underline;
@@ -1374,14 +1480,15 @@ input{
         }
         ul#tabMenu li.active{
             background-color: white;
+            color: black;
+            font-weight: bold;
+            border-bottom: 0;
         }
         
     div#content{
-        border:1px dotted #aaa;
-/*
-        border-right:1px dotted #aaa;
-        border-left:1px dotted #aaa;
-*/
+        border-bottom:1px dotted #ddd;
+        border-right:1px dotted #ddd;
+        border-left:1px dotted #ddd;
     }
         div#content div.tab-content{
         }

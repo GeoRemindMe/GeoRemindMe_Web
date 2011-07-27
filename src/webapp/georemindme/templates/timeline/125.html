@@ -14,7 +14,8 @@ Mensaje nº 125
         <div class="avatar">
             <a href="/fb/user/{{request.user}}" title="{{request.user}}">
                 <img src="/user/{{request.user}}/picture/" alt="{{request.user}} avatar"/>
-            </a>
+            </a><br>
+            <a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a>:
         </div>
         <div class="timeline-msg">
             <span class="small-text">Te ha gustado el comentario  de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>:</span>
@@ -26,11 +27,11 @@ Mensaje nº 125
             </a>
         </div>
         <div class="timeline-msg">
-            <span class="small-text">A <a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a> le ha gustado 
+            <span class="small-text">Me gusta 
             {% if obj.instance.instance.user.username = request.user.username %}
                 <strong>tu comentario</strong>:
             {% else %}
-                el comentario  de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>:
+                el comentario de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>:
             {% endif %}
             </span>
             

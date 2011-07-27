@@ -41,7 +41,7 @@ function resizeIframe() {
     //~ tam=tam+250;
     //~ console.log('Resize to '+tam);
     FB.Canvas.setSize({ height: tam });
-
+    $('#right-col').css('min-height',tam+'px');
     
 }
 

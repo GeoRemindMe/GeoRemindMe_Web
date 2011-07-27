@@ -14,7 +14,23 @@ $(document).ready(function(){
         
     });
 
-
+    $('#chronology li').hover(
+        function(){$(this).find('.action-bar').css('visibility','visible')},
+        function(){$(this).find('.action-bar').css('visibility','hidden')}
+    )
+    
+    $('.help-txt').dialog({
+            autoOpen:false,
+			resizable: false,
+            modal:true,
+            draggable: false,
+			width:600,
+            position: ['middle', 100]
+    });
+    
+    $('.help-icon img').click(function(){
+        $('#'+$(this).attr('id')+'-text').dialog("open");
+    })
     //Al pulsar en comentar ponemos el foco en el input
     $('.focusInput').click(function(){
         var commentBox=$(this).parentsUntil('.suggestion-element').parent().find('.input-box')
