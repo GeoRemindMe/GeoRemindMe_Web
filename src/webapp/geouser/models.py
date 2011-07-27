@@ -222,7 +222,7 @@ class User(polymodel.PolyModel, HookedModel):
     
     def get_notifications_timeline(self, page=1, query_id=None):
         from models_utils import _Notification
-        q = _Notification.all().filter('owner =', self)
+        q = _Notification.all().filter('owner =', self).order('-_created')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
