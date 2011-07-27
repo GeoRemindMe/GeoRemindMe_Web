@@ -1,18 +1,21 @@
 {% load humanize %}
 
+<!--
 Mensaje nº 120
+-->
 <!--
 120: Ha hecho un comentario en una sugerencia | UT
 -->
 
-{% if obj.is_private %}
+{% if obj.instance.user.username = request.user.username %}
     <div class="avatar">
         <a href="/fb/user/{{request.user}}" title="{{request.user}}">
             <img src="/user/{{request.user}}/picture/" alt="{{request.user}} avatar"/>
         </a>
     </div>
+    <div class="removable" value="{{obj.instance.id}}" type="comment"><a href="#">Remove</a></div>
     <div class="timeline-msg">
-        Has añadido:<br>
+        <span class="small-text">Has añadido:</span><br>
 {% else %}
     <div class="avatar">
         <a href="/fb/user/{{obj.instance.user.username}}" title="{{obj.instance.user.username}}">
@@ -20,31 +23,39 @@ Mensaje nº 120
         </a>
     </div>
     <div class="timeline-msg">
-        <a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a> ha añadido:<br>
+        <span class="small-text"><a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a> ha añadido:</span><br>
 {% endif %}
+        
 
-    <em class="comment">{{obj.instance.msg}}</em><br>
+        <em class="comment">{{obj.instance.msg}}</em><br>
 
 
-    <span class="suggestionPlace">En la sugerencia: {{obj.instance.instance.name|truncatewords:10}} </span><br>
-    
-    
-    <span class="timestamp"> hace {{obj.created|timesince}}</span>
-    <span class="action-bar">
-        | <a href="/fb/suggestion/{{obj.instance.instance.id}}">Ver sugerencia</a> 
-        {% if not obj.is_private %}
-            | 
-            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="comment">
-                <span class="dislike">
-                    <span class="hoverlink">Ya no me gusta</span> 
-                    <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
-                </span>
-                
-                <span class="like">
-                    Me gusta
-                </span>
-            </span>
+        <span class="small-text">
+        En
+        {% if obj.instance.instance.user.username = request.user.username %}
+            <strong> tu sugerencia</strong>
+        {% else %}
+            la sugerencia
         {% endif %}
-    </span>
-</div>
+        : {{obj.instance.instance.name|truncatewords:10}} </span><br>
+        
+        
+        <span class="timestamp"> hace {{obj.created|timesince}}</span>
+        <span class="action-bar">
+            | <a href="/fb/suggestion/{{obj.instance.instance.id}}">Ver sugerencia</a> 
+            {% if not obj.is_private %}
+                | 
+                <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="comment">
+                    <span class="dislike">
+                        <span class="hoverlink">Ya no me gusta</span> 
+                        <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
+                    </span>
+                    
+                    <span class="like">
+                        Me gusta
+                    </span>
+                </span>
+            {% endif %}
+        </span>
+    </div>
 

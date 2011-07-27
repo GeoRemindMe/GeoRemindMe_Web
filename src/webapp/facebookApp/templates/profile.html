@@ -50,16 +50,16 @@
                             <span  onclick="javascript:follow('follow',{{profile.parent.id}})"><a href="#" class="no-following">Seguir</a></span>
                         </div>
                     {% endif %}
+                {% else %}
+                    
+                    <span class="btn"><a href="/fb/user/edit/" id="edit-profile-btn">Editar</a> </span>
+                    
                 {% endifnotequal %}
             </div>
+            
             <div id="user-info">
                 <h1>{{profile.parent.username}}</h1>
-                {% ifequal user.username profile.parent.username %}
-                    <a href="/fb/user/edit/" class="rounded-button" id="edit-profile-btn">Editar</a> 
-                {% endifequal %}
-                {% if profile.description %}
-                    <p>{{profile.description}}</p>
-                {% endif %}
+                
             
         
             
@@ -70,10 +70,14 @@
 <!--
         <div id="col-right-right">
 -->
-            <p>
-                <a href="/fb/user/{{profile.parent.username}}/followers/">{{counters.followers}} seguidores.</a>
-                <a href="/fb/user/{{profile.parent.username}}/followings/">{{counters.followings}} siguiendo.</a>
-            </p>
+            <ul id="user-resume">
+                <li><a href=""><span id="counter">{{counters.influenced}}</span> impactos</a></li>
+                <li><a href="/fb/user/{{profile.parent.username}}/followers/"><span id="counter">{{counters.followers}}</span> seguidores</a></li>
+                <li><a href="/fb/user/{{profile.parent.username}}/followings/"><span id="counter">{{counters.followings}}</span> siguiendo</a></li>
+            </ul>
+            {% if profile.description %}
+                    <p>{{profile.description}}</p>
+                {% endif %}
             <p>
                 <span>También está en:</span>
                 {% if profile.sociallinks.facebook %}

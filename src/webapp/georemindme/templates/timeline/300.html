@@ -1,4 +1,6 @@
+<!--
 Mensaje nº 300
+-->
 <!--
 300: Nueva sugerencia
 -->
@@ -10,17 +12,14 @@ Mensaje nº 300
 </div>
 <div class="timeline-msg">
     <!--Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar-->
-    {% if not obj.is_private %}
-
-            
-
-        
-        <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> sugiere: 
-    {% else %}
+    
+    {% if obj.instance.user.username = request.user.username %}
         <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
-        has creado la sugerencia: 
+        <span class="small-text">has creado la sugerencia: </span>
+    {% else %}
+        <span class="small-text"><a href="/fb/user/{{obj.username}}">{{obj.username}}</a> sugiere: </span>
     {% endif %}
-
+    
 
 
     <br>{{obj.instance}}<br>
@@ -51,7 +50,7 @@ Mensaje nº 300
                 </span>
             </span>
             
-            | <span onclick="" title="Guardar en favoritos" class="save">Recordar</span>
+            | <span onclick="" title="Guardar en favoritos" class="save">Guardar</span>
         {% endif %}
     </span>
 

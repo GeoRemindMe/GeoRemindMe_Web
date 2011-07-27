@@ -1,5 +1,7 @@
 {% load humanize %}
+<!--
 Mensaje nº 125
+-->
 <!--
 125: A [X] le gusta un comentario | UT
 -->
@@ -8,14 +10,14 @@ Mensaje nº 125
     <!--
         Si me gusta un comentario mío no se muestra
     -->
-    {% if obj.is_private %}
+    {% if obj.instance.user.username = request.user.username %}
         <div class="avatar">
             <a href="/fb/user/{{request.user}}" title="{{request.user}}">
                 <img src="/user/{{request.user}}/picture/" alt="{{request.user}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">
-            Te ha gustado el comentario  de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>: <br>
+            <span class="small-text">Te ha gustado el comentario  de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>:</span>
         
     {% else %}
         <div class="avatar">
@@ -24,15 +26,17 @@ Mensaje nº 125
             </a>
         </div>
         <div class="timeline-msg">
-            A <a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a> le ha gustado 
+            <span class="small-text">A <a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a> le ha gustado 
             {% if obj.instance.instance.user.username = request.user.username %}
-                <strong>tu comentario</strong>:<br>
+                <strong>tu comentario</strong>:
             {% else %}
-                el comentario  de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>:<br>
+                el comentario  de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>:
             {% endif %}
+            </span>
+            
             
     {% endif %}
-            <em>{{obj.instance.instance.msg}}</em><br>
+            <br><em class="comment">{{obj.instance.instance.msg}}</em><br>
             <span class="suggestionPlace">
                 En la sugerencia: {{obj.instance.instance.instance.name|truncatewords:10}} <br>
             </span>

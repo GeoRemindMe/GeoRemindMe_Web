@@ -1,4 +1,6 @@
+<!--
 Mensaje nº 305:
+-->
 <!--
 Te gusta una sugerencia
 obj.instance==geovote.models.Vote
@@ -8,15 +10,15 @@ obj.instance==geovote.models.Vote
     Evitamos que se muestre duplicado un "Te gusta la sugerencia X"
 {% else %}
 
-    {% if obj.is_private %}
+    {% if obj.instance.user.username = request.user.username %}
         <!-- Es de mi timeline -->        
         <div class="avatar">
             <a href="/fb/user/request.user" title="Ver perfil en GeoRemindMe">
-                <img src="/user/request.user/picture/" alt="request.user avatar"/>
+                <img src="/user/{{request.user}}/picture/" alt="{{request.user}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">
-            Te gusta la sugerencia de <a href="/fb{{obj.instance.instance.user.get_absolute_url}}">{{obj.instance.instance.user}}</a>:<br>
+            <span class="small-text">Te gusta la sugerencia de <a href="/fb{{obj.instance.instance.user.get_absolute_url}}">{{obj.instance.instance.user}}</a>:</span>
     {% else %}
         <div class="avatar">
             <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
@@ -24,15 +26,17 @@ obj.instance==geovote.models.Vote
             </a>
         </div>
         <div class="timeline-msg">
-            A <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> le ha gustado 
-            {% if obj.instance.instance.user.username = request.user.username %}
-                <strong>tu sugerencia</strong>:<br>
-            {% else %}
-                la sugerencia de <a href="/fb{{obj.instance.instance.user.get_absolute_url}}">{{obj.instance.instance.user}}</a>:<br>
-            {% endif %}
+            <span class="small-text">
+                A <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> le ha gustado 
+                {% if obj.instance.instance.user.username = request.user.username %}
+                    <strong>tu sugerencia</strong>:<br>
+                {% else %}
+                    la sugerencia de <a href="/fb{{obj.instance.instance.user.get_absolute_url}}">{{obj.instance.instance.user}}</a>:
+                {% endif %}
+            </span>
     {% endif %}
             
-            {{obj.instance.instance}} <br>
+            <br>{{obj.instance.instance}} <br>
             <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.instance.poi.slug}}">{{obj.instance.instance.poi.name}}</a></span><br>
             <span class="timestamp">hace {{obj.created|timesince}}</span> <span class="action-bar">| <a href="/fb/suggestion/{{obj.instance.instance.id}}">Ver sugerencia</a></span>
         </div>
