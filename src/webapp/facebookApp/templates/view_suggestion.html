@@ -16,43 +16,7 @@
         GRM.init();
        
         resizeIframe();
-    });
-    
-    function vote(type,obj,value){
-        var element_id=obj.attr('value')
-        
-        $.ajax({
-                type: "POST",
-                url: "/ajax/vote/"+type+"/",
-                data: {
-                    instance_id:element_id,
-                    puntuation: value,
-                },
-                complete: function(msg){
-                    if (msg.status !=200){
-
-                    }else{
-                        console.log(msg.responseText)
-                        //if(msg.responseText!=false){
-                            action=obj.attr('class')
-                            obj.addClass('hidden')
-                            
-                            if(action=="LikeComment")
-                                obj.parent().find(".dontLikeComment").removeClass('hidden')
-                            else if (action=="dontLikeComment")
-                                obj.parent().find(".LikeComment").removeClass('hidden')
-                                
-                            if(action=="LikeSuggestion likeBtn btn")
-                                obj.parent().find(".dontLikeSuggestion").removeClass('hidden')
-                            else if (action=="dontLikeSuggestion likeBtn btn")
-                                obj.parent().find(".LikeSuggestion").removeClass('hidden')
-                        //}
-                    }
-                    
-                }
-            });
-    }
-    
+    });    
     
     function sendComment(obj){
         if($('#msg').val()=="")

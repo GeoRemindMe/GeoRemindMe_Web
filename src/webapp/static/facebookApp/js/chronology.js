@@ -108,43 +108,6 @@ function resetInput(obj){
     
     $(obj).focusout()
 }
-function vote(type,obj,value){
-    var element_id=obj.attr('value')
-    
-    $.ajax({
-            type: "POST",
-            url: "/ajax/vote/"+type+"/",
-            data: {
-                instance_id:element_id,
-                puntuation: value,
-            },
-            dataType:'json',
-            success: function(msg){
-                //console.log(msg)
-                //if(msg!=false){
-                    action=obj.attr('class')
-                    obj.addClass('hidden')
-                    
-                    if(action=="LikeComment")
-                        obj.parent().find(".dontLikeComment").removeClass('hidden')
-                    else if (action=="dontLikeComment")
-                        obj.parent().find(".LikeComment").removeClass('hidden')
-                        
-                    if(action=="LikeSuggestion")
-                        obj.parent().find(".dontLikeSuggestion").removeClass('hidden')
-                    else if (action=="dontLikeSuggestion")
-                        obj.parent().find(".LikeSuggestion").removeClass('hidden')
-                //}
-            },
-            error:function(){
-            }
-            
-        });   
-}
-
-
-
-
 
 function sendComment2(textarea,suggestion_id){
     if(textarea.val()=="")
