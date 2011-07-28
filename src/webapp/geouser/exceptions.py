@@ -1,5 +1,11 @@
 # coding:utf-8
 
+"""
+.. module:: Exceptions
+    :platform: appengine
+    :synopsis: Excepciones lanzadas por geouser
+"""
+
 
 class OutdatedCode(Exception):
     value = "This code is outdated"

@@ -1,16 +1,21 @@
 # coding=utf-8
 
+"""
+.. module:: models_social
+    :platform: appengine
+    :synopsis: Modelos con los datos de las redes sociales
+"""
+
+
 from django.utils.translation import gettext_lazy as _
 
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
-
 from models import User
-from signals import *
 
-class SocialUser(polymodel.PolyModel):
-    
+
+class SocialUser(polymodel.PolyModel):    
     uid = db.StringProperty(required=False)
     email = db.EmailProperty(required=False)
     realname = db.TextProperty()
@@ -42,6 +47,7 @@ class GoogleUserHelper():
         ugoogle = GoogleUser.get_by_key_name('gu%s' % uid)
         return ugoogle
     
+    
 class GoogleUser(SocialUser):
     """USERS FROM A GOOGLE ACCOUNT"""
     user = db.ReferenceProperty(User)
@@ -58,6 +64,7 @@ class GoogleUser(SocialUser):
             ugoogle.put()
             return ugoogle
         ugoogle = db.run_in_transaction(_tx)
+        from signals import user_social_new
         user_social_new.send(sender=ugoogle)
         return ugoogle    
     
@@ -74,14 +81,14 @@ class GoogleUser(SocialUser):
 
     
 class FacebookUserHelper():
-    
     def get_by_id(self, uid):
         """Search and returns a User object with that email"""
         if uid is None:
             raise db.BadValueError("Wrong id")
         ufacebook = FacebookUser.get_by_key_name('fu%s' % uid)
         return ufacebook
-    
+
+
 class FacebookUser(SocialUser):
     """USERS FROM FACEBOOK"""
     user = db.ReferenceProperty(User)
@@ -109,6 +116,7 @@ class FacebookUser(SocialUser):
             ufacebook.put()
             return ufacebook
         ufacebook = db.run_in_transaction(_tx)
+        from signals import user_social_new
         user_social_new.send(sender=ufacebook)
         return ufacebook
     
@@ -119,7 +127,6 @@ class FacebookUser(SocialUser):
 
 
 class TwitterUserHelper():
-    
     def get_by_id(self, uid):
         """Search and returns a User object with that email"""
         if uid is None:
@@ -127,7 +134,7 @@ class TwitterUserHelper():
         utwitter = TwitterUser.get_by_key_name('tu%s' % uid)
         return utwitter
 
-        
+
 class TwitterUser(SocialUser):
     """USER FROM TWITTER"""
     user = db.ReferenceProperty(User)
@@ -152,6 +159,7 @@ class TwitterUser(SocialUser):
             utwitter.put()
             return utwitter
         utwitter = db.run_in_transaction(_tx)
+        from signals import user_social_new
         user_social_new.send(sender=utwitter)
         return utwitter         
     

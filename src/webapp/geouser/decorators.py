@@ -1,6 +1,5 @@
 # coding=utf-8
 
-from django.http import HttpResponseRedirect
 """
 .. module:: decorators
     :platform: appengine
@@ -8,7 +7,8 @@ from django.http import HttpResponseRedirect
     It is used to check if a user is logged in or not
 """
 
-from libs.decorator import *
+from libs.decorator import decorator
+
 
 @decorator
 def login_required(func, *args, **kwargs):
@@ -18,6 +18,7 @@ def login_required(func, *args, **kwargs):
         return func(*args, **kwargs)
     from views import login
     return login(args[0])
+
     
 @decorator
 def admin_required(func, *args, **kwargs):

@@ -1,9 +1,10 @@
 # coding=utf-8
-from google.appengine.ext import db
 
-from georemindme.paging import *
-from models import User
-from models_acc import UserFollowingIndex
+"""
+.. module:: helpers
+    :platform: appengine
+    :synopsis: Helpers de models
+"""
 
 
 class UserHelper(object):
@@ -11,6 +12,7 @@ class UserHelper(object):
         Use ->  User.objects.method()
     """
     def get_by_key(self, key):
+        from models import User
         try:
             return User.get(key)
         except:
@@ -21,7 +23,9 @@ class UserHelper(object):
             return None
         username = username.lower()
         if keys_only:
+            from google.appengine.ext import db
             return db.GqlQuery('SELECT __key__ FROM User WHERE username = :1', username).get()
+        from models import User
         return User.gql('WHERE username = :1', username).get()
     
     def get_by_id(self, userid, keys_only=False):
@@ -29,7 +33,9 @@ class UserHelper(object):
             userid = long(userid)
         except:
             return None
+        from models import User
         if keys_only:
+            from google.appengine.ext import db
             return db.Key.from_path(User.kind(), userid)
         return User.get_by_id(userid)
     
@@ -41,6 +47,7 @@ class UserHelper(object):
             return None
         email = email.lower()
         if keys_only:
+            from google.appengine.ext import db
             return db.GqlQuery('SELECT __key__ FROM User WHERE email = :1', email).get()
         return self._get().filter('email =', email).get()       
     
@@ -52,10 +59,10 @@ class UserHelper(object):
             return None
         email = email.lower()
         if keys_only:
+            from google.appengine.ext import db
             return db.GqlQuery('SELECT __key__ FROM User WHERE email = :1 AND has=\'confirmed:F\'', email).get()
         return self._get().filter('email =', email).filter('has =', 'confirmed:F').get()
         
-    
     def get_followers(self, userid = None, username=None, page=1, query_id=None):
         """Obtiene la lista de followers de un usuario
             
@@ -71,12 +78,16 @@ class UserHelper(object):
             
             :raises: AttributeError
         """
+        from google.appengine.ext import db
         if username is not None:
             userkey = self.get_by_username(username, keys_only=True)
         elif userid is not None:
+            from models import User
             userkey = db.Key.from_path(User.kind(), userid)
         else:
             raise AttributeError()
+        from georemindme.paging import PagedQuery
+        from models_acc import UserFollowingIndex
         followers = UserFollowingIndex.gql('WHERE following = :1 ORDER BY created DESC', userkey)
         p = PagedQuery(followers, id = query_id)
         return [p.id, [{'id':u.id, 
@@ -101,18 +112,23 @@ class UserHelper(object):
             
             :raises: AttributeError
         """
+        from google.appengine.ext import db
         if username is not None:
             userkey = self.get_by_username(username, keys_only=True)
         elif userid is not None:
+            from models import User
             userkey = db.Key.from_path(User.kind(), userid)
         else: 
             raise AttributeError()
+        from georemindme.paging import PagedQuery
+        from models_acc import UserFollowingIndex
         followings = UserFollowingIndex.all().ancestor(userkey).order('-created')
         p = PagedQuery(followings, id = query_id)
         users = [db.get(index.following) for index in p.fetch_page(page)]  # devuelve una lista anidada con otra
         return [p.id, [{'id':u.id, 'username':u.username, 
                         'avatar':u.profile.avatar, 'profile':u.profile }
                         for sublist in users for u in sublist]]
-    
+
     def _get(self, string=None):
+        from models import User
         return User.all().filter('has =', 'active:T')

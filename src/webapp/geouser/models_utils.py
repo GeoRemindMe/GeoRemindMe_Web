@@ -1,10 +1,16 @@
 # coding=utf-8
 
+"""
+.. module:: models_utils
+    :platform: appengine
+    :synopsis: Modelos auxiliares
+"""
+
 from django.utils.translation import gettext_lazy as _
 
 from google.appengine.ext import db
 from models import User
-from google.appengine.ext import deferred
+
 
 class _Notification(db.Model):
     from models_acc import UserTimelineBase
@@ -50,6 +56,7 @@ class _Report_Account_follower(db.Model):
     
     @classmethod
     def insert_or_update(cls, userkey, add=None, delete=None):
+        from google.appengine.ext import deferred
         if not isinstance(userkey, db.Key):
             raise deferred.PermanentTaskFailure
         report = cls.get_by_key_name('report_account_follower_%d' % userkey.id())
@@ -101,6 +108,7 @@ class _Report_Suggestion_changed(db.Model):
 
     @classmethod
     def insert_or_update(cls, userkey, suggestionkey):
+        from google.appengine.ext import deferred
         if not isinstance(suggestionkey, db.Key) or not isinstance(userkey, db.Key):
             raise deferred.PermanentTaskFailure
         report = cls.get_by_key_name('report_suggestion_changed_%d' % suggestionkey.id())
@@ -139,6 +147,7 @@ class _Report_Suggestion_commented(db.Model):
 
     @classmethod
     def insert_or_update(cls, userkey, suggestionkey, time):
+        from google.appengine.ext import deferred
         if not isinstance(suggestionkey, db.Key) or not isinstance(userkey, db.Key):
             raise deferred.PermanentTaskFailure
         report = cls.get_by_key_name('report_suggestion_commented_%d' % suggestionkey.id())

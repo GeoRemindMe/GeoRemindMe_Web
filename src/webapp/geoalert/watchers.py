@@ -102,23 +102,23 @@ suggestion_following_deleted.connect(deleted_following_suggestion)
 def new_privateplace(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=400)
     timeline.put()
-privateplace_new.connect(new_privateplace)
+#privateplace_new.connect(new_privateplace)
 
 def modified_privateplace(sender, **kwargs):    
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=401)
     timeline.put()
-privateplace_modified.connect(modified_privateplace)
+#privateplace_modified.connect(modified_privateplace)
 
 def deleted_privateplace(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=402)
     timeline.put()
-privateplace_deleted.connect(deleted_privateplace)
+#privateplace_deleted.connect(deleted_privateplace)
 
 def new_place(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=450)
     timeline.put()
     sender.insert_ft()
-place_new.connect(new_place)
+#place_new.connect(new_place)
 
 def modified_place(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=451)
@@ -128,7 +128,7 @@ def modified_place(sender, **kwargs):
 def deleted_place(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=452)
     timeline.put()
-place_deleted.connect(deleted_place)
+#place_deleted.connect(deleted_place)
 
 
 from models import *

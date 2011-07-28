@@ -1,17 +1,19 @@
 # coding=utf-8
 
-import memcache
+"""
+.. module:: models_acc
+    :platform: appengine
+    :synopsis: Modelos con los datos relacionados a una cuenta
+"""
+
 
 from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
 
-from georemindme.models_utils import *
+from georemindme.models_utils import HookedModel, Visibility
 from georemindme.decorators import classproperty
-from signals import user_timeline_new
 from models import User
 
-# import code for encoding urls and generating md5 hashes for GRAVATAR
-import urllib, hashlib
 
 TIME_CHOICES = ('never', 'instant', 'daily', 'weekly', 'monthly')
 class UserSettings(HookedModel):
@@ -36,17 +38,18 @@ class UserSettings(HookedModel):
     created = db.DateTimeProperty(auto_now_add=True)
     
     _scgoogleplaces = None
+
     
     @property
     def searchconfig_google(self):
         if self._scgoogleplaces is None:
             self._scgoogleplaces = SearchConfigGooglePlaces.all().ancestor(self.key()).get()
         return self._scgoogleplaces
-    
+
     @classproperty
     def objects(self):
         return UserSettingsHelper()
-    
+
     @property
     def user_id(self):
         return int(self.key().name().split('settings_')[1])
@@ -87,7 +90,6 @@ class UserSettings(HookedModel):
             from geouser.models_utils import _Report_Suggestion_changed
             _Report_Suggestion_changed.insert_or_update(self.parent().key(), suggestionkey)
     
-           
     def notify_suggestion_comment(self, commentkey):
         if self.time_notification_suggestion_comment == 'never':
             return
@@ -103,8 +105,9 @@ class UserSettings(HookedModel):
         else:
             from geouser.models_utils import _Report_Suggestion_commented
             _Report_Suggestion_commented.insert_or_update(self.parent().key(), comment.instance, comment.created)
-                
+
     def _post_put(self, **kwargs):
+        import memcache
         memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)
         
 
@@ -119,43 +122,42 @@ class UserProfile(HookedModel):
     created = db.DateTimeProperty(auto_now_add=True)
     
     _sociallinks = None
-    
+
     @classproperty
     def objects(self):
         return UserProfileHelper()
-    
+
     @property
     def sociallinks(self):
         if self._sociallinks is None:
             self._sociallinks = UserSocialLinks.all().ancestor(self.key()).get()
         return self._sociallinks
-    
+
     def sociallinks_async(self):
         q = UserSocialLinks.all().ancestor(self.key())
         return q.run()
-        
-#    def __init__(self, *args, **kwargs):
-#        super(self.__class__, self).__init__(*args, **kwargs)
 
-    def _update_gravatar(self):
-        parent = self.parent()
-        if parent is not None and parent.email is not None:
-            email = parent.email
-            default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
-            size = 50
-            # construct the url
-            gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
-            gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
-            self.avatar = gravatar_url
-        
-    def _update_facebook(self):
-        parent = self.parent()
-        if parent.facebook_user is not None:
-            self.avatar = "https://graph.facebook.com/%s/picture/" % parent.facebook_user.uid
-        else:
-            self.avatar = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
-            
+#    def _update_gravatar(self):
+#        parent = self.parent()
+#        if parent is not None and parent.email is not None:
+#            email = parent.email
+#            default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
+#            size = 50
+#            # construct the url
+#            gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+#            gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
+#            self.avatar = gravatar_url
+#    
+#        
+#    def _update_facebook(self):
+#        parent = self.parent()
+#        if parent.facebook_user is not None:
+#            self.avatar = "https://graph.facebook.com/%s/picture/" % parent.facebook_user.uid
+#        else:
+#            self.avatar = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
+
     def _post_put(self, **kwargs):
+        import memcache
         memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)    
     
 
@@ -216,7 +218,7 @@ class UserCounter(db.Model):
         setattr(obj, prop, value)
         db.put_async(obj)
         return value
-        
+    
     def set_suggested(self, value=1):
         return db.run_in_transaction(self._change_counter, 'suggested', value)
     
@@ -230,7 +232,7 @@ class UserCounter(db.Model):
     def set_influenced(self, value=1):
         from georemindme.models_utils import ShardedCounter
         return ShardedCounter.increase_counter('%s_influenced'% self.parent().key(), value)
-        
+    
     def set_followings(self, value=1):
         return db.run_in_transaction(self._change_counter, 'followings', value)
     
@@ -347,6 +349,7 @@ class UserTimelineSystem(UserTimelineBase):
 #                }
 #        return _msg_ids[self.msg_id]
 
+
 #Equivale al Muro o a los del Perfil
 class UserTimeline(UserTimelineBase, Visibility):
     msg = db.TextProperty(required=False)
@@ -446,6 +449,7 @@ class UserTimeline(UserTimelineBase, Visibility):
 #        else:
 #            return self._msg
     
+    
     @classproperty
     def objects(self):
         return UserTimelineHelper()
@@ -453,7 +457,6 @@ class UserTimeline(UserTimelineBase, Visibility):
     def __str__(self):
         return '%s - %s' % (self.created.strftime("%B %d, %Y"), self.msg)
 
-    
     def notify_followers(self):
         if self._is_public():
             if UserTimelineFollowersIndex.all().ancestor(self.key()).count() != 0:
@@ -485,10 +488,9 @@ class UserTimeline(UserTimelineBase, Visibility):
             super(self.__class__, self).put()
         else:  # si ya estaba guardada, no hay que volver a notificar
             super(self.__class__, self).put()
+            from signals import user_timeline_new
             user_timeline_new.send(sender=self)
             
-
-    
 
 class UserTimelineFollowersIndex(db.Model):
     followers = db.ListProperty(db.Key)
@@ -503,5 +505,6 @@ class SearchConfig(db.polymodel.PolyModel):
     
 class SearchConfigGooglePlaces(SearchConfig):
     type = db.TextProperty(choices = ('all', 'geocode', 'establishment'), default='establishment')
+
     
 from helpers_acc import *

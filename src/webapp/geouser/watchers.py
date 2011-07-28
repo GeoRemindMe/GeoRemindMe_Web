@@ -1,31 +1,41 @@
 # coding=utf-8
 
+"""
+.. module:: signals
+    :platform: appengine
+    :synopsis: Observadores de señales de geouser
+"""
+
 import logging
 
-from signals import *
-from exceptions import *
+from signals import user_new, user_social_new, user_follower_new, user_following_deleted, user_timeline_new
 
-from models_social import *
-from models_acc import *
 
 def new_user_registered(sender, **kwargs):
-    '''
-    Un nuevo usuario se registra, escribimos el primer timeline
-    '''
+    """
+        Captura la señal de un nuevo usuario registrado,
+        escribe el primer timeline
+    """
     if kwargs['status'] is None:
         logging.error('Problema registrando usuario %s') % sender.email
         sender.delete()
+        from exceptions import RegistrationException
         raise RegistrationException()
     sender.send_confirm_code()
+    from models_acc import UserTimelineSystem
     timeline = UserTimelineSystem(user = sender, msg_id=0)
     logging.info('Registrado nuevo usuario %s email: %s' % (sender.id, sender.email))
     timeline.put()
 user_new.connect(new_user_registered)
-    
+
+
 def new_social_user_registered(sender, **kwargs):
-    '''
-    Se da de alta un usuario de una red social 
-    '''
+    """
+        Captura la señal de un nuevo usuario de red social,
+        escribe su timeline
+    """
+    from models_acc import UserTimelineSystem
+    from models_social import GoogleUser, FacebookUser, TwitterUser
     if isinstance(sender, GoogleUser):
         timeline = UserTimelineSystem(user = sender.user, msg_id=1)
         logging.info('Usuario con email %s ahora tiene cuenta de Google: %s' % (sender.user.email, sender.uid))
@@ -42,9 +52,14 @@ user_social_new.connect(new_social_user_registered)
 
 
 def new_follower(sender, **kwargs):
-    '''
-    Sender empieza a seguir a un nuevo usuario
-    '''
+    """
+        Captura la señal de un nuevo seguidor
+        Escribe en el timeline de los dos usuarios.
+        Envia una notificacion al correo.
+        Escribe en el timeline de notificaciones
+    """
+    from google.appengine.ext import db
+    from models_acc import UserTimelineSystem, UserTimeline, UserSettings
     if not isinstance(kwargs['following'], db.Key):
         raise AttributeError
     timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=100)
@@ -65,9 +80,14 @@ user_follower_new.connect(new_follower)
 
 
 def deleted_following(sender, **kwargs):
-    '''
-    Sender deja de seguir a un nuevo usuario
-    '''
+    """
+        Captura la señal indicando que se ha dejado
+        de seguir a un usuario
+        Escribe en el timeline del usuario
+        En el caso de que no se enviara todavia la notificacion
+        al mail, se borra el mensaje de un nuevo seguidor.
+    """
+    from models_acc import UserTimelineSystem, UserTimeline
     timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=102)
     timeline.put()
     timelines = UserTimeline.all().filter('user =', sender).filter('msg_id =', 100).filter('instance =', kwargs['following']).run()
@@ -78,10 +98,12 @@ def deleted_following(sender, **kwargs):
         timeline.delete()
 user_following_deleted.connect(deleted_following)
 
+
 def new_timeline(sender, **kwargs):
-    '''
-    Sender ha escrito un nuevo timeline publico, notificar a los seguidores
-    '''
+    """
+        Captura la señal de un nuevo timeline
+        Añade a la cola de tareas de notificaciones
+    """
     if sender._is_public():
         from georemindme.tasks import NotificationHandler
         NotificationHandler().timeline_followers_notify(sender)

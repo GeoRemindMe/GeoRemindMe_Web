@@ -1,14 +1,13 @@
 # coding=utf-8
 
-from datetime import datetime, timedelta
+"""
+.. module:: Funcs
+    :platform: appengine
+    :synopsis: Funciones utiles utilizadas por geouser
+"""
+
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
-from django.contrib import messages
-
-from google.appengine.ext import db
-
-from models import User
 
 
 def get_next(request):
@@ -22,6 +21,7 @@ def get_next(request):
     elif 'next' in request.POST:
         return request.POST.get('next')
     else:
+        from django.core.urlresolvers import reverse
         return reverse('geouser.views.dashboard')
 
 
@@ -37,7 +37,7 @@ def init_user_session(request, user, remember=False, from_rpc=False, is_from_fac
     """
     request.session.init_session(remember, lang=user.settings.language, user=user, from_rpc=from_rpc, is_from_facebook=is_from_facebook)
     request.user = user
-    user.settings.put()
+    from datetime import datetime
     user.last_login = datetime.now()
     user.put()
 
@@ -49,6 +49,7 @@ def login_func(request, email = None, password = None, remember_me = False, user
             :param f: Login form
             :type user: :class:`georemindme.forms.LoginForm`
     """
+    from django.contrib import messages
     error = ''
     redirect = ''
     if user is not None:
@@ -56,11 +57,13 @@ def login_func(request, email = None, password = None, remember_me = False, user
         init_user_session(request, user, remember=remember_me)
         messages.success(request, _("Welcome, %s") % request.session['user'])
         return error, redirect
+    from models import User
     user = User.objects.get_by_email(email)
     if user is None:
         user = User.objects.get_by_username(email)
     if user:
         if user.check_password(password):
+            from datetime import datetime, timedelta
             if not user.is_confirmed() and user.created + timedelta(days=settings.NO_CONFIRM_ALLOW_DAYS) < datetime.now():
                 user.send_confirm_code()
                 if from_rpc:

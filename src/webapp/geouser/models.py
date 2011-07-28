@@ -1,5 +1,12 @@
 # coding=utf-8
-import memcache
+
+"""
+.. module:: models_acc
+    :platform: appengine
+    :synopsis: Modelos con los datos relacionados a una cuenta
+"""
+
+
 
 from datetime import datetime, timedelta
 
@@ -8,8 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
-from georemindme.models_utils import *
-from georemindme.funcs import make_random_string
+from georemindme.models_utils import HookedModel
 from georemindme.decorators import classproperty
 from properties import PasswordProperty, UsernameProperty
 from exceptions import *
@@ -60,24 +66,28 @@ class User(polymodel.PolyModel, HookedModel):
     @property
     def google_user(self):
         if self._google_user is None:
+            from models_social import GoogleUser
             self._google_user = GoogleUser.all().filter('user =', self).get()
         return self._google_user
     
     @property
     def facebook_user(self):
         if self._facebook_user is None:
+            from models_social import FacebookUser
             self._facebook_user = FacebookUser.all().filter('user =', self).get()
         return self._facebook_user
     
     @property
     def twitter_user(self):
         if self._twitter_user is None:
+            from models_social import TwitterUser
             self._twitter_user = TwitterUser.all().filter('user =', self).get()
         return self._twitter_user
     
     @property
     def profile(self):
         if self._profile is None:
+            import memcache
             self._profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, self.id)))
             if self._profile is None:
                 self._profile = UserProfile.all().ancestor(self.key()).get()
@@ -87,6 +97,7 @@ class User(polymodel.PolyModel, HookedModel):
     @property
     def settings(self):
         if self._settings is None:
+            import memcache
             self._settings = memcache.deserialize_instances(memcache.get('%ssettings_%s' % (memcache.version, self.id)))
             if self._settings is None:
                 self._settings = UserSettings.all().ancestor(self.key()).get() 
@@ -118,6 +129,7 @@ class User(polymodel.PolyModel, HookedModel):
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
         from geovote.models import Vote
+        from georemindme.paging import PagedQuery
         q = UserTimelineBase.all().filter('user =', self.key()).order('-modified')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         from geovote.models import Comment
@@ -146,6 +158,7 @@ class User(polymodel.PolyModel, HookedModel):
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
         from geovote.models import Vote, Comment
+        from georemindme.paging import PagedQuery
         q = UserTimelineSystem.all().filter('user =', self.key()).order('-modified')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
@@ -188,6 +201,7 @@ class User(polymodel.PolyModel, HookedModel):
         '''
         from geovote.models import Vote, Comment
         from geoalert.models import Suggestion
+        from georemindme.paging import PagedQuery
         q = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
@@ -222,6 +236,7 @@ class User(polymodel.PolyModel, HookedModel):
     
     def get_notifications_timeline(self, page=1, query_id=None):
         from models_utils import _Notification
+        from georemindme.paging import PagedQuery
         q = _Notification.all().filter('owner =', self).order('-_created')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
@@ -363,6 +378,7 @@ class User(polymodel.PolyModel, HookedModel):
         if self.email == '' or self.email is None:
             return None
         if not self.is_confirmed():
+            from georemindme.funcs import make_random_string
             self.confirm_code = make_random_string(length=24)
             if commit:
                 self.put()
@@ -383,6 +399,7 @@ class User(polymodel.PolyModel, HookedModel):
         '''
         if self.email == '' or self.email is None:
             return None
+        from georemindme.funcs import make_random_string
         self.remind_code = make_random_string(length=24)
         from datetime import datetime
         self.date_remind = datetime.now()
@@ -662,6 +679,9 @@ class User(polymodel.PolyModel, HookedModel):
     def get_absolute_url(self):
         if self.username is not None:
             return '/user/%s/' % str(self.username)
+            
+    def get_absolute_fburl(self):
+        return '/fb%s' % self.get_absolute_url()
         
     def get_friends_to_follow(self):
         friends = {}

@@ -1,11 +1,14 @@
 # coding=utf-8
 
-from django import forms
-from django.utils.translation import ugettext as _
-from django.conf import settings
-from google.appengine.ext.db import GeoPt, NotSavedError
+"""
+.. module:: Forms
+    :platform: appengine
+    :synopsis: Formularios para recibir datos
+"""
 
-from models import User
+from django import forms
+from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 
 
 class EmailForm(forms.Form):
@@ -41,6 +44,7 @@ class RecoverPassForm(forms.Form):
 
         return cleaned_data
 
+
 class LoginForm(forms.Form):
     """
         Form for the login process
@@ -53,6 +57,7 @@ class LoginForm(forms.Form):
                                      widget=forms.CheckboxInput(),
                                      initial = False
                                      )
+
 
 class RegisterForm(forms.Form):
     """
@@ -89,6 +94,7 @@ class RegisterForm(forms.Form):
         return cleaned_data
 
     def save(self, language='en', commit=True):
+        from models import User
         try:
             return User.register(email=self.cleaned_data['email'], password=self.cleaned_data['password'], language=language)
         except User.UniqueEmailConstraint, e:
@@ -98,6 +104,7 @@ class RegisterForm(forms.Form):
             fail = _(e.message)
             self._errors['email'] = self.error_class([fail])
             
+
 class SocialUserForm(forms.Form):
     '''
         Formulario para pedir un correo y username a los usuarios que entran desde una red social
@@ -149,6 +156,7 @@ class SocialUserForm(forms.Form):
             fail = _(e.message)
             self._errors['email'] = self.error_class([fail])
 
+
 AVATAR_CHOICES = (
           ('none', _('None')),
           ('facebook', _('Facebook')),
@@ -181,7 +189,6 @@ class UserProfileForm(forms.Form):
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
             fail = _(e.message)
             self._errors['email'] = self.error_class([fail])
-        
 
 
 class UserForm(forms.Form):
@@ -255,7 +262,8 @@ class UserForm(forms.Form):
                 return None
 
         return user
-    
+
+
 CHOICES = (
            ('never', _('Never')),
            ('instant', _('Instant')),
@@ -278,7 +286,6 @@ class UserSettingsForm(forms.Form):
             user.settings.time_notification_suggestion_comment = self.cleaned_data['time_notification_suggestion_comment']
             user.settings.time_notification_account = self.cleaned_data['time_notification_account']
             user.settings.language = self.cleaned_data['language']
-            
             user.settings.put()
         except:
             return False

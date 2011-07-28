@@ -1,11 +1,10 @@
 # coding=utf-8
 
-from google.appengine.ext import db
-
-from models_acc import *
-from models import User
-from georemindme.paging import *
-import memcache
+"""
+.. module:: helpers_acc
+    :platform: appengine
+    :synopsis: Helpers de los models_acc
+"""
 
 
 class UserSettingsHelper(object):
@@ -14,17 +13,17 @@ class UserSettingsHelper(object):
             userid = long(userid)
         except:
             return None
+        import memcache
         settings = memcache.deserialize_instances(memcache.get('%ssettings_%s' % (memcache.version, userid)))
         if settings is None:
+            from models_acc import UserSettings
+            from models import User
+            from google.appengine.ext import db
             key = db.Key.from_path(User.kind(), userid, UserSettings.kind(), 'settings_%s' % userid)
             settings = db.get(key)
             memcache.set('%s%s' % (memcache.version, settings.key().name()), memcache.serialize_instances(settings), 300)
         return settings
-        """
-        if async:
-            return db.get_async(key)
-        return db.get(key)
-        """
+
     
 class UserProfileHelper(object):
     def get_by_id(self, userid, async=False):
@@ -32,8 +31,12 @@ class UserProfileHelper(object):
             userid = long(userid)
         except:
             return None
+        import memcache
         profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, userid)))
         if profile is None:
+            from models_acc import UserProfile
+            from models import User
+            from google.appengine.ext import db
             key = db.Key.from_path(User.kind(), userid, UserProfile.kind(), 'profile_%s' % userid)
             profile = db.get(key)
             memcache.set('%s%s' % (memcache.version, profile.key().name()), memcache.serialize_instances(profile), 300)
@@ -50,18 +53,23 @@ class UserCounterHelper(object):
             userid = long(userid)
         except:
             return None
+        from models_acc import UserCounter
+        from models import User
+        from google.appengine.ext import db
         key = db.Key.from_path(User.kind(), userid, UserCounter.kind(), 'counters_%s' % userid)
         if async:
             return db.get_async(key)
         return db.get(key)
-    
+
+
 class UserTimelineHelper(object):
     def get_by_instance_user(self, instance, user):
+        from models import User
         if not isinstance(user, User):
             raise TypeError
+        from models_acc import UserTimelineBase
         return UserTimelineBase.all().filter('user =', user).filter('instance =', instance).run()
 
-        
     def get_by_id(self, userid, page=1, query_id = None, querier=None):
         '''
         Obtiene la lista de ultimos timeline del usuario
@@ -80,10 +88,15 @@ class UserTimelineHelper(object):
             return None
         from geovote.models import Vote, Comment
         from geoalert.models import Suggestion
+        from models_acc import UserTimeline
+        from models import User
+        from georemindme.paging import PagedQuery
+        from google.appengine.ext import db
         q = UserTimeline.all().filter('user =', db.Key.from_path(User.kind(), userid)).order('-created')
         p = PagedQuery(q, id = query_id, page_size=42)
         timelines = p.fetch_page(page)
         if querier is None:
+            from models_acc import UserTimelineSystem
             return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 

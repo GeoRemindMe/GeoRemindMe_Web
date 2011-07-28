@@ -114,7 +114,10 @@ class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
         return None
     
     def get_absolute_url(self):
-        return '/event/%s' % str(self.id)
+        return '/event/%s/' % str(self.id)
+    
+    def get_absolute_fburl(self):
+        return '/fb%s' % self.get_absolute_url()
     
 
 class Alert(Event):

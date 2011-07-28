@@ -291,7 +291,10 @@ class Place(POI):
         
 
     def get_absolute_url(self):
-        return '/place/%s' % self.slug
+        return '/place/%s/' % self.slug
+    
+    def get_absolute_fburl(self):
+        return '/fb%s' % self.get_absolute_url()
     
     
     @classmethod
