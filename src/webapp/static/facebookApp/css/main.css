@@ -1530,6 +1530,14 @@ input{
         border-bottom: 1px dotted #DDDDDD;
         
     }
+        ul#tabMenu li.clear-box{
+            background: none repeat scroll 0 0 transparent;
+            border: 0 none;
+            color: black;
+        }
+        ul#tabMenu li.clear-box:hover{
+            text-decoration:none;
+        }
         ul#tabMenu li{
             background-color: #EEEEEE;
             border: 1px dotted #DDDDDD;

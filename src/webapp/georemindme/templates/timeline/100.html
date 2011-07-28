@@ -1,6 +1,7 @@
 {% load humanize %}
 <!--
 Mensaje nº 100<br>
+{{obj}}
 -->
 <!--
 100: Usuario empieza a seguirte | UT
@@ -15,8 +16,9 @@ Mensaje nº 100<br>
             <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
         </a>
     </div>
-    {% if obj.username = request.username %}
-        Ahora estás a <a href="{% url fb_public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
+    
+    {% if obj.instance.username = request.user.username %}
+        <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ahora te está siguiendo<br>
     {% else %}
         <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ahora sigue a <a href="{% url fb_public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
     {% endif %}

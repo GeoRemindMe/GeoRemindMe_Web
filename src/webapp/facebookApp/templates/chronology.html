@@ -7,6 +7,49 @@
     <script src="/static/facebookApp/js/grm.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>   
     <script src="/static/facebookApp/js/chronology.js"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+            //Adding behaviour to tab content
+            $('#tabMenu li').click(function(){
+                tab_id=$('#tabMenu li.active').attr('id')
+                $('#'+tab_id+'_content').addClass('hidden');
+                $('#tabMenu li.active').removeClass('active');
+                
+                tab_id=$(this).attr('id')
+                $('#'+tab_id+'_content').removeClass('hidden');
+                $(this).addClass('active');
+            })
+            
+            $('#filter-suggestions').click(function(){
+                $('#chronology li.msg-300').show();
+                //Oculto todos aquellos que no son sugerencias
+                $('#chronology li').not('.msg-300').not('.suggestion-comment').hide();
+            });
+            
+            $('#filter-likes').click(function(){
+                $(':regex(class,(msg-125|msg-305))').show();
+                //Ocultamos aquellos que no son 125 ni 305
+                $('#chronology li').not('.msg-125').not('.msg-305').hide()  
+            });
+                
+            $('#filter-comments').click(function(){
+                $('#chronology li.msg-120').show();
+                //Oculto todos aquellos que no son sugerencias
+                $('#chronology li').not('.msg-120').hide();
+            });
+            
+            $('#no-filter').click(function(){
+                //Muestro todos
+                $('#chronology li').show();
+            });
+            
+                
+            
+        });
+    </script>
+    
 {%endblock%}
 
 {% block embed_js %}{%endblock%}
@@ -21,10 +64,19 @@
     <!--
             <p>{{chronology.1.0}} mensajes</p>
     -->
+            
+            <ul id="tabMenu" class="clear">
+                <li class="clear-box">Ver:</li>
+                <li id="no-filter" class="active">Todo</li>
+                <li id="filter-suggestions">Sugerencias</li>
+                <li id="filter-likes">Valoraciones</li>
+                <li id="filter-comments">Comentarios</li>
+                
+            </ul>
             <ul id="chronology">
             {% for obj in chronology.1 %}
                 {% if not obj.msg_id = 100 or not obj.is_private %}
-                    <li {% if forloop.last %} style="border:0" {% endif %}>
+                    <li {% if forloop.last %} style="border:0" {% endif %} class="msg-{{obj.msg_id}}">
                         {% timeline_item obj %}
                     </li>
                 {% endif %}
