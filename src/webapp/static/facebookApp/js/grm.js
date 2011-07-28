@@ -294,9 +294,52 @@ GRM.loadPage = function(params){
                         $('#prev-page').removeClass('hidden');
                     else
                         $('#prev-page').addClass('hidden');
+                    console.debug(data);
+                    if(data[2]<current_page)
+                        $('#next-page').removeClass('hidden');
+                    else
+                        $('#next-page').addClass('hidden');
                 }
             });
         }
+
+GRM.sendComment = function(type,text,id,callback){
+    
+    if(text=="")
+        return false;
+        
+    $(obj).text("Enviando")
+    $(obj).addClass("waiting")
+    
+    $.ajax({
+        type: "POST",
+        url: "/ajax/add/comment/"+type+"/",
+        data: {
+            instance_id:id,
+            msg:text },
+        dataType:'json',
+        success: function(response){
+            
+            var message=$('#msg').val()
+            $('#msg').val("")
+            
+            var c = $('#commentTemplate').tmpl(response).prependTo('#comment-list');
+            
+        
+            c.find(".like-dislike").like();
+            resizeIframe()
+            
+            if (typeof callback != "undefined")
+                callback();
+            
+            $(obj).text("Comentar")
+            $(obj).removeClass("waiting")
+        }
+    });
+
+    return true;
+}
+    
 
 jQuery.fn.like = GRM.like;
 jQuery.fn.remember = GRM.remember;

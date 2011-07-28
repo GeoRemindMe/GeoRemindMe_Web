@@ -18,68 +18,10 @@
         resizeIframe();
     });    
     
-    function sendComment(obj){
-        if($('#msg').val()=="")
-            return false;
-        $(obj).text("Enviando")
-        $(obj).addClass("waiting")
-        
-        $.ajax({
-            type: "POST",
-            url: "/ajax/add/comment/event/",
-            data: {
-                instance_id:{{suggestion.id}},
-                msg:$('#msg').val()
-            },
-            dataType:'json',
-            success: function(response){
-                
-                var message=$('#msg').val()
-                $('#msg').val("")
-                
-                c=$('#commentTemplate').tmpl(response).prependTo('#comment-list');
-            
-                c.find(".like-dislike").like();
-                resizeIframe()
-                    
-                $(obj).text("Comentar")
-                $(obj).removeClass("waiting")
-            },
-            error:function(){
-            }
-        });
+    function sendComment() {
+        GRM.sendComment('event',$('#msg').val(),)
     }
     
-    // not used
-    function voteSuggestion(id,puntuation){
-            
-            $.ajax({
-                    type: "POST",
-                    url: "/ajax/vote/suggestion/",
-                    data: {
-                        instance_id:id,
-                        puntuation: puntuation,//$('#suggestion_'+id).find('.like').attr('value'),
-                    },
-                    complete: function(msg){
-                        if (msg.status !=200){
-//                            $(this).text("Error "+msg.status)
-//                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
-                        }else{
-                            if($('#suggestion_'+id).find('.like').attr('value')==1){
-                            //$('#suggestion_'+value.value).fadeOut('slow').remove()
-                                $('#suggestion_'+id).find('.like').text("Ya no me gusta");
-                                $('#suggestion_'+id).find('.like').attr('value',-1);
-                            }
-                            else{
-                                $('#suggestion_'+id).find('.like').text("Me gusta");
-                                $('#suggestion_'+id).find('.like').attr('value',1);
-                            }
-                            $(document).find('.like-text').toggle();
-                        }
-                        
-                    }
-                });
-        }
     </script>
 {%endblock%}
 
@@ -166,7 +108,7 @@
             <li>Sad</li>
         </ul>
 -->
-        <span class="btn" onclick="sendComment(this)">Comentar</span>
+        <span class="btn" onclick="sendComment();">Comentar</span>
         
         {% if comments %}
         <ul class="comments" id="comment-list">

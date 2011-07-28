@@ -212,7 +212,8 @@ def get_suggestion(request):
     wanted_user = request.POST.get('wanteduser', request.user)
     query_id = request.POST.get('query_id', None)
     page = int(request.POST.get('page', 1))
-    suggestions = geoalert.get_suggestion(request, eventid, wanted_user, page, query_id)
+    suggestions = geoalert.get_suggestion(request, id=eventid, wanted_user=wanted_user, page=page, query_id=query_id)
+
     return HttpResponse(getAlertsJSON(suggestions), mimetype="application/json")
 
 @ajax_request

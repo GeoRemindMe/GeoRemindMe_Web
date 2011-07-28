@@ -81,7 +81,6 @@ def profile(request, username):
         timeline = request.user.get_profile_timeline()
         suggestions = get_suggestion(request, id=None,
                                      wanted_user=request.user,
-                                     private_profile=True,
                                      page = 1, query_id = None
                                      )
         is_following = True
@@ -100,7 +99,6 @@ def profile(request, username):
         sociallinks = profile.sociallinks_async()
         suggestions = get_suggestion(request, id=None,
                                      wanted_user=profile_user,
-                                     private_profile=False,
                                      page = 1, query_id = None
                                      )
         
@@ -170,7 +168,6 @@ def user_suggestions(request):
     counters = request.user.counters_async()
     suggestions = get_suggestion(request, id=None,
                                 wanted_user=request.user,
-                                private_profile=True,
                                 page = 1, query_id = None
                                 )
     return  render_to_response('suggestions.html',{'suggestions': suggestions,

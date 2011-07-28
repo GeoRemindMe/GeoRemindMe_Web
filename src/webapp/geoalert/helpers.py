@@ -228,6 +228,7 @@ class SuggestionHelper(EventHelper):
         else:
             q = self._klass.gql('WHERE user = :1 AND _vis = :2 ORDER BY modified DESC', user, 'public')
         p = PagedQuery(q, id = query_id)
+        
         return [p.id, p.fetch_page(page), p.page_count()]
     
     def get_by_userALL(self, user, page = 1, query_id = None):
@@ -239,6 +240,7 @@ class SuggestionHelper(EventHelper):
             raise TypeError()
         q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
         p = PagedQuery(q, id = query_id)
+        
         return [p.id, p.fetch_page(page), p.page_count()]
     
     def get_by_place(self, place, page=1, query_id=None, async=False, querier=None):

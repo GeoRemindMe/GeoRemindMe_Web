@@ -309,7 +309,7 @@ def edit_suggestion(request, id, form):
 
 
 @login_required
-def get_suggestion(request, id, wanted_user=None, private_profile=False, page = 1, query_id = None):
+def get_suggestion(request, id, wanted_user=None, page = 1, query_id = None):
     """ Obtiene sugerencias
         
             :param id: identificador de la sugerencia
@@ -325,8 +325,6 @@ def get_suggestion(request, id, wanted_user=None, private_profile=False, page = 
     """
     if id:
         return [Suggestion.objects.get_by_id_user(id, wanted_user, request.user)]
-    elif private_profile:
-        return Suggestion.objects.get_by_userALL(request.user, page, query_id)
     else:
         return Suggestion.objects.get_by_user(wanted_user, request.user, page, query_id)
 
