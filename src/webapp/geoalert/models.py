@@ -389,7 +389,7 @@ class Suggestion(Event, Visibility, Taggable):
     
     def put(self, from_comment=False):
         if from_comment:
-            super(Place, self).put()
+            super(Suggestion, self).put()
             return self
         from georemindme.funcs import u_slugify
         if self.slug is None:
