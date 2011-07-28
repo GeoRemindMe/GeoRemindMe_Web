@@ -42,7 +42,7 @@ Mensaje nº 300
             <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
                 <span class="dislike">
                     <span class="hoverlink">Ya no me gusta</span> 
-                    <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
+                    <span class="text like-text increase">{{obj.vote_counter}}</span> personas
                 </span>
                 
                 <span class="like">
@@ -50,7 +50,7 @@ Mensaje nº 300
                 </span>
             </span>
             
-            | <span onclick="" title="Guardar en favoritos" class="save">Guardar</span>
+            | <span title="Guardar en favoritos"  class="remember-forget" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">Guardar</span><span class="forget">Guardado</span></span>
         {% endif %}
     </span>
 
