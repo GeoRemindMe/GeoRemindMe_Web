@@ -732,4 +732,4 @@ class User(polymodel.PolyModel, HookedModel):
 
 
 from helpers import UserHelper
-from geouser.watchers import *
+from watchers import *
