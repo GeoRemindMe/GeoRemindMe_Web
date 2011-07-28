@@ -11,6 +11,8 @@ def getAlertsJSON(alerts):
     """
     if len(alerts) == 2:
         return simplejson.dumps((int(alerts[0]), [a.to_dict() for a in alerts[1]]))
+    if len(alerts) == 3:
+        return simplejson.dumps((int(alerts[0]), [a.to_dict() for a in alerts[1]]), int(alerts[2]))
     return alerts[0].to_json()
 
 def getListsJSON(lists):

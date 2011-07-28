@@ -161,7 +161,7 @@ class User(polymodel.PolyModel, HookedModel):
         from geovote.models import Vote, Comment
         from georemindme.paging import PagedQuery
         from models_acc import UserTimelineSystem
-        q = UserTimelineSystem.all().filter('user =', self.key()).order('-modified')
+        q = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
