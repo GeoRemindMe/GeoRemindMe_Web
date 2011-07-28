@@ -192,6 +192,11 @@ def add_suggestion_follower(request):
     result = geoalert.add_suggestion_follower(request, eventid)
     return HttpResponse(simplejson.dumps(result), mimetype="application/json")
 
+def delete_suggestion_follower(request):
+    eventid = request.POST.get('eventid')
+    result = geoalert.del_suggestion_follower(request, eventid)
+    return HttpResponse(simplejson.dumps(result), mimetype="application/json")
+
 @ajax_request
 def get_suggestion(request):
     """
