@@ -1,8 +1,23 @@
 Config = null;
 
-//~ $(document).ready(function() {
-    //~ resizeIframe();
-//~ });
+$(document).ready(function() {
+    $('.help-txt').dialog({
+            autoOpen:false,
+			resizable: false,
+            buttons: [{
+                    text: "Cerrar",
+                    click: function() { $(this).dialog("close"); }
+                }],
+            draggable: false,
+			width:560,
+            position: ['right', 45]
+    });
+    
+       
+    $('.help-icon img').click(function(){
+        $('#'+$(this).attr('id')+'-text').dialog("open");
+    })
+});
 
 function facebookInit(config) {
   Config = config;

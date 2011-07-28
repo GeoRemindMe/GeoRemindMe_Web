@@ -12,7 +12,7 @@
         $(document).ready(function(){
             
             //Adding behaviour to tab content
-            $('#tabMenu li').click(function(){
+            $('#tabMenu li').not('.clear-box').click(function(){
                 tab_id=$('#tabMenu li.active').attr('id')
                 $('#'+tab_id+'_content').addClass('hidden');
                 $('#tabMenu li.active').removeClass('active');
@@ -45,7 +45,10 @@
                 $('#chronology li').show();
             });
             
+            $('.user-picture').each(function(i,elem){
                 
+                (new Image()).src = $(elem).attr('src')
+            })
             
         });
     </script>
@@ -102,7 +105,7 @@
     
     <script id="commentTemplate" type="text/x-jquery-tmpl">
         <li>
-            <img src="{% url user_avatar user.username %}" alt="user avatar"><a href="{% url fb_public_profile user.username %}">{{user.username}}</a>: ${msg}<br>
+            <img class="user-picture" src="{% url user_avatar user.username %}" alt="user avatar"><a href="{% url fb_public_profile user.username %}">{{user.username}}</a>: ${msg}<br>
             <span class="timestamp">0 minutes ago</span> - 
             
             

@@ -7,7 +7,7 @@ Mensaje nº 300
 
 <div class="avatar">
     <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
-        <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
+        <img class="user-picture" src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
     </a>
 </div>
 <div class="timeline-msg">
@@ -50,7 +50,7 @@ Mensaje nº 300
                 </span>
             </span>
             
-            | <span title="Guardar en favoritos"  class="remember-forget" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">Guardar</span><span class="forget">Guardado</span></span>
+            | <span title="Recibe novedades"  class="remember-forget" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">Seguir</span><span class="forget">Siguiendo</span></span>
         {% endif %}
     </span>
 
@@ -72,7 +72,7 @@ Mensaje nº 300
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}
                 
-                    <img src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
+                    <img class="user-picture" src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
                     <span class="timestamp">{{c.created|timesince}} ago</span> - 
                     
                     {% if c.username != user.username %}

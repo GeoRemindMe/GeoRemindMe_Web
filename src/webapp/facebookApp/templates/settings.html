@@ -7,12 +7,12 @@
     <div id="profile">
         
         <h1>Configuración de la cuenta</h1>
-        <a href="edit/" class="rounded-button" id="edit-settings-btn">Editar</a> 
+        <a href="{% url fb_edit_profile %}" class="btn" id="edit-settings-btn">Editar</a> 
         
         <div class="section">
             <div class="header">
                 <h2>Notificaciones</h2>
-                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+                <div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-notifications"></div>
             </div>
             
             
@@ -34,7 +34,7 @@
         <div class="section">
             <div class="header">
                 <h2>Control de cuentas</h2>
-                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+                <div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-accounts-control"></div>
             </div>
             
             <p>
@@ -97,7 +97,7 @@
         <div class="section">
             <div class="header">
                 <h2>Privacidad</h2>
-                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+                <div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-privacy"></div>
             </div>
         
             
@@ -113,10 +113,11 @@
         </div>
         
         <div class="section">	
-			<div class="header">
+            <div class="header">
                 <h2>Idioma</h2>
-                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+                <div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-language"></div>
             </div>
+            
             {% get_available_languages as LANGUAGES %}
             {% get_current_language as LANGUAGE_CODE %}
             <p>
@@ -125,8 +126,10 @@
                     {%if LANGUAGE_CODE == code %}{{name}}{% endif %} 
 
                 {% endfor %}
+                <a href="{% url fb_edit_profile %}" class="btn" id="edit-settings-btn">Editar</a> 
             </p>
         </div>
+        
     </div>
         
         
@@ -137,6 +140,24 @@
         </div>
     </div>
     
+    <div class="help-txt" style="display:none" id="help-notifications-text" title="Ayuda: Notificaciones">
+        <p>Texto de ayuda notificaciones</p>
+        <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
+    </div>
     
+    <div class="help-txt" style="display:none" id="help-accounts-control-text" title="Ayuda: Control de cuentas">
+        <p>Texto de ayuda control de cuentas</p>
+        <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
+    </div>
+    
+    <div class="help-txt" style="display:none" id="help-privacy-text" title="Ayuda: Privacidad">
+        <p>Texto de ayuda privacidad</p>
+        <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
+    </div>
+    
+    <div class="help-txt" style="display:none" id="help-language-text" title="Ayuda: Idioma">
+        <p>Texto de ayuda idioma</p>
+        <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
+    </div>
     
 {% endblock %}

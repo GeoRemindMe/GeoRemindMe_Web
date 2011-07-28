@@ -6,7 +6,7 @@ Mensaje nº 350<br>
 -->
 <div class="avatar">
     <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
-        <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
+        <img class="user-picture" src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
     </a>
 </div>
 
@@ -43,7 +43,7 @@ Mensaje nº 350<br>
         </span>
     </span>
     
-    | <span title="Guardar en favoritos" class="remember" value="{{obj.instance.id}}">Recordar</span>
+    | <span title="Guardar en favoritos" class="remember" value="{{obj.instance.id}}">Seguir</span>
 </span>
 
 
@@ -64,7 +64,7 @@ Mensaje nº 350<br>
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}
                 
-                    <img src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
+                    <img class="user-picture" src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
                     <span class="timestamp">{{c.created|timesince}} ago</span> - 
                     
                     

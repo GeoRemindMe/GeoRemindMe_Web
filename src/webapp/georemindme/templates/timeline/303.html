@@ -11,7 +11,7 @@ Mensaje nº 303<br>
 {% if request.user =  username %}
     <div class="avatar">
         <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-            <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
+            <img class="user-picture" src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
         </a>
     </div>
     <div class="timeline-msg">
@@ -22,7 +22,7 @@ Mensaje nº 303<br>
 {% else %}
     <div class="avatar">
         <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
-            <img src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+            <img class="user-picture" src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
         </a>
     </div>
     <div class="timeline-msg">
@@ -37,7 +37,7 @@ Mensaje nº 303<br>
 
 <div class="avatar">
     <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-        <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
+        <img class="user-picture" src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
     </a>
 </div>
 <div class="timeline-msg">

@@ -378,6 +378,11 @@ input{
         height: 22px;
         margin: 6px 0;
     }
+    #activity div.help-icon{
+        height: 16px;
+        margin: 15px 0;
+    }
+    
     div.help-icon img{
         width:16px;
         height:16px;
@@ -812,10 +817,9 @@ input{
     }
     
     #edit-settings-btn{
-        color: black;
-        font-size: 1.2em;
-        margin-left: 1em;
-        padding: 0.3em 1em;
+        margin: 1.5em 0;
+        text-decoration:none;
+        color:white;
     }
     
     #profile dl,#edit-profile dl{
@@ -1534,6 +1538,7 @@ input{
             background: none repeat scroll 0 0 transparent;
             border: 0 none;
             color: black;
+            cursor:default;
         }
         ul#tabMenu li.clear-box:hover{
             text-decoration:none;
