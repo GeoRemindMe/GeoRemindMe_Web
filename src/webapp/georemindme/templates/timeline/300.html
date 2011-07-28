@@ -6,7 +6,7 @@ Mensaje nº 300
 -->
 
 <div class="avatar">
-    <a href="/fb/user/{{obj.username}}" title="{{obj.username}}">
+    <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
         <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
     </a>
 </div>
@@ -17,7 +17,7 @@ Mensaje nº 300
         <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
         <span class="small-text">has creado la sugerencia: </span>
     {% else %}
-        <span class="small-text"><a href="/fb/user/{{obj.username}}">{{obj.username}}</a> sugiere: </span>
+        <span class="small-text"><a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> sugiere: </span>
     {% endif %}
     
 
@@ -25,7 +25,7 @@ Mensaje nº 300
     <br>{{obj.instance}}<br>
 
     {% if obj.instance.poi.slug %}
-        <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
+        <span class="suggestionPlace">En <a href="{% url fb_view_place obj.instance.poi.slug %}">{{obj.instance.poi.name}}</a></span><br>
     {% endif %}
 
 
@@ -57,10 +57,10 @@ Mensaje nº 300
 </div>
 <!-- Si hay comentarios en la sugerencia -->
 
-<div class="comment-box" value="{{obj.instance.id}}">
+<div class="comment-box clear" value="{{obj.instance.id}}">
 
     {% if obj.comments.1|length and obj.comments.1|length > 2 %}
-        <div class="show-all-comments">Veros los {{obj.comments.1|length}} comentarios</div>
+        <div class="show-all-comments">Ver los {{obj.comments.1|length}} comentarios</div>
     {% endif %}
     <ul id="commentList-{{obj.instance.id}}">
         {% if obj.comments.1 %}
@@ -72,7 +72,7 @@ Mensaje nº 300
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}
                 
-                    <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
+                    <img src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
                     <span class="timestamp">{{c.created|timesince}} ago</span> - 
                     
                     

@@ -9,14 +9,14 @@ Mensaje nº 100
     NO entra porque en chronology está puesto que no
 {% else %}
     <div class="avatar">
-        <a href="/fb/user/{{obj.username}}" title="{{obj.username}}">
+        <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
             <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
         </a>
     </div>
     {% if obj.username = request.username %}
-        Ahora estás a <a href="/fb/user/{{obj.instance.username}}">{{obj.instance.username}}</a><br>
+        Ahora estás a <a href="{% url fb_public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
     {% else %}
-        <a href="/fb/user/{{obj.username}}">{{obj.username}}</a> ahora sigue a <a href="/fb/user/{{obj.instance.username}}">{{obj.instance.username}}</a><br>
+        <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ahora sigue a <a href="{% url fb_public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
     {% endif %}
 {% endif %}
 

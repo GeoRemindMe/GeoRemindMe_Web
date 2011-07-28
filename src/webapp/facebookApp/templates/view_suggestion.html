@@ -216,7 +216,7 @@
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}
                                             
-                    <span class="user"><img src="/user/{{c.username}}/picture/" alt="{{c.username}} avatar"></span>
+                    <span class="user"><img src="{% url user_avatar c.username %}" alt="{{c.username}} avatar"></span>
                     <div style="float:left">
                         <span class="msg"><a href="{% url fb_public_profile c.username%}">{{c.username}}</a>: {{c.msg}}</span>
                         <span class="timestamp">{{c.created|timesince}}</span> | 
