@@ -1,27 +1,23 @@
 {% load humanize %}
 
 <!--
-Mensaje nº 101
+Mensaje nº 101<br>
+{{obj}}
 -->
 <!--
 101: Te han empezado a seguir
 -->
 
 
-{% if obj.is_private %}   
+{% if request.user = obj.instance.username %}   
+    Te has empezado a seguir?
+{% else %}
     <div class="avatar">
         <a href="{% url fb_public_profile obj.instance %}" title="{{obj.instance}}">
             <img src="{% url user_avatar obj.instance %}" alt="{{obj.instance}} avatar"/>
         </a>
     </div>
     <a href="{% url fb_public_profile obj.instance %}">{{obj.instance}}</a> ahora te está siguiendo.<br>
-{% else %}
-    <div class="avatar">
-        <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-            <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
-        </a>
-    </div>
-    Ahora estás siguiendo a <a href="{% url fb_public_profile obj.instance %}">{{obj.instance}}</a><br>
 {% endif %}
 
 <span class="timestamp"> hace {{obj.created|timesince}}</span>  

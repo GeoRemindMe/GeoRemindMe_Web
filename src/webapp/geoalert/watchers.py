@@ -16,7 +16,7 @@ def new_alert(sender, **kwargs):
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=200)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=320)
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=320, visible=False)
     else:
         return
     timeline.put()
@@ -30,7 +30,7 @@ def modified_alert(sender, **kwargs):
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=201)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=321)
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=321, visible=False)
     else:
         return
     timeline.put()
@@ -43,7 +43,7 @@ def deleted_alert(sender, **kwargs):
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=202)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=322)
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=322, visible=False)
     else:
         return
     timeline.put()
@@ -54,7 +54,7 @@ def done_alert(sender, **kwargs):
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=203)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=323)
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=323, visible=False)
     else:
         return
     timeline.put()
@@ -91,9 +91,9 @@ def new_following_suggestion(sender, **kwargs):
     sender.counters.set_followers(+1)
     from google.appengine.ext.deferred import defer
     defer(sender.user.settings.notify_suggestion_follower, sender.key(), kwargs['user'].key())
-    if kwargs['user'] != sender.instance.key():
+    if kwargs['user'].key() != sender.user.key():
         from geouser.models_utils import _Notification
-        notification = _Notification(owner=sender.instance.user, timeline=timeline)
+        notification = _Notification(owner=sender.user, timeline=timeline)
         notification.put()
 suggestion_following_new.connect(new_following_suggestion)
 
@@ -101,9 +101,9 @@ def deleted_following_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=304, visible=False)
     timeline.put()
     sender.counters.set_followers(-1)
-    if kwargs['user'] != sender.instance.key():
+    if kwargs['user'].key() != sender.user.key():
         from geouser.models_utils import _Notification
-        notification = _Notification(owner=sender.instance.user, timeline=timeline)
+        notification = _Notification(owner=sender.user, timeline=timeline)
         notification.put()
 suggestion_following_deleted.connect(deleted_following_suggestion)
 

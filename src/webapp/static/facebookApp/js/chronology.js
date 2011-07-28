@@ -21,10 +21,13 @@ $(document).ready(function(){
     $('.help-txt').dialog({
             autoOpen:false,
 			resizable: false,
-            modal:true,
+            buttons: [{
+                    text: "Cerrar",
+                    click: function() { $(this).dialog("close"); }
+                }],
             draggable: false,
-			width:600,
-            position: ['middle', 100]
+			width:560,
+            position: ['right', 45]
     });
     
     $('.help-icon img').click(function(){
@@ -32,7 +35,7 @@ $(document).ready(function(){
     })
     //Al pulsar en comentar ponemos el foco en el input
     $('.focusInput').click(function(){
-        var commentBox=$(this).parentsUntil('.suggestion-element').parent().find('.input-box')
+        var commentBox=$(this).parentsUntil('li').parent().find('.input-box')
         
         if(commentBox.hasClass('hidden'))
             commentBox.removeClass('hidden');
