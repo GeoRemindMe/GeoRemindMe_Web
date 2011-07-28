@@ -13,9 +13,7 @@
     $(document).ready(function(){
        
        
-        $(".like-dislike").like();
-        
-        initRemovable();
+        GRM.init();
        
         resizeIframe();
     });
@@ -136,11 +134,11 @@
                 <p><strong>Instrucciones/explicación</strong>: {{suggestion.description}} </p>
             {% endif %}    
 
-            <a title="Más detalles sobre: {{suggestion.poi.name}}" href="/fb{{suggestion.poi.get_absolute_url}}"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x100&maptype=roadmap
+            <a title="Más detalles sobre: {{suggestion.poi.name}}" href="{% url fb_view_place suggestion.poi %}"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x100&maptype=roadmap
 &markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false"></a>
             
             <p>
-                <strong>Lugar</strong>: <a href="/fb{{suggestion.poi.get_absolute_url}}">{{suggestion.poi.name}}</a>, <br>
+                <strong>Lugar</strong>: <a href="{% url fb_view_place suggestion.poi %}">{{suggestion.poi.name}}</a>, <br>
                 <strong>Dirección</strong>: {{suggestion.poi.address}}<br>
                 {% if suggestion.date_starts or suggestion.date_ends %}
                     <strong>Fecha</strong>: 

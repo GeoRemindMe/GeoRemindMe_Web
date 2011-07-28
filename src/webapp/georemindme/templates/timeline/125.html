@@ -44,7 +44,7 @@ Mensaje nº 125
 
             <span class="timestamp"> hace {{obj.created|timesince}}</span>  
             <span class="action-bar">
-                | <a href="/fb/suggestion/{{obj.instance.instance.instance.id}}">Ver sugerencia</a> 
+                | <a href="{% url fb_view_suggestion obj.instance.instance.instance.slug %}">Ver sugerencia</a> 
             </span
         </div>
 {% endif %}
