@@ -264,6 +264,7 @@ class UserTimelineSystem(UserTimelineBase):
     msg_id = db.IntegerProperty()
     msg = db.TextProperty(required=False)
     instance = db.ReferenceProperty(db.Model)
+    visible = db.BooleanProperty(default=True)
     
 #    @property
 #    def msg(self):
