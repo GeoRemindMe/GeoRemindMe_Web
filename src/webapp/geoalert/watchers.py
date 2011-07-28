@@ -91,9 +91,9 @@ def new_following_suggestion(sender, **kwargs):
     sender.counters.set_followers(+1)
     from google.appengine.ext.deferred import defer
     defer(sender.user.settings.notify_suggestion_follower, sender.key(), kwargs['user'].key())
-    if kwargs['user'].key() != sender.instance.key():
+    if kwargs['user'].key() != sender.user.key():
         from geouser.models_utils import _Notification
-        notification = _Notification(owner=sender.instance.user, timeline=timeline)
+        notification = _Notification(owner=sender.user, timeline=timeline)
         notification.put()
 suggestion_following_new.connect(new_following_suggestion)
 
@@ -101,9 +101,9 @@ def deleted_following_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=304, visible=False)
     timeline.put()
     sender.counters.set_followers(-1)
-    if kwargs['user'].key() != sender.instance.key():
+    if kwargs['user'].key() != sender.user.key():
         from geouser.models_utils import _Notification
-        notification = _Notification(owner=sender.instance.user, timeline=timeline)
+        notification = _Notification(owner=sender.user, timeline=timeline)
         notification.put()
 suggestion_following_deleted.connect(deleted_following_suggestion)
 
