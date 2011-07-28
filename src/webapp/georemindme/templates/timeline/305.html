@@ -1,6 +1,4 @@
-<!--
-Mensaje nº 305:
--->
+Mensaje nº 305:<br>
 <!--
 Te gusta una sugerencia
 obj.instance==geovote.models.Vote
@@ -27,7 +25,7 @@ obj.instance==geovote.models.Vote
         </div>
         <div class="timeline-msg">
             <span class="small-text">
-                <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a>: me gusta 
+                A <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> le gusta 
                 {% if obj.instance.instance.user.username = request.user.username %}
                     <strong>tu sugerencia</strong>:
                 {% else %}
@@ -38,6 +36,6 @@ obj.instance==geovote.models.Vote
             
             <br>{{obj.instance.instance}} <br>
             <span class="suggestionPlace">En <a href="{% url fb_view_place obj.instance.instance.poi.slug %}">{{obj.instance.instance.poi.name}}</a></span><br>
-            <span class="timestamp">hace {{obj.created|timesince}}</span> <span class="action-bar">| <a href="{% url fb_view_suggestion obj.instance.instance.slug %}">Ver sugerencia</a></span>
+            <span class="timestamp">hace {{obj.created|timesince}}</span> <span class="action-bar">| <a href="{% url fb_view_suggestion obj.instance.instance.slug %}">Detalles</a></span>
         </div>
 {% endif %}
