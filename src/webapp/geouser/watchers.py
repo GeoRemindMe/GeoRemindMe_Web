@@ -88,7 +88,7 @@ def deleted_following(sender, **kwargs):
         al mail, se borra el mensaje de un nuevo seguidor.
     """
     from models_acc import UserTimelineSystem, UserTimeline
-    timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=102)
+    timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=102, visible=False)
     timeline.put()
     timelines = UserTimeline.all().filter('user =', sender).filter('msg_id =', 100).filter('instance =', kwargs['following']).run()
     from geouser.models_utils import _Report_Account_follower
