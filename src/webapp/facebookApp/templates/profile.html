@@ -52,7 +52,7 @@
                     {% endif %}
                 {% else %}
                     
-                    <span class="btn"><a href="/fb/user/edit/" id="edit-profile-btn">Editar</a> </span>
+                    <span class="btn"><a href="{% url fb_edit_profile %}" id="edit-profile-btn">Editar</a> </span>
                     
                 {% endifnotequal %}
             </div>
@@ -72,8 +72,8 @@
 -->
             <ul id="user-resume">
                 <li><a href=""><span id="counter">{{counters.influenced}}</span> impactos</a></li>
-                <li><a href="/fb/user/{{profile.parent.username}}/followers/"><span id="counter">{{counters.followers}}</span> seguidores</a></li>
-                <li><a href="/fb/user/{{profile.parent.username}}/followings/"><span id="counter">{{counters.followings}}</span> siguiendo</a></li>
+                <li><a href="{% url fb_followers_panel profile.parent.username %}"><span id="counter">{{counters.followers}}</span> seguidores</a></li>
+                <li><a href="{% url fb_followings_panel profile.parent.username %}"><span id="counter">{{counters.followings}}</span> siguiendo</a></li>
             </ul>
             {% if profile.description %}
                     <p>{{profile.description}}</p>
@@ -142,7 +142,7 @@
                         {% for obj in suggestions.1 %}                        
                             <li {% if forloop.last %} style="border:0" {% endif %}>
                                 <div class="avatar">
-                                    <a href="/fb/user/{{obj.user.username}}" title="{{obj.user.username}}">
+                                    <a href="{% url fb_public_profile obj.user.username %}" title="{{obj.user.username}}">
                                         <img src="/user/{{obj.user.username}}/picture/" alt="{{obj.user.username}} avatar"/>
                                     </a>
                                 </div>

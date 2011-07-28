@@ -67,7 +67,7 @@
                 <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
                     <span class="user"><img src="/user/{{s.instance.user.username}}/picture/" alt="{{s.instance.user.username}} avatar"></span>
                     <div style="float:left">
-                        <span class="msg"><a href="/fb{{s.instance.user.get_absolute_url}}">{{s.instance.user.username}}</a> sugiere:<br> {{s.instance.name}}</span>
+                        <span class="msg"><a href="{% url fb_public_profile s.instance.user.username %}">{{s.instance.user.username}}</a> sugiere:<br> {{s.instance.name}}</span>
                         <span class="timestamp">{{s.instance.created|timesince}} - </span>
                         <span class="like-dislike" value="{{s.instance.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion">
                             <span class="dislike">

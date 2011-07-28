@@ -23,7 +23,6 @@
     -->
             <ul id="chronology">
             {% for obj in chronology.1 %}
-
                 {% if not obj.msg_id = 100 or not obj.is_private %}
                     <li {% if forloop.last %} style="border:0" {% endif %}>
                         {% timeline_item obj %}
@@ -51,7 +50,7 @@
     
     <script id="commentTemplate" type="text/x-jquery-tmpl">
         <li>
-            <img src="/user/{{user.username}}/picture/" alt="user avatar"><a href="/fb/user/{{user.username}}/">{{user.username}}</a>: ${msg}<br>
+            <img src="{% url user_avatar user.username %}" alt="user avatar"><a href="{% url fb_public_profile user.username %}">{{user.username}}</a>: ${msg}<br>
             <span class="timestamp">0 minutes ago</span> - 
             
             

@@ -126,7 +126,7 @@
         <div id="autor">
             <a href="/user/{{suggestion.user.username}}/picture/"><img src="/user/{{suggestion.user.username}}/picture/" alt="{{suggestion.user.username}} avatar"></a>
             <p>
-                <a href="/fb{{suggestion.user.get_absolute_url}}">{{suggestion.user.username}}</a>
+                <a href="{% url fb_public_profile suggestion.user.username %}">{{suggestion.user.username}}</a>
                 sugiere:
             </p>
         </div>
@@ -218,7 +218,7 @@
                                             
                     <span class="user"><img src="/user/{{c.username}}/picture/" alt="{{c.username}} avatar"></span>
                     <div style="float:left">
-                        <span class="msg"><a href="/fb/user/{{c.username}}">{{c.username}}</a>: {{c.msg}}</span>
+                        <span class="msg"><a href="{% url fb_public_profile c.username%}">{{c.username}}</a>: {{c.msg}}</span>
                         <span class="timestamp">{{c.created|timesince}}</span> | 
                         <span class="action-bar">
                             <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
@@ -244,7 +244,7 @@
         <li class="suggestion-element">
             <span class="user"><img src="/user/{{user.username}}/picture/" alt="{{user.username}} avatar"></span>
             <div style="float:left">
-                <span class="msg"><a href="">{{user.username}}</a>: ${msg}</span>
+                <span class="msg"><a href="{% url fb_public_profile user.username%}">{{user.username}}</a>: ${msg}</span>
                 <span class="timestamp">0 minutes ago</span> | 
                 <span class="action-bar">
                     <span class="like-dislike" value="${id}" type="comment">
