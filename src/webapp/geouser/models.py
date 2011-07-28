@@ -7,9 +7,7 @@
 """
 
 
-from datetime import datetime, timedelta
 
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
@@ -17,8 +15,7 @@ from google.appengine.ext.db import polymodel
 from georemindme.models_utils import HookedModel
 from georemindme.decorators import classproperty
 from properties import PasswordProperty, UsernameProperty
-from exceptions import *
-from signals import *
+
 
 TIMELINE_PAGE_SIZE = 42
 
@@ -89,6 +86,7 @@ class User(polymodel.PolyModel, HookedModel):
             import memcache
             self._profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, self.id)))
             if self._profile is None:
+                from models_acc import UserProfile
                 self._profile = UserProfile.all().ancestor(self.key()).get()
                 memcache.set('%s%s' % (memcache.version, self._profile.key().name()), memcache.serialize_instances(self._profile), 300)
         return self._profile
@@ -99,6 +97,7 @@ class User(polymodel.PolyModel, HookedModel):
             import memcache
             self._settings = memcache.deserialize_instances(memcache.get('%ssettings_%s' % (memcache.version, self.id)))
             if self._settings is None:
+                from models_acc import UserSettings
                 self._settings = UserSettings.all().ancestor(self.key()).get() 
                 memcache.set('%s%s' % (memcache.version, self._settings.key().name()), memcache.serialize_instances(self._settings), 300)
         return self._settings
@@ -106,12 +105,14 @@ class User(polymodel.PolyModel, HookedModel):
     @property
     def counters(self):
         if self._counters is None:
+            from models_acc import UserCounter
             self._counters = UserCounter.all().ancestor(self.key()).get()
         return self._counters
     
 
     
     def counters_async(self):
+        from models_acc import UserCounter
         q = UserCounter.all().ancestor(self.key())
         return q.run()
         
@@ -129,6 +130,7 @@ class User(polymodel.PolyModel, HookedModel):
         '''
         from geovote.models import Vote
         from georemindme.paging import PagedQuery
+        from models_acc import UserTimelineBase, UserTimelineSystem
         q = UserTimelineBase.all().filter('user =', self.key()).order('-modified')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         from geovote.models import Comment
@@ -158,6 +160,7 @@ class User(polymodel.PolyModel, HookedModel):
         '''
         from geovote.models import Vote, Comment
         from georemindme.paging import PagedQuery
+        from models_acc import UserTimelineSystem
         q = UserTimelineSystem.all().filter('user =', self.key()).order('-modified')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         return [p.id, [{'id': timeline.id, 'created': timeline.created, 
@@ -185,6 +188,7 @@ class User(polymodel.PolyModel, HookedModel):
             :type query_id: int
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
+        from models_acc import UserTimeline
         return UserTimeline.objects.get_by_id(self.id, querier=querier, page=page, query_id=query_id)
     
     def get_chronology(self, page=1, query_id=None):
@@ -252,6 +256,7 @@ class User(polymodel.PolyModel, HookedModel):
         '''
         Devuelve la lista con todos los indices que el usuario tiene, ordenados por fecha de creacion descendente
         '''
+        from models_acc import UserFollowingIndex
         if async:
             q = UserFollowingIndex.all().ancestor(self.key()).order('-created')
             return q.run()
@@ -285,6 +290,7 @@ class User(polymodel.PolyModel, HookedModel):
         return self.objects.get_followers(userid=self.id, page=page, query_id=query_id)
     
     def get_friends(self):
+        from models_acc import UserFollowingIndex
         indexes = UserFollowingIndex.all().ancestor(self.key())
         # cargo la lista completa de todos a los que sigue el usuario
         followings = []
@@ -297,6 +303,7 @@ class User(polymodel.PolyModel, HookedModel):
         return db.get_async(friends)
             
     def are_friends(self, friend):
+        from models_acc import UserFollowingIndex
         if isinstance(friend, db.Key):
             user_following = UserFollowingIndex.all().filter('following =', friend).ancestor(self.key()).count()
             if user_following == 0:
@@ -417,12 +424,16 @@ class User(polymodel.PolyModel, HookedModel):
             :returns: boolean
             :raises: OutdatedCode, BadCode
         '''
+        from datetime import datetime, timedelta
+        from django.conf import settings
         if self.date_remind+timedelta(days=settings.NO_CONFIRM_ALLOW_DAYS) < datetime.now():
             #checks code is in date
             self.date_remind = None
             self.remind_code = None
+            from exceptions import OutdatedCode
             raise OutdatedCode()
         if not self.remind_code == code:
+            from exceptions import BadCode
             raise BadCode()
         if password is not None:
             self.password = password
@@ -442,6 +453,7 @@ class User(polymodel.PolyModel, HookedModel):
         '''
         def _tx(user):
             try:
+                from models_acc import UserFollowingIndex, UserSettings, UserProfile, UserCounter
                 settings = UserSettings(key_name='settings_%s' % user.id, parent=user, language=language)
                 profile = UserProfile(key_name='profile_%s' % user.id, parent=user, username=user.username, email=user.email)
                 followings = UserFollowingIndex(parent=user)
@@ -459,10 +471,12 @@ class User(polymodel.PolyModel, HookedModel):
         if not trans:
             user.delete()
         else:
+            from models_acc import UserSocialLinks, SearchConfigGooglePlaces
             sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
             scgoogleplaces = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
             save = db.put_async([sociallinks, scgoogleplaces])
             from google.appengine.ext.deferred import defer
+            from signals import user_new
             user_new.send(sender=user, status=trans)
             save.get_result()
             return user
@@ -507,13 +521,15 @@ class User(polymodel.PolyModel, HookedModel):
             u = db.GqlQuery('SELECT __key__ FROM User WHERE email = :1', self.email).get()
             if u is not None:
                 if not self.is_saved() or u != self.key():
+                    import logging
                     logging.debug('Usuario %s email repetido: %s - %s' % (u.id, self.email, u))
                     raise self.UniqueEmailConstraint(self.email)               
         if self.username is not None:
             self.username = self.username.lower()
             u = db.GqlQuery('SELECT __key__ FROM User WHERE username = :1', self.username).get()
             if u is not None:
-                if not self.is_saved() or u != self.key(): 
+                if not self.is_saved() or u != self.key():
+                    import logging 
                     logging.debug('Usuario %s username repetido: %s - %s' % (u.id, self.username, u))
                     raise self.UniqueUsernameConstraint(self.username)
     
@@ -543,11 +559,13 @@ class User(polymodel.PolyModel, HookedModel):
         if following is not None:
             if following == self.key():
                 return True
+            from models_acc import UserFollowingIndex
             is_following = UserFollowingIndex.all().filter('following =', following).ancestor(self.key()).count()
             if is_following != 0:  # en este caso, el usuario ya esta siguiendo al otro, no hacemos nada mas.
                 return True
             following_result = self.following(async=True)  # obtiene un iterador con los UserFollowingIndex
             if self._add_follows(following_result, following):
+                from signals import user_follower_new
                 user_follower_new.send(sender=self, following=following)
                 return True
         return False
@@ -576,6 +594,7 @@ class User(polymodel.PolyModel, HookedModel):
             if following == self.key():
                 return True
             if self._del_follows(following):
+                from signals import user_following_deleted
                 user_following_deleted.send(sender=self, following=following)
                 return True
         return False
@@ -593,6 +612,7 @@ class User(polymodel.PolyModel, HookedModel):
             :type key: :class:`db.Key()
             :returns: True si se añadio el usuario
         '''
+        from models_acc import UserFollowingIndex
         try: 
             last_follow = followiterator.next()  # como estan ordenados por fecha de creacion, carga el primero que seria el ultimo indice.
         except StopIteration:
@@ -602,6 +622,7 @@ class User(polymodel.PolyModel, HookedModel):
         else:  # creamos un index nuevo
             last_follow = UserFollowingIndex(parent=self, following=[key])
         try:
+            from models_acc import UserCounter
             counter_result = self.counters_async() # obtiene los contadores de self
             follow_query = UserCounter.all().ancestor(key) # obtiene los contadores del otro usuario
             follow_result = follow_query.run()
@@ -622,10 +643,12 @@ class User(polymodel.PolyModel, HookedModel):
             :type key: :class:`db.Key()
             :returns: True si se borro el usuario, False si no se encontro
         '''
+        from models_acc import UserFollowingIndex
         index = UserFollowingIndex.all().ancestor(self.key()).filter('following =', key).get()
         if index is not None:
             index.following.remove(key)
             try:
+                from models_acc import UserCounter
                 counter_result = self.counters_async() # obtiene los contadores de self
                 follow_query = UserCounter.all().ancestor(key) # obtiene los contadores del otro usuario
                 follow_result = follow_query.run()
@@ -640,11 +663,13 @@ class User(polymodel.PolyModel, HookedModel):
         return False
     
     def is_following(self, user):
+        from models_acc import UserFollowingIndex
         if UserFollowingIndex.all().ancestor(self.key()).filter('following =', user.key()).count() != 0:
             return True
         return False
     
     def has_follower(self, user=None, userkey=None):
+        from models_acc import UserFollowingIndex
         if userkey is not None:
             if UserFollowingIndex.all().ancestor(userkey).filter('following =', self.key()).count() != 0:
                 return True
@@ -655,6 +680,7 @@ class User(polymodel.PolyModel, HookedModel):
         return False       
     
     def write_timeline(self, msg, instance=None):
+        from models_acc import UserTimeline
         return UserTimeline.insert(msg=msg, user=self, instance=instance)
     
     def delete_async(self):
@@ -703,7 +729,6 @@ class User(polymodel.PolyModel, HookedModel):
         except:
             pass
         return friends
-        
-from watchers import *
-from models_acc import *
+
+
 from helpers import UserHelper
