@@ -79,7 +79,7 @@
                                 <span class="hoverlink">Me gusta</span> 
                             </span>
                         </span>
-                        - <a href="/fb/suggestion/{{s.instance.id}}" class="hoverlink">Ver más</a>
+                        - <a href="{% url fb_view_suggestion s.instance.slug %}" class="hoverlink">Ver más</a>
                     </div>
                 </li>
                 {% endfor %}
