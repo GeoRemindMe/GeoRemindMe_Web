@@ -16,7 +16,7 @@ def new_alert(sender, **kwargs):
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=200)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=320)
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=320, visible=False)
     else:
         return
     timeline.put()
@@ -30,7 +30,7 @@ def modified_alert(sender, **kwargs):
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=201)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=321)
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=321, visible=False)
     else:
         return
     timeline.put()
@@ -43,7 +43,7 @@ def deleted_alert(sender, **kwargs):
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=202)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=322)
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=322, visible=False)
     else:
         return
     timeline.put()
@@ -54,7 +54,7 @@ def done_alert(sender, **kwargs):
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=203)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=323)
+        timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=323, visible=False)
     else:
         return
     timeline.put()
