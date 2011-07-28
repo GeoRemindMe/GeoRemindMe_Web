@@ -50,6 +50,7 @@
         function loadSuggestionsPage(page){
             GRM.loadPage({
                 page:page,
+                "total_pages":{{suggestions.2}},
                 container:'#suggestion-list',
                 url:'/ajax/get/suggestion/',
                 template: "#suggestionTemplate",
