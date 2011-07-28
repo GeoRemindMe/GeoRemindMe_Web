@@ -41,6 +41,61 @@ input{
 */
         
     }
+    /*
+      Friend to follow  
+    */
+    div#left-col div.help-icon {
+        margin: 4px 7px 0 0;
+    }
+    div#left-col ul#friends-to-follow{
+        margin: 1em 0 0;
+    }
+    div#left-col ul#friends-to-follow:after{
+            clear: both;
+            content: ".";
+            display: block;
+            height: 0px;
+            visibility: hidden;
+        }
+    div#left-col ul#friends-to-follow li {
+        clear: left;
+        margin: 0 0.2em;
+        padding: 0.5em 0;
+        width: auto;
+    }
+        div#left-col ul#friends-to-follow li a{
+            background-position: 4px 3px;
+            padding: 1px 7px 1px 22px;
+            width: auto;
+            
+        }
+        div#left-col ul#friends-to-follow li div.avatar a.user-img{
+            float: left;
+            margin-right: 10px;
+            padding: 0;
+        }
+        div#left-col ul#friends-to-follow li div.avatar a.user-img img{
+            height:25px;
+        }
+        div#left-col ul#friends-to-follow li div.avatar div.follow-button{
+            margin-top: 2px;
+        }
+        div#left-col ul#friends-to-follow li div.avatar span.waiting {
+            background-position: 4px 3px;
+            padding: 1px 7px 1px 22px;
+            width: auto;
+        }
+        div#left-col ul#friends-to-follow li div.avatar span.waiting a{
+            background:none;
+            padding-left:6px;
+        }
+        div#left-col ul#friends-to-follow li div.avatar div.removable{
+            margin:5px;
+        }
+        div#left-col ul#friends-to-follow li div.avatar div.removable a{
+            display:none;
+        }
+    
     div#left-col li a{
         color: black;
         display: block;

@@ -2,46 +2,47 @@
 {% load i18n %}
 {% load humanize %}
 
+{% block embed_js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+                
+        });
+    </script>
+{%endblock%}
 
 {% block id %} id="activity" {%endblock%}
+
+{% block extraContent %}
+    {% if friends_to_follow|length %}        
+        <hr>
+        <div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-friends-to-follow"></div>
+        <p><strong>Personas sugeridas:</strong></p>
+        
+        <ul id="friends-to-follow" class="clear">
+            {% for id, f in friends_to_follow.items %}
+                
+                <li> <!--style="{% cycle 'clear:left' ''%}">-->
+                    <div class="avatar">
+                        <div class="removable" value="{{f.id}}" type="person"><a href="#">Remove</a></div>
+                        <a href="/fb/user/{{f.username}}" title="{{ f.username }}" class="user-img">
+                            <img src="/user/{{f.username}}/picture/" alt="{{f.username}} avatar"/>
+                        </a>
+                        
+                        <div id="following_state_{{ id }}" class="follow-button">
+                            <span  onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+            
+        </ul>
+        
+    {% endif %}
+{% endblock %}
 
 {% block pre_chronology %} 
 
     <h1>Actividad</h1>
-    {% if friends_to_follow|length %}        
-        <div class="section">    
-            <div class="header">
-                <h2>
-                    Gente a la que podrías conocer
-<!--
-                    {% blocktrans count friends_to_follow|length as counter %}
-                        Hemos encontrado {{ counter }} persona a la que podrías conocer
-                    {% plural %}
-                        Hemos encontrado {{ counter }} personas a las que podrías conocer
-                    {% endblocktrans %}
--->
-                </h2>
-                <div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-friends-to-follow"></div>
-            </div>
-            <ul id="friends-to-follow" class="clear">
-                {% for id, f in friends_to_follow.items %}
-                    
-                    <li> <!--style="{% cycle 'clear:left' ''%}">-->
-                        <div class="avatar">
-                            <a href="/fb/user/{{f.username}}" title="{{ f.username }}">
-                                <img src="/user/{{f.username}}/picture/" alt="{{f.username}} avatar"/>
-                            </a>
-                            
-                            <div id="following_state_{{ id }}" class="follow-button">
-                                <span  onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
-                            </div>
-                        </div>
-                    </li>
-                {% endfor %}
-                
-            </ul>
-        </div>
-    {% endif %}
     
     <div class="section">
         <div class="header">
