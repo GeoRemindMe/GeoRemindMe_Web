@@ -377,7 +377,9 @@ class ListUser(List):
         self.keys = [k for k in keys]
         self.put()
         
-
+class _Deleted_List(db.Model):
+    # TODO: crear deleted list
+    pass
 
 from watchers import *    
 from helpers import *

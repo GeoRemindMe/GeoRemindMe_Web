@@ -257,6 +257,7 @@ class Suggestion(Event, Visibility, Taggable):
         Recomendaciones de los usuarios que otros pueden
         convertir en Alert
     '''
+    slug = db.StringProperty()
     name = db.StringProperty(required=True)
     description = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
@@ -387,10 +388,22 @@ class Suggestion(Event, Visibility, Taggable):
         return False
     
     def put(self, from_comment=False):
+        if from_comment:
+            super(Place, self).put()
+            return self
+        from georemindme.funcs import u_slugify
+        if self.slug is None:
+            self.slug = u_slugify('%s'% (self.name))
+        p = Suggestion.all().filter('slug =', self.slug).get()
+        if p is not None:
+            if not self.is_saved() or p.key() != self.key():
+                i = 1
+                while p is not None:
+                    slug = self.slug + '-%s' % i
+                    p = Suggestion.all().filter('slug =', slug).get()
+                self.slug = self.slug + '-%s' % i
         if self.is_saved():
             super(Suggestion, self).put()
-            if from_comment:
-                return self
             suggestion_modified.send(sender=self)
         else:
             super(Suggestion, self).put()
@@ -465,6 +478,12 @@ class Suggestion(Event, Visibility, Taggable):
             return False
         else:
             raise ForbiddenAccess
+        
+    def get_absolute_url(self):
+        return '/suggestion/%s/' % self.slug if self.slug != '' else self.id
+    
+    def get_absolute_fburl(self):
+        return '/fb%s' % self.get_absolute_url()
         
         
 

@@ -204,9 +204,9 @@ def edit_suggestion(request,suggestion_id):
                                                         }, context_instance=RequestContext(request)
                                )
 @facebook_required
-def view_suggestion(request,suggestion_id):
+def view_suggestion(request, slug):
     from geoalert.views import suggestion_profile
-    return suggestion_profile(request, suggestion_id, template='view_suggestion.html')
+    return suggestion_profile(request, slug, template='view_suggestion.html')
     
 
 

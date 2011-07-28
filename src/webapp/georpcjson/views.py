@@ -12,6 +12,12 @@ from geouser.funcs import login_func
 from libs.jsonrpc import jsonrpc_method
 from libs.jsonrpc.exceptions import *
 from libs.jsonrpc.views import *
+try:
+    # When deployed
+    from google.appengine.runtime import DeadlineExceededError
+except ImportError:
+    # In the development server
+    from google.appengine.runtime.apiproxy_errors import DeadlineExceededError 
 
 def need_authenticate(username=None, password=None):
     raise BadSessionException
@@ -115,47 +121,50 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
     temp_alert = {}
     last_sync = parse_date(last_sync)
     parse_alertdeleted(deleted, request.user)
-    for a in modified:
-        id = a.get('id', None)
-        if id is not None:  # la alerta ya estaba sincronizada, la actualizamos
-            old = Alert.objects.get_by_id_user(id, request.user)
-            if not old:  # no existe en la BD, fue borrada.
-                sync_deleted.append({'id': id})
-                continue
-            if parse_date(a.get('modified')) <= old.modified:
-                continue
-        poi = PrivatePlace.get_or_insert(name = '',
-                                         location = GeoPt(a.get('x'), a.get('y')),
-                                         address = '',
-                                         user = request.user)
-        alert = Alert.update_or_insert(
-                     id = id,
-                     name = a.get('name', u''),
-                     description = a.get('description', u''),
-                     date_starts = parse_date(a.get('starts'), False),
-                     date_ends = parse_date(a.get('ends'), False),
-                     user = request.user,
-                     poi = poi,
-                     done = True if parse_date(a.get('done_when'), False) else False,
-                     done_when = parse_date(a.get('done_when'), False),
-                     active = True if a.get('active', True) else False,
-                     )
-        if a.get('client_id', None) is not None:  # la alerta no estaba sincronizada
-            temp_alert[int(alert.id)] = a.get('client_id')
-                       
-    response = []
-    alerts = Alert.objects.get_by_last_sync(request.user, last_sync)
-    for a in alerts:
-        if int(a.id) in temp_alert:  # añadir alerta no sincro
-            dict = a.to_dict()
-            dict['client_id'] = temp_alert[int(a.id)]
-            response.append(dict)
-        else:
-            response.append(a.to_dict())
-    alertsDel =  _Deleted_Alert.objects.get_by_last_sync(request.user, last_sync)
-    for a in alertsDel:
-        sync_deleted.append({'id': a.id})
-    return [int(time.mktime(datetime.now().timetuple())), response, sync_deleted]
+    try:
+        for a in modified:
+            id = a.get('id', None)
+            if id is not None:  # la alerta ya estaba sincronizada, la actualizamos
+                old = Alert.objects.get_by_id_user(id, request.user)
+                if not old:  # no existe en la BD, fue borrada.
+                    sync_deleted.append({'id': id})
+                    continue
+                if parse_date(a.get('modified')) <= old.modified:
+                    continue
+            poi = PrivatePlace.get_or_insert(name = '',
+                                             location = GeoPt(a.get('x'), a.get('y')),
+                                             address = '',
+                                             user = request.user)
+            alert = Alert.update_or_insert(
+                         id = id,
+                         name = a.get('name', u''),
+                         description = a.get('description', u''),
+                         date_starts = parse_date(a.get('starts'), False),
+                         date_ends = parse_date(a.get('ends'), False),
+                         user = request.user,
+                         poi = poi,
+                         done = True if parse_date(a.get('done_when'), False) else False,
+                         done_when = parse_date(a.get('done_when'), False),
+                         active = True if a.get('active', True) else False,
+                         )
+            if a.get('client_id', None) is not None:  # la alerta no estaba sincronizada
+                temp_alert[int(alert.id)] = a.get('client_id')
+                           
+        response = []
+        alerts = Alert.objects.get_by_last_sync(request.user, last_sync)
+        for a in alerts:
+            if int(a.id) in temp_alert:  # añadir alerta no sincro
+                dict = a.to_dict()
+                dict['client_id'] = temp_alert[int(a.id)]
+                response.append(dict)
+            else:
+                response.append(a.to_dict())
+        alertsDel =  _Deleted_Alert.objects.get_by_last_sync(request.user, last_sync)
+        for a in alertsDel:
+            sync_deleted.append({'id': a.id})
+        return [int(time.mktime(datetime.now().timetuple())), response, sync_deleted]
+    except DeadlineExceededError:
+        return DeadlineException
 
 
 @jsonrpc_method('report_bug', authenticated=False)
