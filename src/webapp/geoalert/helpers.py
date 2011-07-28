@@ -23,7 +23,7 @@ class EventHelper(object):
             raise TypeError()
         q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
         p = PagedQuery(q, id = query_id)
-        return [p.id, p.fetch_page(page)]
+        return [p.id, p.fetch_page(page), p.page_count()]
     
     def get_by_id(self, id):
         '''
