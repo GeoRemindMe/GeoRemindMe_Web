@@ -1,4 +1,11 @@
 # coding=utf-8
+
+"""
+.. module:: urls
+    :platform: appengine
+    :synopsis: URLs de geouser
+"""
+
 from django.conf.urls.defaults import *
 
 
