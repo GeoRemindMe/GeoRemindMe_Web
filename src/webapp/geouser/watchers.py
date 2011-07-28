@@ -62,7 +62,7 @@ def new_follower(sender, **kwargs):
     from models_acc import UserTimelineSystem, UserTimeline, UserSettings
     if not isinstance(kwargs['following'], db.Key):
         raise AttributeError
-    timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=100)
+    timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=100, visible=False)
     timelineFollowing = UserTimelineSystem(user=kwargs['following'], instance=sender, msg_id=101)
     put = db.put_async([timeline, timelineFollowing])
     settings = UserSettings.objects.get_by_id(kwargs['following'].id())
