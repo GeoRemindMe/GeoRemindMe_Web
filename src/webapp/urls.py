@@ -28,6 +28,7 @@ if sys.getdefaultencoding() != default_encoding:
 from django.conf.urls.defaults import *
 import appengine_admin
 
+
 urlpatterns = patterns('',
     (r'^(?i)blog/(?P<path>.*)$', 'django.views.generic.simple.redirect_to', {'url': 'http://blog.georemindme.com/%(path)s', 'permanent': True}),
     (r'^(?i)oauth/', include('geoauth.urls')),
