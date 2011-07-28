@@ -345,6 +345,15 @@ def add_suggestion_follower(request, id):
     return False
 
 
+@login_required
+def del_suggestion_follower(request, id):
+    suggestion = Suggestion.objects.get_by_id_querier(id, request.user)
+    if suggestion is not None:
+        suggestion.del_follower(request.user)
+        return True
+    return False
+
+
 @login_required    
 def del_suggestion(request, id = None):
     """ Borra una sugerencia

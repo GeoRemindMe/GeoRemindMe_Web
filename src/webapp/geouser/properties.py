@@ -1,26 +1,13 @@
 # coding=utf-8
-"""
-This file is part of GeoRemindMe.
-
-GeoRemindMe is free software: you can redistribute it and/or modify
-it under the terms of the Affero General Public License (AGPL) as published 
-by Affero, as published by the Free Software Foundation, either version 3 
-of the License, or (at your option) any later version.
-
-GeoRemindMe is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
-
-You should have received a copy of the GNU Affero General Public License
-along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 
 """
+.. module:: properties
+    :platform: appengine
+    :synopsis: Propiedades propias para el datastore
+"""
 
-import re
 from google.appengine.ext import db
-
-from django.utils.hashcompat import sha_constructor
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy as _
 
 
 class PasswordProperty(db.TextProperty):
@@ -70,18 +57,19 @@ class PasswordProperty(db.TextProperty):
             alg, seed, passw = value.split('$')
             return value            
         except:# no esta codificado el password, lo codificamos
+            import re
             if len(value) < 5 or len(value) > 12:
                 raise ValueError(_("Invalid password"))
             if re.search(u'[^a-zA-Z0-9]', value):
                 raise ValueError(_("Invalid password"))
             from random import random
+            from django.utils.hashcompat import sha_constructor
             alg = "sha1"
             seed = sha_constructor(str(random()) + str(random())).hexdigest()[:5]
             passw = sha_constructor(seed + str(value)).hexdigest()
             return '%s$%s$%s' % (alg, seed, passw)
-        
-        
-    
+
+
 class UsernameProperty(db.StringProperty):
     '''
         Amplia la clase string para controlar que no se usen caracteres no permitidos
@@ -94,13 +82,14 @@ class UsernameProperty(db.StringProperty):
         raw = raw.lower()
         if len(raw) < 5:
             raise ValueError(_("Invalid username"))
+        import re
         if re.search(r'[^a-z0-9]', raw):
             raise ValueError(_("Invalid username"))
         return str(raw)
     
-from django.utils import simplejson
-from google.appengine.api import datastore_types
+
 class JSONProperty(db.Property):
+    from google.appengine.api import datastore_types
     def get_value_for_datastore(self, model_instance):
         value = super(JSONProperty, self).get_value_for_datastore(model_instance)
         return self._deflate(value)
@@ -115,10 +104,12 @@ class JSONProperty(db.Property):
         if value is None:
             return {}
         if isinstance(value, unicode) or isinstance(value, str):
+            from django.utils import simplejson
             return simplejson.loads(value)
         return value
     
     def _deflate(self, value):
+        from django.utils import simplejson
         return simplejson.dumps(value)
     data_type = datastore_types.Text
         

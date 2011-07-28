@@ -1,32 +1,21 @@
 # coding=utf-8
-import base64
-from django.contrib import messages
-from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404, HttpResponse
-from django.utils.translation import ugettext as _
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic.simple import direct_to_template
-
-from google.appengine.api import users
-
-from georemindme.funcs import make_random_string
-from models import User
-from models_social import *
-from models_acc import *
-from forms import *
-from exceptions import *
-from funcs import init_user_session, get_next, login_func
-from decorators import login_required
-from geoauth.clients import facebook, twitter, google
 
 """
 .. module:: views
     :platform: appengine
     :synopsis: Views for User model
 """
+
+
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, Http404, HttpResponse
+from django.utils.translation import ugettext as _
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+
+
+from decorators import login_required
+
 
 #===============================================================================
 # REGISTER VIEW
@@ -40,14 +29,17 @@ def register(request):
             
     """
     if request.method == 'POST':
+        from forms import RegisterForm
         f = RegisterForm(request.POST, prefix='user_register')
         user = None
         if f.is_valid():
             user = f.save(language=request.session['LANGUAGE_CODE'])
             if user:
+                from django.contrib import messages
                 messages.success(request, _("User registration complete, a confirmation email have been sent to %s. Redirecting to dashboard...") % user)
         return user, f
     return HttpResponseRedirect(reverse('georemindme.views.register_panel'))
+
 
 #===============================================================================
 # LOGIN VIEWS
@@ -59,18 +51,20 @@ def login(request):
         
         :return: En caso de recibir el POST devuelve un string con posibles errores y redirect con la URL a la que habría que dirigir. En caso contrario renderiza la plantilla de login.
             
-    """
-    
+    """   
     if request.method == 'POST':
+        from forms import LoginForm
         f = LoginForm(request.POST, prefix='user_login')    
         error = ''
         redirect = ''
         if f.is_valid():
+            from funcs import login_func
             error, redirect = login_func(request, f.cleaned_data['email'], f.cleaned_data['password'], f.cleaned_data['remember_me'])
         else:
             error = _("The email/password you entered is incorrect<br/>Please make sure your caps lock is off and try again")
         return error, redirect
     return render_to_response('webapp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
+
 
 def login_google(request):
     """**Descripción**: Comprueba si ya te has dado de alta en la App con tu cuenta de Google
@@ -79,6 +73,8 @@ def login_google(request):
         
        :return: En caso de exito llama a :py:func:`geouser.funcs.login_func` y redirige al panel. En caso contrario renderiza la plantilla de login.
     """
+    from google.appengine.api import users
+    from models_social import GoogleUser
     ugoogle = users.get_current_user()
     if ugoogle:
         if request.user.is_authenticated():
@@ -86,23 +82,29 @@ def login_google(request):
             if not guser:
                 guser = GoogleUser.register(user=request.user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
             if hasattr(request, 'facebook'):
-                return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))    
+                return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
+            from funcs import get_next
             return HttpResponse(get_next(request))
         if not guser:#user is not registered, register it
+            from models import User
             user = User.objects.get_by_email(ugoogle.email())
             if user:
                 guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
             else:
+                from georemindme.funcs import make_random_string
                 user = User.register(email=ugoogle.email(), password=make_random_string(length=6))
                 guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
+            from funcs import init_user_session
             init_user_session(request, user)
         else:#checks google account is confirmed, only load his account
             guser.update(ugoogle.email(), realname=ugoogle.nickname())
+            from funcs import init_user_session
             init_user_session(request, guser.user)
         return HttpResponseRedirect(get_next(request))
     #not google user
     return HttpResponseRedirect(users.create_login_url(reverse('geouser.views.login_google')))
-    
+
+
 def login_facebook(request):
     """**Descripción**: Utiliza el `protocolo OAuth <http://oauth.net/>`_ para solicitar al 
         usuario que confirme que podemos usar sus sesión de Facebook para identificarlo.
@@ -113,6 +115,7 @@ def login_facebook(request):
     """
     from geoauth.views import facebook_authenticate_request
     return facebook_authenticate_request(request)
+
 
 def login_twitter(request):
     """**Descripción**: Utiliza el `protocolo OAuth <http://oauth.net/>`_ para solicitar al usuario que confirme
@@ -129,9 +132,10 @@ def login_twitter(request):
     else:
         cls = False
         #callback_url=None
-    from geoauth.views import client_token_request, authenticate_request
+    from geoauth.views import authenticate_request
     #client_token_request(request, 'twitter', callback_url=callback_url)
     return authenticate_request(request, 'twitter', cls=True)
+
 
 #===============================================================================
 # LOGOUT VIEW
@@ -145,6 +149,7 @@ def logout(request):
     return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
     ##return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
 
+
 #===============================================================================
 # CONFIGURACION DE LA CUENTA, PRIVACIDAD, ETC.
 #===============================================================================
@@ -155,13 +160,15 @@ def update_profile(request):
         :return: Solo devuelve errores si el proceso falla.
     """
     if request.method == 'POST':
+        from forms import UserProfileForm
         f = UserProfileForm(request.POST, prefix='user_settings_profile')
         if f.is_valid():
             updated = f.save(request.session['user'], file=request.POST['avatar'])
             if updated:
                 return
         return f.errors
-    
+
+
 @login_required
 def update_user(request):
     """**Descripción**: Permite actualizar el email y la contraseña.
@@ -169,6 +176,7 @@ def update_user(request):
         :return: Solo devuelve errores si el proceso falla.
     """
     if request.method == 'POST':
+        from forms import UserForm
         f = UserForm(request.POST, prefix='user_settings')
         if f.is_valid():
             user = f.save()
@@ -187,6 +195,7 @@ def dashboard(request):
         :return: Solo devuelve errores si el proceso falla.
     """
     if request.user.username is None or request.user.email is None:
+        from forms import SocialUserForm
         if request.method == 'POST':
             f = SocialUserForm(request.POST, prefix='user_set_username')
             if f.is_valid():
@@ -200,7 +209,9 @@ def dashboard(request):
                                                                   'username': request.session['user'].username,
                                                                   })
         return render_to_response('webapp/socialsettings.html', {'form': f}, context_instance=RequestContext(request))
+    from django.views.generic.simple import direct_to_template
     return direct_to_template(request, 'webapp/dashboard.html')
+
 
 def public_profile(request, username):
     """**Descripción**: Perfil publico que veran los demas usuarios
@@ -208,6 +219,8 @@ def public_profile(request, username):
     :param username: nombre de usuario
     :type username: ni idea
     """
+    from models import User
+    from models_acc import UserCounter, UserTimeline
     profile_user = User.objects.get_by_username(username)
     if profile_user is None:
         raise Http404()
@@ -246,7 +259,9 @@ def confirm(request, user, code):
 		:type code: string
 		:return: En caso de que todo vaya correctamente solicitar identificarse al usuario. En caso contrario devuelve un mensaje de error
 	"""
+    import base64
     user = base64.urlsafe_b64decode(user.encode('ascii'))
+    from models import User
     u = User.objects.get_by_email_not_confirm(user)
     if u is not None:
         if u.confirm_user(code):
@@ -255,15 +270,19 @@ def confirm(request, user, code):
     msg = _("Invalid user %s") % user
     return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
 
+
 #===============================================================================
 # REMIND PASSWORD VIEWS 
 #===============================================================================
 def remind_user(request):
-    """**Descripción**: Resetea la contraseña de usuario
+    """
+        **Descripción**: Resetea la contraseña de usuario
 	"""
+    from forms import EmailForm
     if request.method == 'POST':
         f = EmailForm(request.POST, prefix='pass_remind')
         if f.is_valid():
+            from models import User
             user = User.objects.get_by_email(f.cleaned_data['email'])
             if user is None:
                 fail = _("Email doesn't exist")
@@ -276,6 +295,7 @@ def remind_user(request):
         f = EmailForm(prefix='pass_remind')
     return render_to_response('webapp/user_pass.html', {'form': f}, context_instance=RequestContext(request))
 
+
 def remind_user_code(request, user, code):
     """**Descripción**: Genera una nueva URL única para resetear la contraseña de usuario
     
@@ -284,12 +304,16 @@ def remind_user_code(request, user, code):
     :param code: código único para recuperar contraseña
     :type code: int
 	"""
+    import base64
     user = base64.urlsafe_b64decode(user.encode('ascii'))
+    from models import User
     user = User.objects.get_by_email(user)
     if user is not None:
+        from exceptions import OutdatedCode, BadCode
         try:
             user.reset_password(code)
             if request.method == 'POST':
+                from forms import RecoverPassForm
                 f = RecoverPassForm(request.POST, prefix='pass_recover')
                 if f.is_valid():
                     user.reset_password(code, password=f.cleaned_data['password'])
@@ -329,6 +353,8 @@ def get_followers(request, userid=None, username=None, page=1, query_id=None):
             return request.session['user'].get_followers(page=page, query_id=query_id)
         return None
     else:
+        from models import User
+        from models_acc import UserSettings
         if userid:
             profile_key = User.objects.get_by_id(userid, keys_only=True)
         elif username:
@@ -337,7 +363,8 @@ def get_followers(request, userid=None, username=None, page=1, query_id=None):
         if settings.show_followers:
             return User.objects.get_followers(userid=userid, username=username, page=page, query_id=query_id)
     return None
-    
+
+
 def get_followings(request, userid=None, username=None, page=1, query_id=None):
     """**Descripción**: Obtiene la lista de followings de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado
         
@@ -356,6 +383,8 @@ def get_followings(request, userid=None, username=None, page=1, query_id=None):
             return request.session['user'].get_followings(page=page, query_id=query_id)
         return None
     else:
+        from models import User
+        from models_acc import UserSettings
         if userid:
             user_key = User.objects.get_by_id(userid, keys_only=True)
         elif username:
@@ -365,13 +394,15 @@ def get_followings(request, userid=None, username=None, page=1, query_id=None):
             return User.objects.get_followings(userid=userid, username=username, page=page, query_id=query_id)
     return None
 
+
 @login_required
 def get_friends(request):
     users = request.user.get_friends().get_result()
     if len(users) > 0:
         return [(u.id, u.username) for u in users]
     return None
-    
+
+
 @login_required
 def add_following(request, userid=None, username=None):
     """**Descripción**:	Añade un  nuevo usuario a la lista de following del usuario logeado
@@ -384,6 +415,7 @@ def add_following(request, userid=None, username=None):
     """
     return request.session['user'].add_following(followid=userid, followname=username)
 
+
 @login_required
 def del_following(request, userid=None, username=None):
     """**Descripción**: Borra un usuario de la lista de following del usuario logeado
@@ -395,6 +427,7 @@ def del_following(request, userid=None, username=None):
 		:return: boolean con el resultado de la operacion
     """
     return request.session['user'].del_following(followid=userid, followname=username)
+
 
 @login_required
 def get_contacts_google(request):
@@ -418,6 +451,7 @@ def get_contacts_google(request):
     return render_to_response('webapp/contacts_google.html', {'contacts' : contacts, },
                               context_instance=RequestContext(request))
 
+
 @login_required
 def get_perms_google(request):
     """**Descripción**: Obtiene los permisos para acceder a los contactos de una cuenta de google
@@ -433,10 +467,10 @@ def get_friends_facebook(request):
     el usuario puede seguir
     
     """
-    from geoauth.clients.facebook import *
-
+    from geoauth.clients.facebook import FacebookClient
     c = FacebookClient(user=request.user)
     return c.get_friends_to_follow()
+
 
 @login_required
 def get_perms_twitter(request):
@@ -445,6 +479,7 @@ def get_perms_twitter(request):
     """
     from geoauth.views import client_token_request
     return client_token_request(request, 'twitter', callback_url=request.build_absolute_uri(reverse('geouser.views.get_friends_twitter')+'?cls&nologin'))
+
 
 @login_required
 def get_friends_twitter(request):
@@ -457,7 +492,7 @@ def get_friends_twitter(request):
         client_access_request(request, 'twitter')
         if 'cls' in request.GET:
             return HttpResponseRedirect(reverse('geouser.views.close_window'))
-    from geoauth.clients.twitter import *
+    from geoauth.clients.twitter import TwitterClient
     try:
         c = TwitterClient(user=request.user)
         contacts = c.get_friends_to_follow()
@@ -467,7 +502,6 @@ def get_friends_twitter(request):
     return render_to_response('webapp/contacts_twitter.html', {'contacts' : contacts, },
                               context_instance=RequestContext(request))
     
-
 
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
@@ -490,6 +524,7 @@ def get_profile_timeline(request, userid = None, username = None, page=1, query_
             return request.user.get_profile_timeline(page=page, query_id=query_id)
         return None
     else:
+        from models import User
         if userid:
             user_profile = User.objects.get_by_id(userid)
         elif username:
@@ -497,6 +532,7 @@ def get_profile_timeline(request, userid = None, username = None, page=1, query_
         if user_profile.settings.show_timeline:
             return user_profile.get_profile_timeline(page=page, query_id=query_id, querier=request.user)
     return None
+
 
 @login_required
 def get_notifications_timeline(request, page=1, query_id=None):
@@ -509,6 +545,7 @@ def get_notifications_timeline(request, page=1, query_id=None):
 		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """
     return request.user.notifications_timeline(page=page, query_id=query_id)
+
 
 @login_required
 def get_activity_timeline(request, page=1, query_id=None):
@@ -524,6 +561,7 @@ def get_activity_timeline(request, page=1, query_id=None):
 
     
 def get_avatar(request, username):
+    from models import User
     user = User.objects.get_by_username(username)
     if user is None:
         raise Http404
@@ -538,20 +576,26 @@ def get_avatar(request, username):
     default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
     size = 50
     # construct the url
+    import hashlib
+    import urllib
     gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
     gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
     return HttpResponseRedirect(gravatar_url)
+
 
 def close_window(request):
     return render_to_response('webapp/close_window.html', {}, context_instance=RequestContext(request))
 
 
 def update(request):
+    from models import User
     users = User.all()
     for user in users:
         profile = user.profile
         settings = user.settings
         counters = user.counters
+        from models_acc import SearchConfigGooglePlaces
+        from google.appengine.ext import db
         sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
         if sc is None:
             sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
