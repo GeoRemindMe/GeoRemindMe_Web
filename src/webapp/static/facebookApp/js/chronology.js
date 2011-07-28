@@ -2,8 +2,6 @@ $(document).ready(function(){
     resizeIframe();
     
     GRM.init();
-    
-    initRemovable();
 
     $('.show-all-comments').click(function(){
         //Después de mostrar los comentarios ocultamos el botón
@@ -170,8 +168,8 @@ function sendComment2(textarea,suggestion_id){
             textarea.parent()
             c=$('#commentTemplate').tmpl(response).appendTo('#commentList-'+suggestion_id);
             c.find(".like-dislike").like();
+            c.find(".removable").removable();
             //resetInput(textarea);
-            initRemovable();
             resizeIframe();
         },
         error:{

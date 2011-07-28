@@ -54,10 +54,10 @@ GRM.like = function(settings) {
 
 
         // counter incremental
-        var inc = $(this).find('.increase');
+        /*var inc = $(this).find('.increase');
         $.each(inc, function(index,item){
             $(item).text(parseInt($(item).text())+1);
-        });
+        });*/
         
         $(this).click(function() {
             
@@ -74,7 +74,7 @@ GRM.like = function(settings) {
                         puntuation: vote
                     },
                     context: $(this),
-                    success: function(){
+                    success: function(data){
                         
                         // disliking
                         if (typeof $(this).attr('like') != "undefined" ) {
@@ -104,6 +104,8 @@ GRM.like = function(settings) {
                             if (settings.dislike_class)
                                 $(this).addClass(settings.dislike_class);
                             }
+                            
+                            $(this).find('.increase').text(data.votes);
                         
                     },
                     complete: function()
@@ -205,85 +207,74 @@ GRM.remember = function(settings) {
     });
 };
 
-jQuery.fn.like = GRM.like;
-jQuery.fn.remember = GRM.remember;
+GRM.removable = function() {
 
-GRM.init = function() {
-        $(".like-dislike").like();
-        $(".remember-forget").remember();
-    }
-
-//$(document).ready(GRM.init);
-
-function initRemovable(){
-
-    $(".removable").hide();
-    $(".removable").parent().hover(
-        function(){$(this).find(".removable:first").show()},
-        function(){$(this).find(".removable:first").hide()}
-    )
-    $(".removable").click(function(){
-        var id=$(this).attr('value');
-        var type=$(this).attr('type');
+    return this.each(function(){
+        $(this).hide();
         
-        if(type=="suggestion"){
-            data={eventid:id};
-        }else if (type=="comment"){
-            data={comment_id:id};
-        }
-        var elem=$(this)
-        $.ajax({
-            type: "POST",
-            url: "/ajax/delete/"+type+"/",
-            data: data,
-            dataType:'json',
-            success: function(msg){
-                if(msg==true){
+        var item = $(this);
+        
+        $(this).parent().hover(
+            function(){item.show();},
+            function(){item.hide();}
+        );
 
-                    if (type=="comment"){
-                        //Eliminamos el comentario
-                        var preElem=elem.parent().prev();
-                        var posElem=elem.parent().next();
-                        //parentTree=elem.parentsUntil('.suggestion-element');
-                        if(preElem.size()==0 && posElem.size()==0){
-                            //Si al borrar el comentario ya no quedan más elementos
-                            //Ocultamos la caja de comentarios
-                            elem.parent().parent().next().addClass('hidden');
-                            
-                        }
-                        elem.parent().remove()
-                        
-                    }else if(type=="suggestion")
-                        elem.parent().parent().remove()
-                }
-            },
-            error:function(){
-            }
+        $(this).click(function(){
+            var id = $(this).attr('value'), type = $(this).attr('type');
             
+            var data = { eventid:id,  comment_id:id};
+            
+            $.ajax({
+                type: "POST",
+                url: "/ajax/delete/"+type+"/",
+                data: data,
+                dataType:'json',
+                context:$(this),
+                success: function(msg){
+                    if(msg==true){
+
+                        if (type=="comment"){
+                            //Eliminamos el comentario
+                            var preElem=$(this).parent().prev();
+                            var posElem=$(this).parent().next();
+                            //parentTree=elem.parentsUntil('.suggestion-element');
+                            if(preElem.size()==0 && posElem.size()==0){
+                                //Si al borrar el comentario ya no quedan más elementos
+                                //Ocultamos la caja de comentarios
+                                $(this).parent().parent().next().addClass('hidden');
+                                
+                            }
+                            $(this).parent().remove();
+                            
+                        }else if(type=="suggestion")
+                            $(this).parent().parent().remove()
+                    }
+                },
+                error:function(){
+                }
+                
+            });
         });
+
     });
+
 }
 
-function loadPage(dict){
-            var page=dict['page'];
-            var container=dict['container']
-            var url=dict['url']
-            var template=dict['template']
-            var data=dict["data"]
+GRM.loadPage = function(params){
+    
+            var page=params['page'];
+            var container=params['container'];
+            var url=params['url'];
+            var template=params['template'];
+            var data=params["data"];
+            var current_page = ( typeof $(container).attr('page') == 'undefined' )?1:parseInt($(container).attr('page'));
             
-            if ( typeof loadPage.currentPage == 'undefined' ) {
-            // It has not... perform the initilization
-                loadPage.currentPage=1
-            }
             if (page=='next')
-                loadPage.currentPage++;
-            else if(page=='prev' && loadPage.currentPage>1)
-                loadPage.currentPage--;
-            else
-                loadPage.currentPage=page;
-            
-            page=loadPage.currentPage;
-            data['page']=page;
+                current_page++;
+            else if(page=='prev' && current_page>1)
+                current_page--;
+
+            data['page'] = current_page;
             
             $.ajax({
                 type: 'POST',
@@ -291,21 +282,46 @@ function loadPage(dict){
                 data:data,
                 success: function(data){
                     
-                    $(container).empty()
+                    $(container).attr("page",current_page);
+                    
+                    $(container).empty();
                     $.each(data[1], function(index,suggestion){
                         $(template).tmpl( {element:suggestion} ).appendTo(container);
                     });
                     
                     //Ocultamos los botones de siguiente y anterior si es necesario
-                    if(page>1)
-                        $('#prev-page').removeClass('hidden')
+                    if(current_page>1)
+                        $('#prev-page').removeClass('hidden');
                     else
-                        $('#prev-page').addClass('hidden')
-                    
-                    return page;
+                        $('#prev-page').addClass('hidden');
                 }
             });
         }
+
+jQuery.fn.like = GRM.like;
+jQuery.fn.remember = GRM.remember;
+jQuery.fn.removable = GRM.removable;
+
+GRM.init = function() {
+        $(".like-dislike").like();
+        $(".remember-forget").remember();
+        $(".removable").removable();
+    }
+
+//$(document).ready(GRM.init);
+
+jQuery.expr[':'].regex = function(elem, index, match) {
+    var matchParams = match[3].split(','),
+        validLabels = /^(data|css):/,
+        attr = {
+            method: matchParams[0].match(validLabels) ?
+                        matchParams[0].split(':')[0] : 'attr',
+            property: matchParams.shift().replace(validLabels,'')
+        },
+        regexFlags = 'ig',
+        regex = new RegExp(matchParams.join('').replace(/^\s+|\s+$/g,''), regexFlags);
+    return regex.test(jQuery(elem)[attr.method](attr.property));
+}
 
 //Creamos nuestro propio namespace       
 //~ if (typeof GRM == "undefined" || !GRM ) {
