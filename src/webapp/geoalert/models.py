@@ -480,7 +480,7 @@ class Suggestion(Event, Visibility, Taggable):
             raise ForbiddenAccess
         
     def get_absolute_url(self):
-        return '/suggestion/%s/' % self.slug if self.slug != '' or self.slug is None else self.id
+        return '/suggestion/%s/' % self.slug if self.slug != '' or self.slug is not None else self.id
     
     def get_absolute_fburl(self):
         return '/fb%s' % self.get_absolute_url()
