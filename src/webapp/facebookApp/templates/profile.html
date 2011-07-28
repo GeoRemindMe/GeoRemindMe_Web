@@ -149,7 +149,7 @@
                                 <div class="timeline-msg">
                                     <a href="">{{obj}}</a><br>
                                 
-                                    <span class="small-text">En <a href="/fb/place/{{obj.poi.slug}}">{{obj.poi.name}}</a></span><br>
+                                    <span class="small-text">En <a href="{% url fb_view_place obj.poi.slug %}">{{obj.poi.name}}</a></span><br>
                                     <span class="timestamp"> hace {{obj.created|timesince}}</span>  
                                     <span class="action-bar">
                                         {% if request.user != obj.user.username %}

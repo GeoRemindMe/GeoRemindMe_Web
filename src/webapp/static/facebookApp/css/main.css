@@ -500,6 +500,7 @@ input{
         background-image: url('/static/facebookApp/img/delete.png');
         float:right;
         cursor:pointer;
+        margin-top:0.5em;
     }
     div.removable:hover{
         background-position: 0 32px;
@@ -511,6 +512,11 @@ input{
             font-size:0.9em;
             color: #555555;
         }
+    a.small-link{
+        font-weight:bold;
+        color: #555555;
+        text-decoration:none;
+    }
     
     ul#chronology{
         font-size: 1.1em;

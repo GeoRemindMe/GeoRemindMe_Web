@@ -12,18 +12,18 @@ Mensaje nº 125
     -->
     {% if obj.instance.user.username = request.user.username %}
         <div class="avatar">
-            <a href="/fb/user/{{request.user}}" title="{{request.user}}">
-                <img src="/user/{{request.user}}/picture/" alt="{{request.user}} avatar"/>
+            <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
+                <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
             </a><br>
-            <a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a>:
+            <a href="{% url fb_public_profile obj.instance.user.username %}/">{{obj.instance.user.username}}</a>:
         </div>
         <div class="timeline-msg">
-            <span class="small-text">Te ha gustado el comentario  de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>:</span>
+            <span class="small-text">Te ha gustado el comentario  de <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.instance.user.username}}</a>:</span>
         
     {% else %}
         <div class="avatar">
-            <a href="/fb/user/{{obj.instance.user.username}}" title="{{obj.instance.user.username}}">
-                <img src="/user/{{obj.instance.user.username}}/picture/" alt="{{obj.instance.user.username}} avatar"/>
+            <a href="{% url fb_public_profile obj.instance.user.username %}" title="{{obj.instance.user.username}}">
+                <img src="{% url user_avatar obj.instance.user.username %}" alt="{{obj.instance.user.username}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">
@@ -31,7 +31,7 @@ Mensaje nº 125
             {% if obj.instance.instance.user.username = request.user.username %}
                 <strong>tu comentario</strong>:
             {% else %}
-                el comentario de <a href="/fb/user/{{obj.instance.instance.user.username}}">{{obj.instance.instance.user.username}}</a>:
+                el comentario de <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.instance.user.username}}</a>:
             {% endif %}
             </span>
             

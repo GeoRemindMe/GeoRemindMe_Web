@@ -9,21 +9,22 @@ Mensaje nº 120
 
 {% if obj.instance.user.username = request.user.username %}
     <div class="avatar">
-        <a href="/fb/user/{{request.user}}" title="{{request.user}}">
-            <img src="/user/{{request.user}}/picture/" alt="{{request.user}} avatar"/>
+        <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
+            <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
         </a>
     </div>
-    <div class="removable" value="{{obj.instance.id}}" type="comment"><a href="#">Remove</a></div>
+    
     <div class="timeline-msg">
+        <div class="removable" value="{{obj.instance.id}}" type="comment"><a href="#">Remove</a></div>
         <span class="small-text">Has añadido:</span><br>
 {% else %}
     <div class="avatar">
-        <a href="/fb/user/{{obj.instance.user.username}}" title="{{obj.instance.user.username}}">
-            <img src="/user/{{obj.instance.user.username}}/picture/" alt="{{obj.instance.user.username}} avatar"/>
+        <a href="{% url fb_public_profile obj.instance.user.username %}" title="{{obj.instance.user.username}}">
+            <img src="{% url user_avatar obj.instance.user.username %}" alt="{{obj.instance.user.username}} avatar"/>
         </a>
     </div>
     <div class="timeline-msg">
-        <span class="small-text"><a href="/fb/user/{{obj.instance.user.username}}/">{{obj.instance.user.username}}</a> ha añadido:</span><br>
+        <span class="small-text"><a href="{% url fb_public_profile obj.instance.user.username %}/">{{obj.instance.user.username}}</a> ha añadido:</span><br>
 {% endif %}
         
 
@@ -37,12 +38,11 @@ Mensaje nº 120
         {% else %}
             la sugerencia
         {% endif %}
-        : {{obj.instance.instance.name|truncatewords:10}} </span><br>
+        : <a href="{% url fb_view_suggestion obj.instance.instance.id %}" class="small-link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
         
         
         <span class="timestamp"> hace {{obj.created|timesince}}</span>
         <span class="action-bar">
-            | <a href="/fb/suggestion/{{obj.instance.instance.id}}">Ver sugerencia</a> 
             {% if not obj.is_private %}
                 | 
                 <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="comment">
