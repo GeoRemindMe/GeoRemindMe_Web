@@ -29,6 +29,10 @@ class EventHelper(object):
         '''
         Obtiene un evento por su id, COMPRUEBA VISIBILIDAD, solo obtiene los publicos
         '''
+        try:
+            id = int(id)
+        except:
+            raise TypeError
         event = memcache.deserialize_instances(memcache.get('%sEVENT%s' % (memcache.version, id)), _search_class=self._klass)
         if event is None:
             event = self._klass.get_by_id(int(id))
@@ -185,6 +189,33 @@ class AlertHelper(EventHelper):
 class SuggestionHelper(EventHelper):
     _klass = Suggestion
     
+    def get_by_slug_querier(self, slug, querier):
+        '''
+        Obtiene un evento por su id, COMPRUEBA VISIBILIDAD, solo obtiene los publicos
+        '''
+        suggestion = memcache.deserialize_instances(memcache.get('%sEVENT%s' % (memcache.version, slug)), _search_class=self._klass)
+        if suggestion is None:
+            suggestion = self._klass.all().filter('slug =', slug).get()
+            if suggestion is None:
+                try:
+                    suggestion = Suggestion.get_by_id(int(slug))
+                except:
+                    raise TypeError
+            if suggestion is not None:
+                if suggestion._is_private():
+                    if not querier.is_authenticated():
+                        return None 
+                    if suggestion.user.key() != querier.key():
+                        return None
+                elif suggestion._is_shared():
+                    if not querier.is_authenticated():
+                        return None 
+                    if not suggestion.user_invited(querier):
+                        return None 
+                memcache.set('%sEVENT%s' % (memcache.version, slug), memcache.serialize_instances(suggestion),300)
+                return suggestion
+        return suggestion
+    
     def get_by_user(self, user, querier, page = 1, query_id = None):
         '''
         Obtiene una lista con todos los Eventos
@@ -225,7 +256,6 @@ class SuggestionHelper(EventHelper):
                      } for suggestion in p.fetch_page(page)
                     ]
              ]
-            
             
 
 class AlertSuggestionHelper(AlertHelper):

@@ -106,6 +106,11 @@ class NoConfirmedException(Error):
     """ Email not confirmed """
     code = -32001
     message = _('Account not confirmed, please, check email')    
+    
+class DeadlineException(Error):
+    """ Email not confirmed """
+    code = -32002
+    message = _('Deadline exceeded')   
 
     
 class BadSessionException(Error):

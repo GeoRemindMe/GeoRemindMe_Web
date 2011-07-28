@@ -13,6 +13,20 @@ GRM.common.get = function(s){
     return s;
 };
 
+/*
+    <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
+        <span class="dislike">
+            <span class="hoverlink">Ya no me gusta</span> 
+            <span class="text like-text increase">{{obj.vote_counter}}</span> personas
+        </span>
+
+        <span class="like">
+            Me gusta
+        </span>
+    </span>
+    
+    $('.like-dislike').remember({like_class: "xxx", dislike_class: "xxx", progress_class: "xxx"});
+*/
 GRM.like = function(settings) {
     
     settings = jQuery.extend({
@@ -102,7 +116,104 @@ GRM.like = function(settings) {
     });
 };
 
+/*
+    <span title="Guardar en favoritos"  class="remember-forget" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}>
+        <span class="remember">Guardar</span>
+        <span class="forget">Guardado</span>
+    </span>
+    
+    $('.remember-forget').remember({remember_class: "xxx", forget_class: "xxx", progress_class: "xxx"});
+*/
+GRM.remember = function(settings) {
+    
+    settings = jQuery.extend({
+        remember_class: null,
+        forget_class: null,
+        progress_class: null        
+    }, settings);
+       
+    return this.each(function(){
+
+        // get init state
+        var state = (typeof $(this).attr('remember') != "undefined" );
+
+        // auto-init classes
+        if (state && settings.forget_class)
+            $(this).addClass(settings.forget_class);
+        if (!state && settings.remember_class)
+            $(this).addClass(settings.remember_class);
+
+        // auto-init show/hide
+        if (state)
+            $(this).find('.remember').hide();
+        else
+            $(this).find('.forget').hide();
+
+        $(this).click(function() {
+            
+            var id = $(this).attr('value'), url = (typeof $(this).attr('remember') != "undefined" )?"/ajax/delete/suggestion/follower/":"/ajax/add/suggestion/follower/";
+            
+            if (settings.progress_class)
+                $(this).addClass(settings.progress_class);
+            
+            $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        eventid:id
+                    },
+                    context: $(this),
+                    success: function(){
+                        
+                        // disliking
+                        if (typeof $(this).attr('remember') != "undefined" ) {
+                            // send vote -1
+                            $(this).find('.forget').hide();
+                            $(this).find('.remember').show();
+                            $(this).removeAttr("remember");
+                            
+                            if (settings.forget_class)
+                                $(this).removeClass(settings.forget_class);
+                            
+                            if (settings.remember_class)
+                                $(this).addClass(settings.remember_class);
+                                
+                        }
+                        
+                        // liking
+                        else {
+                            // send vote +1
+                            $(this).find('.remember').hide();
+                            $(this).find('.forget').show();
+                            $(this).attr("remember","true");
+                            
+                            if (settings.remember_class)
+                                $(this).removeClass(settings.remember_class);
+                            
+                            if (settings.forget_class)
+                                $(this).addClass(settings.forget_class);
+                            }
+                        
+                    },
+                    complete: function()
+                    {
+                        if (settings.progress_class)
+                            $(this).removeClass(settings.progress_class);
+                    }
+                });
+        });
+    });
+};
+
 jQuery.fn.like = GRM.like;
+jQuery.fn.remember = GRM.remember;
+
+GRM.init = function() {
+        $(".like-dislike").like();
+        $(".remember-forget").remember();
+    }
+
+//$(document).ready(GRM.init);
 
 function initRemovable(){
 

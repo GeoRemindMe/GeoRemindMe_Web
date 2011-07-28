@@ -1,6 +1,7 @@
 $(document).ready(function(){
     resizeIframe();
-    $(".like-dislike").like();
+    
+    GRM.init();
     
     initRemovable();
 
