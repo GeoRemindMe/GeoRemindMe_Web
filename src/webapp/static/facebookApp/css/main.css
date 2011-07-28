@@ -1097,6 +1097,10 @@ input{
         width: 100%;
 
     }
+    #public-profile img#user-avatar{
+        max-height:50px;
+        max-width:50px;
+    }
     #public-profile p{
         margin:0;
     }
