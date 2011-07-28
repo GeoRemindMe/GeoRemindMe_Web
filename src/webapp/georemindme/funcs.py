@@ -89,6 +89,6 @@ def u_slugify(txt):
         txt = re.sub('[\s/]', '_', txt, re.UNICODE) # replace remaining spaces with underscores
         txt = re.sub('(\d):(\d)', r'\1-\2', txt, re.UNICODE) # replace colons between numbers with dashes
         txt = re.sub('"', "'", txt, re.UNICODE) # replace double quotes with single quotes
-        txt = re.sub(r'[?,:!@#~`+=$%^&\\*()\[\]{}<>]','',txt, re.UNICODE) # remove some characters altogether
+        txt = re.sub(r'[?,:!@#~`+=$%^&\\*()\[\]{}<>]ñ','',txt, re.UNICODE) # remove some characters altogether
         return txt
 

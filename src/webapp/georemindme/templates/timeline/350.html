@@ -3,7 +3,7 @@ Mensaje nº 350
 350: Nueva lista de sugerencias creada
 -->
 <div class="avatar">
-    <a href="/fb/user/{{obj.username}}" title="{{obj.username}}">
+    <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
         <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
     </a>
 </div>
@@ -18,7 +18,7 @@ Mensaje nº 350
 
 {{obj.msg|safe}} <br>
 {% if obj.instance.poi.slug %}
-    <span class="suggestionPlace">En <a href="/fb/place/{{obj.instance.poi.slug}}">{{obj.instance.poi.name}}</a></span><br>
+    <span class="suggestionPlace">En <a href="{% url fb_view_place obj.instance.poi.slug %}">{{obj.instance.poi.name}}</a></span><br>
 {% endif %}
 
 
@@ -62,7 +62,7 @@ Mensaje nº 350
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}
                 
-                    <img src="/user/{{c.username}}/picture/" alt="user avatar"><a href="/fb/user/{{c.username}}/">{{c.username}}</a>: {{c.msg}}<br>
+                    <img src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
                     <span class="timestamp">{{c.created|timesince}} ago</span> - 
                     
                     

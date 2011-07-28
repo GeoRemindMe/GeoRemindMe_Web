@@ -19,22 +19,17 @@ import memcache
 #===============================================================================
 # PERFIL DE EVENTOS
 #===============================================================================
-def suggestion_profile(request, id, template='webapp/suggestionprofile.html'):
+def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     """Devuelve el perfil de una sugerencia, comprueba la visibilidad de una funcion
         
             :param id: identificador de la sugerencia
             :type id: :class:`ìnteger`
     """
-    suggestion = Suggestion.objects.get_by_id(id)
+    suggestion = Suggestion.objects.get_by_slug_querier(slug, querier=request.user)
     if suggestion is None:
-        raise Http404
-    if suggestion._is_private() and suggestion.user.id != request.user.id:
-        # sugerencia privada, pero de otro usuario
-        raise Http404
-    elif suggestion._is_shared() and not suggestion.user_invited(request.user):
         raise Http404 
     from geovote.views import get_comments_event
-    comments = get_comments_event(request, id)
+    comments = get_comments_event(request, suggestion.id)
     from geovote.models import Vote
     return render_to_response(template, {
                                         'suggestion': suggestion,

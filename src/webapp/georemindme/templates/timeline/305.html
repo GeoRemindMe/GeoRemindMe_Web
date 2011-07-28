@@ -13,25 +13,25 @@ obj.instance==geovote.models.Vote
     {% if obj.instance.user.username = request.user.username %}
         <!-- Es de mi timeline -->        
         <div class="avatar">
-            <a href="/fb/user/request.user" title="Ver perfil en GeoRemindMe">
-                <img src="/user/{{request.user}}/picture/" alt="{{request.user}} avatar"/>
+            <a href="{% url fb_public_profile request.user %}" title="Ver perfil en GeoRemindMe">
+                <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">
-            <span class="small-text">Te gusta la sugerencia de <a href="/fb{{obj.instance.instance.user.get_absolute_url}}">{{obj.instance.instance.user}}</a>:</span>
+            <span class="small-text">Te gusta la sugerencia de <a href="{% url fb_public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:</span>
     {% else %}
         <div class="avatar">
-            <a href="/fb/user/{{obj.username}}" title="Ver perfil en GeoRemindMe">
+            <a href="{% url fb_public_profile obj.username %}" title="Ver perfil en GeoRemindMe">
                 <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">
             <span class="small-text">
-                <a href="/fb/user/{{obj.username}}">{{obj.username}}</a>: me gusta 
+                <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a>: me gusta 
                 {% if obj.instance.instance.user.username = request.user.username %}
                     <strong>tu sugerencia</strong>:
                 {% else %}
-                    la sugerencia de <a href="/fb{{obj.instance.instance.user.get_absolute_url}}">{{obj.instance.instance.user}}</a>:
+                    la sugerencia de <a href="{% url fb_public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:
                 {% endif %}
             </span>
     {% endif %}
