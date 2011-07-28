@@ -8,7 +8,7 @@ def new_comment(sender, **kwargs):
     from google.appengine.ext.deferred import defer
     from geoalert.models import Suggestion
     sender.instance.put(from_comment=True)
-    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=120)
+    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=120, visible=False)
     from google.appengine.ext import db
     p = db.put_async([timeline])
     if hasattr(sender.instance, '_vis'):
