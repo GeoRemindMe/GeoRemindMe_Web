@@ -1,6 +1,4 @@
-<!--
-Mensaje nº 305:
--->
+Mensaje nº 305:<br>
 <!--
 Te gusta una sugerencia
 obj.instance==geovote.models.Vote
@@ -27,7 +25,7 @@ obj.instance==geovote.models.Vote
         </div>
         <div class="timeline-msg">
             <span class="small-text">
-                <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a>: me gusta 
+                A <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> le gusta 
                 {% if obj.instance.instance.user.username = request.user.username %}
                     <strong>tu sugerencia</strong>:
                 {% else %}
