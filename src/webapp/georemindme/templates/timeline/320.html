@@ -1,0 +1,21 @@
+{% load humanize %}
+
+<!--
+Mensaje nº 320
+-->
+<!--
+320: Nueva alerta ligada a sugerencia
+-->
+
+
+
+<div class="avatar">
+    <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
+        <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
+    </a>
+</div>
+<div class="timeline-msg">
+    Nueva alerta ligada a la sugerencia de <a href="{% url fb_public_profile obj.instance.suggestion.user.username %}">{{obj.instance.suggestion.user.username}}</a>:<br>
+    <a href="{% url fb_view_suggestion obj.instance.suggestion.slug %}">{{obj.instance.suggestion.name}}</a><br>
+    <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+</div>
