@@ -1,27 +1,19 @@
 # coding=utf-8
-"""
-This file is part of GeoRemindMe.
-
-GeoRemindMe is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-GeoRemindMe is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 
 """
+.. module:: forms
+    :platform: appengine
+    :synopsis: Formularios comunes para todo el proyecto
+"""
+
 
 from django import forms
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy as _
 
 
 class ContactForm(forms.Form):
-    name = forms.CharField(required=True)
-    email = forms.EmailField(required=True)
-    message = forms.CharField(required=True,widget=forms.Textarea(attrs={'cols': 10, 'rows': 10}))
+    name = forms.CharField(required=True, label=_('Name'))
+    email = forms.EmailField(required=True, label=_('Email'))
+    message = forms.CharField(label=_('Message'), required=True,
+                              widget=forms.Textarea(attrs={'cols': 10, 'rows': 10})
+                              )

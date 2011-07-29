@@ -1,5 +1,12 @@
 # coding=utf-8
 
+"""
+.. module:: decorators
+    :platform: appengine
+    :synopsis: Decoradores comunes para todo el proyecto
+"""
+
+
 class classproperty(object):
     '''
     Define una propiedad de clase

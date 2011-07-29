@@ -1,9 +1,16 @@
-import os
-from datetime import datetime
+# coding=utf-8
+
+"""
+.. module:: Cron
+    :platform: appengine
+    :synopsis: Funciones cron
+"""
+
+
 from django.http import HttpResponse, HttpResponseForbidden
 from google.appengine.ext import db
-from geouser.models import User
 from libs.decorator import decorator
+
 
 @decorator
 def cron_required(func, *args, **kwargs):
@@ -21,15 +28,19 @@ class Stats_base(db.Model):
     date = db.DateTimeProperty(required=True)
     new = db.IntegerProperty(default=0, required=True)
     total = db.IntegerProperty(default=0, required=True)
-    
+
+
 class Stats_user(Stats_base):
     pass
+
 
 class Stats_googleuser(Stats_user):
     pass
 
+
 class Stats_alert_new(Stats_base):
     pass
+
 
 class Stats_alert_done(Stats_base):
     pass
@@ -69,6 +80,7 @@ class Stats_alert_done(Stats_base):
 @cron_required
 def clean_sessions(request):
     from geomiddleware.sessions.models import _Session_Data
+    from datetime import datetime
     sessions = _Session_Data.all().filter('expires <', datetime.now())
     try:
         db.delete([session for session in sessions])
@@ -89,11 +101,9 @@ def report_notify(request, time):
         if report is not None:
             report.send_notification(user)
             report.delete()
-
     # correos de resumen de sugerencia
     from geouser.mails import send_notification_suggestion_summary
     users = UserSettings().all().filter('time_notification_suggestions_follower =', time).run()
-    
     for user in users:
         suggs = {}
         user = user.parent()
@@ -106,10 +116,5 @@ def report_notify(request, time):
                                suggestions=suggs,
                                language=user.get_language()
                                )
-            
     # TODO: correos de comentarios
-    
     return HttpResponse()
-                
-        
-        

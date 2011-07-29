@@ -68,19 +68,21 @@ class NotificationHandler(TaskHandler):
 @admin_required
 def timelinefollowers_worker(request):
     timeline = db.get(request.POST['timeline'])
-    notified = timeline.notify_followers()
-    if notified:
-        return HttpResponse()
-    return HttpResponseBadRequest()
+    if timeline is not None:
+        notified = timeline.notify_followers()
+        if notified:
+            return HttpResponse()
+        return HttpResponseBadRequest()
 
 @csrf_exempt
 @admin_required
 def list_notify_worker(request):
     list = db.get(request.POST['list'])
-    notified = list.notify_followers()
-    if notified:
-        return HttpResponse()
-    return HttpResponseBadRequest()
+    if list is not None:
+        notified = list.notify_followers()
+        if notified:
+            return HttpResponse()
+        return HttpResponseBadRequest()
     
         
         

@@ -1,16 +1,21 @@
 # coding=utf-8
 
-from django.utils.translation import gettext_lazy as _
+"""
+.. module:: models
+    :platform: appengine
+    :synopsis: Modelo de voto y comentario
+"""
 
+
+from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
 
-from georemindme.paging import *
 from georemindme.models_utils import Visibility
 from geouser.models import User
-from watchers import *
+
 
 class CommentHelper(object):
-    
+    """ Helper de la clase comentario """
     def get_by_id(self, id):
         try:
             id = long(id)
@@ -45,6 +50,7 @@ class CommentHelper(object):
         """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
+        from georemindme.paging import PagedQuery
         q = Comment.all().filter('user =', user).filter('deleted =', False).order('-created')
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
@@ -74,6 +80,7 @@ class CommentHelper(object):
         """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
+        from georemindme.paging import PagedQuery
         q = Comment.all().filter('instance =', instance).filter('deleted =', False).order('-created')
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
@@ -129,9 +136,7 @@ class CommentHelper(object):
         
 
 class Comment(Visibility):
-    '''
-    Se puede comentar cualquier objeto del modelo
-    '''
+    """ Se puede comentar cualquier objeto del modelo """
     user = db.ReferenceProperty(User, collection_name='comments')
     instance = db.ReferenceProperty(None)
     created = db.DateTimeProperty(auto_now_add=True)
@@ -140,11 +145,7 @@ class Comment(Visibility):
     deleted = db.BooleanProperty(default=False)
     
     objects = CommentHelper()
-    """
-    @classproperty
-    def objects(self):
-        return CommentHelper()
-    """
+
     @property
     def id(self):
         return self.key().id()
@@ -180,19 +181,20 @@ class Comment(Visibility):
             self.put()
             comment_deleted.send(self)
             
-        
-    
+
 from georemindme.models_utils import ShardedCounter
 class VoteCounter(ShardedCounter):
-    '''
+    """
         Contador sharded
         instance es el key del objeto al que apunta
-    '''
+    """
     pass
 
+
 class VoteHelper(object):
+    """ Helper de la clase Vote """
     def user_has_voted(self, user, instance_key):
-        '''
+        """
         Comprueba que un usuario ya ha realizado un voto
         
             :param user: usuario que realiza el voto
@@ -201,7 +203,7 @@ class VoteHelper(object):
             :type instance_key: :class:`string`
             
             :returns: True si ya ha votado, False en caso contrario
-        '''
+        """
         if isinstance(user, db.Key):
             vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND user = :user', ins=instance_key, user=user).get()
         else:
@@ -213,7 +215,7 @@ class VoteHelper(object):
         return False
     
     def get_user_vote(self, user, instance_key):
-        '''
+        """
         Obtiene el voto de un usuario a un objeto determinado
         
             :param user: usuario a buscar
@@ -222,25 +224,24 @@ class VoteHelper(object):
             :type instance_key: :class:`db.Key`
             
             :returns: :class:`geovote.models.Vote` o None
-        '''
+        """
         vote = Vote.all().filter('instance =', instance_key).filter('user =', user).get()
         return vote
     
     def get_vote_counter(self, instance_key):
-        '''
+        """
         Obtiene el contador de votos de objeto determinado
         
             :param instance_key: clave del objeto al que hay que buscar el voto
             :type instance_key: :class:`db.Key`
             
             :returns: :class:`integer`
-        '''
+        """
         return VoteCounter.get_count(instance_key)
         
-    
 
 class Vote(db.Model):
-    
+    """ Se podria votar cualquier objeto """
     user = db.ReferenceProperty(User, collection_name='votes')
     instance = db.ReferenceProperty(None)
     created = db.DateTimeProperty(auto_now_add=True)
@@ -254,7 +255,7 @@ class Vote(db.Model):
     
     @classmethod
     def do_vote(cls, user, instance, count=1):
-        '''
+        """
         Añade un voto de un usuario a una instancia
         
             :param user: usuario que realiza la votacion
@@ -265,7 +266,7 @@ class Vote(db.Model):
             :type count: :class:`integer`
             
             :returns: True si se realizo el voto, False si ya se habia votado
-        '''
+        """
         from signals import vote_new, vote_deleted
         count = int(count)
         vote = cls.objects.get_user_vote(user, instance.key())
@@ -288,7 +289,6 @@ class Vote(db.Model):
         VoteCounter.increase_counter(self.instance.key(), -1)
         vote_deleted.send(self)
         super(Vote, self).delete()
-                
-        
-        
-    
+
+
+from watchers import *

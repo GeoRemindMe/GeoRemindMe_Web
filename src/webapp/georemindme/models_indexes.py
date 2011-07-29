@@ -1,10 +1,16 @@
 # coding=utf-8
 
+"""
+.. module:: models_indexes
+    :platform: appengine
+    :synopsis: Modelos para almacenar indices comunes a todo el proyecto
+"""
+
+
 from google.appengine.ext import db
-from geouser.models import *
-from geomail import *
-from exceptions import PrivateException
-from signals import *
+from django.utils.translation import gettext_lazy as _
+
+from geouser.models import User
 
 
 """ QUIZAS SERIA MEJOR LLEVAR LAS INVITACIONES ACEPTADAS COMO UNA LISTA Y NO CREAR UNA NUEVA INSTANCIA POR CADA LISTA
@@ -12,11 +18,10 @@ class InvitacionAceptadaIndex(db.Model):
     recomendacion = db.ReferenceProperty(Recomendacion)
     users = db.ListProperty(db.Key)
 """ 
-
 class InvitationHelper(object):
-    
+    """ Helper de la clase Invitation """
     def is_user_invited(self, instance, user):
-        '''
+        """
         Comprueba si un usuario esta invitado a una instancia
         
             :param instance: instancia a la que deberia estar invitado
@@ -25,7 +30,7 @@ class InvitationHelper(object):
             :type user: :class:`geouser.models.User`
             
             :returns: True si esta invitado, False en caso contrario
-        '''
+        """
         if getattr(instance, 'user', None) == user:
             return True
         invitation = db.GqlQuery('SELECT __key__ FROM Invitation WHERE instance = :ins AND to = :user', ins=instance.key(), user=user.key()).get()
@@ -34,7 +39,7 @@ class InvitationHelper(object):
         return False
     
     def get_invitation(self, instance, user):
-        '''
+        """
         Obtiene la invitacion (si existe) de un usuario a una instancia
         
             :param instance: instancia a la que deberia estar invitado
@@ -43,7 +48,7 @@ class InvitationHelper(object):
             :type user: :class:`geouser.models.User`
             
             :returns: :class:`georemindme.model_indexes.Invitation` o None
-        '''
+        """
         if getattr(instance, 'user', None) == user:
             return True
         invitation = Invitation.all().filter('instance =', instance).filter('to =', user).get()
@@ -56,19 +61,19 @@ class Invitation(db.Model):
     to = db.ReferenceProperty(User, collection_name='toinvitation_set')
     created = db.DateTimeProperty(auto_now_add=True)
     instance = db.ReferenceProperty(None, required = True)
-    '''
+    """
     STATUS CODES:
             0 - Pending
             1 - Accepted
             2 - Declined
             3 - Ignored
-    '''
+    """
     status = db.IntegerProperty(default=0)
     objects = InvitationHelper()
     
     @classmethod
     def send_invitation(cls, sender, to, instance, status=0):
-        '''
+        """
         Envia una invitacion a un usuario. Si la instancia es algun objeto privado, 
         lanza excepcion.
         
@@ -81,8 +86,7 @@ class Invitation(db.Model):
             
             :returns: :class:`georemindme.models_indexes.Invitation`
             :raises: :class:`georemindme.exceptions.PrivateException` si el objeto es privado
-        '''
-        
+        """
         invitation = cls.objects.get_invitation(instance, to)
         if invitation is not None:
             if invitation.status == 2:  # la invitacion fue rechazada, se creara otra
@@ -109,18 +113,19 @@ class Invitation(db.Model):
     def set_status(self, set_status=0):
         self.status = set_status
         self.put()
+        from signals import invitation_changed
         invitation_changed.send(sender=self)
          
     def put(self):
         if not self.is_saved():
             super(Invitation, self).put()
+            from geouser.models_acc import UserTimelineSystem
             timeline = UserTimelineSystem(user=self.sender, msg_id=110, instance=self)
             timeline2 = UserTimelineSystem(user=self.to, msg_id=111, instance=self)
             put = db.put_async([timeline, timeline2])            
             if self.to.settings.notification_invitation:
+                from geomail import send_notification_invitation
                 send_notification_invitation(self.to.email, self.sender, self)
             put.get_result()
         else:
-            super(Invitation, self).put()
-         
-        
+            super(Invitation, self).put()            

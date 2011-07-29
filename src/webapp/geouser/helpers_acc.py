@@ -21,7 +21,8 @@ class UserSettingsHelper(object):
             from google.appengine.ext import db
             key = db.Key.from_path(User.kind(), userid, UserSettings.kind(), 'settings_%s' % userid)
             settings = db.get(key)
-            memcache.set('%s%s' % (memcache.version, settings.key().name()), memcache.serialize_instances(settings), 300)
+            if settings is not None:
+                memcache.set('%s%s' % (memcache.version, settings.key().name()), memcache.serialize_instances(settings), 300)
         return settings
 
     
@@ -39,7 +40,8 @@ class UserProfileHelper(object):
             from google.appengine.ext import db
             key = db.Key.from_path(User.kind(), userid, UserProfile.kind(), 'profile_%s' % userid)
             profile = db.get(key)
-            memcache.set('%s%s' % (memcache.version, profile.key().name()), memcache.serialize_instances(profile), 300)
+            if profile is not None:
+                memcache.set('%s%s' % (memcache.version, profile.key().name()), memcache.serialize_instances(profile), 300)
         return profile
         """
         if async:

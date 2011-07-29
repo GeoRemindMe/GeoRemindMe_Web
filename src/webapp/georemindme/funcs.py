@@ -1,13 +1,14 @@
 # coding=utf-8
 
+"""
+.. module:: funcs
+    :platform: appengine
+    :synopsis: Funciones comunes para todo el proyecto
+"""
+
+
 from django.utils import simplejson
-
-import datetime  
-import time 
-
-from google.appengine.api import users 
-from google.appengine.ext import db 
-from django.utils import simplejson  
+from google.appengine.ext import db
 
 
 class GqlEncoder(simplejson.JSONEncoder): 
@@ -23,21 +24,21 @@ class GqlEncoder(simplejson.JSONEncoder):
     def default(self, obj): 
 
         """Tests the input object, obj, to encode as JSON.""" 
-
+        
+        from datetime import datetime
+        from time import mktime, struct_time
+        from google.appengine.api import users
         if hasattr(obj, '__json__'): 
             return getattr(obj, '__json__')() 
-
         if isinstance(obj, db.GqlQuery): 
             return list(obj) 
-
         elif isinstance(obj, db.Model): 
             properties = obj.properties().items() 
             output = {} 
             for field, value in properties: 
                 output[field] = getattr(obj, field) 
             return output 
-
-        elif isinstance(obj, datetime.datetime): 
+        elif isinstance(obj, datetime): 
             output = {} 
             fields = ['day', 'hour', 'microsecond', 'minute', 'month', 'second', 'year'] 
             methods = ['ctime', 'isocalendar', 'isoformat', 'isoweekday', 'timetuple'] 
@@ -45,26 +46,21 @@ class GqlEncoder(simplejson.JSONEncoder):
                 output[field] = getattr(obj, field) 
             for method in methods: 
                 output[method] = getattr(obj, method)() 
-            output['epoch'] = time.mktime(obj.timetuple()) 
+            output['epoch'] = mktime(obj.timetuple()) 
             return output 
-
-        elif isinstance(obj, time.struct_time): 
+        elif isinstance(obj, struct_time): 
             return list(obj) 
-
         elif isinstance(obj, users.User): 
             output = {} 
             methods = ['nickname', 'email', 'auth_domain'] 
             for method in methods: 
                 output[method] = getattr(obj, method)() 
-            return output 
-        
+            return output
         elif isinstance(obj, db.GeoPt):
             output = {}
             return output
-        
-
         return simplejson.JSONEncoder.default(self, obj) 
-    
+
 
 def make_random_string(length=6, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'):
         #"Generates a random string with the given length and given allowed_chars"
@@ -74,6 +70,7 @@ def make_random_string(length=6, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJ
         # I take this from django.contrib.auth
         from random import choice
         return ''.join([choice(allowed_chars) for i in xrange(length)])
+
     
 def u_slugify(txt):
         import re
@@ -91,4 +88,3 @@ def u_slugify(txt):
         txt = re.sub('"', "'", txt, re.UNICODE) # replace double quotes with single quotes
         txt = re.sub(r'[?,:!@#~`+=$%^&\\*()\[\]{}<>]ñ','',txt, re.UNICODE) # remove some characters altogether
         return txt
-
