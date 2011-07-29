@@ -9,7 +9,16 @@
     $(document).ready(function(){
         
         //Set like & dislike behaviour
-        $(".like-dislike").like();
+        $(".like-dislike").like({
+            like_class: 'like-suggestion',
+            dislike_class: 'dislike-suggestion',
+        });
+        
+        //Set like&dislike style
+        $('.suggestion-element').hover(
+            function(){$(this).find('.like-dislike').show()},
+            function(){$(this).find('.like-dislike').hide()}
+        )
         
         //Load Panoramios photos
         var latlngStr = "{{place.location}}".split(",",2);
@@ -48,7 +57,7 @@
 {% block body %}
     <div id="view-place">
         <div id="place-container">
-            <h1>{{place.name}} ({{suggestions.1|length}} sugerencias)</h1>
+            <h1 class="clear">{{place.name}}</h1>
             <div id="place-details">
                 <p><strong>Dirección</strong>: {{place.address}}</p>
                 <a href="http://maps.google.com/maps?q={{place.address}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=14&size=270x200&maptype=roadmap
@@ -60,26 +69,30 @@
             </div>
         </div>
         <div>
-            <p class="big"><strong>Sugerencias</strong></p>
+            <p class="big suggestions-title"><strong>Sugerencias</strong></p>
             <ul class="comments">
 
                 {% for s in suggestions.1%}                
                 <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
-                    <span class="user"><img src="/user/{{s.instance.user.username}}/picture/" alt="{{s.instance.user.username}} avatar"></span>
-                    <div style="float:left">
-                        <span class="msg"><a href="{% url fb_public_profile s.instance.user.username %}">{{s.instance.user.username}}</a> sugiere:<br> {{s.instance.name}}</span>
-                        <span class="timestamp">{{s.instance.created|timesince}} - </span>
-                        <span class="like-dislike" value="{{s.instance.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion">
-                            <span class="dislike">
-                                <span class="hoverlink">Ya no me gusta</span> 
-                                <span class="text like-text {% if not s.has_voted %}increase{% endif %}">{{s.vote_counter}}</span> personas
-                            </span>
-                            
-                            <span class="like">
-                                <span class="hoverlink">Me gusta</span> 
-                            </span>
+                    
+                    <span class="like-dislike" value="{{s.instance.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion" style="display:none">
+                        <span class="dislike">
+                            <span class="hoverlink">Ya no me gusta</span> 
                         </span>
-                        - <a href="{% url fb_view_suggestion s.instance.slug %}" class="hoverlink">Ver más</a>
+                        
+                        <span class="like">
+                            <span class="hoverlink">Me gusta</span> 
+                        </span>
+                    </span>
+                    
+                    <span class="user"><img src="/user/{{s.instance.user.username}}/picture/" alt="{{s.instance.user.username}} avatar"></span>
+                    <div class="timeline-msg">
+                        
+                        <a href="{% url fb_public_profile s.instance.user.username %}">{{s.instance.user.username}}</a> sugiere:<br>
+                        
+                        <span class="msg"><a href="{% url fb_view_suggestion s.instance.slug %}">{{s.instance.name}}</a></span>
+                        <span class="timestamp">{{s.instance.created|timesince}} - </span>
+                        
                     </div>
                 </li>
                 {% endfor %}

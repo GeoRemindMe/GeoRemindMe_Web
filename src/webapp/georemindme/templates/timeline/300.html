@@ -29,7 +29,7 @@ Mensaje nº 300
     {% endif %}
 
 
-    <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+    <span class="timestamp"> hace {{obj.created|timesince|truncatewords:2}}</span>  
 
     <span class="action-bar">
         | <span class="focusInput">Comentar</span> | 

@@ -505,7 +505,9 @@ input{
         background-image: url('/static/facebookApp/img/delete.png');
         float:right;
         cursor:pointer;
+/*
         margin-top:0.5em;
+*/
     }
     div.removable:hover{
         background-position: 0 32px;
@@ -674,7 +676,7 @@ input{
                 }
                 ul#chronology li div.timeline-msg{
                     float:left;
-                    width:470px;
+                    width:475px;
                     border-bottom:0;
                 }
                 ul#chronology div.comment-box ul li .timestamp,
@@ -1932,7 +1934,7 @@ input{
         height: 0px;
         visibility: hidden;
     }
-    #view-suggestion ul.comments li:hover,#view-place ul.comments li:hover{
+    #view-suggestion ul.comments li:hover{
         background-color: #eee;
     }
     
@@ -1954,8 +1956,17 @@ input{
     #view-place{
         
     }
+    
+    .suggestions-title{
+        background-image: url("/static/facebookApp/img/icons/suggestions.png");
+        background-position: 0 7px;
+        background-repeat: no-repeat;
+        padding-left: 40px;
+    }
     #place-container{
+/*
         border: 1px solid #CCCCCC;
+*/
         margin: 1em 0;
         padding: 1em;
     }
@@ -1972,11 +1983,14 @@ input{
     }
     #place-pictures{
         float: right;
-        margin-top: 15px;
+        
         text-align: center;
 /*
         width: 275px;
 */
+    }
+    #place-pictures p{
+        margin-bottom:0.5em;
     }
     #place-details p a{
         font-size:1.2em
@@ -1984,4 +1998,40 @@ input{
     #view-place h1{
         line-height: 1em;
         margin: 0.2em 0;
+        display:block;
     }
+    #view-place div.timeline-msg{
+        float: left;
+        line-height: 1.7em;
+        padding: 0.3em 0;
+        width: 415px;
+    }
+    
+    #view-place .like-dislike{
+        float: right;
+        text-align: center;
+        width: 80px;
+        padding-top: 35px;
+        cursor: pointer;
+    }
+    #view-place .like-dislike:hover{
+        text-decoration: underline;
+    }
+    #view-place .comments .user{
+        margin-top:4px;
+    }
+    .like-suggestion{
+        background-image: url("/static/facebookApp/img/icons/like.png");
+        background-repeat: no-repeat;
+        background-position: 25px 0;
+    }
+    .dislike-suggestion{
+        background-image: url("/static/facebookApp/img/icons/liked.png");
+        background-repeat: no-repeat;
+        background-position: 25px 0;
+    }
+    
+    .dislike-suggestion:hover{
+        background-image: url("/static/facebookApp/img/icons/dislike.png");
+    }
+    
