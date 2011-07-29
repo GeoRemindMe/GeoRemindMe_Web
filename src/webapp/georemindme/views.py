@@ -1,5 +1,12 @@
 # coding=utf-8
 
+"""
+.. module:: views
+    :platform: appengine
+    :synopsis: Vistas basicas para todo el proyecto
+"""
+
+
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -9,10 +16,10 @@ from django.utils.translation import ugettext as _
 from tasks import list_notify_worker, timelinefollowers_worker, email_worker
 from cron import report_notify, clean_sessions
 
+
 def register_panel(request, login=False):
     if request.session.get('user'):
         return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-    
     return render_to_response("webapp/register.html", {'login' :login}, context_instance=RequestContext(request))
 
 
@@ -20,6 +27,7 @@ def login_panel(request,login=False):
     if request.session.get('user'):
         return HttpResponseRedirect(reverse('geouser.views.dashboard'))
     return render_to_response("webapp/login.html", {'login' :login}, context_instance=RequestContext(request))
+
 
 def set_language(request):
     if request.method == 'POST':
@@ -33,7 +41,5 @@ def set_language(request):
             settings = request.user.settings
             settings.language = lang
             settings.put()
-        return HttpResponseRedirect(next)
-        
+        return HttpResponseRedirect(next)        
     return HttpResponseRedirect(request.path)
-

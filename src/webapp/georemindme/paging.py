@@ -1,11 +1,18 @@
 # coding=utf-8
 
+"""
+.. module:: views
+    :platform: appengine
+    :synopsis: Vistas basicas para todo el proyecto
+"""
 
-'''
+
+"""
+@author: http://code.google.com/p/he3-appengine-lib/wiki/PagedQuery
 This module contains classes for managing paging.
 
 CAMBIOS: Añadido soporte para SearchableModel
-'''
+"""
 from google.appengine.ext import db, search
 import google.appengine.api.memcache as memcache
 from datetime import datetime

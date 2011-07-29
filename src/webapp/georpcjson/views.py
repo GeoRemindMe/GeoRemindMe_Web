@@ -1,17 +1,14 @@
 # coding=utf-8
 
-import time
-from datetime import datetime, timedelta
+"""
+.. module:: views
+    :platform: appengine
+    :synopsis: Servicios ofrecidos al movil
+"""
 
-from django.utils import simplejson
 
-from google.appengine.ext.db import GeoPt
-
-from geouser.models import User
-from geouser.funcs import login_func
 from libs.jsonrpc import jsonrpc_method
 from libs.jsonrpc.exceptions import *
-from libs.jsonrpc.views import *
 try:
     # When deployed
     from google.appengine.runtime import DeadlineExceededError
@@ -19,25 +16,37 @@ except ImportError:
     # In the development server
     from google.appengine.runtime.apiproxy_errors import DeadlineExceededError 
 
+
 def need_authenticate(username=None, password=None):
+    """
+        No se deja loguearse pasando el nombre y password
+        desde cualquier funcion
+    """
     raise BadSessionException
     
 
 def parse_date(date, excep=True):
-        if date is None:
-            if excep:
-                raise InvalidParamsError
-            else:
-                return None
-        if type(date) in (str, unicode,) and not date.isdigit():
-            if excep:
-                raise InvalidParamsError
-            else:
-                return None
-        return datetime.fromtimestamp(date)
+    """
+        Parsea la fecha de segundos a un datetime
+    """
+    if date is None:
+        if excep:
+            raise InvalidParamsError
+        else:
+            return None
+    if type(date) in (str, unicode,) and not date.isdigit():
+        if excep:
+            raise InvalidParamsError
+        else:
+            return None
+    from datetime import datetime
+    return datetime.fromtimestamp(date)
 
     
 def parse_alertdeleted(deleted, user):
+    """
+        Borra las alertas recibidas en deleted por el movil
+    """
     from geoalert.models import Alert
     for a in deleted:  # borrar las alertas enviadas por el movil
         id = a.get('id', None)
@@ -46,7 +55,11 @@ def parse_alertdeleted(deleted, user):
             if alert is not None:
                 alert.delete()
 
+
 def parse_listdeleted(deleted, user):
+    """
+        Borra las listas recibidas en deleted por el movil
+    """
     from geolist.models import List
     for a in deleted:  # borrar las alertas enviadas por el movil
         id = a.get('id', None)
@@ -67,6 +80,7 @@ def login(request, email, password):
     """
     email = unicode(email)
     password = unicode(password)
+    from geouser.funcs import login_func
     error, redirect = login_func(request, email=email, password=password, from_rpc=True)
     if error == 0:
         raise NoConfirmedException
@@ -99,12 +113,13 @@ def login_facebook(request, access_token):
 
 @jsonrpc_method('register', authenticated=False)
 def register(request, email, password):
-    '''
+    """
         Register a user
         returns True if sucessful
-    '''
+    """
     email = unicode(email)
     password = unicode(password)
+    from geouser.models import User
     u = User.register(email=email, password=password)
     if u is not None:
         return True
@@ -112,8 +127,16 @@ def register(request, email, password):
 
 @jsonrpc_method('sync_alert', authenticated=need_authenticate)
 def sync_alert(request, last_sync, modified=[], deleted=[]):
+    """
+        Sincroniza las alertas
+        
+        :param last_sync: Ultima fecha de sincronizacion, en epoch
+        :type last_sync: :class:`integer`
+        :param modified: lista con las alertas modificadas (en diccionario)
+        :param deleted: lista con las alertas a borrar (sus ids)
+    """
     from geoalert.models import Alert, _Deleted_Alert
-    from geoalert.models_poi import Business, POI, PrivatePlace, Place
+    from geoalert.models_poi import PrivatePlace
     
     if type(modified) != type(list()) or type(deleted) != type(list()):
         raise InvalidParamsError
@@ -122,6 +145,7 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
     last_sync = parse_date(last_sync)
     parse_alertdeleted(deleted, request.user)
     try:
+        from google.appengine.ext.db import GeoPt
         for a in modified:
             id = a.get('id', None)
             if id is not None:  # la alerta ya estaba sincronizada, la actualizamos
@@ -162,7 +186,9 @@ def sync_alert(request, last_sync, modified=[], deleted=[]):
         alertsDel =  _Deleted_Alert.objects.get_by_last_sync(request.user, last_sync)
         for a in alertsDel:
             sync_deleted.append({'id': a.id})
-        return [int(time.mktime(datetime.now().timetuple())), response, sync_deleted]
+        from time import mktime
+        from datetime import datetime
+        return [int(mktime(datetime.now().timetuple())), response, sync_deleted]
     except DeadlineExceededError:
         return DeadlineException
 
@@ -174,6 +200,7 @@ def report_bug(request, bugs):
     try:
         for b in bugs:
             datetime = parse_date(b.get('datetime'))
+            from geouser.models import User
             u = User.objects.get_by_email(b.get('email'))
             report = _Report_Bug(user=u, msg=b.get('msg'), datetime=datetime)
             db.put_async([report])
@@ -189,6 +216,7 @@ def view_timeline(request, username, query_id=None, page=1):
         timelines = request.user.get_timelineALL(page=page, query_id=query_id)
         return timelines
     else:
+        from geouser.models import User
         user = User.objects.get_by_username(username)
         if user is not None:
             timelines = user.get_timeline(page=page, query_id=query_id)
@@ -204,6 +232,14 @@ def view_chronology(request, query_id=None, page=1):
 
 @jsonrpc_method('sync_alertlist', authenticated=need_authenticate)
 def sync_alertlist(request, last_sync, modified=[], deleted=[]):
+    """
+        Sincroniza las listas de alertas
+        
+        :param last_sync: Ultima fecha de sincronizacion, en epoch
+        :type last_sync: :class:`integer`
+        :param modified: lista con las listas de alertas modificadas (en diccionario)
+        :param deleted: lista con las listas de alertas a borrar (sus ids)
+    """
     from geolist.models import ListAlert, List, _Deleted_List # FIXME: crear _Deleted_List
     from geoalert.models import Alert
     
@@ -224,10 +260,10 @@ def sync_alertlist(request, last_sync, modified=[], deleted=[]):
                 continue
         keys_to_add = []
         for i in l.get('instances'):
-            keys_to_add.append(Alert.get_by_id_user(id, request.user))
+            keys_to_add.append(i)
         keys_to_del = []
         for i in l.get('delete_instances'):
-            keys_to_del.append(Alert.get_by_id_user(id, request.user))
+            keys_to_del.append(i)
         new_list = ListAlert.insert_list(request.user, id=id,
                                           name=l.get('name'),
                                           instances=keys_to_add)
@@ -246,7 +282,6 @@ def sync_alertlist(request, last_sync, modified=[], deleted=[]):
     listsDel =  _Deleted_List.objects.get_by_last_sync(request.user, last_sync, ListAlert.kind())
     for l in listsDel:
         sync_deleted.append({'id': l.id})
-
-    return [int(time.mktime(datetime.now().timetuple())), response, sync_deleted]
-    
-
+    from time import mktime
+    from datetime import datetime
+    return [int(mktime(datetime.now().timetuple())), response, sync_deleted]

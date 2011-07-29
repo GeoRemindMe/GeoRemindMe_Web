@@ -1,12 +1,20 @@
 # coding=utf-8
 
+"""
+.. module:: signals
+    :platform: appengine
+    :synopsis: Señales lanzadas por comentarios y votos
+"""
+
+
 from signals import comment_new, comment_deleted, vote_new, vote_deleted
 from geoalert.signals import suggestion_deleted
-from geouser.models_acc import UserTimeline, UserTimelineSystem
+
 
 def new_comment(sender, **kwargs):
     from google.appengine.ext.deferred import defer
     from geoalert.models import Suggestion
+    from geouser.models_acc import UserTimeline, UserTimelineSystem
     sender.instance.put(from_comment=True)
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=120, visible=False)
     from google.appengine.ext import db
@@ -24,9 +32,11 @@ def new_comment(sender, **kwargs):
         notification.put()
 comment_new.connect(new_comment)
 
+
 def new_vote(sender, **kwargs):
     from geoalert.models import Suggestion
     from geovote.models import Comment
+    from geouser.models_acc import UserTimeline
     if isinstance(sender.instance, Suggestion):
         influenced = sender.instance.user.counters_async()
         supported = sender.user.counters_async()
@@ -47,8 +57,10 @@ def new_vote(sender, **kwargs):
         notification.put()
 vote_new.connect(new_vote)
 
+
 def deleted_comment(sender, **kwargs):
     from geovote.models import Vote
+    from geouser.models_acc import UserTimeline
     timeline = UserTimeline.objects.get_by_instance_user(sender, sender.user)
     votes = Vote.all().filter('instance =', sender).run()
     for t in timeline:
@@ -56,7 +68,8 @@ def deleted_comment(sender, **kwargs):
     for vote in votes:
         vote.delete()
 comment_deleted.connect(deleted_comment)
-    
+
+
 def deleted_vote(sender, **kwargs):
     from geoalert.models import Suggestion
     from geouser.models_acc import UserTimelineBase
@@ -68,11 +81,10 @@ def deleted_vote(sender, **kwargs):
     timelines = UserTimelineBase.all().filter('instance =', sender).run()
     for timeline in timelines:
         timeline.delete()
-        
 vote_deleted.connect(deleted_vote)
 
+
 def deleted_suggestion(sender, **kwargs):
-    from geouser.models_acc import UserTimelineBase
     from geovote.models import Comment, Vote
     comments = Comment.all().filter('instance =', sender).run()
     votes = Vote.all().filter('instance =', sender).run()

@@ -1,5 +1,12 @@
 # coding=utf-8
 
+"""
+.. module:: models_utils
+    :platform: appengine
+    :synopsis: Modelos comunes a todo el proyecto
+"""
+
+
 from google.appengine.ext import db
 from django.utils.translation import gettext_lazy as _
 
@@ -16,7 +23,6 @@ class _Do_later_ft(db.Model):
             que fallaron, deben implementar el metodo insert_ft()
         """
         queries = cls.all()
-        
         for q in queries:
             try:
                 instance = db.get(q.instance_key)
@@ -25,12 +31,13 @@ class _Do_later_ft(db.Model):
             except:
                 q.put()
 
+
 SHARDS = 5
 class ShardedCounter(db.Model):
-    '''
+    """
         Contador sharded
         instance es el key del objeto al que apunta
-    '''
+    """
     instance = db.TextProperty(required=True)
     count = db.IntegerProperty(required=True, default=0)
     
@@ -73,12 +80,12 @@ class ShardedCounter(db.Model):
         else:
             memcache.decr(instance, initial_value=0)
     
+
 VISIBILITY_CHOICES = (
           ('public', _('Public')),
           ('private', _('Private')),
           ('shared', _('Shared')),
                       )
-
 class Visibility(db.Model):
     """Metodos comunes heredados por todas las Clases que necesiten visibilidad"""
     _vis = db.StringProperty(required = True, choices = ('public', 'private', 'shared'), default = 'public')
@@ -101,8 +108,8 @@ class Visibility(db.Model):
             return True
         return False
 
-#  from http://blog.notdot.net/2010/04/Pre--and-post--put-hooks-for-Datastore-models
 
+#  from http://blog.notdot.net/2010/04/Pre--and-post--put-hooks-for-Datastore-models
 class HookedModel(db.Model):
     def _pre_put(self):
         pass
@@ -132,6 +139,7 @@ class HookedModel(db.Model):
     def delete_async(self):
         return db.delete_async(self)
 
+
 old_async_put = db.put_async
 def hokked_put_async(models, **kwargs):
     if type(models) != type(list()):
@@ -150,6 +158,7 @@ def hokked_put_async(models, **kwargs):
     return async
 db.put_async = hokked_put_async
 
+
 old_async_delete = db.delete_async
 def hokked_delete_async(models):
     if type(models) != type(list()):
@@ -167,3 +176,29 @@ def hokked_delete_async(models):
     async.get_result = get_result_with_callback
     return async
 db.delete_async = hokked_delete_async
+
+
+old_put = db.put
+def hokked_put(models, **kwargs):
+    if type(models) != type(list()):
+        models = [models]
+    for model in models:
+        if isinstance(model, HookedModel):
+            model._pre_put()
+        old_put(models, **kwargs)
+        if isinstance(model, HookedModel):
+            model._post_put()
+db.put = hokked_put
+
+
+old_delete = db.delete
+def hokked_delete(models):
+    if type(models) != type(list()):
+        models = [models]
+    for model in models:
+        if isinstance(model, HookedModel):
+            model._pre_delete()
+        model.delete()
+        if isinstance(model, HookedModel):
+            model._post_delete()
+db.delete = hokked_delete

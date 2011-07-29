@@ -1,3 +1,4 @@
+{% load tags %}
 <!--
 Mensaje nº 0
 -->
@@ -14,6 +15,6 @@ Mensaje nº 0
 <div class="timeline-msg">
     <p>¡Genial! ya has creado <a href="{{request.user.get_absolute_url}}">tu cuenta</a> en GeoRemindMe, <strong>ya puedes empezar a recibir y enviar sugerencias</strong>.</p>
     <p>Aquí te dejamos un video de introducción a la plaforma:</p>
-    <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+    <span class="timestamp"> {{obj.created|naturaltime}}</span>  
 </div>
 

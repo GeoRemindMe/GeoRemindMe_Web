@@ -2,9 +2,12 @@
 
 import unittest
 from geouser.models import *
+from geouser.models_acc import *
 from django.core.exceptions import ValidationError
 from google.appengine.ext import db
 
+from facebookApp.watchers import disconnect_all
+disconnect_all()
 
 class Test(unittest.TestCase):
     def test_user(self):
@@ -112,10 +115,10 @@ class Test(unittest.TestCase):
         assert User.objects.get_followings(username=u.username, query_id=query_id, page=1) == u.get_followings(query_id=query_id, page=1), 'Busqueda de followings erronea'
         
         #ahora probamos añadir followers, etc.
-        #assert u.add_following(followid=u2.id), 'Error añadiendo following'
+        assert u.add_following(followid=u2.id), 'Error añadiendo following'
         ##assert User.objects.get_followings(userid=u.id)[1] == u.get_followings()[1], 'Busqueda de followings erronea'
-        #assert User.objects.get_followings(userid=u.id, query_id=query_id, page=2) != u.get_followings(query_id=query_id, page=1), 'Busqueda de followings erronea'
-        #assert u.del_following(followid=u2.id), 'Error borrando following'
+        assert User.objects.get_followings(userid=u.id, query_id=query_id, page=2) != u.get_followings(query_id=query_id, page=1), 'Busqueda de followings erronea'
+        assert u.del_following(followid=u2.id), 'Error borrando following'
         assert User.objects.get_followings(userid=u.id)[1] == u.get_followings()[1], 'Busqueda de followings erronea'
         assert User.objects.get_followings(userid=u.id, query_id=query_id, page=2) == u.get_followings(query_id=query_id, page=1), 'Busqueda de followings erronea'
         assert u.add_following(followname=u2.username), 'Error añadiendo following'
@@ -160,14 +163,9 @@ class Test(unittest.TestCase):
         assert UserCounter.objects.get_by_id(123) == None, 'Busqueda de contadores erronea'
         assert UserCounter.objects.get_by_id(None) == None, 'Busqueda de contadores erronea'
         
-        assert UserTimeline.objects.get_by_id(u.id)[1] == u.get_timeline()[1], 'Error en timeline'
-        assert UserTimeline.objects.get_by_id(str(u.id))[1] == u.get_timeline()[1], 'Error en timeline'
+        assert UserTimeline.objects.get_by_id(u.id)[1] == u.get_profile_timeline()[1], 'Error en timeline'
+        assert UserTimeline.objects.get_by_id(str(u.id))[1] == u.get_profile_timeline()[1], 'Error en timeline'
         assert UserTimeline.objects.get_by_id('asdf') == None, 'Error en timeline'
         assert UserTimeline.objects.get_by_id('') == None, 'Error en timeline'
         assert UserTimeline.objects.get_by_id(123)[1] == [], 'Error en timeline'
         assert UserTimeline.objects.get_by_id(None) == None, 'Error en timeline'
-          
-        
-        
-        
-        

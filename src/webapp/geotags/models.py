@@ -1,13 +1,17 @@
 # coding=utf-8
 
-from django.utils.translation import gettext_lazy as _
+"""
+.. module:: models
+    :platform: appengine
+    :synopsis: Modelo de Tag
+"""
 
-from types import UnicodeType, StringType, ListType
-from string import split
-from google.appengine.ext import db, search
+
+from django.utils.translation import gettext_lazy as _
+from google.appengine.ext import db
+
 
 SEPARATOR = ','
-
 class TagHelper(object):
     def get_by_name(self, name):
         return Tag.get_by_key_name('tag_%s' % name.lower())
@@ -17,6 +21,7 @@ class TagHelper(object):
 
 
 class Tag(db.Model):
+    """Tag, el nombre se guarda tambien en el key_name, de la forma tag_name"""
     name = db.StringProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     count = db.IntegerProperty(default=0)
@@ -61,12 +66,13 @@ class Tag(db.Model):
     def __unicode__(self):
         return self.name
 
+
 class Taggable(db.Model):
-    '''
+    """
         Para acceder a los atributos de aqui en una clase hijo de esta,
         hay que poner __Tagabble antes del atributo.
         usar: object.__Tagabble__tags_list
-    '''
+    """
     _tags_list = db.ListProperty(db.Key, default=[])
     __tags = None
     
@@ -77,11 +83,12 @@ class Taggable(db.Model):
         return self.__tags
     
     def _tags_setter(self, tags):
+        from types import UnicodeType, StringType, ListType
         """Crea la lista o añade el tag"""
         if type(tags) is UnicodeType:
             tags = str(tags)
         if type(tags) is StringType:
-            tags = split(tags, SEPARATOR)
+            tags = tags.split(tags, SEPARATOR)
         if type(tags) is ListType:
             tags = [t.lower() for t in tags]
             loaded_tags = db.get_async(self._tags_list)  # carga todos los tags existentes en una lista
@@ -97,20 +104,20 @@ class Taggable(db.Model):
             self.put()
         else:
             raise AttributeError
-    # FIXME: LOS CONTADORES DE CADA TAGS SE MODIFICAN SIEMPRE, AUNQUE _TAG_LISTS ESTE VACIO, SE MOFICAN EL RESTO DE TAGS
+    # ¿arreglado? FIXME: LOS CONTADORES DE CADA TAGS SE MODIFICAN SIEMPRE, AUNQUE _TAG_LISTS ESTE VACIO, SE MOFICAN EL RESTO DE TAGS
 
-    def _remove_tag(self, name):
-        tagInstance = Tag.objects.get_by_name(name)
-        if tagInstance is None:
-            return False
-        self.__tags_list.remove(tagInstance.key())
-        tagInstance.desc_count()
-        return True
-        
-    def _add_tag(self, name):
-        tagInstance = Tag.get_or_insert(name=name)
-        if tagInstance is None:
-            return False
-        self.__tags_list.append(tagInstance.key())
-        tagInstance.inc_count()
-        return True
+#    def _remove_tag(self, name):
+#        tagInstance = Tag.objects.get_by_name(name)
+#        if tagInstance is None:
+#            return False
+#        self.__tags_list.remove(tagInstance.key())
+#        tagInstance.desc_count()
+#        return True
+#        
+#    def _add_tag(self, name):
+#        tagInstance = Tag.get_or_insert(name=name)
+#        if tagInstance is None:
+#            return False
+#        self.__tags_list.append(tagInstance.key())
+#        tagInstance.inc_count()
+#        return True

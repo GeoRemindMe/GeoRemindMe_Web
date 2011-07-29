@@ -1,5 +1,12 @@
 # coding=utf-8
 
+"""
+.. module:: signals
+    :platform: appengine
+    :synopsis: Señales lanzadas por comentarios y votos
+"""
+
+
 import django.dispatch
 
 

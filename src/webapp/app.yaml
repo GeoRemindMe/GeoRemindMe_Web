@@ -1,5 +1,5 @@
 application: georemindme
-version: 1
+version: 3
 runtime: python
 api_version: 1
 
@@ -49,5 +49,5 @@ builtins:
 - appstats: on
 - deferred: on
 
-inbound_services:
-- warmup
+#inbound_services:
+#- warmup

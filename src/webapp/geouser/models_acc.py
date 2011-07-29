@@ -61,25 +61,29 @@ class UserSettings(HookedModel):
                 :param user: Usuario que comienza a seguir a self.
                 :type user: :class:`geouser.models.User`
         """
+        parent = self.parent()
+        if parent is None:
+            return
         if self.time_notification_account == 'never':
             return
         elif self.time_notification_account == 'instant':
             from geouser.mails import send_notification_follower
-            parent = self.parent()
             send_notification_follower(parent.email,
                                        follower=User.objects.get_by_key(userkey),
                                        language=self.language
                                        )
         else:
             from geouser.models_utils import _Report_Account_follower
-            _Report_Account_follower.insert_or_update(self.parent().key(), add=userkey)
+            _Report_Account_follower.insert_or_update(parent.key(), add=userkey)
 
     def notify_suggestion_follower(self, suggestionkey, userkey):
+        parent = self.parent()
+        if parent is None:
+            return
         if self.time_notification_suggestion_follower == 'never':
             return
         elif self.time_notification_suggestion_follower == 'instant':
             from geouser.mails import send_notification_suggestion_follower
-            parent = self.parent()
             from geoalert.models import Suggestion
             send_notification_suggestion_follower(parent.email, 
                                                   suggestion=Suggestion.objects.get_by_key(suggestionkey), 
@@ -88,14 +92,16 @@ class UserSettings(HookedModel):
                                                   )
         else:
             from geouser.models_utils import _Report_Suggestion_changed
-            _Report_Suggestion_changed.insert_or_update(self.parent().key(), suggestionkey)
+            _Report_Suggestion_changed.insert_or_update(parent.key(), suggestionkey)
     
     def notify_suggestion_comment(self, commentkey):
+        parent = self.parent()
+        if parent is None:
+            return
         if self.time_notification_suggestion_comment == 'never':
             return
         if self.time_notification_suggestion_comment == 'instant':
             from geouser.mails import send_notification_suggestion_comment
-            parent = self.parent()
             from geovote.models import Comment
             comment = Comment.objects.get_by_key(commentkey)
             if comment is not None:
@@ -104,7 +110,10 @@ class UserSettings(HookedModel):
                                                      language=self.language)
         else:
             from geouser.models_utils import _Report_Suggestion_commented
-            _Report_Suggestion_commented.insert_or_update(self.parent().key(), comment.instance, comment.created)
+            from geovote.models import Comment
+            comment = Comment.objects.get_by_key(commentkey)
+            if comment is not None:
+                _Report_Suggestion_commented.insert_or_update(parent.key(), comment.instance, comment.created)
 
     def _post_put(self, **kwargs):
         import memcache
