@@ -1,4 +1,4 @@
-{% load humanize %}
+{% load tags %}
 
 <!--
 Mensaje nº 120<br>
@@ -42,7 +42,7 @@ Mensaje nº 120<br>
         : <a href="{% url fb_view_suggestion obj.instance.instance.id %}" class="small-link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
         
         
-        <span class="timestamp"> hace {{obj.created|timesince}}</span>
+        <span class="timestamp">  {{obj.created|naturaltime}}</span>
         <span class="action-bar">
             {% if not obj.is_private %}
                 | 

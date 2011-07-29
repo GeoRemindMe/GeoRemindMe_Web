@@ -1,4 +1,4 @@
-{% load humanize %}
+{% load tags %}
 
 <!--
 Mensaje nº 303<br>
@@ -11,24 +11,24 @@ Mensaje nº 303<br>
 {% if request.user =  username %}
     <div class="avatar">
         <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-            <img class="user-picture" src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
+            <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
         </a>
     </div>
     <div class="timeline-msg">
         Has guardado en <a href="{% url fb_user_suggestions%}">tu baúl</a> la sugerencia de <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a>:<br>
         {{obj.instance.name}}<br>
-        <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+        <span class="timestamp">  {{obj.created|naturaltime}}</span>  
     </div>
 {% else %}
     <div class="avatar">
         <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
-            <img class="user-picture" src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+            <img src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
         </a>
     </div>
     <div class="timeline-msg">
         <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ha guardado en su baúl tu sugerencia :<br>
         {{obj.instance.name}}<br>
-        <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+        <span class="timestamp">  {{obj.created|naturaltime}}</span>  
     </div>
 {% endif %}
 
@@ -37,12 +37,12 @@ Mensaje nº 303<br>
 
 <div class="avatar">
     <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-        <img class="user-picture" src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
+        <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
     </a>
 </div>
 <div class="timeline-msg">
     Has guardado en <a href="{% url fb_user_suggestions%}">tu baúl</a> la sugerencia de <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a>:<br>
     {{obj.instance.name}}<br>
-    <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
 </div>
 -->

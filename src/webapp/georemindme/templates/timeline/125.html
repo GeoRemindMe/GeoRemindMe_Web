@@ -1,4 +1,4 @@
-{% load humanize %}
+{% load tags %}
 <!--
 Mensaje nº 125<br>
 -->
@@ -13,7 +13,7 @@ Mensaje nº 125<br>
     {% if obj.instance.user.username = request.user.username %}
         <div class="avatar">
             <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-                <img class="user-picture" src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
+                <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
             </a><br>
             <a href="{% url fb_public_profile obj.instance.user.username %}/">{{obj.instance.user.username}}</a>:
         </div>
@@ -23,7 +23,7 @@ Mensaje nº 125<br>
     {% else %}
         <div class="avatar">
             <a href="{% url fb_public_profile obj.instance.user.username %}" title="{{obj.instance.user.username}}">
-                <img class="user-picture" src="{% url user_avatar obj.instance.user.username %}" alt="{{obj.instance.user.username}} avatar"/>
+                <img src="{% url user_avatar obj.instance.user.username %}" alt="{{obj.instance.user.username}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">
@@ -39,12 +39,12 @@ Mensaje nº 125<br>
     {% endif %}
             <br><em class="comment">{{obj.instance.instance.msg}}</em><br>
             <span class="suggestionPlace">
-                En la sugerencia: <a href="{% url fb_view_suggestion obj.instance.instance.instance.slug %}">{{obj.instance.instance.instance.name|truncatewords:10}}</a><br>
+                En la sugerencia: {{obj.instance.instance.instance.name|truncatewords:10}} <br>
             </span>
 
-            <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+            <span class="timestamp">  {{obj.created|naturaltime}}</span>  
             <span class="action-bar">
-                | <a href="{% url fb_view_suggestion obj.instance.instance.instance.slug %}">Detalles</a> 
+                | <a href="{% url fb_view_suggestion obj.instance.instance.instance.slug %}">Ver sugerencia</a> 
             </span
         </div>
 {% endif %}

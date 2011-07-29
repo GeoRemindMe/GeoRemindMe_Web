@@ -1,3 +1,4 @@
+{% load tags %}
 <!--
 Mensaje nº 350<br>
 -->
@@ -24,7 +25,7 @@ Mensaje nº 350<br>
 {% endif %}
 
 
-<span class="timestamp"> hace {{obj.created|timesince}}</span>  
+<span class="timestamp"> hace {{obj.created|naturaltime}}</span>  
 
 <span class="action-bar">
     | <span class="focusInput">Comentar</span> | 
@@ -65,7 +66,7 @@ Mensaje nº 350<br>
                     {% endif %}
                 
                     <img class="user-picture" src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
-                    <span class="timestamp">{{c.created|timesince}} ago</span> - 
+                    <span class="timestamp">{{c.created|naturaltime}}</span> - 
                     
                     
                     <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-{% load humanize %}
+{% load tags %}
 
 {% block title %}Ver sugerencia{% endblock %}
 {% block extra_js %}
@@ -126,7 +126,7 @@
                     <span class="user"><img src="{% url user_avatar c.username %}" alt="{{c.username}} avatar"></span>
                     <div style="float:left">
                         <span class="msg"><a href="{% url fb_public_profile c.username%}">{{c.username}}</a>: {{c.msg}}</span>
-                        <span class="timestamp">{{c.created|timesince}}</span> | 
+                        <span class="timestamp">{{c.created|naturaltime}}</span> | 
                         <span class="action-bar">
                             <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
                                 <span class="dislike">

@@ -1,6 +1,8 @@
-{% load humanize %}
+{% load tags %}
 
+<!--
 Mensaje nº 102<br>
+-->
 <!--
 102: Dejas de seguir
 -->
@@ -15,4 +17,4 @@ Mensaje nº 102<br>
     has dejado de seguir a <a href="{% url fb_public_profile obj.instance %}">{{obj.instance}}</a>.<br>
 
 
-<span class="timestamp"> hace {{obj.created|timesince}}</span>  
+<span class="timestamp">  {{obj.created|naturaltime}}</span>  

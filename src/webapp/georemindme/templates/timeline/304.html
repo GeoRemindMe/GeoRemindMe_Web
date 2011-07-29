@@ -1,4 +1,4 @@
-{% load humanize %}
+{% load tags %}
 
 <!--
 Mensaje nº 304<br>
@@ -16,5 +16,5 @@ Mensaje nº 304<br>
 <div class="timeline-msg">
     Ya no tienes la sugerencia de <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a> en <a href="{% url fb_user_suggestions%}">tu baúl</a>:<br>
     {{obj.instance.name}}<br>
-    <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
 </div>

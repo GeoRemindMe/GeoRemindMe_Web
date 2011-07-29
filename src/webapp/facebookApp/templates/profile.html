@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load humanize %}
+{% load tags %}
 {% load tags %}
 
 {% block title %}Perfil público de {{profile.username}}{% endblock %}
@@ -150,7 +150,7 @@
                                     <a href="">{{obj}}</a><br>
                                 
                                     <span class="small-text">En <a href="{% url fb_view_place obj.poi.slug %}">{{obj.poi.name}}</a></span><br>
-                                    <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+                                    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
                                     <span class="action-bar">
                                         {% if request.user != obj.user.username %}
                                             |

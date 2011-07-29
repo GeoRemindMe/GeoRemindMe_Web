@@ -1,4 +1,4 @@
-{% load humanize %}
+{% load tags %}
 
 <!--
 Mensaje nº 320<br>
@@ -11,11 +11,11 @@ Mensaje nº 320<br>
 
 <div class="avatar">
     <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-        <img class="user-picture" src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
+        <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
     </a>
 </div>
 <div class="timeline-msg">
     Nueva alerta ligada a la sugerencia de <a href="{% url fb_public_profile obj.instance.suggestion.user.username %}">{{obj.instance.suggestion.user.username}}</a>:<br>
     <a href="{% url fb_view_suggestion obj.instance.suggestion.slug %}">{{obj.instance.suggestion.name}}</a><br>
-    <span class="timestamp"> hace {{obj.created|timesince}}</span>  
+    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
 </div>
