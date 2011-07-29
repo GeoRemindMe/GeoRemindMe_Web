@@ -25,7 +25,7 @@ Mensaje nº 350<br>
 {% endif %}
 
 
-<span class="timestamp"> hace {{obj.created|naturaltime}}</span>  
+<span class="timestamp"> {{obj.created|naturaltime}}</span>  
 
 <span class="action-bar">
     | <span class="focusInput">Comentar</span> | 
@@ -66,11 +66,11 @@ Mensaje nº 350<br>
                     {% endif %}
                 
                     <img class="user-picture" src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
-                    <span class="timestamp">{{c.created|naturaltime}}</span> - 
+                    <span class="timestamp">{{c.created|naturaltime}}</span> 
                     
                     
                     <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
-    
+                        - 
                         <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
                             <span class="hoverlink">Ya no me gusta</span> 
                             <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas

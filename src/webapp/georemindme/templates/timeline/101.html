@@ -20,4 +20,4 @@ Mensaje nº 101<br>
     <a href="{% url fb_public_profile obj.instance %}">{{obj.instance}}</a> ahora te está siguiendo.<br>
 {% endif %}
 
-<span class="timestamp"> hace {{obj.created|timesince}}</span>  
+<span class="timestamp">{{obj.created|naturaltime}}</span>  

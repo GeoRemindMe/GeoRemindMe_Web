@@ -39,6 +39,6 @@ obj.instance==geovote.models.Vote
             
             <br>{{obj.instance.instance}} <br>
             <span class="suggestionPlace">En <a href="{% url fb_view_place obj.instance.instance.poi.slug %}">{{obj.instance.instance.poi.name}}</a></span><br>
-            <span class="timestamp">hace {{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url fb_view_suggestion obj.instance.instance.slug %}">Detalles</a></span>
+            <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url fb_view_suggestion obj.instance.instance.slug %}">Detalles</a></span>
         </div>
 {% endif %}

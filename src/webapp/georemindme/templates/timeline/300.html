@@ -74,9 +74,10 @@ Mensaje nº 300
                     {% endif %}
                 
                     <img class="user-picture" src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
-                    <span class="timestamp">{{c.created|naturaltime}}</span> - 
+                    <span class="timestamp">{{c.created|naturaltime}}</span> 
                     
                     {% if c.username != user.username %}
+                        - 
                         <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
         
                             <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
