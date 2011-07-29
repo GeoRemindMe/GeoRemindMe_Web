@@ -1,12 +1,3 @@
-La plaforma contiene una serie de pilas de mensajes:
-- UserTimelineSystem: 
-    Que recoge todas las acciones de un usuario.
-- UserTimeline(UT): 
-    Que recoge las acciones que se publican en la página de un usuario
-
-* Los mensajes que terminan en | UT son aquellos que son añadidos al 
-UserTimeline.
-
 Descripción de los mensajes:
 ------------------------------
 0: Mensaje de bienvenida
@@ -24,7 +15,7 @@ Descripción de los mensajes:
 113: Rechazada tu invitación 
 120: Ha hecho un comentario en una sugerencia | UT
 125: A [X] le gusta un comentario | UT
-150: Nueva lista de sugerencias creada
+150: Nueva lista de usuarios creada
 151: Lista de usuarios modificada
 152: Lista de usuarios eliminada
 
@@ -62,41 +53,3 @@ Descripción de los mensajes:
 450: _('New public place: %s') % self.instance,
 451: _('Public place modified: %s') % self.instance,
 452: _('Public place deleted: %s') % self.instance,
-
-
-Actividad del perfil de usuario | Facebook: Muro
-================================================
-300 - El usuario ha creado una sugerencia
-301 - El usuario ha editado una sugerencia
-2- El usuario ha empezado a seguir a otro usuario--------------
-3- El usuario ha creado/editado una lista de sugerencias
-4- Al usuario le ha gustado una sugerencia
-5- Al usuario le ha gustado una comentario-------------
-6- El usuario ha hecho un comentario
-
-Notificaciones | Facebook: Notificaciones
-===========================================
-7- Un usuario ha comentado una de tus sugerencias
-8- Alguien te ha enviado una invitación de sugerencia
-9- Alguien te ha enviado una invitación de lista de sugerencias
-10- Un usuario a aceptado/rechazado una invitación
-11- Una persona a empezado a seguirte
-
-Actividad | Facebook: Ultimas noticias
-========================================
-300 - El usuario ha creado una sugerencia (mia o de mis followings)
-301 - El usuario ha editado una sugerencia (mia o de mis followings)
-303 - Sugerencias a las que se suscriben mis followings
-305 - Sugerencia que les gustas a mis followings
-210 - Comentarios qu
-
-
-12- Se intercalan las actividades de tus followings y la tuya propia
-
-+ Intercalados con tus notificaciones (sección de debajo)
-
-
-History | Modelo UserTimeline system
-======================================
-- Histórico de interacciones del usuario con la plataforma
-
