@@ -267,6 +267,7 @@ GRM.loadPage = function(params){
             var url=params['url'];
             var template=params['template'];
             var data=params["data"];
+            var total=params["total_pages"];
             var current_page = ( typeof $(container).attr('page') == 'undefined' )?1:parseInt($(container).attr('page'));
             
             if (page=='next')
@@ -288,14 +289,14 @@ GRM.loadPage = function(params){
                     $.each(data[1], function(index,suggestion){
                         $(template).tmpl( {element:suggestion} ).appendTo(container);
                     });
-                    
+
                     //Ocultamos los botones de siguiente y anterior si es necesario
                     if(current_page>1)
                         $('#prev-page').removeClass('hidden');
                     else
                         $('#prev-page').addClass('hidden');
-                    console.debug(data);
-                    if(data[2]<current_page)
+                        
+                    if(current_page<total)
                         $('#next-page').removeClass('hidden');
                     else
                         $('#next-page').addClass('hidden');
@@ -307,10 +308,7 @@ GRM.sendComment = function(type,text,id,callback){
     
     if(text=="")
         return false;
-        
-    $(obj).text("Enviando")
-    $(obj).addClass("waiting")
-    
+
     $.ajax({
         type: "POST",
         url: "/ajax/add/comment/"+type+"/",
@@ -331,9 +329,6 @@ GRM.sendComment = function(type,text,id,callback){
             
             if (typeof callback != "undefined")
                 callback();
-            
-            $(obj).text("Comentar")
-            $(obj).removeClass("waiting")
         }
     });
 

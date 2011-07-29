@@ -18,21 +18,6 @@ $(document).ready(function(){
         function(){$(this).find('.action-bar').css('visibility','hidden')}
     )
     
-    $('.help-txt').dialog({
-            autoOpen:false,
-			resizable: false,
-            buttons: [{
-                    text: "Cerrar",
-                    click: function() { $(this).dialog("close"); }
-                }],
-            draggable: false,
-			width:560,
-            position: ['right', 45]
-    });
-    
-    $('.help-icon img').click(function(){
-        $('#'+$(this).attr('id')+'-text').dialog("open");
-    })
     //Al pulsar en comentar ponemos el foco en el input
     $('.focusInput').click(function(){
         var commentBox=$(this).parentsUntil('li').parent().find('.input-box')

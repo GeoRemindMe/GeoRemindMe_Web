@@ -7,7 +7,7 @@ Mensaje nº 300
 
 <div class="avatar">
     <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
-        <img src="/user/{{obj.username}}/picture/" alt="{{obj.username}} avatar"/>
+        <img class="user-picture" src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
     </a>
 </div>
 <div class="timeline-msg">
@@ -50,7 +50,7 @@ Mensaje nº 300
                 </span>
             </span>
             
-            | <span title="Guardar en favoritos"  class="remember-forget" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">Guardar</span><span class="forget">Guardado</span></span>
+            | <span title="Recibe novedades"  class="remember-forget" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">Seguir</span><span class="forget">Siguiendo</span></span>
         {% endif %}
     </span>
 
@@ -65,28 +65,29 @@ Mensaje nº 300
     <ul id="commentList-{{obj.instance.id}}">
         {% if obj.comments.1 %}
             {% for c in obj.comments.1 reversed %}
-                <li {% if forloop.revcounter > 2 %} class="long-list" {% endif %}>
+                <li {% if forloop.revcounter > 2 %} class="long-list suggestion-comment" {% else %} class="suggestion-comment" {% endif %} >
                     
                     <!-- Añadimos el botón de borrar comentario-->
                     {% if c.username = user.username %}
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}
                 
-                    <img src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
+                    <img class="user-picture" src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
                     <span class="timestamp">{{c.created|timesince}} ago</span> - 
                     
-                    
-                    <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
-    
-                        <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
-                            <span class="hoverlink">Ya no me gusta</span> 
-                            <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+                    {% if c.username != user.username %}
+                        <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
+        
+                            <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
+                                <span class="hoverlink">Ya no me gusta</span> 
+                                <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+                            </span>
+                            
+                            <span class="like" {% if c.has_voted %}style="display:none;"{%endif%} >
+                                <span class="hoverlink">Me gusta</span> 
+                            </span>
                         </span>
-                        
-                        <span class="like" {% if c.has_voted %}style="display:none;"{%endif%} >
-                            <span class="hoverlink">Me gusta</span> 
-                        </span>
-                    </span>
+                    {% endif %}
                 </li>
             {% endfor %}
         {% endif %}

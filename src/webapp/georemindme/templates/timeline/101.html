@@ -14,7 +14,7 @@ Mensaje nº 101<br>
 {% else %}
     <div class="avatar">
         <a href="{% url fb_public_profile obj.instance %}" title="{{obj.instance}}">
-            <img src="{% url user_avatar obj.instance %}" alt="{{obj.instance}} avatar"/>
+            <img class="user-picture" src="{% url user_avatar obj.instance %}" alt="{{obj.instance}} avatar"/>
         </a>
     </div>
     <a href="{% url fb_public_profile obj.instance %}">{{obj.instance}}</a> ahora te está siguiendo.<br>
