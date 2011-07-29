@@ -115,7 +115,7 @@
                     {% for obj in chronology.1 %}
 
                         {% if not obj.msg_id = 100 or not obj.is_private %}
-                            <li {% if forloop.last %} style="border:0" {% endif %}>
+                            <li {% if forloop.last %} style="border:0" {% endif %} class="msg-{{obj.msg_id}}">
                                 {% timeline_item obj %}
                             </li>
                         {% endif %}

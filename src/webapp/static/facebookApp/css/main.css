@@ -701,6 +701,82 @@ input{
             padding:0;
         }
     
+        ul#chronology li.msg-0{
+            background-image: url("/static/facebookApp/img/timeline/0.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-1{
+            background-image: url("/static/facebookApp/img/timeline/1.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-2{
+            background-image: url("/static/facebookApp/img/timeline/2.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-3{
+            background-image: url("/static/facebookApp/img/timeline/3.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        ul#chronology li.msg-101,ul#chronology li.msg-100{
+            background-image: url("/static/facebookApp/img/timeline/100.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-110{
+            background-image: url("/static/facebookApp/img/timeline/110.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-120{
+            background-image: url("/static/facebookApp/img/timeline/120.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-125{
+            background-image: url("/static/facebookApp/img/timeline/125.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-300{
+            background-image: url("/static/facebookApp/img/timeline/300.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-303{
+            background-image: url("/static/facebookApp/img/timeline/303.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-305{
+            background-image: url("/static/facebookApp/img/timeline/305.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-350{
+            background-image: url("/static/facebookApp/img/timeline/350.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        
+        ul#chronology li.msg-353{
+            background-image: url("/static/facebookApp/img/timeline/353.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
     
     /****************************
      *      
