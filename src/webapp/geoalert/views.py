@@ -30,13 +30,14 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
         raise Http404 
     from geovote.views import get_comments_event
     comments = get_comments_event(request, suggestion.id)
-    from geovote.models import Vote
+    from geovote.models import Vote, Comment
     return render_to_response(template, {
                                         'suggestion': suggestion,
                                         'comments': comments,
                                         'has_voted': Vote.objects.user_has_voted(request.user, suggestion.key()),
                                         'vote_counter': Vote.objects.get_vote_counter(suggestion.key()),
                                         'user_follower': suggestion.has_follower(request.user),
+                                        'top_comments': Comment.objects.get_top_voted(suggestion, request.user)
                                         },
                                context_instance=RequestContext(request))
 
@@ -214,7 +215,7 @@ def view_place(request, slug, template='webapp/place.html'):
             if len(suggestions_loaded) > 7:
                 break
         return suggestions_loaded
-    
+    slug = slug.lower()
     place = Place.objects.get_by_slug(slug)
     if place is None:
         raise Http404

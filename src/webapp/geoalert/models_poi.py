@@ -271,10 +271,12 @@ class Place(POI):
             return self
         from georemindme.funcs import u_slugify
         if self.slug is None:
+            name = self.name.lower()
+            city = self.city.lower()
             if self.city is not None:
-                self.slug = u_slugify('%s-%s'% (self.name, self.city))
+                self.slug = u_slugify('%s-%s'% (name, city))
             else:
-                self.slug = u_slugify('%s' % self.name)
+                self.slug = u_slugify('%s' % name)
         p = Place.all().filter('slug =', self.slug).get()
         if p is not None:
             if not self.is_saved() or p.key() != self.key():

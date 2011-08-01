@@ -61,7 +61,7 @@ class CommentHelper(object):
                         'username': comment.user.username,
                         'instance': comment.instance if comment.instance is not None else None,
                         'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(comment.key()),
+                        'vote_counter': comment.votes,
                         }
                        for comment in comments]]
     
@@ -91,7 +91,7 @@ class CommentHelper(object):
                         'username': comment.user.username,
                         'instance': comment.instance if comment.instance is not None else None,
                         'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(comment.key()),
+                        'vote_counter': comment.votes,
                         }
                        for comment in comments]]
     
@@ -133,6 +133,18 @@ class CommentHelper(object):
             elif comment.instance._is_shared() and comment.instance.user_invited(querier): # instancia compartida, usuario invitado
                 return comment
         return None     
+    
+    def get_top_voted(self, instance, querier):
+        if querier is not None and not isinstance(querier, User):
+            raise TypeError
+        if instance is not None:
+            import memcache
+            top = None #memcache.deserialize_instances(memcache.get('%stopcomments_%s' % (memcache.version, instance.key())))
+            if top is None:
+                top = Comment.all().filter('instance =', instance).filter('votes >', 0).filter('deleted =', False).order('-votes').fetch(3, 0)
+                if top is not None: 
+                    memcache.set('%stopcomments_%s' % (memcache.version, instance.key()), memcache.serialize_instances(top), 300)
+        return top
         
 
 class Comment(Visibility):
@@ -143,12 +155,23 @@ class Comment(Visibility):
     modified = db.DateTimeProperty(auto_now = True)
     msg = db.TextProperty(required=True)
     deleted = db.BooleanProperty(default=False)
+    votes = db.IntegerProperty(default=0)
     
     objects = CommentHelper()
 
     @property
     def id(self):
         return self.key().id()
+    
+    def set_votes(self, count):
+        def _tx(count):
+            obj = Comment.get(self.key())
+            obj.votes += count
+            if obj.votes < 0:
+                obj.votes = 0
+            obj.put()
+            return obj.votes
+        return db.run_in_transaction(_tx, count)
     
     @classmethod
     def do_comment(cls, user, instance, msg):
@@ -272,6 +295,7 @@ class Vote(db.Model):
         vote = cls.objects.get_user_vote(user, instance.key())
         if vote is not None:
             if count < 0:
+                vote_deleted.send(sender=vote)
                 vote.delete()
                 return True
             return False
@@ -282,11 +306,17 @@ class Vote(db.Model):
     
     def put(self):
         if not self.is_saved():
-            contador = VoteCounter.increase_counter(self.instance.key(), self.count)
+            if hasattr(self.instance, 'set_votes'):
+                self.instance.set_votes(self.count)
+            else:
+                contador = VoteCounter.increase_counter(self.instance.key(), self.count)
         super(Vote, self).put()
         
     def delete(self):
-        VoteCounter.increase_counter(self.instance.key(), -1)
+        if hasattr(self.instance, 'set_votes'):
+                self.instance.set_votes(-1)
+        else:
+            VoteCounter.increase_counter(self.instance.key(), -1)
         vote_deleted.send(self)
         super(Vote, self).delete()
 

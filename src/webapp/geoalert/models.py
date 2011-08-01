@@ -393,7 +393,8 @@ class Suggestion(Event, Visibility, Taggable):
             return self
         from georemindme.funcs import u_slugify
         if self.slug is None:
-            self.slug = u_slugify('%s'% (self.name))
+            name = self.name.lower()
+            self.slug = u_slugify('%s'% (name))
         p = Suggestion.all().filter('slug =', self.slug).get()
         if p is not None:
             if not self.is_saved() or p.key() != self.key():
