@@ -29,9 +29,9 @@ class geosession(object):
                     from facebookApp.watchers import disconnect_all
                     disconnect_all()
                     return
-            from facebookApp import watchers
-            request.user = request.session['user']
-            return
+                from facebookApp import watchers    
+                request.user = request.session['user']
+                return
         else:
             if request.session.is_from_facebook:
                 request.session.delete()
