@@ -18,9 +18,11 @@ def login_panel(request):
     from geouser.forms import SocialUserForm
     if hasattr(request, 'facebook'):
         if not request.user.is_authenticated():
+            
             user = request.facebook['client'].authenticate()
             init_user_session(request, user, is_from_facebook=True)
         else:
+            
             user = request.user
         if user.username is None or user.email is None:
             if request.method == 'POST':
@@ -47,22 +49,14 @@ def login_panel(request):
 
 @facebook_required
 def dashboard(request):
-    friends_to_follow=request.user.get_friends_to_follow()
-    followers=request.user.get_followers()
-    followings=request.user.get_followings()
-    chronology = request.user.get_activity_timeline()
-    return  render_to_response('dashboard.html', {'friends_to_follow': friends_to_follow,
-                                                  'followers': followers,
-                                                  'followings': followings, 
-                                                  'chronology': chronology,
-                                                  } , RequestContext(request))
+    from geouser.views import dashboard
+    return dashboard(request, template='dashboard.html')
+
          
 @facebook_required
 def notifications(request):
-    timeline = request.user.get_notifications_timeline()
-    return  render_to_response('notifications.html', {
-                                                      'chronology': timeline
-                                                  } , RequestContext(request))
+    from geouser.views import notifications
+    return notifications(request)
 
 
 @facebook_required
@@ -72,57 +66,8 @@ def profile(request, username):
     :param username: nombre de usuario
     :type username: ni idea
     """
-    from geoalert.views import get_suggestion
-    if request.user.username.lower() == username.lower():
-        # Si el usuario esta viendo su propio perfil
-        profile = request.user.profile
-        counters = request.user.counters_async()
-        sociallinks = profile.sociallinks_async()
-        timeline = request.user.get_profile_timeline()
-        suggestions = get_suggestion(request, id=None,
-                                     wanted_user=request.user,
-                                     page = 1, query_id = None
-                                     )
-        is_following = True
-        is_follower = True
-        show_followers = True
-        show_followings = True
-    else:
-        # Si esta viendo el perfil de otro
-        profile_user = User.objects.get_by_username(username)
-        if profile_user is None:
-            raise Http404()
-        counters = profile_user.counters_async()#UserCounter.objects.get_by_id(profile_user.id, async=True)
-        
-        settings = profile_user.settings
-        profile = profile_user.profile
-        sociallinks = profile.sociallinks_async()
-        suggestions = get_suggestion(request, id=None,
-                                     wanted_user=profile_user,
-                                     page = 1, query_id = None
-                                     )
-        
-        if request.user.is_authenticated():
-            is_following = profile_user.is_following(request.user)
-            is_follower = request.user.is_following(profile_user)
-        else:
-            is_following = None
-            is_follower = None
-        if is_following or settings.show_timeline:  # el usuario logueado, sigue al del perfil
-            timeline = profile_user.get_profile_timeline(querier=request.user)
-        show_followers = settings.show_followers,
-        show_followings = settings.show_followings
-    
-    return render_to_response('profile.html', {'profile': profile, 
-                                                'counters': counters.next(),
-                                                'sociallinks': sociallinks.next(),
-                                                'chronology': timeline, 
-                                                'suggestions': suggestions,
-                                                'is_following': is_following,
-                                                'is_follower': is_follower, 
-                                                'show_followers': show_followers,
-                                                'show_followings': show_followings
-                                                }, context_instance=RequestContext(request))
+    from geouser.views import public_profile
+    return public_profile(request, username, template='profile.html')
 
 
 @facebook_required
@@ -147,7 +92,6 @@ def edit_profile (request):
                                      'sync_avatar_with': request.user.profile.sync_avatar_with, },
                             prefix='user_set_profile'
                             )
-    #~ raise Exception(f)
     return render_to_response('edit_profile.html', {'form': f}, context_instance=RequestContext(request))
 
 

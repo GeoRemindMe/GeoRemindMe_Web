@@ -189,62 +189,80 @@ def update_user(request):
 # DASHBOARD VIEW
 #===============================================================================
 @login_required
-def dashboard(request):
+def dashboard(request, template='webapp/dashboard.html'):
     """**Descripción**: Permite actualizar el email y la contraseña.
         
         :return: Solo devuelve errores si el proceso falla.
     """
-    if request.user.username is None or request.user.email is None:
-        from forms import SocialUserForm
-        if request.method == 'POST':
-            f = SocialUserForm(request.POST, prefix='user_set_username')
-            if f.is_valid():
-                user = f.save(request.session['user'])
-                if user:
-                    request.session['user'] = user
-                    return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-        else:
-            f = SocialUserForm(prefix='user_set_username', initial = { 
-                                                                  'email': request.session['user'].email,
-                                                                  'username': request.session['user'].username,
-                                                                  })
-        return render_to_response('webapp/socialsettings.html', {'form': f}, context_instance=RequestContext(request))
-    from django.views.generic.simple import direct_to_template
-    return direct_to_template(request, 'webapp/dashboard.html')
+    friends_to_follow=request.user.get_friends_to_follow()
+    followers=request.user.get_followers()
+    followings=request.user.get_followings()
+    chronology = request.user.get_activity_timeline()
+    return  render_to_response(template, {'friends_to_follow': friends_to_follow,
+                                                  'followers': followers,
+                                                  'followings': followings, 
+                                                  'chronology': chronology,
+                                                  } , RequestContext(request))
 
 
-def public_profile(request, username):
+def public_profile(request, username, template='webapp/profile.html'):
     """**Descripción**: Perfil publico que veran los demas usuarios
     
     :param username: nombre de usuario
     :type username: ni idea
     """
-    from models import User
-    from models_acc import UserCounter, UserTimeline
-    profile_user = User.objects.get_by_username(username)
-    if profile_user is None:
-        raise Http404()
-    settings = profile_user.settings
-    profile = profile_user.profile
-    counters = UserCounter.objects.get_by_id(profile_user.id, async=True)
-    if request.user.is_authenticated():
-        is_following = profile_user.is_following(request.user)
-        is_follower = request.user.is_following(profile_user)
+    from geoalert.views import get_suggestion
+    if request.user.username.lower() == username.lower():
+        # Si el usuario esta viendo su propio perfil
+        profile = request.user.profile
+        counters = request.user.counters_async()
+        sociallinks = profile.sociallinks_async()
+        timeline = request.user.get_profile_timeline()
+        suggestions = get_suggestion(request, id=None,
+                                     wanted_user=request.user,
+                                     page = 1, query_id = None
+                                     )
+        is_following = True
+        is_follower = True
+        show_followers = True
+        show_followings = True
     else:
-        is_following = None
-        is_follower = None
-    if is_following:  # el usuario logueado, sigue al del perfil
-        timeline = UserTimeline.objects.get_by_id(profile_user.id, vis='shared')
-    elif settings.show_timeline:
-        timeline = UserTimeline.objects.get_by_id(profile_user.id)
-    return render_to_response('webapp/publicprofile.html', {'profile': profile, 
-                                                            'counters': counters.get_result(),
-                                                            'timeline': timeline, 
-                                                            'is_following': is_following,
-                                                            'is_follower': is_follower, 
-                                                            'show_followers': settings.show_followers,
-                                                            'show_followings': settings.show_followings
-                                                            }, context_instance=RequestContext(request))
+        # Si esta viendo el perfil de otro
+        from geouser.models import User
+        profile_user = User.objects.get_by_username(username)
+        if profile_user is None:
+            raise Http404()
+        counters = profile_user.counters_async()#UserCounter.objects.get_by_id(profile_user.id, async=True)
+        
+        settings = profile_user.settings
+        profile = profile_user.profile
+        sociallinks = profile.sociallinks_async()
+        suggestions = get_suggestion(request, id=None,
+                                     wanted_user=profile_user,
+                                     page = 1, query_id = None
+                                     )
+        
+        if request.user.is_authenticated():
+            is_following = profile_user.is_following(request.user)
+            is_follower = request.user.is_following(profile_user)
+        else:
+            is_following = None
+            is_follower = None
+        if is_following or settings.show_timeline:  # el usuario logueado, sigue al del perfil
+            timeline = profile_user.get_profile_timeline(querier=request.user)
+        show_followers = settings.show_followers,
+        show_followings = settings.show_followings
+    
+    return render_to_response(template, {'profile': profile, 
+                                                'counters': counters.next(),
+                                                'sociallinks': sociallinks.next(),
+                                                'chronology': timeline, 
+                                                'suggestions': suggestions,
+                                                'is_following': is_following,
+                                                'is_follower': is_follower, 
+                                                'show_followers': show_followers,
+                                                'show_followings': show_followings
+                                                }, context_instance=RequestContext(request))
     
     
 #===============================================================================
@@ -535,16 +553,11 @@ def get_profile_timeline(request, userid = None, username = None, page=1, query_
 
 
 @login_required
-def get_notifications_timeline(request, page=1, query_id=None):
-    """**Descripción**: Obtiene la lista de timeline de los followings del usuario logueado
-
-		:param page: número de página a mostrar
-		:type page: int
-		:param query_id: identificador de búsqueda
-		:type query_id: int
-		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
-    """
-    return request.user.notifications_timeline(page=page, query_id=query_id)
+def notifications(request):
+    timeline = request.user.get_notifications_timeline()
+    return  render_to_response('notifications.html', {
+                                                      'chronology': timeline
+                                                  } , RequestContext(request))
 
 
 @login_required

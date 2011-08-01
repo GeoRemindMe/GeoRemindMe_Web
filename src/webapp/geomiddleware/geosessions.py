@@ -2,18 +2,15 @@ import time
 from django.utils.cache import patch_vary_headers
 from django.conf import settings
 
-from sessions.store import *
+from sessions.store import SessionStore
 from geouser.models import AnonymousUser
 
 class geosession(object):
     def process_request(self, request):
-        
         session_id = request.COOKIES.get(settings.COOKIE_NAME, None)
-
         if session_id is None:
             session_id = request.META.get('HTTP_X_GEOREMINDME_SESSION', None)
             request.session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
-
         if session_id is None:
             request.session = SessionStore.load(session_data=request.COOKIES.get(
                                              settings.COOKIE_DATA_NAME, None),
@@ -21,24 +18,27 @@ class geosession(object):
                                              )
         else:
             request.session = SessionStore.load(session_id=session_id)
-
+        if hasattr(request, 'facebook'):
+            if request.facebook['client'].user is not None and 'user' in request.session:
+                # sesion iniciada en web y facebook
+                if request.session['user'].id != request.facebook['client'].user.id:
+                    # usuarios distintos, cerrar sesion
+                    delattr(request, 'facebook')
+                    request.session.delete()  
+                    request.user = AnonymousUser()
+                    from facebookApp.watchers import disconnect_all
+                    disconnect_all()
+                    return
+            from facebookApp import watchers
+            request.user = request.session['user']
+            return
+        else:
+            if request.session.is_from_facebook:
+                request.session.delete()
+                from facebookApp.watchers import disconnect_all
+                disconnect_all()
         if 'user' in request.session:
             request.user = request.session['user']
-            if request.session.is_from_facebook and not hasattr(request, 'facebook'):
-                request.session.delete()
-                request.user = AnonymousUser()
-            elif hasattr(request, 'facebook'):
-                fbuser = request.user.facebook_user
-                if fbuser is None:
-                    if request.facebook['client'].user is not None:
-                        delattr(request, 'facebook')
-                        request.session.delete()
-                        request.user = AnonymousUser()
-                else:
-                    if request.facebook['uid'] != fbuser.uid:
-                        delattr(request, 'facebook')
-                        request.session.delete()  
-                        request.user = AnonymousUser()
         else:
             request.user = AnonymousUser()
 

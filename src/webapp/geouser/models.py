@@ -28,6 +28,10 @@ class AnonymousUser(object):
     
     def is_admin(self):
         return False
+    
+    @property
+    def id(self):
+        return -1
 
 
 class User(polymodel.PolyModel, HookedModel):

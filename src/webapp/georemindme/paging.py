@@ -399,7 +399,8 @@ class PagedQuery(object):
                 @return: a string ID
                 '''
                 ##return str(hash(pickle.dumps(self._query,2)))
-                return hash('%s%s' % (self._query.__hash__(), datetime.now().__hash__()))
+                from os import urandom
+                return hex(hash('%s%s' % (urandom(16), datetime.now().__hash__())))
                 
                         
         def _check_query_type_is(self, required_query_type):

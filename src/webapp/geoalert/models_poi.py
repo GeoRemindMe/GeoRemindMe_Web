@@ -283,6 +283,7 @@ class Place(POI):
                 self.slug = u_slugify('%s-%s'% (name, city))
             else:
                 self.slug = u_slugify('%s' % name)
+                self.city = name
         p = Place.all().filter('slug =', self.slug).get()
         if p is not None:
             if not self.is_saved() or p.key() != self.key():
