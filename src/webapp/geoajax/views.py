@@ -687,7 +687,7 @@ def do_vote_suggestion(request):
         puntuation: puntuacion a añadir
     """
     instance_id = request.POST['instance_id']
-    puntuation = request.POST['puntuation']
+    puntuation = request.POST.get('puntuation', 1)
     
     vote = geovote.do_vote_suggestion(request, instance_id, puntuation)
     from libs.jsonrpc.jsonencoder import JSONEncoder
