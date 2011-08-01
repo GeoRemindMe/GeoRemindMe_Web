@@ -708,25 +708,29 @@ class User(polymodel.PolyModel, HookedModel):
         return '/fb%s' % self.get_absolute_url()
         
     def get_friends_to_follow(self):
-        friends = {}
-        from geoauth.clients.facebook import FacebookClient
-        try:
-            fbclient = FacebookClient(user=self)
-            friends.update(fbclient.get_friends_to_follow())
-        except:
-            pass
-        try:
-            from geoauth.clients.twitter import TwitterClient
-            twclient = TwitterClient(user=self)
-            friends.update(twclient.get_friends_to_follow())
-        except:
-            pass
-        try:
-            from geoauth.clients.google import GoogleClient
-            goclient = GoogleClient(user=self)
-            friends.update(goclient.get_contacts_to_follow())
-        except:
-            pass
+        import memcache
+        friends = memcache.get('%sfriends_to_%s' % (memcache.version, self.key()))
+        if friends is None:
+            friends = {}
+            from geoauth.clients.facebook import FacebookClient
+            try:
+                fbclient = FacebookClient(user=self)
+                friends.update(fbclient.get_friends_to_follow())
+            except:
+                pass
+            try:
+                from geoauth.clients.twitter import TwitterClient
+                twclient = TwitterClient(user=self)
+                friends.update(twclient.get_friends_to_follow())
+            except:
+                pass
+            try:
+                from geoauth.clients.google import GoogleClient
+                goclient = GoogleClient(user=self)
+                friends.update(goclient.get_contacts_to_follow())
+            except:
+                pass
+                memcache.set('%sfriends_to_%s' % (memcache.version, self.key()), friends, 300)
         return friends
 
 
