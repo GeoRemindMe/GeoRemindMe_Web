@@ -532,10 +532,17 @@ class User(polymodel.PolyModel, HookedModel):
                     logging.debug('Usuario %s username repetido: %s - %s' % (u.id, self.username, u))
                     raise self.UniqueUsernameConstraint(self.username)
     
-    def __str__(self):        
+    def __str__(self):
         if self.username is None:
             if self.email is None:
-                return str(self.id)
+                return unicode(self.id)
+            return unicode(self.email).encode('utf-8')
+        return unicode(self.username).encode('utf-8')
+
+    def __unicode__(self):
+        if self.username is None:
+            if self.email is None:
+                return unicode(self.id)
             return self.email
         return self.username
 

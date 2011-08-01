@@ -67,7 +67,6 @@ class GoogleClient(Client):
                 if user_to_follow is not None and user_to_follow.username is not None and not self.user.is_following(user_to_follow):
                     registered[user_to_follow.id]={ 
                                                 'username': user_to_follow.username, 
-                                                'avatar': user_to_follow.profile.avatar, 
                                                 'email': user_to_follow.email
                                                 }
         return registered

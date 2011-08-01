@@ -237,9 +237,15 @@ class PrivatePlace(POI):
         
     def __str__(self):
         if self.name is not None:
-            return self.name
+            return unicode(self.name).encode('utf-8')
         else:
             return str(self.id)
+
+    def __unicode__(self):
+        if self.name is not None:
+            return self.name
+        else:
+            return unicode(self.id)
 
     
 class Place(POI):
@@ -409,8 +415,14 @@ class Place(POI):
         
     def __str__(self):
         if self.name is not None:
-            return self.name
+            return unicode(self.name).encode('utf-8')
         else:
             return str(self.id)
+
+    def __unicode__(self):
+        if self.name is not None:
+            return self.name
+        else:
+            return unicode(self.id)
 
 from helpers_poi import *

@@ -246,8 +246,8 @@ class Alert(Event):
         return simplejson.dumps(self.to_dict())
     
     def __str__(self):
-        return unicode(self.name)
-    
+        return unicode(self.name).encode('utf-8')
+
     def __unicode__(self):
         return self.name
 
@@ -464,12 +464,6 @@ class Suggestion(Event, Visibility, Taggable):
     def to_json(self):
         return simplejson.dumps(self.to_dict())
     
-    def __str__(self):
-        return unicode(self.name)
-    
-    def __unicode__(self):
-        return self.name
-    
     def send_invitation(self, sender, to):
         if sender.key() == self.user.key():
             from georemindme.models_indexes import Invitation
@@ -485,6 +479,12 @@ class Suggestion(Event, Visibility, Taggable):
     
     def get_absolute_fburl(self):
         return '/fb%s' % self.get_absolute_url()
+    
+    def __str__(self):
+        return unicode(self.name).encode('utf-8')
+
+    def __unicode__(self):
+        return self.name
         
         
 
@@ -597,6 +597,9 @@ class AlertSuggestion(Event):
         return simplejson.dumps(self.to_dict())
         
     def __str__(self):
+        return unicode(self.suggestion.name).encode('utf-8')
+
+    def __unicode__(self):
         return self.suggestion.name
 
 

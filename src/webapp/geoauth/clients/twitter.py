@@ -70,7 +70,6 @@ class TwitterClient(Client):
                 info = self.get_others_user_info(id=user_to_follow.id)
                 registered[user_to_follow.user.id] = { 
                                                'username': user_to_follow.user.username, 
-                                               'avatar': user_to_follow.user.profile.avatar,
                                                'twittername': info['screen_name'], 
                                                }
         return registered

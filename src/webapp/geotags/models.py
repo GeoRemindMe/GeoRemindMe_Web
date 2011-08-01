@@ -61,8 +61,8 @@ class Tag(db.Model):
         db.run_in_transaction(_tx, value)
         
     def __str__(self):
-        return unicode(self.name)
-    
+        return unicode(self.name).encode('utf-8')
+
     def __unicode__(self):
         return self.name
 

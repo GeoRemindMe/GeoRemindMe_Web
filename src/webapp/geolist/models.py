@@ -62,6 +62,12 @@ class List(polymodel.PolyModel, HookedModel):
             
     def to_json(self):
         return simplejson.dumps(self.to_dict())
+    
+    def __str__(self):
+        return unicode(self.name).encode('utf-8')
+
+    def __unicode__(self):
+        return self.name
 
 class ListSuggestion(List, Visibility):
     '''
