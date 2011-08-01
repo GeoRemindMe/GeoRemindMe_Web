@@ -737,6 +737,7 @@ class User(polymodel.PolyModel, HookedModel):
                 friends.update(goclient.get_contacts_to_follow())
             except:
                 pass
+            if len(friends) > 0:
                 memcache.set('%sfriends_to_%s' % (memcache.version, self.key()), friends, 300)
         return friends
 
