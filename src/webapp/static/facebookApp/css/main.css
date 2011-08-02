@@ -602,6 +602,11 @@ input{
                 text-decoration:none;
             }
             
+            #view-suggestion ul#popular-comments{
+                margin:1em 0;
+            }
+            
+            
             ul#chronology li span.like-text, 
             #view-suggestion ul#comment-list li span.like-text{
                 background: url("/static/facebookApp/img/like_min.png") no-repeat scroll -2px 1px transparent;
