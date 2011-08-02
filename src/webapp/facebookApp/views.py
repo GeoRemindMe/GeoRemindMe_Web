@@ -15,11 +15,9 @@ def login_panel(request):
     from geouser.forms import SocialUserForm
     if hasattr(request, 'facebook'):
         if not request.user.is_authenticated():
-            
             user = request.facebook['client'].authenticate()
             init_user_session(request, user, is_from_facebook=True)
         else:
-            
             user = request.user
         if user.username is None or user.email is None:
             if request.method == 'POST':
@@ -47,6 +45,7 @@ def login_panel(request):
             return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
     from django.conf import settings
+    raise
     return render_to_response('register.html', {"permissions": settings.OAUTH['facebook']['scope'] },
                               context_instance=RequestContext(request)
                               )

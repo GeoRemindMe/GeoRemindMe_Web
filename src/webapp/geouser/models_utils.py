@@ -45,6 +45,11 @@ class _Notification(db.Model):
     @property
     def id(self):
         return self.timeline.id
+    
+    def put(self):
+        if not self.is_saved():
+            self.owner.counters.set_notifications()
+        super(_Notification, self).put()
 
 class _Report_Account_follower(db.Model):
     """

@@ -593,6 +593,7 @@ def get_profile_timeline(request, userid = None, username = None, page=1, query_
 @login_required
 def notifications(request, template='webapp/notifications.html'):
     timeline = request.user.get_notifications_timeline()
+    # reset contador de notificaciones
     request.user.counters.set_notifications(-request.user.counters.notifications)
     return  render_to_response(template, {
                                           'chronology': timeline

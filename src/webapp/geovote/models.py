@@ -139,11 +139,21 @@ class CommentHelper(object):
             raise TypeError
         if instance is not None:
             import memcache
-            top = None #memcache.deserialize_instances(memcache.get('%stopcomments_%s' % (memcache.version, instance.key())))
+            top = None #memcache.get(memcache.get('%stopcomments_%s' % (memcache.version, instance.key())))
             if top is None:
                 top = Comment.all().filter('instance =', instance).filter('votes >', 0).filter('deleted =', False).order('-votes').fetch(3, 0)
-                if top is not None: 
-                    memcache.set('%stopcomments_%s' % (memcache.version, instance.key()), memcache.serialize_instances(top), 300)
+                if top is not None:
+                    comments = [{'id': comment.id,
+                                'created': comment.created,
+                                'modified': comment.modified, 
+                                'msg': comment.msg,
+                                'username': comment.user.username,
+                                'instance': comment.instance if comment.instance is not None else None,
+                                'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                                'vote_counter': comment.votes,
+                        }
+                       for comment in top]
+                    memcache.set('%stopcomments_%s' % (memcache.version, instance.key()), comments, 300)
         return top
         
 

@@ -19,19 +19,22 @@ class geosession(object):
         else:
             request.session = SessionStore.load(session_id=session_id)
         if hasattr(request, 'facebook'):
-            if request.facebook['client'].user is not None and 'user' in request.session:
-                # sesion iniciada en web y facebook
-                if request.session['user'].id != request.facebook['client'].user.id:
-                    # usuarios distintos, cerrar sesion
-                    delattr(request, 'facebook')
-                    request.session.delete()  
-                    request.user = AnonymousUser()
-                    from facebookApp.watchers import disconnect_all
-                    disconnect_all()
+            if request.facebook['client'].user is not None:
+                if not 'user' in request.session:
+                    from facebookApp import watchers    
+                    request.user = request.facebook['client'].user
                     return
-                from facebookApp import watchers    
-                request.user = request.session['user']
-                return
+                # sesion iniciada en web y facebook
+                else:
+                    if request.session['user'].id == request.facebook['client'].user.id:
+                        from facebookApp import watchers    
+                        request.user = request.session['user']
+                        return
+            request.session.delete()  
+            request.user = AnonymousUser()
+            from facebookApp.watchers import disconnect_all
+            disconnect_all()
+            return
         else:
             if request.session.is_from_facebook:
                 request.session.delete()
