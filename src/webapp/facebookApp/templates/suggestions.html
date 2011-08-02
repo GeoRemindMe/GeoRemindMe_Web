@@ -38,6 +38,18 @@
                 $(this).addClass('active');
             })
             
+            //Menu desplegable "Mover a"
+            $("ul.submenu").css({display: "none"});
+            // Defino que submenus deben estar visibles cuando se pasa el mouse por encima
+            $(".mvBtn, .submenu ").hover(
+                function(){
+                    $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+                },function(){
+                    $(this).find('ul:first').slideUp(400);
+                }
+            );
+            
+            
         });
         function toogleSuggestion(obj){
             var suggestion_id=$(obj).parent().attr('id').substr(11)
@@ -108,7 +120,13 @@
                         <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
                         
                         <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
-                        <span class="btn mvBtn">Mover a</span>
+                        <span class="btn mvBtn">
+                            Mover a
+                            <ul class="submenu">
+                                <li>Lista 1</li>
+                                <li>Nueva lista</li>
+                            </ul>
+                        </span>
                         
                     </div>
                     
