@@ -6,6 +6,7 @@
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+    <script src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript">        
         $(document).ready(function(){
             
@@ -38,35 +39,63 @@
                 $(this).addClass('active');
             })
             
-            //Menu desplegable "Mover a"
-            $("ul.submenu").css({display: "none"});
-            // Defino que submenus deben estar visibles cuando se pasa el mouse por encima
-            $(".mvBtn, .submenu ").hover(
-                function(){
+            // Menu desplegable "Listas"
+            // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
+            hiConfig = {
+                sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
+                interval: 0, // number = milliseconds for onMouseOver polling interval
+                timeout: 500, // number = milliseconds delay before onMouseOut
+                over: function() {
                     $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
-                },function(){
-                    $(this).find('ul:first').slideUp(400);
+                },
+                out: function() {
+                     $(this).find('ul:first').slideUp(400);
                 }
-            );
+            }
+            
+            $(".mvBtn, .submenu ").hoverIntent(hiConfig);
+            
+            $('.submenu li').click(function(){submenuLiBehave(this)})
+            
+            //Enter behave when adding new list
+            $("#new-list-btn span#new-list").keyup(function(e) {
+                e.preventDefault();
+                if(e.keyCode == 13) {
+                    console.log($(this).find('input').val());
+                    $("<li id=\"valor\">"+$(this).find('input').val()+"</li>").insertBefore('#new-list-btn');
+                    $('#valor').click(function(){submenuLiBehave(this)});
+                    $("#new-list-btn span#text").css('display','inline-block')
+                    $("#new-list-btn span#new-list").css('display','none')
+                    $("#new-list-btn span#new-list").find('input').val("");
+                }
+            });
+            
             
             $('#new-list-btn').click(function(){
-                if($("#new-list-btn").find("input").length==0){
-                    $(this).empty();
-                    $(this).append("<input type=\"text\" id=\"new-list\" />");
-                    //Search the element again
-                    var inputField=$("#new-list-btn").find("input");
-                    inputField.focus();
-                    inputField.keyup(function(e) {
-                        e.preventDefault();
-                        if(e.keyCode == 13) {
-                            console.log($(this).val());
-                        }
-                    });
+                if($("#new-list-btn span#text").css('display')=="inline-block"){
+                    $("#new-list-btn span#text").css('display','none')
+                    $("#new-list-btn span#new-list").css('display','inline-block')
+                    $("#new-list-btn span#new-list").find('input').focus()
                 }
             })
             
             
         });
+        
+        function submenuLiBehave(obj){
+            if($(obj).attr('id')=="new-list-btn")
+                return false;
+            var addToList=$(obj).attr('id');
+            var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
+            if( checkedSuggestions.length==0){
+                console.log("No ha seleccionado items");
+            }
+            checkedSuggestions.each(function(){
+                console.log("Añadimos a la lista "+addToList+" la sugerencia"+$(obj).attr('id'))
+            })
+            
+        }
+        
         function toogleSuggestion(obj){
             var suggestion_id=$(obj).parent().attr('id').substr(11)
             var temp=$(obj).parent()
@@ -138,9 +167,12 @@
                         <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
                         <span class="btn mvBtn">
                             Listas
-                            <ul class="submenu">
-                                <li>Lista 1 (3 sugerencias)</li>
-                                <li id="new-list-btn">Nueva lista...</li>
+                            <ul class="submenu" style="display:none">
+                                <li id="listid-1">Lista 1 (3 sugerencias)</li>
+                                <li id="new-list-btn">
+                                    <span id="text">Nueva lista...</span>
+                                    <span id="new-list" style="display:none"><input type="text" /></span>
+                                </li>
                             </ul>
                         </span>
                         
