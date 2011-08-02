@@ -562,13 +562,13 @@ input{
         }
         
         ul#chronology li div.avatar{        
+            border-bottom: 0 none;
             display: block;
             float: left;
-            margin: 0.5em 1em 0 0;
+            height: 50px;
+            margin: 0.5em 0.7em 0 0.3em;
             text-align: left;
             width: 50px;
-            height:50px;
-            border-bottom:0;
         }
         ul#chronology li div.avatar img{
             width:50px
@@ -605,7 +605,10 @@ input{
             #view-suggestion ul#popular-comments{
                 margin:1em 0;
             }
-            
+            #notifications .unread-item{
+                background-color: #EEEEEE;
+                border: 1px dotted #CCCCCC;
+            }
             
             ul#chronology li span.like-text, 
             #view-suggestion ul#comment-list li span.like-text{
@@ -745,7 +748,7 @@ input{
         
         ul#chronology li.msg-120{
             background-image: url("/static/facebookApp/img/timeline/120.png");
-            background-position: right 10px;
+            background-position: 99% 10%;
             background-repeat: no-repeat;
         }
         
