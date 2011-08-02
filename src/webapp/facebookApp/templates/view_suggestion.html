@@ -95,17 +95,39 @@
         <span class="btn likeBtn">Recordar</span>
         
         
-<!--
-        <p class="popular">Comentario más popular</p>
-        <div id="comments" class="comments suggestion-element">
-            <span class="user"><img src="/user/susana/picture/" alt="user avatar"><br><a href="">Pack</a></span>
-            <span class="msg">Deberíais tomar unas cerveza mientras</span>
-            <span class="timestamp">
-                hace 5 min
-                <span class="hoverlink like">Me gusta</span>
-            </span>
-        </div>
--->
+        {% if top_comments %}
+                <p class="popular">Comentarios populares</p>
+                <ul class="comments" id="popular-comments">
+                    {% for c in top_comments %}
+                        <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
+                    
+                            <!-- Añadimos el botón de borrar comentario-->
+                            {% if c.user.username = user.username %}
+                                <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
+                            {% endif %}
+                                                    
+                            <span class="user"><img src="{% url user_avatar c.user.username %}" alt="{{c.user.username}} avatar"></span>
+                            <div style="float:left">
+                                <span class="msg"><a href="{% url fb_public_profile c.user.username%}">{{c.user.username}}</a>: {{c.msg}}</span>
+                                <span class="timestamp">{{c.created|naturaltime}}</span> | 
+                                <span class="action-bar">
+                                    <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
+                                        <span class="dislike">
+                                            <span class="hoverlink">Ya no me gusta</span> 
+                                            <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+                                        </span>
+                                        
+                                        <span class="like">
+                                            <span class="hoverlink">Me gusta</span> 
+                                        </span>
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+        {% endif %}
+        
         <p class="clear big">¿Tienes algo que añadir a esta sugerencia?</p>
         <textarea id="msg"></textarea>
 <!--
