@@ -51,7 +51,7 @@ def naturaltime(value, arg=None):
     except ValueError: 
         return value 
     delta = datetime.now() - value 
-    if delta.days != 0: 
+    if delta.days > 0: 
         value = datetime(value.year, value.month, value.day, value.hour, value.minute) 
         return value #.strftime("%d/%m/%y %H:%M")
     elif delta.seconds == 0: 
