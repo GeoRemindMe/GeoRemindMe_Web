@@ -337,7 +337,6 @@ def block_contacts(request):
             
             :returns: boolean
     """
-    
     if request.user.is_authenticated():
         userid = request.POST['userid']
         if userid is not None:
