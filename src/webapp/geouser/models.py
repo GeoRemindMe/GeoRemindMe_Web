@@ -176,7 +176,7 @@ class User(polymodel.PolyModel, HookedModel):
                         'comments': Comment.objects.get_by_instance(timeline.instance, querier=self),
                         'is_private': True,
                         }
-                       for timeline in p.fetch_page(page)]]
+                       for timeline in p.fetch_page(page)], p.page_count()]
     
     def get_profile_timeline(self, page=1, query_id=None, querier=None):
         '''
@@ -223,7 +223,7 @@ class User(polymodel.PolyModel, HookedModel):
                         'user_follower': timeline.instance.has_follower(self) if isinstance(timeline.instance, Suggestion) else None,
                         'is_private': False,
                         }
-                        for timeline in timelines if timeline is not None ]]
+                        for timeline in timelines if timeline is not None ], p.page_count()]
         
     def get_activity_timeline(self, page=1, query_id=None):
         if query_id is not None:
@@ -238,6 +238,7 @@ class User(polymodel.PolyModel, HookedModel):
         chronology[1].extend(timeline[1])
         chronology[1].sort(key=lambda x: x['modified'], reverse=True)
         chronology[0] = '%s_%s' % (chronology[0], timeline[0])
+        chronology[2] = timeline[2] if timeline[2] > chronology[2] else chronology[2] 
         return chronology
     
     def get_notifications_timeline(self, page=1, query_id=None):
@@ -742,6 +743,9 @@ class User(polymodel.PolyModel, HookedModel):
             except:
                 pass
             if len(friends) > 0:
+                for k in friends.keys():
+                    if k in self.settings.blocked_friends_sug:
+                        del friends[k]
                 memcache.set('%sfriends_to_%s' % (memcache.version, self.key()), friends, 300)
         return friends
 

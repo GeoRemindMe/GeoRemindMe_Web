@@ -33,6 +33,7 @@ class UserSettings(HookedModel):
     show_timeline = db.BooleanProperty(indexed=False, default=True)
     show_lists = db.BooleanProperty(indexed=False, default=True)
     show_public_profile = db.BooleanProperty(indexed=False, default=True)
+    blocked_friends_sug = db.ListProperty(int, indexed=False)
     
     language = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
@@ -225,6 +226,8 @@ class UserCounter(db.Model):
         obj = UserCounter.get(self.key())
         oldValue = getattr(obj, prop)
         value = oldValue+value
+        if value < 0:
+            value = 0
         setattr(obj, prop, value)
         db.put_async(obj)
         return value

@@ -325,6 +325,25 @@ def get_friends_twitter(request):
     friends = geouser.get_friends_twitter(request)
     return HttpResponse(simplejson.dumps(friends))
 
+
+@ajax_request
+def block_contacts(request):
+    """
+        Bloquea a un usuario para no recibirlo en la lista
+        de amigos sugeridos
+        
+        Parametros en POST:
+            userid: el id del usuario a bloquear
+            
+            :returns: boolean
+    """
+    
+    if request.user.is_authenticated():
+        userid = request.POST['userid']
+        if userid is not None:
+            request.user.settings.blocked_friends_sug.add(int(userid))
+            return True
+    return False
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
