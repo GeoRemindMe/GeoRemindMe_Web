@@ -95,7 +95,7 @@ class UserTimelineHelper(object):
         from georemindme.paging import PagedQuery
         from google.appengine.ext import db
         q = UserTimeline.all().filter('user =', db.Key.from_path(User.kind(), userid)).order('-created')
-        p = PagedQuery(q, id = query_id, page_size=42)
+        p = PagedQuery(q, id = query_id, page_size=10)
         timelines = p.fetch_page(page)
         if querier is None:
             from models_acc import UserTimelineSystem

@@ -16,7 +16,7 @@ from georemindme.decorators import classproperty
 from properties import PasswordProperty, UsernameProperty
 
 
-TIMELINE_PAGE_SIZE = 42
+TIMELINE_PAGE_SIZE = 10
 
 
 class AnonymousUser(object):
