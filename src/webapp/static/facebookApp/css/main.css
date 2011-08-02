@@ -1773,7 +1773,11 @@ input{
     .mvBtn{
         float:none;
     }
-    .mvBtn { list-style:none; }
+    #suggestions #content span.mvBtn { 
+        background: url("/static/webapp/img/dropdownmenu.png") no-repeat scroll 96% 5px transparent !important;
+        list-style: none outside none;
+        padding-right: 15px;
+    }
     .mvBtn li { float:left; background-image:url(nav_li_bg.png); background-repeat:no-repeat; background-position:right; }
 /*
     .mvBtn li a { display:block; padding:7px 10px; text-decoration:none; color:#CCCCCC; font-weight:bold; }
@@ -1785,17 +1789,21 @@ input{
         border: 1px solid #CCCCCC;
         clear: both;
         list-style: none outside none;
-        margin: 0;
-        padding: 5px;
+        margin: 0 0 0 -10px;
+        padding: 0;
         position: absolute;
         text-align: left;
         width: auto;
     }
     .mvBtn ul.submenu li { 
         background-image: none;
-        border-bottom: 1px solid #999999;
         float: none;
+        padding: 4px;
     }
+    .mvBtn ul.submenu li:hover{
+        background-color:#EEEEEE;
+    }
+    
     /* Subsubmenu */
     
     div#content div#noSuggestions{
@@ -1808,7 +1816,18 @@ input{
         background-color: inherit;
         cursor:default;
     }
-    
+    #suggestions ul.submenu input[type="checkbox"]{
+        margin: 0 7px 0 2px;
+    }
+    #new-list-btn{
+/*
+        border-top: 1px solid #AAAAAA;
+        color: blue;
+        font-size: 0.9em;
+        text-align: center;
+        text-decoration: underline;
+*/
+    }
     #add-more-details{
         -moz-border-radius: 4px 4px 4px 4px;
         border-radius: 4px 4px 4px 4px;
