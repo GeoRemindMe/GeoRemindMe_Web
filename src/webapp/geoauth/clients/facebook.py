@@ -109,7 +109,8 @@ class FacebookClient(object):
             if user_to_follow is not None and user_to_follow.user.username is not None and not self.user.is_following(user_to_follow.user):
                 registered[user_to_follow.user.id]= {
                                                    'username':user_to_follow.user.username, 
-                                                   'uid':user_to_follow.uid
+                                                   'uid':user_to_follow.uid,
+                                                   'id': user_to_follow.user.id,
                                                    }
         return registered
         

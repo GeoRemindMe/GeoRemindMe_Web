@@ -70,7 +70,8 @@ class TwitterClient(Client):
                 info = self.get_others_user_info(id=user_to_follow.id)
                 registered[user_to_follow.user.id] = { 
                                                'username': user_to_follow.user.username, 
-                                               'twittername': info['screen_name'], 
+                                               'twittername': info['screen_name'],
+                                               'id': user_to_follow.user.id,
                                                }
         return registered
     def authorize(self, user=None, login=True):
