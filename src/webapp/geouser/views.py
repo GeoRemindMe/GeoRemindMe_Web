@@ -162,7 +162,7 @@ def update_profile(request):
         from forms import UserProfileForm
         f = UserProfileForm(request.POST, prefix='user_settings_profile')
         if f.is_valid():
-            updated = f.save(request.session['user'], file=request.POST['avatar'])
+            updated = f.save(request.user, file=request.POST['avatar'])
             if updated:
                 return
         return f.errors
@@ -405,8 +405,8 @@ def get_followers(request, userid=None, username=None, page=1, query_id=None):
 		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """
     if userid is None and username is None:
-        if request.session.get('user', None):
-            return request.session['user'].get_followers(page=page, query_id=query_id)
+        if request.user.is_authenticated():
+            return request.user.get_followers(page=page, query_id=query_id)
         return None
     else:
         from models import User
@@ -435,8 +435,8 @@ def get_followings(request, userid=None, username=None, page=1, query_id=None):
 		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """
     if userid is None and username is None:
-        if request.session.get('user', None):
-            return request.session['user'].get_followings(page=page, query_id=query_id)
+        if request.user.is_authenticated():
+            return request.user.get_followings(page=page, query_id=query_id)
         return None
     else:
         from models import User
@@ -469,7 +469,7 @@ def add_following(request, userid=None, username=None):
 		:type username: string
 		:return: booleano con el resultado de la operación
     """
-    return request.session['user'].add_following(followid=userid, followname=username)
+    return request.user.add_following(followid=userid, followname=username)
 
 
 @login_required
@@ -482,7 +482,7 @@ def del_following(request, userid=None, username=None):
 		:type username: string
 		:return: boolean con el resultado de la operacion
     """
-    return request.session['user'].del_following(followid=userid, followname=username)
+    return request.user.del_following(followid=userid, followname=username)
 
 
 @login_required
