@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load tags %}
+{% url fb_notifications as notifications_section %}
 {% load tags %}
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
@@ -50,6 +50,19 @@
                 (new Image()).src = $(elem).attr('src')
             })
             
+            $(".load-more").click(function(){
+                GRM.loadPage({
+                    page:page,
+//                    "total_pages":{{suggestions.2}},
+                    container:'#chronology',
+                    url:'{% url get_activity_timeline %}',
+                    template: "#suggestionTemplate",
+                    data:{
+                            'query_id':"{{chronology.0}}",
+                        }                
+                });
+            });
+            
         });
     </script>
     
@@ -64,9 +77,10 @@
         
         {% block pre_chronology %} {%endblock%}
         {% if chronology.1|length %}    
-    <!--
-            <p>{{chronology.1.0}} mensajes</p>
-    -->
+    
+            
+            
+    
             
             <ul id="tabMenu" class="clear">
                 <li class="clear-box">Ver:</li>
@@ -79,7 +93,8 @@
             <ul id="chronology">
             {% for obj in chronology.1 %}
                 {% if not obj.msg_id = 100 or not obj.is_private %}
-                    <li {% if forloop.last %} style="border:0" {% endif %} class="msg-{{obj.msg_id}}">
+                
+                    <li {% if forloop.last %} style="border:0" {% endif %} class="msg-{{obj.msg_id}} {% if forloop.counter <= notifications %}unread-item{% endif %}">
                         {% timeline_item obj %}
                     </li>
                 {% endif %}
@@ -88,7 +103,7 @@
             </ul>
         
             <!-- Si hay más mensajes -->
-            {% if chronology.1|length == 15%}
+            {% if chronology.1|length > 9%}
                 <div class="load-more">Cargar más</div>
             {% endif %}    
             
