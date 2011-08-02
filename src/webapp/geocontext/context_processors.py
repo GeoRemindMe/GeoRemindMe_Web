@@ -31,6 +31,7 @@ def geoAuth(request):
                                 u'appId': settings.OAUTH['facebook']['app_key'],
                                 u'canvasName': settings.FACEBOOK_APP['canvas_name'],
                             },
+            'notifications': request.user.counters.notifications,
             }
     
     return parameters

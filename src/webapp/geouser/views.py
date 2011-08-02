@@ -13,7 +13,6 @@ from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-
 from decorators import login_required
 
 
@@ -202,7 +201,8 @@ def dashboard(request, template='webapp/dashboard.html'):
                                                   'followers': followers,
                                                   'followings': followings, 
                                                   'chronology': chronology,
-                                                  } , RequestContext(request))
+                                                  } , RequestContext(request)
+                               )
 
 
 def public_profile(request, username, template='webapp/profile.html'):
@@ -263,8 +263,46 @@ def public_profile(request, username, template='webapp/profile.html'):
                                                 'show_followers': show_followers,
                                                 'show_followings': show_followings
                                                 }, context_instance=RequestContext(request))
+
+
+@login_required
+def edit_profile (request, template='webapp/edit_profile.html'):
+    """**Descripción**: Edición del perfil publico que veran los demas usuarios
     
+    :param username: nombre de usuario
+    :type username: ni idea
+    """
+    from geouser.forms import UserProfileForm
+    if request.method == 'POST':
+        f = UserProfileForm(request.POST, prefix='user_set_profile')
+        if f.is_valid():
+            modified = f.save(user=request.user)
+            if modified:
+                return HttpResponseRedirect('/fb/user/%s/' % request.user.username)
+
+    else:
+        f = UserProfileForm(initial={'username': request.user.username,
+                                     'email': request.user.email,
+                                     'description': request.user.profile.description, 
+                                     'sync_avatar_with': request.user.profile.sync_avatar_with, },
+                            prefix='user_set_profile'
+                            )
+    return render_to_response(template, {'form': f}, context_instance=RequestContext(request))
+
+@login_required
+def profile_settings(request, template='webapp/settings.html'):
+    counters = request.user.counters_async()
+    has_twitter = True if request.user.twitter_user is not None else False
+    has_google = True if request.user.google_user is not None else False
     
+    return  render_to_response(template,{'counters': counters.next(),
+                                               'profile': request.user.profile,
+                                               'has_twitter': has_twitter,
+                                               'has_google': has_google,
+                                               'settings': request.user.settings,
+                                                },
+                                            context_instance=RequestContext(request)
+                                )
 #===============================================================================
 # CONFIRM VIEW
 #===============================================================================
@@ -553,11 +591,12 @@ def get_profile_timeline(request, userid = None, username = None, page=1, query_
 
 
 @login_required
-def notifications(request):
+def notifications(request, template='webapp/notifications.html'):
     timeline = request.user.get_notifications_timeline()
-    return  render_to_response('notifications.html', {
-                                                      'chronology': timeline
-                                                  } , RequestContext(request))
+    request.user.counters.set_notifications(-request.user.counters.notifications)
+    return  render_to_response(template, {
+                                          'chronology': timeline
+                                          } , RequestContext(request))
 
 
 @login_required

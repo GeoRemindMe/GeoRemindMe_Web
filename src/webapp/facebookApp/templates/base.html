@@ -82,11 +82,11 @@
         <!-- async loading of facebook js sdk  -->
         $(document).ready(function(){ 
             facebookInit({
-				'appId': {{app_settings.appId}}, 
-				'status' : true, // check login status
-				'cookie' : true, // enable cookies to allow the server to access the session
-				'xfbml'  : true,  // parse XFBML
-				'canvasName'  : '{{app_settings.canvasName}}',
+				appId: '{{app_settings.appId}}', 
+				status : true, // check login status
+				cookie : true, // enable cookies to allow the server to access the session
+				xfbml  : true,  // parse XFBML
+				canvasName  : '{{app_settings.canvasName}}',
             });
             
         });

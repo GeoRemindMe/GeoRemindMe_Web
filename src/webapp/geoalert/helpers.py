@@ -96,7 +96,7 @@ class EventHelper(object):
         '''
         if not isinstance(querier, User):
             raise TypeError()
-        event = self._klass.get_by_id(id)
+        event = self.get_by_id(id)
         if event is None:
             return None
         if event.user.key() == querier.key():

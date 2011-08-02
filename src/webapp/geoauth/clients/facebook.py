@@ -106,7 +106,7 @@ class FacebookClient(object):
         registered = {}
         for f in friends:
             user_to_follow = FacebookUser.objects.get_by_id(f['id'])
-            if user_to_follow is not None and user_to_follow.user.username is not None and  not self.user.is_following(user_to_follow.user):
+            if user_to_follow is not None and user_to_follow.user.username is not None and not self.user.is_following(user_to_follow.user):
                 registered[user_to_follow.user.id]= {
                                                    'username':user_to_follow.user.username, 
                                                    'uid':user_to_follow.uid

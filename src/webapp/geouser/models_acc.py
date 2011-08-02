@@ -203,6 +203,7 @@ class UserCounter(db.Model):
     alerts = db.IntegerProperty(default=0)
     followings = db.IntegerProperty(default=0)
     followers = db.IntegerProperty(default=0)
+    notifications = db.IntegerProperty(default=0)
     created = db.DateTimeProperty(auto_now_add=True)
     
     @classproperty
@@ -247,6 +248,9 @@ class UserCounter(db.Model):
     
     def set_followers(self, value=1):
         return db.run_in_transaction(self._change_counter, 'followers', value)
+    
+    def set_notifications(self, value=1):
+        return db.run_in_transaction(self._change_counter, 'notifications', value)
     
     
 class UserTimelineBase(db.polymodel.PolyModel):

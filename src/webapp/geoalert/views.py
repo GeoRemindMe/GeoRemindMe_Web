@@ -263,7 +263,20 @@ def view_place(request, slug, template='webapp/place.html'):
 # FUNCIONES PARA AÑADIR, EDITAR, OBTENER Y MODIFICAR RECOMENDACIONES
 #===============================================================================
 @login_required
-def add_suggestion(request, form):
+def user_suggestions(request, template='webapp/suggestions.html'):
+    counters = request.user.counters_async()
+    suggestions = get_suggestion(request, id=None,
+                                wanted_user=request.user,
+                                page = 1, query_id = None
+                                )
+    return  render_to_response(template, {'suggestions': suggestions,
+                                          'counters': counters.next()
+                                          }, context_instance=RequestContext(request)
+                               )
+
+
+@login_required
+def add_suggestion(request, template='webapp/add_suggestion.html'):
     """ Añade una sugerencia
         
             :param form: formulario con los datos
@@ -272,6 +285,20 @@ def add_suggestion(request, form):
             :type: :class:`string`
             
             :returns: :class:`geoalert.models.Suggestion`
+    """
+    from forms import SuggestionForm
+    f = SuggestionForm();
+    return  render_to_response(template, {'f': f,},
+                               context_instance=RequestContext(request)
+                               )
+@login_required
+def save_suggestion(request, form):
+    """ Añade una sugerencia
+    :param form: formulario con los datos
+    :type form: :class:`geoalert.forms.RemindForm`
+    :param address: direccion obtenida de la posicion
+    :type: :class:`string`
+    :returns: :class:`geoalert.models.Suggestion`
     """
     sug = form.save(user = request.user)
     return sug
@@ -297,7 +324,7 @@ def add_suggestion_invitation(request, eventid, userid):
     return event.send_invitation(request.user, user_to)
 
 @login_required
-def edit_suggestion(request, id, form):
+def edit_suggestion(request, suggestion_id, form, template='webapp/add_suggestion.html'):
     """ Edita una sugerencia
         
             :param form: formulario con los datos
@@ -305,8 +332,22 @@ def edit_suggestion(request, id, form):
             
             :returns: :class:`geoalert.models.Suggestion`
     """
-    sug = form.save(user = request.user, id = id)
-    return sug
+    from geoalert.forms import SuggestionForm
+    s = Suggestion.objects.get_by_id(suggestion_id)
+    return  render_to_response(template, {
+                                                        'eventid':suggestion_id,
+                                                        'name': s.name,
+                                                        'poi_id': s.poi.id,
+                                                        'poi_reference': s.poi.google_places_reference,
+                                                        'starts': s.date_starts,
+                                                        'ends': s.date_ends,
+                                                        'description': s.description, 
+                                                        'visibility': s._vis,
+                                                        'poi_location': s.poi.location,
+                                                        'poi_name': s.poi.name,
+                                                        'poi_address': s.poi.address,
+                                                        }, context_instance=RequestContext(request)
+                               )
 
 
 @login_required

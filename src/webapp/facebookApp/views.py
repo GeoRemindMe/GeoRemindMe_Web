@@ -3,14 +3,11 @@
 
 from django.shortcuts import render_to_response, Http404
 from django.http import HttpResponse,HttpResponseRedirect
-from django.utils.decorators import decorator_from_middleware
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
-from django.conf import settings
 
-from geouser.models import *
+
 from geouser.funcs import init_user_session
-from geoalert.models import *
 from decorators import facebook_required
 
 
@@ -26,25 +23,33 @@ def login_panel(request):
             user = request.user
         if user.username is None or user.email is None:
             if request.method == 'POST':
-                f = SocialUserForm(request.POST, prefix='user_set_username', initial = { 
-                                                                      'email': user.email,
-                                                                      'username': user.username,
-                                                                      })
+                f = SocialUserForm(request.POST, 
+                                   prefix='user_set_username', 
+                                   initial = { 'email': user.email,
+                                               'username': user.username,
+                                             }
+                                   )
                 if f.is_valid():
                     user = f.save(user)
                     if user:
                         request.user = user
                         return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
             else:
-                f = SocialUserForm(prefix='user_set_username', initial = { 
-                                                                      'email': request.user.email,
-                                                                      'username': request.user.username,
-                                                                      })
-            return render_to_response('create_social_profile.html', {'form': f}, context_instance=RequestContext(request))
+                f = SocialUserForm(prefix='user_set_username', 
+                                   initial = { 'email': request.user.email,
+                                               'username': request.user.username,
+                                              }
+                                   )
+            return render_to_response('create_social_profile.html', {'form': f}, 
+                                       context_instance=RequestContext(request)
+                                      )
         else:
             return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
-    return render_to_response('register.html', {"permissions":settings.OAUTH['facebook']['scope']}, context_instance=RequestContext(request))
+    from django.conf import settings
+    return render_to_response('register.html', {"permissions": settings.OAUTH['facebook']['scope'] },
+                              context_instance=RequestContext(request)
+                              )
     
 
 @facebook_required
@@ -56,99 +61,43 @@ def dashboard(request):
 @facebook_required
 def notifications(request):
     from geouser.views import notifications
-    return notifications(request)
+    return notifications(request, template='notifications.html')
 
 
 @facebook_required
 def profile(request, username):
-    """**Descripción**: Perfil publico que veran los demas usuarios
-    
-    :param username: nombre de usuario
-    :type username: ni idea
-    """
     from geouser.views import public_profile
     return public_profile(request, username, template='profile.html')
 
 
 @facebook_required
 def edit_profile (request):
-    """**Descripción**: Edición del perfil publico que veran los demas usuarios
-    
-    :param username: nombre de usuario
-    :type username: ni idea
-    """
-    from geouser.forms import UserProfileForm
-    if request.method == 'POST':
-        f = UserProfileForm(request.POST, prefix='user_set_profile')
-        if f.is_valid():
-            modified = f.save(user=request.user)
-            if modified:
-                return HttpResponseRedirect('/fb/user/%s/' % request.user.username)
-
-    else:
-        f = UserProfileForm(initial={'username': request.user.username,
-                                     'email': request.user.email,
-                                     'description': request.user.profile.description, 
-                                     'sync_avatar_with': request.user.profile.sync_avatar_with, },
-                            prefix='user_set_profile'
-                            )
-    return render_to_response('edit_profile.html', {'form': f}, context_instance=RequestContext(request))
+    from geouser.views import edit_profile
+    return edit_profile(request, template='edit_profile.html')
 
 
 @facebook_required    
 def user_suggestions(request):
-    """
-    name = forms.CharField(required=True)
-    location = LocationField(required=True)
-    poi_id = forms.IntegerField(required=False, initial=-1)
-    starts = forms.DateTimeField(required=False, widget=SelectDateWidget())
-    ends = forms.DateTimeField(required=False, widget=SelectDateWidget())
-    description = forms.CharField(required=False,widget=forms.Textarea())
-    distance = forms.CharField(label=_('Alert distance (meters)'), required=False)
-    active = forms.BooleanField(required=False, initial=True)
-    done = forms.BooleanField(required=False)
-    """
-    from geoalert.views import get_suggestion
-    counters = request.user.counters_async()
-    suggestions = get_suggestion(request, id=None,
-                                wanted_user=request.user,
-                                page = 1, query_id = None
-                                )
-    return  render_to_response('suggestions.html',{'suggestions': suggestions,
-                                                   'counters': counters.next()}, context_instance=RequestContext(request))
-
-
-@facebook_required    
-def add_suggestion(request):
-    from geoalert.forms import SuggestionForm
-    f = SuggestionForm();
-
-    return  render_to_response('add_suggestion.html',{'f': f,}, context_instance=RequestContext(request))
+    from geoalert.views import user_suggestions
+    return user_suggestions(request, template='suggestions.html')
     
 
 @facebook_required    
-def edit_suggestion(request,suggestion_id):
-    from geoalert.forms import SuggestionForm
-    s = Suggestion.objects.get_by_id(suggestion_id)
-    return  render_to_response('add_suggestion.html', {
-                                                        'eventid':suggestion_id,
-                                                        'name': s.name,
-                                                        'poi_id': s.poi.id,
-                                                        'poi_reference': s.poi.google_places_reference,
-                                                        'starts': s.date_starts,
-                                                        'ends': s.date_ends,
-                                                        'description': s.description, 
-                                                        'visibility': s._vis,
-                                                        'poi_location': s.poi.location,
-                                                        'poi_name': s.poi.name,
-                                                        'poi_address': s.poi.address,
-                                                        }, context_instance=RequestContext(request)
-                               )
+def add_suggestion(request):
+    from geoalert.views import add_suggestion
+    return add_suggestion(request, template='add_suggestion.html')
+    
+
+@facebook_required    
+def edit_suggestion(request, suggestion_id):
+    from geoalert.views import edit_suggestion
+    return edit_suggestion(request, suggestion_id, template='add_suggestion.html')
+
+
 @facebook_required
 def view_suggestion(request, slug):
     from geoalert.views import suggestion_profile
     return suggestion_profile(request, slug, template='view_suggestion.html')
-    
 
 
 @facebook_required
@@ -159,16 +108,8 @@ def view_place(request, place_id):
 
 @facebook_required
 def profile_settings(request):
-    counters = request.user.counters_async()
-    has_twitter = True if request.user.twitter_user is not None else False
-    has_google = True if request.user.google_user is not None else False
-    
-    return  render_to_response('settings.html',{'counters': counters.next(),
-                                               'profile': request.user.profile,
-                                               'has_twitter': has_twitter,
-                                               'has_google': has_google,
-                                               'settings': request.user.settings,
-                                                }, context_instance=RequestContext(request))
+    from geouser.views import profile_settings
+    return profile_settings(request, template='settings.html')
    
 
 @facebook_required
@@ -187,11 +128,13 @@ def edit_settings(request):
                                                                   'time_notification_account': request.user.settings.time_notification_account,
                                                                   'show_public_profile': request.user.settings.show_public_profile,
                                                                   'language': request.user.settings.language,
-                                                                  })
+                                                                  }
+                             )
     return  render_to_response('edit_settings.html',{'profile': request.user.profile,
                                                     'settings': request.user.settings,
                                                     'settings_form': f,
-                                                    }, context_instance=RequestContext(request))
+                                                    }, context_instance=RequestContext(request)
+                               )
 
 
 @facebook_required
@@ -199,14 +142,19 @@ def followers_panel(request, username):
     if username == request.user.username:
         followers=request.user.get_followers()
     else:
-        user=User.objects.get_by_username(username)
+        from geouser.models import User
+        user = User.objects.get_by_username(username)
         if user is None:
             raise Http404
         if user.settings.show_followers:
             followers = user.get_followers()
         else:
             followers = None
-    return  render_to_response('followers.html', {'followers': followers[1],'username_page':username}, context_instance=RequestContext(request))
+    return  render_to_response('followers.html', {'followers': followers[1],
+                                                  'username_page':username,
+                                                  },
+                                                  context_instance=RequestContext(request)
+                               )
 
 
 @facebook_required
@@ -215,6 +163,7 @@ def followings_panel(request, username):
         followings=request.user.get_followings()
         user=request.user
     else:
+        from geouser.models import User
         user = User.objects.get_by_username(username)
         if user is None:
             raise Http404
@@ -223,7 +172,11 @@ def followings_panel(request, username):
         else:
             followings = None
     
-    return  render_to_response('followings.html', {'followings': followings[1],'username_page':username}, context_instance=RequestContext(request))
+    return  render_to_response('followings.html', {'followings': followings[1],
+                                                   'username_page':username
+                                                   },
+                                                   context_instance=RequestContext(request)
+                               )
 
 
 def test_users(request):
@@ -236,4 +189,3 @@ def get_test_users(request):
     from geoauth.clients.facebook import get_test_users
     user = get_test_users()
     return HttpResponse(user)
-    
