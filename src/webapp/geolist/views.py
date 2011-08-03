@@ -58,7 +58,7 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         :type instances: :class:`list`
         :returns: id de la lista modificada
     '''
-    list = ListSuggestion.insert_list(user=request.user, id=None name=name, description=description, instances=instances)
+    list = ListSuggestion.insert_list(user=request.user, id=None, name=name, description=description, instances=instances)
     return list
 #===============================================================================
 # Modificacion de listas
@@ -320,7 +320,7 @@ def view_list(request, id, template='webapp/list.html'):
     from models import ListSuggestion
     list = ListSuggestion.objects.get_by_id_querier(id, request.user)
     if list is None:
-        raise Http404    
+        raise     
     from geovote.models import Vote
     has_voted = Vote.objects.user_has_voted(request.user, list.key())
     from geoalert.models import Suggestion
