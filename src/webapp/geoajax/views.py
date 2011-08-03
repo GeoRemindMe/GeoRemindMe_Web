@@ -428,7 +428,8 @@ def get_list_suggestion(request):
     page = request.POST.get('page', 1)
     query_id = request.POST.get('query_id', None)
     lists = geolist.get_list_suggestion(request, list_id=list_id, user_id=user_id, query_id=query_id, page=page)
-    return HttpResponse(simplejson.dumps(lists), mimetype="application/json")
+    from funcs import getListsJSON
+    return HttpResponse(getListsJSON(lists), mimetype="application/json")
 
 
 @ajax_request
@@ -451,7 +452,8 @@ def add_list_suggestion(request):
                                  description = list_description,
                                  instances = list_instances
                                  )
-    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+    from funcs import getListsJSON
+    return HttpResponse(getListsJSON(list), mimetype="application/json")
 
 
 @ajax_request
@@ -465,7 +467,8 @@ def get_list_id(request):
     """
     list_id = request.POST.get('list_id', None)
     list = geolist.get_list_id(request, list_id)
-    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+    from funcs import getListsJSON
+    return HttpResponse(getListsJSON(list), mimetype="application/json")
 
 
 @ajax_request
