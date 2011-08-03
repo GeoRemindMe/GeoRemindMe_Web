@@ -59,11 +59,40 @@
             
             //Enter behave when adding new list
             $("#new-list-btn span#new-list").keyup(function(e) {
+                var suggestionList=[];
                 e.preventDefault();
+                //On press enter
                 if(e.keyCode == 13) {
-                    console.log($(this).find('input').val());
-                    $("<li id=\"valor\">"+$(this).find('input').val()+"</li>").insertBefore('#new-list-btn');
-                    $('#valor').click(function(){submenuLiBehave(this)});
+
+                    //Comprobamos si hay sugerencias seleccionadas para añadirlas
+                    var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
+                    if( checkedSuggestions.length>0){
+                        checkedSuggestions.each(function(){
+                            suggestionList.push($(this).attr('id').substring(9,$(this).attr('id').length))
+                        })
+                    }
+                    
+                    //console.log("Añadimos a la lista "+addToList+" la sugerencia"+$(obj).attr('id'))
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url add_suggestion_list %}",
+                        data: {
+                            name: $(this).find('input').val(),
+                            suggestions: suggestionList
+                        },
+                        dataType:'json',
+                        success: function(data){
+                            //Añadimos la lista al desplegable
+                            $("<li id=\""+data.id+"\">"+$(this).find('input').val()+" ("+data.total+" sugerencias)</li>").insertBefore('#new-list-btn');
+                            $('#'+data.id).click(function(){submenuLiBehave(this)});
+                            
+                            //Añadimos a la lista de sugerencias las nuevas listas en que se encuentran
+                            
+                            //Mostrar mensaje de éxito
+                        }
+                    });
+                    
                     $("#new-list-btn span#text").css('display','inline-block')
                     $("#new-list-btn span#new-list").css('display','none')
                     $("#new-list-btn span#new-list").find('input').val("");
@@ -193,12 +222,15 @@
                                     <div class="collapsed">
                                         <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
                                         <span class="suggestionName">{{k.name}}</span>
-                                        <span class="suggestionInLists"><!-- Listas no implementadas -->Lista {{k.id}}</span>
+<!--
+                                        <span class="suggestionInLists">
+                                        Lista {{k.id}}</span>
+-->
                                     </div>
                                     <div class="expanded" style="display:none">
                                         <dl>
                                             <dt>Nombre:</dt>
-                                            <dd>{{k.name}}</dd>
+                                            <dd class="editable">{{k.name}}</dd>
                                             
                                             {% if k.description%}
                                                 <dt>Descripción:</dt>
@@ -206,22 +238,32 @@
                                             {% endif %}
                                             
                                             <dt>Lugar:</dt>
-                                            <dd><a href="">{{k.poi.name}}</a> ({{k.poi.address}})</dd>
+                                            <dd>
+                                                <a href="">{{k.poi.name}}</a> ({{k.poi.address}}) 
+                                                <a href="{% url fb_edit_suggestions k.id %}">Editar</a>
+                                            </dd>
                                             
                                             {% if k.date_starts != None or k.date_ends != None%}
                                                 <dt>Fecha:</dt>
                                             
-                                            <dd>
-                                                {% if k.date_starts != None %}
-                                                    {{k.date_starts}}
-                                                {% endif %}
-                                                {% if k.date_ends != None %}
-                                                    {{k.date_ends}}
-                                                {% endif %}    
-                                            </dd>
+                                                <dd class="editable">
+                                                    {% if k.date_starts != None %}
+                                                        {{k.date_starts}}
+                                                    {% endif %}
+                                                    {% if k.date_ends != None %}
+                                                        {{k.date_ends}}
+                                                    {% endif %}    
+                                                </dd>
                                             
                                             {% endif %}
                                             
+                                            <dt>Listas</dt>
+                                            <dd>
+                                                <ul>
+                                                    <li id="lista1">Lista 1</li>
+                                                    <li id="lista2">Lista 2</li>
+                                                </ul>
+                                            </dd>
                                             
                                             <dt>Fecha de la última modificación:</dt>
                                             <dd>{{k.modified}}</dd>
@@ -232,8 +274,8 @@
                                             <dt>Comentarios recibidos:</dt>
                                             <dd>{{k.counters.comments}}</dd>
                                         </dl>
-                                        <span class="btn collapseBtn">Contraer</span>
-                                        <a href="edit/{{k.id}}" class="btn" style="clear:none">Editar</a>
+                                        <div class="collapseBtn"><img src="/static/webapp/img/collapse.png"></div>
+                                        
                                     </div>
                                     
                                 </div>
@@ -269,7 +311,9 @@
             <div class="collapsed">
                 <span class="checkBox"><input type="checkbox" id="checkBox_{{element.id}}" value="${element.id}" /></span>
                 <span class="suggestionName">${element.name}</span>
+<!--
                 <span class="suggestionInLists">Lista ${element.id}</span>
+-->
             </div>
             <div class="expanded hidden">
                 Id:${element.id}<br>

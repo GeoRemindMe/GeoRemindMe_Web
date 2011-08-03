@@ -1606,13 +1606,17 @@ input{
         }
     /****************************
      *      
-     *  Suggestion panel
+     *  Suggestion panel (Vault)
      * 
      ***************************/
     #suggestions{
         font-size:1.1em;
     }
     .suggestion{
+    }
+    
+    #suggestions .editable:hover{
+        background-color:#FEFF99
     }
     
     ul#tabMenu{
@@ -1667,7 +1671,7 @@ input{
         div#content div{
             line-height:2em;
             cursor:pointer;
-            border-bottom: 1px solid #CCCCCC;
+            border-bottom: 1px solid #DDDDDD;
         }
         div#content div.collapsed,div#content div.expanded{
             border:0;
@@ -1677,14 +1681,24 @@ input{
                 margin: 0;
                 padding: 1em;
             }
+            div#content div.expanded dl:after{
+                clear: both;
+                content: ".";
+                display: block;
+                height: 0px;
+                visibility: hidden;
+            }
             div#content div.expanded dt{
+                clear: left;
                 display: block;
                 float: left;
                 font-weight: bold;
                 margin-right: 1em;
             }
             div#content div.expanded dd{
-                display: block;
+                display: inline-block;
+                float: left;
+                margin: 0;
             }
             div#content div.expanded a.btn{
                 clear:both
@@ -1711,7 +1725,8 @@ input{
             width:5%;
         }
         .suggestionName{
-            width:68%;
+            width:515px;
+            cursor:pointer;
         }
         .suggestionInLists{
             width:25%;
@@ -1749,7 +1764,16 @@ input{
         }
         
         #suggestions #content .collapseBtn{
-            float: left;
+            background-color: #EEEEEE;
+            clear: both;
+            line-height: 10px;
+            text-align: center;
+        }
+        #suggestions #content .collapseBtn img{
+            height: auto;
+            margin: 0;
+            padding: 0;
+            width: auto;
         }
         
         #suggestions #content .btn:hover, .selectCheckBox:hover{
