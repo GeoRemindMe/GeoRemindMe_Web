@@ -56,7 +56,8 @@ class List(db.polymodel.PolyModel, HookedModel):
                     }
             
     def to_json(self):
-        return simplejson.dumps(self.to_dict())
+        from libs.jsonrpc.jsonencoder import JSONEncoder
+        return simplejson.dumps(self.to_dict(), cls=JSONEncoder)
     
     def __str__(self):
         return unicode(self.name).encode('utf-8')
