@@ -22,6 +22,7 @@ def new_list(sender, **kwargs):
     timeline.put()
 list_new.connect(new_list)
 
+
 def modified_list(sender, **kwargs):
     if isinstance(sender, ListAlert):
         timeline = UserTimelineSystem(user=sender.user.key(), msg_id=251, instance=sender)
@@ -38,26 +39,26 @@ def modified_list(sender, **kwargs):
     timeline.put()
 list_modified.connect(modified_list)
 
+
 def deleted_list(sender, **kwargs):
-    if isinstance(sender, ListAlert):
-        timeline = UserTimelineSystem(user=sender.user.key(), msg_id=252, instance=sender)
-    elif isinstance(sender, ListUser):
-        timeline = UserTimelineSystem(user=sender.user.key(), msg_id=152, instance=sender)
-    elif isinstance(sender, ListSuggestion):
-        timeline = UserTimelineSystem(user=sender.user.key(), msg_id=352, instance=sender)
-    else:
-        return
-    timeline.put()
+    from geouser.models_acc import UserTimelineBase
+    query = UserTimelineBase.all().filter('instance =', sender.key())
+    sender.user.counters.set_suggested(-1)
+    for q in query:
+        q.delete()
 list_deleted.connect(deleted_list)
+
 
 def new_following_list(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=353)
     timeline.put()
 list_following_new.connect(new_following_list)
 
+
 def deleted_following_list(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=354)
     timeline.put()
 list_following_deleted.connect(deleted_following_list)
+
 
 from models import *

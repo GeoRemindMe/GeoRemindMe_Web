@@ -622,6 +622,7 @@ def get_notifications_timeline(request, page=1, query_id=None):
         :type query_id: int
         :return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """
+    request.user.counters.set_notifications(-10)
     return request.user.get_notifications_timeline(page=page, query_id=query_id)
 
     

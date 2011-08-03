@@ -5,7 +5,7 @@ cron:
   
 - description: hourly invalid sessions cleaning job
   url: /clean/sessions/
-  schedule: every 1 hours synchronized
+  schedule: every sunday 7:00
   target: version-3
   
 - description: daily suggestion notifications job

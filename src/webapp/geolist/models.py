@@ -157,7 +157,7 @@ class ListSuggestion(List, Visibility):
             :type vis: :class:`string`
         '''
         from geoalert.models import Suggestion
-        if name is not None:
+        if name is not None or name == '':
             self.name = name
         if description is not None:
             self.description = description

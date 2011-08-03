@@ -295,6 +295,7 @@ def add_suggestion(request, template='webapp/add_suggestion.html'):
     return  render_to_response(template, {'f': f,},
                                context_instance=RequestContext(request)
                                )
+    
 @login_required
 def save_suggestion(request, form):
     """ Añade una sugerencia
@@ -306,6 +307,7 @@ def save_suggestion(request, form):
     """
     sug = form.save(user = request.user)
     return sug
+
 
 @login_required
 def add_suggestion_invitation(request, eventid, userid):
@@ -326,6 +328,7 @@ def add_suggestion_invitation(request, eventid, userid):
         raise Http404
     
     return event.send_invitation(request.user, user_to)
+
 
 @login_required
 def edit_suggestion(request, suggestion_id, form, template='webapp/add_suggestion.html'):

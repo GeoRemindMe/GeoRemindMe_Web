@@ -1,5 +1,10 @@
 # coding=utf-8
 
+
+from django.shortcuts import render_to_response
+from django.shortcuts import Http404
+from django.template import RequestContext
+    
 from geouser.decorators import login_required
 from models import *
 
@@ -296,3 +301,42 @@ def get_all_shared_list_suggestion(request):
     lists = ListSuggestion.objects.get_shared_list(request.user)
     
     return lists
+
+
+@login_required
+def view_list(request, id, template='webapp/list.html'):
+    def load_suggestions_async(suggestions):
+        suggestions_loaded = []
+        for suggestion in suggestions:
+            suggestions_loaded.append({
+                                    'instance': suggestion,
+                                    'has_voted':  Vote.objects.user_has_voted(request.user, suggestion.key()) if request.user.is_authenticated() else False,
+                                    'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
+                                   }
+                                  )
+            if len(suggestions_loaded) > 7:
+                    break
+            return suggestions_loaded
+    from models import ListSuggestion
+    list = ListSuggestion.objects.get_by_id_querier(id, request.user)
+    if list is None:
+        raise Http404    
+    from geovote.models import Vote
+    has_voted = Vote.objects.user_has_voted(request.user, list.key())
+    from geoalert.models import Suggestion
+    suggestions_async = db.get_async(list.keys)
+    vote_counter = Vote.objects.get_vote_counter(list.key())
+    from geovote.views import get_comments_list
+    from geovote.models import Comment
+    comments = get_comments_list(request, list.id)
+    
+    return render_to_response(template, {'list': list, 
+                                         'has_voted': has_voted,
+                                         'vote_counter': vote_counter,
+                                         'user_follower': list.has_follower(request.user),
+                                         'suggestions':load_suggestions_async(suggestions_async),
+                                         'comments': comments,
+                                         'top_comments': Comment.objects.get_top_voted(list, request.user)
+                                         },
+                              context_instance=RequestContext(request)
+                              )

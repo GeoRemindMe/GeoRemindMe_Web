@@ -99,6 +99,12 @@ def view_suggestion(request, slug):
 
 
 @facebook_required
+def view_list(request, id):
+    from geolist.views import view_list
+    return view_list(request, id, template='view_list.html')
+
+
+@facebook_required
 def view_place(request, place_id):
     from geoalert.views import view_place
     return view_place(request, place_id, template='view_place.html')
