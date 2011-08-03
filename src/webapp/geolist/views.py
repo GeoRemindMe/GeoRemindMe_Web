@@ -38,6 +38,23 @@ def add_list_alert(request, name=None, description=None, instances=None):
     list = ListAlert.insert_list(user=request.session['user'], name=name, description=description, instances=instances)
     return list.id
 
+@login_required
+def add_list_suggestion(request, id, name=None, description=None, instances=[]):
+    '''
+    Modifica una lista de usuarios
+        
+        :param id: identificador de la lista
+        :type id: :class:`integer`
+        :param name: nombre para la lista (el nombre es unico)
+        :type name: :class:`string`
+        :param description: descripcion de la lista (opcional)
+        :type description: :class:`string`
+        :param instances: lista de alertas iniciales (opcional)
+        :type instances: :class:`list`
+        :returns: id de la lista modificada
+    '''
+    list = ListSuggestion.instert_list(user=request.user, name=name, description=description, instances=instances)
+    return list
 #===============================================================================
 # Modificacion de listas
 #===============================================================================
@@ -173,12 +190,12 @@ def del_list(request, id):
         :type id: :class:`integer`
         :returns: True si se borro la lista
     '''
-    user = request.session['user']
-    list = List.objects.get_by_id_user(id, user = user)
-    if list.user == user:
-        list.active = False
-        list.put()
-        return True
+    list = List.objects.get_by_id_user(id, user = request.user)
+    if list is not None:
+        if list.user.key() == request.user.key():
+            list.active = False
+            list.put()
+            return True
     return False
 
 @login_required
@@ -214,7 +231,7 @@ def get_all_list_alert(request, query_id=None, page=1):
     return lists
 
 @login_required
-def get_all_list_suggestion(request, query_id=None, page=1):
+def get_list_suggestion(request, list_id=None, user_id=None, query_id=None, page=1):
     '''
     Devuelve todas las listas de sugerencias del usuario ¡PAGINADA!
     
@@ -224,10 +241,20 @@ def get_all_list_suggestion(request, query_id=None, page=1):
         :type query_id: int
         :returns: [query_id, [:class:`geolist.models.ListSuggestion`]
     '''
-    user = request.session['user']
-    lists = ListSuggestion.objects.get_by_user(user, query_id=query_id, page=page)
-    
-    return lists
+    if list_id is None:
+        if user_id is not None:
+            user = User.objects.get_by_id(user_id)
+            if user is None:
+                raise Http404
+            lists = ListSuggestion.objects.get_by_user(user, query_id=query_id, page=page, querier=request.user)
+            return lists
+        else:
+            lists = ListSuggestion.objects.get_by_user(query_id=query_id, page=page, querier=request.user)
+            return lists
+    else:
+        list = ListSuggestion.objects.get_by_id_querier(list_id, querier=request.user)
+        return list
+
 
 @login_required
 def follow_list_suggestion(request, id):

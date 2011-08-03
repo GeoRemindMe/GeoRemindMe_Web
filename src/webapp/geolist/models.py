@@ -2,18 +2,13 @@
 
 from django.utils import simplejson
 from google.appengine.ext import db
-from google.appengine.ext.db import polymodel
 
 from geouser.models import User
-from geouser.models_acc import UserTimelineSystem
 from georemindme.models_utils import Visibility, HookedModel
-from georemindme.models_indexes import Invitation
 from georemindme.decorators import classproperty
-from models_indexes import ListFollowersIndex
-from signals import *
 
 
-class List(polymodel.PolyModel, HookedModel):
+class List(db.polymodel.PolyModel, HookedModel):
     '''
         NO USAR ESTA LISTA, USAR LOS MODELOS ESPECIFICOS :D
     '''
@@ -92,6 +87,7 @@ class ListSuggestion(List, Visibility):
         '''
         if not self.is_saved():
             return db.NotSavedError()
+        from models_indexes import ListFollowersIndex
         index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
         if index is not None:
             return True
@@ -102,6 +98,7 @@ class ListSuggestion(List, Visibility):
         Crea un timelineSystem por cada usuario que sigue
         a esta lista
         '''
+        from models_indexes import ListFollowersIndex
         if not self._is_private():
             if ListFollowersIndex.all().ancestor(self.key()).count() == 0:
                 return True
@@ -113,7 +110,7 @@ class ListSuggestion(List, Visibility):
         
     @classmethod
     def insert_list(cls, user, id=None, name=None, description = None, instances=[], vis='public'):
-        '''
+        """
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
         
@@ -127,28 +124,23 @@ class ListSuggestion(List, Visibility):
             :type instances: :class:`geoalert.models.Alert`
             :param vis: Visibilidad de la lista
             :type vis: :class:`string`
-        '''
+        """
+        from geoalert.models import Suggestion
         list = None
         if id is not None:
             list = cls.objects.get_by_id_user(id, user)
         if list is None:
             list = user.listsuggestion_set.filter('name =', name).get()
         if list is not None:  # la lista con ese nombre ya existe, la editamos
-            if description is not None:
-                list.description = description
-            keys = set(list.keys)
-            keys |= set([instance.key() for instance in instances])
-            list.keys = [k for k in keys]
-            list._vis = vis
-            list.put()
+            list.update(name=name, description=description, instances=instances, vis=vis)
             return list
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
-        keys= set([instance.key() for instance in instances])
+        keys= set([db.Key.from_path(Suggestion.kind(), instance) for instance in instances])
         list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
         list.put()
         return list
     
-    def update(self, name=None, description=None, instances_add=[], instances_del=[], vis='public'):
+    def update(self, name=None, description=None, instances=[], vis='public'):
         '''
         Actualiza una lista de alertas
         
@@ -163,17 +155,12 @@ class ListSuggestion(List, Visibility):
             :param vis: Visibilidad de la lista
             :type vis: :class:`string`
         '''
+        from geoalert.models import Suggestion
         if name is not None:
             self.name = name
         if description is not None:
-                self.description = description
-        for instance in instances_del:
-            try:
-                self.keys.remove(instance.key())
-            except ValueError:
-                pass
-        keys = set(self.keys)
-        keys |= set([instance.key() for instance in instances_add])
+            self.description = description
+        keys = set([db.Key.from_path(Suggestion.kind(), instance) for instance in instances])
         self.keys = [k for k in keys]
         self._vis = vis
         self.put()
@@ -193,6 +180,7 @@ class ListSuggestion(List, Visibility):
             index.put()
         if not self._user_is_follower(user_key):
             return False
+        from models_indexes import ListFollowersIndex
         index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
         db.run_in_transaction(_tx, index.key(), user_key)
         list_following_deleted.send(sender=self, user=db.get(user_key)) #  FIXME: recibir usuario como parametro
@@ -216,6 +204,7 @@ class ListSuggestion(List, Visibility):
         def _tx(list_key, user_key):
             # TODO : cambiar a contador con sharding
             list = db.get(list_key)
+            from models_indexes import ListFollowersIndex
             if ListFollowersIndex.all().ancestor(list).filter('keys =', user_key).count() != 0:
                 return  # el usuario ya sigue la lista
             list += 1
@@ -231,22 +220,6 @@ class ListSuggestion(List, Visibility):
         list_following_new.send(sender=self, user=user)
         return True
                 
-    def user_invited(self, user, set_status=None):
-        '''
-        Comprueba que un usuario ha sido invitado a la lista
-            
-            :param user: Usuario que debe estar invitado
-            :type user: :class:`geouser.models.User`
-            :param set_status: Nuevo estado para la invitacion
-            :type set_status: :class:`integer`
-            
-            :returns: True si esta invitado, False en caso contrario
-        '''
-        invitation = Invitation.objects.is_user_invited(self, user)
-        if invitation is not None and set_status is not None:
-            invitation.set_status(set_status)
-        return invitation
-
 
 class ListAlert(List):
     '''
@@ -261,7 +234,7 @@ class ListAlert(List):
     
     @classmethod
     def insert_list(cls, user, name, description = None, instances=[]):
-        '''
+        """
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
         
@@ -273,18 +246,19 @@ class ListAlert(List):
             :type description: :class:`string`
             :param instances: objetos a añadir a la lista
             :type instances: :class:`geoalert.models.Alert`
-        '''
+        """
+        from geoalert.models import Alert
         list = user.listalert_set.filter('name =', name).get()
         if list is not None:  # la lista con ese nombre ya existe, la editamos
             if description is not None:
                 list.description = description
             keys = set(list.keys)
-            keys |= set([instance.key() for instance in instances])
+            keys |= set([db.Key.from_path(Alert.kind(), instance) for instance in instances])
             list.keys = [k for k in keys]
             list.put()
             return list
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
-        keys= set([instance.key() for instance in instances])
+        keys= set([db.Key.from_path(Alert.kind(), instance) for instance in instances])
         list = ListAlert(name=name, user=user, description=description, keys=[k for k in keys])
         list.put()
         return list

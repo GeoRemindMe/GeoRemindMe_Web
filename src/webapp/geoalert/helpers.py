@@ -223,7 +223,7 @@ class SuggestionHelper(EventHelper):
         '''
         if not isinstance(user, User) or not isinstance(querier, User):
             raise TypeError()
-        if user.id == querier:
+        if user.id == querier.id:
             q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
         else:
             q = self._klass.gql('WHERE user = :1 AND _vis = :2 ORDER BY modified DESC', user, 'public')

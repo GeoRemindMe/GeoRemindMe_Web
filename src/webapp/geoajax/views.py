@@ -401,6 +401,60 @@ def get_notifications_timeline(request):
 # FUNCIONES PARA LISTAS
 #===============================================================================
 @ajax_request
+def delete_list(request):
+    """
+    Borra una lista de sugerencias
+    Parametros en POST:
+        list_id: id de la lista
+    """
+    list_id = request.POST.get('list_id', None)
+    list = geolist.del_list(request, id = list_id)
+    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
+
+@ajax_request
+def get_list_suggestion(request):
+    """
+    Devuelve todas las listas de sugerencias
+    si no se especifica id
+    Parametros en POST:
+        list_id: id de la lista (opcional)
+        user_id: id del usuario del que buscar listas (opcional,
+            si no se especifica se busca del usuario identificado)
+            
+    """
+    list_id = request.POST.get('list_id', None)
+    user_id = request.POST.get('user_id', None)
+    page = request.POST.get('page', 1)
+    query_id = request.POST.get('query_id', None)
+    lists = geolist.get_list_suggestion(request, list_id=list_id, user_id=user_id, query_id=query_id, page=page)
+    return HttpResponse(simplejson.dumps(lists), mimetype="application/json")
+
+
+@ajax_request
+def add_list_suggestion(request):
+    """
+    Cra una lista de sugerencias o modifica una
+    si se especifica id
+    Parametros en POST:
+        list_id: id de la lista (opcional)
+        name: nombre de la lista (unico por usuario)
+        description: descripcion (opcional)
+        suggestions: lista de ids de sugerencias    
+    """
+    list_id = request.POST.get('list_id', None)
+    list_name = request.POST.get('list_name', None)
+    list_description = request.POST.get('list_description', None)
+    list_instances = request.POST.get('list_instances', [])
+    
+    list = geolist.add_list_suggestion(request, list_id=list_id, name = list_name,
+                                 description = list_description,
+                                 instances = list_instances
+                                 )
+    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
+
+@ajax_request
 def get_list_id(request):
     """
     Devuelve la lista publica buscada por ID
@@ -412,6 +466,7 @@ def get_list_id(request):
     list_id = request.POST.get('list_id', None)
     list = geolist.get_list_id(request, list_id)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
 
 @ajax_request
 def get_list_user(request):
@@ -432,6 +487,7 @@ def get_list_user(request):
         list = None
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
+
 @ajax_request
 def get_list_alert(request):
     """
@@ -451,40 +507,6 @@ def get_list_alert(request):
         list = None
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
-@ajax_request
-def get_list_suggestion(request):
-    """
-    Devuelve todas las listas de sugerencias
-    si no se especifica id
-    Parametros en POST:
-        list_id: id de la lista (opcional)
-        userid: id del usuario del que buscar listas (opcional,
-            si no se especifica se busca del usuario identificado)
-            
-    """
-    pass
-
-@ajax_request
-def delete_list_suggestion(request):
-    """
-    Borra una lista de sugerencias
-    Parametros en POST:
-        list_id: id de la lista
-    """
-    pass
-
-@ajax_request
-def add_list_suggestion(request):
-    """
-    Cra una lista de sugerencias o modifica una
-    si se especifica id
-    Parametros en POST:
-        list_id: id de la lista (opcional)
-        name: nombre de la lista (unico por usuario)
-        description: descripcion (opcional)
-        suggestions: lista de ids de sugerencias    
-    """
-    pass
 
 @ajax_request
 def new_list_user(request):
@@ -506,6 +528,7 @@ def new_list_user(request):
     list = geolist.add_list_user(request, name = list_name, description = list_description, instances = list_instances)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
+
 @ajax_request
 def new_list_alert(request):
     """
@@ -525,7 +548,6 @@ def new_list_alert(request):
     
     list = geolist.add_list_alert(request, name = list_name, description = list_description, instances = list_instances)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
-
 
 
 @ajax_request
@@ -551,6 +573,7 @@ def mod_list_user(request):
     list = geolist.mod_list_user(request, id = list_id, name = list_name, description = list_description, instances = list_instances)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
+
 @ajax_request
 def mod_list_alert(request):
     """
@@ -574,19 +597,6 @@ def mod_list_alert(request):
     list = geolist.mod_list_alert(request, id = list_id, name = list_name, description = list_description, instances = list_instances)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
-@ajax_request
-def delete_list(request):
-    """
-    Borra una lista
-    Parametros POST
-        :param list_id: identificador de la lista
-        :type list_id: :class:`integer`
-        
-        :returns: True si se borro la lista
-    """
-    list_id = request.POST.get('list_id', None)
-    list = geolist.del_list(request, id = list_id)
-    return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
 @ajax_request
 def get_all_list_user(request):
@@ -602,6 +612,7 @@ def get_all_list_user(request):
     
     return HttpResponse(getListsJSON(lists), mimetype="application/json")
 
+
 @ajax_request
 def get_all_list_alert(request):
     """
@@ -615,44 +626,6 @@ def get_all_list_alert(request):
     lists = geolist.get_all_list_alert(request, page = page, query_id = query_id)
     
     return HttpResponse(getListsJSON(lists), mimetype="application/json")
-
-@ajax_request
-def get_all_list_suggestion(request):
-    """
-    Obtiene las listas de sugerencias de un usuario
-    Parametros POST
-        page: pagina a mostrar
-        query_id: id de la consulta de pagina
-    """
-    query_id = request.POST.get('query_id', None)
-    page = request.POST.get('page', 1)
-    lists = geolist.get_all_list_suggestion(request, query_id=query_id, page=page)
-    
-    return HttpResponse(getListsJSON(lists), mimetype="application/json")
-    
-@ajax_request
-def get_all_public_list_suggestion(request):
-    """
-    Obtiene todas las listas de sugerencias publicas
-    Parametros POST
-        page: pagina a mostrar
-        query_id: id de la consulta de pagina
-    """
-    query_id = request.POST.get('query_id', None)
-    page = request.POST.get('page', 1)
-    lists = geolist.get_all_public_list_suggestion(request, query_id=query_id, page=page)
-    
-    return HttpResponse(getListsJSON(lists), mimetype="application/json") 
-
-@ajax_request
-def get_all_shared_list_suggestion(request):
-    """
-    Obtiene todas las lista de sugerencias para las que
-    el usuario tiene invitacion
-    """
-    lists = geolist.get_all_shared_list_suggestion(request)
-    
-    return HttpResponse(simplejson.dumps(lists), mimetype="application/json")
 
 #===============================================================================
 # COMENTARIOS Y VOTOS
