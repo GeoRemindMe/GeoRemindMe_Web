@@ -97,7 +97,7 @@ class ListHelper(object):
         lists = [inv.list for inv in user.toinvitations_set if inv.status == 1]
     
     
-class ListSuggestionHelper(object):
+class ListSuggestionHelper(ListHelper):
     _klass = ListSuggestion
     
     def get_by_name_user(self, name, user):

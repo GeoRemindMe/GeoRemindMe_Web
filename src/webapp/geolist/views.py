@@ -44,7 +44,7 @@ def add_list_alert(request, name=None, description=None, instances=None):
     return list.id
 
 @login_required
-def add_list_suggestion(request, id, name=None, description=None, instances=[]):
+def add_list_suggestion(request, id = None, name=None, description=None, instances=[]):
     '''
     Modifica una lista de usuarios
         
@@ -58,7 +58,7 @@ def add_list_suggestion(request, id, name=None, description=None, instances=[]):
         :type instances: :class:`list`
         :returns: id de la lista modificada
     '''
-    list = ListSuggestion.insert_list(user=request.user, name=name, description=description, instances=instances)
+    list = ListSuggestion.insert_list(user=request.user, id=None name=name, description=description, instances=instances)
     return list
 #===============================================================================
 # Modificacion de listas
