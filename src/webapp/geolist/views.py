@@ -53,7 +53,7 @@ def add_list_suggestion(request, id, name=None, description=None, instances=[]):
         :type instances: :class:`list`
         :returns: id de la lista modificada
     '''
-    list = ListSuggestion.instert_list(user=request.user, name=name, description=description, instances=instances)
+    list = ListSuggestion.insert_list(user=request.user, name=name, description=description, instances=instances)
     return list
 #===============================================================================
 # Modificacion de listas
