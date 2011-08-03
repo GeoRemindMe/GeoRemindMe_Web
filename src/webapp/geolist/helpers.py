@@ -64,7 +64,7 @@ class ListHelper(object):
             :returns: None o :class:`geolist.models.List`
         '''
         # TODO : si la lista es 'shared', mirar si el usuario tiene visibilidad
-        list = self._klass.get_by_id(id)
+        list = self.get_by_id(id)
         if not list.active:
             return None
         if list is not None:
