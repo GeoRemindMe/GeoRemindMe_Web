@@ -12,7 +12,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     '''
         NO USAR ESTA LISTA, USAR LOS MODELOS ESPECIFICOS :D
     '''
-    name = db.StringProperty()
+    name = db.StringProperty(required=True)
     description = db.TextProperty()
     keys = db.ListProperty(db.Key)
     created = db.DateTimeProperty(auto_now_add = True)

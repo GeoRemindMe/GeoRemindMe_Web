@@ -90,6 +90,7 @@ class UserTimelineHelper(object):
             return None
         from geovote.models import Vote, Comment
         from geoalert.models import Suggestion
+        from geolist.models import List
         from models_acc import UserTimeline
         from models import User
         from georemindme.paging import PagedQuery

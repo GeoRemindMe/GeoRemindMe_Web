@@ -162,6 +162,7 @@ class User(polymodel.PolyModel, HookedModel):
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
         from geovote.models import Vote, Comment
+        from geolist.models import List
         from georemindme.paging import PagedQuery
         from models_acc import UserTimelineSystem
         q = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
@@ -207,6 +208,7 @@ class User(polymodel.PolyModel, HookedModel):
         '''
         from geovote.models import Vote, Comment
         from geoalert.models import Suggestion
+        from geolist.models import List
         from georemindme.paging import PagedQuery
         q = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
@@ -243,6 +245,7 @@ class User(polymodel.PolyModel, HookedModel):
     
     def get_notifications_timeline(self, page=1, query_id=None):
         from models_utils import _Notification
+        from geolist.models import List
         from georemindme.paging import PagedQuery
         q = _Notification.all().filter('owner =', self).order('-_created')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
