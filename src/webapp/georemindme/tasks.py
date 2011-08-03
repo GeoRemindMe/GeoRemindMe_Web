@@ -61,7 +61,7 @@ class NotificationHandler(TaskHandler):
         '''
         Notifica a los seguidores de la lista que esta se modifico
         '''
-        task = Task(url='/tasks/notify/list', params = {'list': list.key()}, method = 'POST')
+        task = Task(url='/tasks/notify/list/', params = {'list': list.key()}, method = 'POST')
         task.add(queue_name='listFollowers')
     
 @csrf_exempt
