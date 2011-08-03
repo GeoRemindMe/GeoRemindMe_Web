@@ -50,7 +50,7 @@ class ListHelper(object):
         except:
             raise TypeError
         list = self._klass.get_by_id(id)
-        return None
+        return list
     
     def get_by_id_user(self, id, user = None):
         '''
