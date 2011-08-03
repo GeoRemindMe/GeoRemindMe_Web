@@ -68,7 +68,7 @@ class ListHelper(object):
         if not list.active:
             return None
         if list is not None:
-            if list.user == user:
+            if list.user.key() == user.key():
                 return list
             elif hasattr(list, '_vis'):
                 if list._is_public():
