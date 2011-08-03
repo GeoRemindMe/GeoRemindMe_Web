@@ -72,7 +72,7 @@
                         })
                     }
                     
-                    //console.log("Añadimos a la lista "+addToList+" la sugerencia"+$(obj).attr('id'))
+                    console.log(suggestionList)
                     
                     $.ajax({
                         type: "POST",
@@ -84,7 +84,7 @@
                         dataType:'json',
                         success: function(data){
                             //Añadimos la lista al desplegable
-                            $("<li id=\""+data.id+"\">"+$(this).find('input').val()+" ("+data.total+" sugerencias)</li>").insertBefore('#new-list-btn');
+                            $("<li id=\"listid-"+data.id+"\">"+data.name+" ("+data.keys.length+" sugerencias)</li>").insertBefore('#new-list-btn');
                             $('#'+data.id).click(function(){submenuLiBehave(this)});
                             
                             //Añadimos a la lista de sugerencias las nuevas listas en que se encuentran
@@ -114,13 +114,15 @@
         function submenuLiBehave(obj){
             if($(obj).attr('id')=="new-list-btn")
                 return false;
-            var addToList=$(obj).attr('id');
+            var addToList=$(obj).attr('id').substring(7,$(obj).attr('id').length);
+            var suggestions=[]
             var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
             if( checkedSuggestions.length==0){
                 console.log("No ha seleccionado items");
             }
             checkedSuggestions.each(function(){
                 console.log("Añadimos a la lista "+addToList+" la sugerencia"+$(obj).attr('id'))
+                suggestions.push()
             })
             
         }
@@ -239,7 +241,7 @@
                                             
                                             <dt>Lugar:</dt>
                                             <dd>
-                                                <a href="">{{k.poi.name}}</a> ({{k.poi.address}}) 
+                                                <a class="placeName" href="">{{k.poi.name}}</a> ({{k.poi.address}}) 
                                                 <a href="{% url fb_edit_suggestions k.id %}">Editar</a>
                                             </dd>
                                             
@@ -260,8 +262,8 @@
                                             <dt>Listas</dt>
                                             <dd>
                                                 <ul>
-                                                    <li id="lista1">Lista 1</li>
-                                                    <li id="lista2">Lista 2</li>
+                                                    <li id="lista1" class="removable">Lista 1</li>
+                                                    <li id="lista2" class="removable">Lista 2</li>
                                                 </ul>
                                             </dd>
                                             

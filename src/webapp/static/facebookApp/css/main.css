@@ -1700,6 +1700,32 @@ input{
                 float: left;
                 margin: 0;
             }
+                div#content div.expanded dd a.placeName{
+                    color:black;
+                    text-decoration:none;
+                }
+                div#content div.expanded dd a.placeName:hover{
+                    text-decoration:underline;
+                }
+                div#content div.expanded dd ul{
+                    list-style:none;
+                    margin: 0;
+                    padding: 0;
+                }
+                    div#content div.expanded dd ul li{
+                        border: 1px dotted;
+                        color: #6B90C6;
+                        display: inline-block;
+                        font-size: 0.9em;
+                        font-weight: bold;
+                        line-height: 1.5em;
+                        margin-right: 0.5em;
+                        padding: 0 1.8em 0 1em;
+                    }
+                    div#content div.expanded dd ul li.removable:hover{
+                        background: url("/static/facebookApp/img/delete.png") no-repeat scroll right 1px #EEEEEE;
+                    }
+            
             div#content div.expanded a.btn{
                 clear:both
             }
