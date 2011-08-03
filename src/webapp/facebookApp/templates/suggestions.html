@@ -12,12 +12,15 @@
             
             //Asignamos comportamiento ONCLICK a cada fila
             $('.suggestionName').click(function(){
-                    $(this).parent().parent().find('div.collapsed').toggle()
-                    $(this).parent().parent().find('div.expanded').toggle()
+                    $(this).parent().parent().find('div.collapsed').slideToggle('fast','swing',function(){
+                        $(this).parent().find('div.expanded').slideToggle('fast','swing')    
+                    })
+                    
             });
             $('.collapseBtn').click(function(){
-                    $(this).parent().parent().find('div.collapsed').toggle()
-                    $(this).parent().parent().find('div.expanded').toggle()
+                    $(this).parent().parent().find('div.expanded').slideToggle('fast','swing',function(){
+                        $(this).parent().find('div.collapsed').slideToggle('fast','swing')
+                    })
             });
             
             $('#checkBox_all').click(function(){
@@ -85,7 +88,7 @@
                         success: function(data){
                             //Añadimos la lista al desplegable
                             $("<li id=\"listid-"+data.id+"\">"+data.name+" ("+data.keys.length+" sugerencias)</li>").insertBefore('#new-list-btn');
-                            $('#'+data.id).click(function(){submenuLiBehave(this)});
+                            $('#listid-'+data.id).click(function(){submenuLiBehave(this)});
                             
                             //Añadimos a la lista de sugerencias las nuevas listas en que se encuentran
                             
@@ -119,11 +122,27 @@
             var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
             if( checkedSuggestions.length==0){
                 console.log("No ha seleccionado items");
+            }else{
+                checkedSuggestions.each(function(){
+                    //console.log("Añadimos a la lista: "+addToList+", la sugerencia: "+);
+                    suggestions.push($(this).attr('id').substring(9,$(this).attr('id').length))
+                });
+                
+                $.ajax({
+                    type: "POST",
+                    url: "{% url add_suggestion_list %}",
+                    data: {
+                        list_id: addToList,
+                        suggestions: suggestions
+                    },
+                    dataType:'json',
+                    success: function(data){
+                        //Añadimos a la lista de sugerencias las nuevas listas en que se encuentran
+                        console.log("Sugerencias añadidas con éxito");
+                        //Mostrar mensaje de éxito
+                    }
+                });
             }
-            checkedSuggestions.each(function(){
-                console.log("Añadimos a la lista "+addToList+" la sugerencia"+$(obj).attr('id'))
-                suggestions.push()
-            })
             
         }
         
