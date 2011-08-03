@@ -136,7 +136,7 @@ class ListSuggestion(List, Visibility):
             list.update(name=name, description=description, instances=instances, vis=vis)
             return list
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
-        keys= set([db.Key.from_path(Suggestion.kind(), instance) for instance in instances])
+        keys= set([db.Key.from_path('Event, Suggestion', int(instance)) for instance in instances])
         list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
         list.put()
         return list
@@ -161,7 +161,7 @@ class ListSuggestion(List, Visibility):
             self.name = name
         if description is not None:
             self.description = description
-        keys = set([db.Key.from_path(Suggestion.kind(), instance) for instance in instances])
+        keys = set([db.Key.from_path('Event, Suggestion', int(instance)) for instance in instances])
         self.keys = [k for k in keys]
         self._vis = vis
         self.put()
@@ -254,12 +254,12 @@ class ListAlert(List):
             if description is not None:
                 list.description = description
             keys = set(list.keys)
-            keys |= set([db.Key.from_path(Alert.kind(), instance) for instance in instances])
+            keys |= set([db.Key.from_path('Event, Alert', int(instance)) for instance in instances])
             list.keys = [k for k in keys]
             list.put()
             return list
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
-        keys= set([db.Key.from_path(Alert.kind(), instance) for instance in instances])
+        keys= set([db.Key.from_path('Event, Alert', int(instance)) for instance in instances])
         list = ListAlert(name=name, user=user, description=description, keys=[k for k in keys])
         list.put()
         return list

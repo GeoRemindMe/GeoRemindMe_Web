@@ -446,7 +446,7 @@ def add_list_suggestion(request):
     list_id = request.POST.get('list_id', None)
     list_name = request.POST.get('name', None)
     list_description = request.POST.get('description', None)
-    list_instances = request.POST.get('suggestions', [])
+    list_instances = request.POST.get('suggestions[]', [])
     
     list = geolist.add_list_suggestion(request, id=list_id, name = list_name,
                                  description = list_description,
