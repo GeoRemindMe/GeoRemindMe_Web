@@ -403,7 +403,7 @@ def get_notifications_timeline(request):
 @ajax_request
 def get_list_id(request):
     """
-    Devuelve la lista buscada por ID
+    Devuelve la lista publica buscada por ID
     Parametros en POST
         list_id : lista a buscar
         
@@ -452,6 +452,41 @@ def get_list_alert(request):
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
 
 @ajax_request
+def get_list_suggestion(request):
+    """
+    Devuelve todas las listas de sugerencias
+    si no se especifica id
+    Parametros en POST:
+        list_id: id de la lista (opcional)
+        userid: id del usuario del que buscar listas (opcional,
+            si no se especifica se busca del usuario identificado)
+            
+    """
+    pass
+
+@ajax_request
+def delete_list_suggestion(request):
+    """
+    Borra una lista de sugerencias
+    Parametros en POST:
+        list_id: id de la lista
+    """
+    pass
+
+@ajax_request
+def add_list_suggestion(request):
+    """
+    Cra una lista de sugerencias o modifica una
+    si se especifica id
+    Parametros en POST:
+        list_id: id de la lista (opcional)
+        name: nombre de la lista (unico por usuario)
+        description: descripcion (opcional)
+        suggestions: lista de ids de sugerencias    
+    """
+    pass
+
+@ajax_request
 def new_list_user(request):
     """
     Crea una nueva lista de usuarios
@@ -490,6 +525,8 @@ def new_list_alert(request):
     
     list = geolist.add_list_alert(request, name = list_name, description = list_description, instances = list_instances)
     return HttpResponse(simplejson.dumps(list), mimetype="application/json")
+
+
 
 @ajax_request
 def mod_list_user(request):

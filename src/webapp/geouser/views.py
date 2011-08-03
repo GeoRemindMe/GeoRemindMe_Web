@@ -612,6 +612,18 @@ def get_activity_timeline(request, page=1, query_id=None):
     """
     return request.user.get_activity_timeline(page=page, query_id=query_id)
 
+@login_required
+def get_notifications_timeline(request, page=1, query_id=None):
+    """**Descripción**: Obtiene la lista de timeline de actividad del usuario logueado
+
+        :param page: número de página a mostrar
+        :type page: int
+        :param query_id: identificador de búsqueda
+        :type query_id: int
+        :return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
+    """
+    return request.user.get_notifications_timeline(page=page, query_id=query_id)
+
     
 def get_avatar(request, username):
     from models import User
