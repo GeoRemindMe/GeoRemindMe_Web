@@ -17,6 +17,7 @@ class ListHelper(object):
             :type query_id: int
         '''            
         q = self._klass.all().filter('_vis =', 'public').order('-modified')
+        from georemindme.paging import PagedQuery
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
     
@@ -32,6 +33,7 @@ class ListHelper(object):
         if not isinstance(user, User):
             raise TypeError()
         q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
+        from georemindme.paging import PagedQuery
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
     
@@ -43,10 +45,11 @@ class ListHelper(object):
             :type id: :class:`Integer`
             :returns: None o :class:`geolist.models.List`
         '''
+        try:
+            id = int(id)
+        except:
+            raise TypeError
         list = self._klass.get_by_id(id)
-        if hasattr(list, '_vis'):
-            if list._is_public():
-                return list
         return None
     
     def get_by_id_user(self, id, user = None):
@@ -102,6 +105,42 @@ class ListSuggestionHelper(object):
         if not list.active:
             return None
         return list
+    
+    def get_by_id_querier(self, id, querier):
+        '''
+        Devuelve la lista publica con ese ID
+        
+            :param id: identificador de la lista
+            :type id: :class:`Integer`
+            :returns: None o :class:`geolist.models.List`
+        '''
+        if not isinstance(querier, User):
+            raise TypeError()
+        list = self.get_by_id(id)
+        if list is None:
+            return None
+        if list.user.key() == querier.key():
+            return list
+        if list._is_public():
+            return list
+        elif list._is_shared() and list.user_invited(querier):
+            return list
+        return None
+    
+        
+    def get_by_user(self, user, querier, page = 1, query_id = None):
+        """
+        Obtiene las listas de un usuario
+        """
+        if not isinstance(user, User) or not isinstance(querier, User):
+            raise TypeError()
+        if user.id == querier.id:
+            q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
+        else:
+            q = self._klass.gql('WHERE user = :1 AND _vis = :2 ORDER BY modified DESC', user, 'public')
+        from georemindme.paging import PagedQuery
+        p = PagedQuery(q, id = query_id)
+        return [p.id, p.fetch_page(page), p.page_count()]
     
 
 class ListAlertHelper(object):

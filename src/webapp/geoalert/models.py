@@ -417,27 +417,6 @@ class Suggestion(Event, Visibility, Taggable):
         suggestion_deleted.send(sender=self)
         super(Suggestion, self).delete()
     
-    def user_invited(self, user, set_status=None):
-        '''
-        Comprueba que un usuario ha sido invitado a la lista
-            
-            :param user: Usuario que debe estar invitado
-            :type user: :class:`geouser.models.User`
-            :param set_status: Nuevo estado para la invitacion
-            :type set_status: :class:`integer`
-            
-            :returns: True si esta invitado, False en caso contrario
-        '''
-        from georemindme.models_indexes import Invitation
-        if set_status is None:
-            invitation = Invitation.objects.is_user_invited(self, user)
-            return invitation
-        else:
-            invitation = Invitation.objects.get_invitation(self, user)
-            if invitation is not None:
-                invitation.set_status(set_status)
-        return invitation
-    
     def has_follower(self, user):
         if not user.is_authenticated():
             return False
@@ -464,15 +443,7 @@ class Suggestion(Event, Visibility, Taggable):
     def to_json(self):
         return simplejson.dumps(self.to_dict())
     
-    def send_invitation(self, sender, to):
-        if sender.key() == self.user.key():
-            from georemindme.models_indexes import Invitation
-            invitation = Invitation.send_invitation(sender=sender, to=to, instance=self)
-            if invitation is not None:
-                return True
-            return False
-        else:
-            raise ForbiddenAccess
+
         
     def get_absolute_url(self):
         return '/suggestion/%s/' % self.slug if self.slug is not None and self.slug != '' else self.id

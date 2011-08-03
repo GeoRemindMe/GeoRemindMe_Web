@@ -9,3 +9,6 @@
 
 class PrivateException(Exception):
     value = "This instance is private"
+    
+class ForbiddenAccess(Exception):
+    value = "Access forbidden"

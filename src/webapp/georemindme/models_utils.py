@@ -107,6 +107,40 @@ class Visibility(db.Model):
         if self._vis == 'shared':
             return True
         return False
+    
+    def user_invited(self, user, set_status=None):
+        '''
+        Comprueba que un usuario ha sido invitado a la lista
+            
+            :param user: Usuario que debe estar invitado
+            :type user: :class:`geouser.models.User`
+            :param set_status: Nuevo estado para la invitacion
+            :type set_status: :class:`integer`
+            
+            :returns: True si esta invitado, False en caso contrario
+        '''
+        from georemindme.models_indexes import Invitation
+        if set_status is None:
+            invitation = Invitation.objects.is_user_invited(self, user)
+            return invitation
+        else:
+            invitation = Invitation.objects.get_invitation(self, user)
+            if invitation is not None:
+                invitation.set_status(set_status)
+        return invitation
+    
+    def send_invitation(self, sender, to):
+        if not self.is_saved():
+            raise NotImplementedError
+        if sender.key() == self.user.key():
+            from georemindme.models_indexes import Invitation
+            invitation = Invitation.send_invitation(sender=sender, to=to, instance=self)
+            if invitation is not None:
+                return True
+            return False
+        else:
+            from exceptions import ForbiddenAccess
+            raise ForbiddenAccess
 
 
 #  from http://blog.notdot.net/2010/04/Pre--and-post--put-hooks-for-Datastore-models
