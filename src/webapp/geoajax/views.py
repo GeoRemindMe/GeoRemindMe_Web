@@ -452,8 +452,9 @@ def add_list_suggestion(request):
                                  description = list_description,
                                  instances = list_instances
                                  )
-    from funcs import getListsJSON
-    return HttpResponse(getListsJSON(list), mimetype="application/json")
+    if list is not None:
+        return HttpResponse(list.to_json(), mimetype="application/json")
+    return HttpResponse(list, mimetype="application/json")
 
 
 @ajax_request
