@@ -23,7 +23,7 @@ Mensaje nº 300
     
 
 
-    <br>{{obj.instance}}<br>
+    <br><a class="black-link" href="{% url fb_view_suggestion obj.instance.slug %}">{{obj.instance}}</a><br>
 
     {% if obj.instance.poi.slug %}
         <span class="suggestionPlace">En <a href="{% url fb_view_place obj.instance.poi.slug %}">{{obj.instance.poi.name}}</a></span><br>

@@ -90,6 +90,9 @@
                 <li id="filter-comments">Comentarios</li>
                 
             </ul>
+            {% for obj in user.listsuggestion_set %}
+                {{obj.name}}, {{obj.id}}, {{obj.keys|length}}, 
+            {% endfor %}
             <ul id="chronology">
             {% for obj in chronology.1 %}
                 {% if not obj.msg_id = 100 or not obj.is_private %}

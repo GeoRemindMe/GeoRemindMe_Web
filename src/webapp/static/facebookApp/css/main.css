@@ -506,6 +506,7 @@ input{
         background-image: url('/static/facebookApp/img/delete.png');
         float:right;
         cursor:pointer;
+        margin-right: -7px;
 /*
         margin-top:0.5em;
 */
@@ -575,7 +576,13 @@ input{
             width:50px
         }
         
-        
+        ul#chronology li a.black-link{
+            text-decoration:none;
+            color:black;
+        }
+        ul#chronology li a.black-link:hover{
+            text-decoration:underline;
+        }
         ul#chronology li span.action-bar{
             font-size: 0.9em;
             padding-left: 0.5em;

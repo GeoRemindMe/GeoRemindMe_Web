@@ -10,55 +10,58 @@ Mensaje nº 350<br>
         <img class="user-picture" src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
     </a>
 </div>
-
-<!--Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar-->
-{% if not obj.is_private %}
-    {% if obj.username = user.username %}
+<div class="timeline-msg">
+    <!--Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar-->
+    
+    {% if obj.instance.user.username = request.user.username %}
         <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
+        <span class="small-text">has creado una nueva lista de sugerencias: </span>
+    {% else %}
+        <span class="small-text"><a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ha creado una nueva lista de sugerencias: </span>
     {% endif %}
-{% endif %}
-
-
-{{obj.msg|safe}} <br>
-{% if obj.instance.poi.slug %}
-    <span class="suggestionPlace">En <a href="{% url fb_view_place obj.instance.poi.slug %}">{{obj.instance.poi.name}}</a></span><br>
-{% endif %}
-
-
-<span class="timestamp"> {{obj.created|naturaltime}}</span>  
-
-<span class="action-bar">
-    | <span class="focusInput">Comentar</span> | 
-    <a href="{% url fb_view_suggestion obj.instance.slug %}">Detalles</a> | 
     
-    
-    
-    <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
-        <span class="dislike">
-            <span class="hoverlink">Ya no me gusta</span> 
-            <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
-        </span>
+
+
+    <br><a class="black-link" href="{% url fb_view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a><br>
+
+
+    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
+
+    <span class="action-bar">
+        | <span class="focusInput">Comentar</span> | 
+        <a href="{% url fb_view_suggestion obj.instance.slug %}">Detalles</a>  
         
-        <span class="like">
-            Me gusta
-        </span>
+        
+        
+        {% if not obj.is_private %}
+            | 
+            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
+                <span class="dislike">
+                    <span class="hoverlink">Ya no me gusta</span> 
+                    <span class="text like-text increase">{{obj.vote_counter}}</span> personas
+                </span>
+                
+                <span class="like">
+                    Me gusta
+                </span>
+            </span>
+            
+            | <span title="Recibe novedades"  class="remember-forget" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">Seguir</span><span class="forget">Siguiendo</span></span>
+        {% endif %}
     </span>
-    
-    | <span title="Guardar en favoritos" class="remember" value="{{obj.instance.id}}">Seguir</span>
-</span>
 
-
+</div>
 <!-- Si hay comentarios en la sugerencia -->
 
-<div class="comment-box" value="{{obj.instance.id}}">
+<div class="comment-box clear" value="{{obj.instance.id}}">
 
     {% if obj.comments.1|length and obj.comments.1|length > 2 %}
-        <div class="show-all-comments">Veros los {{obj.comments.1|length}} comentarios</div>
+        <div class="show-all-comments">Ver los {{obj.comments.1|length}} comentarios</div>
     {% endif %}
     <ul id="commentList-{{obj.instance.id}}">
         {% if obj.comments.1 %}
             {% for c in obj.comments.1 reversed %}
-                <li {% if forloop.revcounter > 2 %} class="long-list" {% endif %}>
+                <li {% if forloop.revcounter > 2 %} class="long-list suggestion-comment" {% else %} class="suggestion-comment" {% endif %} >
                     
                     <!-- Añadimos el botón de borrar comentario-->
                     {% if c.username = user.username %}
@@ -68,18 +71,20 @@ Mensaje nº 350<br>
                     <img class="user-picture" src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
                     <span class="timestamp">{{c.created|naturaltime}}</span> 
                     
-                    
-                    <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
+                    {% if c.username != user.username %}
                         - 
-                        <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
-                            <span class="hoverlink">Ya no me gusta</span> 
-                            <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+                        <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
+        
+                            <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
+                                <span class="hoverlink">Ya no me gusta</span> 
+                                <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+                            </span>
+                            
+                            <span class="like" {% if c.has_voted %}style="display:none;"{%endif%} >
+                                <span class="hoverlink">Me gusta</span> 
+                            </span>
                         </span>
-                        
-                        <span class="like" {% if c.has_voted %}style="display:none;"{%endif%} >
-                            <span class="hoverlink">Me gusta</span> 
-                        </span>
-                    </span>
+                    {% endif %}
                 </li>
             {% endfor %}
         {% endif %}

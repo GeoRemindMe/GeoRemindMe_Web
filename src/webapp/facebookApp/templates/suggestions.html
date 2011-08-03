@@ -218,7 +218,11 @@
                         <span class="btn mvBtn">
                             Listas
                             <ul class="submenu" style="display:none">
-                                <li id="listid-1">Lista 1 (3 sugerencias)</li>
+                                {% if lists %}
+                                    {% for obj in lists %}
+                                        <li id="{{obj.id}}">{{obj.name}} ({{obj.keys|length}} sugerencias)</li>
+                                    {% endfor %}
+                                {% endif %}
                                 <li id="new-list-btn">
                                     <span id="text">Nueva lista...</span>
                                     <span id="new-list" style="display:none"><input type="text" /></span>
