@@ -65,9 +65,9 @@ class ListHelper(object):
         '''
         # TODO : si la lista es 'shared', mirar si el usuario tiene visibilidad
         list = self.get_by_id(id)
-        if not list.active:
-            return None
         if list is not None:
+            if not list.active:
+                return None
             if list.user.key() == user.key():
                 return list
             elif hasattr(list, '_vis'):
