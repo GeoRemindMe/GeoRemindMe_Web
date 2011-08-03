@@ -278,8 +278,8 @@ class Place(POI):
         from georemindme.funcs import u_slugify
         if self.slug is None:
             name = self.name.lower()
-            city = self.city.lower()
             if self.city is not None:
+                city = self.city.lower()
                 self.slug = u_slugify('%s-%s'% (name, city))
             else:
                 self.slug = u_slugify('%s' % name)

@@ -264,13 +264,17 @@ def view_place(request, slug, template='webapp/place.html'):
 #===============================================================================
 @login_required
 def user_suggestions(request, template='webapp/suggestions.html'):
+    from geolist.models import ListSuggestion
+    lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     counters = request.user.counters_async()
     suggestions = get_suggestion(request, id=None,
                                 wanted_user=request.user,
                                 page = 1, query_id = None
                                 )
+    
     return  render_to_response(template, {'suggestions': suggestions,
-                                          'counters': counters.next()
+                                          'counters': counters.next(),
+                                          'lists': [l for l in lists]
                                           }, context_instance=RequestContext(request)
                                )
 

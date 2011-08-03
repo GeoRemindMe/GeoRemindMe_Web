@@ -128,7 +128,7 @@ class ListSuggestionHelper(object):
         return None
     
         
-    def get_by_user(self, user, querier, page = 1, query_id = None):
+    def get_by_user(self, user, querier, page = 1, query_id = None, all=False):
         """
         Obtiene las listas de un usuario
         """
@@ -138,9 +138,12 @@ class ListSuggestionHelper(object):
             q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
         else:
             q = self._klass.gql('WHERE user = :1 AND _vis = :2 ORDER BY modified DESC', user, 'public')
-        from georemindme.paging import PagedQuery
-        p = PagedQuery(q, id = query_id)
-        return [p.id, p.fetch_page(page), p.page_count()]
+        if not all:
+            from georemindme.paging import PagedQuery
+            p = PagedQuery(q, id = query_id)
+            return [p.id, p.fetch_page(page), p.page_count()]
+        else:
+            return q.run()
     
 
 class ListAlertHelper(object):
