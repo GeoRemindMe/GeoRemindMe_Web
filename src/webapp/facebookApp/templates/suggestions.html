@@ -204,7 +204,7 @@
         <ul id="tabMenu">
             <li id="your_suggestions" class="active">Tus sugerencias ({{user.counters.suggested}})</li>
             <li id="all_suggestions">Todas</li>
-            <li id="suggestions_lists">Listas</li>
+            <li id="suggestions_lists">Listas ({{lists|length}})</li>
         </ul>
         <div id="content">
                 <!-- YOUR SUGGESTIONS -->
@@ -216,11 +216,11 @@
                         
                         <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
                         <span class="btn mvBtn">
-                            Listas
+                            Guardar en
                             <ul class="submenu" style="display:none">
                                 {% if lists %}
                                     {% for obj in lists %}
-                                        <li id="{{obj.id}}">{{obj.name}} ({{obj.keys|length}} sugerencias)</li>
+                                        <li id="listid-{{obj.id}}">{{obj.name}} ({{obj.keys|length}} sugerencias)</li>
                                     {% endfor %}
                                 {% endif %}
                                 <li id="new-list-btn">
@@ -323,7 +323,11 @@
                     
                     <!-- ALL SUGGESTIONS -->
                     <span id="suggestions_lists_content" class="tab-content hidden">
-                        <p>Listas de sugerencias</p>
+                        {% if lists %}
+                            {% for obj in lists %}
+                                <li id="listid-{{obj.id}}">{{obj.name}} ({{obj.keys|length}} sugerencias)</li>
+                            {% endfor %}
+                        {% endif %}
                     </span>
                     <!-- END ALL SUGGESTIONS -->
             </table>

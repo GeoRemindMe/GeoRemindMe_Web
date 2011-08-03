@@ -342,7 +342,7 @@ jQuery.fn.removable = GRM.removable;
 
 GRM.init = function() {
         $(".like-dislike").like();
-        $(".remember-forget").remember();
+        //$(".remember-forget").remember(); <-- Now on chronology (Debugging)
         $(".removable").removable();
     }
 
