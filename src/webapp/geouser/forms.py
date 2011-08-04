@@ -141,6 +141,7 @@ class SocialUserForm(forms.Form):
         return cleaned_data
     
     def save(self, user):
+        from geouser.models import User
         try:
             if self.cleaned_data['password'] != '':
                 return user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'], password=self.cleaned_data['password'])
@@ -174,6 +175,7 @@ class UserProfileForm(forms.Form):
 #        if file is not None:
 #            if 'image/' in file.type:
 #                user.profile.avatar = file
+        from geouser.models import User
         try:
             user.update(username=self.cleaned_data['username'], 
                         email=self.cleaned_data['email'], description=self.cleaned_data['description'], 
@@ -235,6 +237,7 @@ class UserForm(forms.Form):
         return cleaned_data
 
     def save(self, user, commit=True):
+        from geouser.models import User
         email = self.cleaned_data['email']
         old_pass = self.cleaned_data['old_pass']
         password = self.cleaned_data['password']

@@ -420,7 +420,7 @@ class Suggestion(Event, Visibility, Taggable):
     def has_follower(self, user):
         if not user.is_authenticated():
             return False
-        if SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).count() != 0:
+        if SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get() is not None:
             return True
         return False   
     

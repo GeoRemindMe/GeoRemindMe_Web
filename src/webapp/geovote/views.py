@@ -83,15 +83,14 @@ def get_comments_list(request, instance_id, query_id=None, page=1):
         :param page: pagina a buscar
         :type page: :class:`integer`
     """
-    user = request.session.get('user', None)
     from geolist.models import List
-    if user is not None:
-        list = List.objects.get_by_id_querier(instance_id, user)
+    if not request.user.is_authenticated():
+        list = List.objects.get_by_id_querier(instance_id, querier=request.user)
     else:
         list = List.objects.get_by_id(instance_id)
     if list is None:
         return None
-    return _get_comments(list, query_id=query_id, page=page)        
+    return _get_comments(list, query_id=query_id, page=page, querier=request.user)        
 
 
 def _get_comments(instance, query_id=None, page=1, querier=None):

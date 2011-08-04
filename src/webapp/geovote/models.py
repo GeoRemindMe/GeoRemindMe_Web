@@ -65,7 +65,7 @@ class CommentHelper(object):
                         }
                        for comment in comments]]
     
-    def get_by_instance(self, instance, query_id=None, page=1, querier = None):
+    def get_by_instance(self, instance, query_id=None, page=1, querier = None, async=False):
         """
         Obtiene una lista con todos los comentarios hechos en una instancia
         
@@ -83,6 +83,8 @@ class CommentHelper(object):
         from georemindme.paging import PagedQuery
         q = Comment.all().filter('instance =', instance).filter('deleted =', False).order('-created')
         p = PagedQuery(q, id = query_id, page_size=7)
+        if async:
+            return p.id, q.run()
         comments = p.fetch_page(page)
         return [p.id, [{'id': comment.id,
                         'created': comment.created,

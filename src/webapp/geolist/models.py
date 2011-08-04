@@ -18,7 +18,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     created = db.DateTimeProperty(auto_now_add = True)
     modified = db.DateTimeProperty(auto_now=True)
     active = db.BooleanProperty(default=True)
-    count = db.IntegerProperty()
+    count = db.IntegerProperty(default=0)
     
     _new = False
     
@@ -136,7 +136,7 @@ class ListSuggestion(List, Visibility):
             list.update(name=name, description=description, instances=instances, vis=vis)
             return list
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
-        keys= set([db.Key.from_path('Event, Suggestion', int(instance)) for instance in instances])
+        keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
         list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
         list.put()
         return list
@@ -161,7 +161,7 @@ class ListSuggestion(List, Visibility):
             self.name = name
         if description is not None:
             self.description = description
-        keys = set([db.Key.from_path('Event, Suggestion', int(instance)) for instance in instances])
+        keys = set([db.Key.from_path('Event', int(instance)) for instance in instances])
         self.keys = [k for k in keys]
         self._vis = vis
         self.put()
@@ -220,6 +220,13 @@ class ListSuggestion(List, Visibility):
         self.user_invited(user, set_status=1)  # FIXME : mejor manera de cambiar estado invitacion
         list_following_new.send(sender=self, user=user)
         return True
+    
+    def has_follower(self, user):
+        if not user.is_authenticated():
+            return False
+        if ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get() is not None:
+            return True
+        return False 
                 
 
 class ListAlert(List):
@@ -254,12 +261,12 @@ class ListAlert(List):
             if description is not None:
                 list.description = description
             keys = set(list.keys)
-            keys |= set([db.Key.from_path('Event, Alert', int(instance)) for instance in instances])
+            keys |= set([db.Key.from_path('Event', int(instance)) for instance in instances])
             list.keys = [k for k in keys]
             list.put()
             return list
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
-        keys= set([db.Key.from_path('Event, Alert', int(instance)) for instance in instances])
+        keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
         list = ListAlert(name=name, user=user, description=description, keys=[k for k in keys])
         list.put()
         return list

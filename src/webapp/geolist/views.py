@@ -6,7 +6,7 @@ from django.shortcuts import Http404
 from django.template import RequestContext
     
 from geouser.decorators import login_required
-from models import *
+from models import ListSuggestion, ListAlert, ListUser, List
 
 #===============================================================================
 # CREACION DE LISTAS
@@ -248,6 +248,7 @@ def get_list_suggestion(request, list_id=None, user_id=None, query_id=None, page
     '''
     if list_id is None:
         if user_id is not None:
+            from geouser.models import User
             user = User.objects.get_by_id(user_id)
             if user is None:
                 raise Http404
@@ -304,9 +305,10 @@ def get_all_shared_list_suggestion(request):
 
 
 @login_required
-def view_list(request, id, template='webapp/list.html'):
+def view_list(request, id, template='webapp/view_list.html'):
     def load_suggestions_async(suggestions):
         suggestions_loaded = []
+        
         for suggestion in suggestions:
             suggestions_loaded.append({
                                     'instance': suggestion,
@@ -317,26 +319,27 @@ def view_list(request, id, template='webapp/list.html'):
             if len(suggestions_loaded) > 7:
                     break
             return suggestions_loaded
-    from models import ListSuggestion
     list = ListSuggestion.objects.get_by_id_querier(id, request.user)
     if list is None:
         raise Http404
+    from google.appengine.ext import db
+    from geoalert.models import Event
+    suggestions_async = db.get(list.keys)
     from geovote.models import Vote
-    has_voted = Vote.objects.user_has_voted(request.user, list.key())
-    from geoalert.models import Suggestion
-    suggestions_async = db.get_async(list.keys)
-    vote_counter = Vote.objects.get_vote_counter(list.key())
     from geovote.views import get_comments_list
     from geovote.models import Comment
+    has_voted = Vote.objects.user_has_voted(request.user, list.key())
+    vote_counter = Vote.objects.get_vote_counter(list.key())
     comments = get_comments_list(request, list.id)
-    
+    top_comments = Comment.objects.get_top_voted(list, request.user)
+    user_follower = list.has_follower(request.user)
     return render_to_response(template, {'list': list, 
                                          'has_voted': has_voted,
                                          'vote_counter': vote_counter,
-                                         'user_follower': list.has_follower(request.user),
+                                         'user_follower': user_follower,
                                          'suggestions':load_suggestions_async(suggestions_async),
                                          'comments': comments,
-                                         'top_comments': Comment.objects.get_top_voted(list, request.user)
+                                         'top_comments': top_comments
                                          },
                               context_instance=RequestContext(request)
                               )
