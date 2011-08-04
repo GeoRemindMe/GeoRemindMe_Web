@@ -31,14 +31,17 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     from geovote.views import get_comments_event
     query_id, comments_async = get_comments_event(request, suggestion.id, async=True)
     from geovote.models import Vote, Comment
+    from geolist.models import ListSuggestion
     has_voted = Vote.objects.user_has_voted(request.user, suggestion.key())
     vote_counter = Vote.objects.get_vote_counter(suggestion.key())
     user_follower = suggestion.has_follower(request.user)
     top_comments = Comment.objects.get_top_voted(suggestion, request.user)
+    lists = ListSuggestion.objects.get_by_suggestion(suggestion, request.user)
     return render_to_response(template, {
                                         'suggestion': suggestion,
                                         'comments': Comment.objects.load_comments_from_async(query_id, comments_async, request.user),
                                         'has_voted': has_voted,
+                                        'lists': lists,
                                         'vote_counter': vote_counter,
                                         'user_follower': user_follower,
                                         'top_comments': top_comments,
@@ -275,7 +278,6 @@ def user_suggestions(request, template='webapp/suggestions.html'):
                                 wanted_user=request.user,
                                 page = 1, query_id = None
                                 )
-    import string
     return  render_to_response(template, {'suggestions': suggestions,
                                           'counters': counters.next(),
                                           'lists': [l for l in lists],

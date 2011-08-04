@@ -144,6 +144,24 @@ class ListSuggestionHelper(ListHelper):
             return [p.id, p.fetch_page(page), p.page_count()]
         else:
             return q.run()
+        
+    def get_by_suggestion(self, suggestion, querier):
+        if not isinstance(querier, User):
+            raise TypeError()
+        lists = self._klass.all().filter('keys =', suggestion.key())
+        lists_loaded = []
+        for list in lists:
+            if not querier.is_authenticated():
+                if list._is_public():
+                    lists_loaded.append(list)
+            else:
+                if list.user.key() == querier.key():
+                    lists_loaded.append(list)
+                elif list._is_public():
+                    lists_loaded.append(list)
+                elif list._is_shared() and list.user_invited(querier):
+                    lists_loaded.append(list)
+        return lists_loaded
     
 
 class ListAlertHelper(object):
