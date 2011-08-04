@@ -447,9 +447,11 @@ def add_list_suggestion(request):
     list_name = request.POST.get('name', None)
     list_description = request.POST.get('description', None)
     list_instances = request.POST.getlist('suggestions[]')
+    list_instances_del = request.POST.getlist('suggestions_del[]')
     list = geolist.add_list_suggestion(request, id=list_id, name = list_name,
                                  description = list_description,
-                                 instances = list_instances
+                                 instances = list_instances,
+                                 instances_del = list_instances_del,
                                  )
     if list is not None:
         return HttpResponse(list.to_json(), mimetype="application/json")

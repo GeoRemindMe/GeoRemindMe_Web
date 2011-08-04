@@ -110,7 +110,7 @@ class ListSuggestion(List, Visibility):
             return True
         
     @classmethod
-    def insert_list(cls, user, id=None, name=None, description = None, instances=[], vis='public'):
+    def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], vis='public'):
         """
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
@@ -133,7 +133,7 @@ class ListSuggestion(List, Visibility):
         if list is None:
             list = user.listsuggestion_set.filter('name =', name).get()
         if list is not None:  # la lista con ese nombre ya existe, la editamos
-            list.update(name=name, description=description, instances=instances, vis=vis)
+            list.update(name=name, description=description, instances=instances, instances_del=[], vis=vis )
             return list
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
         keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
@@ -141,7 +141,7 @@ class ListSuggestion(List, Visibility):
         list.put()
         return list
     
-    def update(self, name=None, description=None, instances=[], vis='public'):
+    def update(self, name=None, description=None, instances=[], instances_del=[], vis='public'):
         '''
         Actualiza una lista de alertas
         
@@ -161,7 +161,12 @@ class ListSuggestion(List, Visibility):
             self.name = name
         if description is not None:
             self.description = description
-        keys = set([db.Key.from_path('Event', int(instance)) for instance in instances])
+        try:
+            [self.keys.remove(db.Key.from_path('Event', int(instance))) for instance in instances_del]
+        except:
+            pass
+        keys = set(self.keys)
+        keys |= set([db.Key.from_path('Event', int(instance)) for instance in instances])
         self.keys = [k for k in keys]
         self._vis = vis
         self.put()
