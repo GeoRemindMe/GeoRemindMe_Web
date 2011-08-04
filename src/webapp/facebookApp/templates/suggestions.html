@@ -57,10 +57,13 @@
             }
             
             $(".mvBtn, .submenu ").hoverIntent(hiConfig);
+            $(".mvBtn").click(function(){
+                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+            })
             
             $('.submenu li').click(function(){submenuLiBehave(this)})
             
-            //Enter behave when adding new list
+            //Enter behave when adding new list on Suggestions Tab
             $("#new-list-btn span#new-list").keyup(function(e) {
                 var suggestionList=[];
                 e.preventDefault();
@@ -75,7 +78,7 @@
                         })
                     }
                     
-                    console.log(suggestionList)
+                    //console.log(suggestionList)
                     
                     $.ajax({
                         type: "POST",
@@ -90,6 +93,11 @@
                             $("<li id=\"listid-"+data.id+"\">"+data.name+" ("+data.keys.length+" sugerencias)</li>").insertBefore('#new-list-btn');
                             $('#listid-'+data.id).click(function(){submenuLiBehave(this)});
                             
+                            //Reordenamos alfabéticamente la lista
+                            $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
+                                return $(a).text() > $(b).text() ? 1 : -1;
+                            });
+                            
                             //Añadimos a la lista de sugerencias las nuevas listas en que se encuentran
                             
                             //Mostrar mensaje de éxito
@@ -100,6 +108,11 @@
                     $("#new-list-btn span#new-list").css('display','none')
                     $("#new-list-btn span#new-list").find('input').val("");
                 }
+                
+                
+                $('.addNewList').click(function(){
+                    
+                });
             });
             
             
@@ -190,6 +203,72 @@
         }
         
         
+        /**
+         * jQuery.fn.sortElements
+         * --------------
+         * @param Function comparator:
+         *   Exactly the same behaviour as [1,2,3].sort(comparator)
+         *   
+         * @param Function getSortable
+         *   A function that should return the element that is
+         *   to be sorted. The comparator will run on the
+         *   current collection, but you may want the actual
+         *   resulting sort to occur on a parent or another
+         *   associated element.
+         *   
+         *   E.g. $('td').sortElements(comparator, function(){
+         *      return this.parentNode; 
+         *   })
+         *   
+         *   The <td>'s parent (<tr>) will be sorted instead
+         *   of the <td> itself.
+         */
+        jQuery.fn.sortElements = (function(){
+         
+            var sort = [].sort;
+         
+            return function(comparator, getSortable) {
+         
+                getSortable = getSortable || function(){return this;};
+         
+                var placements = this.map(function(){
+         
+                    var sortElement = getSortable.call(this),
+                        parentNode = sortElement.parentNode,
+         
+                        // Since the element itself will change position, we have
+                        // to have some way of storing its original position in
+                        // the DOM. The easiest way is to have a 'flag' node:
+                        nextSibling = parentNode.insertBefore(
+                            document.createTextNode(''),
+                            sortElement.nextSibling
+                        );
+         
+                    return function() {
+         
+                        if (parentNode === this) {
+                            throw new Error(
+                                "You can't sort elements if any one is a descendant of another."
+                            );
+                        }
+         
+                        // Insert before flag:
+                        parentNode.insertBefore(this, nextSibling);
+                        // Remove flag:
+                        parentNode.removeChild(nextSibling);
+         
+                    };
+         
+                });
+         
+                return sort.call(this, comparator).each(function(i){
+                    placements[i].call(getSortable.call(this));
+                });
+         
+            };
+         
+        })();
+        
     </script>
 {%endblock%}
 
@@ -232,104 +311,134 @@
                         
                     </div>
                     
-                        <!-- Objetos Suggestion-->
-                        {% if user.counters.suggested == 0 %}
-                            <div id="noSuggestions" class="tab-content">
-                                <span>
-                                    Aún no has hecho ninguna sugerencia, para empezar:<br>
-                                    <a href="{% url fb_add_suggestion %}" id="btn-add-suggestion">Añade una sugerencia</a>
-                                </span>
-                            </div>
-                        {% else %}
-                        <span id="suggestion-list" class="tab-content">
-                            {% for k in suggestions.1%}
-                                <div id="suggestion_{{k.id}}" class="suggestion">
-                                    <div class="collapsed">
-                                        <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
-                                        <span class="suggestionName">{{k.name}}</span>
+                    <!-- Objetos Suggestion-->
+                    {% if user.counters.suggested == 0 %}
+                        <div id="noSuggestions" class="tab-content">
+                            <span>
+                                Aún no has hecho ninguna sugerencia, para empezar:<br>
+                                <a href="{% url fb_add_suggestion %}" id="btn-add-suggestion">Añade una sugerencia</a>
+                            </span>
+                        </div>
+                    {% else %}
+                    <span id="suggestion-list" class="tab-content">
+                        {% for k in suggestions.1%}
+                            <div id="suggestion_{{k.id}}" class="suggestion">
+                                <div class="collapsed">
+                                    <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
+                                    <span class="suggestionName">{{k.name}}</span>
 <!--
-                                        <span class="suggestionInLists">
-                                        Lista {{k.id}}</span>
+                                    <span class="suggestionInLists">
+                                    Lista {{k.id}}</span>
 -->
-                                    </div>
-                                    <div class="expanded" style="display:none">
-                                        <dl>
-                                            <dt>Nombre:</dt>
-                                            <dd class="editable">{{k.name}}</dd>
-                                            
-                                            {% if k.description%}
-                                                <dt>Descripción:</dt>
-                                                <dd>{{k.description}}</dd>
-                                            {% endif %}
-                                            
-                                            <dt>Lugar:</dt>
-                                            <dd>
-                                                <a class="placeName" href="">{{k.poi.name}}</a> ({{k.poi.address}}) 
-                                                <a href="{% url fb_edit_suggestions k.id %}">Editar</a>
-                                            </dd>
-                                            
-                                            {% if k.date_starts != None or k.date_ends != None%}
-                                                <dt>Fecha:</dt>
-                                            
-                                                <dd class="editable">
-                                                    {% if k.date_starts != None %}
-                                                        {{k.date_starts}}
-                                                    {% endif %}
-                                                    {% if k.date_ends != None %}
-                                                        {{k.date_ends}}
-                                                    {% endif %}    
-                                                </dd>
-                                            
-                                            {% endif %}
-                                            
-                                            <dt>Listas</dt>
-                                            <dd>
-                                                <ul>
-                                                    <li id="lista1" class="removable">Lista 1</li>
-                                                    <li id="lista2" class="removable">Lista 2</li>
-                                                </ul>
-                                            </dd>
-                                            
-                                            <dt>Fecha de la última modificación:</dt>
-                                            <dd>{{k.modified}}</dd>
-                                            
-                                            <dt>Personas a las que les gusta: </dt>
-                                            <dd>{{k.counters.followers}}</dd>
-                                            
-                                            <dt>Comentarios recibidos:</dt>
-                                            <dd>{{k.counters.comments}}</dd>
-                                        </dl>
-                                        <div class="collapseBtn"><img src="/static/webapp/img/collapse.png"></div>
+                                </div>
+                                <div class="expanded" style="display:none">
+                                    <dl>
+                                        <dt>Nombre:</dt>
+                                        <dd class="editable">{{k.name}}</dd>
                                         
-                                    </div>
+                                        {% if k.description%}
+                                            <dt>Descripción:</dt>
+                                            <dd>{{k.description}}</dd>
+                                        {% endif %}
+                                        
+                                        <dt>Lugar:</dt>
+                                        <dd>
+                                            <a class="placeName" href="">{{k.poi.name}}</a> ({{k.poi.address}}) 
+                                            <a href="{% url fb_edit_suggestions k.id %}">Editar</a>
+                                        </dd>
+                                        
+                                        {% if k.date_starts != None or k.date_ends != None%}
+                                            <dt>Fecha:</dt>
+                                        
+                                            <dd class="editable">
+                                                {% if k.date_starts != None %}
+                                                    {{k.date_starts}}
+                                                {% endif %}
+                                                {% if k.date_ends != None %}
+                                                    {{k.date_ends}}
+                                                {% endif %}    
+                                            </dd>
+                                        
+                                        {% endif %}
+                                        
+                                        {% if k.lists|length >0 %}
+                                        <dt>Listas</dt>
+                                        <dd>
+                                            <ul>
+                                                
+                                                <li id="lista1" class="removable">Lista 1</li>
+                                                <li id="lista2" class="removable">Lista 2</li>
+                                            </ul>
+                                        </dd>
+                                        {% endif %}
+                                        
+                                        <dt>Fecha de la última modificación:</dt>
+                                        <dd>{{k.modified}}</dd>
+                                        
+                                        <dt>Personas a las que les gusta: </dt>
+                                        <dd>{{k.counters.followers}}</dd>
+                                        
+                                        <dt>Comentarios recibidos:</dt>
+                                        <dd>{{k.counters.comments}}</dd>
+                                    </dl>
+                                    <div class="collapseBtn"><img src="/static/webapp/img/collapse.png"></div>
                                     
                                 </div>
                                 
-                                
-                            {% endfor%}   
-                        </span>           
-                        {% endif %}
-                    </span>
-                    <!-- END YOUR SUGGESTIONS -->
+                            </div>
+                            
+                            
+                        {% endfor%}   
+                    </span>           
+                    {% endif %}
+                </span>
+                <!-- END YOUR SUGGESTIONS -->
                     
                     
                     
                     
-                    <!-- ALL SUGGESTIONS -->
-                    <span id="all_suggestions_content" class="tab-content hidden">
-                        <p>Todas las sugerencias</p>
-                    </span>
-                    <!-- END ALL SUGGESTIONS -->
+                <!-- ALL SUGGESTIONS -->
+                <span id="all_suggestions_content" class="tab-content hidden">
+                    <p>Todas las sugerencias</p>
+                </span>
+                <!-- END ALL SUGGESTIONS -->
+                
+                
+                
+                
+                
+                
+                
+                
+                <!-- LISTS -->
+                <span id="suggestions_lists_content" class="tab-content hidden">
+                    <div id="header">
+                        <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" value="Car" /></span>
+                        <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="loadSuggestionsPage('next')">Siguiente</span>
+                        <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
+                        
+                        <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
+                        <span class="btn addNewList">
+                            Nueva lista
+                        </span>
+                        
+                    </div>
                     
-                    <!-- ALL SUGGESTIONS -->
-                    <span id="suggestions_lists_content" class="tab-content hidden">
-                        {% if lists %}
+                    {% if lists %}
+                        <div id="suggestion-list-lists">
                             {% for obj in lists %}
-                                <li id="listid-{{obj.id}}">{{obj.name}} ({{obj.keys|length}} sugerencias)</li>
+                                <div id="list_{{obj.id}}">
+                                    <div class="collapsed">{{obj.name}} ({{obj.keys|length}} sugerencias)</div>
+                                    <div class="expanded" style="display:none">
+                                        <p>Nombre: {{obj.name}}</p>
+                                        <p>Número de sugerencias: ({{obj.keys|length}} sugerencias)</p>
+                                    </div>
+                                </div>
                             {% endfor %}
-                        {% endif %}
-                    </span>
-                    <!-- END ALL SUGGESTIONS -->
+                        </div>
+                    {% endif %}
+                </span>
+                <!-- END LISTS -->
             </table>
         </div>
     </div>

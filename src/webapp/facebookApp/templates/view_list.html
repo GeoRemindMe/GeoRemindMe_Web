@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block extra_js %}
+        
+{%endblock%}
+
+{% block title %}View list{% endblock %}
+
+{% block goBack %}{%endblock%}    
+{% block body %}
+    
+    <p>Lista: {{list}}, nº de seguidores de la lista: {{list.count}}</p>
+    <p>He votado: {{has_voted}}</p>
+    <p>Contador de votos: {{vote_counter}}</p>
+    <p>Si el usuario es seguidor de la lista: {{user_follower}}</p>
+    <p>Sugerencias de la lista: {{suggestions}}</p>
+    <p>Comentarios: {{comments}}</p>
+    <p>Comentarios populares: {{top_comments}}</p>
+{%endblock%}

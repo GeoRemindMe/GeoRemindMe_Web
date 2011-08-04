@@ -1827,7 +1827,7 @@ input{
     }
     .nextBtn{
     }
-    .removeBtn{
+    .removeBtn, .addNewList{
         float:none;
     }
     .mvBtn{
