@@ -115,29 +115,18 @@
             $('.removable-sugestion-list li').click(function(){
                 var listID = $(this).attr('id').substring(5,$(this).attr('id').length)
                 var suggestionID = $(this).attr('value')
-                console.log("Eliminamos sugerencia "+suggestionID+" de la lista " + listID)
+                //console.log("Eliminamos sugerencia "+suggestionID+" de la lista " + listID)
                 
                 $.ajax({
                     type: "POST",
-                    url: "{% url delete_list %}",
+                    url: "{% url modify_suggestion_list %}",
                     data: {
                         list_id: listID,
-                        suggestions: suggestionList
+                        suggestions_del: [suggestionID]]
                     },
                     dataType:'json',
                     success: function(data){
-                        //Añadimos la lista al desplegable
-                        $("<li id=\"listid-"+data.id+"\">"+data.name+" ("+data.keys.length+" sugerencias)</li>").insertBefore('#new-list-btn');
-                        $('#listid-'+data.id).click(function(){submenuLiBehave(this)});
-                        
-                        //Reordenamos alfabéticamente la lista
-                        $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
-                            return $(a).text() > $(b).text() ? 1 : -1;
-                        });
-                        
-                        //Añadimos a la lista de sugerencias las nuevas listas en que se encuentran
-                        
-                        //Mostrar mensaje de éxito
+                        $(this).fadeOut()
                     }
                 });
             });
@@ -331,7 +320,7 @@
                             <ul class="submenu" style="display:none">
                                 {% if lists %}
                                     {% for obj in lists %}
-                                        <li id="listid-{{obj.id}}">{{obj.name}} ({{obj.keys|length}} sugerencias)</li>
+                                        <li id="listid-{{obj.id}}">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
                                     {% endfor %}
                                 {% endif %}
                                 <li id="new-list-btn">
@@ -465,7 +454,7 @@
                                     <div class="collapsed">{{obj.name}} ({{obj.keys|length}} sugerencias)</div>
                                     <div class="expanded" style="display:none">
                                         <p>Nombre: {{obj.name}}</p>
-                                        <p>Número de sugerencias: ({{obj.keys|length}} sugerencias)</p>
+                                        <p>Número de sugerencias: <span class="list-{{obj.id}}-counter"> sugerencias)</p>
                                     </div>
                                 </div>
                             {% endfor %}
