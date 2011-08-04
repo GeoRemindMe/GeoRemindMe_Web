@@ -308,7 +308,6 @@ def get_all_shared_list_suggestion(request):
 def view_list(request, id, template='webapp/view_list.html'):
     def load_suggestions_async(suggestions):
         suggestions_loaded = []
-        
         for suggestion in suggestions:
             suggestions_loaded.append({
                                     'instance': suggestion,
@@ -318,7 +317,7 @@ def view_list(request, id, template='webapp/view_list.html'):
                                   )
             if len(suggestions_loaded) > 7:
                     break
-            return suggestions_loaded
+        return suggestions_loaded
     list = ListSuggestion.objects.get_by_id_querier(id, request.user)
     if list is None:
         raise Http404
@@ -330,7 +329,7 @@ def view_list(request, id, template='webapp/view_list.html'):
     from geovote.models import Comment
     has_voted = Vote.objects.user_has_voted(request.user, list.key())
     vote_counter = Vote.objects.get_vote_counter(list.key())
-    comments = get_comments_list(request, list.id)
+    query_id, comments_async = get_comments_list(request, list.id, async=True)
     top_comments = Comment.objects.get_top_voted(list, request.user)
     user_follower = list.has_follower(request.user)
     return render_to_response(template, {'list': list, 
@@ -338,7 +337,7 @@ def view_list(request, id, template='webapp/view_list.html'):
                                          'vote_counter': vote_counter,
                                          'user_follower': user_follower,
                                          'suggestions':load_suggestions_async(suggestions_async),
-                                         'comments': comments,
+                                         'comments': Comment.objects.load_comments_from_async(query_id, comments_async, request.user),
                                          'top_comments': top_comments
                                          },
                               context_instance=RequestContext(request)

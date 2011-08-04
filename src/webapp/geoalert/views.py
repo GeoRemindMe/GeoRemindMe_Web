@@ -29,15 +29,19 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     if suggestion is None:
         raise Http404 
     from geovote.views import get_comments_event
-    comments = get_comments_event(request, suggestion.id)
+    query_id, comments_async = get_comments_event(request, suggestion.id, async=True)
     from geovote.models import Vote, Comment
+    has_voted = Vote.objects.user_has_voted(request.user, suggestion.key())
+    vote_counter = Vote.objects.get_vote_counter(suggestion.key())
+    user_follower = suggestion.has_follower(request.user)
+    top_comments = Comment.objects.get_top_voted(suggestion, request.user)
     return render_to_response(template, {
                                         'suggestion': suggestion,
-                                        'comments': comments,
-                                        'has_voted': Vote.objects.user_has_voted(request.user, suggestion.key()),
-                                        'vote_counter': Vote.objects.get_vote_counter(suggestion.key()),
-                                        'user_follower': suggestion.has_follower(request.user),
-                                        'top_comments': Comment.objects.get_top_voted(suggestion, request.user)
+                                        'comments': Comment.objects.load_comments_from_async(query_id, comments_async, request.user),
+                                        'has_voted': has_voted,
+                                        'vote_counter': vote_counter,
+                                        'user_follower': user_follower,
+                                        'top_comments': top_comments,
                                         },
                                context_instance=RequestContext(request))
 
@@ -271,10 +275,10 @@ def user_suggestions(request, template='webapp/suggestions.html'):
                                 wanted_user=request.user,
                                 page = 1, query_id = None
                                 )
-    
+    import string
     return  render_to_response(template, {'suggestions': suggestions,
                                           'counters': counters.next(),
-                                          'lists': [l for l in lists]
+                                          'lists': [l for l in lists],
                                           }, context_instance=RequestContext(request)
                                )
 

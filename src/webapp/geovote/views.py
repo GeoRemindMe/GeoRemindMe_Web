@@ -51,7 +51,7 @@ def do_comment_list(request, instance_id, msg):
     return comment
 
 
-def get_comments_event(request, instance_id, query_id=None, page=1):
+def get_comments_event(request, instance_id, query_id=None, page=1, async=False):
     """
     Obtiene los comentarios de cualquier evento visible
     
@@ -69,10 +69,10 @@ def get_comments_event(request, instance_id, query_id=None, page=1):
         event = Event.objects.get_by_id_querier(instance_id, request.user)
     if event is None:
         return None
-    return _get_comments(event, query_id=query_id, page=page, querier=request.user)
+    return _get_comments(event, query_id=query_id, page=page, querier=request.user, async=async)
 
 
-def get_comments_list(request, instance_id, query_id=None, page=1):
+def get_comments_list(request, instance_id, query_id=None, page=1, async=False):
     """
     Obtiene los comentarios de cualquier lista visible
     
@@ -90,10 +90,10 @@ def get_comments_list(request, instance_id, query_id=None, page=1):
         list = List.objects.get_by_id(instance_id)
     if list is None:
         return None
-    return _get_comments(list, query_id=query_id, page=page, querier=request.user)        
+    return _get_comments(list, query_id=query_id, page=page, querier=request.user, async=async)        
 
 
-def _get_comments(instance, query_id=None, page=1, querier=None):
+def _get_comments(instance, query_id=None, page=1, querier=None, async=False):
     """
     Obtiene los comentarios de cualquier objeto
     
@@ -106,10 +106,9 @@ def _get_comments(instance, query_id=None, page=1, querier=None):
         
     """
     if querier.is_authenticated():
-        comments = Comment.objects.get_by_instance(instance, query_id=query_id, page=page, querier=querier)
+        return Comment.objects.get_by_instance(instance, query_id=query_id, page=page, querier=querier, async=async)
     else:
-        comments = Comment.objects.get_by_instance(instance, query_id=query_id, page=page)
-    return comments
+        return Comment.objects.get_by_instance(instance, query_id=query_id, page=page, async=async)
 
 
 #===========================================================================

@@ -96,6 +96,25 @@ class CommentHelper(object):
                         'vote_counter': comment.votes,
                         }
                        for comment in comments]]
+        
+    def load_comments_from_async(self, query_id, comments_async, querier):
+        if querier is not None and not isinstance(querier, User):
+            raise TypeError
+        comments_loaded = []
+        for comment in comments_async:
+            comments_loaded.append({'id': comment.id,
+                                    'created': comment.created,
+                                    'modified': comment.modified, 
+                                    'msg': comment.msg,
+                                    'username': comment.user.username,
+                                    'instance': comment.instance if comment.instance is not None else None,
+                                    'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                                    'vote_counter': comment.votes,
+                                    }
+                                  )
+            if len(comments_loaded) > 7:
+                    break
+        return [query_id, comments_loaded]
     
     def get_by_id_user(self, id, user):
         try:
