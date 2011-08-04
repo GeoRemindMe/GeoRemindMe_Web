@@ -133,7 +133,7 @@ class ListSuggestion(List, Visibility):
         if list is None:
             list = user.listsuggestion_set.filter('name =', name).get()
         if list is not None:  # la lista con ese nombre ya existe, la editamos
-            list.update(name=name, description=description, instances=instances, instances_del=[], vis=vis )
+            list.update(name=name, description=description, instances=instances, instances_del=instances_del, vis=vis )
             return list
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
         keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
@@ -161,10 +161,11 @@ class ListSuggestion(List, Visibility):
             self.name = name
         if description is not None:
             self.description = description
-        try:
-            [self.keys.remove(db.Key.from_path('Event', int(instance))) for instance in instances_del]
-        except:
-            pass
+        for deleted in instances_del:
+            try:
+                self.keys.remove(db.Key.from_path('Event', int(deleted)))
+            except:
+                pass
         keys = set(self.keys)
         keys |= set([db.Key.from_path('Event', int(instance)) for instance in instances])
         self.keys = [k for k in keys]
