@@ -136,9 +136,9 @@
                             $(this).remove();
                             
                             //Actualizamos el contador de la lista
-                            var counterClass='.list-'+suggestionID+'-counter';
-                            var counter=parseInt($(counterClass).text())
-                            $(counterClass).text(counter--);
+                            var counterClass='.list-'+listID+'-counter';
+                            var counter=parseInt($($(counterClass)[0]).text())
+                            $(counterClass).text(--counter);
                         })
                         
                     }
@@ -467,10 +467,10 @@
                         <div id="suggestion-list-lists">
                             {% for obj in lists %}
                                 <div id="list_{{obj.id}}">
-                                    <div class="collapsed">{{obj.name}} ({{obj.keys|length}} sugerencias)</div>
+                                    <div class="collapsed">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</div>
                                     <div class="expanded" style="display:none">
                                         <p>Nombre: {{obj.name}}</p>
-                                        <p>Número de sugerencias: <span class="list-{{obj.id}}-counter"> sugerencias)</p>
+                                        <p>Número de sugerencias: <span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</p>
                                     </div>
                                 </div>
                             {% endfor %}
