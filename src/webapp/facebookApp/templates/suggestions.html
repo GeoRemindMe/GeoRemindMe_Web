@@ -115,6 +115,7 @@
             $('.removable-sugestion-list li').click(function(){
                 var listID = $(this).attr('id').substring(5,$(this).attr('id').length)
                 var suggestionID = $(this).attr('value')
+                var domElement=$(this);
                 //console.log("Eliminamos sugerencia "+suggestionID+" de la lista " + listID)
                 
                 $.ajax({
@@ -126,7 +127,20 @@
                     },
                     dataType:'json',
                     success: function(data){
-                        $(this).fadeOut()
+
+                        
+                        //Ocultamos y eliminamos
+                        domElement.fadeOut(function(){ 
+                            if($('#suggestion_'+suggestionID+' .removable-sugestion-list').children().length==1)
+                                $('#suggestion_'+suggestionID+' .empty-msg').fadeIn('slow');
+                            $(this).remove();
+                            
+                            //Actualizamos el contador de la lista
+                            var counterClass='.list-'+suggestionID+'-counter';
+                            var counter=parseInt($(counterClass).text())
+                            $(counterClass).text(counter--);
+                        })
+                        
                     }
                 });
             });
@@ -172,7 +186,7 @@
                     dataType:'json',
                     success: function(data){
                         //Añadimos a la lista de sugerencias las nuevas listas en que se encuentran
-                        console.log("Sugerencias añadidas con éxito");
+                        //console.log("Sugerencias añadidas con éxito");
                         //Mostrar mensaje de éxito
                     }
                 });
@@ -384,15 +398,17 @@
                                         
                                         <dt>Listas:</dt>
                                         <dd>
-                                            {% if k.lists|length > 0 %}
-                                                <ul class="removable-sugestion-list">
+                                            
+                                                <ul class="removable-sugestion-list" {% if k.lists|length = 0 %}style="display:none"{% endif %}>
                                                     {% for obj in k.lists %}
                                                         <li id="list_{{obj.id}}" class="removable" value="{{k.id}}">{{obj.name}}</li>
                                                     {% endfor %}
                                                 </ul>
-                                            {% else %}
-                                                <em>Para añadir esta sugerencia a una lista contrae la sugerencia</em>
-                                            {% endif %}
+                                            
+                                                <em class="empty-msg" {% if k.lists|length > 0 %}style="display:none"{% endif %}>
+                                                    Para añadir esta sugerencia a una lista contrae la sugerencia
+                                                </em>
+                                            
                                         </dd>
                                         
                                         <dt>Fecha de la última modificación:</dt>
