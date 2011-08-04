@@ -82,7 +82,7 @@
                     
                     $.ajax({
                         type: "POST",
-                        url: "{% url add_suggestion_list %}",
+                        url: "{% url modify_suggestion_list %}",
                         data: {
                             name: $(this).find('input').val(),
                             suggestions: suggestionList
