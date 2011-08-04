@@ -2185,4 +2185,48 @@ input{
 		border-bottom: 1px solid #DDDDDD;
 		padding-bottom: 5px;
 	}
+	
+	.save-suggestion {
+		background-image: url("/static/facebookApp/img/sprite_follow.png");
+		background-repeat: no-repeat;
+		display: none;
+		cursor: pointer;
+		float: right;
+	  	height: 15px;
+	  	width: 15px;
+	}
+	
+	.save-suggestion a {
+		display: none;
+	}
+	
+	.like-suggestion {
+		background-image: url("/static/facebookApp/img/like_min.png");
+		background-repeat: no-repeat;
+		cursor: pointer;
+		float: right;
+	  	height: 15px;
+	  	width: 15px;
+		background-position: 0px;
+		margin-right: 5px;
+	}
+	
+	.like-suggestion a {
+		display: none;
+	}
+	
+	.map-suggestion {
+		background-image: url("/static/facebookApp/img/map-pointer.png");
+		background-repeat: no-repeat;
+		cursor: pointer;
+		float: right;
+	  	height: 15px;
+	  	width: 15px;
+		background-position: 0px;
+		margin-right: 5px;
+	}
+	
+	.map-suggestion a {
+		display: none;
+	}
     
