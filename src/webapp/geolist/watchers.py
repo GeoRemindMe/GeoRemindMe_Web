@@ -37,7 +37,7 @@ def modified_list(sender, **kwargs):
     else:
         return
     timeline.put()
-list_modified.connect(modified_list)
+#list_modified.connect(modified_list)
 
 
 def deleted_list(sender, **kwargs):
