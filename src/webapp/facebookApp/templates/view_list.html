@@ -10,11 +10,23 @@
 {% block goBack %}{%endblock%}    
 {% block body %}
     
-    <p>Lista: {{list}}, nº de seguidores de la lista: {{list.count}}</p>
-    <p>He votado: {{has_voted}}</p>
-    <p>Contador de votos: {{vote_counter}}</p>
-    <p>Si el usuario es seguidor de la lista: {{user_follower}}</p>
-    <p>Sugerencias de la lista: {{suggestions}}</p>
-    <p>Comentarios: {{comments}}</p>
+    <h1>{{list}}</h1>
+	<div id="suggestion-info">
+		<p>Descripción: {{list.description}}</p>
+	    <p>Autor: <a href="#">{{list.user}}</a></p>
+	    <p>Etiquetas: <a href="#">Bares</a> | <a href="#">Restaurantes</a> | <a href="#">Almería</a></p>
+	</div>
+	<div id="suggestion-aside">
+		<h2>Seguir</h2>
+	</div>
+	<h2 class="clear-left">Sugerencias</h2>
+	
+		<ul id="suggestion-list">
+			{% for sugg in suggestions %}
+			<li>{{sugg.instance.name}} <br> Lugar: {{sugg.instance.poi}}</li>
+			{% endfor %}
+		</ul>
+	
+    <h2>Comentarios</h2> <p>{{comments}}</p>
     <p>Comentarios populares: {{top_comments}}</p>
 {%endblock%}

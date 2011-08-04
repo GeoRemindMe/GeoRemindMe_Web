@@ -2148,4 +2148,41 @@ input{
     .dislike-suggestion:hover{
         background-image: url("/static/facebookApp/img/icons/dislike.png");
     }
+
+	/****************************
+     *      
+     *  View list details
+     * 
+     ***************************/
+	#suggestion-info {
+		width: 435px;
+		float: left;
+		padding-right: 15px;
+	}
+	
+	#suggestion-aside {
+		width: 100px;
+		float: right;
+	}
+	
+	.clear-left {
+		clear: left;
+	}
+	
+	#suggestion-list {
+		list-style: none;
+		padding-left: 0;
+	}
+	
+	#suggestion-list li{
+		border-top: 1px solid #DDDDDD;
+		padding-top: 5px;
+		margin-bottom: 5px;
+		line-height: 1.5em;
+	}
+	
+	#suggestion-list li:last-child {
+		border-bottom: 1px solid #DDDDDD;
+		padding-bottom: 5px;
+	}
     
