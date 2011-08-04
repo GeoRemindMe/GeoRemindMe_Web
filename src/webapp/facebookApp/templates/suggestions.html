@@ -107,14 +107,46 @@
                     $("#new-list-btn span#text").css('display','inline-block')
                     $("#new-list-btn span#new-list").css('display','none')
                     $("#new-list-btn span#new-list").find('input').val("");
-                }
+                }                
+            });
+            
+            
+            //On expanded view of a suggestion--> Remove suggestion from a list
+            $('.removable-sugestion-list li').click(function(){
+                var listID = $(this).attr('id').substring(5,$(this).attr('id').length)
+                var suggestionID = $(this).attr('value')
+                console.log("Eliminamos sugerencia "+suggestionID+" de la lista " + listID)
                 
-                
-                $('.addNewList').click(function(){
-                    
+                $.ajax({
+                    type: "POST",
+                    url: "{% url delete_list %}",
+                    data: {
+                        list_id: listID,
+                        suggestions: suggestionList
+                    },
+                    dataType:'json',
+                    success: function(data){
+                        //Añadimos la lista al desplegable
+                        $("<li id=\"listid-"+data.id+"\">"+data.name+" ("+data.keys.length+" sugerencias)</li>").insertBefore('#new-list-btn');
+                        $('#listid-'+data.id).click(function(){submenuLiBehave(this)});
+                        
+                        //Reordenamos alfabéticamente la lista
+                        $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
+                            return $(a).text() > $(b).text() ? 1 : -1;
+                        });
+                        
+                        //Añadimos a la lista de sugerencias las nuevas listas en que se encuentran
+                        
+                        //Mostrar mensaje de éxito
+                    }
                 });
             });
             
+            
+            //On LISTS tab, add new list
+            $('.addNewList').click(function(){
+               console.log("Añadimos nueva lista") 
+            });
             
             $('#new-list-btn').click(function(){
                 if($("#new-list-btn span#text").css('display')=="inline-block"){
@@ -143,7 +175,7 @@
                 
                 $.ajax({
                     type: "POST",
-                    url: "{% url add_suggestion_list %}",
+                    url: "{% url modify_suggestion_list %}",
                     data: {
                         list_id: addToList,
                         suggestions: suggestions
@@ -361,16 +393,18 @@
                                         
                                         {% endif %}
                                         
-                                        {% if k.lists|length >0 %}
-                                        <dt>Listas</dt>
+                                        <dt>Listas:</dt>
                                         <dd>
-                                            <ul>
-                                                
-                                                <li id="lista1" class="removable">Lista 1</li>
-                                                <li id="lista2" class="removable">Lista 2</li>
-                                            </ul>
+                                            {% if k.lists|length > 0 %}
+                                                <ul class="removable-sugestion-list">
+                                                    {% for obj in k.lists %}
+                                                        <li id="list_{{obj.id}}" class="removable" value="{{k.id}}">{{obj.name}}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% else %}
+                                                <em>Para añadir esta sugerencia a una lista contrae la sugerencia</em>
+                                            {% endif %}
                                         </dd>
-                                        {% endif %}
                                         
                                         <dt>Fecha de la última modificación:</dt>
                                         <dd>{{k.modified}}</dd>
