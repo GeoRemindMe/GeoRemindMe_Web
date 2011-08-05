@@ -102,6 +102,9 @@
                     //las nuevas listas en las que se encuentra
                     updateSuggestions(data);
                     
+                    //Actualizamos el contador de la lista
+                    updateCounter(data.id,data.keys.length);
+                    
                     //Mostrar mensaje de éxito
                     
                     
@@ -195,7 +198,7 @@ function removableFromList(obj){
                 $(obj).remove();
                 
                 //Actualizamos el contador de la lista
-                updateCounter(listID,-1);
+                updateCounter(listID,data.keys.length);
             })
             
         }
@@ -233,7 +236,7 @@ function submenuLiBehave(obj){
                 
                 
                 //Actualizamos el contador de la lista
-                updateCounter(data.id,suggestions);
+                updateCounter(data.id,data.keys.length);
                 
                 //console.log("Sugerencias añadidas con éxito");
                 //Mostrar mensaje de éxito
@@ -289,10 +292,11 @@ function removeSuggestions(){
 }
 
 function updateCounter(listID,val){
-    var counterClass='.list-'+listID+'-counter';
-    var counter=parseInt($($(counterClass)[0]).text())
-    counter=counter+val;
-    $(counterClass).text(counter);
+    counterClass='.list-'+listID+'-counter';
+//    counter=parseInt($($(counterClass)[0]).text())
+    //counter=counter+val;
+    //if(counter>=0)
+        $(counterClass).text(val);
 }
 
 /**
