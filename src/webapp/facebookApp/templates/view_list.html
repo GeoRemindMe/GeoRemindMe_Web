@@ -51,6 +51,9 @@
     <textarea id="msg-to-list"></textarea>
     <span class="btn" onclick="sendComment(this);">Comentar</span>
 	
-    <h2>Comentarios</h2> <p>{{comments}}</p>
+    <h2>Comentarios</h2>
+	{% for com in comments %}
+		<p>comentario y tal</p>
+	{% endfor %}
     <p>Comentarios populares: {{top_comments}}</p>
 {%endblock%}
