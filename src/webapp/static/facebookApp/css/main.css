@@ -2259,4 +2259,18 @@ input{
 	.map-suggestion a {
 		display: none;
 	}
+	
+	ul#suggestion-list li a.sugg-link{
+        text-decoration:none;
+        color:black;
+		font-size: 1.2em;
+    }
+    ul#suggestion-list li a.sugg-link:hover{
+        text-decoration:underline;
+    }
+
+	.sugg-place {
+		color: #555555;
+		font-weight: bold;
+	}
     
