@@ -35,9 +35,9 @@
             });
             
             $('#filter-likes').click(function(){
-                $(':regex(class,(msg-125|msg-305))').show();
-                //Ocultamos aquellos que no son 125 ni 305
-                $('#chronology li').not('.msg-125').not('.msg-305').hide()  
+                $(':regex(class,(msg-125|msg-305|msg-355))').show();
+                //Ocultamos aquellos que no son 125 ni 355
+                $('#chronology li').not('.msg-125').not('.msg-305').not('.msg-355').hide()  
             });
                 
             $('#filter-comments').click(function(){
@@ -92,16 +92,13 @@
             
             <ul id="tabMenu" class="clear">
                 <li class="clear-box">Ver:</li>
-                <li id="no-filter" class="active">Todo (<span id="all-counter"></span>)</li>
-                <li id="filter-suggestions">Sugerencias (<span id="suggestions-counter"></span>)</li>
-                <li id="filter-lists">Listas (<span id="lists-counter"></span>)</li>
-                <li id="filter-likes">Valoraciones (<span id="likes-counter"></span>)</li>
-                <li id="filter-comments">Comentarios (<span id="comments-counter"></span>)</li>
+                <li id="no-filter" class="active">Todo <span id="all-counter"></span></li>
+                <li id="filter-suggestions">Sugerencias <span id="suggestions-counter"></span></li>
+                <li id="filter-lists">Listas <span id="lists-counter"></span></li>
+                <li id="filter-likes">Valoraciones <span id="likes-counter"></span></li>
+                <li id="filter-comments">Comentarios <span id="comments-counter"></span></li>
                 
             </ul>
-            {% for obj in user.listsuggestion_set %}
-                {{obj.name}}, {{obj.id}}, {{obj.keys|length}}, 
-            {% endfor %}
             <ul id="chronology">
             {% for obj in chronology.1 %}
                 {% if not obj.msg_id = 100 or not obj.is_private %}

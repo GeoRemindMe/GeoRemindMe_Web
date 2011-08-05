@@ -255,7 +255,9 @@ GRM.removable = function() {
                         }else if(type=="suggestion" || type=="suggestion/list" || type=="person")
                             $(this).parent().parent().fadeOut('slow').remove()
                         
-                        
+                        //Si estamos en chronology actualizamos los contadores de los tabs
+                        if($('ul#chronology').length>0)
+                            updateTabCounters();
                     
                             
                     }
@@ -352,7 +354,7 @@ jQuery.fn.removable = GRM.removable;
 
 GRM.init = function() {
         $(".like-dislike").like();
-        //$(".remember-forget").remember(); <-- Now on chronology (Debugging)
+        $(".remember-forget").remember(); //<-- Now on chronology (Debugging)
         $(".removable").removable();
     }
 

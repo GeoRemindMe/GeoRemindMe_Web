@@ -379,15 +379,14 @@ jQuery.fn.sortElements = (function(){
 
         <h1>Baúl de sugerencias</h1>
         <ul id="tabMenu">
-            <li id="your_suggestions" class="active">Tus sugerencias ({{user.counters.suggested}})</li>
-            <li id="all_suggestions">Todas</li>
+            <li id="your_suggestions" class="active">Sugerencias ({{user.counters.suggested}})</li>
             <li id="suggestions_lists">Listas ({{lists|length}})</li>
         </ul>
         <div id="content">
                 <!-- YOUR SUGGESTIONS -->
                 <span id="your_suggestions_content" class="tab-content">
                     <div id="header">
-                        <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" value="Car" /></span>
+                        <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" /></span>
                         <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="loadSuggestionsPage('next')">Siguiente</span>
                         <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
                         
@@ -434,30 +433,32 @@ jQuery.fn.sortElements = (function(){
                                         <dt>Nombre:</dt>
                                         <dd class="editable">{{k.name}}</dd>
                                         
-                                        {% if k.description%}
-                                            <dt>Descripción:</dt>
-                                            <dd>{{k.description}}</dd>
-                                        {% endif %}
+                                        
+                                        <dt>Descripción:</dt>
+                                        <dd class="editable">{%if k.description %}{{k.description}} {% else %}<em>Sin descripción</em>{% endif %}</dd>
                                         
                                         <dt>Lugar:</dt>
                                         <dd>
-                                            <a class="placeName" href="">{{k.poi.name}}</a> ({{k.poi.address}}) 
+                                            <a class="placeName" href="{% url fb_view_place k.poi.slug%}">{{k.poi.name}}</a> ({{k.poi.address}}) 
                                             <a href="{% url fb_edit_suggestions k.id %}">Editar</a>
                                         </dd>
                                         
+                                        
+                                        <dt>Fecha:</dt>
                                         {% if k.date_starts != None or k.date_ends != None%}
-                                            <dt>Fecha:</dt>
-                                        
-                                            <dd class="editable">
-                                                {% if k.date_starts != None %}
-                                                    {{k.date_starts}}
-                                                {% endif %}
-                                                {% if k.date_ends != None %}
-                                                    {{k.date_ends}}
-                                                {% endif %}    
-                                            </dd>
-                                        
+                                        <dd class="editable">
+                                            {% if k.date_starts != None %}
+                                                {{k.date_starts}}
+                                            {% endif %}
+                                            {% if k.date_ends != None %}
+                                                {{k.date_ends}}
+                                            {% endif %}    
+                                        </dd>
                                         {% endif %}
+                                        <dd class="editable">
+                                            <em>Sin fecha</em>
+                                        </dd>
+                                        
                                         
                                         <dt>Listas:</dt>
                                         <dd>
@@ -487,10 +488,13 @@ jQuery.fn.sortElements = (function(){
                                     </p>
                                     <p class="big">Estadísticas:</p>
                                     <dl>
-                                        <dt>Fecha de la última modificación:</dt>
+                                        <dt>Última modificación:</dt>
                                         <dd>{{k.modified}}</dd>
                                         
-                                        <dt>Personas a las que les gusta: </dt>
+                                        <dt>Valoraciones recibidas: </dt>
+                                        <dd>{{k.counters}}</dd>
+                                        
+                                        <dt>Personas que han guardado la sugerencia: </dt>
                                         <dd>{{k.counters.followers}}</dd>
                                         
                                         <dt>Comentarios recibidos:</dt>
