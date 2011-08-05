@@ -255,7 +255,9 @@ GRM.removable = function() {
                         }else if(type=="suggestion" || type=="suggestion/list" || type=="person")
                             $(this).parent().parent().fadeOut('slow').remove()
                         
-                        
+                        //Si estamos en chronology actualizamos los contadores de los tabs
+                        if($('ul#chronology').length>0)
+                            updateTabCounters();
                     
                             
                     }
