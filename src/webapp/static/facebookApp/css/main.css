@@ -2273,4 +2273,8 @@ input{
 		color: #555555;
 		font-weight: bold;
 	}
+	
+	#msg-to-list {
+		width: 100%;
+	}
     
