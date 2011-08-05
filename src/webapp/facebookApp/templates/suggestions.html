@@ -12,15 +12,11 @@
         $(document).ready(function(){    
     //Asignamos comportamiento ONCLICK a cada fila
     $('.maximize-minimize').toggle(function(){
-            $(this).parent().find('div.collapsed').slideToggle('fast','swing',function(){
-                $(this).parent().find('div.expanded').slideToggle('fast','swing')    
-            })
+            $(this).parent().find('div.expanded').slideDown('fast');
             $(this).removeClass('suggestionCollapsed');
             $(this).addClass('suggestionExpanded');
-        },function(){
-            $(this).parent().find('div.expanded').slideToggle('fast','swing',function(){
-                $(this).parent().find('div.collapsed').slideToggle('fast','swing')
-            })
+        },function() {
+            $(this).parent().find('div.expanded').slideUp('fast'); 
             $(this).removeClass('suggestionExpanded');
             $(this).addClass('suggestionCollapsed');
     });
