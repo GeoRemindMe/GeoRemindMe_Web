@@ -39,6 +39,7 @@ urlpatterns = patterns('',
     (r'', include('geouser.urls')),
     (r'', include('geoalert.urls')),
     (r'', include('geolist.urls')),
+    (r'', include('geotags.urls')),
 )
 
 

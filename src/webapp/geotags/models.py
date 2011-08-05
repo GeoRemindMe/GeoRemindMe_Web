@@ -82,6 +82,10 @@ class Taggable(db.Model):
         self.__tags = Tag.get(self._tags_list)
         return self.__tags
     
+    @property
+    def tags(self):
+        return [tag.name for tag in self._tags]
+        
     def _tags_setter(self, tags):
         from types import UnicodeType, StringType, ListType
         """Crea la lista o añade el tag"""
