@@ -108,13 +108,12 @@ class EventHelper(object):
                 return event
         return None
     
-    def get_by_tag_querier(self, tagname, querier, page=1, query_id=None):
+    def get_by_tag_querier(self, tagInstance, querier, page=1, query_id=None):
         if not isinstance(querier, User):
             raise TypeError()
         from geotags.models import Tag
-        tagInstance = Tag.objects.get_by_name(tagname)
-        if tagInstance is None:
-            return None
+        if not isinstance(tagInstance, Tag):
+            raise TypeError
         events = self._klass.all().filter('_tags_list =', tagInstance.key())
         p = PagedQuery(events, id = query_id)
         events_lists = []
@@ -129,6 +128,16 @@ class EventHelper(object):
         if len(events_lists) != 0:
             return [p.id, events_lists] 
         return None
+    
+    def get_by_tag_owner(self, tagInstance, owner, page=1, query_id=None):
+        if not isinstance(owner, User):
+            raise TypeError()
+        from geotags.models import Tag
+        if not isinstance(tagInstance, Tag):
+            raise TypeError
+        events = self._klass.all().filter('_tags_list =', tagInstance.key()).filter('user =', owner)
+        p = PagedQuery(events, id = query_id)
+        return [p.id, p.fetch_page(page)] 
     
     def get_by_last_sync(self, user, last_sync):
         '''
@@ -317,6 +326,15 @@ class SuggestionHelper(EventHelper):
             setattr(event, 'lists', lists)
             return event
         return None
+    
+    def get_by_user_following(self, user, page=1, query_id=None):
+        if not isinstance(user, User):
+            raise TypeError
+        from models_indexes import SuggestionFollowersIndex
+        q = SuggestionFollowersIndex.all().filter('keys =', user.key())
+        p = PagedQuery(q, id = query_id)
+        return [index.parent() for index in p.fetch_page(page)]
+        
 
 class AlertSuggestionHelper(AlertHelper):
     _klass = AlertSuggestion
