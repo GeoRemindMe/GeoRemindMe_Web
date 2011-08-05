@@ -31,7 +31,8 @@
 	<ul id="suggestion-list">
 		{% for sugg in suggestions %}
 		<li>
-			{{sugg.instance.name}} <br> Lugar: {{sugg.instance.poi.address}}
+			<a class="sugg-link" href="{% url fb_view_suggestion sugg.instance.slug %}">{{sugg.instance.name}}</a> <br> En <span class="sugg-place">{{sugg.instance.poi.name}}</span>
+			
 			<div class="save-suggestion" value="104" type="suggestion">
 				<a href="#">Add</a>
 			</div>
@@ -46,22 +47,6 @@
 		{% endfor %}
 	</ul>
 	
-<!--
-	<script type="text/javascript">
-		$('#suggestion-list li').hover(
-		  function () {
-		    $(this).find('div.save-suggestion').css({'display': 'inline'});
-			$(this).find('div.like-suggestion').css({'display': 'inline'});
-			$(this).find('div.map-suggestion').css({'display': 'inline'});
-		  },
-		  function () {
-		    $(this).find('div.save-suggestion').css({'display': 'none'});
-			$(this).find('div.like-suggestion').css({'display': 'none'});
-			$(this).find('div.map-suggestion').css({'display': 'none'});
-		  }
-		);
-	</script>
--->
 	
     <h2>Comentarios</h2> <p>{{comments}}</p>
     <p>Comentarios populares: {{top_comments}}</p>
