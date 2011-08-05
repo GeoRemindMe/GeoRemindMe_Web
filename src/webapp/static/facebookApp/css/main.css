@@ -1684,11 +1684,34 @@ input{
             border:0;
             cursor:default;
         }
+        div#content div.expanded{
+            background-color: #F5F5F5;
+            border-top: 1px solid #CCCCCC;
+            margin: 0;
+            
+        }
             div#content div.expanded dl{
-                margin: 0;
-                padding: 1em;
-                background-color: #F5F5F5;
-                border-top: 1px solid #CCCCCC;
+                padding: 0 1em;
+            }
+            div#content div.expanded p{
+                margin: 0 1em;
+                padding: 0;
+            }
+            div#content div.expanded ul.share-suggestion{
+                margin:0;
+                padding:0;
+                list-style:none;
+            }
+            div#content div.expanded ul.share-suggestion li{
+                display:inline-block;
+                
+            }
+            div#content div.expanded p.big{
+                border-bottom: 1px dotted #CCCCCC;
+                display: block;
+                font-size: 1.3em;
+                margin: 0 0.7em;
+                padding: 0;
             }
             div#content div.expanded dl:after{
                 clear: both;
@@ -1830,21 +1853,26 @@ input{
     .removeBtn, .addNewList{
         float:none;
     }
-    .mvBtn{
+    .dropDrownBtn{
         float:none;
     }
-    #suggestions #content span.mvBtn { 
+    #suggestions #content span.dropDrownBtn { 
         background: url("/static/webapp/img/dropdownmenu.png") no-repeat scroll 96% 5px transparent !important;
         list-style: none outside none;
         padding-right: 15px;
     }
-    .mvBtn li { float:left; background-image:url(nav_li_bg.png); background-repeat:no-repeat; background-position:right; }
+    .dropDrownBtn li { 
+        border:0;
+        line-height: 1.2em;
+        margin: 0;
+        padding: 0.5em;
+    }
 /*
-    .mvBtn li a { display:block; padding:7px 10px; text-decoration:none; color:#CCCCCC; font-weight:bold; }
-    .mvBtn li a:hover { color:#FFFFFF; }
+    .dropDrownBtn li a { display:block; padding:7px 10px; text-decoration:none; color:#CCCCCC; font-weight:bold; }
+    .dropDrownBtn li a:hover { color:#FFFFFF; }
 */
     /* Submenu */
-    .mvBtn ul.submenu { 
+    .dropDrownBtn ul.submenu,.dropDrownBtn ul { 
         background-color: white;
         border: 1px solid #CCCCCC;
         clear: both;
@@ -1855,12 +1883,12 @@ input{
         text-align: left;
         width: auto;
     }
-    .mvBtn ul.submenu li { 
+    .dropDrownBtn ul.submenu li { 
         background-image: none;
         float: none;
         padding: 4px;
     }
-    .mvBtn ul.submenu li:hover{
+    .dropDrownBtn ul.submenu li:hover{
         background-color:#EEEEEE;
     }
     
