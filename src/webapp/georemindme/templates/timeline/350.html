@@ -14,7 +14,7 @@ Mensaje nº 350<br>
     <!--Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar-->
     
     {% if obj.instance.user.username = request.user.username %}
-        <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
+        <div class="removable" value="{{obj.instance.id}}" type="suggestion/list"><a href="#">Remove</a></div>
         <span class="small-text">has creado una nueva lista de sugerencias: </span>
     {% else %}
         <span class="small-text"><a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ha creado una nueva lista de sugerencias: </span>
@@ -35,7 +35,7 @@ Mensaje nº 350<br>
         
         {% if not obj.is_private %}
             | 
-            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
+            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="list">
                 <span class="dislike">
                     <span class="hoverlink">Ya no me gusta</span> 
                     <span class="text like-text increase">{{obj.vote_counter}}</span> personas

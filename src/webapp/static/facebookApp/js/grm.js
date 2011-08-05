@@ -222,7 +222,7 @@ GRM.removable = function() {
         $(this).click(function(){
             var id = $(this).attr('value'), type = $(this).attr('type');
             
-            var data = { eventid:id,  comment_id:id};
+            var data = { eventid:id,  comment_id:id, list_id:id};
             
             $.ajax({
                 type: "POST",
@@ -244,10 +244,13 @@ GRM.removable = function() {
                                 $(this).parent().parent().next().addClass('hidden');
                                 
                             }
-                            $(this).parent().remove();
+                            $(this).parent().fadeOut('slow').remove();
                             
-                        }else if(type=="suggestion")
-                            $(this).parent().parent().remove()
+                        }else if(type=="suggestion" || type=="suggestion/list" )
+                            $(this).parent().parent().fadeOut('slow').remove()
+                        
+                    
+                            
                     }
                 },
                 error:function(){
