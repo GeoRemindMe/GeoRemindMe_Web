@@ -222,11 +222,17 @@ GRM.removable = function() {
         $(this).click(function(){
             var id = $(this).attr('value'), type = $(this).attr('type');
             
-            var data = { eventid:id,  comment_id:id, list_id:id};
+            var custom_url;
+            if(type=="person")
+                custom_url="/ajax/contacts/block/";
+            else
+                custom_url="/ajax/delete/"+type+"/";
+            
+            var data = { eventid:id,  comment_id:id, list_id:id, userid:id};
             
             $.ajax({
                 type: "POST",
-                url: "/ajax/delete/"+type+"/",
+                url: custom_url,
                 data: data,
                 dataType:'json',
                 context:$(this),

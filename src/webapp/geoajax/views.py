@@ -349,7 +349,7 @@ def block_contacts(request):
     if request.user.is_authenticated():
         userid = request.POST['userid']
         if userid is not None:
-            request.user.settings.blocked_friends_sug.add(int(userid))
+            request.user.settings.blocked_friends_sug.append(int(userid))
             return True
     return False
 #===============================================================================
