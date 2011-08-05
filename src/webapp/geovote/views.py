@@ -146,7 +146,7 @@ def do_vote_list(request, instance_id, vote=1):
     """
     vote = int(vote)
     from geolist.models import List
-    list = List.objects.get_by_id_querier(id=instance_id, user=request.user)
+    list = List.objects.get_by_id_querier(id=instance_id, querier=request.user)
     if list is None:
         return None
     vote = Vote.do_vote(user=request.user, instance=list, count=vote)
