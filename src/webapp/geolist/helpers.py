@@ -52,6 +52,28 @@ class ListHelper(object):
         list = self._klass.get_by_id(id)
         return list
     
+    def get_by_id_querier(self, id, querier):
+        '''
+        Devuelve la lista publica con ese ID
+        
+            :param id: identificador de la lista
+            :type id: :class:`Integer`
+            :returns: None o :class:`geolist.models.List`
+        '''
+        if not isinstance(querier, User):
+            raise TypeError()
+        list = self.get_by_id(id)
+        if list is None:
+            return None
+        if list.user.key() == querier.key():
+            return list
+        if hasattr(list, '_vis'):
+            if list._is_public():
+                return list
+            elif list._is_shared() and list.user_invited(querier):
+                return list
+        return None
+    
     def get_by_id_user(self, id, user = None):
         '''
         Devuelve la lista con ese ID y el usuario. 
