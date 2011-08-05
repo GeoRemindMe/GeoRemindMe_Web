@@ -31,7 +31,7 @@
 	<ul id="suggestion-list">
 		{% for sugg in suggestions %}
 		<li>
-			{{sugg.instance.name}} <br> Lugar: {{sugg.instance.poi}}
+			{{sugg.instance.name}} <br> Lugar: {{sugg.instance.poi.address}}
 			<div class="save-suggestion" value="104" type="suggestion">
 				<a href="#">Add</a>
 			</div>
