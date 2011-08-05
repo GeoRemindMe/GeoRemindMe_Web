@@ -42,12 +42,11 @@ def do_comment_list(request, instance_id, msg):
         :param msg: mensaje del comentario
         :type msg: :class:`string`
     """
-    user = request.session['user']
     from geolist.models import List
-    list = List.objects.get_by_id_querier(id=instance_id, user=user)
+    list = List.objects.get_by_id_querier(id=instance_id, querier=request.user)
     if list is None:
         return None
-    comment = Comment.do_comment(user=user, instance=list, msg=msg)
+    comment = Comment.do_comment(user=request.user, instance=list, msg=msg)
     return comment
 
 

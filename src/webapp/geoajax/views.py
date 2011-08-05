@@ -524,11 +524,11 @@ def do_comment_list(request):
     """
     instance_id = request.POST['instance_id']
     msg = request.POST['msg']
-    comment = geovote.do_comment_list(request, instance_id, msg),
-    
-    return HttpResponse(simplejson.dumps(comment),
+    comment = geovote.do_comment_list(request, instance_id, msg)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(comment, cls=JSONEncoder),
                         mimetype="application/json")
-
+    
 @ajax_request
 def get_comments_list(request):
     """
