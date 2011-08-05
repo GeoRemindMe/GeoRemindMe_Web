@@ -372,3 +372,11 @@ jQuery.expr[':'].regex = function(elem, index, match) {
         regex = new RegExp(matchParams.join('').replace(/^\s+|\s+$/g,''), regexFlags);
     return regex.test(jQuery(elem)[attr.method](attr.property));
 }
+
+
+function sendComment(btn,elemType,id) {
+    if (GRM.sendComment(elemType,$('#msg').val(),id,function(){$(btn).text("Comentar");$(btn).removeClass("waiting");})){
+        $(this).text("Enviando")
+        $(this).addClass("waiting")
+    }
+}

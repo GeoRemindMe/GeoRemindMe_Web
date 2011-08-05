@@ -2004,7 +2004,7 @@ input{
     
     #view-suggestion .dontLikeSuggestion.likebtn.btn{
     }
-    #view-suggestion textarea{
+    #view-suggestion textarea,#view-list textarea {
         width:100%
     }
     
@@ -2294,7 +2294,4 @@ input{
 		font-weight: bold;
 	}
 	
-	#msg-to-list {
-		width: 100%;
-	}
     

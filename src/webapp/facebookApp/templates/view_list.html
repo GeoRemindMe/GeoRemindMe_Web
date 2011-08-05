@@ -57,8 +57,8 @@
 	</ul>
 	
 	<h2>¿Tienes algún comentario para esta lista?</h2>
-    <textarea id="msg-to-list"></textarea>
-    <span class="btn" onclick="sendComment(this);">Comentar</span>
+    <textarea id="msg"></textarea>
+    <span class="btn" onclick="sendComment(this,'list',{{list.id}});">Comentar</span>
 	
     {% if comments.1 %}
 		<h2>Comentarios</h2>

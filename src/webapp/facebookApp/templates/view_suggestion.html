@@ -17,14 +17,6 @@
        
         resizeIframe();
     });    
-    
-    function sendComment(btn) {
-        if (GRM.sendComment('event',$('#msg').val(),{{suggestion.id}},function(){$(btn).text("Comentar");$(btn).removeClass("waiting");})){
-            $(this).text("Enviando")
-            $(this).addClass("waiting")
-        }
-    }
-    
     </script>
 {%endblock%}
 
@@ -137,7 +129,7 @@
             <li>Sad</li>
         </ul>
 -->
-        <span class="btn" onclick="sendComment(this);">Comentar</span>
+        <span class="btn" onclick="sendComment(this,'event',{{suggestion.id}});">Comentar</span>
         
         {% if comments %}
         <ul class="comments" id="comment-list">
