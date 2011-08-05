@@ -49,12 +49,14 @@ list_deleted.connect(deleted_list)
 
 
 def new_following_list(sender, **kwargs):
+    sender.counters.set_followers(+1)
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=353)
     timeline.put()
 list_following_new.connect(new_following_list)
 
 
 def deleted_following_list(sender, **kwargs):
+    sender.counters.set_followers(-1)
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=354)
     timeline.put()
 list_following_deleted.connect(deleted_following_list)

@@ -6,6 +6,7 @@ from google.appengine.ext import db
 from geouser.models import User
 from georemindme.models_utils import Visibility, HookedModel
 from georemindme.decorators import classproperty
+from models_indexes import ListCounter
 
 
 class List(db.polymodel.PolyModel, HookedModel):
@@ -26,6 +27,12 @@ class List(db.polymodel.PolyModel, HookedModel):
     def id(self):
         return self.key().id()
     
+    @property
+    def counters(self):
+        if self._counters is None:
+            self._counters = ListCounter.all().ancestor(self).get()
+        return self._counters
+    
     @classproperty
     def objects(self):
         return ListHelper()
@@ -37,6 +44,8 @@ class List(db.polymodel.PolyModel, HookedModel):
             
     def _post_put_sync(self):
         if self._new:
+            counter = ListCounter(parent=self)
+            counter.put()
             list_new.send(sender=self)
             self._new = False
         else:
