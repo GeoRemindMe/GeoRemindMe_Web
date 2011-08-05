@@ -36,8 +36,16 @@ class ListCounter(db.Model):
         return {'id': self.id,
                 'followers': self.followers,
                 'comments': self.comments,
+                'votes': self.votes
                 }
             
+    @property
+    def votes(self):
+        if self._votes is None:
+            from geovote.models import Vote
+            self._votes = Vote.objects.get_vote_counter(self.parent_key())
+        return self._votes
+    
     def to_json(self):
         from django.utils import simplejson
         return simplejson.dumps(self.to_dict())

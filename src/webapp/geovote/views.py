@@ -145,6 +145,8 @@ def do_vote_list(request, instance_id, vote=1):
         :type vote: :class:`integer`
     """
     vote = int(vote)
+    if vote > 1 or vote < -1:
+        return False
     from geolist.models import List
     list = List.objects.get_by_id_querier(id=instance_id, querier=request.user)
     if list is None:

@@ -18,6 +18,8 @@ class SuggestionCounter(db.Model):
     comments = db.IntegerProperty(default=0)
     created = db.DateTimeProperty(auto_now_add=True)
     
+    _votes = None
+    
     @property
     def id(self):
         return int(self.key().id())
@@ -40,7 +42,14 @@ class SuggestionCounter(db.Model):
         return {'id': self.id,
                 'followers': self.followers,
                 'comments': self.comments,
+                'votes': self.votes,
                 }
+    @property
+    def votes(self):
+        if self._votes is None:
+            from geovote.models import Vote
+            self._votes = Vote.objects.get_vote_counter(self.parent_key())
+        return self._votes
             
     def to_json(self):
         from django.utils import simplejson
