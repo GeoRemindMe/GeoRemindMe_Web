@@ -47,6 +47,9 @@
 		{% endfor %}
 	</ul>
 	
+	<h2>¿Tienes algún comentario para esta lista?</h2>
+    <textarea id="msg-to-list"></textarea>
+    <span class="btn" onclick="sendComment(this);">Comentar</span>
 	
     <h2>Comentarios</h2> <p>{{comments}}</p>
     <p>Comentarios populares: {{top_comments}}</p>
