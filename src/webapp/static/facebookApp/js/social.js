@@ -7,7 +7,7 @@ $(document).ready(function(){
                         <span  onclick="javascript:follow(\'follow\',${id})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>\
                     </script>\
                     <script id="unfollowTemplate" type="text/x-jquery-tmpl">\
-                        <span  onclick="javascript:follow(\'unfollow\',${id})"><a href="javascript:void(0)" class="following">Seguiendo</a></span>\
+                        <span  onclick="javascript:follow(\'unfollow\',${id})"><a href="javascript:void(0)" class="following">Siguiendo</a></span>\
                     </script>'
         $('#templates').append(temp).ready()
         

@@ -43,7 +43,7 @@
                 {% ifnotequal user.username profile.parent.username %}
                     {% if is_follower %}
                         <div id="following_state_{{ profile.parent.id }}" class="follow-button following-state">
-                            <span  onclick="javascript:follow('unfollow',{{profile.parent.id}})"><a href="#" class="following">Seguiendo</a></span>
+                            <span  onclick="javascript:follow('unfollow',{{profile.parent.id}})"><a href="#" class="following">Siguiendo</a></span>
                         </div>
                     {% else %}
                         <div id="following_state_{{ profile.parent.id }}" class="follow-button">

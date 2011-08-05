@@ -252,8 +252,9 @@ GRM.removable = function() {
                             }
                             $(this).parent().fadeOut('slow').remove();
                             
-                        }else if(type=="suggestion" || type=="suggestion/list" )
+                        }else if(type=="suggestion" || type=="suggestion/list" || type=="person")
                             $(this).parent().parent().fadeOut('slow').remove()
+                        
                         
                     
                             
