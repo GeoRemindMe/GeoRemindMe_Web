@@ -56,8 +56,8 @@
         }
     }
     
-    $(".mvBtn, .submenu ").hoverIntent(hiConfig);
-    $(".mvBtn").click(function(){
+    $(".dropDrownBtn, .submenu ").hoverIntent(hiConfig);
+    $(".dropDrownBtn").click(function(){
         $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
     })
     
@@ -391,7 +391,7 @@ jQuery.fn.sortElements = (function(){
                         <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
                         
                         <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
-                        <span class="btn mvBtn">
+                        <span class="btn dropDrownBtn">
                             Guardar en
                             <ul class="submenu" style="display:none">
                                 {% if lists %}
@@ -472,7 +472,20 @@ jQuery.fn.sortElements = (function(){
                                                 </em>
                                             
                                         </dd>
-                                        
+                                    </dl>
+                                    <p>
+                                        <span><strong>Compartir:</strong></span>
+                                        <span class="btn dropDrownBtn"> Elige:
+                                            <ul style="display:none">
+                                                <li><a href="{% url fb_view_suggestion k.id %}">Enlace</a></li>
+                                                <li><a href="">Enviar a un amigo</a></li>
+                                                <li><a href="">Twitter</a></li>
+                                                <li><a href="">Publicar en mi muro</a></li>
+                                            </ul>
+                                        </span>
+                                    </p>
+                                    <p class="big">Estadísticas:</p>
+                                    <dl>
                                         <dt>Fecha de la última modificación:</dt>
                                         <dd>{{k.modified}}</dd>
                                         
