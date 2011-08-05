@@ -19,7 +19,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     created = db.DateTimeProperty(auto_now_add = True)
     modified = db.DateTimeProperty(auto_now=True)
     active = db.BooleanProperty(default=True)
-    count = db.IntegerProperty(default=0)
+    count = db.IntegerProperty(default=0)  # numero de sugerencias en la lista
     
     _new = False
     
@@ -30,7 +30,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     @property
     def counters(self):
         if self._counters is None:
-            self._counters = ListCounter.all().ancestor(self).get()
+            self._counters = self.all().ancestor(self).get()
         return self._counters
     
     @classproperty
