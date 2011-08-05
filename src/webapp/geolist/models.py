@@ -31,7 +31,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     @property
     def counters(self):
         if self._counters is None:
-            self._counters = self.all().ancestor(self).get()
+            self._counters = ListCounter.all().ancestor(self).get()
         return self._counters
     
     @classproperty
