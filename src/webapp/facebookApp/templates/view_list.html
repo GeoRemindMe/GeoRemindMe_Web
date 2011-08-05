@@ -2,7 +2,14 @@
 {% load i18n %}
 
 {% block extra_js %}
-        
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $('#suggestion-list li').hover(
+                function(){$(this).find('div').css({'display': 'inline'});},
+                function(){$(this).find('div').css({'display': 'none'});}
+            );
+        });
+	</script>
 {%endblock%}
 
 {% block title %}View list{% endblock %}
@@ -39,6 +46,7 @@
 		{% endfor %}
 	</ul>
 	
+<!--
 	<script type="text/javascript">
 		$('#suggestion-list li').hover(
 		  function () {
@@ -53,6 +61,7 @@
 		  }
 		);
 	</script>
+-->
 	
     <h2>Comentarios</h2> <p>{{comments}}</p>
     <p>Comentarios populares: {{top_comments}}</p>
