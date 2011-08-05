@@ -36,6 +36,7 @@ comment_new.connect(new_comment)
 def new_vote(sender, **kwargs):
     from geoalert.models import Suggestion
     from geovote.models import Comment
+    from geolist.models import ListSuggestion
     from geouser.models_acc import UserTimeline
     if isinstance(sender.instance, Suggestion):
         influenced = sender.instance.user.counters_async()
@@ -48,6 +49,9 @@ def new_vote(sender, **kwargs):
         s.set_supported()
     elif isinstance(sender.instance, Comment):
         timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=125, _vis=sender.instance._get_visibility())
+        timelinePublic.put()
+    elif isinstance(sender.instance, ListSuggestion):
+        timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=355, _vis=sender.instance._get_visibility())
         timelinePublic.put()
     else:
         return
