@@ -217,6 +217,15 @@ def get_suggestion(request):
     return HttpResponse(getAlertsJSON(suggestions), mimetype="application/json")
 
 @ajax_request
+def get_suggestion_following(request):
+    query_id = request.POST.get('query_id', None)
+    page = int(request.POST.get('page', 1))
+    suggestions = geoalert.get_suggestion_following(request, page=page, query_id=query_id)
+
+    return HttpResponse(getAlertsJSON(suggestions), mimetype="application/json")
+
+
+@ajax_request
 def delete_suggestion(request):
     """
         Borra un evento

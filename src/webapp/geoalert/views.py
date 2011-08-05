@@ -278,7 +278,7 @@ def user_suggestions(request, template='webapp/suggestions.html'):
                                 wanted_user=request.user,
                                 page = 1, query_id = None
                                 )
-    suggestions_following = Suggestion.objects.get_by_user_following(request.user)
+    suggestions_following = get_suggestion_following(request)
     return  render_to_response(template, {'suggestions': suggestions,
                                           'suggestions_following': suggestions_following,
                                           'counters': counters.next(),
@@ -441,3 +441,11 @@ def get_alertsuggestion(request, id, page = 1, query_id = None):
         return [AlertSuggestion.objects.get_by_id_user(id, request.user, request.user)]
     else:
         return AlertSuggestion.objects.get_by_user(request.user, page, query_id)
+    
+@login_required
+def get_suggestion_following(request, page=1, query_id=None):
+    suggestions_following = Suggestion.objects.get_by_user_following(request.user, 
+                                                                     page=page,
+                                                                     query_id=query_id
+                                                                     )
+    return suggestions_following
