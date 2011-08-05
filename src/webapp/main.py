@@ -17,6 +17,19 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os, logging, sys
+# mediagenerator
+if os.environ.get('SERVER_SOFTWARE', '').lower().startswith('devel'):
+    try:
+        from google.appengine.api.mail_stub import subprocess
+        sys.modules['subprocess'] = subprocess
+        import inspect
+        frame = inspect.currentframe().f_back.f_back.f_back
+        old_builtin = frame.f_locals['old_builtin']
+        subprocess.buffer = old_builtin['buffer']
+    except Exception, e:
+        logging.warn('Could not add the subprocess module to the sandbox: %s' % e)
+
+#carga la aplicacion
 from google.appengine.ext.webapp import util
 from google.appengine.dist import use_library
 
