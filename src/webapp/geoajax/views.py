@@ -347,11 +347,16 @@ def block_contacts(request):
             :returns: boolean
     """
     if request.user.is_authenticated():
-        userid = request.POST['userid']
+        userid = int(request.POST['userid'])
         if userid is not None:
-            request.user.settings.blocked_friends_sug.append(int(userid))
-            return True
-    return False
+            request.user.settings.blocked_friends_sug.append(userid)
+            friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
+            if friends is not None:
+                del friends[userid]
+                memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 300)
+            request.user.settings.put()
+            return HttpResponse(simplejson.dumps(True))
+    return HttpResponse(simplejson.dumps(True))
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================

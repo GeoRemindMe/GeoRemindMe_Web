@@ -573,6 +573,11 @@ class User(polymodel.PolyModel, HookedModel):
         if following is not None:
             if following == self.key():
                 return True
+            import memcache
+            friends = memcache.get('%sfriends_to_%s' % (memcache.version, self.key()))
+            if friends is not None:
+                del friends[following.id]
+                memcache.set('%sfriends_to_%s' % (memcache.version, self.key()), friends, 300)
             from models_acc import UserFollowingIndex
             is_following = UserFollowingIndex.all().filter('following =', following).ancestor(self.key()).count()
             if is_following != 0:  # en este caso, el usuario ya esta siguiendo al otro, no hacemos nada mas.
