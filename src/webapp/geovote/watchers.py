@@ -14,15 +14,20 @@ from geoalert.signals import suggestion_deleted
 def new_comment(sender, **kwargs):
     from google.appengine.ext.deferred import defer
     from geoalert.models import Suggestion
+    from geolist.models import ListSuggestion
     from geouser.models_acc import UserTimeline, UserTimelineSystem
     sender.instance.put(from_comment=True)
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=120, visible=False)
     from google.appengine.ext import db
     p = db.put_async([timeline])
     if hasattr(sender.instance, '_vis'):
-        timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=120, _vis=sender.instance._get_visibility())
-        timelinePublic.put()
-    if isinstance(sender.instance, Suggestion):
+        if isinstance(sender.instance, Suggestion):
+            timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=120, _vis=sender.instance._get_visibility())
+            timelinePublic.put()
+        if isinstance(sender.instance, ListSuggestion):
+            timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=121, _vis=sender.instance._get_visibility())
+            timelinePublic.put()
+    if isinstance(sender.instance, Suggestion) or isinstance(sender.instance, ListSuggestion):
         defer(sender.user.settings.notify_suggestion_comment, sender.key())
         sender.instance.counters.set_comments()
     p.get_result()
