@@ -94,7 +94,9 @@
         });
     </script>
 {% endblock %}
-
+{%if form.errors %}
+{{error}}
+{%endif%}
 <form method="post" id="SocialUserProfile-form" action=".">
     {% csrf_token %}
     <div class="fieldWrapper">
