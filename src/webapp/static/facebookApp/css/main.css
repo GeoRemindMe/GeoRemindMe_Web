@@ -1691,6 +1691,7 @@ input{
             
         }
             div#content div.expanded dl{
+                margin: 1em 0 0;
                 padding: 0 1em;
             }
             div#content div.expanded p{
@@ -1710,7 +1711,7 @@ input{
                 border-bottom: 1px dotted #CCCCCC;
                 display: block;
                 font-size: 1.3em;
-                margin: 0 0.7em;
+                margin: 1em 0.7em 0;
                 padding: 0;
             }
             div#content div.expanded dl:after{
@@ -1826,6 +1827,7 @@ input{
             background-color: #EEEEEE;
             clear: both;
             line-height: 10px;
+            margin-top: 1em;
             text-align: center;
         }
         #suggestions #content .collapseBtn img{
