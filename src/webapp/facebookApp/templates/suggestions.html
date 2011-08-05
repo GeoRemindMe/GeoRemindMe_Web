@@ -409,7 +409,7 @@ jQuery.fn.sortElements = (function(){
                     </div>
                     
                     <!-- Objetos Suggestion-->
-                    {% if user.counters.suggested == 0 %}
+                    {% if user.counters.suggested = 0 and suggestions_following|length = 0 %}
                         <div id="noSuggestions" class="tab-content">
                             <span>
                                 Aún no has hecho ninguna sugerencia, para empezar:<br>
@@ -423,10 +423,6 @@ jQuery.fn.sortElements = (function(){
                                 <div class="collapsed">
                                     <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
                                     <span class="suggestionName">{{k.name}}</span>
-<!--
-                                    <span class="suggestionInLists">
-                                    Lista {{k.id}}</span>
--->
                                 </div>
                                 <div class="expanded" style="display:none">
                                     <dl>
@@ -492,7 +488,7 @@ jQuery.fn.sortElements = (function(){
                                         <dd>{{k.modified}}</dd>
                                         
                                         <dt>Valoraciones recibidas: </dt>
-                                        <dd>{{k.counters}}</dd>
+                                        <dd>{{k.counters.votes}}</dd>
                                         
                                         <dt>Personas que han guardado la sugerencia: </dt>
                                         <dd>{{k.counters.followers}}</dd>
