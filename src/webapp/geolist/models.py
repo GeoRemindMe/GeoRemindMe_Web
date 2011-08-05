@@ -21,6 +21,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     active = db.BooleanProperty(default=True)
     count = db.IntegerProperty(default=0)  # numero de sugerencias en la lista
     
+    _counters = None
     _new = False
     
     @property
