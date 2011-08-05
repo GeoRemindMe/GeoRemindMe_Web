@@ -60,10 +60,14 @@ function setCommentFormsBehaviour(){
         e.preventDefault();
         if(e.keyCode == 13) {
             //If keypress==enter -> submit
-            
-            
-            suggestion_id=$(this).parent().parent().parent().attr('value')
-            sendComment2($(this),suggestion_id);
+            element_id=$(this).parent().parent().parent().attr('value')
+            parents=$(this).parentsUntil("#chronology")
+            liElement=parents[parents.length-1]
+            msgType=$(liElement).attr('class');
+            if(msgType=="msg-350")
+                sendComment2($(this),element_id,"list");
+            else
+                sendComment2($(this),element_id,"event");
             
             $(this).val("");
             $(this).blur();
@@ -97,7 +101,7 @@ function resetInput(obj){
     $(obj).focusout()
 }
 
-function sendComment2(textarea,suggestion_id){
+function sendComment2(textarea,element_id,elemType){
     if(textarea.val()=="")
         return false;
     else{
@@ -107,17 +111,17 @@ function sendComment2(textarea,suggestion_id){
                 
     $.ajax({
         type: "POST",
-        url: "/ajax/add/comment/event/",
+        url: "/ajax/add/comment/"+elemType+"/",
         dataType:'json',
         data: {
-            instance_id:suggestion_id,
+            instance_id:element_id,
             msg:msg
         },
         success: function(response){
 
             //console.log(response)
             textarea.parent()
-            c=$('#commentTemplate').tmpl(response).appendTo('#commentList-'+suggestion_id);
+            c=$('#commentTemplate').tmpl(response).appendTo('#commentList-'+element_id);
             c.find(".like-dislike").like();
             c.find(".removable").removable();
             //resetInput(textarea);
