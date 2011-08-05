@@ -351,7 +351,7 @@ def block_contacts(request):
         if userid is not None:
             request.user.settings.blocked_friends_sug.append(userid)
             friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
-            if friends is not None:
+            if friends is not None and userid in friends:
                 del friends[userid]
                 memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 300)
             request.user.settings.put()

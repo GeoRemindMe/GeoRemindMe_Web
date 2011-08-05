@@ -575,8 +575,8 @@ class User(polymodel.PolyModel, HookedModel):
                 return True
             import memcache
             friends = memcache.get('%sfriends_to_%s' % (memcache.version, self.key()))
-            if friends is not None:
-                del friends[following.id]
+            if friends is not None and int(following.id()) in friends:
+                del friends[int(following.id())]
                 memcache.set('%sfriends_to_%s' % (memcache.version, self.key()), friends, 300)
             from models_acc import UserFollowingIndex
             is_following = UserFollowingIndex.all().filter('following =', following).ancestor(self.key()).count()
