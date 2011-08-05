@@ -754,7 +754,7 @@ input{
             background-repeat: no-repeat;
         }
         
-        ul#chronology li.msg-120{
+        ul#chronology li.msg-120,ul#chronology li.msg-121{
             background-image: url("/static/facebookApp/img/timeline/120.png");
             background-position: 99% 10%;
             background-repeat: no-repeat;
@@ -792,6 +792,11 @@ input{
         
         ul#chronology li.msg-353{
             background-image: url("/static/facebookApp/img/timeline/353.png");
+            background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        ul#chronology li.msg-355{
+            background-image: url("/static/facebookApp/img/timeline/355.png");
             background-position: right 10px;
             background-repeat: no-repeat;
         }

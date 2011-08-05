@@ -28,6 +28,12 @@
                 $('#chronology li').not('.msg-300').not('.suggestion-comment').hide();
             });
             
+            $('#filter-lists').click(function(){
+                $('#chronology li.msg-350').show();
+                //Oculto todos aquellos que no son sugerencias
+                $('#chronology li').not('.msg-350').not('.suggestion-comment').hide();
+            });
+            
             $('#filter-likes').click(function(){
                 $(':regex(class,(msg-125|msg-305))').show();
                 //Ocultamos aquellos que no son 125 ni 305
@@ -35,9 +41,9 @@
             });
                 
             $('#filter-comments').click(function(){
-                $('#chronology li.msg-120').show();
+                $(':regex(class,(msg-120|msg-121))').show();
                 //Oculto todos aquellos que no son sugerencias
-                $('#chronology li').not('.msg-120').hide();
+                $('#chronology li').not('.msg-120').not('.msg-121').hide();
             });
             
             $('#no-filter').click(function(){
@@ -49,6 +55,8 @@
                 
                 (new Image()).src = $(elem).attr('src')
             })
+            
+            updateTabCounters();
             
             $(".load-more").click(function(){
                 GRM.loadPage({
@@ -84,10 +92,11 @@
             
             <ul id="tabMenu" class="clear">
                 <li class="clear-box">Ver:</li>
-                <li id="no-filter" class="active">Todo</li>
-                <li id="filter-suggestions">Sugerencias</li>
-                <li id="filter-likes">Valoraciones</li>
-                <li id="filter-comments">Comentarios</li>
+                <li id="no-filter" class="active">Todo (<span id="all-counter"></span>)</li>
+                <li id="filter-suggestions">Sugerencias (<span id="suggestions-counter"></span>)</li>
+                <li id="filter-lists">Listas (<span id="lists-counter"></span>)</li>
+                <li id="filter-likes">Valoraciones (<span id="likes-counter"></span>)</li>
+                <li id="filter-comments">Comentarios (<span id="comments-counter"></span>)</li>
                 
             </ul>
             {% for obj in user.listsuggestion_set %}

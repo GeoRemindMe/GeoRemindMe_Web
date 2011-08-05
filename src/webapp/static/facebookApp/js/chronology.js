@@ -63,8 +63,8 @@ function setCommentFormsBehaviour(){
             element_id=$(this).parent().parent().parent().attr('value')
             parents=$(this).parentsUntil("#chronology")
             liElement=parents[parents.length-1]
-            msgType=$(liElement).attr('class');
-            if(msgType=="msg-350")
+            
+            if($(liElement).hasClass('msg-350'))
                 sendComment2($(this),element_id,"list");
             else
                 sendComment2($(this),element_id,"event");
@@ -108,7 +108,7 @@ function sendComment2(textarea,element_id,elemType){
         msg=textarea.val();
         msg=msg.substring(0,msg.length-1);
     }
-                
+     console.log("elemType="+  elemType);         
     $.ajax({
         type: "POST",
         url: "/ajax/add/comment/"+elemType+"/",
@@ -130,4 +130,13 @@ function sendComment2(textarea,element_id,elemType){
         error:{
         }
     });
+}
+
+function updateTabCounters(){
+    
+    $('#all-counter').text($('#chronology li').length);
+    $('#suggestions-counter').text($('#chronology li.msg-300').length);
+    $('#lists-counter').text($('#chronology li.msg-350').length);
+    $('#likes-counter').text($(':regex(class,(msg-125|msg-305))').length);
+    $('#comments-counter').text($(':regex(class,(msg-120|msg-121))').length);
 }
