@@ -43,7 +43,6 @@ def modified_list(sender, **kwargs):
 def deleted_list(sender, **kwargs):
     from geouser.models_acc import UserTimelineBase
     query = UserTimelineBase.all().filter('instance =', sender.key())
-    sender.user.counters.set_suggested(-1)
     for q in query:
         q.delete()
 list_deleted.connect(deleted_list)

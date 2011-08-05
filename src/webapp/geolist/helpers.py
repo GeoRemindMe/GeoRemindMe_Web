@@ -117,6 +117,7 @@ class ListHelper(object):
             :type user: :class:`geouser.models.User`
         '''
         lists = [inv.list for inv in user.toinvitations_set if inv.status == 1]
+        return lists
     
     
 class ListSuggestionHelper(ListHelper):
