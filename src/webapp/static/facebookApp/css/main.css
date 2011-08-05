@@ -1626,7 +1626,19 @@ input{
     }
     .suggestion{
     }
-    
+    .maximize-minimize{
+        background: url("/static/facebookApp/img/maximize_minimize.gif") no-repeat scroll 0 0 transparent;
+        float: right;
+        height: 15px;
+        margin-top: 5px;
+        width: 15px;
+    }
+    div.suggestionExpanded{
+        background-position:0 -17px;
+    }
+    .maximize-minimize span{
+        visibility:hidden;
+    }
     #suggestions .editable:hover{
         background-color:#FEFF99
     }
@@ -1790,8 +1802,10 @@ input{
             width:5%;
         }
         .suggestionName{
-            width:515px;
+            width:500px;
+/*
             cursor:pointer;
+*/
         }
         .suggestionInLists{
             width:25%;

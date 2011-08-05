@@ -11,16 +11,18 @@
     <script type="text/javascript">        
         $(document).ready(function(){    
     //Asignamos comportamiento ONCLICK a cada fila
-    $('.suggestionName').click(function(){
-            $(this).parent().parent().find('div.collapsed').slideToggle('fast','swing',function(){
+    $('.maximize-minimize').toggle(function(){
+            $(this).parent().find('div.collapsed').slideToggle('fast','swing',function(){
                 $(this).parent().find('div.expanded').slideToggle('fast','swing')    
             })
-            
-    });
-    $('.collapseBtn').click(function(){
-            $(this).parent().parent().find('div.expanded').slideToggle('fast','swing',function(){
+            $(this).removeClass('suggestionCollapsed');
+            $(this).addClass('suggestionExpanded');
+        },function(){
+            $(this).parent().find('div.expanded').slideToggle('fast','swing',function(){
                 $(this).parent().find('div.collapsed').slideToggle('fast','swing')
             })
+            $(this).removeClass('suggestionExpanded');
+            $(this).addClass('suggestionCollapsed');
     });
     
     $('#checkBox_all').click(function(){
@@ -264,7 +266,7 @@ function loadSuggestionsPage(page){
         url:'/ajax/get/suggestion/',
         template: "#suggestionTemplate",
         data:{
-                'query_id':{{suggestions.0}},
+                'query_id':"{{suggestions.0}}",
             }                
     });
 }
@@ -420,12 +422,14 @@ jQuery.fn.sortElements = (function(){
                     <span id="suggestion-list" class="tab-content">
                         {% for k in suggestions.1%}
                             <div id="suggestion_{{k.id}}" class="suggestion">
+                                <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                 <div class="collapsed">
                                     <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
                                     <span class="suggestionName">{{k.name}}</span>
                                 </div>
                                 <div class="expanded" style="display:none">
                                     <dl>
+                                        
                                         <dt>Nombre:</dt>
                                         <dd class="editable">{{k.name}}</dd>
                                         
@@ -496,7 +500,7 @@ jQuery.fn.sortElements = (function(){
                                         <dt>Comentarios recibidos:</dt>
                                         <dd>{{k.counters.comments}}</dd>
                                     </dl>
-                                    <div class="collapseBtn"><img src="/static/webapp/img/collapse.png"></div>
+                                    
                                     
                                 </div>
                                 
