@@ -4,12 +4,17 @@
 
 
 {% block extra_js %}
+		<script src="/static/facebookApp/js/grm.js"></script>
+		
         <script type="text/javascript">
         $(document).ready(function(){
+			GRM.init();
+			
             $('#suggestion-list li').hover(
                 function(){$(this).find('div').css({'display': 'inline'});},
                 function(){$(this).find('div').css({'display': 'none'});}
-            );
+            ),
+			$('#list-description').html($('#list-description').html().replace(/none/ig, "<em>Sin descripción</em>"))
         });
 	</script>
 {%endblock%}
@@ -23,8 +28,8 @@
     
     <h1>{{list}}</h1>
 	<div id="suggestion-info">
-		<p>Descripción: {{list.description}}</p>
-	    <p>Autor: <a href="#">{{list.user}}</a></p>
+		<p>Descripción: <span id="list-description">{{list.description}}</span></p>
+	    <p>Autor: <a href="{% url fb_public_profile list.user %}">{{list.user}}</a></p>
 	    <p>Etiquetas: <a href="#">Bares</a> | <a href="#">Restaurantes</a> | <a href="#">Almería</a></p>
 	</div>
 	<div id="suggestion-aside">
@@ -55,9 +60,9 @@
     <textarea id="msg-to-list"></textarea>
     <span class="btn" onclick="sendComment(this);">Comentar</span>
 	
-    {% if comments %}
-	<h2>Comentarios</h2>
-    <ul class="comments" id="comment-list">
+    {% if comments.1 %}
+		<h2>Comentarios</h2>
+    	<ul class="comments" id="comment-list">
         {% for c in comments.1 %}
             <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
                 
@@ -86,7 +91,7 @@
             </li>
         {% endfor %}
 
-    </ul>
+    	</ul>
     {% endif %}
 
     
