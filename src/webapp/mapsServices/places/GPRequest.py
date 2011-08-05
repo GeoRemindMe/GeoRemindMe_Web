@@ -95,7 +95,9 @@ class GPRequest(Http):
     def do_checkin(self, reference, sensor = True):
         url = self._checkin_url + 'sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
         return self._do_request(url, method='POST', body='reference: %s' % reference)
-        
+    
+    def add_place(self):
+        pass
         
     def _do_request(self, url, method='GET', body=None):
         """

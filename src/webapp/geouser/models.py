@@ -751,9 +751,10 @@ class User(polymodel.PolyModel, HookedModel):
             except:
                 pass
             if len(friends) > 0:
-                for k in friends.keys():
-                    if k in self.settings.blocked_friends_sug:
-                        del friends[k]
+                if len(self.settings.blocked_friends_sug)>0:
+                    for k in friends.keys():
+                        if k in self.settings.blocked_friends_sug:
+                            del friends[k]
                 memcache.set('%sfriends_to_%s' % (memcache.version, self.key()), friends, 300)
         return friends
 
