@@ -233,6 +233,10 @@ class ListSuggestion(List, Visibility):
         if ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get() is not None:
             return True
         return False 
+    
+    def delete(self):
+        list_deleted.send(sender=self)
+        super(ListSuggestion, self).delete()
                 
 
 class ListAlert(List):

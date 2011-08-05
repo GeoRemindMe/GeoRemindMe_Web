@@ -16,7 +16,7 @@ class ListHelper(object):
             :param query_id: identificador de busqueda
             :type query_id: int
         '''            
-        q = self._klass.all().filter('_vis =', 'public').order('-modified')
+        q = self._klass.all().filter('_vis =', 'public').filter('active =', True).order('-modified')
         from georemindme.paging import PagedQuery
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
@@ -32,7 +32,7 @@ class ListHelper(object):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
+        q = self._klass.gql('WHERE user = :1 AND active = True ORDER BY modified DESC', user)
         from georemindme.paging import PagedQuery
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
@@ -107,7 +107,7 @@ class ListHelper(object):
             :type user: :class:`geouser.models.User`
         '''
         indexes = ListFollowersIndex.all().filter('_kind =', self._klass.kind()).filter('keys =', user.key())
-        return [index.parent() for index in indexes]
+        return [index.parent() for index in indexes if index.active]
     
     def get_shared_list(self, user):
         '''
@@ -157,9 +157,9 @@ class ListSuggestionHelper(ListHelper):
         if not isinstance(user, User) or not isinstance(querier, User):
             raise TypeError()
         if user.id == querier.id:
-            q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
+            q = self._klass.gql('WHERE user = :1 AND active = True ORDER BY modified DESC', user)
         else:
-            q = self._klass.gql('WHERE user = :1 AND _vis = :2 ORDER BY modified DESC', user, 'public')
+            q = self._klass.gql('WHERE user = :1  AND active = True AND _vis = :2 ORDER BY modified DESC', user, 'public')
         if not all:
             from georemindme.paging import PagedQuery
             p = PagedQuery(q, id = query_id)
@@ -170,7 +170,7 @@ class ListSuggestionHelper(ListHelper):
     def get_by_suggestion(self, suggestion, querier):
         if not isinstance(querier, User):
             raise TypeError()
-        lists = self._klass.all().filter('keys =', suggestion.key())
+        lists = self._klass.all().filter('keys =', suggestion.key()).filter('active =', True)
         lists_loaded = []
         for list in lists:
             if not querier.is_authenticated():
@@ -190,7 +190,7 @@ class ListAlertHelper(object):
     _klass = ListAlert
     
     def get_by_name_user(self, name, user):
-        list = self._klass.all().filter('user =', user).filter('name =', name).get()
+        list = self._klass.all().filter('user =', user).filter('name =', name).filter('active =', True).get()
         if not list.active:
             return None
         return list
@@ -200,7 +200,7 @@ class ListUserHelper(object):
     _klass = ListUser
     
     def get_by_name_user(self, name, user):
-        list = self._klass.all().filter('user =', user).filter('name =', name).get()
+        list = self._klass.all().filter('user =', user).filter('name =', name).filter('active =', True).get()
         if not list.active:
             return None
         return list
