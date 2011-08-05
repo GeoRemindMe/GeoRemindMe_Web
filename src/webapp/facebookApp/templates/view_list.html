@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load tags %}
+
 
 {% block extra_js %}
         <script type="text/javascript">
@@ -16,6 +18,8 @@
 
 {% block goBack %}{%endblock%}    
 {% block body %}
+    <div id="view-list">
+    	
     
     <h1>{{list}}</h1>
 	<div id="suggestion-info">
@@ -54,7 +58,7 @@
     {% if comments %}
 	<h2>Comentarios</h2>
     <ul class="comments" id="comment-list">
-        {% for c in comments %}
+        {% for c in comments.1 %}
             <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
                 
                 <!-- Añadimos el botón de borrar comentario-->
@@ -84,5 +88,7 @@
 
     </ul>
     {% endif %}
-    <p>Comentarios populares: {{top_comments}}</p>
+
+    
+	</div>
 {%endblock%}
