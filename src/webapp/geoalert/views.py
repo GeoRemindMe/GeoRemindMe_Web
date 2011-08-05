@@ -279,8 +279,10 @@ def user_suggestions(request, template='webapp/suggestions.html'):
                                 page = 1, query_id = None
                                 )
     suggestions_following = get_suggestion_following(request)
+    suggestions[1].extend(suggestions_following[1])
+    suggestions[1].sort(key=lambda x: x.modified, reverse=True)
+    suggestions[0] = '%s_%s' % (suggestions[0], suggestions_following[0])
     return  render_to_response(template, {'suggestions': suggestions,
-                                          'suggestions_following': suggestions_following,
                                           'counters': counters.next(),
                                           'lists': [l for l in lists],
                                           }, context_instance=RequestContext(request)

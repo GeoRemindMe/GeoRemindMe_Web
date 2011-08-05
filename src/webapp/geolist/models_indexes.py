@@ -36,7 +36,7 @@ class ListCounter(db.Model):
         return {'id': self.id,
                 'followers': self.followers,
                 'comments': self.comments,
-                'votes': self.votes
+                'votes': self.votes,
                 }
             
     @property

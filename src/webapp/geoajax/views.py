@@ -211,9 +211,19 @@ def get_suggestion(request):
     eventid = request.POST.get('eventid', None)
     wanted_user = request.POST.get('wanteduser', request.user)
     query_id = request.POST.get('query_id', None)
+    if query_id is not None:
+        query_id = query_id.split('_')
+        sug_id = query_id[0]
+        foll_id = query_id[1]
+    else:
+        sug_id = None
+        foll_id = None
     page = int(request.POST.get('page', 1))
-    suggestions = geoalert.get_suggestion(request, id=eventid, wanted_user=wanted_user, page=page, query_id=query_id)
-
+    suggestions = geoalert.get_suggestion(request, id=eventid, wanted_user=wanted_user, page=page, query_id=sug_id)
+    if eventid is None:
+        suggestions_following = get_suggestion_following(request, )
+        suggestions[1].extend(suggestions_following[1]).sort(key=lambda x: x.modified, reverse=True)
+        suggestions[1].sort(key=lambda x: x.modified, reverse=True)
     return HttpResponse(getAlertsJSON(suggestions), mimetype="application/json")
 
 @ajax_request

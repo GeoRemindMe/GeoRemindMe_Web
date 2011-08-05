@@ -333,7 +333,7 @@ class SuggestionHelper(EventHelper):
         from models_indexes import SuggestionFollowersIndex
         q = SuggestionFollowersIndex.all().filter('keys =', user.key())
         p = PagedQuery(q, id = query_id)
-        return [index.parent() for index in p.fetch_page(page)]
+        return [p.id, [index.parent() for index in p.fetch_page(page)]]
         
 
 class AlertSuggestionHelper(AlertHelper):
