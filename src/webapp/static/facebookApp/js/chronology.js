@@ -134,9 +134,9 @@ function sendComment2(textarea,element_id,elemType){
 
 function updateTabCounters(){
     
-    $('#all-counter').text($('#chronology li').length);
-    $('#suggestions-counter').text($('#chronology li.msg-300').length);
-    $('#lists-counter').text($('#chronology li.msg-350').length);
-    $('#likes-counter').text($(':regex(class,(msg-125|msg-305|msg-355))').length);
-    $('#comments-counter').text($(':regex(class,(msg-120|msg-121))').length);
+    $('#all-counter').text('('+$('#chronology li').length+')');
+    $('#suggestions-counter').text('('+$('#chronology li.msg-300').length+')');
+    $('#lists-counter').text('('+$('#chronology li.msg-350').length+')');
+    $('#likes-counter').text('('+$(':regex(class,(msg-125|msg-305|msg-355))').length+')');
+    $('#comments-counter').text('('+$(':regex(class,(msg-120|msg-121))').length+')');
 }
