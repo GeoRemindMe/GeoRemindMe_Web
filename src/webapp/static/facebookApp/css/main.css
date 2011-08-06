@@ -1006,13 +1006,13 @@ input{
         padding-left: 20px;
         width:70px;
     }
-    div#right-col #profile span#twitter-icon{
+    div#right-col #profile span#twitter-icon, a.twitter-icon{
         background-position: 0 0;
     }
-    div#right-col #profile span#google-icon{
+    div#right-col #profile span#google-icon, a.google-icon{
         background-position: 0 -16px;
     }
-    div#right-col #profile span#facebook-icon{
+    div#right-col #profile span#facebook-icon, a.facebook-icon{
     
         background-position: 0 -32px;
     }
@@ -1702,17 +1702,16 @@ input{
             cursor:default;
         }
         div#content div.expanded{
-            background-color: #F5F5F5;
-            border-top: 1px solid #CCCCCC;
-            margin: 0;
+            padding-bottom: 1em;
             
         }
+        
             div#content div.expanded dl{
-                margin: 1em 0 0;
-                padding: 0 1em;
+                margin: 0;
+                padding: 0 2.5em;
             }
             div#content div.expanded p{
-                margin: 0 1em;
+                margin: 0 2.5em;
                 padding: 0;
             }
             div#content div.expanded ul.share-suggestion{
@@ -1722,13 +1721,15 @@ input{
             }
             div#content div.expanded ul.share-suggestion li{
                 display:inline-block;
-                
+            }
+            div#content div.expanded ul.share-suggestion li:hover{
+                background-color:#EEEEEE
             }
             div#content div.expanded p.big{
                 border-bottom: 1px dotted #CCCCCC;
                 display: block;
                 font-size: 1.3em;
-                margin: 1em 0.7em 0;
+                margin: 1em 2em 0.5em 2em;
                 padding: 0;
             }
             div#content div.expanded dl:after{
@@ -1744,6 +1745,7 @@ input{
                 float: left;
                 font-weight: bold;
                 margin-right: 1em;
+                min-width: 75px;
             }
             div#content div.expanded dd{
                 display: inline-block;
@@ -1769,8 +1771,11 @@ input{
                         font-size: 0.9em;
                         font-weight: bold;
                         line-height: 1.5em;
-                        margin-right: 0.5em;
-                        padding: 0 1.8em;
+                        margin-right: 0.3em;
+                        padding: 0;
+                    }
+                    div#content div.expanded dd ul li.removable{
+                        padding: 0 1.5em;
                     }
                     div#content div.expanded dd ul li.removable:hover{
                         background: url("/static/facebookApp/img/delete.png") no-repeat scroll right 1px #EEEEEE;
@@ -1802,7 +1807,9 @@ input{
             width:5%;
         }
         .suggestionName{
+/*
             width:500px;
+*/
 /*
             cursor:pointer;
 */
@@ -1882,16 +1889,32 @@ input{
         list-style: none outside none;
         padding-right: 15px;
     }
-    .dropDrownBtn li { 
-        border:0;
-        line-height: 1.2em;
-        margin: 0;
-        padding: 0.5em;
+    ul.share-suggestion a.share-suggestion{
+        background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 4px 3px transparent;
+        color: black;
+        display: inline-block;
+        font-weight: normal;
+        height: 16px;
+        line-height: 18px;
+        padding: 0 1em 0 2.5em;
+        margin: 0.2em 0;
+        text-decoration: none;
     }
-/*
-    .dropDrownBtn li a { display:block; padding:7px 10px; text-decoration:none; color:#CCCCCC; font-weight:bold; }
-    .dropDrownBtn li a:hover { color:#FFFFFF; }
-*/
+    ul.share-suggestion a.twitter-icon{
+        background-position: 4px 0px;
+    }
+    ul.share-suggestion a.facebook-icon{
+        background-position: 4px -32px;
+    }
+    ul.share-suggestion a.link-icon{
+        background: url("/static/facebookApp/img/share.png") no-repeat scroll 4px 3px transparent;
+        background-position: 4px 0px;
+    }
+    ul.share-suggestion a.georemindme-icon{
+        background: url("/static/facebookApp/img/share.png") no-repeat scroll 4px 3px transparent;
+        background-position: 4px -16px;
+    }
+    
     /* Submenu */
     .dropDrownBtn ul.submenu,.dropDrownBtn ul { 
         background-color: white;

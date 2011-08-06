@@ -13,10 +13,14 @@
     //Asignamos comportamiento ONCLICK a cada fila
     $('.maximize-minimize').toggle(function(){
             $(this).parent().find('div.expanded').slideDown('fast');
+            $(this).parent().find('.suggestionName').toggle();
+            $(this).parent().find('.suggestionName_editable').toggle();
             $(this).removeClass('suggestionCollapsed');
             $(this).addClass('suggestionExpanded');
         },function() {
             $(this).parent().find('div.expanded').slideUp('fast'); 
+            $(this).parent().find('.suggestionName').toggle();
+            $(this).parent().find('.suggestionName_editable').toggle();
             $(this).removeClass('suggestionExpanded');
             $(this).addClass('suggestionCollapsed');
     });
@@ -140,6 +144,11 @@
     })
     
     
+    $('.empty-msg').click(function(){
+        $("#checkBox_"+$(this).attr('value')).attr('checked',true);
+        $(".dropDrownBtn").click()
+    });
+    
 });
 
 /*
@@ -172,7 +181,7 @@ function updateSuggestions(data){
 
 //Extrae a una sugerencia de una lista
 function removableFromList(obj){
-    var unparsedString=$(obj).attr('class').split(" ")[1];
+    var unparsedString=$(obj).attr('class').split(" ")[0];
     var listID = unparsedString.substring(5,unparsedString.length)
     var suggestionID = $(obj).attr('value')
     var domElement=$(obj);
@@ -377,7 +386,7 @@ jQuery.fn.sortElements = (function(){
 
         <h1>Baúl de sugerencias</h1>
         <ul id="tabMenu">
-            <li id="your_suggestions" class="active">Sugerencias ({{user.counters.suggested}})</li>
+            <li id="your_suggestions" class="active">Sugerencias ({{suggestions.1|length}})</li>
             <li id="suggestions_lists">Listas ({{lists|length}})</li>
         </ul>
         <div id="content">
@@ -421,28 +430,24 @@ jQuery.fn.sortElements = (function(){
                                 <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                 <div class="collapsed">
                                     <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
-                                    <span class="suggestionName">{{k.name}}</span>
+                                    <span class="suggestionName">{{k.name}}{% if k.user.username != user.username%} (<em>{{k.user.username}}</em>){% endif %}</span>
+                                    <span class="suggestionName_editable {% if k.user.username == user.username%}editable{% endif %}" style="display:none">{{k.name}}</span>
                                 </div>
                                 <div class="expanded" style="display:none">
-                                    <dl>
-                                        
-                                        <dt>Nombre:</dt>
-                                        <dd class="editable">{{k.name}}</dd>
-                                        
-                                        
+                                    <dl>                                        
                                         <dt>Descripción:</dt>
-                                        <dd class="editable">{%if k.description %}{{k.description}} {% else %}<em>Sin descripción</em>{% endif %}</dd>
+                                        <dd class=" {% if k.user.username == user.username%}editable{% endif %}">{%if k.description %}{{k.description}} {% else %}<em>Sin descripción</em>{% endif %}</dd>
                                         
                                         <dt>Lugar:</dt>
                                         <dd>
                                             <a class="placeName" href="{% url fb_view_place k.poi.slug%}">{{k.poi.name}}</a> ({{k.poi.address}}) 
-                                            <a href="{% url fb_edit_suggestions k.id %}">Editar</a>
+                                             {% if k.user.username != user.username%}<a href="{% url fb_edit_suggestions k.id %}">Editar</a>{% endif %}
                                         </dd>
                                         
                                         
                                         <dt>Fecha:</dt>
                                         {% if k.date_starts != None or k.date_ends != None%}
-                                        <dd class="editable">
+                                        <dd class="{% if k.user.username == user.username%}editable{% endif %}">
                                             {% if k.date_starts != None %}
                                                 {{k.date_starts}}
                                             {% endif %}
@@ -451,37 +456,43 @@ jQuery.fn.sortElements = (function(){
                                             {% endif %}    
                                         </dd>
                                         {% endif %}
-                                        <dd class="editable">
+                                        <dd class="{% if k.user.username == user.username%}editable{% endif %}">
                                             <em>Sin fecha</em>
                                         </dd>
-                                        
                                         
                                         <dt>Listas:</dt>
                                         <dd>
                                             
                                                 <ul class="removable-sugestion-list" {% if k.lists|length = 0 %}style="display:none"{% endif %}>
                                                     {% for obj in k.lists %}
-                                                        <li class="removable list_{{obj.id}}" value="{{k.id}}">{{obj.name}}</li>
+                                                        <li class="list_{{obj.id}} {% if k.user.username == user.username%}removable{% endif %}" value="{{k.id}}">{{obj.name}}</li>
                                                     {% endfor %}
                                                 </ul>
                                             
-                                                <em class="empty-msg" {% if k.lists|length > 0 %}style="display:none"{% endif %}>
-                                                    Para añadir esta sugerencia a una lista contrae la sugerencia
+                                                <em class="empty-msg {% if k.user.username == user.username%}editable{% endif %}" value="{{k.id}}" {% if k.lists|length > 0 %}style="display:none"{% endif %}>
+                                                    Añadir a lista
                                                 </em>
                                             
                                         </dd>
-                                    </dl>
-                                    <p>
-                                        <span><strong>Compartir:</strong></span>
-                                        <span class="btn dropDrownBtn"> Elige:
-                                            <ul style="display:none">
-                                                <li><a href="{% url fb_view_suggestion k.id %}">Enlace</a></li>
-                                                <li><a href="">Enviar a un amigo</a></li>
-                                                <li><a href="">Twitter</a></li>
-                                                <li><a href="">Publicar en mi muro</a></li>
+                                        
+                                        <dt><strong>Compartir:</strong></dt>
+                                        <dd>
+                                            <ul class="share-suggestion">
+                                                <li><a class="share-suggestion link-icon" href="{% url fb_view_suggestion k.id %}">Enlace</a></li>
+                                                <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
+                                                <li><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
+                                                <li><a class="share-suggestion facebook-icon" href="">Muro</a></li>
                                             </ul>
-                                        </span>
-                                    </p>
+                                        </dd>
+
+
+                                        {% if k.user.username != user.username%} 
+                                            <dt>Autor:</dt>
+                                            <dd><a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a></dd>
+                                        {% endif %}
+                                    </dl>
+                                    
+                                    
                                     <p class="big">Estadísticas:</p>
                                     <dl>
                                         <dt>Última modificación:</dt>
