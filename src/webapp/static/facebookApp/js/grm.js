@@ -257,7 +257,7 @@ GRM.removable = function() {
                         
                         //Si estamos en chronology actualizamos los contadores de los tabs
                         if($('ul#chronology').length>0)
-                            updateTabCounters();
+                            GRM.updateTabCounters();
                     
                             
                     }
@@ -337,7 +337,7 @@ GRM.sendComment = function(type,text,id,callback){
             
         
             c.find(".like-dislike").like();
-            resizeIframe()
+            resizeIframe();
             
             if (typeof callback != "undefined")
                 callback();
@@ -345,6 +345,14 @@ GRM.sendComment = function(type,text,id,callback){
     });
 
     return true;
+}
+
+GRM.updateTabCounters = function(){
+    $('#all-counter').text('('+$('#chronology li').length+')');
+    $('#suggestions-counter').text('('+$('#chronology li.msg-300').length+')');
+    $('#lists-counter').text('('+$('#chronology li.msg-350').length+')');
+    $('#likes-counter').text('('+$(':regex(class,(msg-125|msg-305|msg-355))').length+')');
+    $('#comments-counter').text('('+$(':regex(class,(msg-120|msg-121))').length+')');
 }
     
 
