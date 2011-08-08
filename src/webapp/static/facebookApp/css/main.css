@@ -1774,6 +1774,12 @@ input{
                         margin-right: 0.3em;
                         padding: 0;
                     }
+                    div#content div.suggestionList div.expanded dd ul li{
+                        display: block;
+                        margin: 0.7em 0;
+                        padding: 0em 1.5em;
+                    }
+                    
                     div#content div.expanded dd ul li.removable{
                         padding: 0 1.5em;
                     }

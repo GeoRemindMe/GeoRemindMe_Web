@@ -577,11 +577,11 @@
                     {% if lists %}
                         <div id="suggestion-list-lists">
                             {% for obj in lists %}
-                                <div id="list_{{obj.id}}" class="suggestion">
+                                <div id="list_{{obj.id}}" class="suggestion suggestionList">
                                     <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                     <div class="collapsed">
                                         <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
-                                        <span class="suggestionName">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.instances|length}}</span> sugerencias)</span>
+                                        <span class="suggestionName">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.count}}</span> sugerencias)</span>
                                         <span class="suggestionName_editable {% if k.user.username == user.username%}editable{% endif %}" style="display:none">{{obj.name}}</span>                                        
                                     </div>
                                     <div class="expanded" style="display:none">
@@ -593,10 +593,16 @@
                                             <dd>
                                                 <ul>
                                                     {% for k in obj.instances %}
-                                                        <li>Sugerencia={{k}}</li>
+                                                        <li  class="list_{{obj.id}} {% if obj.user.username == user.username%}removable{% endif %}" value="{{k.id}}">{{k}}</li>
                                                     {% endfor %}
                                                 </ul>
                                             </dd>
+                                            
+                                            <dt>Tags:</dt>
+                                            <dd>{{obj.tags}}</dd>
+                                            
+                                            <dt>Autor:</dt>
+                                            <dd><a href="{% url fb_public_profile obj.user.username %}">{{obj.user.username}}</a></dd>
                                         </dl>
                                         
                                         <p class="big">Estadísticas:</p>
