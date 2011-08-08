@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load tags %}
+
+
+{% block extra_js %}
+		
+{%endblock%}
+
+{% block title %}Search{% endblock %}
+
+{% block goBack %}{%endblock%}   
+ 
+{% block body %}
+	
+	<div id="#search">
+		
+		<p>¿Qué buscas? <input type="search"></p>
+		<h2>Resultados de la búsqueda:</h2>
+		<div>
+			<span class="search-result">Barato</span> <span class="search-result">Turismo</span>
+		</div>
+		
+		<div id="advanced-search">
+			<p>Búsqueda avanzada</p>
+			<p>Seleccionar: <a href="#">todo</a> | <a href="#">nada</a></p>
+			<input type="checkbox" value=""> Listas de sugerencias
+			<input type="checkbox" value=""> Sugerencias
+			<input type="checkbox" value=""> Usuarios
+			<input type="checkbox" value=""> Comentarios
+		</div>
+		
+		<div>
+			<div>
+				¿Dónde? <input type="search">
+			</div>
+			<div>
+				Ordenar por: <input type="select">
+			</div>
+		</div>
+		
+		<ul id="suggestion-list">
+			<li>
+				<a href="#"><img src="/static/facebookapp/img/no_avatar.png" alt="" title=""></a>
+				<a class="sugg-link" href="#">Ole que ole esa sugerencia güenah!</a> <br> En <span class="sugg-place">Restaurante Buencomer</span>
+
+				<div class="save-suggestion" value="104" type="suggestion">
+					<a href="#">Add</a>
+				</div>
+				<div class="like-suggestion" value="104" type="suggestion" style="display:none;">
+					<a href="#">Like</a>
+				</div>
+				<div class="map-suggestion" value="104" type="suggestion" style="display:none;">
+					<a href="#">Map</a>
+				</div>
+
+			</li>
+			<li>
+				<a href="#"><img src="/static/facebookapp/img/no_avatar.png" alt="" title=""></a>
+				<a class="sugg-link" href="#">Sugerencia buscada con cariño y amor por nuestro pollo aventurero</a> <br> En <span class="sugg-place">Restaurante mal comer</span>
+
+				<div class="save-suggestion" value="104" type="suggestion">
+					<a href="#">Add</a>
+				</div>
+				<div class="like-suggestion" value="104" type="suggestion" style="display:none;">
+					<a href="#">Like</a>
+				</div>
+				<div class="map-suggestion" value="104" type="suggestion" style="display:none;">
+					<a href="#">Map</a>
+				</div>
+
+			</li>
+		</ul>
+		
+	</div>
+	
+    
+{%endblock%}
