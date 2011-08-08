@@ -284,7 +284,7 @@ def user_suggestions(request, template='webapp/suggestions.html'):
     suggestions[0] = '%s_%s' % (suggestions[0], suggestions_following[0])
     return  render_to_response(template, {'suggestions': suggestions,
                                           'counters': counters.next(),
-                                          'lists': [l for l in lists],
+                                          'lists': [l.to_dict(resolve=True) for l in lists],
                                           }, context_instance=RequestContext(request)
                                )
 

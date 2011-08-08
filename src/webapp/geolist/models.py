@@ -55,8 +55,8 @@ class List(db.polymodel.PolyModel, HookedModel):
             else:
                 list_modified.send(sender=self)
        
-    def to_dict(self):
-            return {'id': self.id,
+    def to_dict(self, resolve=False):
+            dict = {'id': self.id,
                     'name': self.name,
                     'description': self.description,
                     'user': self.user.username,
@@ -64,6 +64,9 @@ class List(db.polymodel.PolyModel, HookedModel):
                     'created': self.created if self.created is not None else 0,
                     'keys': [i.id() for i in self.keys], 
                     }
+            if resolve:
+                dict['instances'] = db.get(self.keys)
+            return dict
             
     def to_json(self):
         from libs.jsonrpc.jsonencoder import JSONEncoder
