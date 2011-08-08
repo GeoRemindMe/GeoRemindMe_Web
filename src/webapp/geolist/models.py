@@ -75,6 +75,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     def __unicode__(self):
         return self.name
 
+
 class ListSuggestion(List, Visibility):
     '''
     Lista agrupando sugerencias, que no tienen porque ser sugerencias
@@ -247,7 +248,94 @@ class ListSuggestion(List, Visibility):
     def delete(self):
         list_deleted.send(sender=self)
         super(ListSuggestion, self).delete()
-                
+        
+        
+class ListRequested(ListSuggestion):
+    @classproperty
+    def objects(self):
+        return ListRequestedHelper()
+    
+    @classmethod
+    def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], vis='public'):
+        """
+        Crea una nueva lista, en el caso de que exista una con ese nombre,
+        se añaden las alertas
+        
+            :param user: usuario
+            :type user: :class:`geouser.models.User`
+            :param name: nombre de la lista
+            :type name: :class:`string`
+            :param description: descripcion de la lista
+            :type description: :class:`string`
+            :param instances: objetos a añadir a la lista
+            :type instances: :class:`geoalert.models.Alert`
+            :param vis: Visibilidad de la lista
+            :type vis: :class:`string`
+        """
+        from geoalert.models import Suggestion
+        list = None
+        if id is not None:
+            list = cls.objects.get_by_id_user(id, user)
+        if list is None:
+            list = user.listsuggestion_set.filter('name =', name).get()
+        if list is not None:  # la lista con ese nombre ya existe, la editamos
+            list.update(name=name, description=description, instances=instances, instances_del=instances_del, vis=vis )
+            return list
+        # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
+        keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
+        list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
+        list.put()
+        return list
+    
+    def update(self, querier, name=None, description=None, instances=[], instances_del=[], vis='public'):
+        '''
+        Actualiza una lista de alertas
+        
+            :param user: usuario
+            :type user: :class:`geouser.models.User`
+            :param name: nombre de la lista
+            :type name: :class:`string`
+            :param description: descripcion de la lista
+            :type description: :class:`string`
+            :param instances: objetos a añadir a la lista
+            :type instances: :class:`geoalert.models.Alert`
+            :param vis: Visibilidad de la lista
+            :type vis: :class:`string`
+        '''
+        from geoalert.models import Suggestion
+        if querier.key() == self.user.key():
+            if name is not None or name == '':
+                self.name = name
+            if description is not None:
+                self.description = description
+            for deleted in instances_del:
+                try:
+                    self.keys.remove(db.Key.from_path('Event', int(deleted)))
+                except:
+                    pass
+        else:
+            invitation = self.user_invited(querier)
+            if invitation is None or not invitation.is_accepted():
+                from georemindme.exceptions import ForbiddenAccess
+                raise ForbiddenAccess
+        keys = set(self.keys)
+        keys |= set([db.Key.from_path('Event', int(instance)) for instance in instances])
+        self.keys = [k for k in keys]
+        self._vis = vis
+        self.put(querier=querier)
+        
+        def _post_put_sync(self, querier):
+            if self._new:
+                counter = ListCounter(parent=self)
+                counter.put()
+                list_new.send(sender=self)
+                self._new = False
+            else:
+                if not self.active:
+                    list_deleted.send(sender=self)
+                else:
+                    list_modified.send(sender=self, querier=querier)
+        
 
 class ListAlert(List):
     '''

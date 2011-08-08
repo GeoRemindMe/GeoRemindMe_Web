@@ -320,7 +320,7 @@ def save_suggestion(request, form):
 
 
 @login_required
-def add_suggestion_invitation(request, eventid, userid):
+def add_suggestion_invitation(request, eventid, username):
     """Envia una invitacion a un usuario
     
         :param eventid: identificador del evento
@@ -330,10 +330,10 @@ def add_suggestion_invitation(request, eventid, userid):
         
         :returns: :class:`Boolean`
     """
-    user_to = User.objects.get_by_id(userid)
+    user_to = User.objects.get_by_username(username)
     if user_to is None:
         raise Http404
-    event = Suggestion.objects.get_by_id(eventid, request.user, request.user)
+    event = Suggestion.objects.get_by_id_querier(eventid, request.user)
     if event is None:
         raise Http404
     

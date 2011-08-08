@@ -23,6 +23,7 @@ class GPRequest(Http):
     _search_url = 'https://maps.googleapis.com/maps/api/place/search/json?'
     _details_url = 'https://maps.googleapis.com/maps/api/place/details/json?'
     _checkin_url = 'https://maps.googleapis.com/maps/api/place/check-in/json?'
+    _add_url = 'https://maps.googleapis.com/maps/api/place/add/json?'
     headers = { 'User-Agent' : 'Georemindme:0.1' }
 
     
@@ -31,7 +32,6 @@ class GPRequest(Http):
         super(self.__class__, self).__init__(cache=mem, timeout=20, *args, **kwargs)
         self.key = settings.API['google_places']
 
-    
     def do_search(self, pos, radius=500, types=None, language=None, name=None, sensor=False):
         """
             Realiza una busqueda en Google Places. Añade '_url' a cada resultado con la direccion para acceder
@@ -69,7 +69,6 @@ class GPRequest(Http):
         url = url + '&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
         return self._do_request(url)
     
-        
     def retrieve_reference(self, reference, language=None, sensor=False):
         """
             Realiza una busqueda en Google Places de un lugar concreto. Añade '_url'
@@ -91,13 +90,27 @@ class GPRequest(Http):
         url = url + '&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
         return self._do_request(url)
     
-    
     def do_checkin(self, reference, sensor = True):
         url = self._checkin_url + 'sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
         return self._do_request(url, method='POST', body='reference: %s' % reference)
     
-    def add_place(self):
-        pass
+    def add_place(self, location, accuracy, name, types, language='en', sensor=False):
+        from google.appengine.ext.db import GeoPt
+        if not isinstance(location, GeoPt):
+            location = GeoPt(location)
+        dict = {
+                'location': { 
+                                'lat': location.lat,
+                                'lng': location.lon,
+                            },
+                'accuracy': accuracy,
+                'name': name,
+                'language': language,
+                'sensor': sensor,
+                }
+        if types is not None:
+            dict['types'] = types
+        return self._do_request(self._add_url, method='POST', body=dict) 
         
     def _do_request(self, url, method='GET', body=None):
         """

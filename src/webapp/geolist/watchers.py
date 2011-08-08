@@ -24,6 +24,7 @@ list_new.connect(new_list)
 
 
 def modified_list(sender, **kwargs):
+    """
     if isinstance(sender, ListAlert):
         timeline = UserTimelineSystem(user=sender.user.key(), msg_id=251, instance=sender)
     elif isinstance(sender, ListUser):
@@ -37,7 +38,17 @@ def modified_list(sender, **kwargs):
     else:
         return
     timeline.put()
-#list_modified.connect(modified_list)
+    """
+    if isinstance(sender, ListRequested):
+        timeline = UserTimelineSystem(user=kwargs['querier'], msg=351, _vis=sender._get_visibility())
+        from georemindme.tasks import NotificationHandler
+        NotificationHandler().list_followers_notify(sender)
+        timeline.put()
+        if kwargs['querier'].key() != sender.user.key():
+            from geouser.models_utils import _Notification
+            notification = _Notification(owner=sender.user, timeline=timeline)
+            notification.put()
+list_modified.connect(modified_list)
 
 
 def deleted_list(sender, **kwargs):

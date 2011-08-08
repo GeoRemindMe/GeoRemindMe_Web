@@ -76,8 +76,7 @@ class ListHelper(object):
     
     def get_by_id_user(self, id, user = None):
         '''
-        Devuelve la lista con ese ID y el usuario. 
-        Si usuario es None y la lista es publica, tambien devuelve la lista
+        Devuelve la lista con ese ID y el usuario como dueño. 
         
             :param id: identificador de la lista
             :type id: :class:`Integer`
@@ -92,11 +91,6 @@ class ListHelper(object):
                 return None
             if list.user.key() == user.key():
                 return list
-            elif hasattr(list, '_vis'):
-                if list._is_public():
-                    return list
-                elif user is not None and list._is_shared() and list.user_invited(user):
-                    return list
         return None
     
     def get_list_user_following(self, user):
@@ -186,6 +180,9 @@ class ListSuggestionHelper(ListHelper):
                     lists_loaded.append(list)
         return lists_loaded
     
+class ListRequestedHelper(ListSuggestion):
+    _klass = ListRequested
+
 
 class ListAlertHelper(object):
     _klass = ListAlert

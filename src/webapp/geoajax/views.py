@@ -28,7 +28,7 @@ import geovote.views as geovote
     :synopsis: Views for AJAX request
 """
 def str2bool(v):
-  return v.lower() in ("yes", "true", "t", "1")
+    return v.lower() in ("yes", "true", "t", "1")
 
 
 @ajax_request
@@ -182,9 +182,9 @@ def add_suggestion_invitation(request):
             eventid: el id del evento a donde invitar al usuario
             userid: el id del usuario a invitar
     """
-    userid = request.POST.get('userid')
+    username = request.POST.get('username')
     eventid = request.POST.get('eventid')
-    invitation = geoalert.add_suggestion_invitation(request, eventid, userid)
+    invitation = geoalert.add_suggestion_invitation(request, eventid, username)
     return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
 
 def add_suggestion_follower(request):
@@ -481,7 +481,17 @@ def add_list_suggestion(request):
         return HttpResponse(list.to_json(), mimetype="application/json")
     return HttpResponse(list, mimetype="application/json")
 
-
+def add_suggestion_list_invitation(request):
+    """
+        Envia una invitacion a un usuario
+        Parametros en POST:
+            eventid: el id del evento a donde invitar al usuario
+            userid: el id del usuario a invitar
+    """
+    username = request.POST.get('username')
+    eventid = request.POST.get('list_id')
+    invitation = geolist.add_suggestion_list_invitation(request, eventid, username)
+    return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
 #===============================================================================
 # COMENTARIOS Y VOTOS
 #===============================================================================
