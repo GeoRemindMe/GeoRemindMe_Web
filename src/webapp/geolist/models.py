@@ -43,7 +43,7 @@ class List(db.polymodel.PolyModel, HookedModel):
         if not self.is_saved():
             self._new = True
 
-    def _post_put_sync(self):
+    def _post_put_sync(self, **kwargs):
         if self._new:
             counter = ListCounter(parent=self)
             counter.put()
@@ -62,6 +62,7 @@ class List(db.polymodel.PolyModel, HookedModel):
                     'user': self.user.username,
                     'modified': self.modified if self.modified is not None else 0,
                     'created': self.created if self.created is not None else 0,
+                    'counters': self.counters, 
                     'keys': [i.id() for i in self.keys],
                     }
             if resolve:
@@ -327,7 +328,7 @@ class ListRequested(ListSuggestion):
         self._vis = vis
         self.put(querier=querier)
 
-        def _post_put_sync(self, querier):
+        def _post_put_sync(self, querier, **kwargs):
             if self._new:
                 counter = ListCounter(parent=self)
                 counter.put()
