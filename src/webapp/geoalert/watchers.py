@@ -123,10 +123,10 @@ def deleted_privateplace(sender, **kwargs):
 #privateplace_deleted.connect(deleted_privateplace)
 
 def new_place(sender, **kwargs):
-    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=450)
-    timeline.put()
+    #timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=450)
+    #timeline.put()
     sender.insert_ft()
-#place_new.connect(new_place)
+place_new.connect(new_place)
 
 def modified_place(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=451)
