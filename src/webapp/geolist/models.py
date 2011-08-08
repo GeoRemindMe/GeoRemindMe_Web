@@ -62,8 +62,8 @@ class List(db.polymodel.PolyModel, HookedModel):
                     'user': self.user,
                     'modified': self.modified if self.modified is not None else 0,
                     'created': self.created if self.created is not None else 0,
-                    'count': self.count, 
-                    'counters': self.counters.to_dict(), 
+                    'count': self.count,
+                    'counters': self.counters.to_dict(),
                     'keys': [i.id() for i in self.keys],
                     }
             if resolve:
@@ -188,7 +188,7 @@ class ListSuggestion(List, Visibility):
         self._vis = vis
         self.put()
 
-    def del_follower(self, user_key):
+    def del_follower(self, follow_id=None, follow_name=None):
         '''
         Borra un usuario de la lista
 
@@ -201,12 +201,18 @@ class ListSuggestion(List, Visibility):
             index.keys.remove(user_key)
             index.count -= 1
             index.put()
+        if follow_id is not None:
+            user_key = db.Key.from_path(User.kind(), int(follow_id))
+        elif follow_name is not None:
+            user_key = User.objects.get_by_username(follow_name, keys_only=True)
+        else:
+            raise TypeError
         if not self._user_is_follower(user_key):
             return False
         from models_indexes import ListFollowersIndex
         index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
         db.run_in_transaction(_tx, index.key(), user_key)
-        list_following_deleted.send(sender=self, user=db.get(user_key)) #  FIXME: recibir usuario como parametro
+        list_following_deleted.send(sender=self, user=db.get(user_key))
 
     def add_follower(self, user):
         '''

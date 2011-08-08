@@ -13,7 +13,7 @@ import memcache
 class EventHelper(object):
     ''' Clase Helper para realizar busquedas en el datastore '''
     _klass = Event
-        
+
     def get_by_user(self, user, page = 1, query_id = None):
         '''
         Obtiene una lista con todos los Eventos
@@ -24,7 +24,7 @@ class EventHelper(object):
         q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page), p.page_count()]
-    
+
     def get_by_id(self, id):
         '''
         Obtiene un evento por su id, COMPRUEBA VISIBILIDAD, solo obtiene los publicos
@@ -41,19 +41,19 @@ class EventHelper(object):
             if not event._is_public():
                 return None
             memcache.set('%sEVENT%s' % (memcache.version, id), memcache.serialize_instances(event),300)
-        return event     
-    
+        return event
+
     def get_by_key(self, key):
         '''
         Obtiene el evento con ese key
         '''
         return self._klass.get(key)
-    
+
     def get_by_key_user(self, key, user):
         '''
         Obtiene el evento con ese key y comprueba que
         pertenece a un usuario
-        
+
             :raises: :class:`geoalert.exceptions.ForbiddenAccess`
         '''
         if not isinstance(user, User):
@@ -64,12 +64,12 @@ class EventHelper(object):
         if event.user.key() == user.key():
             return event
         return None
-    
+
     def get_by_id_user(self, id, user, querier):
         '''
         Obtiene el evento con ese id comprobando que
         pertenece al usuario
-        
+
             :raises: :class:`geoalert.exceptions.ForbiddenAccess`
         '''
         if not isinstance(user, User) or not isinstance(querier, User):
@@ -86,12 +86,12 @@ class EventHelper(object):
             elif event._is_shared() and event.user_invited(querier):
                 return event
         return None
-    
+
     def get_by_id_querier(self, id, querier):
         '''
         Obtiene el evento con ese id comprobando que
         el usuario tiene acceso a el
-        
+
             :raises: :class:`geoalert.exceptions.ForbiddenAccess`
         '''
         if not isinstance(querier, User):
@@ -107,7 +107,7 @@ class EventHelper(object):
             elif event._is_shared() and event.user_invited(querier):
                 return event
         return None
-    
+
     def get_by_tag_querier(self, tagInstance, querier, page=1, query_id=None):
         if not isinstance(querier, User):
             raise TypeError()
@@ -126,9 +126,9 @@ class EventHelper(object):
                 elif event._is_shared() and event.user_invited(querier):
                     events_lists.append(event)
         if len(events_lists) != 0:
-            return [p.id, events_lists] 
+            return [p.id, events_lists]
         return None
-    
+
     def get_by_tag_owner(self, tagInstance, owner, page=1, query_id=None):
         if not isinstance(owner, User):
             raise TypeError()
@@ -137,8 +137,8 @@ class EventHelper(object):
             raise TypeError
         events = self._klass.all().filter('_tags_list =', tagInstance.key()).filter('user =', owner)
         p = PagedQuery(events, id = query_id)
-        return [p.id, p.fetch_page(page)] 
-    
+        return [p.id, p.fetch_page(page)]
+
     def get_by_last_sync(self, user, last_sync):
         '''
         Obtiene los ultimos eventos a partir
@@ -148,15 +148,15 @@ class EventHelper(object):
             raise TypeError()
         return self._klass.all().filter('user =', user).filter('modified >', last_sync).order('-modified')
 
-    
+
 class AlertHelper(EventHelper):
     _klass = Alert
-    
+
     def get_by_id_user(self, id, user):
         '''
         Obtiene el evento con ese id comprobando que
         pertenece al usuario
-        
+
             :raises: :class:`geoalert.exceptions.ForbiddenAccess`
         '''
         if not isinstance(user, User):
@@ -171,7 +171,7 @@ class AlertHelper(EventHelper):
         if event.user.key() == user.key():
                 return event
         return None
-    
+
     def get_by_user_done(self, user, page=1, query_id=None):
         '''
         Obtiene una lista con todos los Eventos
@@ -182,8 +182,8 @@ class AlertHelper(EventHelper):
         q = self._klass.gql('WHERE user = :1 AND has = "done:T" ORDER BY modified DESC', user)
         p = PagedQuery(q, id = query_id)
         return [p.id, p.fetch_page(page)]
-        
-        
+
+
     def get_by_user_undone(self, user, page=1, query_id=None):
         '''
         Obtiene una lista con todos los Eventos
@@ -193,10 +193,10 @@ class AlertHelper(EventHelper):
             raise TypeError()
         q = self._klass.gql('WHERE user = :1 AND has = "done:F" ORDER BY modified DESC', user)
         return [l for l in q]
-      
+
 
 class SuggestionHelper(EventHelper):
-    _klass = Suggestion    
+    _klass = Suggestion
 
     def get_by_slug_querier(self, slug, querier):
         '''
@@ -213,18 +213,18 @@ class SuggestionHelper(EventHelper):
             if suggestion is not None:
                 if suggestion._is_private():
                     if not querier.is_authenticated():
-                        return None 
+                        return None
                     if suggestion.user.key() != querier.key():
                         return None
                 elif suggestion._is_shared():
                     if not querier.is_authenticated():
-                        return None 
+                        return None
                     if not suggestion.user_invited(querier):
-                        return None 
+                        return None
                 memcache.set('%sEVENT%s' % (memcache.version, slug), memcache.serialize_instances(suggestion),300)
                 return suggestion
         return suggestion
-    
+
     def get_by_user(self, user, querier, page = 1, query_id = None):
         """
         Obtiene una lista con todos los Eventos
@@ -243,7 +243,7 @@ class SuggestionHelper(EventHelper):
             lists = ListSuggestion.objects.get_by_suggestion(s, querier)
             setattr(s, 'lists', lists)
         return [p.id, suggestions, p.page_count()]
-    
+
     def get_by_userALL(self, user, page = 1, query_id = None):
         '''
         Obtiene una lista con todos los Eventos
@@ -253,9 +253,9 @@ class SuggestionHelper(EventHelper):
             raise TypeError()
         q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
         p = PagedQuery(q, id = query_id)
-        
+
         return [p.id, p.fetch_page(page), p.page_count()]
-    
+
     def get_by_place(self, place, page=1, query_id=None, async=False, querier=None):
         if not isinstance(querier, User):
             raise TypeError()
@@ -271,12 +271,12 @@ class SuggestionHelper(EventHelper):
                      } for suggestion in p.fetch_page(page)
                     ]
              ]
-            
+
     def get_by_id_user(self, id, user, querier):
         '''
         Obtiene el evento con ese id comprobando que
         pertenece al usuario
-        
+
             :raises: :class:`geoalert.exceptions.ForbiddenAccess`
         '''
         if not isinstance(user, User) or not isinstance(querier, User):
@@ -299,12 +299,12 @@ class SuggestionHelper(EventHelper):
                 setattr(event, 'lists', lists)
                 return event
         return None
-    
+
     def get_by_id_querier(self, id, querier):
         '''
         Obtiene el evento con ese id comprobando que
         el usuario tiene acceso a el
-        
+
             :raises: :class:`geoalert.exceptions.ForbiddenAccess`
         '''
         if not isinstance(querier, User):
@@ -326,7 +326,7 @@ class SuggestionHelper(EventHelper):
             setattr(event, 'lists', lists)
             return event
         return None
-    
+
     def get_by_user_following(self, user, page=1, query_id=None):
         if not isinstance(user, User):
             raise TypeError
@@ -334,11 +334,11 @@ class SuggestionHelper(EventHelper):
         q = SuggestionFollowersIndex.all().filter('keys =', user.key())
         p = PagedQuery(q, id = query_id)
         return [p.id, [index.parent() for index in p.fetch_page(page)]]
-        
+
 
 class AlertSuggestionHelper(AlertHelper):
     _klass = AlertSuggestion
-    
+
     def get_by_sugid_user(self, sugid, user):
         if not isinstance(user, User):
             raise TypeError()

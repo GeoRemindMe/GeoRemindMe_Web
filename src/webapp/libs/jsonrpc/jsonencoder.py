@@ -9,6 +9,9 @@ class JSONEncoder(simplejson.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return long(time.mktime(obj.timetuple()))
+        from geouser.models import User
+        if isinstance(obj, User):
+            return obj.to_dict()
         from geoalert.models import Event
         if isinstance(obj, Event):
             return obj.to_dict()
