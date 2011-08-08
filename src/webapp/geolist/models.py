@@ -62,6 +62,7 @@ class List(db.polymodel.PolyModel, HookedModel):
                     'user': self.user.username,
                     'modified': self.modified if self.modified is not None else 0,
                     'created': self.created if self.created is not None else 0,
+                    'count': self.count, 
                     'counters': self.counters.to_dict(), 
                     'keys': [i.id() for i in self.keys],
                     }
