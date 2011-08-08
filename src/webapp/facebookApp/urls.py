@@ -35,6 +35,8 @@ urlpatterns = patterns('facebookApp.views',
     url(r'^suggestion/(?P<slug>[^/]*)/$', 'view_suggestion',{},'fb_view_suggestion'),
     url(r'^list/(?P<id>[^/]\d+)/$', 'view_list',{},'fb_view_list'),
     url(r'^place/(?P<place_id>[^/]*)/$', 'view_place',{},'fb_view_place'),
+    url(r'^search/$', 'search_suggestions',{}),
+    url(r'^search/(?P<term>[^/]*)/$', 'search_suggestions',{},'fb_search_suggestions'),
     #url(r'^test_user/$', 'test_users', {}, 'fb_test_user'),
     #url(r'^get_test_user/$', 'get_test_users', {}, 'fb_get_test_user'),
 )

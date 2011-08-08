@@ -78,7 +78,11 @@ def edit_profile (request):
 def user_suggestions(request):
     from geoalert.views import user_suggestions
     return user_suggestions(request, template='suggestions.html')
-    
+
+@facebook_required    
+def search_suggestions(request,term=None):
+    from georemindme.views import search_suggestions
+    return search_suggestions(request, term, template='search.html')    
 
 @facebook_required    
 def add_suggestion(request):
