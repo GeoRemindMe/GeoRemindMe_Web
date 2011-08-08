@@ -87,6 +87,16 @@ def add_suggestion_list_invitation(request, listid, username):
         raise Http404
 
     return event.send_invitation(request.user, user_to)
+
+
+@login_required
+def add_list_follower(request, list_id):
+    list = List.objects.get_by_id_querier(list_id, request.user)
+    if list is not None:
+        return list.add_follower(request.user)
+    return False
+
+    
 #===============================================================================
 # Modificacion de listas
 #===============================================================================

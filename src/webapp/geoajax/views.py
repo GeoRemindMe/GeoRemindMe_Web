@@ -481,6 +481,7 @@ def add_list_suggestion(request):
         return HttpResponse(list.to_json(), mimetype="application/json")
     return HttpResponse(list, mimetype="application/json")
 
+@ajax_request
 def add_suggestion_list_invitation(request):
     """
         Envia una invitacion a un usuario
@@ -492,6 +493,13 @@ def add_suggestion_list_invitation(request):
     eventid = request.POST.get('list_id')
     invitation = geolist.add_suggestion_list_invitation(request, eventid, username)
     return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
+
+@ajax_request
+def add_list_follower(request):
+    list_id = request.POST.get['list_id']
+    added = geolist.add_list_follower(request, list_id)
+    return HttpResponse(simplejson.dumps(added), mimetype="application/json")
+    
 #===============================================================================
 # COMENTARIOS Y VOTOS
 #===============================================================================
