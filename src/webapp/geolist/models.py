@@ -229,7 +229,7 @@ class ListSuggestion(List, Visibility):
             if ListFollowersIndex.all().ancestor(list_key).filter('keys =', user_key).count() != 0:
                 return  # el usuario ya sigue la lista
             # indice con personas que siguen la sugerencia
-            index = ListFollowersIndex.all().ancestor(list_key).filter('count < 80').get()
+            index = ListFollowersIndex.all().ancestor(list_key).filter('count <', 80).get()
             if index is None:
                 index = ListFollowersIndex(parent=list_key)
             index.keys.append(user_key)
