@@ -2333,7 +2333,7 @@ input{
 	}
 	
 	#search input {
-		margin-left: 20px;
+		margin-left: 10px;
 	}
 	
 	#search label {
@@ -2343,8 +2343,8 @@ input{
 	}
 	
 	.search-result {
-		font-size: 1.5em;
-		border: 1px dotted #000000;
+		font-size: 1.2em;
+		border: 1px dotted #696969;
 		display: inline;
 		padding-right: 15px;
 		padding-left: 5px;
@@ -2379,9 +2379,19 @@ input{
 	}
 	
 	#advanced-search {
-		width: 100%;
-		border: 1px dotted #000000;
-		margin-top: 20px;
+		border: 1px dotted #696969;
+		margin-top: 15px;
+		padding-left: 5px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	
+	#advanced-search h2{
+		margin-top: 0px;
+	}
+	
+	#advanced-search input {
+		margin-left: 0px;
 	}
 	
 	.search-avatar {
