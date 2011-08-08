@@ -1774,6 +1774,12 @@ input{
                         margin-right: 0.3em;
                         padding: 0;
                     }
+                    div#content div.suggestionList div.expanded dd ul li{
+                        display: block;
+                        margin: 0.7em 0;
+                        padding: 0em 1.5em;
+                    }
+                    
                     div#content div.expanded dd ul li.removable{
                         padding: 0 1.5em;
                     }
@@ -1807,9 +1813,11 @@ input{
             width:5%;
         }
         .suggestionName{
-
             width:500px;
             cursor:pointer;
+        }
+        .collapsed:hover{
+            background-color: #EEEEEE;
         }
         .suggestionInLists{
             width:25%;
@@ -2320,19 +2328,84 @@ input{
      * 
      ***************************/
 	
-	div#search {
+	#search {
 		margin-top: 10px;
 	}
 	
-	#search h2 {
+	#search input {
+		margin-left: 10px;
+	}
+	
+	#search label {
+		font-weight: bold;
+		font-size: 1.2em;
 		display: inline;
 	}
 	
-	#search input[type="search"] {
-		margin-left: 20px;
+	.search-result {
+		font-size: 1.2em;
+		border: 1px dotted #696969;
+		display: inline;
+		padding-right: 15px;
+		padding-left: 5px;
 	}
 	
-	.search-result {
-		font-size: 1.5em;
-		border: 1px dotted #000000;
+	.close-result {
+		background-image: url("/static/facebookApp/img/delete.png");
+		background-repeat: no-repeat;
+		cursor: pointer;
+		float: right;
+	  	height: 15px;
+	  	width: 15px;
+		background-position: 0 0;
+		margin-right: 5px;
+		position: absolute;
 	}
+	
+	.close-result a {
+		display: none;
+	}
+	
+	#more-search {
+		margin-top: 10px;
+	}
+	
+	#more-search div {
+		display: inline;
+	}
+	
+	#more-search div:last-child {
+		float: right;
+	}
+	
+	#advanced-search {
+		border: 1px dotted #696969;
+		margin-top: 15px;
+		padding-left: 5px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	
+	#advanced-search h2{
+		margin-top: 0px;
+	}
+	
+	#advanced-search input {
+		margin-left: 0px;
+	}
+	
+	.search-avatar {
+		display: inline;
+		float: left;
+	    width: 32px;
+		margin-right: 10px;
+	}
+	
+	.search-avatar img {
+		width: 32px;
+	}
+	
+	.search-text {
+		display: inline;
+	}
+>>>>>>> 743fe54543206e86accc731fa1ac3757c7ae2006

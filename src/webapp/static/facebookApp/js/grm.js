@@ -153,7 +153,15 @@ GRM.remember = function(settings) {
 
         $(this).click(function() {
             
-            var id = $(this).attr('value'), url = (typeof $(this).attr('remember') != "undefined" )?"/ajax/delete/suggestion/follower/":"/ajax/add/suggestion/follower/";
+            //Primero comprobamos el tipo de mensaje
+            var elemType=$(this).parentsUntil('#chronology');
+            if ($(elemType[elemType.length-1]).hasClass("msg-350"))
+                elemType="list";
+            else
+                elemType="suggestion";
+            var id = $(this).attr('value'), url = (typeof $(this).attr('remember') != "undefined" )?"/ajax/delete/"+elemType+"/follower/":"/ajax/add/"+elemType+"/follower/";
+            
+            
             
             if (settings.progress_class)
                 $(this).addClass(settings.progress_class);
@@ -162,7 +170,8 @@ GRM.remember = function(settings) {
                     type: "POST",
                     url: url,
                     data: {
-                        eventid:id
+                        eventid:id,
+                        list_id:id
                     },
                     context: $(this),
                     success: function(){

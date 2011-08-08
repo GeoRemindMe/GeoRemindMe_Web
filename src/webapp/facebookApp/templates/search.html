@@ -4,7 +4,15 @@
 
 
 {% block extra_js %}
-		
+		<script type="text/javascript">
+        $(document).ready(function(){
+			
+            $('#suggestion-list li').hover(
+                function(){$(this).find('div.save-suggestion,div.like-suggestion,div.map-suggestion').css({'display': 'inline'});},
+                function(){$(this).find('div.save-suggestion,div.like-suggestion,div.map-suggestion').css({'display': 'none'});}
+            )
+        });
+	</script>
 {%endblock%}
 
 {% block title %}Search{% endblock %}
@@ -13,16 +21,16 @@
  
 {% block body %}
 	
-	<div id="#search">
+	<div id="search">
 		
-		<h2 style="display:inline">¿Qué buscas?</h2> <input type="search">
+		<h2 style="display:inline">¿Qué buscas?</h2> <input type="search" placeholder="Bares, Restaurantes">
 		<h2>Resultados de la búsqueda:</h2>
 		<div>
-			<span class="search-result">Barato</span> <span class="search-result">Turismo</span>
+			<div class="search-result">Barato<span class="close-result"><a href="#">Close</a></span></div> <div class="search-result">Turismo<span class="close-result"><a href="#">Close</a></span></div>
 		</div>
 		
 		<div id="advanced-search">
-			<p>Búsqueda avanzada</p>
+			<h2>Búsqueda avanzada</h2>
 			<p>Seleccionar: <a href="#">todo</a> | <a href="#">nada</a></p>
 			<input type="checkbox" value=""> Listas de sugerencias
 			<input type="checkbox" value=""> Sugerencias
@@ -30,19 +38,24 @@
 			<input type="checkbox" value=""> Comentarios
 		</div>
 		
-		<div>
+		<div id="more-search">
 			<div>
-				¿Dónde? <input type="text">
+				<label>¿Dónde?</label> <input type="search" placeholder="Granada, Spain">
 			</div>
 			<div>
-				Ordenar por: <input type="select">
+				<label>Ordenar por:</label> <select></select>
 			</div>
 		</div>
 		
 		<ul id="suggestion-list">
 			<li>
-				<a href="#"><img src="/static/facebookapp/img/no_avatar.png" alt="" title=""></a>
-				<a class="sugg-link" href="#">Ole que ole esa sugerencia güenah!</a> <br> En <span class="sugg-place">Restaurante Buencomer</span>
+				<div class="search-avatar">
+					<a href="#"><img src="/static/facebookapp/img/no_avatar.png" alt="" title=""></a>
+				</div>
+				<div class="search-text">
+					<a class="sugg-link" href="#">Ole que ole esa sugerencia güenah!</a> <br> En <span class="sugg-place">Restaurante Buencomer</span>
+				</div>
+				
 
 				<div class="save-suggestion" value="104" type="suggestion">
 					<a href="#">Add</a>
@@ -56,8 +69,12 @@
 
 			</li>
 			<li>
-				<a href="#"><img src="/static/facebookapp/img/no_avatar.png" alt="" title=""></a>
-				<a class="sugg-link" href="#">Sugerencia buscada con cariño y amor por nuestro pollo aventurero</a> <br> En <span class="sugg-place">Restaurante mal comer</span>
+				<div class="search-avatar">
+					<a href="#"><img src="/static/facebookapp/img/no_avatar.png" alt="" title=""></a>
+				</div>
+				<div class="search-text">
+					<a class="sugg-link" href="#">Ole que ole esa sugerencia güenah!</a> <br> En <span class="sugg-place">Restaurante Buencomer</span>
+				</div>
 
 				<div class="save-suggestion" value="104" type="suggestion">
 					<a href="#">Add</a>
