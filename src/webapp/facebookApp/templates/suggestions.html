@@ -577,23 +577,27 @@
                     {% if lists %}
                         <div id="suggestion-list-lists">
                             {% for obj in lists %}
-                                <div id="list_{{obj.id}}">
+                                <div id="list_{{obj.id}}" class="suggestion">
                                     <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                     <div class="collapsed">
                                         <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
-                                        {{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.instances|length}}</span> sugerencias)
-                                        
+                                        <span class="suggestionName">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.instances|length}}</span> sugerencias)</span>
+                                        <span class="suggestionName_editable {% if k.user.username == user.username%}editable{% endif %}" style="display:none">{{obj.name}}</span>                                        
                                     </div>
                                     <div class="expanded" style="display:none">
                                         <dl>
                                             <dt>Descripción:</dt>
                                             <dd>{{obj.description}}</dd>
+                                            
+                                            <dt>Sugerencias</dt>
+                                            <dd>
+                                                <ul>
+                                                    {% for k in obj.instances %}
+                                                        <li>Sugerencia={{k}}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </dd>
                                         </dl>
-                                        <ul>
-                                            {% for k in obj.instances %}
-                                                <li>Sugerencia={{k}}</li>
-                                            {% endfor %}
-                                        </ul>
                                         
                                         <p class="big">Estadísticas:</p>
                                         <dl>

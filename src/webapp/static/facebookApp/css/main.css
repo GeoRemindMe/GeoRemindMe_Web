@@ -1807,9 +1807,11 @@ input{
             width:5%;
         }
         .suggestionName{
-
             width:500px;
             cursor:pointer;
+        }
+        .collapsed:hover{
+            background-color: #EEEEEE;
         }
         .suggestionInLists{
             width:25%;
