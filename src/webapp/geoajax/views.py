@@ -496,7 +496,7 @@ def add_suggestion_list_invitation(request):
 
 @ajax_request
 def add_list_follower(request):
-    list_id = request.POST.get['list_id']
+    list_id = request.POST.get('list_id')
     added = geolist.add_list_follower(request, list_id)
     return HttpResponse(simplejson.dumps(added), mimetype="application/json")
     
