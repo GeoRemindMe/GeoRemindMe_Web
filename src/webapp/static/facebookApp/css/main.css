@@ -2320,19 +2320,73 @@ input{
      * 
      ***************************/
 	
-	div#search {
+	#search {
 		margin-top: 10px;
 	}
 	
-	#search h2 {
-		display: inline;
+	#search input {
+		margin-left: 20px;
 	}
 	
-	#search input[type="search"] {
-		margin-left: 20px;
+	#search label {
+		font-weight: bold;
+		font-size: 1.2em;
+		display: inline;
 	}
 	
 	.search-result {
 		font-size: 1.5em;
 		border: 1px dotted #000000;
+		display: inline;
+		padding-right: 15px;
+		padding-left: 5px;
+	}
+	
+	.close-result {
+		background-image: url("/static/facebookApp/img/delete.png");
+		background-repeat: no-repeat;
+		cursor: pointer;
+		float: right;
+	  	height: 15px;
+	  	width: 15px;
+		background-position: 0 0;
+		margin-right: 5px;
+		position: absolute;
+	}
+	
+	.close-result a {
+		display: none;
+	}
+	
+	#more-search {
+		margin-top: 10px;
+	}
+	
+	#more-search div {
+		display: inline;
+	}
+	
+	#more-search div:last-child {
+		float: right;
+	}
+	
+	#advanced-search {
+		width: 100%;
+		border: 1px dotted #000000;
+		margin-top: 20px;
+	}
+	
+	.search-avatar {
+		display: inline;
+		float: left;
+	    width: 32px;
+		margin-right: 10px;
+	}
+	
+	.search-avatar img {
+		width: 32px;
+	}
+	
+	.search-text {
+		display: inline;
 	}
