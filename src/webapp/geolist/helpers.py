@@ -123,27 +123,6 @@ class ListSuggestionHelper(ListHelper):
             return None
         return list
     
-    def get_by_id_querier(self, id, querier):
-        '''
-        Devuelve la lista publica con ese ID
-        
-            :param id: identificador de la lista
-            :type id: :class:`Integer`
-            :returns: None o :class:`geolist.models.List`
-        '''
-        if not isinstance(querier, User):
-            raise TypeError()
-        list = self.get_by_id(id)
-        if list is None:
-            return None
-        if list.user.key() == querier.key():
-            return list
-        if list._is_public():
-            return list
-        elif list._is_shared() and list.user_invited(querier):
-            return list
-        return None
-    
         
     def get_by_user(self, user, querier, page = 1, query_id = None, all=False):
         """
@@ -180,8 +159,29 @@ class ListSuggestionHelper(ListHelper):
                     lists_loaded.append(list)
         return lists_loaded
     
-class ListRequestedHelper(ListSuggestion):
+class ListRequestedHelper(ListSuggestionHelper):
     _klass = ListRequested
+    
+    def get_by_id_querier(self, id, querier):
+        '''
+        Devuelve la lista publica con ese ID
+        
+            :param id: identificador de la lista
+            :type id: :class:`Integer`
+            :returns: None o :class:`geolist.models.List`
+        '''
+        if not isinstance(querier, User):
+            raise TypeError()
+        list = self.get_by_id(id)
+        if list is None or not isinstance(list, ListRequested):
+            return None
+        if list.user.key() == querier.key():
+            return list
+        if list._is_public():
+            return list
+        elif list._is_shared() and list.user_invited(querier):
+            return list
+        return None
 
 
 class ListAlertHelper(object):

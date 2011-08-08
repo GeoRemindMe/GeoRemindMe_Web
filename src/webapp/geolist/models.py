@@ -20,20 +20,20 @@ class List(db.polymodel.PolyModel, HookedModel):
     modified = db.DateTimeProperty(auto_now=True)
     active = db.BooleanProperty(default=True)
     count = db.IntegerProperty(default=0)  # numero de sugerencias en la lista
-    
+
     _counters = None
     _new = False
-    
+
     @property
     def id(self):
         return self.key().id()
-    
+
     @property
     def counters(self):
         if self._counters is None:
             self._counters = ListCounter.all().ancestor(self).get()
         return self._counters
-    
+
     @classproperty
     def objects(self):
         return ListHelper()
@@ -42,7 +42,7 @@ class List(db.polymodel.PolyModel, HookedModel):
         self.count = len(self.keys)
         if not self.is_saved():
             self._new = True
-            
+
     def _post_put_sync(self):
         if self._new:
             counter = ListCounter(parent=self)
@@ -54,7 +54,7 @@ class List(db.polymodel.PolyModel, HookedModel):
                 list_deleted.send(sender=self)
             else:
                 list_modified.send(sender=self)
-       
+
     def to_dict(self, resolve=False):
             dict = {'id': self.id,
                     'name': self.name,
@@ -62,16 +62,16 @@ class List(db.polymodel.PolyModel, HookedModel):
                     'user': self.user.username,
                     'modified': self.modified if self.modified is not None else 0,
                     'created': self.created if self.created is not None else 0,
-                    'keys': [i.id() for i in self.keys], 
+                    'keys': [i.id() for i in self.keys],
                     }
             if resolve:
                 dict['instances'] = db.get(self.keys)
             return dict
-            
+
     def to_json(self):
         from libs.jsonrpc.jsonencoder import JSONEncoder
         return simplejson.dumps(self.to_dict(), cls=JSONEncoder)
-    
+
     def __str__(self):
         return unicode(self.name).encode('utf-8')
 
@@ -85,17 +85,17 @@ class ListSuggestion(List, Visibility):
     creadas por el mismo usuario que crea la lista.
     Tiene control de visibilidad
     '''
-    
+
     user = db.ReferenceProperty(User)
-    
+
     @classproperty
     def objects(self):
         return ListSuggestionHelper()
-    
+
     def _user_is_follower(self, user_key):
         '''
         Busca si un usuario ya sigue a una lista
-        
+
             :param user_key: key del usuario a buscar
             :type user_key: :class:`db.Key`
             :returns: True si el usuario ya sigue la lista. False si no.
@@ -107,7 +107,7 @@ class ListSuggestion(List, Visibility):
         if index is not None:
             return True
         return False
-    
+
     def notify_followers(self):
         '''
         Crea un timelineSystem por cada usuario que sigue
@@ -122,13 +122,13 @@ class ListSuggestion(List, Visibility):
                     timeline = UserTimelineSystem(user=self.user, msg_id=351, instance=self)
                     timeline.put()
             return True
-        
+
     @classmethod
     def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], vis='public'):
         """
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
-        
+
             :param user: usuario
             :type user: :class:`geouser.models.User`
             :param name: nombre de la lista
@@ -154,11 +154,11 @@ class ListSuggestion(List, Visibility):
         list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
         list.put()
         return list
-    
+
     def update(self, name=None, description=None, instances=[], instances_del=[], vis='public'):
         '''
         Actualiza una lista de alertas
-        
+
             :param user: usuario
             :type user: :class:`geouser.models.User`
             :param name: nombre de la lista
@@ -185,11 +185,11 @@ class ListSuggestion(List, Visibility):
         self.keys = [k for k in keys]
         self._vis = vis
         self.put()
-        
+
     def del_follower(self, user_key):
         '''
         Borra un usuario de la lista
-        
+
             :param user_key: key del usuario a buscar
             :type user_key: :class:`db.Key`
             :returns: True si se borro el usuario. False si hubo algun error o no existia
@@ -205,15 +205,15 @@ class ListSuggestion(List, Visibility):
         index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
         db.run_in_transaction(_tx, index.key(), user_key)
         list_following_deleted.send(sender=self, user=db.get(user_key)) #  FIXME: recibir usuario como parametro
-    
+
     def add_follower(self, user):
         '''
         Añade un usuario a los seguidores de una lista
-        
+
             :param user: Usuario que quiere apuntarse a una sugerencia
             :type user: :class:`geouser.models.User`
-            
-            :returns: True si se añadio, False en caso contrario    
+
+            :returns: True si se añadio, False en caso contrario
         '''
         if self._user_is_follower(user.key()):
             return True
@@ -221,7 +221,7 @@ class ListSuggestion(List, Visibility):
             return False
         elif self._is_shared():
             if self.user_invited(user) is None:
-                return False   
+                return False
         def _tx(list_key, user_key):
             # TODO : cambiar a contador con sharding
             list = db.get(list_key)
@@ -240,30 +240,30 @@ class ListSuggestion(List, Visibility):
         self.user_invited(user, set_status=1)  # FIXME : mejor manera de cambiar estado invitacion
         list_following_new.send(sender=self, user=user)
         return True
-    
+
     def has_follower(self, user):
         if not user.is_authenticated():
             return False
         if ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get() is not None:
             return True
-        return False 
-    
+        return False
+
     def delete(self):
         list_deleted.send(sender=self)
         super(ListSuggestion, self).delete()
-        
-        
+
+
 class ListRequested(ListSuggestion):
     @classproperty
     def objects(self):
         return ListRequestedHelper()
-    
+
     @classmethod
     def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], vis='public'):
         """
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
-        
+
             :param user: usuario
             :type user: :class:`geouser.models.User`
             :param name: nombre de la lista
@@ -289,11 +289,11 @@ class ListRequested(ListSuggestion):
         list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
         list.put()
         return list
-    
+
     def update(self, querier, name=None, description=None, instances=[], instances_del=[], vis='public'):
         '''
         Actualiza una lista de alertas
-        
+
             :param user: usuario
             :type user: :class:`geouser.models.User`
             :param name: nombre de la lista
@@ -326,7 +326,7 @@ class ListRequested(ListSuggestion):
         self.keys = [k for k in keys]
         self._vis = vis
         self.put(querier=querier)
-        
+
         def _post_put_sync(self, querier):
             if self._new:
                 counter = ListCounter(parent=self)
@@ -338,7 +338,7 @@ class ListRequested(ListSuggestion):
                     list_deleted.send(sender=self)
                 else:
                     list_modified.send(sender=self, querier=querier)
-        
+
 
 class ListAlert(List):
     '''
@@ -346,17 +346,17 @@ class ListAlert(List):
     usuarios
     '''
     user = db.ReferenceProperty(User)
-    
+
     @classproperty
     def objects(self):
         return ListAlertHelper()
-    
+
     @classmethod
     def insert_list(cls, user, name, description = None, instances=[]):
         """
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
-        
+
             :param user: usuario
             :type user: :class:`geouser.models.User`
             :param name: nombre de la lista
@@ -381,11 +381,11 @@ class ListAlert(List):
         list = ListAlert(name=name, user=user, description=description, keys=[k for k in keys])
         list.put()
         return list
-    
+
     def update(self, name=None, description=None, instances_add=[], instances_del=[]):
         '''
         Actualiza una lista de alertas
-        
+
             :param user: usuario
             :type user: :class:`geouser.models.User`
             :param name: nombre de la lista
@@ -409,23 +409,23 @@ class ListAlert(List):
         self.keys = [k for k in keys]
         self.put()
 
-        
+
 class ListUser(List):
     '''
     Lista agrupando usuarios, para mejor gestion del usuario, no es publica
     '''
     user = db.ReferenceProperty(User)
-    
+
     @classproperty
     def objects(self):
         return ListUserHelper()
-    
+
     @classmethod
     def insert_list(cls, user, name, description=None, instances=[]):
         '''
         Crea una nueva lista de usuarios, en el caso de que exista una con ese nombre,
         se añaden los usuarios
-        
+
             :param user: usuario
             :type user: :class:`geouser.models.User`
             :param name: nombre de la lista
@@ -448,11 +448,11 @@ class ListUser(List):
         list = ListUser(name=name, user=user, description=description, keys=[k for k in keys])
         list.put()
         return list
-    
+
     def update(self, name=None, description=None, instances_add=[], instances_del=[]):
         '''
         Actualiza una lista de usuarios
-        
+
             :param user: usuario
             :type user: :class:`geouser.models.User`
             :param name: nombre de la lista
@@ -475,10 +475,10 @@ class ListUser(List):
         keys |= set([instance.key() for instance in instances_add])
         self.keys = [k for k in keys]
         self.put()
-        
+
 class _Deleted_List(db.Model):
     # TODO: crear deleted list
     pass
 
-from watchers import *    
+from watchers import *
 from helpers import *

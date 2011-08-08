@@ -2321,3 +2321,20 @@ input{
      *  Search details
      * 
      ***************************/
+	
+	div#search {
+		margin-top: 10px;
+	}
+	
+	#search h2 {
+		display: inline;
+	}
+	
+	#search input[type="search"] {
+		margin-left: 20px;
+	}
+	
+	.search-result {
+		font-size: 1.5em;
+		border: 1px dotted #000000;
+	}
