@@ -6,12 +6,13 @@
     <script type="text/javascript" src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/vault.js"></script>
+
     <script type="text/javascript" src="/static/facebookApp/js/jquery.jeditable.js"></script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript">        
         $(document).ready(function(){    
-            //Asignamos comportamiento ONCLICK a cada fila
+            //Asignamos comportamiento ONCLICK a cada fila --> Desplegar detalles
             $('.maximize-minimize').toggle(function(){
                     $(this).parent().find('div.expanded').slideDown('fast');
                     $(this).parent().find('.suggestionName').toggle();
@@ -25,6 +26,9 @@
                     $(this).removeClass('suggestionExpanded');
                     $(this).addClass('suggestionCollapsed');
             });
+            
+            //Copiamos el comportamiento del click sobre el botón al hacerlo
+            //sobre el nombre de la sugenrecia
             $('.suggestionName').click(function(){
                 $(this).parentsUntil('.suggestion').parent().find('.maximize-minimize').click();
             })
@@ -36,13 +40,13 @@
                     $(':regex(id,^(checkBox_))').attr('checked',false);
             });
             
-            $('.editable[value="textarea"]').editable('suggestions/add', { 
-                 type      : 'textarea',
-                 cancel    : 'Cancel',
-                 submit    : 'OK',
-                 indicator : 'Saving...',
-                 tooltip   : 'Click to edit...'
-             });
+//            $('.editable[value="textarea"]').editable('suggestions/add', { 
+//                 type      : 'textarea',
+//                 cancel    : 'Cancel',
+//                 submit    : 'OK',
+//                 indicator : 'Saving...',
+//                 tooltip   : 'Click to edit...'
+//             });
             
             //Adding behaviour to tab content
             $('#tabMenu li').click(function(){
@@ -575,10 +579,37 @@
                         <div id="suggestion-list-lists">
                             {% for obj in lists %}
                                 <div id="list_{{obj.id}}">
-                                    <div class="collapsed">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</div>
+                                    <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
+                                    <div class="collapsed">
+                                        <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
+                                        {{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.instances|length}}</span> sugerencias)
+                                        
+                                    </div>
                                     <div class="expanded" style="display:none">
-                                        <p>Nombre: {{obj.name}}</p>
-                                        <p>Número de sugerencias: <span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</p>
+                                        <dl>
+                                            <dt>Descripción:</dt>
+                                            <dd>{{obj.description}}</dd>
+                                        </dl>
+                                        <ul>
+                                            {% for k in obj.instances %}
+                                                <li>Sugerencia={{k}}</li>
+                                            {% endfor %}
+                                        </ul>
+                                        
+                                        <p class="big">Estadísticas:</p>
+                                        <dl>
+                                            <dt>Última modificación:</dt>
+                                            <dd>{{obj.modified}}</dd>
+                                            
+                                            <dt>Valoraciones recibidas: </dt>
+                                            <dd>{{obj.counters.votes}}</dd>
+                                            
+                                            <dt>Personas que han guardado la sugerencia: </dt>
+                                            <dd>{{obj.counters.followers}}</dd>
+                                            
+                                            <dt>Comentarios recibidos:</dt>
+                                            <dd>{{obj.counters.comments}}</dd>
+                                        </dl>
                                     </div>
                                 </div>
                             {% endfor %}
