@@ -111,7 +111,7 @@ class PlaceHelper(POIHelper):
                        )
         results = list(query[9:].split()) #  chapuza :)
         places = [self.get_by_id(result) for result in results]
-        return places # TODO: acabar
+        return places
     
 
 class BusinessHelper(object):

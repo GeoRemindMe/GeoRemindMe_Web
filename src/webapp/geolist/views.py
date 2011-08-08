@@ -4,7 +4,7 @@
 from django.shortcuts import render_to_response
 from django.shortcuts import Http404
 from django.template import RequestContext
-    
+
 from geouser.decorators import login_required
 from models import ListSuggestion, ListAlert, ListUser, List
 
@@ -15,7 +15,7 @@ from models import ListSuggestion, ListAlert, ListUser, List
 def add_list_user(request, name, description = None, instances = []):
     '''
     Crea una nueva lista de usuarios
-        
+
         :param name: nombre para la lista (el nombre es unico)
         :type name: :class:`string`
         :param description: descripcion de la lista (opcional)
@@ -31,7 +31,7 @@ def add_list_user(request, name, description = None, instances = []):
 def add_list_alert(request, name=None, description=None, instances=None):
     '''
     Crea una nueva lista de alertas
-        
+
         :param name: nombre para la lista (el nombre es unico)
         :type name: :class:`string`
         :param description: descripcion de la lista (opcional)
@@ -47,7 +47,7 @@ def add_list_alert(request, name=None, description=None, instances=None):
 def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[]):
     '''
     Modifica una lista de usuarios
-        
+
         :param id: identificador de la lista
         :type id: :class:`integer`
         :param name: nombre para la lista (el nombre es unico)
@@ -62,7 +62,7 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         from models import ListRequested
         list = ListRequested.objects.get_by_id_querier(id, request.user)
         if list is not None:
-            list.update(request.user, instances_add=instances)
+            list.update(querier=request.user, instances=instances)
             return list
     list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, instances_del=instances_del)
     return list
@@ -70,12 +70,12 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
 @login_required
 def add_suggestion_list_invitation(request, listid, username):
     """Envia una invitacion a un usuario
-    
+
         :param eventid: identificador del evento
         :type eventid: :class:`Integer`
         :param userid: identificador del usuario
         :type userid: :class:`Integer`
-        
+
         :returns: :class:`Boolean`
     """
     from geouser.models import User
@@ -85,7 +85,7 @@ def add_suggestion_list_invitation(request, listid, username):
     event = ListSuggestion.objects.get_by_id_querier(listid, request.user)
     if event is None:
         raise Http404
-    
+
     return event.send_invitation(request.user, user_to)
 #===============================================================================
 # Modificacion de listas
@@ -103,7 +103,7 @@ def mod_list_requested(request, id, instances_add=[]):
 def mod_list_user(request, id, name=None, description=None, instances_add=[], instances_del=[]):
     '''
     Modifica una lista de usuarios
-        
+
         :param id: identificador de la lista
         :type id: :class:`integer`
         :param name: nombre para la lista (el nombre es unico)
@@ -124,7 +124,7 @@ def mod_list_user(request, id, name=None, description=None, instances_add=[], in
 def mod_list_alert(request, id, name=None, description=None, instances_add=[], instances_del=[]):
     '''
     Modifica una lista de alertas
-        
+
         :param id: identificador de la lista
         :type id: :class:`integer`
         :param name: nombre para la lista (el nombre es unico)
@@ -147,12 +147,12 @@ def mod_list_alert(request, id, name=None, description=None, instances_add=[], i
 def get_list_id(request, id = None, user = None):
     '''
     Obtiene una lista por el identificador
-        
+
         :param id: identificador de la lista
         :type id: :class:`integer`
         :returns: id de la lista modificada
     '''
-    
+
     user = request.session.get('user', None)
     list = List.objects.get_by_id_user(id = id, user = user)
     return list
@@ -162,7 +162,7 @@ def get_list_id(request, id = None, user = None):
 def get_list_user_id(request, id = None, name = None):
     '''
     Obtiene una lista de usuarios
-        
+
         :param id: identificador de la lista
         :type id: :class:`integer`
         :param name: nombre para la lista (el nombre es unico)
@@ -179,7 +179,7 @@ def get_list_user_id(request, id = None, name = None):
 def get_list_user_name(request, name):
     '''
     Obtiene una lista de usuarios
-        
+
         :param id: identificador de la lista
         :type id: :class:`integer`
         :param name: nombre para la lista (el nombre es unico)
@@ -188,7 +188,7 @@ def get_list_user_name(request, name):
     '''
     user = request.session['user']
     list = ListUser.objects.get_by_name_user(name, user)
-    
+
     return list
 
 
@@ -196,7 +196,7 @@ def get_list_user_name(request, name):
 def get_list_alert_id(request, id = None, name = None):
     '''
     Obtiene una lista de alertas
-        
+
         :param id: identificador de la lista
         :type id: :class:`integer`
         :param name: nombre para la lista (el nombre es unico)
@@ -212,7 +212,7 @@ def get_list_alert_id(request, id = None, name = None):
 def get_list_alert_name(request, name):
     '''
     Obtiene una lista de usuarios
-        
+
         :param id: identificador de la lista
         :type id: :class:`integer`
         :param name: nombre para la lista (el nombre es unico)
@@ -221,7 +221,7 @@ def get_list_alert_name(request, name):
     '''
     user = request.session['user']
     list = ListAlert.objects.get_by_name_user(name, user)
-    
+
     return list
 
 
@@ -229,7 +229,7 @@ def get_list_alert_name(request, name):
 def del_list(request, id):
     '''
     Borra una lista
-        
+
         :param id: identificador de la lista
         :type id: :class:`integer`
         :returns: True si se borro la lista
@@ -247,7 +247,7 @@ def del_list(request, id):
 def get_all_list_user(request, query_id=None, page=1):
     '''
     Devuelve todas las listas de usuarios del usuario ¡PAGINADA!
-    
+
         :param page: numero de pagina a mostrar
         :type param: int
         :param query_id: identificador de busqueda
@@ -256,7 +256,7 @@ def get_all_list_user(request, query_id=None, page=1):
     '''
     user = request.session['user']
     lists = ListUser.objects.get_by_user(user, query_id=query_id, page=page)
-    
+
     return lists
 
 
@@ -264,7 +264,7 @@ def get_all_list_user(request, query_id=None, page=1):
 def get_all_list_alert(request, query_id=None, page=1):
     '''
     Devuelve todas las listas de alertas del usuario ¡PAGINADA!
-    
+
         :param page: numero de pagina a mostrar
         :type param: int
         :param query_id: identificador de busqueda
@@ -273,7 +273,7 @@ def get_all_list_alert(request, query_id=None, page=1):
     '''
     user = request.session['user']
     lists = ListAlert.objects.get_by_user(user, query_id=query_id, page=page)
-    
+
     return lists
 
 
@@ -281,7 +281,7 @@ def get_all_list_alert(request, query_id=None, page=1):
 def get_list_suggestion(request, list_id=None, user_id=None, query_id=None, page=1):
     '''
     Devuelve todas las listas de sugerencias del usuario ¡PAGINADA!
-    
+
         :param page: numero de pagina a mostrar
         :type param: int
         :param query_id: identificador de busqueda
@@ -308,7 +308,7 @@ def get_list_suggestion(request, list_id=None, user_id=None, query_id=None, page
 def get_requested_suggestion(request, list_id):
     '''
     Devuelve todas las listas de sugerencias del usuario ¡PAGINADA!
-    
+
         :param page: numero de pagina a mostrar
         :type param: int
         :param query_id: identificador de busqueda
@@ -318,28 +318,28 @@ def get_requested_suggestion(request, list_id):
     from models import ListRequested
     list = ListRequested.objects.get_by_id_querier(list_id, querier=request.user)
     return list
-    
+
 
 @login_required
 def follow_list_suggestion(request, id):
     '''
     Añade a un usuario como seguir de una lista de sugerencias
-    
+
         :param id: identificador de la lista
         :type id: :class:`integer`
-        
+
         :returns: True si se añadio, False si no tiene permisos
     '''
     user = request.session['user']
     list = ListSuggestion.objects.get_by_id(id)
     follow = list.add_follower(user)
-    
+
     return follow
 
 def get_all_public_list_suggestion(request, query_id=None, page=1):
     '''
     Devuelve todas las listas de sugerencias publicas ¡PAGINADA!
-    
+
         :param page: numero de pagina a mostrar
         :type param: int
         :param query_id: identificador de busqueda
@@ -347,18 +347,18 @@ def get_all_public_list_suggestion(request, query_id=None, page=1):
         :returns: [query_id, [:class:`geolist.models.ListSuggestion`]
     '''
     lists = ListSuggestion.objects.get_all_public(query_id=query_id, page=page)
-    
+
     return lists
 
 @login_required
 def get_all_shared_list_suggestion(request):
     '''
     Devuelve todas las listas de sugerencias compartidas con el usuario
-    
+
         :returns: [:class:`geolist.models.ListSuggestion`]
     '''
     lists = ListSuggestion.objects.get_shared_list(request.user)
-    
+
     return lists
 
 
@@ -390,13 +390,14 @@ def view_list(request, id, template='webapp/view_list.html'):
     query_id, comments_async = get_comments_list(request, list.id, async=True)
     top_comments = Comment.objects.get_top_voted(list, request.user)
     user_follower = list.has_follower(request.user)
-    return render_to_response(template, {'list': list, 
-                                         'has_voted': has_voted,
-                                         'vote_counter': vote_counter,
-                                         'user_follower': user_follower,
-                                         'suggestions':load_suggestions_async(suggestions_async),
-                                         'comments': Comment.objects.load_comments_from_async(query_id, comments_async, request.user),
-                                         'top_comments': top_comments
-                                         },
-                              context_instance=RequestContext(request)
+    return render_to_response(template,
+                                {'list': list,
+                                 'has_voted': has_voted,
+                                 'vote_counter': vote_counter,
+                                 'user_follower': user_follower,
+                                 'suggestions': load_suggestions_async(suggestions_async),
+                                 'comments': Comment.objects.load_comments_from_async(query_id, comments_async, request.user),
+                                 'top_comments': top_comments
+                                },
+                                context_instance=RequestContext(request)
                               )
