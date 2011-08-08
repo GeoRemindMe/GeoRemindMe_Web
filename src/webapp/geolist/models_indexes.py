@@ -14,6 +14,8 @@ class ListCounter(db.Model):
     comments = db.IntegerProperty(default=0)
     created = db.DateTimeProperty(auto_now_add=True)
     
+    _votes = None
+    
     @property
     def id(self):
         return int(self.key().id())
