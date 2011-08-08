@@ -227,7 +227,7 @@ class ListSuggestion(List, Visibility):
             # TODO : cambiar a contador con sharding
             from models_indexes import ListFollowersIndex
             if ListFollowersIndex.all().ancestor(list_key).filter('keys =', user_key).count() != 0:
-                return  # el usuario ya sigue la lista
+                return True  # el usuario ya sigue la lista
             # indice con personas que siguen la sugerencia
             index = ListFollowersIndex.all().ancestor(list_key).filter('count <', 80).get()
             if index is None:
@@ -235,7 +235,9 @@ class ListSuggestion(List, Visibility):
             index.keys.append(user_key)
             index.count += 1
             index.put()
-        db.run_in_transaction(_tx, list_key = self.key(), user_key = user.key())
+        tx = db.run_in_transaction(_tx, list_key = self.key(), user_key = user.key())
+        if tx:
+            return True
         self.user_invited(user, set_status=1)  # FIXME : mejor manera de cambiar estado invitacion
         list_following_new.send(sender=self, user=user)
         return True
