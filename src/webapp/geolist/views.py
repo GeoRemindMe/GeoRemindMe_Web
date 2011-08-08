@@ -58,11 +58,47 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         :type instances: :class:`list`
         :returns: id de la lista modificada
     '''
+    if id is not None:
+        from models import ListRequested
+        list = ListRequested.objects.get_by_id_querier(id, request.user)
+        if list is not None:
+            list.update(request.user, instances_add=instances)
+            return list
     list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, instances_del=instances_del)
     return list
+
+@login_required
+def add_suggestion_list_invitation(request, listid, username):
+    """Envia una invitacion a un usuario
+    
+        :param eventid: identificador del evento
+        :type eventid: :class:`Integer`
+        :param userid: identificador del usuario
+        :type userid: :class:`Integer`
+        
+        :returns: :class:`Boolean`
+    """
+    from geouser.models import User
+    user_to = User.objects.get_by_username(username)
+    if user_to is None:
+        raise Http404
+    event = ListSuggestion.objects.get_by_id_querier(listid, request.user)
+    if event is None:
+        raise Http404
+    
+    return event.send_invitation(request.user, user_to)
 #===============================================================================
 # Modificacion de listas
 #===============================================================================
+@login_required
+def mod_list_requested(request, id, instances_add=[]):
+    from models import ListRequested
+    list = ListRequested.objects.get_by_id_querier(id, querier=request.user)
+    if list is not None:
+        list.update(request.user, instances_add=instances_add)
+    return list
+
+
 @login_required
 def mod_list_user(request, id, name=None, description=None, instances_add=[], instances_del=[]):
     '''
@@ -121,6 +157,7 @@ def get_list_id(request, id = None, user = None):
     list = List.objects.get_by_id_user(id = id, user = user)
     return list
 
+
 @login_required
 def get_list_user_id(request, id = None, name = None):
     '''
@@ -170,6 +207,7 @@ def get_list_alert_id(request, id = None, name = None):
     list = ListAlert.objects.get_by_id_user(id, user)
     return list
 
+
 @login_required
 def get_list_alert_name(request, name):
     '''
@@ -185,6 +223,7 @@ def get_list_alert_name(request, name):
     list = ListAlert.objects.get_by_name_user(name, user)
     
     return list
+
 
 @login_required
 def del_list(request, id):
@@ -203,6 +242,7 @@ def del_list(request, id):
             return True
     return False
 
+
 @login_required
 def get_all_list_user(request, query_id=None, page=1):
     '''
@@ -219,6 +259,7 @@ def get_all_list_user(request, query_id=None, page=1):
     
     return lists
 
+
 @login_required
 def get_all_list_alert(request, query_id=None, page=1):
     '''
@@ -234,6 +275,7 @@ def get_all_list_alert(request, query_id=None, page=1):
     lists = ListAlert.objects.get_by_user(user, query_id=query_id, page=page)
     
     return lists
+
 
 @login_required
 def get_list_suggestion(request, list_id=None, user_id=None, query_id=None, page=1):
@@ -261,6 +303,22 @@ def get_list_suggestion(request, list_id=None, user_id=None, query_id=None, page
         list = ListSuggestion.objects.get_by_id_querier(list_id, querier=request.user)
         return list
 
+
+@login_required
+def get_requested_suggestion(request, list_id):
+    '''
+    Devuelve todas las listas de sugerencias del usuario ¡PAGINADA!
+    
+        :param page: numero de pagina a mostrar
+        :type param: int
+        :param query_id: identificador de busqueda
+        :type query_id: int
+        :returns: [query_id, [:class:`geolist.models.ListSuggestion`]
+    '''
+    from models import ListRequested
+    list = ListRequested.objects.get_by_id_querier(list_id, querier=request.user)
+    return list
+    
 
 @login_required
 def follow_list_suggestion(request, id):

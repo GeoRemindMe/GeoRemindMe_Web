@@ -110,6 +110,15 @@ class Invitation(db.Model):
         self.status = 3
         self.put()
         
+    def is_accepted(self):
+        return True if self.status == 1 else False
+    
+    def is_declined(self):
+        return True if self.status == 2 else False
+    
+    def is_ignored(self):
+        return True if self.status == 3 else False
+        
     def set_status(self, set_status=0):
         self.status = set_status
         self.put()
@@ -117,12 +126,15 @@ class Invitation(db.Model):
         invitation_changed.send(sender=self)
          
     def put(self):
+        if self.sender.key() == self.to.key():
+            return
         if not self.is_saved():
             super(Invitation, self).put()
             from geouser.models_acc import UserTimelineSystem
             timeline = UserTimelineSystem(user=self.sender, msg_id=110, instance=self)
-            timeline2 = UserTimelineSystem(user=self.to, msg_id=111, instance=self)
-            put = db.put_async([timeline, timeline2])            
+            from geouser.models_utils import _Notification
+            notification = _Notification(owner=self.to, timeline=timeline)
+            put = db.put_async([timeline, notification])            
             if self.to.settings.notification_invitation:
                 from geomail import send_notification_invitation
                 send_notification_invitation(self.to.email, self.sender, self)

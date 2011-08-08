@@ -284,7 +284,7 @@ def user_suggestions(request, template='webapp/suggestions.html'):
     suggestions[0] = '%s_%s' % (suggestions[0], suggestions_following[0])
     return  render_to_response(template, {'suggestions': suggestions,
                                           'counters': counters.next(),
-                                          'lists': [l for l in lists],
+                                          'lists': [l.to_dict(resolve=True) for l in lists],
                                           }, context_instance=RequestContext(request)
                                )
 
@@ -320,7 +320,7 @@ def save_suggestion(request, form):
 
 
 @login_required
-def add_suggestion_invitation(request, eventid, userid):
+def add_suggestion_invitation(request, eventid, username):
     """Envia una invitacion a un usuario
     
         :param eventid: identificador del evento
@@ -330,10 +330,10 @@ def add_suggestion_invitation(request, eventid, userid):
         
         :returns: :class:`Boolean`
     """
-    user_to = User.objects.get_by_id(userid)
+    user_to = User.objects.get_by_username(username)
     if user_to is None:
         raise Http404
-    event = Suggestion.objects.get_by_id(eventid, request.user, request.user)
+    event = Suggestion.objects.get_by_id_querier(eventid, request.user)
     if event is None:
         raise Http404
     

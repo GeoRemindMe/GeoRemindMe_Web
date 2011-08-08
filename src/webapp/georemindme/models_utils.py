@@ -150,12 +150,12 @@ class HookedModel(db.Model):
     
     def put(self, **kwargs):
         self.put_async().get_result()
-        return self._post_put_sync()
+        return self._post_put_sync(**kwargs)
         
     def _post_put(self):
         pass
     
-    def _post_put_sync(self):
+    def _post_put_sync(self, **kwargs):
         pass
     
     def _pre_delete(self):
@@ -221,7 +221,7 @@ def hokked_put(models, **kwargs):
             model._pre_put()
         old_put(models, **kwargs)
         if isinstance(model, HookedModel):
-            model._post_put()
+            model._post_put_sync(**kwargs)
 db.put = hokked_put
 
 
