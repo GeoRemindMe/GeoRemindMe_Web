@@ -50,7 +50,7 @@ class ShardedCounter(db.Model):
         from google.appengine.api import memcache
         instance=str(instance)
         total = memcache.get(instance)
-        if not total:
+        if total is None:
             total = 0
             counters = cls.gql('WHERE instance = :1', instance)
             for counter in counters:
