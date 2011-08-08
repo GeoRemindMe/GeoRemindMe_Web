@@ -3,374 +3,394 @@
 {% block title %}Baúl de sugerencias{% endblock %}
 
 {% block extra_js %}
-    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
-    <script src="/static/facebookApp/js/grm.js"></script>
-    <script src="/static/facebookApp/js/vault.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/vault.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/jquery.jeditable.js"></script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
-    <script src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript">        
         $(document).ready(function(){    
-    //Asignamos comportamiento ONCLICK a cada fila
-    $('.maximize-minimize').toggle(function(){
-            $(this).parent().find('div.expanded').slideDown('fast');
-            $(this).parent().find('.suggestionName').toggle();
-            $(this).parent().find('.suggestionName_editable').toggle();
-            $(this).removeClass('suggestionCollapsed');
-            $(this).addClass('suggestionExpanded');
-        },function() {
-            $(this).parent().find('div.expanded').slideUp('fast'); 
-            $(this).parent().find('.suggestionName').toggle();
-            $(this).parent().find('.suggestionName_editable').toggle();
-            $(this).removeClass('suggestionExpanded');
-            $(this).addClass('suggestionCollapsed');
-    });
-    
-    $('#checkBox_all').click(function(){
-        if($('#checkBox_all').is(':checked'))
-            $(':regex(id,^(checkBox_))').attr('checked',true);
-        else
-            $(':regex(id,^(checkBox_))').attr('checked',false);
-    });
-    
-    
-    //Adding behaviour to tab content
-    $('#tabMenu li').click(function(){
-        tab_id=$('#tabMenu li.active').attr('id')
-        $('#'+tab_id+'_content').addClass('hidden');
-        $('#tabMenu li.active').removeClass('active');
-        
-        tab_id=$(this).attr('id')
-        $('#'+tab_id+'_content').removeClass('hidden');
-        $(this).addClass('active');
-    })
-    
-    // Menu desplegable "Listas"
-    // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
-    hiConfig = {
-        sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
-        interval: 0, // number = milliseconds for onMouseOver polling interval
-        timeout: 500, // number = milliseconds delay before onMouseOut
-        over: function() {
-            $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
-        },
-        out: function() {
-             $(this).find('ul:first').slideUp(400);
-        }
-    }
-    
-    $(".dropDrownBtn, .submenu ").hoverIntent(hiConfig);
-    $(".dropDrownBtn").click(function(){
-        $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
-    })
-    
-    $('.submenu li').click(function(){submenuLiBehave(this)})
-    
-    //Enter behave when adding new list on Suggestions Tab
-    $("#new-list-btn span#new-list").keyup(function(e) {
-        var suggestionList=[];
-        e.preventDefault();
-        //On press enter
-        if(e.keyCode == 13) {
-
-            //Comprobamos si hay sugerencias seleccionadas para añadirlas
-            var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
-            if( checkedSuggestions.length>0){
-                checkedSuggestions.each(function(){
-                    suggestionList.push($(this).attr('id').substring(9,$(this).attr('id').length))
-                })
+            //Asignamos comportamiento ONCLICK a cada fila
+            $('.maximize-minimize').toggle(function(){
+                    $(this).parent().find('div.expanded').slideDown('fast');
+                    $(this).parent().find('.suggestionName').toggle();
+                    $(this).parent().find('.suggestionName_editable').toggle();
+                    $(this).removeClass('suggestionCollapsed');
+                    $(this).addClass('suggestionExpanded');
+                },function() {
+                    $(this).parent().find('div.expanded').slideUp('fast'); 
+                    $(this).parent().find('.suggestionName').toggle();
+                    $(this).parent().find('.suggestionName_editable').toggle();
+                    $(this).removeClass('suggestionExpanded');
+                    $(this).addClass('suggestionCollapsed');
+            });
+            $('.suggestionName').click(function(){
+                $(this).parentsUntil('.suggestion').parent().find('.maximize-minimize').click();
+            })
+            
+            $('#checkBox_all').click(function(){
+                if($('#checkBox_all').is(':checked'))
+                    $(':regex(id,^(checkBox_))').attr('checked',true);
+                else
+                    $(':regex(id,^(checkBox_))').attr('checked',false);
+            });
+            
+            $('.editable[value="textarea"]').editable('suggestions/add', { 
+                 type      : 'textarea',
+                 cancel    : 'Cancel',
+                 submit    : 'OK',
+                 indicator : 'Saving...',
+                 tooltip   : 'Click to edit...'
+             });
+            
+            //Adding behaviour to tab content
+            $('#tabMenu li').click(function(){
+                tab_id=$('#tabMenu li.active').attr('id')
+                $('#'+tab_id+'_content').addClass('hidden');
+                $('#tabMenu li.active').removeClass('active');
+                
+                tab_id=$(this).attr('id')
+                $('#'+tab_id+'_content').removeClass('hidden');
+                $(this).addClass('active');
+            })
+            
+            // Menu desplegable "Listas"
+            // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
+            hiConfig = {
+                sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
+                interval: 0, // number = milliseconds for onMouseOver polling interval
+                timeout: 500, // number = milliseconds delay before onMouseOut
+                over: function() {
+                    $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+                },
+                out: function() {
+                     $(this).find('ul:first').slideUp(400);
+                }
             }
+            
+            $(".dropDrownBtn, .submenu ").hoverIntent(hiConfig);
+            $(".dropDrownBtn").click(function(){
+                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+            })
+            
+            $('.submenu li').click(function(){submenuLiBehave(this)})
+            
+            //Enter behave when adding new list on Suggestions Tab
+            $("#new-list-btn span#new-list").keyup(function(e) {
+                var suggestionList=[];
+                e.preventDefault();
+                //On press enter
+                if(e.keyCode == 13) {
+
+                    //Comprobamos si hay sugerencias seleccionadas para añadirlas
+                    var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
+                    if( checkedSuggestions.length>0){
+                        checkedSuggestions.each(function(){
+                            suggestionList.push($(this).attr('id').substring(9,$(this).attr('id').length))
+                        })
+                    }
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url modify_suggestion_list %}",
+                        data: {
+                            name: $(this).find('input').val(),
+                            suggestions: suggestionList
+                        },
+                        dataType:'json',
+                        success: function(data){
+                            //Añadimos la lista al desplegable
+                            $("<li id=\"listid-"+data.id+"\">"+data.name+" (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('#new-list-btn');
+                            $('#listid-'+data.id).click(function(){submenuLiBehave(this)});
+                            
+                            //Añadimos la lista en la pestaña listas
+                            
+                            //Reordenamos alfabéticamente la lista desplegable
+                            $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
+                                return $(a).text() > $(b).text() ? 1 : -1;
+                            });
+                            
+                            //Añadimos a la sugerencia dentro de la lista de sugerencias 
+                            //las nuevas listas en las que se encuentra
+                            updateSuggestions(data);
+                            
+                            //Actualizamos el contador de la lista
+                            updateCounter(data.id,data.keys.length);
+                            
+                            //Mostrar mensaje de éxito
+                            
+                            
+                        }
+                    });
+                    
+                    $("#new-list-btn span#text").css('display','inline-block')
+                    $("#new-list-btn span#new-list").css('display','none')
+                    $("#new-list-btn span#new-list").find('input').val("");
+                }                
+            });
+            
+            //Reordenamos alfabéticamente la lista desplegable
+            $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
+                return $(a).text() > $(b).text() ? 1 : -1;
+            });
+            
+            //On expanded view of a suggestion--> Remove suggestion from a list
+            $('.removable-sugestion-list li').click(function(){
+                removableFromList(this);
+            });
+            
+            
+            //On LISTS tab, add new list
+            $('.addNewList').click(function(){
+               console.log("Añadimos nueva lista") 
+            });
+            
+            $('#new-list-btn').click(function(){
+                if($("#new-list-btn span#text").css('display')=="inline-block"){
+                    $("#new-list-btn span#text").css('display','none')
+                    $("#new-list-btn span#new-list").css('display','inline-block')
+                    $("#new-list-btn span#new-list").find('input').focus()
+                }
+            })
+            
+            
+            $('.empty-msg').click(function(){
+                $("#checkBox_"+$(this).attr('value')).attr('checked',true);
+                $(".dropDrownBtn").click()
+            });
+            
+        });
+
+        /*
+         * 
+         * 
+         * 
+         */
+
+
+        // Actualizamos la información de en que listas se encuentra
+        // cada una de la sugerencias del grid
+        function updateSuggestions(data){
+            var suggestions = data.keys;
+            var listID = data.id;
+            var listName = data.name;
+            console.log(suggestions)
+            console.log("listID="+listID)
+            console.log("listName="+listName)
+            $(suggestions).each(function(i,suggestionID){
+                if($('#suggestion_'+suggestionID+' .removable-sugestion-list .list_'+listID).length==0){
+                    //console.log("existe "+suggestionID+" en "+listID)
+                    var tmp='<li class="list_'+listID+' removable" value="'+suggestionID+'">'+listName+'</li>';
+                    $('#suggestion_'+suggestionID+' .removable-sugestion-list ').append(tmp);
+                    var element=$('#suggestion_'+suggestionID+' .removable-sugestion-list .list_'+listID);
+                    element.click(function(){
+                        removableFromList(this);
+                    });
+                    
+                    if(element.parent().css('display')=="none"){
+                        element.parent().show();
+                        element.parent().parent().find('.empty-msg').hide();
+                    }
+                    
+                }
+            })
+            
+            
+        }
+
+        //Extrae a una sugerencia de una lista
+        function removableFromList(obj){
+            var unparsedString=$(obj).attr('class').split(" ")[0];
+            var listID = unparsedString.substring(5,unparsedString.length)
+            var suggestionID = $(obj).attr('value')
+            var domElement=$(obj);
+            //console.log("Eliminamos sugerencia "+suggestionID+" de la lista " + listID)
             
             $.ajax({
                 type: "POST",
                 url: "{% url modify_suggestion_list %}",
                 data: {
-                    name: $(this).find('input').val(),
-                    suggestions: suggestionList
+                    list_id: listID,
+                    suggestions_del: [suggestionID]
                 },
                 dataType:'json',
                 success: function(data){
-                    //Añadimos la lista al desplegable
-                    $("<li id=\"listid-"+data.id+"\">"+data.name+" (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('#new-list-btn');
-                    $('#listid-'+data.id).click(function(){submenuLiBehave(this)});
+
                     
-                    //Añadimos la lista en la pestaña listas
-                    
-                    //Reordenamos alfabéticamente la lista desplegable
-                    $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
-                        return $(a).text() > $(b).text() ? 1 : -1;
-                    });
-                    
-                    //Añadimos a la sugerencia dentro de la lista de sugerencias 
-                    //las nuevas listas en las que se encuentra
-                    updateSuggestions(data);
-                    
-                    //Actualizamos el contador de la lista
-                    updateCounter(data.id,data.keys.length);
-                    
-                    //Mostrar mensaje de éxito
-                    
+                    //Ocultamos y eliminamos
+                    domElement.fadeOut(function(){ 
+                        if($('#suggestion_'+suggestionID+' .removable-sugestion-list').children().length==1)
+                            $('#suggestion_'+suggestionID+' .empty-msg').fadeIn('slow');
+                        $(obj).remove();
+                        
+                        //Actualizamos el contador de la lista
+                        updateCounter(listID,data.keys.length);
+                    })
                     
                 }
             });
-            
-            $("#new-list-btn span#text").css('display','inline-block')
-            $("#new-list-btn span#new-list").css('display','none')
-            $("#new-list-btn span#new-list").find('input').val("");
-        }                
-    });
-    
-    //Reordenamos alfabéticamente la lista desplegable
-    $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
-        return $(a).text() > $(b).text() ? 1 : -1;
-    });
-    
-    //On expanded view of a suggestion--> Remove suggestion from a list
-    $('.removable-sugestion-list li').click(function(){
-        removableFromList(this);
-    });
-    
-    
-    //On LISTS tab, add new list
-    $('.addNewList').click(function(){
-       console.log("Añadimos nueva lista") 
-    });
-    
-    $('#new-list-btn').click(function(){
-        if($("#new-list-btn span#text").css('display')=="inline-block"){
-            $("#new-list-btn span#text").css('display','none')
-            $("#new-list-btn span#new-list").css('display','inline-block')
-            $("#new-list-btn span#new-list").find('input').focus()
         }
-    })
-    
-    
-    $('.empty-msg').click(function(){
-        $("#checkBox_"+$(this).attr('value')).attr('checked',true);
-        $(".dropDrownBtn").click()
-    });
-    
-});
 
-/*
- * 
- * 
- * 
- */
-
-
-// Actualizamos la información de en que listas se encuentra
-// cada una de la sugerencias del grid
-function updateSuggestions(data){
-    var suggestions = data.keys;
-    var listID = data.id;
-    var listName = data.name;
-    
-    $(suggestions).each(function(i,suggestionID){
-        if($('#suggestion_'+suggestionID+' .removable-sugestion-list .list_'+listID+'32').length)
-            console.log("existe "+suggestionID+" en "+listID)
-        else{
-            var tmp='<li class="removable list_'+listID+'" value="'+suggestionID+'">'+listName+'</li>';
-            $('#suggestion_'+suggestionID+' .removable-sugestion-list ').append(tmp);
+        //Añade las sugerencias marcadas a la lista correspondiente
+        function submenuLiBehave(obj){
+            if($(obj).attr('id')=="new-list-btn")
+                return false;
+            var addToList=$(obj).attr('id').substring(7,$(obj).attr('id').length);
+            var suggestions=[]
+            var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
+            if( checkedSuggestions.length==0){
+                console.log("No ha seleccionado items");
+            }else{
+                checkedSuggestions.each(function(){
+                    //console.log("Añadimos a la lista: "+addToList+", la sugerencia: "+);
+                    suggestions.push($(this).attr('id').substring(9,$(this).attr('id').length))
+                });
+                
+                $.ajax({
+                    type: "POST",
+                    url: "{% url modify_suggestion_list %}",
+                    data: {
+                        list_id: addToList,
+                        suggestions: suggestions
+                    },
+                    dataType:'json',
+                    success: function(data){
+                        
+                        //Añadimos a la sugerencia dentro de la lista de sugerencias 
+                        //las nuevas listas en las que se encuentra
+                        updateSuggestions(data);
+                        
+                        
+                        //Actualizamos el contador de la lista
+                        updateCounter(data.id,data.keys.length);
+                        
+                        //console.log("Sugerencias añadidas con éxito");
+                        //Mostrar mensaje de éxito
+                    }
+                });
+            }
             
-            $('#suggestion_'+suggestionID+' .removable-sugestion-list .list_'+listID).click(function(){
-                removableFromList(this);
+        }
+
+        function toogleSuggestion(obj){
+            var suggestion_id=$(obj).parent().attr('id').substr(11)
+            var temp=$(obj).parent()
+            console.log("Entro")
+            
+            temp.parent().find('div.expanded').toggle();
+            temp.parent().find('div.collapsed').toggle();
+        }
+
+
+        function loadSuggestionsPage(page){
+            GRM.loadPage({
+                page:page,
+                "total_pages":{{suggestions.2}},
+                container:'#suggestion-list',
+                url:'/ajax/get/suggestion/',
+                template: "#suggestionTemplate",
+                data:{
+                        'query_id':"{{suggestions.0}}",
+                    }                
+            });
+        }
+
+        function removeSuggestions(){
+            temp=$("input[name='suggestions']:checked")
+            $.each(temp, function(index,value){
+                $.ajax({
+                    type: "POST",
+                    url: "/ajax/delete/suggestion/",
+                    data: {
+                        eventid:value.value
+                    },
+                    complete: function(msg){
+                        if (msg.status !=200){
+                            $('#error-msg').text("Error "+msg.status)
+                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+                        }else{
+                            $('#suggestion_'+value.value).fadeOut('slow').remove()
+                        }
+                        
+                    }
+                });
             })
         }
-    })
-}
 
-//Extrae a una sugerencia de una lista
-function removableFromList(obj){
-    var unparsedString=$(obj).attr('class').split(" ")[0];
-    var listID = unparsedString.substring(5,unparsedString.length)
-    var suggestionID = $(obj).attr('value')
-    var domElement=$(obj);
-    //console.log("Eliminamos sugerencia "+suggestionID+" de la lista " + listID)
-    
-    $.ajax({
-        type: "POST",
-        url: "{% url modify_suggestion_list %}",
-        data: {
-            list_id: listID,
-            suggestions_del: [suggestionID]
-        },
-        dataType:'json',
-        success: function(data){
-
-            
-            //Ocultamos y eliminamos
-            domElement.fadeOut(function(){ 
-                if($('#suggestion_'+suggestionID+' .removable-sugestion-list').children().length==1)
-                    $('#suggestion_'+suggestionID+' .empty-msg').fadeIn('slow');
-                $(obj).remove();
-                
-                //Actualizamos el contador de la lista
-                updateCounter(listID,data.keys.length);
-            })
-            
+        function updateCounter(listID,val){
+            counterClass='.list-'+listID+'-counter';
+        //    counter=parseInt($($(counterClass)[0]).text())
+            //counter=counter+val;
+            //if(counter>=0)
+                $(counterClass).text(val);
         }
-    });
-}
 
-//Añade las sugerencias marcadas a la lista correspondiente
-function submenuLiBehave(obj){
-    if($(obj).attr('id')=="new-list-btn")
-        return false;
-    var addToList=$(obj).attr('id').substring(7,$(obj).attr('id').length);
-    var suggestions=[]
-    var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
-    if( checkedSuggestions.length==0){
-        console.log("No ha seleccionado items");
-    }else{
-        checkedSuggestions.each(function(){
-            //console.log("Añadimos a la lista: "+addToList+", la sugerencia: "+);
-            suggestions.push($(this).attr('id').substring(9,$(this).attr('id').length))
-        });
-        
-        $.ajax({
-            type: "POST",
-            url: "{% url modify_suggestion_list %}",
-            data: {
-                list_id: addToList,
-                suggestions: suggestions
-            },
-            dataType:'json',
-            success: function(data){
-                
-                //Añadimos a la sugerencia dentro de la lista de sugerencias 
-                //las nuevas listas en las que se encuentra
-                updateSuggestions(data);
-                
-                
-                //Actualizamos el contador de la lista
-                updateCounter(data.id,data.keys.length);
-                
-                //console.log("Sugerencias añadidas con éxito");
-                //Mostrar mensaje de éxito
-            }
-        });
-    }
-    
-}
-
-function toogleSuggestion(obj){
-    var suggestion_id=$(obj).parent().attr('id').substr(11)
-    var temp=$(obj).parent()
-    console.log("Entro")
-    
-    temp.parent().find('div.expanded').toggle();
-    temp.parent().find('div.collapsed').toggle();
-}
-
-
-function loadSuggestionsPage(page){
-    GRM.loadPage({
-        page:page,
-        "total_pages":{{suggestions.2}},
-        container:'#suggestion-list',
-        url:'/ajax/get/suggestion/',
-        template: "#suggestionTemplate",
-        data:{
-                'query_id':"{{suggestions.0}}",
-            }                
-    });
-}
-
-function removeSuggestions(){
-    temp=$("input[name='suggestions']:checked")
-    $.each(temp, function(index,value){
-        $.ajax({
-            type: "POST",
-            url: "/ajax/delete/suggestion/",
-            data: {
-                eventid:value.value
-            },
-            complete: function(msg){
-                if (msg.status !=200){
-                    $('#error-msg').text("Error "+msg.status)
-                    $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
-                }else{
-                    $('#suggestion_'+value.value).fadeOut('slow').remove()
-                }
-                
-            }
-        });
-    })
-}
-
-function updateCounter(listID,val){
-    counterClass='.list-'+listID+'-counter';
-//    counter=parseInt($($(counterClass)[0]).text())
-    //counter=counter+val;
-    //if(counter>=0)
-        $(counterClass).text(val);
-}
-
-/**
- * jQuery.fn.sortElements
- * --------------
- * @param Function comparator:
- *   Exactly the same behaviour as [1,2,3].sort(comparator)
- *   
- * @param Function getSortable
- *   A function that should return the element that is
- *   to be sorted. The comparator will run on the
- *   current collection, but you may want the actual
- *   resulting sort to occur on a parent or another
- *   associated element.
- *   
- *   E.g. $('td').sortElements(comparator, function(){
- *      return this.parentNode; 
- *   })
- *   
- *   The <td>'s parent (<tr>) will be sorted instead
- *   of the <td> itself.
- */
-jQuery.fn.sortElements = (function(){
- 
-    var sort = [].sort;
- 
-    return function(comparator, getSortable) {
- 
-        getSortable = getSortable || function(){return this;};
- 
-        var placements = this.map(function(){
- 
-            var sortElement = getSortable.call(this),
-                parentNode = sortElement.parentNode,
- 
-                // Since the element itself will change position, we have
-                // to have some way of storing its original position in
-                // the DOM. The easiest way is to have a 'flag' node:
-                nextSibling = parentNode.insertBefore(
-                    document.createTextNode(''),
-                    sortElement.nextSibling
-                );
- 
-            return function() {
- 
-                if (parentNode === this) {
-                    throw new Error(
-                        "You can't sort elements if any one is a descendant of another."
-                    );
-                }
- 
-                // Insert before flag:
-                parentNode.insertBefore(this, nextSibling);
-                // Remove flag:
-                parentNode.removeChild(nextSibling);
- 
+        /**
+         * jQuery.fn.sortElements
+         * --------------
+         * @param Function comparator:
+         *   Exactly the same behaviour as [1,2,3].sort(comparator)
+         *   
+         * @param Function getSortable
+         *   A function that should return the element that is
+         *   to be sorted. The comparator will run on the
+         *   current collection, but you may want the actual
+         *   resulting sort to occur on a parent or another
+         *   associated element.
+         *   
+         *   E.g. $('td').sortElements(comparator, function(){
+         *      return this.parentNode; 
+         *   })
+         *   
+         *   The <td>'s parent (<tr>) will be sorted instead
+         *   of the <td> itself.
+         */
+        jQuery.fn.sortElements = (function(){
+         
+            var sort = [].sort;
+         
+            return function(comparator, getSortable) {
+         
+                getSortable = getSortable || function(){return this;};
+         
+                var placements = this.map(function(){
+         
+                    var sortElement = getSortable.call(this),
+                        parentNode = sortElement.parentNode,
+         
+                        // Since the element itself will change position, we have
+                        // to have some way of storing its original position in
+                        // the DOM. The easiest way is to have a 'flag' node:
+                        nextSibling = parentNode.insertBefore(
+                            document.createTextNode(''),
+                            sortElement.nextSibling
+                        );
+         
+                    return function() {
+         
+                        if (parentNode === this) {
+                            throw new Error(
+                                "You can't sort elements if any one is a descendant of another."
+                            );
+                        }
+         
+                        // Insert before flag:
+                        parentNode.insertBefore(this, nextSibling);
+                        // Remove flag:
+                        parentNode.removeChild(nextSibling);
+         
+                    };
+         
+                });
+         
+                return sort.call(this, comparator).each(function(i){
+                    placements[i].call(getSortable.call(this));
+                });
+         
             };
- 
-        });
- 
-        return sort.call(this, comparator).each(function(i){
-            placements[i].call(getSortable.call(this));
-        });
- 
-    };
- 
-})();
+         
+        })();
 
         
     </script>
@@ -436,7 +456,10 @@ jQuery.fn.sortElements = (function(){
                                 <div class="expanded" style="display:none">
                                     <dl>                                        
                                         <dt>Descripción:</dt>
-                                        <dd class=" {% if k.user.username == user.username%}editable{% endif %}">{%if k.description %}{{k.description}} {% else %}<em>Sin descripción</em>{% endif %}</dd>
+                                        <dd class=" {% if k.user.username == user.username%}editable{% endif %}" value="textarea">
+                                            {%if k.description %}{{k.description}} {% else %}<em>Sin descripción</em>{% endif %}
+                                            
+                                        </dd>
                                         
                                         <dt>Lugar:</dt>
                                         <dd>
@@ -485,11 +508,9 @@ jQuery.fn.sortElements = (function(){
                                             </ul>
                                         </dd>
 
-
-                                        {% if k.user.username != user.username%} 
-                                            <dt>Autor:</dt>
-                                            <dd><a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a></dd>
-                                        {% endif %}
+                                        <dt>Autor:</dt>
+                                        <dd><a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a></dd>
+                                        
                                     </dl>
                                     
                                     
