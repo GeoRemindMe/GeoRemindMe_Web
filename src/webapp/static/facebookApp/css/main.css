@@ -1663,7 +1663,7 @@ input{
             text-decoration:none;
         }
         ul#tabMenu li{
-            background-color: #EEEEEE;
+            background-color: white;
             border: 1px dotted #DDDDDD;
             color: blue;
             cursor: pointer;
@@ -1677,12 +1677,23 @@ input{
             
         }
         ul#tabMenu li.active{
-            background-color: white;
+			background-color: #EEEEEE;
+            
             color: black;
             font-weight: bold;
             border-bottom: 0;
         }
-        
+        div#suggestions ul#tabMenu li{
+			margin: 0;
+			padding: 0.5em;
+			border-bottom: 0;
+        }
+        div#suggestions ul#tabMenu li.active{
+			margin: 0;
+			padding: 0.5em;
+			font-weight: normal;
+			border-bottom: 0;
+        }
     div#content{
         border-bottom:1px dotted #ddd;
         border-right:1px dotted #ddd;
@@ -1735,8 +1746,13 @@ input{
                 display: block;
                 font-size: 1.3em;
                 margin: 1em 2em 0.5em 2em;
-                padding: 0;
+                padding: 0 0 4px 30px;
             }
+            div#content div.expanded p.statistics{
+				background: url("/static/facebookApp/img/statistics.png") no-repeat scroll 0 0 transparent;
+				line-height: 24px;
+			}
+            
             div#content div.expanded dl:after{
                 clear: both;
                 content: ".";
@@ -1750,7 +1766,7 @@ input{
                 float: left;
                 font-weight: bold;
                 margin-right: 1em;
-                min-width: 75px;
+                min-width: 85px;
             }
             div#content div.expanded dd{
                 display: inline-block;
@@ -1781,7 +1797,7 @@ input{
                     }
                     div#content div.suggestionList div.expanded dd.suggestions ul li{
                         display: block;
-                        margin: 0.7em 0;
+                        margin: 0.3em 0 0.7em 0;
                         padding: 0em 1.5em;
                     }
                     
@@ -1994,6 +2010,8 @@ input{
         padding: 0.3em;
         cursor:pointer;
     }
+    
+    
     
     /****************************
      *      

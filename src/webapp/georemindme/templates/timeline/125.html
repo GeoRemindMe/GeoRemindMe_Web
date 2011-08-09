@@ -47,4 +47,9 @@ Mensaje nº 125<br>
                 | <a href="{% url fb_view_suggestion obj.instance.instance.instance.slug %}">Ver sugerencia</a> 
             </span
         </div>
+{% else %}
+	<p>No me puede gustar un comentario mio!</p>
+	<p><em class="comment">{{obj.instance.instance.msg}}</em><br></p>
+	<p>obj.instance.user.username = {{obj.instance.user.username}}</p>
+	<p>obj.instance.instance.user.username = {{obj.instance.instance.user.username}}</p>
 {% endif %}

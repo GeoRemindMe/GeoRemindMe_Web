@@ -32,6 +32,9 @@
             $('.suggestionName').click(function(){
                 $(this).parentsUntil('.suggestion').parent().find('.maximize-minimize').click();
             })
+            $('.suggestionName_editable').click(function(){
+				$(this).parentsUntil('.suggestion,.suggestionList').parent().find('.maximize-minimize').click();
+            })
             
             $('#checkBox_all').click(function(){
                 if($('#checkBox_all').is(':checked'))
@@ -230,13 +233,19 @@
                 //Comprobamos si en la lista ya existe la sugerencia
                 if ($('#list_'+listID+' .suggestions li[value="'+suggestionID+'"]').length==0){
                     //Si no está la sugerencia en la lista la añadimos
-                    $('#list_'+listID+' .suggestions ul').append('<li value="'+suggestionID+'" class="list_'+listID+' removable">'+$('#suggestion_'+suggestionID+' .suggestionName').text()+'</li>');
+                    $('#list_'+listID+' .suggestions ul').append('<li value="'+suggestionID+'" class="list_'+listID+' removable">'+$('#suggestion_'+suggestionID+' .suggestionName_editable').text()+'</li>');
                     
                     $('#list_'+listID+' .suggestions ul li[value="'+suggestionID+'"]').click(function(){
                         var unparsedString=$(this).attr('class').split(" ")[0];
                         var listID = unparsedString.substring(5,unparsedString.length)
                         removeFromList(this,listID);
                     });
+                    
+                    if($('#list_'+listID+' .suggestions ul li').length==1){
+						$('#list_'+listID+' .suggestions ul').show();
+						$('#list_'+listID+' .suggestions .empty-msg').hide();
+						
+					}
                 }
             })
             
@@ -279,7 +288,23 @@
                         updateCounter(listID,data.keys.length);
                     })
                     
-                    //Buscamos en la pesta
+                    //Buscamos en la pestaña opuesta
+                    if($('#suggestions_lists').hasClass('active')){
+						//Borramos del detalle de sugerencia la lista
+						if($('#suggestion_'+suggestionID+' ul.removable-sugestion-list li').length==1){
+                            //Ya no quedan más hermanos en la pestaña detalle de sugerencia
+                            $('#suggestion_'+suggestionID+' .empty-msg').show()
+                        }
+						$('#suggestion_'+suggestionID+' .list_'+listID).remove()
+					}else{
+						//Borramos del detalle de lista la sugerencia
+						if($('#list_'+listID+' dd.suggestions li').length==1){
+                            //Ya no quedan más hermanos en la pestaña detalle de sugerencia
+                            $('#list_'+listID+' dd.suggestions .empty-msg').show()
+                        }
+						$('#list_'+listID+' li[value="'+suggestionID+'"]').remove()
+						
+					}
 
                     
                 }
@@ -372,6 +397,27 @@
                             $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
                         }else{
                             $('#suggestion_'+value.value).fadeOut('slow').remove()
+                        }
+                        
+                    }
+                });
+            })
+        }
+        function removeLists(){
+            temp=$("input[name='lists']:checked")
+            $.each(temp, function(index,value){
+                $.ajax({
+                    type: "POST",
+                    url: "/ajax/delete/suggestion/list/",
+                    data: {
+                        list_id: value.value
+                    },
+                    complete: function(msg){
+                        if (msg.status !=200){
+                            $('#error-msg').text("Error "+msg.status)
+                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+                        }else{
+                            $('#list_'+value.value).fadeOut('slow').remove()
                         }
                         
                     }
@@ -546,7 +592,7 @@
                                         </dd>
                                         
                                         <dt>Listas:</dt>
-                                        <dd style="width:400px">
+                                        <dd style="width:390px">
                                             
                                                 <ul class="removable-sugestion-list" {% if k.lists|length = 0 %}style="display:none"{% endif %}>
                                                     {% for obj in k.lists %}
@@ -578,10 +624,8 @@
                                     </dl>
                                     
                                     
-                                    <p class="big">Estadísticas:</p>
+                                    <p class="big statistics">Estadísticas:</p>
                                     <dl>
-                                        <dt>Última modificación:</dt>
-                                        <dd>{{k.modified}}</dd>
                                         
                                         <dt>Valoraciones recibidas: </dt>
                                         <dd>{{k.counters.votes}}</dd>
@@ -591,6 +635,9 @@
                                         
                                         <dt>Comentarios recibidos:</dt>
                                         <dd>{{k.counters.comments}}</dd>
+                                        
+                                        <dt>Última modificación:</dt>
+                                        <dd>{{k.modified}}</dd>
                                     </dl>
                                     
                                     
@@ -624,14 +671,16 @@
                 <!-- LISTS -->
                 <span id="suggestions_lists_content" class="tab-content hidden">
                     <div id="header">
-                        <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" value="Car" /></span>
+                        <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" /></span>
                         <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="loadSuggestionsPage('next')">Siguiente</span>
                         <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
                         
-                        <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
+                        <span class="btn removeBtn" onclick="removeLists()">Eliminar</span>
+<!--
                         <span class="btn addNewList">
                             Nueva lista
                         </span>
+-->
                         
                     </div>
 
@@ -641,7 +690,7 @@
                                 <div id="list_{{obj.id}}" class="suggestion suggestionList">
                                     <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                     <div class="collapsed">
-                                        <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
+                                        <span class="checkBox"><input type="checkbox" id="checkBox_{{obj.id}}" value="{{obj.id}}" name="lists" /></span>
                                         <span class="suggestionName">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.count}}</span> sugerencias, autor: {{obj.user.username}} )</span>
                                         <span class="suggestionName_editable {% if k.user.username == user.username%}editable{% endif %}" style="display:none">{{obj.name}}</span>                                        
                                     </div>
@@ -686,19 +735,17 @@
                                             <dd><a href="{% url fb_public_profile obj.user.username %}">{{obj.user.username}}</a></dd>
                                         </dl>
                                         
-                                        <p class="big">Estadísticas:</p>
+                                        <p class="big statistics">Estadísticas:</p>
                                         <dl>
-                                            <dt>Última modificación:</dt>
-                                            <dd>{{obj.modified}}</dd>
                                             
-                                            <dt>Valoraciones recibidas: </dt>
-                                            <dd>{{obj.counters.votes}}</dd>
-                                            
-                                            <dt>Personas que han guardado la sugerencia: </dt>
+                                            <dt>Personas que han guardado la lista: </dt>
                                             <dd>{{obj.counters.followers}}</dd>
                                             
                                             <dt>Comentarios recibidos:</dt>
                                             <dd>{{obj.counters.comments}}</dd>
+                                            
+                                            <dt>Última modificación:</dt>
+                                            <dd>{{obj.modified}}</dd>
                                         </dl>
                                     </div>
                                 </div>
