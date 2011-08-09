@@ -92,8 +92,8 @@ class ListHelper(object):
             :param user: usuario del que buscar las listas
             :type user: :class:`geouser.models.User`
         '''
-        indexes = ListFollowersIndex.all().filter('_kind =', self._klass.kind()).filter('keys =', user.key())
-        return [index.parent().to_dict(resolve=resolve) for index in indexes if index.active]
+        indexes = ListFollowersIndex.all().filter('keys =', user.key())
+        return [index.parent().to_dict(resolve=resolve) for index in indexes if index.parent().active]
 
     def get_shared_list(self, user):
         '''
