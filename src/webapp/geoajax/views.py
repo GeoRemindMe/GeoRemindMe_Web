@@ -499,6 +499,11 @@ def add_list_follower(request):
     list_id = request.POST.get('list_id')
     added = geolist.add_list_follower(request, list_id)
     return HttpResponse(simplejson.dumps(added), mimetype="application/json")
+
+def delete_list_follower(request):
+    list_id = request.POST.get('list_id')
+    result = geolist.del_list_follower(request, list_id)
+    return HttpResponse(simplejson.dumps(result), mimetype="application/json")
     
 #===============================================================================
 # COMENTARIOS Y VOTOS
