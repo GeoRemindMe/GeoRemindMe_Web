@@ -63,6 +63,10 @@ def new_following_list(sender, **kwargs):
     sender.counters.set_followers(+1)
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=353, visible=False)
     timeline.put()
+    if kwargs['user'].key() != sender.user.key():
+        from geouser.models_utils import _Notification
+        notification = _Notification(owner=sender.user, timeline=timeline)
+        notification.put()
 list_following_new.connect(new_following_list)
 
 
