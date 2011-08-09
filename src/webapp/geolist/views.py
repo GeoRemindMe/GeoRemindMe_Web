@@ -168,9 +168,7 @@ def get_list_id(request, id = None, user = None):
         :type id: :class:`integer`
         :returns: id de la lista modificada
     '''
-
-    user = request.session.get('user', None)
-    list = List.objects.get_by_id_user(id = id, user = user)
+    list = List.objects.get_by_id_user(id = id, querier=request.user)
     return list
 
 
@@ -250,7 +248,7 @@ def del_list(request, id):
         :type id: :class:`integer`
         :returns: True si se borro la lista
     '''
-    list = List.objects.get_by_id_user(id, user = request.user)
+    list = List.objects.get_by_id_user(id, querier=request.user)
     if list is not None:
         if list.user.key() == request.user.key():
             list.active = False
