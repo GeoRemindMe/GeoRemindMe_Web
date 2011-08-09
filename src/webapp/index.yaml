@@ -17,6 +17,28 @@ indexes:
   - name: created
     direction: desc
 
+- kind: Comment
+  properties:
+  - name: deleted
+  - name: instance
+  - name: votes
+    direction: desc
+
+- kind: Event
+  properties:
+  - name: class
+  - name: user
+  - name: modified
+    direction: desc
+
+- kind: List
+  properties:
+  - name: active
+  - name: class
+  - name: user
+  - name: modified
+    direction: desc
+
 - kind: UserFollowingIndex
   properties:
   - name: following
@@ -47,4 +69,10 @@ indexes:
   properties:
   - name: user
   - name: created
+    direction: desc
+
+- kind: _Notification
+  properties:
+  - name: owner
+  - name: _created
     direction: desc

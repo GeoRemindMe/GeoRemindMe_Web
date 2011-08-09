@@ -24,6 +24,7 @@ class GPRequest(Http):
     _details_url = 'https://maps.googleapis.com/maps/api/place/details/json?'
     _checkin_url = 'https://maps.googleapis.com/maps/api/place/check-in/json?'
     _add_url = 'https://maps.googleapis.com/maps/api/place/add/json?'
+    _delete_url = 'https://maps.googleapis.com/maps/api/place/delete/json?'
     headers = { 'User-Agent' : 'Georemindme:0.1' }
 
     
@@ -111,7 +112,12 @@ class GPRequest(Http):
         if types is not None:
             dict['types'] = types
         url = self._add_url + '&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
-        return self._do_request(url, method='POST', body=dict.__str__()) 
+        return self._do_request(url, method='POST', body=dict.__str__())
+    
+    def delete_place(self, reference, sensor = False):
+        dict = {'reference': str(reference)}
+        url = self._delete_url + '&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
+        return self._do_request(url, method='POST', body=dict.__str__())
         
     def _do_request(self, url, method='GET', body=None):
         """

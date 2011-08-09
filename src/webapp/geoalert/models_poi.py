@@ -11,6 +11,8 @@ from geouser.models import User
 from signals import *
 
 def _get_city(components):
+    if components is None:
+        return None
     for i in components:
         if 'locality' in i['types']:
             return i['short_name']
@@ -331,8 +333,8 @@ class Place(POI):
                 from mapsServices.places.GPRequest import GPRequest
                 search = GPRequest().retrieve_reference(google_places_reference)
                 return Place.insert_or_update_google(name=search['result']['name'],
-                                address=search['result']['formatted_address'], 
-                                city=_get_city(search['result']['address_components']),
+                                address=search['result'].get('formatted_address'), 
+                                city=_get_city(search['result'].get('address_components')),
                                 location=db.GeoPt(search['result']['geometry']['location']['lat'], search['result']['geometry']['location']['lng']),
                                 google_places_reference=search['result']['reference'],
                                 google_places_id=search['result']['id'],

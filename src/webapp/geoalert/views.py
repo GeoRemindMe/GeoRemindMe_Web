@@ -127,6 +127,8 @@ def del_alert(request, id = None):
 # AÑADIR PLACES
 #===============================================================================
 def _get_city(components):
+    if components is None:
+        return None
     for i in components:
         if 'locality' in i['types']:
             return i['short_name']
@@ -250,8 +252,8 @@ def view_place(request, slug, template='webapp/place.html'):
                                   )
     
     place.update(name=search['result']['name'],
-                        address=search['result']['formatted_address'], 
-                        city=_get_city(search['result']['address_components']),
+                        address=search['result'].get('formatted_address'), 
+                        city=_get_city(search['result'].get('address_components')),
                         location=db.GeoPt(search['result']['geometry']['location']['lat'], search['result']['geometry']['location']['lng']),
                         google_places_reference=search['result']['reference'],
                         google_places_id=search['result']['id']
