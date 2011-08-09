@@ -463,7 +463,7 @@ input{
     .visible-display{
         visibility:visible !important;
         display:block !important;
-    ]
+    }
     
     .link{
         color:blue;
@@ -1971,7 +1971,8 @@ input{
 */
     }
     #new-list{
-        width:187px;
+        margin-right:4px;
+        width: 97%;
     }
     #new-list input{
         width:100%
