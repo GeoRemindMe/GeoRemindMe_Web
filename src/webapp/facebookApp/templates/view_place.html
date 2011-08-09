@@ -25,11 +25,11 @@
         var ne={}
         var sw={}
 
-        ne['lat']=parseFloat(latlngStr[0])+0.001504;
-        ne['lng']=parseFloat(latlngStr[1])+0.001304;
+        ne['lat']=parseFloat(latlngStr[0])+0.003004;
+        ne['lng']=parseFloat(latlngStr[1])+0.002604;
 
-        sw['lat']=parseFloat(latlngStr[0])-0.000448;
-        sw['lng']=parseFloat(latlngStr[1])-0.001309;
+        sw['lat']=parseFloat(latlngStr[0])-0.000848;
+        sw['lng']=parseFloat(latlngStr[1])-0.002609;
         
         var myRequest = new panoramio.PhotoRequest({
           'rect': {'sw': {'lat': sw['lat'], 'lng': sw['lng']}, 'ne': {'lat': ne['lat'], 'lng': ne['lng']}}
@@ -60,7 +60,7 @@
             <h1 class="clear">{{place.name}}</h1>
             <div id="place-details">
                 <p><strong>Dirección</strong>: {{place.address}}</p>
-                <a href="http://maps.google.com/maps?q={{place.address}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=14&size=270x200&maptype=roadmap
+                <a href="http://maps.google.com/maps?q={{place.address}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=14&size=270x200&maptype=satellite
     &markers=color:red%7C{{place.location}}&sensor=false"></a>
             </div>
             <div id="place-pictures">
