@@ -62,7 +62,7 @@ class ListHelper(object):
                 return list
         return None
 
-    def get_by_id_user(self, id, querier):
+    def get_by_id_user(self, id, user):
         '''
         Devuelve la lista con ese ID y el usuario como dueño.
 
@@ -76,13 +76,8 @@ class ListHelper(object):
         if list is not None:
             if not list.active:
                 return None
-            if list.user.key() == querier.key():
+            if list.user.key() == user.key():
                 return list
-            if hasattr(list, '_vis'):
-                if list._is_public():
-                    return list
-                elif list._is_shared() and list.user_invited(querier):
-                    return list
         return None
 
     def get_list_user_following(self, user, resolve=False):
