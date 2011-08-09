@@ -582,7 +582,7 @@ input{
         
         ul#chronology li a.black-link{
             text-decoration:none;
-            color:black;
+            color:#555555;
         }
         ul#chronology li a.black-link:hover{
             text-decoration:underline;
@@ -2214,7 +2214,7 @@ input{
         float: left;
         line-height: 1.7em;
         padding: 0.3em 0;
-        width: 415px;
+        width: 410px;
     }
     
     #view-place .like-dislike{
@@ -2230,12 +2230,12 @@ input{
     #view-place .comments .user{
         margin-top:4px;
     }
-    .like-suggestion{
+    #view-place .like-suggestion{
         background-image: url("/static/facebookApp/img/icons/like.png");
         background-repeat: no-repeat;
         background-position: 25px 0;
     }
-    .dislike-suggestion{
+    #view-place .dislike-suggestion{
         background-image: url("/static/facebookApp/img/icons/liked.png");
         background-repeat: no-repeat;
         background-position: 25px 0;
