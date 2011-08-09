@@ -150,8 +150,7 @@ class ListSuggestion(List, Visibility):
             if list is not None:  # la lista con ese nombre ya existe, la editamos
                 list.update(name=name, description=description, instances=instances, instances_del=instances_del, vis=vis )
                 return list
-            from georemindme.exceptions import ForbiddenAccess
-            raise ForbiddenAccess
+            return False
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
         keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
         list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)

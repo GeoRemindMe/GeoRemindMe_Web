@@ -3,7 +3,7 @@
 from datetime import timedelta, datetime
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
@@ -477,6 +477,8 @@ def add_list_suggestion(request):
                                  instances = list_instances,
                                  instances_del = list_instances_del,
                                  )
+    if list is False:
+        return HttpResponseForbidden()
     if list is not None:
         return HttpResponse(list.to_json(), mimetype="application/json")
     return HttpResponse(list, mimetype="application/json")

@@ -94,8 +94,8 @@ def report_notify(request, time):
     # correos de los usuarios
     from geouser.models_acc import UserSettings
     from geouser.models_utils import _Report_Account_follower, _Report_Suggestion_changed
-    users = UserSettings().all().filter('time_notification_account =', time).run()
-    for user in users:
+    users_settings = UserSettings().all().filter('time_notification_account =', time).run()
+    for user in users_settings:
         user = user.parent()
         report = _Report_Account_follower.get_by_key_name('report_account_follower_%d' % user.id)
         if report is not None:
