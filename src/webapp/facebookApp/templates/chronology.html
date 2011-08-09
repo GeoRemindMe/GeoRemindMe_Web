@@ -129,21 +129,10 @@
     
     <script id="commentTemplate" type="text/x-jquery-tmpl">
         <li>
+			<div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
             <img class="user-picture" src="{% url user_avatar user.username %}" alt="user avatar"><a href="{% url fb_public_profile user.username %}">{{user.username}}</a>: ${msg}<br>
-            <span class="timestamp">0 minutes ago</span> - 
-            
-            
-            <span class="like-dislike" value="${id}" type="comment">
+            <span class="timestamp">0 minutes ago</span>
 
-                <span class="dislike" style="display:none;">
-                    <span class="hoverlink">Ya no me gusta</span> 
-                    <span class="text like-text">1</span> personas
-                </span>
-                
-                <span class="like">
-                    <span class="hoverlink">Me gusta</span> 
-                </span>
-            </span>
         </li>
     </script>    
 {% endblock %}

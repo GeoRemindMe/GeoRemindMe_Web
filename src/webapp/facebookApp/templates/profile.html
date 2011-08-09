@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "chronology.html" %}
 {% load i18n %}
 {% load tags %}
 {% load tags %}
 
 {% block title %}Perfil público de {{profile.username}}{% endblock %}
-{% block extra_js %}
+{% block embed_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/grm.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>
@@ -32,7 +32,7 @@
     </script>
 {%endblock%}
 
-{% block body %}
+{% block pre_chronology %} 
     <div id="public-profile">
 <!--
         <div id="col-right-left">
@@ -97,101 +97,5 @@
         </div>
 -->
     </div>
-    <ul id="tabMenu" class="clear">
-		<li id="his_activity" class="active">Actividad</li>
-        <li id="his_suggestions">Sugerencias ({{counters.suggested}})</li>
-		<li id="his_votes">Valoraciones ({{counters.supported}})</li>
-		<li id="his_lists">Listas</li>
-	</ul>
-    <div id="content">
-            
-            <!-- HIS TIMELINE -->
-            <span id="his_activity_content" class="tab-content ">
-                {% if chronology.1|length %}    
-                <!--
-                        <p>{{chronology.1.0}} mensajes</p>
-                -->
-                    <ul id="chronology">
-                    {% for obj in chronology.1 %}
-
-                        {% if not obj.msg_id = 100 or not obj.is_private %}
-                            <li {% if forloop.last %} style="border:0" {% endif %} class="msg-{{obj.msg_id}}">
-                                {% timeline_item obj %}
-                            </li>
-                        {% endif %}
-
-                    {% endfor %}
-                    </ul>
-                
-                    <!-- Si hay más mensajes -->
-                    {% if chronology.1|length == 15%}
-                        <div class="load-more">Cargar más</div>
-                    {% endif %}    
-                    
-                    
-                {% endif %} 
-            </span>
-            <!-- END ALL SUGGESTIONS -->
-            
-            <!-- ALL SUGGESTIONS -->
-            <span id="his_suggestions_content" class="tab-content hidden">
-                <ul>
-                    {% if suggestions.1|length = 0 %}
-                        <li><p>Este usuario aún no ha hecho ninguna sugerencia</p></li>
-                    {% else %}
-                        {% for obj in suggestions.1 %}                        
-                            <li {% if forloop.last %} style="border:0" {% endif %}>
-                                <div class="avatar">
-                                    <a href="{% url fb_public_profile obj.user.username %}" title="{{obj.user.username}}">
-                                        <img src="/user/{{obj.user.username}}/picture/" alt="{{obj.user.username}} avatar"/>
-                                    </a>
-                                </div>
-                                <div class="timeline-msg">
-                                    <a href="">{{obj}}</a><br>
-                                
-                                    <span class="small-text">En <a href="{% url fb_view_place obj.poi.slug %}">{{obj.poi.name}}</a></span><br>
-                                    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
-                                    <span class="action-bar">
-                                        {% if request.user != obj.user.username %}
-                                            |
-                                            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
-                                                <span class="dislike">
-                                                    <span class="hoverlink">Ya no me gusta</span> 
-                                                    <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
-                                                </span>
-                                                
-                                                <span class="like">
-                                                    Me gusta
-                                                </span>
-                                            </span>
-                                        {% endif %}
-                                    </span>
-                                
-                                </div>
-                            </li>
-                        {% endfor %}
-                    {% endif %}
-                </ul>
-            </span>
-            <!-- END ALL SUGGESTIONS -->
-            
-            <!-- ALL SUGGESTIONS -->
-            <span id="his_votes_content" class="tab-content hidden">
-                <p>Le gustan</p>
-            </span>
-            <!-- END ALL SUGGESTIONS -->
-            
-            <!-- ALL SUGGESTIONS -->
-            <span id="his_lists_content" class="tab-content hidden">
-                <p>Sus listas</p>
-            </span>
-            <!-- END ALL SUGGESTIONS -->
-    </div>
-    
-    <script id="suggestionTemplate" type="text/x-jquery-tmpl">
-        <div id="suggestion_${element.id}" class="suggestion">
-            <span class="suggestionName">${element.name}</span>
-            <span class="suggestionInLists">Lista ${element.id}</span>
-        </div>
-    </script>
+   
 {% endblock %}

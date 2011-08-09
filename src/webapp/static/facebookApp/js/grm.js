@@ -345,7 +345,8 @@ GRM.sendComment = function(type,text,id,callback){
             var c = $('#commentTemplate').tmpl(response).prependTo('#comment-list');
             
         
-            c.find(".like-dislike").like();
+            //c.find(".like-dislike").like();
+            c.find(".removable").removable();
             resizeIframe();
             
             if (typeof callback != "undefined")
