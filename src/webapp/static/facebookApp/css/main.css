@@ -1779,7 +1779,7 @@ input{
                         margin-right: 0.3em;
                         padding: 0;
                     }
-                    div#content div.suggestionList div.expanded dd ul li{
+                    div#content div.suggestionList div.expanded dd.suggestions ul li{
                         display: block;
                         margin: 0.7em 0;
                         padding: 0em 1.5em;

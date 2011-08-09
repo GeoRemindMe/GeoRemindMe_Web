@@ -48,6 +48,16 @@
 //                 tooltip   : 'Click to edit...'
 //             });
             
+            $('.empty-msg').parent().find('ul').each(function(i,elem){
+                if($(elem).children().length==0){
+                    $(elem).hide();
+                    $(elem).parent().find('.empty-msg').show();
+                }else{
+                    $(elem).parent().find('.empty-msg').hide();
+                }
+            })
+
+            
             //Adding behaviour to tab content
             $('#tabMenu li').click(function(){
                 tab_id=$('#tabMenu li.active').attr('id')
@@ -147,7 +157,15 @@
             
             //On expanded view of a suggestion--> Remove suggestion from a list
             $('.removable-sugestion-list li').click(function(){
-                removableFromList(this);
+                var unparsedString=$(this).attr('class').split(" ")[0];
+                var listID = unparsedString.substring(5,unparsedString.length)
+                removeFromList(this,listID);
+            });
+            
+            $('#suggestion-list-lists .suggestions li.removable').click(function(){
+                var unparsedString=$(this).attr('class').split(" ")[0];
+                var listID = unparsedString.substring(5,unparsedString.length)
+                removeFromList(this,listID);
             });
             
             
@@ -182,25 +200,43 @@
         // Actualizamos la información de en que listas se encuentra
         // cada una de la sugerencias del grid
         function updateSuggestions(data){
+            asd=data;
             var suggestions = data.keys;
             var listID = data.id;
             var listName = data.name;
             
             $(suggestions).each(function(i,suggestionID){
+                /** SUGGESTIONS TAB **/
+                //Comprobamos si ya aparece en el DOM de la sugerencia, la lista de sugerencias
                 if($('#suggestion_'+suggestionID+' .removable-sugestion-list .list_'+listID).length==0){
-                    //console.log("existe "+suggestionID+" en "+listID)
+                    //Si no existe creamos el elemento y le damos el comportamiento de edición/borrado
                     var tmp='<li class="list_'+listID+' removable" value="'+suggestionID+'">'+listName+'</li>';
                     $('#suggestion_'+suggestionID+' .removable-sugestion-list ').append(tmp);
                     var element=$('#suggestion_'+suggestionID+' .removable-sugestion-list .list_'+listID);
                     element.click(function(){
-                        removableFromList(this);
+                        var unparsedString=$(this).attr('class').split(" ")[0];
+                        var listID = unparsedString.substring(5,unparsedString.length)
+                        removeFromList(this,listID);
                     });
                     
+                    //Si se mostraba en el mensaje de vacío lo borramos
                     if(element.parent().css('display')=="none"){
                         element.parent().show();
                         element.parent().parent().find('.empty-msg').hide();
                     }
+                }
+                
+                /** LISTS TAB **/
+                //Comprobamos si en la lista ya existe la sugerencia
+                if ($('#list_'+listID+' .suggestions li[value="'+suggestionID+'"]').length==0){
+                    //Si no está la sugerencia en la lista la añadimos
+                    $('#list_'+listID+' .suggestions ul').append('<li value="'+suggestionID+'" class="list_'+listID+' removable">'+$('#suggestion_'+suggestionID+' .suggestionName').text()+'</li>');
                     
+                    $('#list_'+listID+' .suggestions ul li[value="'+suggestionID+'"]').click(function(){
+                        var unparsedString=$(this).attr('class').split(" ")[0];
+                        var listID = unparsedString.substring(5,unparsedString.length)
+                        removeFromList(this,listID);
+                    });
                 }
             })
             
@@ -208,11 +244,11 @@
         }
 
         //Extrae a una sugerencia de una lista
-        function removableFromList(obj){
-            var unparsedString=$(obj).attr('class').split(" ")[0];
-            var listID = unparsedString.substring(5,unparsedString.length)
-            var suggestionID = $(obj).attr('value')
-            var domElement=$(obj);
+        function removeFromList(obj,listID){
+            
+            suggestionID = $(obj).attr('value')
+            domElement=$(obj);
+            
             //console.log("Eliminamos sugerencia "+suggestionID+" de la lista " + listID)
             
             $.ajax({
@@ -226,15 +262,25 @@
                 success: function(data){
 
                     
-                    //Ocultamos y eliminamos
+                    //Ocultamos el objeto y eliminamos
                     domElement.fadeOut(function(){ 
-                        if($('#suggestion_'+suggestionID+' .removable-sugestion-list').children().length==1)
+                        if($('#suggestion_'+suggestionID+' .removable-sugestion-list li').length==1){
+                            //Mostramos el mensaje de que no quedan más
                             $('#suggestion_'+suggestionID+' .empty-msg').fadeIn('slow');
+                        }
+                        
+                        if($(obj).parent().children().length==1){
+                            console.log("Ya no quedan más hermanos");
+                            $(obj).parent().parent().find('.empty-msg').show()
+                        }
                         $(obj).remove();
                         
                         //Actualizamos el contador de la lista
                         updateCounter(listID,data.keys.length);
                     })
+                    
+                    //Buscamos en la pesta
+
                     
                 }
             });
@@ -292,7 +338,6 @@
         function toogleSuggestion(obj){
             var suggestion_id=$(obj).parent().attr('id').substr(11)
             var temp=$(obj).parent()
-            console.log("Entro")
             
             temp.parent().find('div.expanded').toggle();
             temp.parent().find('div.collapsed').toggle();
@@ -415,7 +460,6 @@
 {% block goBack %}{%endblock%}
 {% block body %}
     <div id="suggestions">
-    
 <!--
     Sugeridas={{user.counters}}
 -->
@@ -438,7 +482,10 @@
                             <ul class="submenu" style="display:none" id="dropdown-list">
                                 {% if lists %}
                                     {% for obj in lists %}
-                                        <li id="listid-{{obj.id}}">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
+                                        {% if obj.user.username = request.user.username %}
+                                            <!-- Solo se muestran mis listas -->
+                                            <li id="listid-{{obj.id}}">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
+                                        {% endif %}
                                     {% endfor %}
                                 {% endif %}
                                 <li id="new-list-btn">
@@ -499,15 +546,17 @@
                                         </dd>
                                         
                                         <dt>Listas:</dt>
-                                        <dd>
+                                        <dd style="width:400px">
                                             
                                                 <ul class="removable-sugestion-list" {% if k.lists|length = 0 %}style="display:none"{% endif %}>
                                                     {% for obj in k.lists %}
-                                                        <li class="list_{{obj.id}} {% if k.user.username == user.username%}removable{% endif %}" value="{{k.id}}">{{obj.name}}</li>
+                                                        {% if obj.user.username = request.user.username %}
+                                                            <li class="list_{{obj.id}} {% if k.user.username == user.username%}removable{% endif %}" value="{{k.id}}">{{obj.name}}</li>
+                                                        {% endif %}
                                                     {% endfor %}
                                                 </ul>
                                             
-                                                <em class="empty-msg {% if k.user.username == user.username%}editable{% endif %}" value="{{k.id}}" {% if k.lists|length > 0 %}style="display:none"{% endif %}>
+                                                <em class="empty-msg {% if k.user.username == user.username%}editable{% endif %}" value="{{k.id}}">
                                                     Añadir a lista
                                                 </em>
                                             
@@ -585,7 +634,7 @@
                         </span>
                         
                     </div>
-                    
+
                     {% if lists %}
                         <div id="suggestion-list-lists">
                             {% for obj in lists %}
@@ -593,26 +642,46 @@
                                     <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                     <div class="collapsed">
                                         <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
-                                        <span class="suggestionName">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.count}}</span> sugerencias)</span>
+                                        <span class="suggestionName">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.count}}</span> sugerencias, autor: {{obj.user.username}} )</span>
                                         <span class="suggestionName_editable {% if k.user.username == user.username%}editable{% endif %}" style="display:none">{{obj.name}}</span>                                        
                                     </div>
                                     <div class="expanded" style="display:none">
                                         <dl>
                                             <dt>Descripción:</dt>
-                                            <dd>{{obj.description}}</dd>
+                                            <dd class="{% if k.user.username == user.username%}editable{% endif %}">{{obj.description}}</dd>
                                             
                                             <dt>Sugerencias</dt>
-                                            <dd>
-                                                <ul>
+                                            <dd class="suggestions">
+                                                
+                                                <ul {% if obj.instances|length = 0 %} style="display:none" {%endif%}>
                                                     {% for k in obj.instances %}
                                                         <li  class="list_{{obj.id}} {% if obj.user.username == user.username%}removable{% endif %}" value="{{k.id}}">{{k}}</li>
                                                     {% endfor %}
                                                 </ul>
+                                                
+                                                <em class="empty-msg {% if k.user.username == user.username%}editable{% endif %}" value="{{k.id}}" {% if obj.instances|length > 0 %} style="display:none" {%endif%}>
+                                                    No hay sugerencias en esta lista
+                                                </em>
+                                                
                                             </dd>
                                             
                                             <dt>Tags:</dt>
-                                            <dd>{{obj.tags}}</dd>
-                                            
+                                            <dd>
+                                                {% if obj.tags %}
+                                                    {{obj.tags}}
+                                                {% else %}
+                                                    <em>Esta lista no tiene tags</em>
+                                                {% endif %}
+                                            </dd>
+                                            <dt><strong>Compartir:</strong></dt>
+                                            <dd>
+                                                <ul class="share-suggestion">
+                                                    <li><a class="share-suggestion link-icon" href="{% url fb_view_suggestion k.id %}">Enlace</a></li>
+                                                    <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
+                                                    <li><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
+                                                    <li><a class="share-suggestion facebook-icon" href="">Muro</a></li>
+                                                </ul>
+                                            </dd>
                                             <dt>Autor:</dt>
                                             <dd><a href="{% url fb_public_profile obj.user.username %}">{{obj.user.username}}</a></dd>
                                         </dl>

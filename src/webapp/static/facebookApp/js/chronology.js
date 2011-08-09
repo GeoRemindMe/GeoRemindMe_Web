@@ -108,7 +108,7 @@ function sendComment2(textarea,element_id,elemType){
         msg=textarea.val();
         msg=msg.substring(0,msg.length-1);
     }
-     console.log("elemType="+  elemType);         
+
     $.ajax({
         type: "POST",
         url: "/ajax/add/comment/"+elemType+"/",
