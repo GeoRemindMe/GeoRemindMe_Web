@@ -81,11 +81,11 @@ class ListHelper(object):
             if hasattr(list, '_vis'):
                 if list._is_public():
                     return list
-                elif list._is_shared() and list.user_invited(querier):
+                elif list._is_shared() and list.user_invited(user):
                     return list
         return None
 
-    def get_list_user_following(self, user):
+    def get_list_user_following(self, user, resolve=False):
         '''
         Devuelve las listas a las que sigue el usuario
 
@@ -93,7 +93,7 @@ class ListHelper(object):
             :type user: :class:`geouser.models.User`
         '''
         indexes = ListFollowersIndex.all().filter('_kind =', self._klass.kind()).filter('keys =', user.key())
-        return [index.parent() for index in indexes if index.active]
+        return [index.parent().to_dict(resolve=resolve) for index in indexes if index.active]
 
     def get_shared_list(self, user):
         '''
