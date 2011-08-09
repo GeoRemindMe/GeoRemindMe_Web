@@ -142,15 +142,16 @@ class ListSuggestion(List, Visibility):
             :param vis: Visibilidad de la lista
             :type vis: :class:`string`
         """
-        from geoalert.models import Suggestion
         list = None
         if id is not None:
             list = cls.objects.get_by_id_user(id, user)
-        if list is None:
-            list = user.listsuggestion_set.filter('name =', name).get()
-        if list is not None:  # la lista con ese nombre ya existe, la editamos
-            list.update(name=name, description=description, instances=instances, instances_del=instances_del, vis=vis )
-            return list
+            if list is None:
+                list = user.listsuggestion_set.filter('name =', name).get()
+            if list is not None:  # la lista con ese nombre ya existe, la editamos
+                list.update(name=name, description=description, instances=instances, instances_del=instances_del, vis=vis )
+                return list
+            from georemindme.exceptions import ForbiddenAccess
+            raise ForbiddenAccess
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
         keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
         list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
@@ -158,7 +159,7 @@ class ListSuggestion(List, Visibility):
         return list
 
     def update(self, name=None, description=None, instances=[], instances_del=[], vis='public'):
-        '''
+        """
         Actualiza una lista de alertas
 
             :param user: usuario
@@ -171,8 +172,7 @@ class ListSuggestion(List, Visibility):
             :type instances: :class:`geoalert.models.Alert`
             :param vis: Visibilidad de la lista
             :type vis: :class:`string`
-        '''
-        from geoalert.models import Suggestion
+        """
         if name is not None or name == '':
             self.name = name
         if description is not None:
@@ -286,8 +286,9 @@ class ListRequested(ListSuggestion):
         if list is None:
             list = user.listsuggestion_set.filter('name =', name).get()
         if list is not None:  # la lista con ese nombre ya existe, la editamos
-            list.update(name=name, description=description, instances=instances, instances_del=instances_del, vis=vis )
-            return list
+            if isinstance(list, ListRequested):
+                list.update(name=name, description=description, instances=instances, instances_del=instances_del, vis=vis )
+                return list
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
         keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
         list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
