@@ -153,6 +153,8 @@ class _Report_Suggestion_commented(db.Model):
     @classmethod
     def insert_or_update(cls, userkey, suggestionkey, time):
         from google.appengine.ext import deferred
+        if not isinstance(suggestionkey, db.Key) or not isinstance(userkey, db.Key):
+            raise deferred.PermanentTaskFailure
         report = cls.get_by_key_name('report_suggestion_commented_%d' % suggestionkey.id())
         if report is None:
             report = cls(key_name='report_suggestion_commented_%d' % suggestionkey.id(),

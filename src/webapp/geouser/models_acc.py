@@ -487,8 +487,8 @@ class UserTimeline(UserTimelineBase, Visibility):
                 index = UserTimelineFollowersIndex.all().ancestor(self.key()).order('-created').get()
                 if index is None or len(index.followers) > 80:  # o no existen indices o hemos alcanzado el maximo
                     index = UserTimelineFollowersIndex(parent=self)
-                from geovote.models import Comment
-                if isinstance(self.instance, Comment):
+                from geovote.models import Comment, Vote
+                if isinstance(self.instance, Comment) or isinstance(self.instance, Vote):
                     index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.instance.user.id])
                 else:
                     index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.user.id])
