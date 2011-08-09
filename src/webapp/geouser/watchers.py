@@ -62,19 +62,20 @@ def new_follower(sender, **kwargs):
     from models_acc import UserTimelineSystem, UserTimeline, UserSettings
     if not isinstance(kwargs['following'], db.Key):
         raise AttributeError
-    timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=100, visible=False)
-    timelineFollowing = UserTimelineSystem(user=kwargs['following'], instance=sender, msg_id=101)
-    put = db.put_async([timeline, timelineFollowing])
     settings = UserSettings.objects.get_by_id(kwargs['following'].id())
+    if not settings.show_followings:
+        timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=100, visible=True)
+        put = db.put_async([timeline])
+    else:
+        timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=100, visible=False)
+        timelinePublic = UserTimeline(user = sender, instance = kwargs['following'], msg_id=100)
+        put = db.put_async([timeline, timelinePublic])
     from google.appengine.ext.deferred import defer
     defer(settings.notify_follower, sender.key())  # mandar email de notificacion
-    if settings.show_followings:
-        timelinePublic = UserTimeline(user = sender, instance = kwargs['following'], msg_id=100)
-        timelinePublic.put()
     put.get_result()
     if sender.key() != kwargs['following']:
         from geouser.models_utils import _Notification
-        notification = _Notification(owner=kwargs['following'], timeline=timelineFollowing)
+        notification = _Notification(owner=kwargs['following'], timeline=timeline)
         notification.put()
 user_follower_new.connect(new_follower)   
 

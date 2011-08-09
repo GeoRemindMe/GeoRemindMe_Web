@@ -3,7 +3,7 @@
 from libs.httplib2 import Http
 from xml.etree import ElementTree
 
-from django.conf import settings
+
 from django.utils import simplejson
 
 from google.appengine.api.memcache import Client
@@ -30,6 +30,7 @@ class GPRequest(Http):
     def __init__(self, *args, **kwargs):
         mem = Client()
         super(self.__class__, self).__init__(cache=mem, timeout=20, *args, **kwargs)
+        from django.conf import settings
         self.key = settings.API['google_places']
 
     def do_search(self, pos, radius=500, types=None, language=None, name=None, sensor=False):
@@ -94,7 +95,7 @@ class GPRequest(Http):
         url = self._checkin_url + 'sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
         return self._do_request(url, method='POST', body='reference: %s' % reference)
     
-    def add_place(self, location, accuracy, name, types, language='en', sensor=False):
+    def add_place(self, location, accuracy, name, types, language='en-EN', sensor=False):
         from google.appengine.ext.db import GeoPt
         if not isinstance(location, GeoPt):
             location = GeoPt(location)
@@ -106,11 +107,11 @@ class GPRequest(Http):
                 'accuracy': accuracy,
                 'name': name,
                 'language': language,
-                'sensor': sensor,
                 }
         if types is not None:
             dict['types'] = types
-        return self._do_request(self._add_url, method='POST', body=dict) 
+        url = self._add_url + '&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
+        return self._do_request(url, method='POST', body=dict.__str__()) 
         
     def _do_request(self, url, method='GET', body=None):
         """
