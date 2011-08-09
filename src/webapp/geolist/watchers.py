@@ -17,6 +17,10 @@ def new_list(sender, **kwargs):
         timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=350, _vis=sender._get_visibility())
         timelinePublic.put()
         timeline = UserTimelineSystem(user=sender.user, msg_id=350, instance=sender)
+    elif isinstance(sender, ListRequested):
+        timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=360, _vis=sender._get_visibility())
+        timelinePublic.put()
+        timeline = UserTimelineSystem(user=sender.user, msg_id=360, instance=sender)
     else:
         return
     timeline.put()

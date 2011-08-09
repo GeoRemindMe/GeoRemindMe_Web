@@ -375,8 +375,10 @@ class Place(POI):
     
     def update(self, name, address, city, location, google_places_reference, google_places_id):
         self.name = name
-        self.address = address
-        self.city = city
+        if address is not None:
+            self.address = address
+        if city is not None:
+            self.city = city
         self.location = location
         self.google_places_reference = google_places_reference
         self.google_places_id = google_places_id

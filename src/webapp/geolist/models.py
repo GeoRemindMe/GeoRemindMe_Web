@@ -188,50 +188,37 @@ class ListSuggestion(List, Visibility):
         self._vis = vis
         self.put()
 
-    def del_follower(self, follow_user= None, follow_id=None, follow_name=None):
-        '''
+    def del_follower(self, user):
+        """
         Borra un usuario de la lista
 
             :param user_key: key del usuario a buscar
             :type user_key: :class:`db.Key`
             :returns: True si se borro el usuario. False si hubo algun error o no existia
-        '''
+        """
         def _tx(index_key, user_key):
             index = db.get(index_key)
             index.keys.remove(user_key)
             index.count -= 1
             index.put()
-        if follow_user is not None:
-            user_key = follow_user.key()
-        elif follow_id is not None:
-            user_key = db.Key.from_path(User.kind(), int(follow_id))
-        elif follow_name is not None:
-            user_key = User.objects.get_by_username(follow_name, keys_only=True)
-        else:
-            raise TypeError
+        user_key = user.key()
         if not self._user_is_follower(user_key):
             return False
         from models_indexes import ListFollowersIndex
         index = ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user_key).get()
         db.run_in_transaction(_tx, index.key(), user_key)
         list_following_deleted.send(sender=self, user=db.get(user_key))
+        return True
 
     def add_follower(self, user):
-        '''
+        """
         Añade un usuario a los seguidores de una lista
 
             :param user: Usuario que quiere apuntarse a una sugerencia
             :type user: :class:`geouser.models.User`
 
             :returns: True si se añadio, False en caso contrario
-        '''
-        if self._user_is_follower(user.key()):
-            return True
-        if self._is_private():
-            return False
-        elif self._is_shared():
-            if self.user_invited(user) is None:
-                return False
+        """
         def _tx(list_key, user_key):
             # TODO : cambiar a contador con sharding
             from models_indexes import ListFollowersIndex
@@ -244,6 +231,13 @@ class ListSuggestion(List, Visibility):
             index.keys.append(user_key)
             index.count += 1
             index.put()
+        if self._user_is_follower(user.key()):
+            return True
+        if self._is_private():
+            return False
+        elif self._is_shared():
+            if self.user_invited(user) is None:
+                return False
         tx = db.run_in_transaction(_tx, list_key = self.key(), user_key = user.key())
         if tx:
             return True
@@ -337,17 +331,17 @@ class ListRequested(ListSuggestion):
         self._vis = vis
         self.put(querier=querier)
 
-        def _post_put_sync(self, querier, **kwargs):
-            if self._new:
-                counter = ListCounter(parent=self)
-                counter.put()
-                list_new.send(sender=self)
-                self._new = False
+    def _post_put_sync(self, querier, **kwargs):
+        if self._new:
+            counter = ListCounter(parent=self)
+            counter.put()
+            list_new.send(sender=self)
+            self._new = False
+        else:
+            if not self.active:
+                list_deleted.send(sender=self)
             else:
-                if not self.active:
-                    list_deleted.send(sender=self)
-                else:
-                    list_modified.send(sender=self, querier=querier)
+                list_modified.send(sender=self, querier=querier)
 
 
 class ListAlert(List):
