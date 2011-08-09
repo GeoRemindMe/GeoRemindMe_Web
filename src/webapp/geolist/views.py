@@ -96,7 +96,13 @@ def add_list_follower(request, list_id):
         return list.add_follower(request.user)
     return False
 
-    
+
+@login_required
+def del_list_follower(request, list_id):
+    list = List.objects.get_by_id_querier(list_id, request.user)
+    if list is not None:
+        return list.del_follower(request.user)
+    return False    
 #===============================================================================
 # Modificacion de listas
 #===============================================================================
