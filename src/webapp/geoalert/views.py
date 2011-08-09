@@ -284,6 +284,8 @@ def user_suggestions(request, template='webapp/suggestions.html'):
     suggestions[1].extend(suggestions_following[1])
     suggestions[1].sort(key=lambda x: x.modified, reverse=True)
     suggestions[0] = '%s_%s' % (suggestions[0], suggestions_following[0])
+    lists_following = ListSuggestion.objects.get_list_user_following(request.user)
+    lists_following.extend(lists)
     return  render_to_response(template, {
                                           'suggestions': suggestions,
                                           'counters': counters.next(),
