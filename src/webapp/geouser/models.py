@@ -222,7 +222,7 @@ class User(polymodel.PolyModel, HookedModel):
                         'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance, querier=self),
-                        'user_follower': timeline.instance.has_follower(self) if isinstance(timeline.instance, Suggestion) else None,
+                        'user_follower': timeline.instance.has_follower(self) if hasattr(timeline.instance, 'has_follower') else None,
                         'is_private': False,
                         }
                         for timeline in timelines if timeline is not None ], p.page_count()]

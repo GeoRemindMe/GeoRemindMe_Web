@@ -248,7 +248,7 @@ class ListSuggestion(List, Visibility):
     def has_follower(self, user):
         if not user.is_authenticated():
             return False
-        if ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get() is not None:
+        if ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).count() != 0:
             return True
         return False
 
