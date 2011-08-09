@@ -188,7 +188,7 @@ class ListSuggestion(List, Visibility):
         self._vis = vis
         self.put()
 
-    def del_follower(self, follow_id=None, follow_name=None):
+    def del_follower(self, follow_user= None, follow_id=None, follow_name=None):
         '''
         Borra un usuario de la lista
 
@@ -201,7 +201,9 @@ class ListSuggestion(List, Visibility):
             index.keys.remove(user_key)
             index.count -= 1
             index.put()
-        if follow_id is not None:
+        if follow_user is not None:
+            user_key = follow_user.key()
+        elif follow_id is not None:
             user_key = db.Key.from_path(User.kind(), int(follow_id))
         elif follow_name is not None:
             user_key = User.objects.get_by_username(follow_name, keys_only=True)
