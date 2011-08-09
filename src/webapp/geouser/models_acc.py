@@ -114,7 +114,7 @@ class UserSettings(HookedModel):
             from geovote.models import Comment
             comment = Comment.objects.get_by_key(commentkey)
             if comment is not None:
-                _Report_Suggestion_commented.insert_or_update(parent.key(), comment.instance, comment.created)
+                _Report_Suggestion_commented.insert_or_update(parent.key(), comment.instance.key(), comment.created)
 
     def _post_put(self, **kwargs):
         import memcache
