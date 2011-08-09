@@ -1665,7 +1665,8 @@ input{
             cursor: pointer;
             display: inline-block;
             font-weight: normal;
-            padding: 0.5em 1em 0.2em;
+            padding: 0.5em 0.5em 0.2em;
+            margin-left:4px;
         }
         ul#tabMenu li:hover{
             text-decoration:underline;

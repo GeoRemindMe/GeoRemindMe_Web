@@ -358,8 +358,8 @@ GRM.sendComment = function(type,text,id,callback){
 
 GRM.updateTabCounters = function(){
     $('#all-counter').text('('+$('#chronology li').length+')');
-    $('#suggestions-counter').text('('+$('#chronology li.msg-300').length+')');
-    $('#lists-counter').text('('+$('#chronology li.msg-350').length+')');
+    $('#suggestions-counter').text('('+$(':regex(class,(msg-300|msg-303))').length+')');
+    $('#lists-counter').text('('+$(':regex(class,(msg-350|msg-353))').length+')');
     $('#likes-counter').text('('+$(':regex(class,(msg-125|msg-305|msg-355))').length+')');
     $('#comments-counter').text('('+$(':regex(class,(msg-120|msg-121))').length+')');
 }

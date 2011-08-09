@@ -27,7 +27,7 @@ Mensaje nº 125<br>
             </a>
         </div>
         <div class="timeline-msg">
-            <span class="small-text">Me gusta 
+            <span class="small-text">A <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a> le gusta 
             {% if obj.instance.instance.user.username = request.user.username %}
                 <strong>tu comentario</strong>:
             {% else %}

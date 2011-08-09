@@ -18,7 +18,7 @@ Te gusta una lista de sugerencias
             </a>
         </div>
         <div class="timeline-msg">
-            <span class="small-text">Te gusta la sugerencia de <a href="{% url fb_public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:</span>
+            <span class="small-text">Te gusta la lista de sugerencias de <a href="{% url fb_public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:</span>
     {% else %}
         <div class="avatar">
             <a href="{% url fb_public_profile obj.username %}" title="Ver perfil en GeoRemindMe">

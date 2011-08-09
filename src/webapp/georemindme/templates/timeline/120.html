@@ -17,7 +17,7 @@ Mensaje nº 120<br>
     
     <div class="timeline-msg">
         <div class="removable" value="{{obj.instance.id}}" type="comment"><a href="#">Remove</a></div>
-        <span class="small-text">Has añadido:</span><br>
+        <span class="small-text">Has comentado:</span><br>
 {% else %}
     <div class="avatar">
         <a href="{% url fb_public_profile obj.instance.user.username %}" title="{{obj.instance.user.username}}">
@@ -25,7 +25,7 @@ Mensaje nº 120<br>
         </a>
     </div>
     <div class="timeline-msg">
-        <span class="small-text"><a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a> ha añadido:</span><br>
+        <span class="small-text"><a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a> ha comentado:</span><br>
 {% endif %}
         
 
@@ -44,7 +44,7 @@ Mensaje nº 120<br>
         
         <span class="timestamp">  {{obj.created|naturaltime}}</span>
         <span class="action-bar">
-            {% if not obj.is_private %}
+            {% if not obj.is_private  and obj.instance.user.username != request.user.username %}
                 | 
                 <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="comment">
                     <span class="dislike">

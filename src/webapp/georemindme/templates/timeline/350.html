@@ -33,7 +33,8 @@ Mensaje nº 350<br>
         
         
         
-        {% if not obj.is_private %}
+        {% if not obj.is_private  and obj.instance.user.username != request.user.username %}
+<!--
             | 
             <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="list">
                 <span class="dislike">
@@ -45,6 +46,7 @@ Mensaje nº 350<br>
                     Me gusta
                 </span>
             </span>
+-->
             
             | <span title="Recibe novedades"  class="remember-forget" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">Seguir</span><span class="forget">Siguiendo</span></span>
         {% endif %}

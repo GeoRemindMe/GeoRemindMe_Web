@@ -23,15 +23,15 @@
             })
             
             $('#filter-suggestions').click(function(){
-                $('#chronology li.msg-300').show();
+                $(':regex(class,(msg-300|msg-303))').show();
                 //Oculto todos aquellos que no son sugerencias
-                $('#chronology li').not('.msg-300').not('.suggestion-comment').hide();
+                $('#chronology li').not('.msg-300').not('.msg-303').not('.suggestion-comment').hide();
             });
             
             $('#filter-lists').click(function(){
-                $('#chronology li.msg-350').show();
+                $(':regex(class,(msg-350|msg-353))').show();
                 //Oculto todos aquellos que no son sugerencias
-                $('#chronology li').not('.msg-350').not('.suggestion-comment').hide();
+                $('#chronology li').not('.msg-350').not('.msg-353').not('.suggestion-comment').hide();
             });
             
             $('#filter-likes').click(function(){

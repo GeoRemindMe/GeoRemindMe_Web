@@ -26,6 +26,14 @@ indexes:
 
 - kind: Event
   properties:
+  - name: _vis
+  - name: class
+  - name: user
+  - name: modified
+    direction: desc
+
+- kind: Event
+  properties:
   - name: class
   - name: user
   - name: modified
@@ -38,6 +46,16 @@ indexes:
   - name: user
   - name: modified
     direction: desc
+
+- kind: ListFollowersIndex
+  ancestor: yes
+  properties:
+  - name: count
+
+- kind: SuggestionFollowersIndex
+  ancestor: yes
+  properties:
+  - name: count
 
 - kind: UserFollowingIndex
   properties:
@@ -55,6 +73,13 @@ indexes:
   properties:
   - name: class
   - name: user
+  - name: created
+    direction: desc
+
+- kind: UserTimelineBase
+  properties:
+  - name: class
+  - name: user
   - name: visible
   - name: modified
     direction: desc
@@ -62,6 +87,12 @@ indexes:
 - kind: UserTimelineFollowersIndex
   properties:
   - name: followers
+  - name: created
+    direction: desc
+
+- kind: UserTimelineFollowersIndex
+  ancestor: yes
+  properties:
   - name: created
     direction: desc
 

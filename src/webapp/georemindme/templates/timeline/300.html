@@ -38,7 +38,7 @@ Mensaje nº 300
         
         
         
-        {% if not obj.is_private %}
+        {% if not obj.is_private and obj.instance.user.username != request.user.username %}
             | 
             <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
                 <span class="dislike">
