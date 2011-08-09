@@ -69,7 +69,8 @@
                     $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
                 },
                 out: function() {
-                     $(this).find('ul:first').slideUp(400);
+                    if($("#dropdown-list").hasClass('visible-display')==false)
+                        $(this).find('ul:first').slideUp(400);
                 }
             }
             
@@ -84,9 +85,11 @@
             $("#new-list-btn span#new-list").keyup(function(e) {
                 var suggestionList=[];
                 e.preventDefault();
-                //On press enter
-                if(e.keyCode == 13) {
-
+                if (e.which == 27){
+                    //On press escape
+                    closeDropdown();
+                }else if(e.keyCode == 13) {
+                    //On press enter
                     //Comprobamos si hay sugerencias seleccionadas para añadirlas
                     var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
                     if( checkedSuggestions.length>0){
@@ -112,8 +115,10 @@
                             
                             //Reordenamos alfabéticamente la lista desplegable
                             $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
-                                return $(a).text() > $(b).text() ? 1 : -1;
+                                return $(a).text().toLowerCase() > $(b).text().toLowerCase() ? 1 : -1;
                             });
+                            
+                            $("#dropdown-list").removeClass('visible-display');
                             
                             //Añadimos a la sugerencia dentro de la lista de sugerencias 
                             //las nuevas listas en las que se encuentra
@@ -130,13 +135,14 @@
                     
                     $("#new-list-btn span#text").css('display','inline-block')
                     $("#new-list-btn span#new-list").css('display','none')
+                    $("#new-list-btn div#cancel-link").css('display','none')
                     $("#new-list-btn span#new-list").find('input').val("");
                 }                
             });
             
             //Reordenamos alfabéticamente la lista desplegable
             $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
-                return $(a).text() > $(b).text() ? 1 : -1;
+                return $(a).text().toLowerCase() > $(b).text().toLowerCase() ? 1 : -1;
             });
             
             //On expanded view of a suggestion--> Remove suggestion from a list
@@ -150,12 +156,12 @@
                console.log("Añadimos nueva lista") 
             });
             
-            $('#new-list-btn').click(function(){
-                if($("#new-list-btn span#text").css('display')=="inline-block"){
-                    $("#new-list-btn span#text").css('display','none')
-                    $("#new-list-btn span#new-list").css('display','inline-block')
-                    $("#new-list-btn span#new-list").find('input').focus()
-                }
+            $('#new-list-btn span#text').click(function(){                
+                $("#new-list-btn span#text").css('display','none')
+                $("#new-list-btn span#new-list").css('display','inline-block')
+                $("#new-list-btn span#new-list").find('input').focus()
+                $("#new-list-btn div#cancel-link").css('display','block')
+                $("#dropdown-list").addClass('visible-display');
             })
             
             
@@ -172,16 +178,14 @@
          * 
          */
 
-
+        
         // Actualizamos la información de en que listas se encuentra
         // cada una de la sugerencias del grid
         function updateSuggestions(data){
             var suggestions = data.keys;
             var listID = data.id;
             var listName = data.name;
-            console.log(suggestions)
-            console.log("listID="+listID)
-            console.log("listName="+listName)
+            
             $(suggestions).each(function(i,suggestionID){
                 if($('#suggestion_'+suggestionID+' .removable-sugestion-list .list_'+listID).length==0){
                     //console.log("existe "+suggestionID+" en "+listID)
@@ -275,6 +279,14 @@
                 });
             }
             
+        }
+        
+        function closeDropdown(){
+            $("#dropdown-list").removeClass('visible-display');
+            $("#new-list-btn span#text").css('display','inline-block');
+            $("#new-list-btn span#new-list").css('display','none');
+            $("#new-list-btn div#cancel-link").css('display','none');
+            $("#new-list-btn span#new-list").find('input').val("");
         }
 
         function toogleSuggestion(obj){
@@ -423,7 +435,7 @@
                         <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
                         <span class="btn dropDrownBtn">
                             Guardar en
-                            <ul class="submenu" style="display:none">
+                            <ul class="submenu" style="display:none" id="dropdown-list">
                                 {% if lists %}
                                     {% for obj in lists %}
                                         <li id="listid-{{obj.id}}">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
@@ -431,7 +443,7 @@
                                 {% endif %}
                                 <li id="new-list-btn">
                                     <span id="text">Nueva lista...</span>
-                                    <span id="new-list" style="display:none"><input type="text" /></span>
+                                    <span id="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">Cancel</div>
                                 </li>
                             </ul>
                         </span>

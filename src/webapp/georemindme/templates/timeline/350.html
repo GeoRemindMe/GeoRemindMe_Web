@@ -15,9 +15,9 @@ Mensaje nº 350<br>
     
     {% if obj.instance.user.username = request.user.username %}
         <div class="removable" value="{{obj.instance.id}}" type="suggestion/list"><a href="#">Remove</a></div>
-        <span class="small-text">has creado una nueva lista de sugerencias: </span>
+        <span class="small-text">has creado una lista de sugerencias: </span>
     {% else %}
-        <span class="small-text"><a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ha creado una nueva lista de sugerencias: </span>
+        <span class="small-text"><a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ha creado una lista de sugerencias: </span>
     {% endif %}
     
 

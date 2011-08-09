@@ -460,6 +460,10 @@ input{
     .visible{
         visibility:visible;
     }
+    .visible-display{
+        visibility:visible !important;
+        display:block !important;
+    ]
     
     .link{
         color:blue;
@@ -1965,6 +1969,18 @@ input{
         text-align: center;
         text-decoration: underline;
 */
+    }
+    #new-list{
+        width:187px;
+    }
+    #new-list input{
+        width:100%
+    }
+    div#cancel-link{
+        color:blue;
+        text-decoration:underline;
+        font-size:0.9em;
+        text-align:right;
     }
     #add-more-details{
         -moz-border-radius: 4px 4px 4px 4px;
