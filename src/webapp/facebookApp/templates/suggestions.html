@@ -13,28 +13,7 @@
     <script type="text/javascript">        
         $(document).ready(function(){    
             //Asignamos comportamiento ONCLICK a cada fila --> Desplegar detalles
-            $('.maximize-minimize').toggle(function(){
-                    $(this).parent().find('div.expanded').slideDown('fast');
-                    $(this).parent().find('.suggestionName').toggle();
-                    $(this).parent().find('.suggestionName_editable').toggle();
-                    $(this).removeClass('suggestionCollapsed');
-                    $(this).addClass('suggestionExpanded');
-                },function() {
-                    $(this).parent().find('div.expanded').slideUp('fast'); 
-                    $(this).parent().find('.suggestionName').toggle();
-                    $(this).parent().find('.suggestionName_editable').toggle();
-                    $(this).removeClass('suggestionExpanded');
-                    $(this).addClass('suggestionCollapsed');
-            });
-            
-            //Copiamos el comportamiento del click sobre el botón al hacerlo
-            //sobre el nombre de la sugenrecia
-            $('.suggestionName').click(function(){
-                $(this).parentsUntil('.suggestion').parent().find('.maximize-minimize').click();
-            })
-            $('.suggestionName_editable').click(function(){
-				$(this).parentsUntil('.suggestion,.suggestionList').parent().find('.maximize-minimize').click();
-            })
+            setExpandible('.suggestion');
             
             $('#checkBox_all').click(function(){
                 if($('#checkBox_all').is(':checked'))
@@ -137,10 +116,37 @@
                             //las nuevas listas en las que se encuentra
                             updateSuggestions(data);
                             
-                            //Actualizamos el contador de la lista
+                            //Actualizamos el contador de la lista con el número de sugerencias
                             updateCounter(data.id,data.keys.length);
                             
+                            //Añadimos la lista a la pestaña listas
+                            var suggestions=[];
+                            $(data.keys).each(function(){
+                                suggestions.push({
+                                        id:this,
+                                        name:$('#suggestion_'+this+' .suggestionName_editable').text()
+                                    })
+                            })
+                            var obj=$("#listTemplate").tmpl({obj:data, keys:suggestions}).appendTo("#suggestion-list-lists");
+                            if(obj.find('.suggestions ul li').length > 0){
+                                tmp=obj;
+                                obj.find('.suggestions ul').show();
+                                obj.find('.suggestions .empty-msg').hide();
+                                obj.find('.suggestions li.removable').click(function(){
+                                    var unparsedString=$(this).attr('class').split(" ")[0];
+                                    var listID = unparsedString.substring(5,unparsedString.length)
+                                    removeFromList(this,listID);
+                                });
+                            }
+                            
+                            
+                            setExpandible('#list_'+data.id);
+                            
+                            //Aumentamos el contador de las listas
+                            $('#lists-tab-counter').text(parseInt($('#lists-tab-counter').text())+1);
+                            
                             //Mostrar mensaje de éxito
+                            showMessage("La lista ha sido añadida con éxito","success")
                             
                             
                         }
@@ -279,7 +285,7 @@
                         }
                         
                         if($(obj).parent().children().length==1){
-                            console.log("Ya no quedan más hermanos");
+                            //console.log("Ya no quedan más hermanos");
                             $(obj).parent().parent().find('.empty-msg').show()
                         }
                         $(obj).remove();
@@ -319,7 +325,7 @@
             var suggestions=[]
             var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
             if( checkedSuggestions.length==0){
-                console.log("No ha seleccionado items");
+                showMessage("No hay ninguna sugerencia seleccionada","success")
             }else{
                 checkedSuggestions.each(function(){
                     //console.log("Añadimos a la lista: "+addToList+", la sugerencia: "+);
@@ -344,8 +350,8 @@
                         //Actualizamos el contador de la lista
                         updateCounter(data.id,data.keys.length);
                         
-                        //console.log("Sugerencias añadidas con éxito");
                         //Mostrar mensaje de éxito
+                        showMessage("Las sugerencias han sido añadidas a la lista","success")
                     }
                 });
             }
@@ -382,6 +388,31 @@
             });
         }
 
+        function setExpandible(obj){
+            $(obj+' .maximize-minimize').toggle(function(){
+                    $(this).parent().find('div.expanded').slideDown('fast');
+                    $(this).parent().find('.suggestionName').toggle();
+                    $(this).parent().find('.suggestionName_editable').toggle();
+                    $(this).removeClass('suggestionCollapsed');
+                    $(this).addClass('suggestionExpanded');
+                },function() {
+                    $(this).parent().find('div.expanded').slideUp('fast'); 
+                    $(this).parent().find('.suggestionName').toggle();
+                    $(this).parent().find('.suggestionName_editable').toggle();
+                    $(this).removeClass('suggestionExpanded');
+                    $(this).addClass('suggestionCollapsed');
+            });
+            
+            //Copiamos el comportamiento del click sobre el botón al hacerlo
+            //sobre el nombre de la sugenrecia
+            $(obj+' .suggestionName').click(function(){
+                $(this).parentsUntil('.suggestion').parent().find('.maximize-minimize').click();
+            })
+            $(obj+' .suggestionName_editable').click(function(){
+				$(this).parentsUntil('.suggestion,.suggestionList').parent().find('.maximize-minimize').click();
+            })
+        }
+
         function removeSuggestions(){
             temp=$("input[name='suggestions']:checked")
             $.each(temp, function(index,value){
@@ -393,10 +424,12 @@
                     },
                     complete: function(msg){
                         if (msg.status !=200){
-                            $('#error-msg').text("Error "+msg.status)
-                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+                            showMessage("Error: "+msg.status,"error")
                         }else{
                             $('#suggestion_'+value.value).fadeOut('slow').remove()
+                            showMessage("Las sugerencias han sido eliminadas con éxito","success")
+                            //Disminuimos el contador
+                            $('#suggestions-tab-counter').text(parseInt($('#suggestions-tab-counter').text())-1);
                         }
                         
                     }
@@ -414,23 +447,30 @@
                     },
                     complete: function(msg){
                         if (msg.status !=200){
-                            $('#error-msg').text("Error "+msg.status)
-                            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
+                            showMessage("Error: "+msg.status,"error")
                         }else{
                             $('#list_'+value.value).fadeOut('slow').remove()
+                            showMessage("Las listas han sido eliminadas con éxito","success")
+                            //Disminuimos el contador
+                            $('#lists-tab-counter').text(parseInt($('#lists-tab-counter').text())-1);
+                            
+                            //La borramos del desplegable
+                            $('#dropdown-list #listid-'+value.value).remove();
+                            
+                            //Y del detalle de sugerencia
+                            $('.list_'+value.value).remove()
+                            
                         }
                         
                     }
                 });
             })
         }
-
+        
+        //Actualiza el contador de la lista: listID y le pone el valor Val
         function updateCounter(listID,val){
             counterClass='.list-'+listID+'-counter';
-        //    counter=parseInt($($(counterClass)[0]).text())
-            //counter=counter+val;
-            //if(counter>=0)
-                $(counterClass).text(val);
+            $(counterClass).text(val);
         }
 
         /**
@@ -511,8 +551,8 @@
 -->
         <h1>Baúl de sugerencias</h1>
         <ul id="tabMenu">
-            <li id="your_suggestions" class="active">Sugerencias ({{suggestions.1|length}})</li>
-            <li id="suggestions_lists">Listas ({{lists|length}})</li>
+            <li id="your_suggestions" class="active">Sugerencias (<span id="suggestions-tab-counter">{{suggestions.1|length}}</span>)</li>
+            <li id="suggestions_lists">Listas (<span id="lists-tab-counter">{{lists|length}}</span>)</li>
         </ul>
         <div id="content">
                 <!-- YOUR SUGGESTIONS -->
@@ -773,4 +813,73 @@
             </div>
         </div>
     </script>
+    
+    
+    <script id="listTemplate" type="text/x-jquery-tmpl">
+        <div id="list_${obj.id}" class="suggestion suggestionList">
+            <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
+            <div class="collapsed">
+                <span class="checkBox"><input type="checkbox" id="checkBox_${obj.id}" value="${obj.id}" name="lists" /></span>
+                <span class="suggestionName">${obj.name} (<span class="list-${obj.id}-counter">${obj.count}</span> sugerencias, autor: ${obj.user.username} )</span>
+                <span class="suggestionName_editable editable" style="display:none">${obj.name}</span>                                        
+            </div>
+            <div class="expanded" style="display:none">
+                <dl>
+                    <dt>Descripción:</dt>
+                    <dd class="editable">Sin descripción</dd>
+                    
+                    <dt>Sugerencias</dt>
+                    <dd class="suggestions">
+                        
+                        <ul style="display:none">
+                            {% templatetag openvariable %}each keys{% templatetag closevariable %}
+                                <li  class="list_${obj.id} removable" value="${$value.id}">${$value.name}</li>
+                            {% templatetag openvariable %}/each{% templatetag closevariable %}
+                        </ul>
+                        
+                        <em class="empty-msg editable" value="nothing">
+                            No hay sugerencias en esta lista
+                        </em>
+                        
+                    </dd>
+                    
+                    <dt>Tags:</dt>
+                    <dd>
+<!--
+                        {% if obj.tags %}
+                            {% templatetag openvariable %}obj.tags{% templatetag closevariable %}
+                        {% else %}
+                            <em>Esta lista no tiene tags</em>
+                        {% endif %}
+-->
+                    </dd>
+                    <dt><strong>Compartir:</strong></dt>
+                    <dd>
+                        <ul class="share-suggestion">
+                            <li><a class="share-suggestion link-icon" href="{% url fb_view_suggestion k.id %}">Enlace</a></li>
+                            <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
+                            <li><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
+                            <li><a class="share-suggestion facebook-icon" href="">Muro</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Autor:</dt>
+                    <dd><a href="{% url fb_public_profile obj.user.username %}">${obj.user.username}</a></dd>
+                </dl>
+                
+                <p class="big statistics">Estadísticas:</p>
+                <dl>
+                    
+                    <dt>Personas que han guardado la lista: </dt>
+                    <dd>${obj.counters.followers}</dd>
+                    
+                    <dt>Comentarios recibidos:</dt>
+                    <dd>${obj.counters.comments}</dd>
+                    
+                    <dt>Última modificación:</dt>
+                    <dd>${obj.modified}</dd>
+                </dl>
+            </div>
+        </div>
+    </script>
+    
 {% endblock %}
