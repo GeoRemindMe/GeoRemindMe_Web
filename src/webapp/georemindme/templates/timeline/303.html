@@ -15,8 +15,8 @@ Mensaje nº 303<br>
         </a>
     </div>
     <div class="timeline-msg">
-        Has guardado en <a href="{% url fb_user_suggestions%}">tu baúl</a> la sugerencia de <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a>:<br>
-        {{obj.instance.name}}<br>
+        Has guardado en <a href="{% url fb_user_suggestions%}">tu baúl</a> la sugerencia de <a href="{% url fb_public_profile obj.instance.user.username %}" class="black-link">{{obj.instance.user.username}}</a>:<br>
+        <a href="{% url fb_view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a><br>
         <span class="timestamp">  {{obj.created|naturaltime}}</span>  
     </div>
 {% else %}
@@ -26,8 +26,8 @@ Mensaje nº 303<br>
         </a>
     </div>
     <div class="timeline-msg">
-        <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ha guardado en su baúl tu sugerencia :<br>
-        {{obj.instance.name}}<br>
+        <a href="{% url fb_public_profile obj.username %}" class="black-link">{{obj.username}}</a> ha guardado en su baúl tu sugerencia :<br>
+        <a href="{% url fb_view_suggestion obj.instance.slug %}" class="hoverlink">{{obj.instance.name}}</a><br>
         <span class="timestamp">  {{obj.created|naturaltime}}</span>  
     </div>
 {% endif %}

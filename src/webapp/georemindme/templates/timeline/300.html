@@ -18,7 +18,7 @@ Mensaje nº 300
         <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
         <span class="small-text">has creado la sugerencia: </span>
     {% else %}
-        <span class="small-text"><a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> sugiere: </span>
+        <span class="small-text"><a href="{% url fb_public_profile obj.username %}" class="black-link">{{obj.username}}</a> sugiere: </span>
     {% endif %}
     
 
@@ -73,7 +73,7 @@ Mensaje nº 300
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}
                 
-                    <img class="user-picture" src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
+                    <img class="user-picture" src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}" class="black-link">{{c.username}}</a>: {{c.msg}}<br>
                     <span class="timestamp">{{c.created|naturaltime}}</span> 
                     
                     {% if c.username != user.username %}

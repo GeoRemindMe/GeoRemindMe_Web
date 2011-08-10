@@ -489,7 +489,7 @@ function saveSuggestion(){
         }
         
         
-        $('#submit-button').val("Enviado...")
+        $('#submit-button').val("Enviando...")
         $('#submit-button').addClass("waiting")
         
         var params = { 

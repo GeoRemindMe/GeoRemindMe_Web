@@ -726,8 +726,9 @@
                         
                     </div>
 
-                    {% if lists %}
+                    
                         <div id="suggestion-list-lists">
+                        {% if lists %}
                             {% for obj in lists %}
                                 <div id="list_{{obj.id}}" class="suggestion suggestionList">
                                     <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
@@ -792,8 +793,9 @@
                                     </div>
                                 </div>
                             {% endfor %}
+						{% endif %}
                         </div>
-                    {% endif %}
+                    
                 </span>
                 <!-- END LISTS -->
             </table>
