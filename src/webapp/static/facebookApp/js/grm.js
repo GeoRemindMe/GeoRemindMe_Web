@@ -398,3 +398,11 @@ function sendComment(btn,elemType,id) {
         $(this).addClass("waiting")
     }
 }
+
+function showMessage(txt,msgClass){
+    if($('#notification-msg').css("display")=="none"){
+        $('#notification-msg').text(txt)
+        $('#notification-msg').addClass(msgClass)
+        $('#notification-msg').fadeIn('slow').delay(3000).fadeOut('slow')
+    }
+}

@@ -232,6 +232,21 @@ input{
      *  COMMON
      * 
      ***************************/
+    #notification-msg{
+        border: 1px dotted #CCCCCC;
+        left: 50%;
+        padding: 1em;
+        position: absolute;
+    }
+    .error{
+        background-color: #FCC7C7;
+        
+    }
+    .success{
+        background-color: #C4FF89;
+        
+    }
+    
     #right-col h1{
         color: #555555;
         display: inline;
@@ -361,6 +376,7 @@ input{
         padding: 5px 10px 5px 27px;
         line-height: 2em;
     }
+
     .following-state span a.following{
         color:white;
     }
@@ -479,14 +495,7 @@ input{
         cursor:pointer;
     }
     
-    .error{
-        background-color: #FCC7C7;
-        border: 1px dotted red;
-    }
-    .success{
-        background-color: #C4FF89;
-        border: 1px dotted green;
-    }
+    
     #answerMessage{
         display:none;
         clear: both;
@@ -1409,7 +1418,17 @@ input{
      *  Add suggestion panel
      * 
      ***************************/
-
+    #add-suggestion span.waiting{
+        background: url("/static/facebookApp/img/spinning-icons/wait16trans.gif") no-repeat scroll 5px 4px #EEEEEE;
+        border: 1px solid #CCCCCC;
+        color: black;
+        display: block;
+        font-weight: bold;
+        line-height: 2em;
+        margin-top: -5px;
+        padding: 2px 10px 2px 25px;
+    }
+    
     #add-suggestion form{
 
     }

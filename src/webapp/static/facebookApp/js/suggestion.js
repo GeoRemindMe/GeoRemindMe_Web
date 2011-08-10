@@ -515,13 +515,14 @@ function saveSuggestion(){
             data: jQuery.param(params),
             complete: function(msg){
                 if (msg.status !=200){
-                    $('#answerMessage').text("Error "+msg.status)
-                    $('#answerMessage').addClass('error')
-                    $('#answerMessage').fadeIn('slow').delay(2000).fadeOut('slow')
+                    showMessage("Error "+msg.status,"error")
                 }else{
-                    $('#answerMessage').text("La sugerencia ha sido añadida con éxito")
-                    $('#answerMessage').addClass('success')
-                    $('#answerMessage').fadeIn('slow').delay(2000).fadeOut('slow')
+                    showMessage("La sugerencia ha sido añadida con éxito","success")
+                    
+                    //Vaciamos los campos
+                    $('#id_name').val("");
+                    $('#id_description').val("");
+                    $('#place').val("");
                 }
                 $('#submit-button').val("Enviar")
                 $('#submit-button').removeClass("waiting")
