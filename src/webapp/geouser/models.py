@@ -32,6 +32,9 @@ class AnonymousUser(object):
     @property
     def id(self):
         return -1
+    
+    def key(self):
+        return -1
 
 
 class User(polymodel.PolyModel, HookedModel):

@@ -116,6 +116,28 @@ class ListHelper(object):
             return [p.id, p.fetch_page(page), p.page_count()]
         else:
             return q.run()
+        
+    def get_by_tag_querier(self, tagInstance, querier, page=1, query_id=None):
+        from georemindme.paging import PagedQuery
+        if not isinstance(querier, User):
+            raise TypeError()
+        from geotags.models import Tag
+        if not isinstance(tagInstance, Tag):
+            raise TypeError
+        lists = self._klass.all().filter('_tags_list =', tagInstance.key())
+        p = PagedQuery(lists, id = query_id)
+        return_list = []
+        for event in p.fetch_page(page):
+            if event.user.key() == querier.key():
+                return_list.append(event)
+            elif hasattr(event, '_vis'):
+                if event._is_public():
+                    return_list.append(event)
+                elif event._is_shared() and event.user_invited(querier):
+                    return_list.append(event)
+        if len(return_list) != 0:
+            return [p.id, return_list]
+        return None
 
 
 class ListSuggestionHelper(ListHelper):

@@ -22,3 +22,22 @@ def view_tag_suggestions(request, slug, template='webapp/view_tag.html'):
                                         'user_suggestions': user_suggestions,
                                         },
                                context_instance=RequestContext(request))
+
+def search_tag_suggestion(request, tag):
+    from models import Tag
+    from geoalert.models import Suggestion
+    from geolist.models import List
+    tags_instance = Tag.objects.get_by_name(tag)
+    suggestions = Suggestion.objects.get_by_tag_querier(tags_instance, request.user)
+    return suggestions
+
+@login_required
+def add_suggestion_tag(request, event_id, tags):
+    from geoalert.models import Event
+    event = Event.objects.get_by_id_user(event_id, request.user)
+    if event is None:
+        raise Http404
+    if hasattr(event, '_tags_setter'):
+        event._tags_setter(tags)
+        return event
+    return False

@@ -463,7 +463,6 @@ class Suggestion(Event, Visibility, Taggable):
     def __unicode__(self):
         return self.name
         
-        
 
 class AlertSuggestion(Event):
     '''
@@ -603,6 +602,7 @@ class _Deleted_AlertHelper(object):
         if not isinstance(user, User):
             raise TypeError()
         return _Deleted_Alert.all().filter('user =', user).filter('created >', last_sync).order('-created')
+
 
 class _Deleted_Alert(db.Model):
     deleted_id = db.IntegerProperty()

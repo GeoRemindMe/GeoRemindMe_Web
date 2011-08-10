@@ -54,6 +54,14 @@ class InvitationHelper(object):
         invitation = Invitation.all().filter('instance =', instance).filter('to =', user).get()
         return invitation
     
+    def get_invitations_pending(self, user, page = 1, query_id = None):
+        if not isinstance(user, User):
+            raise TypeError
+        q = Invitation.all().filter('to =', user).filter('status =', 0)
+        from paging import PagedQuery
+        p = PagedQuery(q, id = query_id)
+        return [p.id, [i.to_dict() for i in p.fetch_page(page)], p.page_count()]
+    
 
 class Invitation(db.Model):
     """Por cada invitacion, se crea una nueva instancia"""
@@ -140,4 +148,17 @@ class Invitation(db.Model):
                 send_notification_invitation(self.to.email, self.sender, self)
             put.get_result()
         else:
-            super(Invitation, self).put()            
+            super(Invitation, self).put()
+            
+    def to_dict(self):
+        return {'user': self.user,
+                'to': self.to,
+                'status': self.status,
+                'created': self.created,
+                'instance': self.instance
+                }
+        
+    def to_json(self):
+        from libs.jsonrpc.jsonencoder import JSONEncoder
+        from django.utils import simplejson
+        return simplejson.dumps(self.to_dict(), cls=JSONEncoder)       

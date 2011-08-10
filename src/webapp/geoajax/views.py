@@ -699,3 +699,30 @@ def get_place_near(request):
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(places, cls=JSONEncoder),
                         mimetype='application/json')
+    
+@ajax_request
+def search_tag_suggestion(request):
+    tag = request.POST.get('tag', None)
+    query_id = request.POST.get('query_id', None)
+    page = request.POST.get('page', 1)
+    if tag is None:
+        return HttpResponseBadRequest
+    from geotags.views import search_tag_suggestion
+    response = search_tag_suggestion(request, tag, page=page, query_id=query_id)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(response, cls=JSONEncoder),
+                        mimetype='application/json')
+    
+@ajax_request
+def add_suggestion_tags(request):
+    tags = request.POST.get('tags', None)
+    event_id = request.POST.get('event_id', None)
+    if tags is None or event_id is None:
+        return HttpResponseBadRequest
+    from geotags.views import add_suggestion_tag
+    response = add_suggestion_tag(request, event_id, tags)
+    if not response:
+        return HttpResponseBadRequest
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(response, cls=JSONEncoder),
+                        mimetype='application/json')
