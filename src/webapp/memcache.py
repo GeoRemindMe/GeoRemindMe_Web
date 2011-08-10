@@ -43,7 +43,6 @@ def serialize_instances(instances):
         return instances._populate_entity(_entity_class=search.SearchableEntity)._ToPb() 
     elif isinstance(instances, db.Model):
         return db.model_to_protobuf(instances).Encode()#instances is only one
-   
     return [db.model_to_protobuf(x).Encode() for x in instances]
 
 def deserialize_instances(data, _search_class=None):

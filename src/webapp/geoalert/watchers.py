@@ -80,7 +80,7 @@ suggestion_modified.connect(modified_suggestion)
 def deleted_suggestion(sender, **kwargs):
     from geouser.models_acc import UserTimelineBase
     query = UserTimelineBase.all().filter('instance =', sender.key())
-    sender.user.counters.set_suggested(-1)
+    kwargs['user'].counters.set_suggested(-1)
     for q in query:
         q.delete()
 suggestion_deleted.connect(deleted_suggestion)

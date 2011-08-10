@@ -265,7 +265,7 @@ class Suggestion(Event, Visibility, Taggable):
     date_ends = db.DateTimeProperty()
     poi = db.ReferenceProperty(POI, required=True)
     modified = db.DateTimeProperty(auto_now=True)
-    user = db.ReferenceProperty(User, required=True, collection_name='suggestions')
+    user = db.ReferenceProperty(User, collection_name='suggestions')
     has = db.StringListProperty(default=[u'active:T',])
     
     _counters = None
@@ -411,11 +411,17 @@ class Suggestion(Event, Visibility, Taggable):
             suggestion_new.send(sender=self)
             
     def delete(self):
-        children = db.query_descendants(self).fetch(10)
-        for c in children:
-            c.delete()
-        suggestion_deleted.send(sender=self)
-        super(Suggestion, self).delete()
+        from django.conf import settings
+        generico = User.objects.get_by_username(settings.GENERICO, keys_only=True)
+        viejo = self.user
+        if generico is None:
+            self.user = None
+        self.user = generico
+#        children = db.query_descendants(self).fetch(10)
+#        for c in children:
+#            c.delete()
+        suggestion_deleted.send(sender=self, user=viejo)
+#        super(Suggestion, self).delete()
     
     def has_follower(self, user):
         if not user.is_authenticated():

@@ -654,6 +654,11 @@ def close_window(request):
 
 
 def update(request):
+    from google.appengine.ext.deferred import defer
+    defer(__update_users)  # mandar email de notificacion
+    return HttpResponse('Updating users...')
+
+def __update_users():
     from models import User
     users = User.all()
     for user in users:
@@ -666,5 +671,3 @@ def update(request):
         if sc is None:
             sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
         db.put([profile, settings, sc, counters])
-        
-    return HttpResponse()

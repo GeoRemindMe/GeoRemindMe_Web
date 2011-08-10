@@ -248,7 +248,7 @@ def del_list(request, id):
         :type id: :class:`integer`
         :returns: True si se borro la lista
     '''
-    list = List.objects.get_by_id_user(id, querier=request.user)
+    list = List.objects.get_by_id_user(id, request.user)
     if list is not None:
         if list.user.key() == request.user.key():
             list.active = False
@@ -268,8 +268,7 @@ def get_all_list_user(request, query_id=None, page=1):
         :type query_id: int
         :returns: [query_id, [:class:`geolist.models.`]
     '''
-    user = request.session['user']
-    lists = ListUser.objects.get_by_user(user, query_id=query_id, page=page)
+    lists = ListUser.objects.get_by_user(request.user, query_id=query_id, page=page)
 
     return lists
 
