@@ -611,7 +611,7 @@
                                         <dt><strong>Compartir:</strong></dt>
                                         <dd>
                                             <ul class="share-suggestion">
-                                                <li><a class="share-suggestion link-icon" href="{% url fb_view_suggestion k.id %}">Enlace</a></li>
+                                                <li><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
                                                 <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
                                                 <li><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
                                                 <li><a class="share-suggestion facebook-icon" href="">Muro</a></li>

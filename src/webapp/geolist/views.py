@@ -62,8 +62,12 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         from models import ListRequested
         list = ListRequested.objects.get_by_id_querier(id, request.user)
         if list is not None:
-            list.update(querier=request.user, instances=instances)
-            return list
+            try:
+                list.update(querier=request.user, instances=instances)
+                return list
+            except:
+                from django.http import HttpResponseForbidden
+                return HttpResponseForbidden
     list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, instances_del=instances_del)
     return list
 
@@ -102,7 +106,24 @@ def del_list_follower(request, list_id):
     list = List.objects.get_by_id_querier(list_id, request.user)
     if list is not None:
         return list.del_follower(request.user)
-    return False    
+    return False
+
+@login_required
+def add_suggestion(request, template='webapp/add_suggestion.html'):
+    """ Añade una sugerencia
+        
+            :param form: formulario con los datos
+            :type form: :class:`geoalert.forms.RemindForm`
+            :param address: direccion obtenida de la posicion
+            :type: :class:`string`
+            
+            :returns: :class:`geoalert.models.Suggestion`
+    """
+    from forms import ListRequestedForm
+    f = ListRequestedForm();
+    return  render_to_response(template, {'f': f,},
+                               context_instance=RequestContext(request)
+                               )
 #===============================================================================
 # Modificacion de listas
 #===============================================================================

@@ -148,12 +148,22 @@ class ListSuggestion(List, Visibility):
             if list is None:
                 list = user.listsuggestion_set.filter('name =', name).get()
             if list is not None:  # la lista con ese nombre ya existe, la editamos
-                list.update(name=name, description=description, instances=instances, instances_del=instances_del, vis=vis )
+                list.update(name=name, 
+                            description=description,
+                            instances=instances, 
+                            instances_del=instances_del, 
+                            vis=vis 
+                            )
                 return list
             return False
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
         keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
-        list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
+        list = ListSuggestion(name=name, 
+                              user=user, 
+                              description=description, 
+                              keys=[k for k in keys], 
+                              _vis=vis
+                              )
         list.put()
         return list
 
@@ -286,11 +296,21 @@ class ListRequested(ListSuggestion):
             list = user.listsuggestion_set.filter('name =', name).get()
         if list is not None:  # la lista con ese nombre ya existe, la editamos
             if isinstance(list, ListRequested):
-                list.update(name=name, description=description, instances=instances, instances_del=instances_del, vis=vis )
+                list.update(name=name, 
+                            description=description, 
+                            instances=instances, 
+                            instances_del=instances_del, 
+                            vis=vis 
+                            )
                 return list
         # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
         keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
-        list = ListSuggestion(name=name, user=user, description=description, keys=[k for k in keys], _vis=vis)
+        list = ListRequested(name=name, 
+                             user=user, 
+                             description=description, 
+                             keys=[k for k in keys], 
+                             _vis=vis
+                             )
         list.put()
         return list
 
@@ -321,8 +341,12 @@ class ListRequested(ListSuggestion):
                 except:
                     pass
         else:
-            invitation = self.user_invited(querier)
-            if invitation is None or not invitation.is_accepted():
+            if self.is_shared():
+                invitation = self.user_invited(querier)
+                if invitation is None or not invitation.is_accepted():
+                    from georemindme.exceptions import ForbiddenAccess
+                    raise ForbiddenAccess
+            elif self.is_private():
                 from georemindme.exceptions import ForbiddenAccess
                 raise ForbiddenAccess
         keys = set(self.keys)
@@ -380,7 +404,6 @@ class ListAlert(List):
             list.keys = [k for k in keys]
             list.put()
             return list
-        # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
         keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
         list = ListAlert(name=name, user=user, description=description, keys=[k for k in keys])
         list.put()

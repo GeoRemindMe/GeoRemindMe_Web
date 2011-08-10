@@ -24,9 +24,18 @@ def register_panel(request, login=False):
 
 
 def login_panel(request,login=False):
-    if request.session.get('user'):
-        return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-    return render_to_response("webapp/login.html", {'login' :login}, context_instance=RequestContext(request))
+    try:
+    # When deployed
+        from google.appengine.runtime import DeadlineExceededError
+    except ImportError:
+    # In the development server
+        from google.appengine.runtime.apiproxy_errors import DeadlineExceededError 
+    try:
+        if request.user.is_authenticated():
+            return HttpResponseRedirect(reverse('geouser.views.dashboard'))
+        return render_to_response("webapp/login.html", {'login' :login}, context_instance=RequestContext(request))
+    except DeadlineExceededError:
+        return HttpResponseRedirect('/')
 
 
 def set_language(request):
