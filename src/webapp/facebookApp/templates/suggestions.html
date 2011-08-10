@@ -327,7 +327,7 @@
             var suggestions=[]
             var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
             if( checkedSuggestions.length==0){
-                showMessage("No hay ninguna sugerencia seleccionada","success")
+                showMessage("No hay ninguna sugerencia seleccionada","error")
             }else{
                 checkedSuggestions.each(function(){
                     //console.log("Añadimos a la lista: "+addToList+", la sugerencia: "+);

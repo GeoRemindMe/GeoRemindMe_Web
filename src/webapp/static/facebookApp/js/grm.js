@@ -154,8 +154,8 @@ GRM.remember = function(settings) {
         $(this).click(function() {
             
             //Primero comprobamos el tipo de mensaje
-            var elemType=$(this).parentsUntil('#chronology');
-            if ($(elemType[elemType.length-1]).hasClass("msg-350"))
+            var elemType;
+            if ($(this).attr('type')=="list")
                 elemType="list";
             else
                 elemType="suggestion";
@@ -372,7 +372,7 @@ jQuery.fn.removable = GRM.removable;
 
 GRM.init = function() {
         $(".like-dislike").like();
-        $(".remember-forget").remember(); //<-- Now on chronology (Debugging)
+        $(".remember-forget").remember();
         $(".removable").removable();
     }
 

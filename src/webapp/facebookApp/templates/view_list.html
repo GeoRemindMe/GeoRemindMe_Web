@@ -10,10 +10,14 @@
         $(document).ready(function(){
 			GRM.init();
 			
+            //Set like & dislike behaviour
+            $(".like-dislike").like();
+            
+            //Set like&dislike style
             $('#suggestion-list li').hover(
-                function(){$(this).find('div').css({'display': 'inline'});},
-                function(){$(this).find('div').css({'display': 'none'});}
-            ),
+                function(){$(this).find('.action-bar').show()},
+                function(){$(this).find('.action-bar').hide()}
+            )
 			$('#list-description').html($('#list-description').html().replace(/none/ig, "<em>Sin descripción</em>"))
         });
 	</script>
@@ -33,30 +37,58 @@
 	    <p>Etiquetas: <a href="#">Bares</a> | <a href="#">Restaurantes</a> | <a href="#">Almería</a></p>
 	</div>
 	<div id="suggestion-aside">
-		<h2>Seguir</h2>
-	</div>
-	<h2 class="clear-left">Sugerencias</h2>
+        
+        seguidores:
+        <span id="counter">{{list.counters.followers}}</span>
+        {% if list.user.username != request.user.username %}
+            <span title="Guardar en favoritos"  class="remember-forget hoverlink" value="{{list.id}}" type="list" {%if user_follower%}remember="true"{%endif%}>
+                <span class="remember">Guardar</span>
+                <span class="forget">Guardado</span>
+            </span>
+        {% endif %}
+        
+    </div>
+	
+    <p class="clear-left big suggestions-title"><strong>Sugerencias</strong></p>
 	
 	<ul id="suggestion-list">
-		{% for sugg in suggestions %}
-		<li>
-			<a class="sugg-link" href="{% url fb_view_suggestion sugg.instance.slug %}">{{sugg.instance.name}}</a> <br> En <span class="sugg-place">{{sugg.instance.poi.name}}</span>
-			
-			<div class="save-suggestion" value="104" type="suggestion">
-				<a href="#">Add</a>
-			</div>
-			<div class="like-suggestion" value="104" type="suggestion" style="display:none;">
-				<a href="#">Like</a>
-			</div>
-			<div class="map-suggestion" value="104" type="suggestion" style="display:none;">
-				<a href="#">Map</a>
-			</div>
+		{% for obj in suggestions %}
+		<li>           
+                
+                <span class="user"><a href="{% url fb_public_profile obj.instance.user.username %}"><img src="/user/{{obj.instance.user.username}}/picture/" alt="{{obj.instance.user.username}} avatar"></a></span>
+                <div class="timeline-msg">
+
+                    <span class="msg"><a href="{% url fb_view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a></span>
+                    {% if obj.instance.poi.slug %}
+                        <span class="suggestionPlace">En <strong><a href="{% url fb_view_place obj.instance.poi.slug %}" class="black-link">{{obj.instance.poi.name}}</a></strong></span><br>
+                    {% endif %}
+                    <span class="timestamp">{{obj.instance.created|naturaltime}} </span> 
+                    <span class="action-bar" style="display:none">
+
+                        {% if not obj.is_private and obj.instance.user.username != request.user.username %}
+                            &nbsp;- 
+                            <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
+                                <span class="dislike hoverlink">
+                                    <span class="hoverlink">Ya no me gusta</span> 
+                                    <span class="text like-text increase">{{obj.vote_counter}}</span> personas
+                                </span>
+                                
+                                <span class="like">
+                                    Me gusta
+                                </span>
+                            </span>
+                            
+                            | <span title="Recibe novedades"  class="remember-forget hoverlink" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">Guardar</span><span class="forget">Guardada</span></span>
+                        {% endif %}
+                    </span>
+                        
+                </div>
 			
 		</li>
 		{% endfor %}
 	</ul>
 	
-	<h2>¿Tienes algún comentario para esta lista?</h2>
+	<h2>¿Tienes algún comentario?</h2>
     <textarea id="msg"></textarea>
     <span class="btn" onclick="sendComment(this,'list',{{list.id}});">Comentar</span>
 	
