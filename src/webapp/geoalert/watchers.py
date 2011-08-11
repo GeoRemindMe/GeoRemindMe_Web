@@ -75,7 +75,7 @@ def modified_suggestion(sender, **kwargs):
     timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=301, _vis=sender._get_visibility())
     timelinePublic.put()
     p.get_result()
-suggestion_modified.connect(modified_suggestion)
+#suggestion_modified.connect(modified_suggestion)
 
 def deleted_suggestion(sender, **kwargs):
     from geouser.models_acc import UserTimelineBase
