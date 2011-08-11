@@ -524,6 +524,10 @@ input{
         margin-top:0.5em;
 */
     }
+    .comment-box div.removable{
+        margin-right:0;
+    }
+    
     div.removable:hover{
         background-position: 0 32px;
     }
@@ -591,7 +595,7 @@ input{
         
         ul#chronology li a.black-link,a.black-link{
             text-decoration:none;
-            color:#555555;
+            color:#333;
         }
         ul#chronology li a.black-link:hover{
             text-decoration:underline;
@@ -627,7 +631,9 @@ input{
             }
             
             #view-suggestion ul#popular-comments{
-                margin:1em 0;
+/*
+                margin:0.5em 0;
+*/
             }
             #notifications .unread-item{
                 background-color: #EEEEEE;
@@ -913,8 +919,16 @@ input{
         background-color:#ddd;
         text-decoration:underline;
     }
+
+    #popular-comments .comment-element{
+        clear: both;
+/*
+        margin-bottom: 1em;
+*/
+        padding: 0;
+    }
     
-    
+    /* fin common*/
     /****************************
      *      
      * ACCOUNT SETTINGS
@@ -1112,7 +1126,7 @@ input{
         background-position: 5px 4px;
     }
     
-    #activity .load-more{
+    #activity .load-more,#view-suggestion .load-more{
         background-color: #3B5998;
         border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
         border-style: solid;
@@ -2052,6 +2066,14 @@ input{
      ***************************/
     #view-suggestion{
     }
+    
+    #popular-box,#list-box{
+        border: 1px solid #CCCCCC;
+        margin: 1em 0;
+        padding: 0 0 1em;
+        background-color: #EFEFEF;
+        
+    }
     #view-suggestion #autor{
         font-size: 1.5em;
         margin: 1em 0;
@@ -2061,9 +2083,13 @@ input{
         width:50px;
         float:left;
     }
+    #view-suggestion #autor img{
+        width:30px;
+        height:30px;
+    }
     #view-suggestion #autor p{
         display: inline-block;
-        line-height: 50px;
+        line-height: 1.7em;
         margin: 0;
         padding: 0 0 0 10px;
         vertical-align: middle;
@@ -2082,7 +2108,7 @@ input{
     }
     #view-suggestion div.suggestion h1{
         line-height: 1em;
-        margin: 0.2em 0;
+        margin: 0.2em 0 0.5em;
         display:block;
     }
     #view-suggestion div.suggestion p,
@@ -2093,7 +2119,9 @@ input{
     #view-suggestion div.suggestion img,
     #view-list div.suggestion img{
         float: right;
+/*
         margin-top: 15px;
+*/
         border: 1px solid #AAAAAA;
     }
     #view-suggestion .likeBtn,#view-list .likeBtn{
@@ -2105,6 +2133,16 @@ input{
     #view-suggestion ul#tag-list{
         margin:0;padding:0;
         width: 305px;
+        font-size:1.1em;
+    }
+    #view-suggestion .suggestion p{
+        margin:0;
+    }
+    #view-suggestion span#save-btn{
+        margin-right:1em;
+    }
+    #tag-list-label{
+        margin:0;
     }
     #view-suggestion ul#tag-list li{
         display:inline-block;
@@ -2196,8 +2234,11 @@ input{
         
     #view-suggestion p.popular,
     #view-list p.popular{
-        font-size:1.3em;
-        font-weight:bold;
+        background-image: url("/static/facebookApp/img/icons/comments.png") !important;
+        font-size: 1.3em;
+        font-weight: normal;
+        line-height: 3em;
+        margin: 0;        
     }
     #view-suggestion p.big,
     #view-place p.big,
@@ -2213,14 +2254,12 @@ input{
     #view-list ul#suggestion-list {
         clear: both;
         list-style: none outside none;
-        margin: 0;
+        margin: -10px 0 0;
         padding: 0;
         position: relative;
         top:10px;
-/*
-        border-top: 1px dotted #BBBBBB;
-*/
     }
+    
     #view-list ul#suggestion-list:after{           
         clear: both;
         content: ".";
@@ -2236,15 +2275,18 @@ input{
         border-top: 1px dotted #BBBBBB;
         clear: both;
         padding: 1em 0.5em;
-/*
-        cursor:pointer;
-*/
     }
+    
+    #view-suggestion div.removable{
+        margin-right:0;
+    }
+    
     #view-place ul.comments li, 
     #view-list ul.comments li, 
     #view-list ul#suggestion-list li{
         padding: 0.5em 0.5em;
         margin:0;
+        background-color:white;
     }
     
     #view-suggestion ul.comments li:after, 
@@ -2257,11 +2299,13 @@ input{
         height: 0px;
         visibility: hidden;
     }
-    #view-suggestion ul.comments li:hover,
-    #view-list ul.comments li:hover,
-    #view-list ul#suggestion-list li:hover{
-        background-color: #eee;
-        margin:0;
+    
+    #view-suggestion ul.comments li,
+    #view-suggestion ul.comments li:hover{
+        background-color:white;
+    }
+    #view-list #popular-comments li:hover{
+        margin-bottom:1em;
     }
     
     #view-suggestion ul#feeling{
@@ -2274,6 +2318,15 @@ input{
         padding:0 1em;
     }
 
+    #view-suggestion span.btn{
+        background-color: white;
+        background:url("/static/facebookApp/img/like_min.png") no-repeat scroll 0px 1px transparent;
+        padding: 0 0.5em 0 1.5em;
+/*
+        border: 1px solid #1111CC;
+*/
+    }
+
     /****************************
      *      
      *  View place details
@@ -2283,10 +2336,13 @@ input{
         
     }
     
-    .suggestions-title{
+    .suggestions-title,
+    #view-suggestion p.popular,
+    #view-list p.popular{
         background-image: url("/static/facebookApp/img/icons/suggestions.png");
         background-position: 0 7px;
         background-repeat: no-repeat;
+        margin: 0 1em;
         padding-left: 40px;
     }
     #place-container{
@@ -2375,17 +2431,18 @@ input{
 		padding-right: 15px;
 	}
 	#suggestion-info p{
-		margin-top: 0;
+		margin: 0 1em 0.5em;
 	}
 	
 	#suggestion-aside {
-		border: 1px dotted #BBBBBB;
+		background-color: #FFFFFF;
+        border: 1px dotted #BBBBBB;
         color: #555555;
         float: right;
-        margin: 0 0.3em;
+        margin: 0 1em;
         padding: 0.3em;
         text-align: center;
-        width: 80px;
+        width: 65px;
 	}
 	
 	.clear-left {
@@ -2480,11 +2537,14 @@ input{
 	}
 	#view-list .comment-content{
 		float:left;
-		width:480px;
+		width:475px;
 	}
 	#view-list .suggestion-element:hover .comment-content{
-		width:480px;
+		width:475px;
 	}
+    #view-list div#list-box .suggestions-title{
+        margin-left:0.5em;
+    }
 	
     /****************************
      *      

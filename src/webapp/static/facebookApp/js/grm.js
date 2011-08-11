@@ -345,9 +345,11 @@ GRM.sendComment = function(type,text,id,callback){
             var c = $('#commentTemplate').tmpl(response).prependTo('#comment-list');
             
         
-            //c.find(".like-dislike").like();
+            c.find(".like-dislike").like();
             c.find(".removable").removable();
             resizeIframe();
+            
+            showMessage("El comentario ha sido añadido con éxito", "success")
             
             if (typeof callback != "undefined")
                 callback();
@@ -376,7 +378,7 @@ GRM.init = function() {
         $(".removable").removable();
     }
 
-//$(document).ready(GRM.init);
+$(document).ready(GRM.init);
 
 jQuery.expr[':'].regex = function(elem, index, match) {
     var matchParams = match[3].split(','),
