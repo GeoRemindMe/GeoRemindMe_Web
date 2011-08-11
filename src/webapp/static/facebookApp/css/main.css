@@ -2378,7 +2378,7 @@ input{
     
     .suggestions-title,
     #view-suggestion p.popular,
-    #view-list p.popular
+    #view-list p.popular,
     #view-place p.popular{
         background-image: url("/static/facebookApp/img/icons/suggestions.png");
         background-position: 0 7px;
