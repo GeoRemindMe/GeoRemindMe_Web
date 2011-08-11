@@ -2075,8 +2075,10 @@ input{
         
     }
     #view-suggestion #autor{
+/*
         font-size: 1.5em;
         margin: 1em 0;
+*/
     }
     #view-suggestion #autor img{
         height:50px;
@@ -2095,8 +2097,10 @@ input{
         vertical-align: middle;
     }
     #view-suggestion div.suggestion{
-        border: 1px solid #CCCCCC;
-        padding: 1em;
+		background-color: #F9F9F9;
+		border: 1px solid #CCCCCC;
+		margin-top: 1em;
+		padding: 1em;
     }
     
     #view-suggestion div.suggestion:after{
@@ -2119,10 +2123,14 @@ input{
     #view-suggestion div.suggestion img,
     #view-list div.suggestion img{
         float: right;
+        margin-top: 0.7em;
 /*
         margin-top: 15px;
 */
         border: 1px solid #AAAAAA;
+    }
+    #view-suggestion div.suggestion .panoramio-wapi-tos img{
+		float:none;
     }
     #view-suggestion .likeBtn,#view-list .likeBtn{
         margin:1em 0;
@@ -2319,12 +2327,34 @@ input{
     }
 
     #view-suggestion span.btn{
-        background-color: white;
-        background:url("/static/facebookApp/img/like_min.png") no-repeat scroll 0px 1px transparent;
-        padding: 0 0.5em 0 1.5em;
+        
+        
 /*
         border: 1px solid #1111CC;
 */
+    }
+    #view-suggestion span.likeBtn{
+		background-color: white;
+		border: 1px solid #CCCCCC;
+		color: black;
+		padding: 0.5em;
+		margin-top:1.5em;
+    }
+    #view-suggestion .suggestion hr{
+		border-color: #F9F9F9;
+		margin: 3px;
+    }
+    
+    #view-suggestion span.likeBtn span.counter{
+		font-size:1.5em
+    }
+    #view-suggestion span.likeBtn span.hoverlink{
+		color:blue;
+		text-decoration:underline;
+    }
+    #view-suggestion #wapiblock{
+		
+		width:310px;
     }
 
     /****************************
