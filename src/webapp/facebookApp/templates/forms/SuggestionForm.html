@@ -87,6 +87,10 @@
         <span id="add-more-details" onclick="javascript:showMoreDetails()">Añadir más detalles</span>
         <div id="more-details">
             <p>
+                <label>{{f.tags.label}}:</label>
+                {{f.tags}}
+            </p>
+            <p>
                 <label>{{f.description.label}}:</label>
                 {{f.description}}
                 <span id="counter"></span>

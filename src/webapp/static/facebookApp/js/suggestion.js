@@ -502,7 +502,8 @@ function saveSuggestion(){
             ends_month: $('#id_ends_month').val(),
             ends_day: $('#id_ends_day').val(),
             ends_year: $('#id_ends_year').val(),
-            visibility: $('#id_visibility').val()
+            visibility: $('#id_visibility').val(),
+            tags: $('#id_tags').val()
         };
         
         //Si estamos editando una sugerencia añadimos el ID.

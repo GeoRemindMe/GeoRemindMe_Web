@@ -617,7 +617,19 @@
                                              {% if k.user.username != user.username%}<a href="{% url fb_edit_suggestions k.id %}">Editar</a>{% endif %}
                                         </dd>
                                         
-                                        
+                                        <dt>Tags:</dt>
+                                            <dd style="width:390px">
+                                                <ul class="removable-tag-list" {% if k.tags|length = 0 %}style="display:none"{% endif %}>
+                                                    {% for tag in k.tags %}
+                                                        <li class="tag_{{tag}} {% if k.user.username == user.username%}removable{% endif %}" value="{{k.id}}">{{tag}}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                                
+                                                <em  class="empty-msg {% if k.user.username == user.username%}editable{% endif %}" value="{{k.id}}">
+                                                    Esta lista no tiene tags
+                                                </em>
+                                                
+                                            </dd>
                                         <dt>Fecha:</dt>
                                         {% if k.date_starts != None or k.date_ends != None%}
                                         <dd class="{% if k.user.username == user.username%}editable{% endif %}">

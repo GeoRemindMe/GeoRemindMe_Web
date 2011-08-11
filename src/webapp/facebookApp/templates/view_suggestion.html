@@ -16,6 +16,8 @@
         GRM.init();
        
         resizeIframe();
+        
+        
     });    
     </script>
 {%endblock%}
@@ -40,21 +42,21 @@
             {% endif %}    
             
             <p>
-            
-            
-            
-                <strong>Lugar</strong>: <a href="{{suggestion.poi.get_absolute_fburl}}">{{suggestion.poi.name}}</a>, <br>
+                 <strong>Lugar</strong>: <a href="{{suggestion.poi.get_absolute_fburl}}">{{suggestion.poi.name}}</a>, <br>
                 <strong>Dirección</strong>: {{suggestion.poi.address}}<br>
                 {% if suggestion.date_starts or suggestion.date_ends %}
                     <strong>Fecha</strong>: 
                     [25/04/2011 al 30/05/2011]<br>
                 {% endif %}
-                
-                
-<!--
-                <strong>Palabras clave</strong>: <a href="">ocio</a> | <a href="">granada</a><br>
--->
             </p>
+            {% if suggestion.tags %}
+                <p><strong>Palabras clave</strong>:</p> 
+                <ul id="tag-list">
+                {% for tag in suggestion.tags %}
+                    <li><form action="{% url fb_search_suggestions tag %}" method="post"><input type="hidden" name="suggestion" value="suggestion"><input type="submit" value="{{tag}}"></form>{%if not forloop.last %}, {%endif%}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
 
 <!--
             <p>Reportar localización errónea</p>
@@ -84,7 +86,7 @@
             </span>
         {% endif %}
         
-        <span class="btn likeBtn">Recordar</span>
+        <span class="btn likeBtn">Guardar</span>
         
         
         {% if top_comments %}

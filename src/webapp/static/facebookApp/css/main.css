@@ -2102,6 +2102,28 @@ input{
     
     #view-suggestion .dontLikeSuggestion.likebtn.btn{
     }
+    #view-suggestion ul#tag-list{
+        margin:0;padding:0;
+        width: 305px;
+    }
+    #view-suggestion ul#tag-list li{
+        display:inline-block;
+    }
+    
+    #view-suggestion ul#tag-list form{
+        display:inline-block;
+        float:none;
+    }
+    #view-suggestion ul#tag-list input[type="submit"]{
+        background-color: inherit;
+        border: 0;
+        color: blue;
+        text-decoration:underline;
+        float: right;
+        padding: 0;
+        text-align: center;
+    }
+    
     #view-suggestion textarea,
     #view-list textarea {
         width:100%
@@ -2385,7 +2407,9 @@ input{
 	}
 	
 	#suggestion-list li:last-child {
+/*
 		border-bottom: 1px solid #DDDDDD;
+*/
 		padding-bottom: 5px;
 	}
 	
