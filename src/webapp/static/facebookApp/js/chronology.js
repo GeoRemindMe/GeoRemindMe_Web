@@ -13,7 +13,7 @@ $(document).ready(function(){
         
     });
 
-    $('#chronology li').hover(
+    $('#chronology div.timeline-msg,#chronology li.suggestion-comment').hover(
         function(){$(this).find('.action-bar').css('visibility','visible')},
         function(){$(this).find('.action-bar').css('visibility','hidden')}
     )

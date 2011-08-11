@@ -601,6 +601,9 @@ input{
             padding-left: 0.5em;
             visibility:hidden;
         }
+            ul#chronology li .comment-box .action-bar{
+                font-size:1em;
+            }
             .timestamp{
                 color: #999;
                 display: block;

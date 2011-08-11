@@ -56,7 +56,7 @@
 	
 	<ul id="suggestion-list">
 		{% for obj in suggestions %}
-		<li>           
+		<li {%if forloop.first %} style="border-top:0;" {%endif%}>           
                 
                 <span class="user"><a href="{% url fb_public_profile obj.instance.user.username %}"><img src="/user/{{obj.instance.user.username}}/picture/" alt="{{obj.instance.user.username}} avatar"></a></span>
                 <div class="timeline-msg">
