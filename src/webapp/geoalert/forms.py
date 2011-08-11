@@ -105,7 +105,8 @@ class SuggestionForm(forms.Form):
     place_reference = forms.CharField(required=False)
     starts = forms.DateTimeField(required=False, widget=SelectDateWidget())
     ends = forms.DateTimeField(required=False, widget=SelectDateWidget())
-    description = forms.CharField(required=False,widget=forms.Textarea())    
+    description = forms.CharField(required=False,widget=forms.Textarea())
+    tags = forms.CharField(required=False)    
     done = forms.BooleanField(required=False)
     visibility = forms.ChoiceField(required=True, choices=VISIBILITY_CHOICES)
     
@@ -149,5 +150,6 @@ class SuggestionForm(forms.Form):
                          date_starts = self.cleaned_data['starts'],
                          date_ends = self.cleaned_data['ends'], poi = poi,
                          user = kwargs['user'], done = self.cleaned_data.get('done', False),
+                         tags = self.cleaned_data.get('tags', None)
                          )
         return suggestion  

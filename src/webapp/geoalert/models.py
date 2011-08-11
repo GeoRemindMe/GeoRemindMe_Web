@@ -292,7 +292,8 @@ class Suggestion(Event, Visibility, Taggable):
     @classmethod
     def update_or_insert(cls, id = None, name = None, description = None,
                          date_starts = None, date_ends = None, poi = None,
-                         user = None, done = False, active = True, vis = 'public'):
+                         user = None, done = False, active = True, tags = None, 
+                         vis = 'public'):
         '''
             Crea una sugerencia nueva, si recibe un id, la busca y actualiza.
             
@@ -315,7 +316,10 @@ class Suggestion(Event, Visibility, Taggable):
             sugg._vis = vis
             if sugg.is_active() != active:
                 sugg.toggle_active()
-            sugg.put()
+            if tags is not None:
+                sugg._tags_setter(tags)
+            else:
+                sugg.put()
             return sugg
         else:
             sugg = Suggestion(name = name, description = description, date_starts = date_starts,
@@ -323,6 +327,7 @@ class Suggestion(Event, Visibility, Taggable):
             if not active:
                 sugg.toggle_active()
             sugg.put()
+            sugg._tags_setter(tags)
             counter = SuggestionCounter(parent=sugg)
             counter.put()
             return sugg
