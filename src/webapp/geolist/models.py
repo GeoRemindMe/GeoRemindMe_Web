@@ -79,6 +79,12 @@ class List(db.polymodel.PolyModel, HookedModel):
 
     def __unicode__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return '/list/%s/' % str(self.id)
+    
+    def get_absolute_fburl(self):
+        return '/fb%s' % self.get_absolute_url()
 
 
 class ListSuggestion(List, Visibility):
@@ -240,6 +246,7 @@ class ListSuggestion(List, Visibility):
             index.keys.append(user_key)
             index.count += 1
             index.put()
+            return True
         if self._user_is_follower(user.key()):
             return True
         if self._is_private():

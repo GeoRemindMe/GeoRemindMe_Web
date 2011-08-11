@@ -145,7 +145,7 @@ class FacebookClient(object):
         try:
             facebookInfo = self.get_user_info()
         except:
-            return False;
+            return False
         fbuser = FacebookUser.objects.get_by_id(facebookInfo['id'])
         if fbuser is not None:#el usuario ya existe, iniciamos sesion
             self.user = fbuser.user

@@ -64,9 +64,10 @@ list_deleted.connect(deleted_list)
 
 
 def new_following_list(sender, **kwargs):
-    sender.counters.set_followers(+1)
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=353, visible=False)
-    timeline.put()
+    put = db.put_async(timeline)
+    sender.counters.set_followers(+1)
+    put.get_result()
     if kwargs['user'].key() != sender.user.key():
         from geouser.models_utils import _Notification
         notification = _Notification(owner=sender.user, timeline=timeline)
@@ -75,9 +76,10 @@ list_following_new.connect(new_following_list)
 
 
 def deleted_following_list(sender, **kwargs):
-    sender.counters.set_followers(-1)
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=354, visible=False)
-    timeline.put()
+    put = db.put_async(timeline)
+    sender.counters.set_followers(-1)
+    put.get_result()
 list_following_deleted.connect(deleted_following_list)
 
 

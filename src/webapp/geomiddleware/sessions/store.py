@@ -90,6 +90,9 @@ class SessionStore(object):
         '''
         Login de un usuario, guarda la sesion en datastore
         '''
+        from geouser.models import User
+        if not isinstance(user, User):
+            raise TypeError
         self._session = _Session_Data.new_session(lang=lang, user=user, remember=remember, is_from_facebook=is_from_facebook)
         self._anonymous = False
         self._accessed = True

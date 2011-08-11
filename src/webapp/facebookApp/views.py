@@ -16,6 +16,11 @@ def login_panel(request):
     if hasattr(request, 'facebook'):
         if not request.user.is_authenticated():
             user = request.facebook['client'].authenticate()
+            if not user:
+                from django.conf import settings
+                return render_to_response('register.html', {"permissions": settings.OAUTH['facebook']['scope'] },
+                              context_instance=RequestContext(request)
+                              )
             init_user_session(request, user, is_from_facebook=True)
         else:
             user = request.user

@@ -410,7 +410,10 @@ def view_list(request, id, template='webapp/view_list.html'):
             if len(suggestions_loaded) > 7:
                     break
         return suggestions_loaded
-    list = ListSuggestion.objects.get_by_id_querier(id, request.user)
+    try:
+        list = ListSuggestion.objects.get_by_id_querier(id, request.user)
+    except:
+        raise Http404
     if list is None:
         raise Http404
     from google.appengine.ext import db
