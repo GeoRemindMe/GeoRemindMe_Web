@@ -1,200 +1,85 @@
-{% load i18n %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{LANGUAGE_CODE}}">
-
+<!DOCTYPE HTML>
+<html lang="es-ES">
 <head>
-
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="description" content="{% trans "Manage your geolocated alerts on your Android smartphone. Coming soon on your iPhone, iPad, Blackberry and other mobile devices."%}"/>
-	<meta name="keywords" content="{% trans "geolocation application, geolocation app, geolocated alerts, geolocated reminders, android app alerts, android geolocation, iphone geolocation, iphone app alerts"%}"/>
-	<meta http-equiv="X-UA-Compatible" content="IE=8" />
-
-	<title>{% block title %}{% trans "GeoRemindMe - Application for geolocated alerts"%}{%endblock%}</title>
-
-	<link rel="stylesheet" href="/static/webapp/style/screen.css" type="text/css" media="screen, projection" />
-	<link rel="stylesheet" href="/static/webapp/style/style.css" type="text/css" media="screen, projection" />
-	<link rel="stylesheet" href="/static/webapp/style/print.css" type="text/css" media="print" />
-	{% block extra_css %}{%endblock%}
-
-	<link rel="alternate" type="application/rss+xml" title="GeoRemindMe &raquo; Feed" href="{% trans "http://feeds.feedburner.com/GeoRemindMe"%}" /><link rel="alternate" type="application/rss+xml" title="GeoRemindMe &raquo; Feed" href="{% trans "http://blog.georemindme.com/feed/"%}" /> 
-
-
-	<script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
-	<script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
-	<script type="text/javascript" src="/static/webapp/js/jquery.preload-1.0.8-min.js"></script> 
-	<script type="text/javascript" src="/static/webapp/js/common.js"></script>
-
-	{% block extra_js %}{%endblock%}
+	<meta charset="UTF-8">
+	<title></title>
 	
-
-	<!--
-	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
-	-->
-
-	<script type="text/javascript" src="/static/webapp/js/base.js"></script> 
-
-	<!--[if IE]>
-	<link rel="stylesheet" href="/static/webapp/style/ie.css" type="text/css"
-	media="screen, projection" />
-	<![endif]-->
-
-	<!--[if lt IE 9]>
-	<script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.6/jquery.min.js" type="text/javascript">
+		document.ready(function() {
+		        var options = { opacity: 0.75 };
+		        $('.reflect').reflect(options);
+		    });
+	</script>
 	
-	<meta name="geo.position" content="37.1479132763687, -3.6085957288742065">
-	<meta name="geo.placename" content="Granada">
-	<meta name="geo.region" content="ES-GR" /> 
-	
-
 </head>
-
 <body>
-
-    <div id="wait-mask"></div>
-    
-    <div class="container" {%block section%}{%endblock%}>
-   
-      
-        <span id="logo">
-            <a href="/" {%block tooltipLogo%}title="{% trans "Go flying to the homepage. Tweet! Tweet!" %}"{%endblock%} accesskey="q">
-                <img src="/static/webapp/img/logoHeader.png" alt="GeoRemindMe"/>
-            </a>
-        </span>
-        {% block login %} 
-        <div id="topnav">
-            <div id="signin-c">
-                <div id="signin_controls">
-                    {% if not user.is_authenticated %}
-                        <span id="have_an_account">
-                            <span>{% trans "Do you already have an account?" %}</span>
-                            <a tabindex="3" class="signin menu-open closedLoginBtn" href="#" id="signinBtn" accesskey="w">
-                                {% trans "Log in" %}
-                            </a>
-                        </span>
-              
-                        <!-- Este codigo comentado es el menu desplegable para el login de usuario, hay que implementarlo con un script-->
-                        <div class="common-form standard-form" id="signinMenu" style="display:none;">  
-                            <form action="." id="signin" method="post">  
-                     
-                                <p class="loginMail">        
-                                    <input type="text" tabindex="4" title="username" value="email" name="user_login-email" id="username" placeholder="email" accesskey="e"/>
-                                </p>
-                                <span id="msgLoginEmail"><span id="txtMsgLoginEmail"></span></span>
-                
-
-                                <p class="loginPassword">                 
-                                    <input type="password" tabindex="5" title="password" value="password" name="user_login-password" id="password" placeholder="{% trans "Password" %}" accesskey="r"/>
-                                </p>
-
-                                <span class="msgNoOK" style="display:none;"></span>
-                                 <!--
-                                  <p class="forgot">
-                                  <a id="resend_password_link" href="" accesskey="o">{% trans "Forgot your password?"%}</a>
-                                 </p>
-                                 -->
-                                <p>
-                                    <span class="remember">
-                                        <input type="checkbox" tabindex="6" value="1" name="user_login-remember_me" id="remember"/>
-                                        <label for="remember">{% trans "Remember me on this computer" %}</label>
-                                    </span>
-                                    <input type="hidden" name="next" value="{{ next }}" id="next" />
-                                    <input type="submit" tabindex="7" value="{% trans "Sign in" %}" id="signin_submit" accesskey="b"/>
-                                </p>
-                                <input type="hidden" value="" id="signin_q" name="q"/>
-                            </form>
-                        </div>
-                    {% else %}
-                        <span id="have_an_account">
-                            <span>{% blocktrans with user.email as email %}Hello {{ email }} ! {% endblocktrans %}</span>
-                            <a tabindex="3" href="/dashboard/">{% trans "Go to dashboard" %}</a>
-                        </span>
-                        <!-- Fin del menu de login-->
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        {% endblock %}
-
-        
-        {%block breadcumb %}{%endblock%}
-<!--
-        </div>
--->
-
-        <div id="main-container">   
-            {% block content %}{%endblock%}
-<!--
-            <div id="networks">
-                 <p>{% trans "Follow us on"%}:</p>
-                 <ul>
-                    <li>
-                        <a href="http://blog.georemindme.com" title="{% trans "Visit our Blog"%}" accesskey="j">
-                            <img src="/static/webapp/img/icons/social/wp_icon.png" title="{% trans "Visit our Blog"%}" alt="Wordpress logo"/>
-                        </a>
-                    </li>      
-                    <li>
-                        <a href="http://www.twitter.com/GeoRemindMe" title="{% trans "Follow us on Twitter"%}" accesskey="l">
-                            <img src="/static/webapp/img/icons/social/twitter_icon.png" title="{% trans "Follow us on Twitter"%}" alt="Twitter logo"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://www.facebook.com/georemindme" title="{% trans "Follow us on Facebook"%}"  accesskey="k">
-                            <img src="/static/webapp/img/icons/social/fb_icon.png" title="{% trans "Follow us on Facebook"%}" alt="Facebook logo"/>
-                        </a>
-                    </li>
-                 </ul>
-             </div>
--->
-        </div>
-
-      
-    </div>
-
-	</div>
-
-	<div class="" id="footer">
-		<div id="footer-nav">
+	<header id="header" class="container">
+		<img src="/static/webapp/img/logo.png" alt="" id="logo">
+		<nav id="header-nav">
 			<ul>
-			   <li><a accesskey="z" title="Know what's going on" href="http://blog.georemindme.com"><strong>Blog</strong></a></li>
-			   <li><a title="Do you want to work with us?" href="http://jobs.georemindme.com">Jobs</a></li>
-			   <li><a title="Join the community now!" href="http://team.georemindme.com">Community</a></li>
-			   <li><a title="Contact us" href="http://help.georemindme.com">Support</a></li>
-			   <li><a title="Looking for some info?" href="http://www.georemindme.com/sitemap">Sitemap</a></li>
-               <li>
-               		<form method="post" action="/lang/">
-	               		{% csrf_token %}
-	                    <label for="language-bar" accesskey="v">Language:</label>
-    				 	{% get_available_languages as LANGUAGES %}
-         				{% get_current_language as LANGUAGE_CODE %}
-	                    <select onsubmit="this.form.submit()" onchange="this.form.submit()" id="language-bar" name="lang">
-								{% for code, name in LANGUAGES %}
-                     				<option {%if LANGUAGE_CODE == code %}selected="selected"{% endif %} value="{{code}}" hreflang="{{code}}">{{name}}</option>
-                    			{% endfor %}
-	                    </select>
-	                	<input type="hidden" name="next" value="{{ request.path }}" />
-					</form>
-				</li>
-		   </ul>
-		<p><strong>GeoRemindMe 2011</strong>,headquarters at  <a href="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=204520629691711228427.0004a5735677747224788&amp;ll=37.147913,-3.608596&amp;spn=0.00289,0.004823&amp;t=h&amp;z=18">PTS, Avda de la Innovación, 18100 Armilla (Granada), Spain</a></p>
+				<li><a href="#">Ayuda</a></li>
+				<li><a href="#">Blog</a></li>
+				<li><a href="#">Móvil</a></li>
+				<li><a href="#">Comunidad</a></li>
+			</ul>
+		</nav>
+	
+		<a href="#" id="login-btn">Identifícate</a>
+		
+	</header>
+	<div id="background">
+		<div id="main" class="container">
+			<section id="left-col">
+				<img src="/static/webapp/img/left-arrow.png" alt="" id="left-arrow">
+				<div id="rollover">
+					<p class="intro-text"><span class="bigger-intro-text">Compartir y recibir sugerencias de</span> <br>
+					amigos, instituciones, tiendas, etc</p>
+					<div class="users-box">
+						<article>
+							<img src="/static/webapp/img/kaos.png" alt="" class="user-avatar">
+							<p class="user-name">hhkaos</p>
+							<p class="user-suggestion">Deberías ir al hackathon. Conoces mucha gente y aprendes un montón. Ya verás lo enrrollados que sosmos.</p>
+						</article>
+						<article>
+							<img src="/static/webapp/img/anna.png" alt="" class="user-avatar">
+							<p class="user-name">annalogik</p>
+							<p class="user-suggestion">Y tenemos galletitas! :D</p>
+						</article>
+					</div>
+				</div>
+				<img src="/static/webapp/img/right-arrow.png" alt="" id="right-arrow">
+				
+				<p class="bottom-p">Ya somos XXX personas compartiendo YYY sugerencias.</p>
+			</section>
+			<section id="right-col">
+				<h2>¿Eres nuevo?</h2>
+				<p>Crea tu perfil utilizando una de tus cuentas.</p>
+				<ul>
+					<li><a href="#"><img src="/static/webapp/img/facebook.png" alt="Facebook"></a></li>
+					<li><a href="#"><img src="/static/webapp/img/twitter.png" alt="Twitter"></a></li>
+					<li><a href="#"><img src="/static/webapp/img/googleplus.png" alt="Google+"></a></li>
+				</ul>
+				<a href="#" id="register-btn">Regístrate</a>
+				
+				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
+			</section>
+			<div id="avatar-chain">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+			</div>
 		</div>
 	</div>
 	
-	  </div>
-      <script type="text/javascript"> 
- 
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-19272923-2']);
-        _gaq.push(['_trackPageview']);
-       
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-       
-      </script> 
-
+	<footer id="footer" class="container">
+		<div class="footer-links">
+			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+		</div>
+		<div class="footer-links right-links">
+			<a href="#">Empleo</a> · <a href="#">Prensa</a> · <a href="#">Mapa del sitio</a>
+		</div>
+	</footer>
 </body>
-
 </html>

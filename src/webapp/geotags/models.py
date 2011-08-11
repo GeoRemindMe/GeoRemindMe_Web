@@ -108,7 +108,6 @@ class Taggable(db.Model):
             self.put()
         else:
             raise AttributeError
-    # ¿arreglado? FIXME: LOS CONTADORES DE CADA TAGS SE MODIFICAN SIEMPRE, AUNQUE _TAG_LISTS ESTE VACIO, SE MOFICAN EL RESTO DE TAGS
 
 #    def _remove_tag(self, name):
 #        tagInstance = Tag.objects.get_by_name(name)

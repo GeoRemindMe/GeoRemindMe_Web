@@ -1,0 +1,347 @@
+/*RESET CSS---------*/
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+body {
+	background-color: #FFFFFF;
+	font-family: Helvetica Neue, Arial, sans-serif;
+}
+
+.container {
+	width: 960px;
+	margin: 0 auto;
+}
+
+#header {
+	height: 70px;
+}
+
+#logo {
+	width: 200px;
+	float: left;
+}
+
+#header-nav {
+	float: left;
+	font-size: 12px;
+	margin-top: 30px;
+	margin-left: 150px;
+}
+
+#header-nav ul {
+	list-style: none;
+	padding-left:0;
+}
+
+#header-nav ul li {
+	float: left;
+	padding-right: 15px;
+	margin-left: 15px;
+	border-right: 1px solid #ff913c;
+	list-style: none;
+}
+
+#header-nav ul li:last-child {
+	border-right: none;
+}
+
+#header-nav ul li a {
+	color: #ff913c;
+	text-decoration: none;
+}
+
+#header-nav ul li a:hover {
+	text-decoration: underline;
+}
+
+#header a#login-btn {
+	display: block;
+	color: #000000;
+	text-decoration: none;
+	margin-top: 17px;
+	margin-right: 15px;
+	font-size: 14px;
+	background: url("/static/webapp/img/login-bg.png") repeat-x;
+	height: 31px;
+	width: 132px;
+	float: right;
+	text-align: center;
+	line-height: 31px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	box-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
+}
+
+#login-btn a {
+	color: #000000;
+	text-decoration: none;
+	width: 31px;
+	height: 132px;
+}
+
+#background {
+	background-color: #ff913c;
+	width: 100%;
+}
+
+#main {
+	min-height: 415px;
+	background: url('/static/webapp/img/bg.png') no-repeat;
+}
+
+#right-col,#left-col {
+	padding-top: 30px;
+}
+
+#left-col {
+	clear: left;
+	float: left;
+	width: 500px;
+}
+
+#right-col {
+	width: 450px;
+	float: right;
+}
+
+#right-col h2 {
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 24pt;
+	text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-moz-text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-webkit-text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	margin-bottom: 15px;
+}
+
+#right-col p {
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 14pt;
+	text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-moz-text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-webkit-text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+}
+
+#right-col ul {
+	display: block;
+	width: 100%;
+	height: 68px;
+	background: url('/static/webapp/img/social-bg.png') no-repeat;
+	margin-top: 30px;
+	margin-left: 30px;
+}
+
+#right-col ul li {
+	float: left;
+	margin-top: 4px;
+	margin-left: 50px;
+}
+
+#right-col a#register-btn {
+	background: url('/static/webapp/img/register-bg.png') repeat-x;
+	color: #000000;
+	display: block;
+	font-size: 18pt;
+	height: 48px;
+	line-height: 48px;
+	margin-left: 130px;
+	margin-top: 25px;
+	text-align: center;
+	text-decoration: none;
+	width: 189px;
+	text-shadow: 0px 1px 1px rgba(255,255,255,.75);
+	-moz-text-shadow: 0px 1px 1px rgba(255,255,255,.75);
+	-webkit-text-shadow: 0px 1px 1px rgba(255,255,255,.75);
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
+	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
+	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
+}
+
+.footer-links {
+	font-size: 14px;
+	display: inline;
+	margin-top: 40px;
+	float: left;
+}
+
+.footer-links a {
+	color: #3896ff;
+	text-decoration: none;
+}
+
+.footer-links a:hover {
+	text-decoration: underline;
+}
+
+.footer-links a:active {
+	color: #d4d4d4;
+}
+
+.right-links {
+	float: right;
+}
+
+#left-arrow {
+	
+	float: left;
+	display: inline-block;
+	height: 262px;
+	width: 24px;
+	border-right: 1px solid #cfcfcf;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	cursor: pointer;
+}
+
+#right-arrow {
+	float: left;
+	display: inline-block;
+	height: 262px;
+	width: 24px;
+	border-left: 1px solid #cfcfcf;
+	-moz-border-radius-topright: 5px;
+	-moz-border-radius-bottomright: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	cursor: pointer;
+	
+}
+
+#rollover {
+	width: 369px;
+	height: 262px;
+	background-color: #FFFFFF;
+	float: left;
+}
+
+.intro-text {
+    color: #404040;
+    font-size: 17px;
+    margin-left: 10px;
+    margin-top: 25px;
+}
+
+.bigger-intro-text {
+	font-size: 21px;
+}
+
+.user-name {
+	font-size: 12px;
+	color: #3896ff;
+	margin-left: 60px;
+}
+
+.user-suggestion {
+	font-size: 10px;
+	color: #404040;
+	margin-left: 60px;
+	margin-top: 10px;
+}
+
+.users-box {
+	margin-top: 15px;
+	margin-left: 30px;
+	margin-right: 10px;
+}
+
+.users-box article {
+	border-bottom: 1px solid #ff913c;
+	display: block;
+	float: left;
+	width: 100%;
+	margin-top: 10px;
+	padding-bottom: 5px;
+}
+
+.user-avatar {
+	border: 1px solid #404040;
+	display: inline-block;
+	float: left;
+}
+
+#right-col p.register-text-aux {
+	height: 31px;
+	background: url('/static/webapp/img/add.png') no-repeat;
+	padding-left: 40px;
+	line-height: 31px;
+	margin-top: 20px;
+	font-size: 14px;
+	margin-left: 30px;
+}
+
+.bottom-p {
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 12pt;
+	text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-moz-text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-webkit-text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	clear: left;
+	padding-top: 30px;
+}
+
+#avatar-chain {
+	height:48px;
+	width:100%;
+	float: left;
+	margin-top: 28px;
+}
+
+.reflect {
+	margin: 0;
+	float: left;
+}
