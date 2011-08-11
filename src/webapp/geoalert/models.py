@@ -422,6 +422,7 @@ class Suggestion(Event, Visibility, Taggable):
         if generico is None:
             self.user = None
         self.user = generico
+        self.put()
 #        children = db.query_descendants(self).fetch(10)
 #        for c in children:
 #            c.delete()

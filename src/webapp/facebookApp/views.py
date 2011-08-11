@@ -120,6 +120,11 @@ def view_place(request, place_id):
     from geoalert.views import view_place
     return view_place(request, place_id, template='view_place.html')
 
+@facebook_required
+def view_tag_suggestions(request, slug):
+    from geotags.views import view_tag_suggestions
+    return view_place(request, slug, template='view_tag.html')
+
 
 @facebook_required
 def profile_settings(request):
