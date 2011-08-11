@@ -444,6 +444,7 @@ class Suggestion(Event, Visibility, Taggable):
                 'x': self.poi.location.lat,
                 'y': self.poi.location.lon,
                 'address': self.poi.address,
+                'tags': self.tags,
                 'created': long(time.mktime(self.created.timetuple())) if self.created else 0,
                 'modified': long(time.mktime(self.modified.timetuple())) if self.modified else 0,
                 'starts': long(time.mktime(self.date_starts.timetuple())) if self.date_starts else 0,
