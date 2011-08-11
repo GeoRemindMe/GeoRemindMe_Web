@@ -54,7 +54,15 @@
 		});
 		
 		$('#panoramio-imgs').append('<div class="panoramio-wapi-tos" style="width: 296px; color: black ! important; background-color: #f9f9f9 ! important;"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span><br>Photos are copyrighted by their owners</span></div>');
-    });    
+    });
+    function toggle_showMore(){
+        if($('#show-more-text').css('display')!="none")
+            $('.show-more').html("Más información")
+        else
+            $('.show-more').html("[Ocultar]")
+        
+        $('#show-more-text').toggle('slow')
+    }
     </script>
 {%endblock%}
 
@@ -119,7 +127,20 @@
                     [25/04/2011 al 30/05/2011]<br>
                 {% endif %}
             </p>
-            {% if suggestion.tags %}
+			
+<!--
+            <p>Reportar localización errónea</p>
+            <p>Reportar sugerencia duplicada</p>
+-->
+<!--
+			<hr class="clear">
+-->
+			
+			<div id="wapiblock"><strong>Pictures of the area:</strong><div id="panoramio-imgs"></div></div>
+			<span class="show-more" onclick="javascript:toggle_showMore()">Más información</span>
+			
+			<div id="show-more-text">
+			{% if suggestion.tags %}
                 <p id="tag-list-label"><strong>Palabras clave</strong>:</p> 
                 <ul id="tag-list">
                 {% for tag in suggestion.tags %}
@@ -136,22 +157,11 @@
                 {% endfor %}
                 </ul>
             {% endif %}
-			<p>
+			
 			<p>
 				<strong>Autor</strong>:<a href="{% url fb_public_profile suggestion.user.username %}">{{suggestion.user.username}}</a>
 			</p>
-			</p>
-<!--
-            <p>Reportar localización errónea</p>
-            <p>Reportar sugerencia duplicada</p>
--->
-<!--
-			<hr class="clear">
--->
-			
-			<div id="wapiblock"><strong>Pictures of the area:</strong><div id="panoramio-imgs"></div></div>
-
-			
+			</div>
         </div>
 
         

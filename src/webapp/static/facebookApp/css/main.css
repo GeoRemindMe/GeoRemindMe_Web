@@ -643,7 +643,9 @@ input{
             ul#chronology li span.like-text, 
             #view-suggestion ul#comment-list li span.like-text,span.like-text{
                 background: url("/static/facebookApp/img/like_min.png") no-repeat scroll -2px 1px transparent;
+/*
                 color: black;
+*/
                 display: inline-block;
                 margin-left: 0;
                 padding-left: 15px;
@@ -2066,7 +2068,15 @@ input{
      ***************************/
     #view-suggestion{
     }
-    
+    #view-suggestion .show-more{
+		float: none;
+		color: blue;
+		margin: 0.5em 0;
+		display: block;
+    }
+    #view-suggestion #show-more-text{
+		border-top:1px solid #ccc
+    }
     #popular-box,#list-box{
         border: 1px solid #CCCCCC;
         margin: 1em 0;
@@ -2253,7 +2263,7 @@ input{
     #view-list p.big{
         font-size: 1.5em;
         line-height: 3em;
-        margin: 0;
+        margin: 0 1em;
     }
     
     #view-suggestion ul.comments, 
@@ -2368,7 +2378,8 @@ input{
     
     .suggestions-title,
     #view-suggestion p.popular,
-    #view-list p.popular{
+    #view-list p.popular
+    #view-place p.popular{
         background-image: url("/static/facebookApp/img/icons/suggestions.png");
         background-position: 0 7px;
         background-repeat: no-repeat;
@@ -2376,9 +2387,8 @@ input{
         padding-left: 40px;
     }
     #place-container{
-/*
-        border: 1px solid #CCCCCC;
-*/
+        background-color: #F9F9F9;
+		border: 1px solid #CCCCCC;
         margin: 1em 0;
         padding: 1em;
     }
@@ -2422,14 +2432,18 @@ input{
     }
     
     #view-place .like-dislike{
+/*
         float: right;
         text-align: center;
         width: 80px;
         padding-top: 35px;
         cursor: pointer;
+*/
     }
     #view-place .like-dislike:hover{
+/*
         text-decoration: underline;
+*/
     }
     #view-place .comments .user,
     #view-list .user{
@@ -2466,13 +2480,13 @@ input{
 	
 	#suggestion-aside {
 		background-color: #FFFFFF;
-        border: 1px dotted #BBBBBB;
-        color: #555555;
-        float: right;
-        margin: 0 1em;
-        padding: 0.3em;
-        text-align: center;
-        width: 65px;
+		border: 1px dotted #BBBBBB;
+		color: #555555;
+		float: right;
+		margin: 0 0.5em;
+		padding: 0.3em 0.8em;
+		text-align: center;
+		width: 65px;
 	}
 	
 	.clear-left {
