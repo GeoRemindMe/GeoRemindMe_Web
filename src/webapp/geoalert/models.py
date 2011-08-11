@@ -454,9 +454,7 @@ class Suggestion(Event, Visibility, Taggable):
             
     def to_json(self):
         return simplejson.dumps(self.to_dict())
-    
 
-        
     def get_absolute_url(self):
         return '/suggestion/%s/' % self.slug if self.slug is not None and self.slug != '' else self.id
     

@@ -92,7 +92,7 @@ class Taggable(db.Model):
         if type(tags) is UnicodeType:
             tags = str(tags)
         if type(tags) is StringType:
-            tags = tags.split(tags, SEPARATOR)
+            tags = tags.split(SEPARATOR)
         if type(tags) is ListType:
             tags = [t.lower() for t in tags]
             loaded_tags = db.get_async(self._tags_list)  # carga todos los tags existentes en una lista
