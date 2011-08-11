@@ -73,12 +73,12 @@
                     <span class="like-dislike" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
                         Votos:<br>
                         <span class="dislike">
-                            <span class="counter {% if not has_voted %}increase{% endif %}">{{vote_counter}}</span><br>
+                            <span class="counter {% if not has_voted %}increase{% endif %}">{{suggestion.counters.votes}}</span><br>
                             <span class="text like-text hoverlink">Ya no me gusta</span> 
                         </span>
                         
                         <span class="like">
-                            <span class="black counter">{{vote_counter}}</span><br>
+                            <span class="black counter">{{suggestion.counters.votes}}</span><br>
                             <span class="text like-text hoverlink" >Me gusta</span> 
                         </span> 
                     </span>
@@ -89,7 +89,7 @@
             <span class="btn likeBtn" id="save-btn">
 				Seguidores:<br>
 				<span title="Recibe novedades"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if obj.user_follower%}remember="true"{%endif%}>
-					<span class="black counter">{{vote_counter}}</span><br>
+					<span class="black counter">{{suggestion.counters.followers}}</span><br>
 					<span class="remember hoverlink">
 						Guardar
 					</span>
