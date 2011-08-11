@@ -94,7 +94,7 @@ class Taggable(db.Model):
         if type(tags) is StringType:
             tags = tags.split(SEPARATOR)
         if type(tags) is ListType:
-            tags = [t.lower() for t in tags]
+            tags = [t.strip().lower() for t in tags]
             loaded_tags = db.get_async(self._tags_list)  # carga todos los tags existentes en una lista
             for tagInstance in loaded_tags.get_result():
                 if tagInstance.name not in tags:  #  un tag ya no esta en la lista nueva, lo borramos
