@@ -48,6 +48,7 @@ table {
 	border-spacing: 0;
 }
 
+/*------- HOME STYLE ---------*/
 
 body {
 	background-color: #FFFFFF;
@@ -345,3 +346,5 @@ body {
 	margin: 0;
 	float: left;
 }
+
+/*------- MAIN STYLES ---------*/
