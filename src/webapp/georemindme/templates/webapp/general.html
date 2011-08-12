@@ -17,53 +17,37 @@
 	<header id="header" class="container">
 		<img src="/static/webapp/img/logo.png" alt="" id="logo">
 		
-	
-		<a href="#" id="login-btn">Identifícate</a>
+		<input type="search" placeholder="Busca sugerencias">
+		
+		<div id="account-info">
+			<img src="/static/webapp/img/avatar.png" alt="">
+			<a href="#">Mi perfil</a>
+			<a href="#">Salir</a>
+		</div>
+		
 		
 	</header>
 	<div id="background">
 		<div id="main" class="container">
-			<section id="left-block">
-				<img src="/static/webapp/img/left-arrow.png" alt="" id="left-arrow">
-				<div id="rollover">
-					<p class="intro-text"><span class="bigger-intro-text">Compartir y recibir sugerencias de</span> <br>
-					amigos, instituciones, tiendas, etc</p>
-					<div class="users-box">
-						<article>
-							<img src="/static/webapp/img/kaos.png" alt="" class="user-avatar">
-							<p class="user-name">hhkaos</p>
-							<p class="user-suggestion">Deberías ir al hackathon. Conoces mucha gente y aprendes un montón. Ya verás lo enrrollados que sosmos.</p>
-						</article>
-						<article>
-							<img src="/static/webapp/img/anna.png" alt="" class="user-avatar">
-							<p class="user-name">annalogik</p>
-							<p class="user-suggestion">Y tenemos galletitas! :D</p>
-						</article>
-					</div>
-				</div>
-				<img src="/static/webapp/img/right-arrow.png" alt="" id="right-arrow">
+			<section id="left-col">
+				<a href="#" id="add-suggestion-btn">Añadir sugerencia</a>
 				
-				<p class="bottom-p">Ya somos XXX personas compartiendo YYY sugerencias.</p>
-			</section>
-			<section id="right-block">
-				<h2>¿Eres nuevo?</h2>
-				<p>Crea tu perfil utilizando una de tus cuentas.</p>
 				<ul>
-					<li><a href="#"><img src="/static/webapp/img/facebook.png" alt="Facebook"></a></li>
-					<li><a href="#"><img src="/static/webapp/img/twitter.png" alt="Twitter"></a></li>
-					<li><a href="#"><img src="/static/webapp/img/googleplus.png" alt="Google+"></a></li>
-				</ul>
-				<a href="#" id="register-btn">Regístrate</a>
-				
-				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
+                    <li class="menu-icons main-menu-icons" id=""><a id="activity-icon" href="#" title="Dashboard">Actividad</a></li>
+                    <li class="menu-icons main-menu-icons" id=""><a id="vault-icon" href="#">Tu mochila</a></li>
+<!--
+                    <li class="menu-icons main-menu-icons"><a id="suggestions-icon" href="{{user_suggestions}}">Tus sugerencias</a></li>
+-->
+                    <li class="menu-icons main-menu-icons" id=""><a id="notifications-icon" href="#">Notificaciones</a></li>
+                    <li class="menu-icons main-menu-icons"><a id="places-icon" href="#">Sitios</a></li>
+                    <li class="menu-icons main-menu-icons" id=""><a id="profile-icon" href="#">Mi perfil</a></li>
+                    <li class="menu-icons main-menu-icons" id=""><a id="settings-icon" href="#">Configuración</a></li>
+                </ul>
 			</section>
-			<div id="avatar-chain">
-				<!-- EL contenedor soporta hasta 20 imagenes de avatar como máximo -->
-				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
-				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
-				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
-				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
-			</div>
+			<section id="right-col">
+				<h2>Hola que tal estamos!</h2>
+			</section>
+			
 		</div>
 	</div>
 	
