@@ -15,7 +15,7 @@ obj.instance==geovote.models.Vote
         <!-- Es de mi timeline -->        
         <div class="avatar">
             <a href="{% url fb_public_profile request.user %}" title="Ver perfil en GeoRemindMe">
-                <img class="user-picture" src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
+                <img class="user-picture" src="{% embedded_avatar request.user %}" alt="{{request.user}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">
@@ -23,7 +23,7 @@ obj.instance==geovote.models.Vote
     {% else %}
         <div class="avatar">
             <a href="{% url fb_public_profile obj.username %}" title="Ver perfil en GeoRemindMe">
-                <img class="user-picture" src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+                <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">

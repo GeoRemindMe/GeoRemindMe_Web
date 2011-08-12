@@ -440,7 +440,7 @@ GRM.init = function() {
         $(".removable").removable();
     }
 
-$(document).ready(GRM.init);
+//$(document).ready(GRM.init);
 
 jQuery.expr[':'].regex = function(elem, index, match) {
     var matchParams = match[3].split(','),
