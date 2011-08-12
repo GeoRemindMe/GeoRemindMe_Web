@@ -11,7 +11,7 @@ Mensaje nº 320<br>
 
 <div class="avatar">
     <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-        <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
+        <img src="{% embedded_avatar request.user %}" alt="{{request.user}} avatar"/>
     </a>
 </div>
 <div class="timeline-msg">

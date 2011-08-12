@@ -7,7 +7,7 @@ Mensaje nº 350<br>
 -->
 <div class="avatar">
     <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
-        <img class="user-picture" src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+        <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
     </a>
 </div>
 
@@ -65,7 +65,7 @@ Mensaje nº 350<br>
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}
                 
-                    <img class="user-picture" src="{% url user_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
+                    <img class="user-picture" src="{% embedded_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>
                     <span class="timestamp">{{c.created|naturaltime}}</span> 
                     
                     
