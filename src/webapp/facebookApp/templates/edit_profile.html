@@ -14,10 +14,23 @@
             <div id="avatar">
                 <span>
                     <img src="/user/{{user.username}}/picture/" alt="{{user.username}} avatar">
+<!--
                     <br>
                     Cambiar foto
+-->
+
+                    
                 </span> 
-                <div>Usar el avatar de: <br>{{form.sync_avatar_with}}</div>
+                <div>
+                    Usar el avatar de: <br>
+                    <select id="id_user_set_profile-sync_avatar_with" name="user_set_profile-sync_avatar_with">
+                        <option value="facebook">Facebook</option>
+                        {% if profile.sociallinks.twitter %}
+                            <option value="twitter">Twitter</option>
+                        {% endif %}
+                        <option selected="selected" value="gravatar">Gravatar</option>
+                    </select>    
+                </div>
             </div>          
             
 				{% csrf_token %}

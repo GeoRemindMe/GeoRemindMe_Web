@@ -360,7 +360,7 @@ GRM.sendComment = function(type,text,id,callback){
 }
 
 GRM.updateTabCounters = function(){
-    $('#all-counter').text('('+$('#chronology li').length+')');
+    $('#all-counter').text('('+$('#chronology li').not('.comment-box li').length+')');
     $('#suggestions-counter').text('('+$(':regex(class,(msg-300|msg-303))').length+')');
     $('#lists-counter').text('('+$(':regex(class,(msg-350|msg-353))').length+')');
     $('#likes-counter').text('('+$(':regex(class,(msg-125|msg-305|msg-355))').length+')');
@@ -396,8 +396,8 @@ jQuery.expr[':'].regex = function(elem, index, match) {
 
 function sendComment(btn,elemType,id) {
     if (GRM.sendComment(elemType,$('#msg').val(),id,function(){$(btn).text("Comentar");$(btn).removeClass("waiting");})){
-        $(this).text("Enviando")
-        $(this).addClass("waiting")
+        $(btn).text("Enviando")
+        $(btn).addClass("waiting")
     }
 }
 

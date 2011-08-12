@@ -1684,7 +1684,15 @@ input{
     #suggestions .editable:hover{
         background-color:#FEFF99
     }
-    
+    #suggestions .show-more{
+		float: none;
+		color: black;
+		padding: 0 2.5em;
+		display: block;
+    }
+    #suggestions div.show-more-text{
+        border:0;
+    }
     ul#tabMenu{
         margin:0;
         padding:0;
@@ -2026,6 +2034,7 @@ input{
         margin: 0 7px 0 2px;
     }
     #new-list-btn{
+        min-width: 80px;
 /*
         border-top: 1px solid #AAAAAA;
         color: blue;
