@@ -102,15 +102,7 @@
                 
             </ul>
             <ul id="chronology">
-            {% for obj in chronology.1 %}
-                {% if not obj.msg_id = 100 or not obj.is_private %}
-                
-                    <li {% if forloop.last %} style="border:0" {% endif %} class="msg-{{obj.msg_id}}{% if forloop.counter <= notifications %} unread-item{% endif %}">
-                        {% timeline_item obj %}
-                    </li>
-                {% endif %}
-
-            {% endfor %}
+                {% include "timeline.html" %}
             </ul>
         
             <!-- Si hay más mensajes -->
