@@ -2685,3 +2685,10 @@ input{
 	.search-text {
 		display: inline;
 	}
+
+    #wait-mask {
+        position:fixed;
+        height:100%;
+        width:100%;
+        cursor:wait;
+    }
