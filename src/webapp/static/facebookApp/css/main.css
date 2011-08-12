@@ -1936,8 +1936,7 @@ input{
             background-image: -o-linear-gradient(top, rgb(227, 227, 227) 40%, rgb(249, 249, 249) 70%);
             font-weight: bold;
         }
-<<<<<<< HEAD
-=======
+
         
         #suggestions #content .filter,#suggestions #content .filter:hover{
             background: none repeat scroll 0 0 white;
@@ -1968,7 +1967,6 @@ input{
             font-style: normal !important;
             color:#555;
         }
->>>>>>> 2007df94d19d3d9b7fc0dc7a63b19e2923231666
         
         #suggestions #content .collapseBtn{
             background-color: #EEEEEE;

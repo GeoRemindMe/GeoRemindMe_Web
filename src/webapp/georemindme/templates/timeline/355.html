@@ -22,7 +22,7 @@ Te gusta una lista de sugerencias
     {% else %}
         <div class="avatar">
             <a href="{% url fb_public_profile obj.username %}" title="Ver perfil en GeoRemindMe">
-                <img class="user-picture" src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+                <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">
