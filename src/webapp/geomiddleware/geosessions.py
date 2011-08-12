@@ -18,6 +18,11 @@ class geosession(object):
                                              )
         else:
             request.session = SessionStore.load(session_id=session_id)
+        import os
+        if request.session.is_from_facebook and os.environ['HTTP_REFERER'] != 'http://apps.facebook.com/georemindme/':
+            request.session.delete()
+            request.user = AnonymousUser()
+            return
         if hasattr(request, 'facebook'):
             if request.facebook['client'].user is not None:
                 if not 'user' in request.session:

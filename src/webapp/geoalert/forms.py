@@ -150,6 +150,7 @@ class SuggestionForm(forms.Form):
                          date_starts = self.cleaned_data['starts'],
                          date_ends = self.cleaned_data['ends'], poi = poi,
                          user = kwargs['user'], done = self.cleaned_data.get('done', False),
-                         tags = self.cleaned_data.get('tags', None)
+                         tags = self.cleaned_data.get('tags', None),
+                         _vis = self.cleaned_data.get['visibility'],
                          )
         return suggestion  
