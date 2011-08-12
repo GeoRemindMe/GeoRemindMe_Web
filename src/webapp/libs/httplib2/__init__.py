@@ -816,6 +816,7 @@ class HTTPSConnectionWithTimeout(httplib.HTTPSConnection):
         self.ca_certs = ca_certs
         self.disable_ssl_certificate_validation = \
                 disable_ssl_certificate_validation
+                
 
     # The following two methods were adapted from https_wrapper.py, released
     # with the Google Appengine SDK at

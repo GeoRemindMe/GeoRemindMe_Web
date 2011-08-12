@@ -143,17 +143,17 @@ class EmbeddedAvatarNode(template.Node):
             from geouser.views import get_avatar
             try:
                 image_url = get_avatar(self, self.item)
-                from libs.httplib2 import Http
+                from libs.httplib2 import Http, HTTPSConnectionWithTimeout
                 from mapsServices.places.GPRequest import Client
                 mem = Client()
                 req = Http(cache=mem)
-                response, content = req.request(image_url['Location'], connection_type='https')
+                response, content = req.request(image_url['Location'])
                 if response['status'] != 200 or content is None:
-                    return None
+                    raise Exception
                 cached_image = "data:image;base64,%s" % base64.b64encode(content)
                 memcache.set('%s%s_avatarcache' % (memcache.version, self.item), encoded_image, 300)
             except:
-                return None
+                return 'http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png'
         return cached_image
 
     def render(self, context):

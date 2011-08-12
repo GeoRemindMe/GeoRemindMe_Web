@@ -633,7 +633,7 @@ def get_avatar(request, username):
         raise Http404
     if user.profile.sync_avatar_with == 'facebook':
         if user.facebook_user is not None:
-            return HttpResponseRedirect("https://graph.facebook.com/%s/picture/" % user.facebook_user.uid)
+            return HttpResponseRedirect("http://graph.facebook.com/%s/picture/" % user.facebook_user.uid)
     elif user.profile.sync_avatar_with == 'twitter':
         if user.twitter_user is not None:
             return HttpResponseRedirect(user.twitter_user.picurl)

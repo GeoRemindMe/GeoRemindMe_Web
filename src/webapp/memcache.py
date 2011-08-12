@@ -18,10 +18,10 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 try:
-	import os
-	version = os.environ["CURRENT_VERSION_ID"]
+    import os
+    version = os.environ["CURRENT_VERSION_ID"]
 except KeyError:
-	version = 1
+    version = 1
 
 #===============================================================================
 # About memcache: http://blog.notdot.net/2009/9/Efficient-model-memcaching
@@ -32,6 +32,8 @@ from google.appengine.datastore import entity_pb
 
 get = memcache.get
 set = memcache.set
+delete = memcache.delete
+
 
 def serialize_instances(instances):
     """
@@ -44,6 +46,7 @@ def serialize_instances(instances):
     elif isinstance(instances, db.Model):
         return db.model_to_protobuf(instances).Encode()#instances is only one
     return [db.model_to_protobuf(x).Encode() for x in instances]
+
 
 def deserialize_instances(data, _search_class=None):
     """
@@ -58,6 +61,3 @@ def deserialize_instances(data, _search_class=None):
     elif isinstance(data, str):
         return db.model_from_protobuf(entity_pb.EntityProto(data))#just one instance in data
     return [db.model_from_protobuf(entity_pb.EntityProto(x)) for x in data]#data contains a list of objects
-
-    
-    
