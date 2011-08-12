@@ -386,6 +386,50 @@ GRM.nowait = function() {
     $("#wait-mask").hide();
 }
 
+GRM.search = function(str,containers,fields)
+{    
+    var words = [];
+    var rawwords = str.split(' ');
+    
+    for (var i in rawwords)
+    {
+        if (typeof(rawwords[i])=="string" && rawwords[i] != '' && words.indexOf(rawwords[i])<0)
+            words.push(rawwords[i]);
+        
+    }
+    
+    $(containers+" .expanded").hide();
+    
+    // no words entered
+    if (words.length==0)
+    {
+        $(containers).not(".expanded").show();
+    }
+    else
+    {        
+        var regexp=new RegExp("("+words.join('|')+")","im");
+        
+        $.each($(containers),function(idx,item) {
+            item = $(item);
+            item.hide();
+            for (var i=0;i<fields.length;i++) {
+                    if (item.find(fields[i]).text().search(regexp)>=0) {
+                            var id = "#"+item.attr('id');
+                            $(id+","+id+' > *').not(".expanded").show();
+                            break;
+                        }
+                }
+            
+            });
+    }
+}
+
+jQuery.fn.search = function(container,fields) {
+    return this.each(function(){
+        $(this).keyup(function(){GRM.search($(this).val(),  container, fields)});
+    });
+}
+
 jQuery.fn.like = GRM.like;
 jQuery.fn.remember = GRM.remember;
 jQuery.fn.removable = GRM.removable;
