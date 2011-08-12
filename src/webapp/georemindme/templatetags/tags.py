@@ -154,7 +154,9 @@ class EmbeddedAvatarNode(template.Node):
         return cached_image
 
     def render(self, context):
-        self.item = self.item.resolve(context)
-        image = self._encode_img()
-        context['image_b64'] = self.item
+        if isinstance(self.item, basestring):
+            image = self._encode_img()
+        else:
+            self.item = self.item.resolve(context)
+            image = self._encode_img()
         return image
