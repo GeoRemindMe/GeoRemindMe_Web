@@ -82,6 +82,13 @@ indexes:
   - name: user
   - name: visible
   - name: modified
+
+- kind: UserTimelineBase
+  properties:
+  - name: class
+  - name: user
+  - name: visible
+  - name: modified
     direction: desc
 
 - kind: UserTimelineFollowersIndex
@@ -89,6 +96,11 @@ indexes:
   - name: followers
   - name: created
     direction: desc
+
+- kind: UserTimelineFollowersIndex
+  properties:
+  - name: followers
+  - name: modified
 
 - kind: UserTimelineFollowersIndex
   ancestor: yes
@@ -101,6 +113,11 @@ indexes:
   - name: user
   - name: created
     direction: desc
+
+- kind: _Notification
+  properties:
+  - name: owner
+  - name: _created
 
 - kind: _Notification
   properties:

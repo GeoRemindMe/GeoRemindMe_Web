@@ -17,6 +17,7 @@ class TwitterAPIError(Exception):
 class TwitterClient(Client):
     url_credentials = 'https://twitter.com/account/verify_credentials.json'
     url_friends = 'http://api.twitter.com/version/friends/ids.json'
+    user = None
     
     def __init__(self, token=None, user=None):
         if user is None and token is None:
@@ -74,28 +75,32 @@ class TwitterClient(Client):
                                                'id': user_to_follow.user.id,
                                                }
         return registered
-    def authorize(self, user=None, login=True):
+    def authorize(self, user = None, login=True):
+        if self.user is None:
+            if user is None:
+                raise TypeError
+            self.user = user
         """Guarda el token de autorizacion"""
-        if user is not None:#el usuario ya esta conectado, pero pide permisos
+        if self.user is not None:#el usuario ya esta conectado, pero pide permisos
             if OAUTH_Access.get_token(self.token.key) is None: 
-                OAUTH_Access.remove_token(user, 'twitter')
+                OAUTH_Access.remove_token(self.user, 'twitter')
                 access = OAUTH_Access.add_token(
                                                 token_key=self.token.key,
                                                 token_secret=self.token.secret,
                                                 provider='twitter',
-                                                user=user,
+                                                user=self.user,
                                                 )
             if login:
                 twitterInfo = self.get_user_info()
-                if user.twitter_user is None:
-                    TwitterUser.register(user=user,
+                if self.user.twitter_user is None:
+                    TwitterUser.register(user=self.user,
                                      uid=twitterInfo['id'], 
                                      username = twitterInfo['screen_name'],
                                      realname = twitterInfo['name'],
                                      picurl = twitterInfo['profile_image_url'],
                                      )
                 else:
-                    user.twitter_user.update(
+                    self.user.twitter_user.update(
                                              username = twitterInfo['screen_name'],
                                              realname = twitterInfo['name'],
                                              picurl = twitterInfo['profile_image_url']
@@ -108,10 +113,12 @@ class TwitterClient(Client):
         twitterInfo = self.get_user_info()
         user = TwitterUser.objects.get_by_id(twitterInfo['id'])
         if user is not None:#el usuario ya existe, iniciamos sesion
-            user = user.user
-            self.authorize(user)
+            self.user = user.user
+            auth = self.authorize()
+            if not auth:
+                raise AttributeError
         else:#no existe, creamos un nuevo usuario
-            user = User.register(password=make_random_string(length=6))
+            self.user = User.register(password=make_random_string(length=6))
             self.user.settings.sync_avatar_with = 'twitter' #  por defecto, si el usuario es nuevo sincronizamos con facebook
             self.user.settings.put()
             self.authorize(user)
