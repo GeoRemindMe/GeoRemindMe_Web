@@ -243,6 +243,7 @@ class User(polymodel.PolyModel, HookedModel):
         timeline = []
         from geovote.models import Comment, Vote
         from geoalert.models import Event
+        from geolist.models import List
         for activity_timeline in query_activity:
             for chrono in query_chrono:
                 chrono_timeline = db.get(chrono.parent())
