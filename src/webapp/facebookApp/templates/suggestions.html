@@ -16,7 +16,12 @@
             //Asignamos comportamiento ONCLICK a cada fila --> Desplegar detalles
             setExpandible('.suggestion');
             
+<<<<<<< HEAD
             $('#filter-suggestions').search('#suggestion-list > div',['.suggestionName']);
+=======
+            $('#filter-suggestions').search('#suggestion-list > div',['.suggestionName_editable']);
+            $('#filter-lists').search('#suggestion-list-lists > div',['.suggestionName_editable']);
+>>>>>>> 2007df94d19d3d9b7fc0dc7a63b19e2923231666
             
             $('#checkBox_all').click(function(){
                 if($('#checkBox_all').is(':checked'))
@@ -215,11 +220,20 @@
             
             $('#filterMySuggestions').toggle(function(){
                 $(this).addClass('pressed');
-                $('.not-mine').hide();
+                $('#suggestion-list .not-mine').fadeOut('slow');
             },function(){
                 $(this).removeClass('pressed');
-                $('.not-mine').show();
-            })
+                $('#suggestion-list .not-mine').fadeIn('slow');
+            });
+            
+            $('#filterMyLists').toggle(function(){
+                $(this).addClass('pressed');
+                $('#suggestion-list .not-mine').fadeOut('slow');
+            },function(){
+                $(this).removeClass('pressed');
+                $('#suggestion-list-lists .not-mine').fadeIn('slow');
+            });
+>>>>>>> 2007df94d19d3d9b7fc0dc7a63b19e2923231666
             
         });//END $(document).ready
 
@@ -606,8 +620,6 @@
                                 </li>
                             </ul>
                         </span>
-                        <span class="btn removeBtn" id="filterMySuggestions">Mis sugerencias</span>
-                        <input type="text" id="filter-suggestions" placeholder="Filtrar por nombre">
                     </div>
                     
                     <!-- Objetos Suggestion-->
@@ -738,17 +750,7 @@
                     
                     
                     
-                    
-                <!-- ALL SUGGESTIONS -->
-                <span id="all_suggestions_content" class="tab-content hidden">
-                    <p>Todas las sugerencias</p>
-                </span>
-                <!-- END ALL SUGGESTIONS -->
-                
-                
-                
-                
-                
+               
                 
                 
                 
@@ -765,14 +767,15 @@
                             Nueva lista
                         </span>
 -->
-                        
+                        <span class="btn removeBtn filter"><input type="text" id="filter-lists" placeholder="Filtrar por nombre"></span>
+                        <span class="btn removeBtn" id="filterMyLists">Mis listas</span>                    
                     </div>
 
                     
                         <div id="suggestion-list-lists">
                         {% if lists %}
                             {% for obj in lists %}
-                                <div id="list_{{obj.id}}" class="suggestion suggestionList">
+                                <div id="list_{{obj.id}}" class="suggestion suggestionList{% if k.user.username != user.username%} not-mine{%endif%}">
                                     <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                     <div class="collapsed">
                                         <span class="checkBox"><input type="checkbox" id="checkBox_{{obj.id}}" value="{{obj.id}}" name="lists" /></span>

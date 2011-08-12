@@ -4,11 +4,13 @@ Mensaje nº 0
 -->
 <!--
 0: Mensaje de bienvenida
+{{obj}}
 -->
 
 <div class="avatar">
     <a href="/fb/user/georemindme" title="GeoRemindMe">
-        <img src="/user/georemindme/picture/" alt="avatar"/>
+        <img src="{% embedded_avatar obj.username %}" alt="avatar"/>
+        {{obj.username}}
     </a>
 </div>
 

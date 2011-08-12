@@ -11,7 +11,7 @@ Mensaje nº 120<br>
 {% if obj.instance.user.username = request.user.username %}
     <div class="avatar">
         <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-            <img class="user-picture" src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
+            <img class="user-picture" src="{% embedded_avatar request.username %}" alt="{{request.user}} avatar"/>
         </a>
     </div>
     
@@ -21,7 +21,7 @@ Mensaje nº 120<br>
 {% else %}
     <div class="avatar">
         <a href="{% url fb_public_profile obj.instance.user.username %}" title="{{obj.instance.user.username}}">
-            <img class="user-picture" src="{% url user_avatar obj.instance.user.username %}" alt="{{obj.instance.user.username}} avatar"/>
+            <img class="user-picture" src="{% embedded_avatar obj.instance.user.username %}" alt="{{obj.instance.user.username}} avatar"/>
         </a>
     </div>
     <div class="timeline-msg">

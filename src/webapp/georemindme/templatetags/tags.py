@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from django import template
+
 register = template.Library()
 
 @register.simple_tag
@@ -67,4 +68,94 @@ def naturaltime(value, arg=None):
     elif delta.seconds / 60 / 60 < 24: 
         return _(u"hace %s horas" % (delta.seconds/60/60)) 
     value = datetime(value.year, value.month, value.day) 
-    return value  
+    return value
+
+"""
+    django templates tags for images
+    @author: R. BECK
+    @version: 0.1
+"""
+
+#from __future__ import with_statement #Python 2.5
+
+import base64
+import os
+
+class EmbeddedImgNode(template.Node):
+    """Image node parser for rendering html inline base64 image"""
+    
+    def __init__(self, item):
+        self.item = item
+
+    def _encode_img(self, file_path):
+        """Returns image base64 string representation and makes a cache file"""
+        import memcache
+        filename   = file_path.rpartition(os.sep)[2]
+        cache_file = "%s_cache" % file_path
+        cached_image = memcache.get('%s%s' % (memcache.version, cache_file))
+        if cached_image is None:
+            image = open(file_path)
+            cached_image = "data:image;base64,%s"%base64.b64encode(image)
+            memcache.set('%s%s' % (memcache.version, cache_file), cached_image, 300)
+        return cached_image
+
+
+    def _render_img(self):
+        """Prepare image attributes"""
+        return self._encode_img(self.item)
+
+
+    def render(self, context):
+        image = self._render_img()
+        return image
+
+
+
+@register.tag(name="embedded_img")
+def do_embedded_img(parser, token):
+    try:
+        item = token.contents.split()[1]
+    except ValueError:
+        raise template.TemplateSyntaxError, "embedded_img requires one argument"    
+    return EmbeddedImgNode(item)
+
+
+@register.tag(name="embedded_avatar")
+def do_embedded_avatar(parser, token):
+    try:
+        item = token.contents.split()[1]
+    except ValueError:
+        raise template.TemplateSyntaxError, "embedded_avatar requires one argument: username"
+    return EmbeddedAvatarNode(item)
+
+
+class EmbeddedAvatarNode(template.Node):
+    """Image node parser for rendering html inline base64 image"""
+    
+    def __init__(self, item):
+        self.item = item
+
+    def _encode_img(self):
+        """Returns image base64 string representation and makes a cache file"""
+        import memcache
+        encoded_image = memcache.get('%s%s_avatarcache' % (memcache.version, self.item))
+        if encoded_image is None:
+            from geouser.views import get_avatar
+            try:
+                image_url = get_avatar(self, self.item)
+                from libs.httplib2 import Http
+                from mapsServices.places.GPRequest import Client
+                mem = Client()
+                req = Http(cache=mem)
+                response, content = req.request(image_url['Location'], connection_type='https')
+                if response['status'] != 200 or content is None:
+                    return None
+                cached_image = "data:image;base64,%s" % base64.b64encode(content)
+                memcache.set('%s%s_avatarcache' % (memcache.version, self.item), encoded_image, 300)
+            except:
+                return None
+        return cached_image
+
+    def render(self, context):
+        image = self._encode_img()
+        return image

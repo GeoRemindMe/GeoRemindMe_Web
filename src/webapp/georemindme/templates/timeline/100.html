@@ -13,7 +13,7 @@ Mensaje nº 100<br>
 {% else %}
     <div class="avatar">
         <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
-            <img class="user-picture" src="{% url user_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+            <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
         </a>
     </div>
     
