@@ -231,19 +231,55 @@ class User(polymodel.PolyModel, HookedModel):
                         for timeline in timelines if timeline is not None ], p.page_count()]
 
     def get_activity_timeline(self, page=1, query_id=None):
+        from geouser.models_acc import UserTimelineSystem
+        query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY modified DESC', user=self.key())
+        query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
         if query_id is not None:
-            query_id = query_id.split('_')
             chrono_id = query_id[0]
-            time_id = query_id[1]
-        else:
-            chrono_id = None
-            time_id = None
-        chronology = self.get_chronology(page=page, query_id=chrono_id)
-        timeline = self.get_timelinesystem(page=page, query_id=time_id)
-        chronology[1].extend(timeline[1])
-        chronology[1].sort(key=lambda x: x['modified'], reverse=True)
-        chronology[0] = '%s_%s' % (chronology[0], timeline[0])
-        chronology[2] = timeline[2] if timeline[2] > chronology[2] else chronology[2]
+            activity_id = query_id[1]
+            query_chrono = query_chrono.with_cursor(start_cursor=chrono_id)
+            query_activity = query_activity.with_cursor(start_cursor=activity_id)
+        
+        timeline = []
+        from geovote.models import Comment, Vote
+        from geoalert.models import Event
+        for activity_timeline in query_activity:
+            for chrono in query_chrono:
+                chrono_timeline = db.get(chrono.parent())
+                if chrono_timeline.modified > activity_timeline:
+                    timeline.append({
+                                    'id': chrono_timeline.id, 'created': chrono_timeline.created,
+                                    'modified': chrono_timeline.modified,
+                                    'msg': chrono_timeline.msg, 'username': chrono_timeline.user.username,
+                                    'msg_id': chrono_timeline.msg_id,
+                                    'instance': chrono_timeline.instance,
+                                    'has_voted':  Vote.objects.user_has_voted(self, chrono_timeline.instance.key()) if chrono_timeline.instance is not None else None,
+                                    'vote_counter': Vote.objects.get_vote_counter(chrono_timeline.instance.key()) if chrono_timeline.instance is not None else None,
+                                    'comments': Comment.objects.get_by_instance(chrono_timeline.instance, querier=self),
+                                    'user_follower': chrono_timeline.instance.has_follower(self) if hasattr(chrono_timeline.instance, 'has_follower') else None,
+                                    'is_private': False,
+                                    })
+                    if len(timeline) == 10:
+                        break
+                else:
+                    break
+            if len(timeline) == 10:
+                break
+            timeline.append({
+                            'id': activity_timeline.id, 'created': activity_timeline.created,
+                            'modified': activity_timeline.modified,
+                            'msg': activity_timeline.msg, 'username': activity_timeline.user.username,
+                            'msg_id': activity_timeline.msg_id,
+                            'instance': activity_timeline.instance,
+                            'has_voted':  Vote.objects.user_has_voted(self, activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
+                            'vote_counter': Vote.objects.get_vote_counter(activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
+                            'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
+                            'is_private': True,
+                            })
+        
+        cursor_chronology = query_chrono.cursor() 
+        cursor_activity = query_activity.cursor()   
+        chronology = [[cursor_chronology, cursor_activity], timeline]
         return chronology
 
     def get_notifications_timeline(self, page=1, query_id=None):

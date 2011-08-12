@@ -103,6 +103,12 @@ indexes:
   - name: modified
 
 - kind: UserTimelineFollowersIndex
+  properties:
+  - name: followers
+  - name: modified
+    direction: desc
+
+- kind: UserTimelineFollowersIndex
   ancestor: yes
   properties:
   - name: created
