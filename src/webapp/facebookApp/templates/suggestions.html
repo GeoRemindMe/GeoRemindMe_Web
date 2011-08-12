@@ -16,6 +16,8 @@
             //Asignamos comportamiento ONCLICK a cada fila --> Desplegar detalles
             setExpandible('.suggestion');
             
+            $('#filter-suggestions').search('#suggestion-list > div',['.suggestionName']);
+            
             $('#checkBox_all').click(function(){
                 if($('#checkBox_all').is(':checked'))
                     $(':regex(id,^(checkBox_))').attr('checked',true);
@@ -561,9 +563,7 @@
          
             };
          
-        })();
-
-        
+        })();        
     </script>
 {%endblock%}
 
