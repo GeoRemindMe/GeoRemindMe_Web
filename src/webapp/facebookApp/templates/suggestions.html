@@ -10,6 +10,7 @@
     <script type="text/javascript" src="/static/facebookApp/js/jquery.jeditable.js"></script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     <script type="text/javascript">        
         $(document).ready(function(){    
             //Asignamos comportamiento ONCLICK a cada fila --> Desplegar detalles
@@ -209,6 +210,14 @@
             });
             
             $("[placeholder]").placeholder();
+            
+            $('#filterMySuggestions').toggle(function(){
+                $(this).addClass('pressed');
+                $('.not-mine').hide();
+            },function(){
+                $(this).removeClass('pressed');
+                $('.not-mine').show();
+            })
             
         });//END $(document).ready
 
@@ -597,7 +606,7 @@
                                 </li>
                             </ul>
                         </span>
-                        <span class="btn removeBtn" onclick="removeSuggestions()">Mis sugerencias</span>
+                        <span class="btn removeBtn" id="filterMySuggestions">Mis sugerencias</span>
                         <input type="text" id="filter-suggestions" placeholder="Filtrar por nombre">
                     </div>
                     
@@ -612,7 +621,7 @@
                     {% else %}
                     <span id="suggestion-list" class="tab-content">
                         {% for k in suggestions.1%}
-                            <div id="suggestion_{{k.id}}" class="suggestion">
+                            <div id="suggestion_{{k.id}}" class="suggestion{% if k.user.username != user.username%} not-mine{%endif%}">
                                 <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                 <div class="collapsed">
                                     <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>

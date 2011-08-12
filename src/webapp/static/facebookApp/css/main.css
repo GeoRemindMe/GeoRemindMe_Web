@@ -1930,6 +1930,12 @@ input{
             vertical-align: middle;
             white-space: nowrap;
         }
+        #suggestions #content .pressed{
+            background: -moz-linear-gradient(center top , #E3E3E3,#F9F9F9) repeat scroll 0 0 transparent;
+            background: -webkit-gradient(linear,0% 40%,0% 70%,from(#E3E3E3),to(#F9F9F9));
+            background-image: -o-linear-gradient(top, rgb(227, 227, 227) 40%, rgb(249, 249, 249) 70%);
+            font-weight: bold;
+        }
         
         #suggestions #content .collapseBtn{
             background-color: #EEEEEE;
