@@ -1937,6 +1937,36 @@ input{
             font-weight: bold;
         }
         
+        #suggestions #content .filter,#suggestions #content .filter:hover{
+            background: none repeat scroll 0 0 white;
+            margin: 6px 0;
+            border-color:#BBBBBB #BBBBBB #A0A0A0 !important;
+            border-style:solid !important;
+        }
+        #filter-suggestions,
+        #filter-lists{
+            border: 0px;
+            height: 1em;
+            line-height: 1.2em;
+            outline:none;
+            padding: 2px;
+        }
+        input#filter-suggestions:active,
+        input#filter-lists:active{
+            border: 0px;
+            height: 1em;
+            line-height: 1.2em;
+            outline:none;
+            padding: 2px;
+            width: 130px;
+        }
+        #suggestions #content .btn input#filter-suggestions:focus,
+        #suggestions #content .btn input#filter-lists:focus{
+            border: 0px;
+            font-style: normal !important;
+            color:#555;
+        }
+        
         #suggestions #content .collapseBtn{
             background-color: #EEEEEE;
             clear: both;
