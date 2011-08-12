@@ -39,11 +39,11 @@ def authorize_token_request(request):
     if not 'oauth_token' in request.GET:
         return HttpResponseBadRequest()
     else:
-        if 'user' in request.session and request.session['user'].is_authenticated():
+        if request.user.is_authenticated():
             server = OAUTH_Server()
             if request.method == 'POST':
                 if 'accept' in request.POST:#el token ha sido aceptado
-                    token = server.authorization_token_requested(request, request.session['user'])
+                    token = server.authorization_token_requested(request, request.user)
                     if token.callback is not None:#devolvemos al usuario al callback
                         return HttpResponseRedirect('%s?oauth_token=%s&oauth_verifier=%s' % (token.callback, token.key, token.verifier))
                     else:#no hay callback
@@ -145,7 +145,7 @@ def client_access_request(request, provider, next=None):
     if provider == 'twitter':
         from clients.twitter import TwitterClient
         client = TwitterClient(token=oauth2.Token(token['oauth_token'], token['oauth_token_secret']))
-        if request.user.is_authenticated:#usuario ya esta logeado, guardamos el token de su cuenta
+        if request.user.is_authenticated():#usuario ya esta logeado, guardamos el token de su cuenta
             if client.authorize(request.user, login = False if 'nologin' in request.GET else True):
                 messages.success(request, _('Got access from %s' % provider))
         else:
@@ -236,8 +236,8 @@ def facebook_access_request(request, next=None):
             }
         from clients.facebook import FacebookClient
         client = FacebookClient(access_token = token['access_token'])
-        if 'user' in request.session:#usuario ya esta logeado, guardamos el token de su cuenta
-            if client.authorize(request.session['user']):
+        if request.user.is_authenticated():#usuario ya esta logeado, guardamos el token de su cuenta
+            if client.authorize(request.user):
                 messages.success(request, _('Got access from Facebook'))
         else:
             user = client.authenticate()
