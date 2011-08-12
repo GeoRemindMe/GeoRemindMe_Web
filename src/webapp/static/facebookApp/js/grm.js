@@ -61,6 +61,8 @@ GRM.like = function(settings) {
         
         $(this).click(function() {
             
+            GRM.wait();
+            
             var type = $(this).attr('type'), id = $(this).attr('value'), vote = (typeof $(this).attr('like') != "undefined" )?-1:1;
             
             if (settings.progress_class)
@@ -112,6 +114,8 @@ GRM.like = function(settings) {
                     {
                         if (settings.progress_class)
                             $(this).removeClass(settings.progress_class);
+                        
+                        GRM.nowait();
                     }
                 });
         });
@@ -152,6 +156,8 @@ GRM.remember = function(settings) {
             $(this).find('.forget').hide();
 
         $(this).click(function() {
+            
+            GRM.wait();
             
             //Primero comprobamos el tipo de mensaje
             var elemType;
@@ -210,6 +216,8 @@ GRM.remember = function(settings) {
                     {
                         if (settings.progress_class)
                             $(this).removeClass(settings.progress_class);
+                        
+                        GRM.nowait();
                     }
                 });
         });
@@ -330,6 +338,8 @@ GRM.sendComment = function(type,text,id,callback){
     if(text=="")
         return false;
 
+    GRM.wait();
+
     $.ajax({
         type: "POST",
         url: "/ajax/add/comment/"+type+"/",
@@ -337,6 +347,7 @@ GRM.sendComment = function(type,text,id,callback){
             instance_id:id,
             msg:text },
         dataType:'json',
+        complete: function() { GRM.nowait(); },
         success: function(response){
             
             var message=$('#msg').val()
@@ -366,7 +377,14 @@ GRM.updateTabCounters = function(){
     $('#likes-counter').text('('+$(':regex(class,(msg-125|msg-305|msg-355))').length+')');
     $('#comments-counter').text('('+$(':regex(class,(msg-120|msg-121))').length+')');
 }
-    
+
+GRM.wait = function() {
+    $("#wait-mask").show();
+}
+
+GRM.nowait = function() {
+    $("#wait-mask").hide();
+}
 
 jQuery.fn.like = GRM.like;
 jQuery.fn.remember = GRM.remember;
