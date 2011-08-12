@@ -156,4 +156,5 @@ class EmbeddedAvatarNode(template.Node):
     def render(self, context):
         self.item = self.item.resolve(context)
         image = self._encode_img()
+        context['image_b64'] = self.item
         return image
