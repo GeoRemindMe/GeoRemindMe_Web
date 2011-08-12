@@ -27,7 +27,6 @@ class RenderTimelineNode(template.Node):
         self.item = template.Variable(item)
         
     def render(self, context):
-        from django.template import Context
         item = self.item.resolve(context)
         t = template.loader.get_template('timeline/%s.html' % item['msg_id'])
         context['obj'] = item
@@ -85,7 +84,7 @@ class EmbeddedImgNode(template.Node):
     """Image node parser for rendering html inline base64 image"""
     
     def __init__(self, item):
-        self.item = item
+        self.item = template.Variable(item)
 
     def _encode_img(self, file_path):
         """Returns image base64 string representation and makes a cache file"""
@@ -133,7 +132,7 @@ class EmbeddedAvatarNode(template.Node):
     """Image node parser for rendering html inline base64 image"""
     
     def __init__(self, item):
-        self.item = item
+        self.item = template.Variable(item)
 
     def _encode_img(self):
         """Returns image base64 string representation and makes a cache file"""
@@ -148,8 +147,6 @@ class EmbeddedAvatarNode(template.Node):
                 mem = Client()
                 req = Http(cache=mem)
                 response, content = req.request(image_url['Location'])
-                if response['status'] != 200 or content is None:
-                    raise Exception
                 cached_image = "data:image;base64,%s" % base64.b64encode(content)
                 memcache.set('%s%s_avatarcache' % (memcache.version, self.item), encoded_image, 300)
             except:
@@ -157,5 +154,6 @@ class EmbeddedAvatarNode(template.Node):
         return cached_image
 
     def render(self, context):
+        self.item = self.item.resolve(context)
         image = self._encode_img()
         return image
