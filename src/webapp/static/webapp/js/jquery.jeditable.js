@@ -57,7 +57,7 @@
   *             
   */
 
-jQuery.fn.extend({
+(function( $ ){
 
     $.fn.editable = function(target, options) {
             
@@ -541,4 +541,4 @@ jQuery.fn.extend({
         ajaxoptions: {}
     };
 
-});
+})( jQuery );

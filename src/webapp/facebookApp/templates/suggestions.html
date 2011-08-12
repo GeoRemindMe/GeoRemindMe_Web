@@ -7,7 +7,7 @@
     <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/vault.js"></script>
 
-    <script type="text/javascript" src="/static/facebookApp/js/jquery.jeditable.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.jeditable.js"></script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
@@ -16,12 +16,8 @@
             //Asignamos comportamiento ONCLICK a cada fila --> Desplegar detalles
             setExpandible('.suggestion');
             
-<<<<<<< HEAD
-            $('#filter-suggestions').search('#suggestion-list > div',['.suggestionName']);
-=======
             $('#filter-suggestions').search('#suggestion-list > div',['.suggestionName_editable']);
             $('#filter-lists').search('#suggestion-list-lists > div',['.suggestionName_editable']);
->>>>>>> 2007df94d19d3d9b7fc0dc7a63b19e2923231666
             
             $('#checkBox_all').click(function(){
                 if($('#checkBox_all').is(':checked'))
@@ -30,13 +26,22 @@
                     $(':regex(id,^(checkBox_))').attr('checked',false);
             });
             
-//            $('.editable[value="textarea"]').editable('suggestions/add', { 
-//                 type      : 'textarea',
-//                 cancel    : 'Cancel',
-//                 submit    : 'OK',
-//                 indicator : 'Saving...',
-//                 tooltip   : 'Click to edit...'
-//             });
+            //$('.editable').editable({editBy:"dblclick"});
+            
+            $('.editable[value="textarea"]').editable('suggestions/add', { 
+                 type      : 'textarea',
+                 cancel    : 'Cancel',
+                 submit    : 'OK',
+                 indicator : 'Saving...',
+                 tooltip   : 'Click to edit...'
+             });
+            $('.editable:not([value="textarea"])').editable('suggestions/add', { 
+                 type      : 'text',
+                 cancel    : 'Cancel',
+                 submit    : 'OK',
+                 indicator : 'Saving...',
+                 tooltip   : 'Click to edit...'
+             });
             
             $('.empty-msg').parent().find('ul').each(function(i,elem){
                 if($(elem).children().length==0){
@@ -233,7 +238,6 @@
                 $(this).removeClass('pressed');
                 $('#suggestion-list-lists .not-mine').fadeIn('slow');
             });
->>>>>>> 2007df94d19d3d9b7fc0dc7a63b19e2923231666
             
         });//END $(document).ready
 
@@ -620,6 +624,9 @@
                                 </li>
                             </ul>
                         </span>
+                        
+                        <span class="btn removeBtn filter"><input type="text" id="filter-suggestions" placeholder="Filtrar por nombre"></span>
+                        <span class="btn removeBtn" id="filterMySuggestions">Mis sugerencias</span>
                     </div>
                     
                     <!-- Objetos Suggestion-->
