@@ -137,6 +137,7 @@ body {
 #main {
 	min-height: 415px;
 	background: url('/static/webapp/img/bg.png') no-repeat;
+	position: relative;
 }
 
 #right-block,#left-block {
@@ -213,7 +214,7 @@ body {
 .footer-links {
 	font-size: 14px;
 	display: inline;
-	margin-top: 40px;
+	margin-top: 20px;
 	float: left;
 }
 
@@ -348,3 +349,119 @@ body {
 }
 
 /*------- MAIN STYLES ---------*/
+
+#account-info {
+	display: inline;
+	float: right;
+	margin-top: 11px;
+}
+
+#account-info a {
+	color: #FF913C;
+    display: block;
+    float: left;
+    text-decoration: none;
+	margin-top: 16px;
+	margin-left: 10px;
+}
+
+#account-info a:hover {
+	text-decoration: underline;
+}
+
+#account-info img {
+	float: left;
+	height: 48px;
+	width: 48px;
+}
+
+#header input {
+	margin-left: 100px;
+	margin-top: 28px;
+}
+
+#left-col {
+	float: left;
+	width: 250px;
+	clear: left;
+	margin-top: 30px;
+}
+
+#right-col {
+	width: 710px;
+	float: left;
+	margin-top:30px;
+	
+	
+}
+
+
+#left-col a#add-suggestion-btn {
+	background: url('/static/webapp/img/register-bg.png') repeat-x;
+	color: #000000;
+	display: block;
+	font-size: 14pt;
+	height: 48px;
+	line-height: 48px;
+	text-align: center;
+	text-decoration: none;
+	width: 189px;
+	text-shadow: 0px 1px 1px rgba(255,255,255,.75);
+	-moz-text-shadow: 0px 1px 1px rgba(255,255,255,.75);
+	-webkit-text-shadow: 0px 1px 1px rgba(255,255,255,.75);
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
+	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
+	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
+	margin-left: 30px;
+}
+
+#left-col ul {
+	margin-top: 40px;
+}
+
+#left-col li a{
+    color: black;
+    display: block;
+    padding: 5px 0 5px 30px;
+    text-decoration: none;
+    width: 100%;
+}
+#left-col li:hover{
+    background: url('/static/webapp/img/list-bg.png') no-repeat 0 0;
+	height: 26px;
+}
+
+.menu-icons a{
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 16px;
+    width: 17px;
+}
+
+.main-menu-icons a {
+    background-image: url("/static/facebookApp/img/main_menu_icons.png");
+}
+
+#activity-icon {
+    background-position: 5px 5px;
+}
+#vault-icon {
+    background-position: 5px -22px;
+}
+#suggestions-icon {
+    background-position: 5px -45px;
+}
+#notifications-icon {
+    background-position: 5px -70px;
+}
+#places-icon {
+    background-position: 4px -95px;
+}
+#profile-icon {
+    background-position: 5px -120px;
+}
+#settings-icon {
+    background-position: 5px -145px;
+}
