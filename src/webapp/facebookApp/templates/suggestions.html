@@ -10,10 +10,13 @@
     <script type="text/javascript" src="/static/facebookApp/js/jquery.jeditable.js"></script>
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     <script type="text/javascript">        
         $(document).ready(function(){    
             //Asignamos comportamiento ONCLICK a cada fila --> Desplegar detalles
             setExpandible('.suggestion');
+            
+            $('#filter-suggestions').search('#suggestion-list > div',['.suggestionName']);
             
             $('#checkBox_all').click(function(){
                 if($('#checkBox_all').is(':checked'))
@@ -197,7 +200,28 @@
                 $(".dropDrownBtn").click()
             });
             
-        });
+            
+            $('.show-more').click(function (){
+                var textElement=$(this).parent().find('.show-more-text');
+                if($(textElement).css('display')!="none")
+                    $(this).html("Mostrar estadísticas")
+                else
+                    $(this).html("Ocultar estadísticas")
+                
+                $(textElement).toggle('slow')
+            });
+            
+            $("[placeholder]").placeholder();
+            
+            $('#filterMySuggestions').toggle(function(){
+                $(this).addClass('pressed');
+                $('.not-mine').hide();
+            },function(){
+                $(this).removeClass('pressed');
+                $('.not-mine').show();
+            })
+            
+        });//END $(document).ready
 
         /*
          * 
@@ -539,9 +563,7 @@
          
             };
          
-        })();
-
-        
+        })();        
     </script>
 {%endblock%}
 
@@ -561,8 +583,10 @@
                 <span id="your_suggestions_content" class="tab-content">
                     <div id="header">
                         <span class="selectCheckBox"><input type="checkbox" id="checkBox_all" /></span>
+<!--
                         <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="loadSuggestionsPage('next')">Siguiente</span>
                         <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
+-->
                         
                         <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
                         <span class="btn dropDrownBtn">
@@ -582,7 +606,8 @@
                                 </li>
                             </ul>
                         </span>
-                        
+                        <span class="btn removeBtn" id="filterMySuggestions">Mis sugerencias</span>
+                        <input type="text" id="filter-suggestions" placeholder="Filtrar por nombre">
                     </div>
                     
                     <!-- Objetos Suggestion-->
@@ -596,7 +621,7 @@
                     {% else %}
                     <span id="suggestion-list" class="tab-content">
                         {% for k in suggestions.1%}
-                            <div id="suggestion_{{k.id}}" class="suggestion">
+                            <div id="suggestion_{{k.id}}" class="suggestion{% if k.user.username != user.username%} not-mine{%endif%}">
                                 <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                 <div class="collapsed">
                                     <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
@@ -666,34 +691,39 @@
                                         <dd>
                                             <ul class="share-suggestion">
                                                 <li><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
+<!--
                                                 <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
+-->
                                                 <li><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
                                                 <li><a class="share-suggestion facebook-icon" href="">Muro</a></li>
                                             </ul>
                                         </dd>
 
                                         <dt>Autor:</dt>
-                                        <dd><a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a></dd>
+                                        <dd><a href="{% url fb_public_profile k.user.username %}" class="black-link">{{k.user.username}}</a></dd>
                                         
                                     </dl>
                                     
                                     
-                                    <p class="big statistics">Estadísticas:</p>
-                                    <dl>
-                                        
-                                        <dt>Valoraciones recibidas: </dt>
-                                        <dd>{{k.counters.votes}}</dd>
-                                        
-                                        <dt>Personas que han guardado la sugerencia: </dt>
-                                        <dd>{{k.counters.followers}}</dd>
-                                        
-                                        <dt>Comentarios recibidos:</dt>
-                                        <dd>{{k.counters.comments}}</dd>
-                                        
-                                        <dt>Última modificación:</dt>
-                                        <dd>{{k.modified}}</dd>
-                                    </dl>
-                                    
+			
+                                    <div class="show-more-text" style="display:none">
+                                        <p class="big statistics">Estadísticas:</p>
+                                        <dl>
+                                            
+                                            <dt>Valoraciones recibidas: </dt>
+                                            <dd>{{k.counters.votes}}</dd>
+                                            
+                                            <dt>Personas que han guardado la sugerencia: </dt>
+                                            <dd>{{k.counters.followers}}</dd>
+                                            
+                                            <dt>Comentarios recibidos:</dt>
+                                            <dd>{{k.counters.comments}}</dd>
+                                            
+                                            <dt>Última modificación:</dt>
+                                            <dd>{{k.modified}}</dd>
+                                        </dl>
+                                    </div>
+                                    <span class="show-more">Mostrar estadísticas</span>
                                     
                                 </div>
                                 

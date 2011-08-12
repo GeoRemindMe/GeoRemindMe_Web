@@ -61,6 +61,8 @@ GRM.like = function(settings) {
         
         $(this).click(function() {
             
+            GRM.wait();
+            
             var type = $(this).attr('type'), id = $(this).attr('value'), vote = (typeof $(this).attr('like') != "undefined" )?-1:1;
             
             if (settings.progress_class)
@@ -112,6 +114,8 @@ GRM.like = function(settings) {
                     {
                         if (settings.progress_class)
                             $(this).removeClass(settings.progress_class);
+                        
+                        GRM.nowait();
                     }
                 });
         });
@@ -152,6 +156,8 @@ GRM.remember = function(settings) {
             $(this).find('.forget').hide();
 
         $(this).click(function() {
+            
+            GRM.wait();
             
             //Primero comprobamos el tipo de mensaje
             var elemType;
@@ -210,6 +216,8 @@ GRM.remember = function(settings) {
                     {
                         if (settings.progress_class)
                             $(this).removeClass(settings.progress_class);
+                        
+                        GRM.nowait();
                     }
                 });
         });
@@ -330,6 +338,8 @@ GRM.sendComment = function(type,text,id,callback){
     if(text=="")
         return false;
 
+    GRM.wait();
+
     $.ajax({
         type: "POST",
         url: "/ajax/add/comment/"+type+"/",
@@ -337,6 +347,7 @@ GRM.sendComment = function(type,text,id,callback){
             instance_id:id,
             msg:text },
         dataType:'json',
+        complete: function() { GRM.nowait(); },
         success: function(response){
             
             var message=$('#msg').val()
@@ -360,13 +371,64 @@ GRM.sendComment = function(type,text,id,callback){
 }
 
 GRM.updateTabCounters = function(){
-    $('#all-counter').text('('+$('#chronology li').length+')');
+    $('#all-counter').text('('+$('#chronology li').not('.comment-box li').length+')');
     $('#suggestions-counter').text('('+$(':regex(class,(msg-300|msg-303))').length+')');
     $('#lists-counter').text('('+$(':regex(class,(msg-350|msg-353))').length+')');
     $('#likes-counter').text('('+$(':regex(class,(msg-125|msg-305|msg-355))').length+')');
     $('#comments-counter').text('('+$(':regex(class,(msg-120|msg-121))').length+')');
 }
+
+GRM.wait = function() {
+    $("#wait-mask").show();
+}
+
+GRM.nowait = function() {
+    $("#wait-mask").hide();
+}
+
+GRM.search = function(str,containers,fields)
+{    
+    var words = [];
+    var rawwords = str.split(' ');
     
+    for (var i in rawwords)
+    {
+        if (typeof(rawwords[i])=="string" && rawwords[i] != '' && words.indexOf(rawwords[i])<0)
+            words.push(rawwords[i]);
+        
+    }
+    
+    $(containers+" .expanded").hide();
+    
+    // no words entered
+    if (words.length==0)
+    {
+        $(containers).not(".expanded").show();
+    }
+    else
+    {        
+        var regexp=new RegExp("("+words.join('|')+")","im");
+        
+        $.each($(containers),function(idx,item) {
+            item = $(item);
+            item.hide();
+            for (var i=0;i<fields.length;i++) {
+                    if (item.find(fields[i]).text().search(regexp)>=0) {
+                            var id = "#"+item.attr('id');
+                            $(id+","+id+' > *').not(".expanded").show();
+                            break;
+                        }
+                }
+            
+            });
+    }
+}
+
+jQuery.fn.search = function(container,fields) {
+    return this.each(function(){
+        $(this).keyup(function(){GRM.search($(this).val(),  container, fields)});
+    });
+}
 
 jQuery.fn.like = GRM.like;
 jQuery.fn.remember = GRM.remember;
@@ -396,8 +458,8 @@ jQuery.expr[':'].regex = function(elem, index, match) {
 
 function sendComment(btn,elemType,id) {
     if (GRM.sendComment(elemType,$('#msg').val(),id,function(){$(btn).text("Comentar");$(btn).removeClass("waiting");})){
-        $(this).text("Enviando")
-        $(this).addClass("waiting")
+        $(btn).text("Enviando")
+        $(btn).addClass("waiting")
     }
 }
 

@@ -1684,7 +1684,15 @@ input{
     #suggestions .editable:hover{
         background-color:#FEFF99
     }
-    
+    #suggestions .show-more{
+		float: none;
+		color: black;
+		padding: 0 2.5em;
+		display: block;
+    }
+    #suggestions div.show-more-text{
+        border:0;
+    }
     ul#tabMenu{
         margin:0;
         padding:0;
@@ -1922,6 +1930,12 @@ input{
             vertical-align: middle;
             white-space: nowrap;
         }
+        #suggestions #content .pressed{
+            background: -moz-linear-gradient(center top , #E3E3E3,#F9F9F9) repeat scroll 0 0 transparent;
+            background: -webkit-gradient(linear,0% 40%,0% 70%,from(#E3E3E3),to(#F9F9F9));
+            background-image: -o-linear-gradient(top, rgb(227, 227, 227) 40%, rgb(249, 249, 249) 70%);
+            font-weight: bold;
+        }
         
         #suggestions #content .collapseBtn{
             background-color: #EEEEEE;
@@ -2026,6 +2040,7 @@ input{
         margin: 0 7px 0 2px;
     }
     #new-list-btn{
+        min-width: 80px;
 /*
         border-top: 1px solid #AAAAAA;
         color: blue;
@@ -2676,3 +2691,10 @@ input{
 	.search-text {
 		display: inline;
 	}
+
+    #wait-mask {
+        position:fixed;
+        height:100%;
+        width:100%;
+        cursor:wait;
+    }
