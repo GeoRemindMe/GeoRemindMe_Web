@@ -168,7 +168,7 @@ class UserProfile(HookedModel):
 
     def _post_put(self, **kwargs):
         import memcache
-        memcache.delete('%s%s_avatarcache' % (memcache.version, self.username))
+        memcache.delete('%s%s_avatarcachebase64' % (memcache.version, self.username))
         memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)    
     
 

@@ -142,7 +142,7 @@ class EmbeddedAvatarNode(template.Node):
             from geouser.views import get_avatar
             try:
                 image_url = get_avatar(self, self.item)
-                from libs.httplib2 import Http, HTTPSConnectionWithTimeout
+                from libs.httplib2 import Http
                 from mapsServices.places.GPRequest import Client
                 mem = Client()
                 req = Http(cache=mem)

@@ -21,21 +21,18 @@ def login_panel(request):
                 return render_to_response('register.html', {"permissions": settings.OAUTH['facebook']['scope'] },
                               context_instance=RequestContext(request)
                               )
-            init_user_session(request, user, is_from_facebook=True)
-        else:
-            user = request.user
-        if user.username is None or user.email is None:
+        if request.user.username is None or request.user.email is None:
             if request.method == 'POST':
                 f = SocialUserForm(request.POST, 
                                    prefix='user_set_username', 
-                                   initial = { 'email': user.email,
-                                               'username': user.username,
+                                   initial = { 'email': request.user.email,
+                                               'username': request.user.username,
                                              }
                                    )
                 if f.is_valid():
-                    user = f.save(user)
+                    user = f.save(request.user)
                     if user:
-                        request.user = user
+                        init_user_session(request, user, remember=True, is_from_facebook=True)
                         return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
             else:
                 f = SocialUserForm(prefix='user_set_username', 
@@ -46,7 +43,9 @@ def login_panel(request):
             return render_to_response('create_social_profile.html', {'form': f}, 
                                        context_instance=RequestContext(request)
                                       )
+
         else:
+            init_user_session(request, request.user, remember=True, is_from_facebook=True)
             return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
     from django.conf import settings
