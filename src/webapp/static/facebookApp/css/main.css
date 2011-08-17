@@ -1281,7 +1281,7 @@ input{
     }
     div#avatar-follow{
         display: inline-block;
-        margin: 15px 15px 5px 0;
+        margin: 0 15px 5px 0;
         text-align: center;
         float:left;
     }
@@ -1301,7 +1301,7 @@ input{
     }
     ul#user-resume{
         list-style: none outside none;
-        margin: -15px 0;
+        margin: 0px 0;
         padding: 0;
         float:right;
     }
@@ -1388,13 +1388,13 @@ input{
         display: block;
         float: left;
         width: 425px;
-/*
-        float: left;
-*/
-/*
-        width: 475px;
-*/
     }
+     #user-info h1{
+		display: inline-block;
+		font-size: 1.8em;
+		margin-bottom: 1.7em;
+		margin-top: 1em;
+     }    
     
             span#his_suggestions_content span.action-bar span{
                 color:#0011FF;

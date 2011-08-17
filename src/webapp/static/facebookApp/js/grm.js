@@ -314,7 +314,7 @@ GRM.loadPage = function(params){
                     
                     $(container).attr("page",current_page);
                     
-                    $(container).empty();
+                    //$(container).empty();
                     $.each(data[1], function(index,suggestion){
                         $(template).tmpl( {element:suggestion} ).appendTo(container);
                     });
@@ -329,6 +329,30 @@ GRM.loadPage = function(params){
                         $('#next-page').removeClass('hidden');
                     else
                         $('#next-page').addClass('hidden');
+                }
+            });
+        }
+
+GRM.loadTimeline = function(params){
+
+            var container=params['container'];
+            var url=params['url'];
+                        
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data:params["query_id"],
+                success: function(data){
+                    
+                    $(container).attr("value",data[0]);
+                    
+                    $.each(data[1], function(index,suggestion){
+                        //$(template).tmpl( {element:suggestion} ).appendTo(container);
+                        console.log(suggestion)
+                    });
+
+                    //Ocultamos el botones de cargar más si se ha alcanzado el limite
+                    
                 }
             });
         }

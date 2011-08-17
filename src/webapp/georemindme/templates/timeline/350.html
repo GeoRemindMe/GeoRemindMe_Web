@@ -74,7 +74,12 @@ Mensaje nº 350<br>
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}
                 
-                    <img class="user-picture" src="{% embedded_avatar c.username %}" alt="user avatar"><a href="{% url fb_public_profile c.username %}" class="black-link">{{c.username}}</a>: {{c.msg}}<br>
+                    <a href="{% url fb_public_profile c.username %}">
+						<img class="user-picture" src="{% embedded_avatar c.username %}" alt="user avatar">
+					</a>
+					<a href="{% url fb_public_profile c.username %}" class="black-link">
+						{{c.username}}
+					</a>: {{c.msg}}<br>
                     <span class="timestamp">{{c.created|naturaltime}}</span> 
                     
                     {% if c.username != user.username %}
@@ -99,7 +104,9 @@ Mensaje nº 350<br>
     </ul>
     
     <div class="input-box {% if not obj.comments.1 %} hidden {% endif %}">
-        <img alt="user avatar" src="{% embedded_avatar user.username %}" class="min-img hidden">
+        <a href="{% url fb_public_profile user.username %}">
+			<img alt="user avatar" src="{% embedded_avatar user.username %}" class="min-img hidden">
+		</a>
         <form class="commentForm"><textarea empty="true" class="autogrow">Escribe un comentario</textarea></form>
     </div>
     

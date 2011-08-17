@@ -11,6 +11,8 @@
     <script type="text/javascript">
         $(document).ready(function(){
             
+            GRM.updateTabCounters();
+            
             //Adding behaviour to tab content
             $('#tabMenu li').not('.clear-box').click(function(){
                 tab_id=$('#tabMenu li.active').attr('id')
@@ -51,28 +53,20 @@
                 $('#chronology li').show();
             });
             
-            $('.user-picture').each(function(i,elem){
+            //$('.user-picture').each(function(i,elem){
                 
-                (new Image()).src = $(elem).attr('src')
-            })
+            //    (new Image()).src = $(elem).attr('src')
+            //})
             
-            GRM.updateTabCounters();
-            
+			//Cargar más elementos del Timeline
             $(".load-more").click(function(){
-                GRM.loadPage({
-                    page:$(this).attr('value'),
-//                    "total_pages":{{suggestions.2}},
+                GRM.loadTimeline({
+                    'query_id':$(this).attr('value'),
                     container:'#chronology',
                     url:'{% url get_activity_timeline %}',
-                    template: "#suggestionTemplate",
-                    data:{
-                            'query_id':"{{chronology.0}}",
-                        }                
                 });
             });
-            
-            
-            //$(".load-more").click()
+
         });
     </script>
     
@@ -107,13 +101,13 @@
                 <li id="filter-comments">Comentarios <span id="comments-counter"></span></li>
                 
             </ul>
-            <ul id="chronology">
+            <ul id="chronology" value="{{chronology.0}}">
                 {% include "timeline.html" %}
             </ul>
         
             <!-- Si hay más mensajes -->
             {% if chronology.1|length > 9%}
-                <div class="load-more" value="{{chronology.0}}">Cargar más</div>
+                <div class="load-more">Cargar más</div>
             {% endif %}    
             
             
