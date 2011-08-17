@@ -16,6 +16,9 @@ class JSONEncoder(simplejson.JSONEncoder):
         from geoalert.models import Event
         if isinstance(obj, Event):
             return obj.to_dict()
+        from geolist.models import List
+        if isinstance(obj, List):
+            return obj.to_dict()
         from geoalert.models_poi import POI
         if isinstance(obj, POI):
             return obj.to_dict()
