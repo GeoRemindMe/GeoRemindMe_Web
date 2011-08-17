@@ -152,6 +152,8 @@ class User(polymodel.PolyModel, HookedModel):
         from geovote.models import Comment, Vote
         from geoalert.models import Event
         from geolist.models import List
+        cursor_chronology = None
+        cursor_activity = None
         for activity_timeline in query_activity:
             for chrono in query_chrono:
                 chrono_timeline = db.get(chrono.parent())
@@ -168,11 +170,12 @@ class User(polymodel.PolyModel, HookedModel):
                                     'user_follower': chrono_timeline.instance.has_follower(self) if hasattr(chrono_timeline.instance, 'has_follower') else None,
                                     'is_private': False,
                                     })
-                    if len(timeline) == 10:
+                    cursor_chronology = query_chrono.cursor()
+                    if len(timeline) == TIMELINE_PAGE_SIZE:
                         break
                 else:
                     break
-            if len(timeline) == 10:
+            if len(timeline) == TIMELINE_PAGE_SIZE:
                 break
             timeline.append({
                             'id': activity_timeline.id, 'created': activity_timeline.created,
@@ -185,12 +188,9 @@ class User(polymodel.PolyModel, HookedModel):
                             'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
                             'is_private': True,
                             })
-        try:
-            cursor_chronology = query_chrono.cursor()
             cursor_activity = query_activity.cursor()   
-            chronology = [[cursor_chronology, cursor_activity], timeline]
-        except AssertionError:
-            chronology = [[], timeline]
+            
+        chronology = [[cursor_chronology, cursor_activity], timeline]
         return chronology
 
     def get_notifications_timeline(self, query_id=None):
