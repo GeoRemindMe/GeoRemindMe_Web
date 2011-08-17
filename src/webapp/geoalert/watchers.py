@@ -91,10 +91,11 @@ def new_following_suggestion(sender, **kwargs):
     sender.counters.set_followers(+1)
     from google.appengine.ext.deferred import defer
     defer(sender.user.settings.notify_suggestion_follower, sender.key(), kwargs['user'].key())
-    if kwargs['user'].key() != sender.user.key():
-        from geouser.models_utils import _Notification
-        notification = _Notification(owner=sender.user, timeline=timeline)
-        notification.put()
+    if sender.user is not None:
+        if kwargs['user'].key() != sender.user.key():
+            from geouser.models_utils import _Notification
+            notification = _Notification(owner=sender.user, timeline=timeline)
+            notification.put()
 suggestion_following_new.connect(new_following_suggestion)
 
 def deleted_following_suggestion(sender, **kwargs):

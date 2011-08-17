@@ -277,10 +277,12 @@ class User(polymodel.PolyModel, HookedModel):
                             'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
                             'is_private': True,
                             })
-        
-        cursor_chronology = query_chrono.cursor() 
-        cursor_activity = query_activity.cursor()   
-        chronology = [[cursor_chronology, cursor_activity], timeline]
+        try:
+            cursor_chronology = query_chrono.cursor()
+            cursor_activity = query_activity.cursor()   
+            chronology = [[cursor_chronology, cursor_activity], timeline]
+        except AssertionError:
+            chronology = [[], timeline]
         return chronology
 
     def get_notifications_timeline(self, page=1, query_id=None):

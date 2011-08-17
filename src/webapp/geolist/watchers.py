@@ -48,10 +48,11 @@ def modified_list(sender, **kwargs):
         from georemindme.tasks import NotificationHandler
         NotificationHandler().list_followers_notify(sender)
         timeline.put()
-        if kwargs['querier'].key() != sender.user.key():
-            from geouser.models_utils import _Notification
-            notification = _Notification(owner=sender.user, timeline=timeline)
-            notification.put()
+        if sender.user is not None:
+            if kwargs['querier'].key() != sender.user.key():
+                from geouser.models_utils import _Notification
+                notification = _Notification(owner=sender.user, timeline=timeline)
+                notification.put()
 list_modified.connect(modified_list)
 
 
@@ -68,10 +69,11 @@ def new_following_list(sender, **kwargs):
     put = db.put_async(timeline)
     sender.counters.set_followers(+1)
     put.get_result()
-    if kwargs['user'].key() != sender.user.key():
-        from geouser.models_utils import _Notification
-        notification = _Notification(owner=sender.user, timeline=timeline)
-        notification.put()
+    if sender.user is not None:
+        if kwargs['user'].key() != sender.user.key():
+            from geouser.models_utils import _Notification
+            notification = _Notification(owner=sender.user, timeline=timeline)
+            notification.put()
 list_following_new.connect(new_following_list)
 
 

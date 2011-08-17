@@ -31,10 +31,11 @@ def new_comment(sender, **kwargs):
         defer(sender.user.settings.notify_suggestion_comment, sender.key())
         sender.instance.counters.set_comments()
     p.get_result()
-    if sender.user.key() != sender.instance.user.key():
-        from geouser.models_utils import _Notification
-        notification = _Notification(owner=sender.instance.user, timeline=timeline)
-        notification.put()
+    if sender.instance.user is not None:
+        if sender.user.key() != sender.instance.user.key():
+            from geouser.models_utils import _Notification
+            notification = _Notification(owner=sender.instance.user, timeline=timeline)
+            notification.put()
 comment_new.connect(new_comment)
 
 
@@ -60,10 +61,11 @@ def new_vote(sender, **kwargs):
         timelinePublic.put()
     else:
         return
-    if sender.user.key() != sender.instance.user.key():
-        from geouser.models_utils import _Notification
-        notification = _Notification(owner=sender.instance.user, timeline=timelinePublic)
-        notification.put()
+    if sender.instance.user is not None:
+        if sender.user.key() != sender.instance.user.key():
+            from geouser.models_utils import _Notification
+            notification = _Notification(owner=sender.instance.user, timeline=timelinePublic)
+            notification.put()
 vote_new.connect(new_vote)
 
 

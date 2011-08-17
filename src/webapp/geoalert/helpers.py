@@ -93,9 +93,10 @@ class EventHelper(object):
         event = self.get_by_id(id)
         if event is None:
             return None
-        if event.user.key() == querier.key():
-            return event
-        elif hasattr(event, '_vis'):
+        if event.user is not None:
+            if event.user.key() == querier.key():
+                return event
+        if hasattr(event, '_vis'):
             if event._is_public():
                 return event
             elif event._is_shared() and event.user_invited(querier):
@@ -279,6 +280,8 @@ class SuggestionHelper(EventHelper):
         if event is None:
             return None
         from geolist.models import ListSuggestion
+        if event.user is None:
+            return None
         if event.user.key() == user.key():
             if user.key() == querier.key():
                 lists = ListSuggestion.objects.get_by_suggestion(event, querier)
