@@ -13,7 +13,7 @@
             <form method="post" action=".">
             <div id="avatar">
                 <span>
-                    <img src="/user/{{user.username}}/picture/" alt="{{user.username}} avatar">
+                    <img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar">
 <!--
                     <br>
                     Cambiar foto

@@ -825,6 +825,20 @@ input{
             background-repeat: no-repeat;
         }
     
+    .load-more{
+        background-color: #3B5998;
+        border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
+        border-style: solid;
+        border-width: 1px;
+        color: white;
+        font-weight: bold;
+        margin: 1.5em auto;
+        padding: 2px 15px 3px;
+        text-align: center;
+        width: 100px;
+        cursor: pointer;
+    }
+    
     /****************************
      *      
      * Create Social Profile 
@@ -1127,21 +1141,6 @@ input{
         padding: 0px 10px 0px 27px;
         background-position: 5px 4px;
     }
-    
-    #activity .load-more,#view-suggestion .load-more{
-        background-color: #3B5998;
-        border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
-        border-style: solid;
-        border-width: 1px;
-        color: white;
-        font-weight: bold;
-        margin: 1.5em auto;
-        padding: 2px 15px 3px;
-        text-align: center;
-        width: 100px;
-        cursor: pointer;
-    }
-    
 
     /****************************
      *      

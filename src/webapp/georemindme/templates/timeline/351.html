@@ -86,7 +86,7 @@ Mensaje nº 350<br>
     </ul>
     
     <div class="input-box {% if not obj.comments.1 %} hidden {% endif %}">
-        <img alt="user avatar" src="/user/{{user.username}}/picture/" class="min-img hidden">
+        <img alt="user avatar" src="{% embedded_avatar user.username %}" class="min-img hidden">
         <form class="commentForm"><textarea empty="true" class="autogrow">Escribe un comentario</textarea></form>
     </div>
     

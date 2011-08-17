@@ -83,7 +83,7 @@
                     
                     
                     
-                    <span class="user"><img src="/user/{{s.instance.user.username}}/picture/" alt="{{s.instance.user.username}} avatar"></span>
+                    <span class="user"><img src="{% embedded_avatar s.instance.user.username %}" alt="{{s.instance.user.username}} avatar"></span>
                     <div class="timeline-msg">
                         
                         <a href="{% url fb_public_profile s.instance.user.username %}" class="black-link">{{s.instance.user.username}}</a> sugiere:<br>

@@ -278,7 +278,7 @@
     <script id="commentTemplate" type="text/x-jquery-tmpl">
         <li class="suggestion-element">
             <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
-            <span class="user"><img src="/user/{{user.username}}/picture/" alt="{{user.username}} avatar"></span>
+            <span class="user"><img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar"></span>
             <div style="float:left;width:460px">
                 <span class="msg"><a href="{% url fb_public_profile user.username%}" class="black-link">{{user.username}}</a>: ${msg}</span>
                 <span class="timestamp">0 minutes ago</span>

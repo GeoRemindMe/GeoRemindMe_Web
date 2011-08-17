@@ -11,7 +11,7 @@ Mensaje nº 102<br>
 
     <div class="avatar">
         <a href="{% url fb_public_profile obj.instance %}" title="{{obj.instance}}">
-            <img src="/user/{{obj.instance}}/picture/" alt="{{obj.instance}} avatar"/>
+            <img src="{% embedded_avatar obj.instance %}" alt="{{obj.instance}} avatar"/>
         </a>
     </div>
     has dejado de seguir a <a href="{% url fb_public_profile obj.instance %}">{{obj.instance}}</a>.<br>

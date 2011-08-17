@@ -38,7 +38,7 @@
         <div id="col-right-left">
 -->
             <div id="avatar-follow">
-                <a href="/user/{{profile.username}}/picture/"><img id="user-avatar" src="/user/{{profile.username}}/picture/" alt="{{profile.username}} avatar"/></a>
+                <a href="/user/{{profile.username}}/picture/"><img id="user-avatar" src="{% embedded_avatar profile.username %}" alt="{{profile.username}} avatar"/></a>
                 <br>
                 {% ifnotequal user.username profile.parent.username %}
                     {% if is_follower %}
