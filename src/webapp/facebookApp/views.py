@@ -21,6 +21,7 @@ def login_panel(request):
                 return render_to_response('register.html', {"permissions": settings.OAUTH['facebook']['scope'] },
                               context_instance=RequestContext(request)
                               )
+            request.user = user
         if request.user.username is None or request.user.email is None:
             if request.method == 'POST':
                 f = SocialUserForm(request.POST, 
