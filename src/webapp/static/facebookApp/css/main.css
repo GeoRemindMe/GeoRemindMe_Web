@@ -348,18 +348,20 @@ input{
         background-repeat:norepeat;
         
     }
-    .follow-button a{
+    .follow-button a,
+    .follow-button a:visited
+    {
 		background-image: url("/static/facebookApp/img/sprite_follow.png");
 		background-repeat: no-repeat;
 		color: black;
 		font-family: Helvetica Neue,Arial,"Lucida Grande",Sans-serif;
 		font-weight: bold;
-		line-height: 24px;
+		line-height: 23px;
 		padding: 7px 7px 7px 22px;
 		text-decoration: none;
     }
     .follow-button a.no-following{
-        background-position: 7px 6px;
+        background-position: 5px 6px;
     }
     .follow-button a.following{
         background-position: 4px -60px;
@@ -369,11 +371,11 @@ input{
         background-position:0 -66px;
     }
     span.waiting{
-        background: url("/static/facebookApp/img/spinning-icons/wait16trans.gif") no-repeat scroll 5px 9px transparent;
+        background: url("/static/facebookApp/img/spinning-icons/wait16trans.gif") no-repeat scroll 3px 5px transparent;
         color: black;
         display: block;
         font-weight: bold;
-        padding: 5px 10px 5px 27px;
+        padding: 0px 7px 0px 22px;
         line-height: 2em;
     }
 
@@ -386,7 +388,7 @@ input{
         background-position:0 -133px;
     }
     .following-state span a.following:hover{
-        background-position:7px -25px;
+        background-position:3px -25px;
         
     }
     div.help-icon{
@@ -1313,11 +1315,12 @@ input{
         padding: 0.3em;
     }
     ul#user-resume li span#counter,#view-list #suggestion-aside #counter{
-        display:block;
-        font-size: 1.4em;
-        font-weight: bold;
-        margin-bottom: 3px;
-        text-align: center;
+        display: block;
+		font-size: 1.4em;
+		font-weight: bold;
+		line-height: 1em;
+		margin-bottom: 0;
+		text-align: center;
     }
     ul#user-resume li a{
         color:#555;
@@ -1392,8 +1395,7 @@ input{
      #user-info h1{
 		display: inline-block;
 		font-size: 1.8em;
-		margin-bottom: 1.7em;
-		margin-top: 1em;
+		margin: 1.2em 0;
      }    
     
             span#his_suggestions_content span.action-bar span{
