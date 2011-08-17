@@ -222,7 +222,8 @@ class Comment(Visibility):
                 'instance': self.instance.id,
                 'created': self.created,
                 'modified': self.modified,
-                'msg': self.msg
+                'msg': self.msg,
+                'user': self.user,
                 }
         
     def delete(self, force=False):
@@ -334,6 +335,14 @@ class Vote(db.Model):
         vote.put()
         vote_new.send(sender=vote)
         return True
+    
+    def to_dict(self):
+        return {'id': self.id if self.is_saved() else -1,
+                'instance': self.instance.id,
+                'created': self.created,
+                'user': self.user,
+                'count': self.count,
+                }
     
     def put(self):
         if not self.is_saved():
