@@ -72,7 +72,7 @@ class UserTimelineHelper(object):
         from models_acc import UserTimelineBase
         return UserTimelineBase.all().filter('user =', user).filter('instance =', instance).run()
 
-    def get_by_id(self, userid, page=1, query_id = None, querier=None):
+    def get_by_id(self, userid, query_id = None, querier=None):
         '''
         Obtiene la lista de ultimos timeline del usuario
 
@@ -95,12 +95,14 @@ class UserTimelineHelper(object):
         from models import User
         from georemindme.paging import PagedQuery
         from google.appengine.ext import db
-        q = UserTimeline.all().filter('user =', db.Key.from_path(User.kind(), userid)).order('-created')
-        p = PagedQuery(q, id = query_id, page_size=10)
-        timelines = p.fetch_page(page)
+        query = UserTimeline.all().filter('user =', db.Key.from_path(User.kind(), userid)).order('-created')
+        if query_id is not None:  # recuperamos los cursores anteriores
+            query = query.with_cursor(start_cursor=query_id)
+        timelines = query.fetch(10)
+        query_id = query.cursor()
         if querier is None:
             from models_acc import UserTimelineSystem
-            return [p.id, [{'id': timeline.id, 'created': timeline.created, 
+            return [query_id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
@@ -112,7 +114,7 @@ class UserTimelineHelper(object):
                         } 
                        for timeline in timelines]]
         elif querier.is_authenticated() and querier.are_friends(db.Key.from_path(User.kind(), userid)):
-            return [p.id, [{'id': timeline.id, 'created': timeline.created, 
+            return [query_id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
@@ -124,7 +126,7 @@ class UserTimelineHelper(object):
                         'is_private': False,
                         }
                         for timeline in timelines if timeline._is_shared() or timeline._is_public()]]
-        return [p.id, [{'id': timeline.id, 'created': timeline.created, 
+        return [query_id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,

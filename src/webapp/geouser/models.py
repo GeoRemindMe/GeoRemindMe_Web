@@ -122,67 +122,7 @@ class User(polymodel.PolyModel, HookedModel):
         q = UserCounter.all().ancestor(self.key())
         return q.run()
 
-    def get_timelineALL(self, page=1, query_id=None):
-        '''
-        Obtiene la lista con todos los timeline del usuario
-
-            :param userid: id del usuario (user.id)
-            :type userid: :class:`string`
-            :param page: numero de pagina a mostrar
-            :type param: int
-            :param query_id: identificador de busqueda
-            :type query_id: int
-            :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
-        '''
-        from geovote.models import Vote
-        from georemindme.paging import PagedQuery
-        from models_acc import UserTimelineBase, UserTimelineSystem
-        q = UserTimelineBase.all().filter('user =', self.key()).order('modified')
-        p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
-        from geovote.models import Comment
-        return [p.id, [{'id': timeline.id, 'created': timeline.created,
-                        'modified': timeline.modified,
-                        'msg': timeline.msg, 'username':timeline.user.username,
-                        'msg_id': timeline.msg_id,
-                        'instance': timeline.instance if timeline.instance is not None else None,
-                        'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
-                        'comments': Comment.objects.get_by_instance(timeline.instance, querier=self) if not isinstance(timeline, UserTimelineSystem) else None,
-                        'is_private': isinstance(timeline, UserTimelineSystem),
-                        }
-                        for timeline in p.fetch_page(page)]]
-
-    def get_timelinesystem(self, page=1, query_id=None):
-        '''
-        Obtiene la lista de ultimos timelineSystem del usuario
-
-            :param userid: id del usuario (user.id)
-            :type userid: :class:`string`
-            :param page: numero de pagina a mostrar
-            :type param: int
-            :param query_id: identificador de busqueda
-            :type query_id: int
-            :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
-        '''
-        from geovote.models import Vote, Comment
-        from geolist.models import List
-        from georemindme.paging import PagedQuery
-        from models_acc import UserTimelineSystem
-        q = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('modified')
-        p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
-        return [p.id, [{'id': timeline.id, 'created': timeline.created,
-                        'modified': timeline.modified,
-                        'msg': timeline.msg, 'username':timeline.user.username,
-                        'msg_id': timeline.msg_id,
-                        'instance': timeline.instance,
-                        'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
-                        'comments': Comment.objects.get_by_instance(timeline.instance, querier=self),
-                        'is_private': True,
-                        }
-                       for timeline in p.fetch_page(page)], p.page_count()]
-
-    def get_profile_timeline(self, page=1, query_id=None, querier=None):
+    def get_profile_timeline(self, query_id=None, querier=None):
         '''
         (Wrapper del metodo UserTimeline.objects.get_by_id(...)
         Obtiene la lista de ultimos timeline publicos del usuario
@@ -196,41 +136,9 @@ class User(polymodel.PolyModel, HookedModel):
             :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
         '''
         from models_acc import UserTimeline
-        return UserTimeline.objects.get_by_id(self.id, querier=querier, page=page, query_id=query_id)
+        return UserTimeline.objects.get_by_id(self.id, querier=querier, query_id=query_id)
 
-    def get_chronology(self, page=1, query_id=None):
-        '''
-        Obtiene la lista cronologica con todos los timeline de los usuarios
-        a los que sigue este usuario
-
-            :param page: numero de pagina a mostrar
-            :type param: int
-            :param query_id: identificador de busqueda
-            :type query_id: int
-            :returns: lista de tuplas de la forma [query_id, [(id, username, avatar)]]
-        '''
-        from geovote.models import Vote, Comment
-        from geoalert.models import Suggestion
-        from geolist.models import List
-        from georemindme.paging import PagedQuery
-        q = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created', user=self.key())
-        p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
-        timelines = p.fetch_page(page)
-        timelines = [db.get(timeline.parent()) for timeline in timelines]
-        return [p.id, [{'id': timeline.id, 'created': timeline.created,
-                        'modified': timeline.modified,
-                        'msg': timeline.msg, 'username':timeline.user.username,
-                        'msg_id': timeline.msg_id,
-                        'instance': timeline.instance,
-                        'has_voted':  Vote.objects.user_has_voted(self, timeline.instance.key()) if timeline.instance is not None else None,
-                        'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
-                        'comments': Comment.objects.get_by_instance(timeline.instance, querier=self),
-                        'user_follower': timeline.instance.has_follower(self) if hasattr(timeline.instance, 'has_follower') else None,
-                        'is_private': False,
-                        }
-                        for timeline in timelines if timeline is not None ], p.page_count()]
-
-    def get_activity_timeline(self, page=1, query_id=None):
+    def get_activity_timeline(self, query_id=None):
         from geouser.models_acc import UserTimelineSystem
         query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
@@ -285,21 +193,21 @@ class User(polymodel.PolyModel, HookedModel):
             chronology = [[], timeline]
         return chronology
 
-    def get_notifications_timeline(self, page=1, query_id=None):
+    def get_notifications_timeline(self, query_id=None):
         from models_utils import _Notification
         from geolist.models import List
-        from georemindme.paging import PagedQuery
-        q = _Notification.all().filter('owner =', self).order('-_created')
-        p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
-        return [p.id, [{'id': timeline.id, 'created': timeline.created,
+        query = _Notification.all().filter('owner =', self).order('-_created')
+        if query_id is not None:
+            query = query.with_cursor(query_id)
+        timelines = query.fetch(TIMELINE_PAGE_SIZE)
+        return [query.cursor, [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username,
                         'msg_id': timeline.msg_id,
                         'instance': timeline.instance if timeline.instance is not None else None,
                         'is_private': False,
                         }
-                        for timeline in p.fetch_page(page)]]
-
+                        for timeline in timelines]]
 
     def following(self, async=False):
         '''

@@ -562,7 +562,7 @@ def get_friends_twitter(request):
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
-def get_profile_timeline(request, userid = None, username = None, page=1, query_id=None):
+def get_profile_timeline(request, userid = None, username = None, query_id=None):
     """**Descripción**: Obtiene la lista de timeline de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado
         
 		:param userid: id del usuario (user.id)
@@ -577,7 +577,7 @@ def get_profile_timeline(request, userid = None, username = None, page=1, query_
     """
     if userid is None and username is None:
         if request.user.is_authenticated():
-            return request.user.get_profile_timeline(page=page, query_id=query_id)
+            return request.user.get_profile_timeline(query_id=query_id)
         return None
     else:
         from models import User
@@ -586,7 +586,7 @@ def get_profile_timeline(request, userid = None, username = None, page=1, query_
         elif username:
             user_profile = User.objects.get_by_username(username)
         if user_profile.settings.show_timeline:
-            return user_profile.get_profile_timeline(page=page, query_id=query_id, querier=request.user)
+            return user_profile.get_profile_timeline(query_id=query_id, querier=request.user)
     return None
 
 
@@ -601,7 +601,7 @@ def notifications(request, template='webapp/notifications.html'):
 
 
 @login_required
-def get_activity_timeline(request, page=1, query_id=None):
+def get_activity_timeline(request, query_id=None):
     """**Descripción**: Obtiene la lista de timeline de actividad del usuario logueado
 
         :param page: número de página a mostrar
@@ -610,10 +610,10 @@ def get_activity_timeline(request, page=1, query_id=None):
         :type query_id: int
         :return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """
-    return request.user.get_activity_timeline(page=page, query_id=query_id)
+    return request.user.get_activity_timeline(query_id=query_id)
 
 @login_required
-def get_notifications_timeline(request, page=1, query_id=None):
+def get_notifications_timeline(request,query_id=None):
     """**Descripción**: Obtiene la lista de timeline de actividad del usuario logueado
 
         :param page: número de página a mostrar
@@ -623,7 +623,7 @@ def get_notifications_timeline(request, page=1, query_id=None):
         :return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
     """
     request.user.counters.set_notifications(-10)
-    return request.user.get_notifications_timeline(page=page, query_id=query_id)
+    return request.user.get_notifications_timeline(query_id=query_id)
 
     
 def get_avatar(request, username):

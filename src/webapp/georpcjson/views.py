@@ -211,23 +211,17 @@ def report_bug(request, bugs):
 
 
 @jsonrpc_method('view_timeline', authenticated=need_authenticate)
-def view_timeline(request, username, query_id=None, page=1):
+def view_timeline(request, username, query_id=None):
     if username == request.user.username:
-        timelines = request.user.get_timelineALL(page=page, query_id=query_id)
+        timelines = request.user.get_activity_timeline(query_id=query_id)
         return timelines
     else:
         from geouser.models import User
         user = User.objects.get_by_username(username)
         if user is not None:
-            timelines = user.get_timeline(page=page, query_id=query_id)
+            timelines = user.get_profile_timeline(query_id=query_id)
             return timelines
     raise InvalidRequestError
-
-
-@jsonrpc_method('view_chronology', authenticated=need_authenticate)
-def view_chronology(request, query_id=None, page=1):
-    timelines = request.user.get_chronology(query_id=query_id, page=page)
-    return timelines
 
 
 @jsonrpc_method('sync_alertlist', authenticated=need_authenticate)
