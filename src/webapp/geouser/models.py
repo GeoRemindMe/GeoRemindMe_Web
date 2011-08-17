@@ -115,8 +115,6 @@ class User(polymodel.PolyModel, HookedModel):
             self._counters = UserCounter.all().ancestor(self.key()).get()
         return self._counters
 
-
-
     def counters_async(self):
         from models_acc import UserCounter
         q = UserCounter.all().ancestor(self.key())
@@ -157,6 +155,8 @@ class User(polymodel.PolyModel, HookedModel):
         cursor_activity = None
         for activity_timeline in query_activity:
             for chrono in query_chrono:
+                if len(timeline) >= TIMELINE_PAGE_SIZE:
+                        break
                 chrono_timeline = db.get(chrono.parent())
                 if chrono_timeline.created > activity_timeline.modified:
                     timeline.append({
@@ -172,11 +172,9 @@ class User(polymodel.PolyModel, HookedModel):
                                     'is_private': False,
                                     })
                     cursor_chronology = query_chrono.cursor()
-                    if len(timeline) == TIMELINE_PAGE_SIZE:
-                        break
                 else:
                     break
-            if len(timeline) == TIMELINE_PAGE_SIZE:
+            if len(timeline) >= TIMELINE_PAGE_SIZE:
                 break
             timeline.append({
                             'id': activity_timeline.id, 'created': activity_timeline.created,
@@ -189,6 +187,7 @@ class User(polymodel.PolyModel, HookedModel):
                             'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
                             'is_private': True,
                             })
+            query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology) # avanzamos la consulta hasta el ultimo chronology añadido
             cursor_activity = query_activity.cursor()   
         chronology = [[cursor_chronology, cursor_activity], timeline]
         return chronology

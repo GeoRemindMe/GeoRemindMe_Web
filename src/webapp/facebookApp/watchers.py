@@ -27,7 +27,7 @@ def new_suggestion(sender, **kwargs):
                 "picture": "http://www.example.com/thumbnail.jpg",
                 "privacy": {'value':'CUSTOM','friends':'SELF'}
             }
-    post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha creado una sugerencia" % {'id':sender.id, 'name':sender.name}, params)
+    post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha creado una sugerencia" % {'id':sender.id, 'name':sender.name.encode('utf-8')}, params)
     from models import _FacebookPost
     fb_post = _FacebookPost(instance=str(sender.key()), post=post_id['id'])
     fb_post.put()
@@ -56,7 +56,7 @@ def new_list(sender, **kwargs):
                     "privacy": {'value':'CUSTOM','friends':'SELF'}
                 }
         fb_client=FacebookClient(user=sender.user)
-        post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha creado una lista" % {'id':sender.id, 'name':sender.name}, params)
+        post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha creado una lista" % {'id':sender.id, 'name':sender.name.encode('utf-8')}, params)
     elif isinstance(sender, ListRequested):        
         if sender._is_public():
             params= {
@@ -77,7 +77,7 @@ def new_list(sender, **kwargs):
                     "privacy": {'value':'CUSTOM','friends':'SELF'}
                 }
         fb_client=FacebookClient(user=sender.user)
-        post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha iniciado una peticion de sugerencias" % {'id':sender.id, 'name':sender.name}, params)
+        post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha iniciado una peticion de sugerencias" % {'id':sender.id, 'name':sender.name.encode('utf-8')}, params)
     else:
         return
     

@@ -364,7 +364,7 @@ class GraphAPI(object):
                 post_args["access_token"] = self.access_token
             else:
                 args["access_token"] = self.access_token
-        post_data = None if post_args is None else urllib.urlencode(post_args.encode('utf-8'))        
+        post_data = None if post_args is None else urllib.urlencode(post_args)        
         response, content = self.req.request("https://graph.facebook.com/" + path + "?" +
                                             urllib.urlencode(args), 
                                             method='GET' if post_data is None else 'POST',
