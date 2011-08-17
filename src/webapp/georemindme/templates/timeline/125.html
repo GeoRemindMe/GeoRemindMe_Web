@@ -13,7 +13,7 @@ Mensaje nº 125<br>
     {% if obj.instance.user.username = request.user.username %}
         <div class="avatar">
             <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-                <img src="{% embedded_avatar request.username %}" alt="{{request.user}} avatar"/>
+                <img src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
             </a><br>
             <a href="{% url fb_public_profile obj.instance.user.username %}/"  class="black-link">{{obj.instance.user.username}}</a>:
         </div>
