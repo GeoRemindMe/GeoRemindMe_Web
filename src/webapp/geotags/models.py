@@ -89,9 +89,9 @@ class Taggable(db.Model):
     def _tags_setter(self, tags):
         from types import UnicodeType, StringType, ListType
         """Crea la lista o añade el tag"""
-        if type(tags) is UnicodeType:
-            tags = str(tags)
         if type(tags) is StringType:
+            tags = unicode(tags)
+        if type(tags) is UnicodeType:
             tags = tags.split(SEPARATOR)
         if type(tags) is ListType:
             tags = [t.strip().lower() for t in tags]
