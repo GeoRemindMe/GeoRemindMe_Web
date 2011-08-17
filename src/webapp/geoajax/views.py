@@ -1,23 +1,16 @@
 # coding=utf-8
 
-from datetime import timedelta, datetime
-from django.core.urlresolvers import reverse
-from django.conf import settings
+
 from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
-from django.contrib import messages
-from django.core.urlresolvers import reverse
-from google.appengine.api import users
 
-from funcs import getAlertsJSON, getListsJSON
 from decorators import ajax_request
 from geouser.models import User
 import geouser.views as geouser
-from geouser.funcs import init_user_session, login_func
-from geoalert.forms import *
-from geoalert.models import *
+from geouser.funcs import login_func
+from geoalert.forms import RemindForm, SuggestionForm
 import geoalert.views as geoalert
 import geolist.views as geolist
 import geovote.views as geovote
@@ -141,6 +134,7 @@ def get_reminder(request):
     query_id = request.POST.get('query_id', None)
     page = request.POST.get('page', 1)
     alerts = geoalert.get_alert(request, eventid, done, page, query_id)
+    from funcs import getAlertsJSON
     return HttpResponse(getAlertsJSON(alerts), mimetype="application/json")
 
 @ajax_request
@@ -187,15 +181,18 @@ def add_suggestion_invitation(request):
     invitation = geoalert.add_suggestion_invitation(request, eventid, username)
     return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
 
+
 def add_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.add_suggestion_follower(request, eventid)
     return HttpResponse(simplejson.dumps(result), mimetype="application/json")
 
+
 def delete_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.del_suggestion_follower(request, eventid)
     return HttpResponse(simplejson.dumps(result), mimetype="application/json")
+
 
 @ajax_request
 def get_suggestion(request):
@@ -210,28 +207,32 @@ def get_suggestion(request):
     """
     eventid = request.POST.get('eventid', None)
     wanted_user = request.POST.get('wanteduser', request.user)
-    query_id = request.POST.get('query_id', None)
-    if query_id is not None:
-        query_id = query_id.split('_')
-        sug_id = query_id[0]
-        foll_id = query_id[1]
-    else:
-        sug_id = None
-        foll_id = None
-    page = int(request.POST.get('page', 1))
-    suggestions = geoalert.get_suggestion(request, id=eventid, wanted_user=wanted_user, page=page, query_id=sug_id)
     if eventid is None:
-        suggestions_following = get_suggestion_following(request, )
+        query_id = request.POST.get('query_id', None)
+        if query_id is not None:
+            query_id = query_id.split('_')
+            sug_id = query_id[0]
+            foll_id = query_id[1]
+        else:
+            sug_id = None
+            foll_id = None
+        page = int(request.POST.get('page', 1))
+        suggestions = geoalert.get_suggestion(request, id=eventid, wanted_user=wanted_user, page=page, query_id=sug_id)
+        suggestions_following = geoalert.get_suggestion_following(request, page=page, query_id=foll_id)
         suggestions[1].extend(suggestions_following[1]).sort(key=lambda x: x.modified, reverse=True)
         suggestions[1].sort(key=lambda x: x.modified, reverse=True)
+    else:
+        suggestions = geoalert.get_suggestion(request, id=eventid, wanted_user=wanted_user)    
+    from funcs import getAlertsJSON
     return HttpResponse(getAlertsJSON(suggestions), mimetype="application/json")
+
 
 @ajax_request
 def get_suggestion_following(request):
     query_id = request.POST.get('query_id', None)
     page = int(request.POST.get('page', 1))
     suggestions = geoalert.get_suggestion_following(request, page=page, query_id=query_id)
-
+    from funcs import getAlertsJSON
     return HttpResponse(getAlertsJSON(suggestions), mimetype="application/json")
 
 
@@ -359,6 +360,7 @@ def block_contacts(request):
     if request.user.is_authenticated():
         userid = int(request.POST['userid'])
         if userid is not None:
+            import memcache
             request.user.settings.blocked_friends_sug.append(userid)
             friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
             if friends is not None and userid in friends:
@@ -678,9 +680,10 @@ def get_vote_comment(request):
 
 @ajax_request
 def mod_searchconfig_google(request):
+    from google.appengine.ext.db import GeoPt
     sconfig = request.user.settings.searchconfig_google
     sconfig.region_code = request.POST['region_code']
-    sconfig.location = db.GeoPt(request.POST['location'])
+    sconfig.location = GeoPt(request.POST['location'])
     sconfig.radius = int(request.POST['radius'])
     sconfig.type = request.POST['type']
     sconfig.put()

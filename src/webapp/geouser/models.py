@@ -289,7 +289,7 @@ class User(polymodel.PolyModel, HookedModel):
         from models_utils import _Notification
         from geolist.models import List
         from georemindme.paging import PagedQuery
-        q = _Notification.all().filter('owner =', self).order('_created')
+        q = _Notification.all().filter('owner =', self).order('-_created')
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         return [p.id, [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
