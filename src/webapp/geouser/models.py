@@ -142,12 +142,13 @@ class User(polymodel.PolyModel, HookedModel):
         from geouser.models_acc import UserTimelineSystem
         query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
-        if query_id is not None:  # recuperamos los cursores anteriores
-            chrono_id = query_id[0]
-            activity_id = query_id[1]
-            query_chrono = query_chrono.with_cursor(start_cursor=chrono_id)
-            query_activity = query_activity.with_cursor(start_cursor=activity_id)
-        
+        if query_id is not None:
+            if query_id[0] is not None:  # recuperamos los cursores anteriores
+                chrono_id = query_id[0]
+                query_chrono = query_chrono.with_cursor(start_cursor=chrono_id)
+            if query_id[1] is not None:
+                activity_id = query_id[1]
+                query_activity = query_activity.with_cursor(start_cursor=activity_id)
         timeline = []
         from geovote.models import Comment, Vote
         from geoalert.models import Event
@@ -189,7 +190,6 @@ class User(polymodel.PolyModel, HookedModel):
                             'is_private': True,
                             })
             cursor_activity = query_activity.cursor()   
-            
         chronology = [[cursor_chronology, cursor_activity], timeline]
         return chronology
 
@@ -200,7 +200,7 @@ class User(polymodel.PolyModel, HookedModel):
         if query_id is not None:
             query = query.with_cursor(query_id)
         timelines = query.fetch(TIMELINE_PAGE_SIZE)
-        return [query.cursor, [{'id': timeline.id, 'created': timeline.created,
+        return [query.cursor(), [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username,
                         'msg_id': timeline.msg_id,
