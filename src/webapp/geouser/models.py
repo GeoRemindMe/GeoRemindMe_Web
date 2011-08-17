@@ -213,7 +213,7 @@ class User(polymodel.PolyModel, HookedModel):
         from geoalert.models import Suggestion
         from geolist.models import List
         from georemindme.paging import PagedQuery
-        q = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY modified', user=self.key())
+        q = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created', user=self.key())
         p = PagedQuery(q, id = query_id, page_size=TIMELINE_PAGE_SIZE)
         timelines = p.fetch_page(page)
         timelines = [db.get(timeline.parent()) for timeline in timelines]
@@ -232,7 +232,7 @@ class User(polymodel.PolyModel, HookedModel):
 
     def get_activity_timeline(self, page=1, query_id=None):
         from geouser.models_acc import UserTimelineSystem
-        query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY modified DESC', user=self.key())
+        query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
         if query_id is not None:  # recuperamos los cursores anteriores
             chrono_id = query_id[0]
@@ -247,7 +247,7 @@ class User(polymodel.PolyModel, HookedModel):
         for activity_timeline in query_activity:
             for chrono in query_chrono:
                 chrono_timeline = db.get(chrono.parent())
-                if chrono_timeline.modified > activity_timeline:
+                if chrono_timeline.created > activity_timeline.modified:
                     timeline.append({
                                     'id': chrono_timeline.id, 'created': chrono_timeline.created,
                                     'modified': chrono_timeline.modified,

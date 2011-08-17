@@ -20,7 +20,7 @@ handlers:
 - url: /ajax/.*
   script: main.py
   secure: optional
-  
+
 - url: /service/.*
   script: main.py
   secure: always
@@ -54,7 +54,7 @@ handlers:
 
 builtins:
 - datastore_admin: on
-- appstats: on
+#- appstats: on
 - deferred: on
 
 #inbound_services:

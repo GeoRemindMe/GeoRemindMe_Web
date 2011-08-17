@@ -95,6 +95,11 @@ indexes:
   properties:
   - name: followers
   - name: created
+
+- kind: UserTimelineFollowersIndex
+  properties:
+  - name: followers
+  - name: created
     direction: desc
 
 - kind: UserTimelineFollowersIndex

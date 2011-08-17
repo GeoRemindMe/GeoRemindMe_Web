@@ -506,11 +506,12 @@ class UserTimeline(UserTimelineBase, Visibility):
         return timeline
     
     def put(self):
-        if self.is_saved():
+        if self.is_saved(): # si ya estaba guardada, no hay que volver a notificar
             super(self.__class__, self).put()
-        else:  # si ya estaba guardada, no hay que volver a notificar
+        else:  
             super(self.__class__, self).put()
             from signals import user_timeline_new
+            from watchers import *
             user_timeline_new.send(sender=self)
             
 

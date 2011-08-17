@@ -18,6 +18,7 @@ from models_poi import *
 from models_indexes import *
 from exceptions import ForbiddenAccess
 from signals import *
+from watchers import *
 
 
 class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
@@ -619,5 +620,5 @@ class _Deleted_Alert(db.Model):
     def id(self):
         return self.deleted_id
 
-from watchers import *    
+
 from helpers import *
