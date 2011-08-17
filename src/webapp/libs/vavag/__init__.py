@@ -1,1 +1,1 @@
-/home/jneight/Dropbox/workspace/vavagClient/__init__.py
+../../../../../vavagClient/__init__.py

@@ -388,7 +388,9 @@ def get_profile_timeline(request):
     page = request.POST.get('page', 1)
     query_id = request.POST.get('query_id', None)
     timeline = geouser.get_profile_timeline(request, userid, username, page=page, query_id=query_id)
-    return HttpResponse(simplejson.dumps(timeline), mimetype="application/json")
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(timeline, cls=JSONEncoder), mimetype="application/json")
+
 
 @ajax_request
 def get_activity_timeline(request):
@@ -403,7 +405,9 @@ def get_activity_timeline(request):
     page = request.POST.get('page', 1)
     query_id = request.POST.get('query_id', None)
     chronology = geouser.get_activity_timeline(request, page=page, query_id=query_id)
-    return HttpResponse(simplejson.dumps(chronology), mimetype="application/json")
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(chronology, cls=JSONEncoder), mimetype="application/json")
+
 
 @ajax_request
 def get_notifications_timeline(request):
@@ -418,7 +422,8 @@ def get_notifications_timeline(request):
     page = request.POST.get('page', 1)
     query_id = request.POST.get('query_id', None)
     chronology = geouser.get_notifications_timeline(request, page=page, query_id=query_id)
-    return HttpResponse(simplejson.dumps(chronology), mimetype="application/json")
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(chronology, cls=JSONEncoder), mimetype="application/json")
     
 
 #===============================================================================
