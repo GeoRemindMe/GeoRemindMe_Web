@@ -158,7 +158,7 @@ class User(polymodel.PolyModel, HookedModel):
                 if len(timeline) >= TIMELINE_PAGE_SIZE:
                         break
                 chrono_timeline = db.get(chrono.parent())
-                if chrono_timeline.created > activity_timeline.modified:
+                if chrono_timeline is not None and chrono_timeline.created > activity_timeline.modified:
                     timeline.append({
                                     'id': chrono_timeline.id, 'created': chrono_timeline.created,
                                     'modified': chrono_timeline.modified,
