@@ -571,6 +571,9 @@ input{
             margin: 0.3em 0;
             padding: 1em 0;
         }
+        ul#chronology li:last-child{
+            border:0;
+        }
         
         ul#chronology li:after{
             clear: both;

@@ -8,7 +8,7 @@ function setTimelineBehaviour(page){
     if (typeof page == "undefined" )
         page='';
     else
-        page='.'+page+' ';
+        page='li[value="'+page+'"] ';
     
     $(page + ".like-dislike").like();
     $(page + ".remember-forget").remember();
@@ -19,7 +19,7 @@ function setTimelineBehaviour(page){
 
 function showHideActionBar(page){
     //Show and hide action-bar
-    $('#chronology'+ page +' div.timeline-msg,#chronology '+ page +' li.suggestion-comment').hover(
+    $('#chronology '+ page +' div.timeline-msg,#chronology '+ page +' li.suggestion-comment').hover(
         function(){$(this).find('.action-bar').css('visibility','visible')},
         function(){$(this).find('.action-bar').css('visibility','hidden')}
     )

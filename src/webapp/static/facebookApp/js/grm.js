@@ -345,12 +345,19 @@ GRM.loadTimeline = function(params){
                 success: function(data){
                     
                     $(container).attr("value",data[0]);
-                    asd=data;
+                    var nextPage=parseInt($(container).attr("page"))+1;
+                    $(container).attr("page",nextPage);
+                    
                     $.each(data[1], function(index,suggestion){
-                        //$(template).tmpl( {element:suggestion} ).appendTo(container);
-                        //console.log(suggestion)
+                        var temp=$(suggestion).appendTo(container);
+                        //Anadimos el valor de la página para añadir comportamientos
+                        $(temp).first().attr('value',nextPage);
                     });
-
+                    
+                    setTimelineBehaviour(nextPage);
+                    
+                    GRM.updateTabCounters();
+                    
                     //Ocultamos el botones de cargar más si se ha alcanzado el limite
                     
                 }

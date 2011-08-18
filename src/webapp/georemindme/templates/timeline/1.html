@@ -3,15 +3,16 @@
     Mensaje nº 1
     2: Ahora puede entrar usando Google
 {% endcomment %} 
+<li class="msg-{{obj.msg_id}}">
+    <div class="avatar">
+        <a href="/fb/user/georemindme/" title="GeoRemindMe">
+            <img src="{% embedded_avatar 'georemindme' %}" alt="avatar"/>
+        </a>
+    </div>
+    <div class="timeline-msg">
+        Now, you can also login using your Google account at <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a>
+        <br>
 
-<div class="avatar">
-    <a href="/fb/user/georemindme/" title="GeoRemindMe">
-        <img src="{% embedded_avatar 'georemindme' %}" alt="avatar"/>
-    </a>
-</div>
-<div class="timeline-msg">
-    Now, you can also login using your Google account at <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a>
-    <br>
-
-    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
-</div>
+        <span class="timestamp">  {{obj.created|naturaltime}}</span>  
+    </div>
+</li>
