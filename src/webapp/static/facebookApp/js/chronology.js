@@ -1,8 +1,32 @@
 $(document).ready(function(){
     resizeIframe();
     
-    GRM.init();
+//    GRM.init();
 
+    
+    setTimelineBehaviour()
+    
+
+});
+
+function setTimelineBehaviour(){
+    $(".like-dislike").like();
+    $(".remember-forget").remember();
+    $(".removable").removable(); 
+    showHideActionBar();
+    setCommentsBehaviour();   
+}
+
+function showHideActionBar(){
+    //Show and hide action-bar
+    $('#chronology div.timeline-msg,#chronology li.suggestion-comment').hover(
+        function(){$(this).find('.action-bar').css('visibility','visible')},
+        function(){$(this).find('.action-bar').css('visibility','hidden')}
+    )
+}
+
+function setCommentsBehaviour(){
+    
     $('.show-all-comments').click(function(){
         //Después de mostrar los comentarios ocultamos el botón
         $(this).parent().find('.long-list').slideDown('fast', function(){
@@ -12,11 +36,6 @@ $(document).ready(function(){
         });
         
     });
-
-    $('#chronology div.timeline-msg,#chronology li.suggestion-comment').hover(
-        function(){$(this).find('.action-bar').css('visibility','visible')},
-        function(){$(this).find('.action-bar').css('visibility','hidden')}
-    )
     
     //Al pulsar en comentar ponemos el foco en el input
     $('.focusInput').click(function(){
@@ -28,9 +47,8 @@ $(document).ready(function(){
         commentBox.find('textarea').focus()
     });
     
-    setCommentFormsBehaviour()
-});
-
+    setCommentFormsBehaviour();
+}
 
 function setCommentFormsBehaviour(){
     

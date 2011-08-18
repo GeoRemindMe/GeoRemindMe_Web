@@ -75,7 +75,8 @@ Mensaje nº 350<br>
                     {% endif %}
                 
                     <a href="{% url fb_public_profile c.username %}">
-						<img class="user-picture" src="{% embedded_avatar c.username %}" alt="user avatar">
+                        <!-- es esto? -->aaaa
+						<img class="user-picture" src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar">
 					</a>
 					<a href="{% url fb_public_profile c.username %}" class="black-link">
 						{{c.username}}

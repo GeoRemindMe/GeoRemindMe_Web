@@ -2,5 +2,6 @@
 /TODO
 /conf.py
 /index.yaml
-trunk/src/webapp/settings.py
 /.project
+run_server.py
+settings.py
