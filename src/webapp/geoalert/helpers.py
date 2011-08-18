@@ -324,13 +324,19 @@ class SuggestionHelper(EventHelper):
             return event
         return None
 
-    def get_by_user_following(self, user, page=1, query_id=None):
+    def get_by_user_following(self, user, page=1, query_id=None, async=False):
         if not isinstance(user, User):
             raise TypeError
         from models_indexes import SuggestionFollowersIndex
         q = SuggestionFollowersIndex.all().filter('keys =', user.key())
         p = PagedQuery(q, id = query_id)
+        if async:
+            return p.id, q.run()
         return [p.id, [index.parent() for index in p.fetch_page(page)]]
+    
+    def load_suggestions_by_user_following(self, query_id, suggestions):
+        # FIXME: no usar
+        return [query_id, [index.parent() for index in suggestions]]
 
 
 class AlertSuggestionHelper(AlertHelper):
