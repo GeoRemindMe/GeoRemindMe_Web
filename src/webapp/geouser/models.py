@@ -715,6 +715,5 @@ class User(polymodel.PolyModel, HookedModel):
                 'get_absolute_fburl': self.get_absolute_fburl(),
                 }
 
-
 from helpers import UserHelper
 from watchers import *

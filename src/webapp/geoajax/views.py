@@ -389,8 +389,9 @@ def get_profile_timeline(request):
     username = request.POST.get('username', None)
     query_id = request.POST.get('query_id', None)
     timeline = geouser.get_profile_timeline(request, userid, username, query_id=query_id)
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(timeline, cls=JSONEncoder), mimetype="application/json")
+    from funcs import render_timeline
+    timeline[1] = render_timeline(request, timeline[1])
+    return HttpResponse(timeline, mimetype="application/json")
 
 
 @ajax_request
@@ -404,9 +405,10 @@ def get_activity_timeline(request):
         :returns: lista de la forma [query_id, [(id, username, avatar)]]
     """ 
     query_id = request.POST.get('query_id', None)
-    chronology = geouser.get_activity_timeline(request, query_id=query_id)
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(chronology, cls=JSONEncoder), mimetype="application/json")
+    activity = geouser.get_activity_timeline(request, query_id=query_id)
+    from funcs import render_timeline
+    activity[1] = render_timeline(request, activity[1])
+    return HttpResponse(activity, mimetype="application/json")
 
 
 @ajax_request
@@ -421,8 +423,9 @@ def get_notifications_timeline(request):
     """ 
     query_id = request.POST.get('query_id', None)
     chronology = geouser.get_notifications_timeline(request, query_id=query_id)
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(chronology, cls=JSONEncoder), mimetype="application/json")
+    from funcs import render_timeline
+    chronology[1] = render_timeline(request, chronology[1])
+    return HttpResponse(chronology, mimetype="application/json")
     
 
 #===============================================================================
