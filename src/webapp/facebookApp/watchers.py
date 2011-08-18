@@ -151,7 +151,7 @@ def deleted_post(sender, **kwargs):
     from models import _FacebookPost
     fb_post = _FacebookPost.all().filter('instance =', str(sender.key())).get()
     if fb_post is not None:
-        fb_client=FacebookClient(kwargs['user'])
+        fb_client=FacebookClient(user=sender.user)
         try:
             fb_client.consumer.delete_object(fb_post.post)
             fb_post.delete()

@@ -1,55 +1,55 @@
 {% load tags %}
-<!--
-Mensaje nº 125<br>
--->
-<!--
-125: A [X] le gusta un comentario | UT
--->
 
-{%if not obj.instance.user.username = obj.instance.instance.user.username %}
-    <!--
-        Si me gusta un comentario mío no se muestra
-    -->
-    {% if obj.instance.user.username = request.user.username %}
-        <div class="avatar">
-            <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-                <img src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
-            </a><br>
-            <a href="{% url fb_public_profile obj.instance.user.username %}/"  class="black-link">{{obj.instance.user.username}}</a>:
-        </div>
-        <div class="timeline-msg">
-            <span class="small-text">Te ha gustado el comentario  <a href="{% url fb_public_profile obj.instance.user.username %}"  class="black-link">{{obj.instance.instance.user.username}}</a>:</span>
+{% comment %} 
+    Mensaje nº 125
+    125: A [X] le gusta un comentario | UT
+{% endcomment %} 
+
+<li class="msg-{{obj.msg_id}}">
+    {%if not obj.instance.user.username = obj.instance.instance.user.username %}
+        {% comment %}  Si me gusta un comentario mío no se muestra {% endcomment %} 
         
-    {% else %}
-        <div class="avatar">
-            <a href="{% url fb_public_profile obj.instance.user.username %}" title="{{obj.instance.user.username}}">
-                <img src="{% embedded_avatar obj.instance.user.username %}" alt="{{obj.instance.user.username}} avatar"/>
-            </a>
-        </div>
-        <div class="timeline-msg">
-            <span class="small-text">A <a href="{% url fb_public_profile obj.instance.user.username %}" class="black-link">{{obj.instance.user.username}}</a> le gusta 
-            {% if obj.instance.instance.user.username = request.user.username %}
-                <strong>tu comentario</strong>:
-            {% else %}
-                el comentario de <a href="{% url fb_public_profile obj.instance.user.username %}" class="black-link">{{obj.instance.instance.user.username}}</a>:
-            {% endif %}
-            </span>
+        {% if obj.instance.user.username = request.user.username %}
+            <div class="avatar">
+                <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
+                    <img src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
+                </a><br>
+                <a href="{% url fb_public_profile obj.instance.user.username %}/"  class="black-link">{{obj.instance.user.username}}</a>:
+            </div>
+            <div class="timeline-msg">
+                <span class="small-text">Te ha gustado el comentario  <a href="{% url fb_public_profile obj.instance.user.username %}"  class="black-link">{{obj.instance.instance.user.username}}</a>:</span>
             
-            
-    {% endif %}
-            <br><em class="comment">{{obj.instance.instance.msg}}</em><br>
-            <span class="suggestionPlace">
-                En la sugerencia: {{obj.instance.instance.instance.name|truncatewords:10}} <br>
-            </span>
+        {% else %}
+            <div class="avatar">
+                <a href="{% url fb_public_profile obj.instance.user.username %}" title="{{obj.instance.user.username}}">
+                    <img src="{% embedded_avatar obj.instance.user.username %}" alt="{{obj.instance.user.username}} avatar"/>
+                </a>
+            </div>
+            <div class="timeline-msg">
+                <span class="small-text">A <a href="{% url fb_public_profile obj.instance.user.username %}" class="black-link">{{obj.instance.user.username}}</a> le gusta 
+                {% if obj.instance.instance.user.username = request.user.username %}
+                    <strong>tu comentario</strong>:
+                {% else %}
+                    el comentario de <a href="{% url fb_public_profile obj.instance.user.username %}" class="black-link">{{obj.instance.instance.user.username}}</a>:
+                {% endif %}
+                </span>
+                
+                
+        {% endif %}
+                <br><em class="comment">{{obj.instance.instance.msg}}</em><br>
+                <span class="suggestionPlace">
+                    En la sugerencia: {{obj.instance.instance.instance.name|truncatewords:10}} <br>
+                </span>
 
-            <span class="timestamp">  {{obj.created|naturaltime}}</span>  
-            <span class="action-bar">
-                | <a href="{% url fb_view_suggestion obj.instance.instance.instance.slug %}">Ver sugerencia</a> 
-            </span
-        </div>
-{% else %}
-	<p>No me puede gustar un comentario mio!</p>
-	<p><em class="comment">{{obj.instance.instance.msg}}</em><br></p>
-	<p>obj.instance.user.username = {{obj.instance.user.username}}</p>
-	<p>obj.instance.instance.user.username = {{obj.instance.instance.user.username}}</p>
-{% endif %}
+                <span class="timestamp">  {{obj.created|naturaltime}}</span>  
+                <span class="action-bar">
+                    | <a href="{% url fb_view_suggestion obj.instance.instance.instance.slug %}">Ver sugerencia</a> 
+                </span
+            </div>
+    {% else %}
+        <p>No me puede gustar un comentario mio!</p>
+        <p><em class="comment">{{obj.instance.instance.msg}}</em><br></p>
+        <p>obj.instance.user.username = {{obj.instance.user.username}}</p>
+        <p>obj.instance.instance.user.username = {{obj.instance.instance.user.username}}</p>
+    {% endif %}
+</li>

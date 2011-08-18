@@ -1,28 +1,25 @@
 {% load tags %}
-<!--
-Mensaje nº 100<br>
-{{obj}}
--->
-<!--
-100: Usuario empieza a seguirte | UT
--->
+{% comment %} 
+    Mensaje nº 100<br>
+    100: Usuario empieza a seguirte | UT
+{% endcomment %} 
 
-
-{% if obj.is_private %}
-    NO entra porque en chronology está puesto que no
-{% else %}
-    <div class="avatar">
-        <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
-            <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
-        </a>
-    </div>
-    
-    {% if obj.instance.username = request.user.username %}
-        <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ahora te está siguiendo<br>
+<li class="msg-{{obj.msg_id}}">
+    {% if obj.is_private %}
+        NO entra porque en chronology está puesto que no
     {% else %}
-        <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ahora sigue a <a href="{% url fb_public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
+        <div class="avatar">
+            <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
+                <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+            </a>
+        </div>
+        
+        {% if obj.instance.username = request.user.username %}
+            <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ahora te está siguiendo<br>
+        {% else %}
+            <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ahora sigue a <a href="{% url fb_public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
+        {% endif %}
     {% endif %}
-{% endif %}
 
-<span class="timestamp"> {{obj.created|naturaltime}}</span>  
-
+    <span class="timestamp"> {{obj.created|naturaltime}}</span>  
+</li>

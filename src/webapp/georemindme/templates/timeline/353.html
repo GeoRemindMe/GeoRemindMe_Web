@@ -1,49 +1,33 @@
 {% load tags %}
 
-<!--
-Mensaje nº 303<br>
--->
-<!--
-303: Empiezas a seguir a una sugerencia
--->
+{% comment %} 
+    Mensaje nº 353
+    Empiezas a seguir una sugerencia
+{% endcomment %} 
 
-
-{% if request.user =  username %}
-    <div class="avatar">
-        <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-            <img src="{% embedded_avatar request.user %}" alt="{{request.user}} avatar"/>
-        </a>
-    </div>
-    <div class="timeline-msg">
-        Has guardado en <a href="{% url fb_user_suggestions%}">tu baúl</a> la lista de sugerencias de <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a>:<br>
-        {{obj.instance.name}}<br>
-        <span class="timestamp">  {{obj.created|naturaltime}}</span>  
-    </div>
-{% else %}
-    <div class="avatar">
-        <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
-            <img src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
-        </a>
-    </div>
-    <div class="timeline-msg">
-    
-        <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ha guardado en su baúl tu lista de sugerencias :<br>
-        {{obj.instance.name}}<br>
-        <span class="timestamp">  {{obj.created|naturaltime}}</span>  
-    </div>
-{% endif %}
-
-<!--
-
-
-<div class="avatar">
-    <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-        <img src="{% url user_avatar request.user %}" alt="{{request.user}} avatar"/>
-    </a>
-</div>
-<div class="timeline-msg">
-    Has guardado en <a href="{% url fb_user_suggestions%}">tu baúl</a> la sugerencia de <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a>:<br>
-    {{obj.instance.name}}<br>
-    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
-</div>
--->
+<li class="msg-{{obj.msg_id}}">
+    {% if request.user =  username %}
+        <div class="avatar">
+            <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
+                <img src="{% embedded_avatar request.user %}" alt="{{request.user}} avatar"/>
+            </a>
+        </div>
+        <div class="timeline-msg">
+            Has guardado en <a href="{% url fb_user_suggestions%}">tu baúl</a> la lista de sugerencias de <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a>:<br>
+            {{obj.instance.name}}<br>
+            <span class="timestamp">  {{obj.created|naturaltime}}</span>  
+        </div>
+    {% else %}
+        <div class="avatar">
+            <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
+                <img src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+            </a>
+        </div>
+        <div class="timeline-msg">
+        
+            <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ha guardado en su baúl tu lista de sugerencias :<br>
+            {{obj.instance.name}}<br>
+            <span class="timestamp">  {{obj.created|naturaltime}}</span>  
+        </div>
+    {% endif %}
+</li>

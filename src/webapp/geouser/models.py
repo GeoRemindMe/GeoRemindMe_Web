@@ -188,8 +188,9 @@ class User(polymodel.PolyModel, HookedModel):
                             'is_private': True,
                             })
             query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology) # avanzamos la consulta hasta el ultimo chronology añadido
-            cursor_activity = query_activity.cursor()   
-        chronology = [[cursor_chronology, cursor_activity], timeline]
+            cursor_activity = query_activity.cursor()
+        chronology = [[cursor_chronology, cursor_activity]]
+        chronology.append(timeline)
         return chronology
 
     def get_notifications_timeline(self, query_id=None):

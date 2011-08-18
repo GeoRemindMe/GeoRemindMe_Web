@@ -274,19 +274,19 @@ def view_place(request, slug, template='webapp/place.html'):
 @login_required
 def user_suggestions(request, template='webapp/suggestions.html'):
     from geolist.models import ListSuggestion
-    lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     counters = request.user.counters_async()
+    lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
+    suggestions_following = get_suggestion_following(request)
+    lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     suggestions = get_suggestion(request, id=None,
                                 wanted_user=request.user,
                                 page = 1, query_id = None
                                 )
-    suggestions_following = get_suggestion_following(request)
     suggestions[1].extend(suggestions_following[1])
     suggestions[1].sort(key=lambda x: x.modified, reverse=True)
     suggestions[0] = '%s_%s' % (suggestions[0], suggestions_following[0])
-    lists_following = ListSuggestion.objects.get_list_user_following(request.user, resolve=True)
     lists = [l.to_dict(resolve=True) for l in lists]
-    lists.extend(lists_following)
+    lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=True))
     return  render_to_response(template, {
                                           'suggestions': suggestions,
                                           'counters': counters.next(),
@@ -451,9 +451,11 @@ def get_alertsuggestion(request, id, page = 1, query_id = None):
         return AlertSuggestion.objects.get_by_user(request.user, page, query_id)
     
 @login_required
-def get_suggestion_following(request, page=1, query_id=None):
-    suggestions_following = Suggestion.objects.get_by_user_following(request.user, 
-                                                                     page=page,
-                                                                     query_id=query_id
-                                                                     )
-    return suggestions_following
+def get_suggestion_following(request, page=1, query_id=None, async=False):
+    return Suggestion.objects.get_by_user_following(
+                                                    request.user, 
+                                                    page=page,
+                                                    query_id=query_id,
+                                                    async=async
+                                                    )
+    

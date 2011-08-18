@@ -80,7 +80,7 @@ class ListHelper(object):
                 return list
         return None
 
-    def get_list_user_following(self, user, resolve=False):
+    def get_list_user_following(self, user, resolve=False, async=False):
         '''
         Devuelve las listas a las que sigue el usuario
 
@@ -88,7 +88,12 @@ class ListHelper(object):
             :type user: :class:`geouser.models.User`
         '''
         indexes = ListFollowersIndex.all().filter('keys =', user.key())
+        if async:
+            return indexes.run()
         return [index.parent().to_dict(resolve=resolve) for index in indexes if index.parent().active]
+    
+    def load_list_user_following_by_async(self, lists_async, resolve=False):
+        return [index.parent().to_dict(resolve=resolve) for index in lists_async if index.parent().active]
 
     def get_shared_list(self, user):
         '''

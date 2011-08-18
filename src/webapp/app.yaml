@@ -53,7 +53,7 @@ handlers:
   expiration: '365d'
 
 builtins:
-#- appstats: on
+- appstats: on
 - deferred: on
 
 #inbound_services:

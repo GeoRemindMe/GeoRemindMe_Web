@@ -71,8 +71,8 @@ vote_new.connect(new_vote)
 
 def deleted_comment(sender, **kwargs):
     from geovote.models import Vote
-    from geouser.models_acc import UserTimeline
-    timeline = UserTimeline.objects.get_by_instance_user(sender, sender.user)
+    from geouser.models_acc import UserTimelineBase
+    timeline = UserTimelineBase.all().filter('instance =', sender).run()
     votes = Vote.all().filter('instance =', sender).run()
     for t in timeline:
         t.delete()

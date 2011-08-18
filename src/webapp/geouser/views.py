@@ -194,12 +194,8 @@ def dashboard(request, template='webapp/dashboard.html'):
         :return: Solo devuelve errores si el proceso falla.
     """
     friends_to_follow=request.user.get_friends_to_follow()
-    followers=request.user.get_followers()
-    followings=request.user.get_followings()
     chronology = request.user.get_activity_timeline()
     return  render_to_response(template, {'friends_to_follow': friends_to_follow,
-                                                  'followers': followers,
-                                                  'followings': followings, 
                                                   'chronology': chronology,
                                                   } , RequestContext(request)
                                )

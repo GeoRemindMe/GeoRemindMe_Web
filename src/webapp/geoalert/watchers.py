@@ -13,6 +13,7 @@ def new_alert(sender, **kwargs):
     '''
     Se registra una nueva alerta
     '''
+    from models import Alert, AlertSuggestion
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=200)
     elif isinstance(sender, AlertSuggestion):
@@ -27,6 +28,7 @@ def modified_alert(sender, **kwargs):
     '''
     Se modifica una alerta
     '''
+    from models import Alert, AlertSuggestion
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=201)
     elif isinstance(sender, AlertSuggestion):
@@ -40,6 +42,7 @@ def deleted_alert(sender, **kwargs):
     '''
     Se borra una alerta
     '''
+    from models import Alert, AlertSuggestion
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=202)
     elif isinstance(sender, AlertSuggestion):
@@ -51,6 +54,7 @@ def deleted_alert(sender, **kwargs):
 alert_deleted.connect(deleted_alert)
 
 def done_alert(sender, **kwargs):
+    from models import Alert, AlertSuggestion
     if isinstance(sender, Alert):
         timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=203)
     elif isinstance(sender, AlertSuggestion):
@@ -79,7 +83,7 @@ def modified_suggestion(sender, **kwargs):
 
 def deleted_suggestion(sender, **kwargs):
     from geouser.models_acc import UserTimelineBase
-    query = UserTimelineBase.all().filter('instance =', sender.key())
+    query = UserTimelineBase.all().filter('instance =', sender.key()).run()
     kwargs['user'].counters.set_suggested(-1)
     for q in query:
         q.delete()
@@ -134,6 +138,3 @@ def deleted_place(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=452)
     timeline.put()
 #place_deleted.connect(deleted_place)
-
-
-from models import *

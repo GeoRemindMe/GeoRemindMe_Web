@@ -1,19 +1,19 @@
 {% load tags %}
-<!--
-Mensaje nº 2
--->
-<!--
-2: Ahora puede entrar usando Facebook
--->
+{% comment %} 
+    Mensaje nº 2
+    2: Ahora puede entrar usando Facebook
+{% endcomment %} 
 
-<div class="avatar">
-    <a href="/fb/user/georemindme/" title="GeoRemindMe">
-        <img src="{% embedded_avatar 'georemindme' %}" alt="avatar"/>
-    </a>
-</div>
-<div class="timeline-msg">
-    Now, you can log from Facebook and from <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a>
-    <br>
+<li class="msg-{{obj.msg_id}}">
+    <div class="avatar">
+        <a href="/fb/user/georemindme/" title="GeoRemindMe">
+            <img src="{% embedded_avatar 'georemindme' %}" alt="avatar"/>
+        </a>
+    </div>
+    <div class="timeline-msg">
+        Now, you can log from Facebook and from <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a>
+        <br>
 
-    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
-</div>
+        <span class="timestamp">  {{obj.created|naturaltime}}</span>  
+    </div>
+</li>
