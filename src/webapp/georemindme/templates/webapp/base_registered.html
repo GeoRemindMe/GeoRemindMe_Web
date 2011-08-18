@@ -1,16 +1,35 @@
+{% load tags %}
 <!DOCTYPE HTML>
 <html lang="es-ES">
 <head>
 	<meta charset="UTF-8">
-	<title></title>
+	<title>
+      {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
+    </title>
 	
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.6/jquery.min.js" type="text/javascript">
-		document.ready(function() {
-		        var options = { opacity: 0.75 };
-		        $('.reflect').reflect(options);
-		    });
-	</script>
+	
+    <meta name="description" content="Track and share your runs with friends.">
+    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+    
+    <script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
+<!--
+    <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
+-->
+<!--
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+-->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+    <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+
+    {% block extra_js %}{%endblock%}
+
+	<!--[if lt IE 9]>
+	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
 	
 </head>
 <body>
@@ -28,10 +47,10 @@
 		
 	</header>
 	<div id="background">
-		<div id="main" class="container">
+		<div id="base" class="container">
 			<section id="left-col">
 				<a href="#" id="add-suggestion-btn">Añadir sugerencia</a>
-				
+				{% block nav %}
 				<ul>
                     <li class="menu-icons main-menu-icons" id=""><a id="activity-icon" href="#" title="Dashboard">Actividad</a></li>
                     <li class="menu-icons main-menu-icons" id=""><a id="vault-icon" href="#">Tu mochila</a></li>
@@ -43,9 +62,10 @@
                     <li class="menu-icons main-menu-icons" id=""><a id="profile-icon" href="#">Mi perfil</a></li>
                     <li class="menu-icons main-menu-icons" id=""><a id="settings-icon" href="#">Configuración</a></li>
                 </ul>
+				{% endblock %}
 			</section>
 			<section id="right-col">
-				<h2>Hola que tal estamos!</h2>
+				{% block body %}{% endblock %}
 			</section>
 			
 		</div>

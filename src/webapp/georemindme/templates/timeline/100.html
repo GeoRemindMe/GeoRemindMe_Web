@@ -15,9 +15,9 @@
         </div>
         
         {% if obj.instance.username = request.user.username %}
-            <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ahora te está siguiendo<br>
+            <a href="{% url fb_public_profile obj.username %}" class="black-link">{{obj.username}}</a> ahora te está siguiendo<br>
         {% else %}
-            <a href="{% url fb_public_profile obj.username %}">{{obj.username}}</a> ahora sigue a <a href="{% url fb_public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
+            <a href="{% url fb_public_profile obj.username %}" class="black-link">{{obj.username}}</a> ahora sigue a <a href="{% url fb_public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
         {% endif %}
     {% endif %}
 
