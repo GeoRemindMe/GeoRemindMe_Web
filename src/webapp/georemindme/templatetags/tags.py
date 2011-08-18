@@ -119,46 +119,22 @@ def do_embedded_img(parser, token):
     return EmbeddedImgNode(item)
 
 
-@register.tag(name="embedded_avatar")
-def do_embedded_avatar(parser, token):
-    try:
-        item = token.contents.split()[1]
-    except ValueError:
-        raise template.TemplateSyntaxError, "embedded_avatar requires one argument: username"
-    return EmbeddedAvatarNode(item)
-
-
-class EmbeddedAvatarNode(template.Node):
-    """Image node parser for rendering html inline base64 image"""
-    
-    def __init__(self, item):
-        self.item = template.Variable(item)
-
-    def _encode_img(self):
-        """Returns image base64 string representation and makes a cache file"""
-        import memcache
-        encoded_image = memcache.get('%s%s_avatarcache' % (memcache.version, self.item))
-        if encoded_image is None:
-            from geouser.views import get_avatar
-            try:
-                image_url = get_avatar(self, self.item)
-                from libs.httplib2 import Http
-                from mapsServices.places.GPRequest import Client
-                mem = Client()
-                req = Http(cache=mem)
-                response, content = req.request(image_url['Location'])
-                cached_image = "data:image;base64,%s" % base64.b64encode(content)
-                memcache.set('%s%s_avatarcache' % (memcache.version, self.item), encoded_image, 300)
-            except:
-                return 'http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png'
-        return cached_image
-
-    def render(self, context):
-        if isinstance(self.item, basestring):
-            image = self._encode_img()
-        else:
-            self.item = self.item.resolve(context)
-            if not isinstance(self.item, basestring):
-                self.item = self.item.username
-            image = self._encode_img()
-        return image
+@register.simple_tag
+def embedded_avatar(username):
+    import memcache
+    encoded_image = memcache.get('%s%s_avatarcache' % (memcache.version, username))
+    if encoded_image is None:
+        from geouser.views import get_avatar
+        try:
+            image_url = get_avatar(None, username)
+            from libs.httplib2 import Http
+            from mapsServices.places.GPRequest import Client
+            mem = Client()
+            req = Http(cache=mem)
+            response, content = req.request(image_url['Location'])
+            cached_image = "data:image;base64,%s" % base64.b64encode(content)
+            memcache.set('%s%s_avatarcache' % (memcache.version, username), encoded_image, 300)
+        except:
+            raise
+            return 'http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png'
+    return cached_image
