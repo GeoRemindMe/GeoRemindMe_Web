@@ -571,6 +571,9 @@ input{
             margin: 0.3em 0;
             padding: 1em 0;
         }
+        ul#chronology li:last-child{
+            border:0;
+        }
         
         ul#chronology li:after{
             clear: both;
@@ -1945,14 +1948,18 @@ input{
             border-color:#BBBBBB #BBBBBB #A0A0A0 !important;
             border-style:solid !important;
         }
+/*
         #filter-suggestions,
-        #filter-lists{
+        #filter-lists,
+        #no-filter,
+        #filter-likes{
             border: 0px;
             height: 1em;
             line-height: 1.2em;
             outline:none;
             padding: 2px;
         }
+*/
         input#filter-suggestions:active,
         input#filter-lists:active{
             border: 0px;

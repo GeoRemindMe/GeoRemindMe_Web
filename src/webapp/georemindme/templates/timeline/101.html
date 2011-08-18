@@ -1,23 +1,21 @@
 {% load tags %}
 
-<!--
-Mensaje nº 101<br>
-{{obj}}
--->
-<!--
-101: Te han empezado a seguir
--->
+{% comment %} 
+    Mensaje nº 101
+    101: Te han empezado a seguir
+{% endcomment %} 
 
+<li class="msg-{{obj.msg_id}}">
+    {% if request.user = obj.instance.username %}   
+        Te has empezado a seguir?
+    {% else %}
+        <div class="avatar">
+            <a href="{% url fb_public_profile obj.instance %}" title="{{obj.instance}}">
+                <img class="user-picture" src="{% url user_avatar obj.instance %}" alt="{{obj.instance}} avatar"/>
+            </a>
+        </div>
+        <a href="{% url fb_public_profile obj.instance %}">{{obj.instance}}</a> ahora te está siguiendo.<br>
+    {% endif %}
 
-{% if request.user = obj.instance.username %}   
-    Te has empezado a seguir?
-{% else %}
-    <div class="avatar">
-        <a href="{% url fb_public_profile obj.instance %}" title="{{obj.instance}}">
-            <img class="user-picture" src="{% url user_avatar obj.instance %}" alt="{{obj.instance}} avatar"/>
-        </a>
-    </div>
-    <a href="{% url fb_public_profile obj.instance %}">{{obj.instance}}</a> ahora te está siguiendo.<br>
-{% endif %}
-
-<span class="timestamp">{{obj.created|naturaltime}}</span>  
+    <span class="timestamp">{{obj.created|naturaltime}}</span>  
+</li>

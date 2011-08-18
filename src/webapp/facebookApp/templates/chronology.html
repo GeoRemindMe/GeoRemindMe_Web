@@ -50,7 +50,7 @@
             
             $('#no-filter').click(function(){
                 //Muestro todos
-                $('#chronology li').show();
+                $('#chronology li:not(.suggestion-comment)').show();
             });
             
             //$('.user-picture').each(function(i,elem){
@@ -101,7 +101,7 @@
                 <li id="filter-comments">Comentarios <span id="comments-counter"></span></li>
                 
             </ul>
-            <ul id="chronology" value="{{chronology.0}}">
+            <ul id="chronology" value="{{chronology.0}}" page="1">
                 {% include "timeline.html" %}
             </ul>
         

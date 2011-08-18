@@ -8,3 +8,5 @@ REPO=/home/hhkaos/workspace/GeoRemindMe_Web
 $SERV \
 	--datastore_path=$REPO/src/webapp/fixtures/dev_appserver.datastore \
 	$REPO/src/webapp/
+
+read
