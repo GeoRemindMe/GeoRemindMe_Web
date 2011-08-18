@@ -195,9 +195,10 @@ def dashboard(request, template='webapp/dashboard.html'):
     """
     friends_to_follow=request.user.get_friends_to_follow()
     chronology = request.user.get_activity_timeline()
-    return  render_to_response(template, {'friends_to_follow': friends_to_follow,
-                                                  'chronology': chronology,
-                                                  } , RequestContext(request)
+    return  render_to_response(template, {
+                                          'friends_to_follow': friends_to_follow,
+                                          'chronology': chronology,
+                                          } , RequestContext(request)
                                )
 
 
