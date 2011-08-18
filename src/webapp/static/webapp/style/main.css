@@ -348,7 +348,7 @@ body {
 	float: left;
 }
 
-/*------- MAIN STYLES ---------*/
+/*------- General template STYLES ---------*/
 
 #account-info {
 	display: inline;
@@ -465,3 +465,4 @@ body {
 #settings-icon {
     background-position: 5px -145px;
 }
+
