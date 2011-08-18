@@ -391,7 +391,7 @@ def get_profile_timeline(request):
     timeline = geouser.get_profile_timeline(request, userid, username, query_id=query_id)
     from funcs import render_timeline
     timeline[1] = render_timeline(request, timeline[1])
-    return HttpResponse(timeline, mimetype="application/json")
+    return HttpResponse(simplejson.dumps(timeline), mimetype="application/json")
 
 
 @ajax_request
@@ -408,7 +408,7 @@ def get_activity_timeline(request):
     activity = geouser.get_activity_timeline(request, query_id=query_id)
     from funcs import render_timeline
     activity[1] = render_timeline(request, activity[1])
-    return HttpResponse(activity, mimetype="application/json")
+    return HttpResponse(simplejson.dumps(activity), mimetype="application/json")
 
 
 @ajax_request
@@ -425,7 +425,7 @@ def get_notifications_timeline(request):
     chronology = geouser.get_notifications_timeline(request, query_id=query_id)
     from funcs import render_timeline
     chronology[1] = render_timeline(request, chronology[1])
-    return HttpResponse(chronology, mimetype="application/json")
+    return HttpResponse(simplejson.dumps(chronology), mimetype="application/json")
     
 
 #===============================================================================
