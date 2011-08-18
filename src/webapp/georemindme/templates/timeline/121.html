@@ -12,9 +12,9 @@
                 <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
             </a>
         </div>
-        
+        <div class="removable" value="{{obj.instance.id}}" type="comment"><a href="#">Remove</a></div>
         <div class="timeline-msg">
-            <div class="removable" value="{{obj.instance.id}}" type="comment"><a href="#">Remove</a></div>
+            
             <span class="small-text">Has añadido:</span><br>
     {% else %}
         <div class="avatar">

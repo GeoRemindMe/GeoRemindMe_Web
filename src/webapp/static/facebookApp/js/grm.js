@@ -254,6 +254,7 @@ GRM.removable = function() {
                 dataType:'json',
                 context:$(this),
                 success: function(msg){
+                    
                     if(msg==true){
 
                         if (type=="comment"){
@@ -267,6 +268,7 @@ GRM.removable = function() {
                                 $(this).parent().parent().next().addClass('hidden');
                                 
                             }
+                            
                             $(this).parent().fadeOut('slow').remove();
                             
                         }else if(type=="suggestion" || type=="suggestion/list" || type=="person")
@@ -357,6 +359,9 @@ GRM.loadTimeline = function(params){
                     setTimelineBehaviour(nextPage);
                     
                     GRM.updateTabCounters();
+                    
+                    //Volvemos a filtrar la pestaña activa forzando evento click
+                    $('#'+$('ul#tabMenu .active').attr('id')).click()
                     
                     //Ocultamos el botones de cargar más si se ha alcanzado el limite
                     

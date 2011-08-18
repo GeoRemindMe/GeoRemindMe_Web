@@ -1,6 +1,9 @@
 $(document).ready(function(){
     resizeIframe();
-    setTimelineBehaviour()
+    setTimelineBehaviour();
+    
+    
+    
 });
 
 function setTimelineBehaviour(page){
@@ -14,7 +17,26 @@ function setTimelineBehaviour(page){
     $(page + ".remember-forget").remember();
     $(page + ".removable").removable(); 
     showHideActionBar(page);
-    setCommentsBehaviour(page);   
+    setCommentsBehaviour(page);
+    markUnreadItems(page);
+}
+function markUnreadItems(page){
+    var notifications=$('#chronology').attr('notifications');
+    if(notifications!='undefined'){
+        var i=0;
+        var msgs;
+        if(page=='')
+            msgs=$('#chronology > li');
+        else
+            msgs=$('#chronology > '+page);
+
+        while (notifications > 0 && i < 10){
+            $(msgs[i]).addClass("unread-item")
+            notifications--;
+            i++;
+        }
+        $('#chronology').attr('notifications',notifications)
+    }
 }
 
 function showHideActionBar(page){
