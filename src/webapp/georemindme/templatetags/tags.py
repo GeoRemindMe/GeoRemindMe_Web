@@ -135,6 +135,5 @@ def embedded_avatar(username):
             cached_image = "data:image;base64,%s" % base64.b64encode(content)
             memcache.set('%s%s_avatarcache' % (memcache.version, username), encoded_image, 300)
         except:
-            raise
             return 'http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png'
     return cached_image
