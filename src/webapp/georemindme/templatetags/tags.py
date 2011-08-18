@@ -158,5 +158,7 @@ class EmbeddedAvatarNode(template.Node):
             image = self._encode_img()
         else:
             self.item = self.item.resolve(context)
+            if not isinstance(self.item, basestring):
+                self.item = self.item.username
             image = self._encode_img()
         return image
