@@ -1,17 +1,16 @@
 {% load tags %}
-<!--
-Mensaje nº 355:<br>
--->
-<!--
-Te gusta una lista de sugerencias
--->
+
+{% comment %} 
+    Mensaje nº 355:
+    Te gusta una lista de sugerencias
+{% endcomment %} 
 
 {% if obj.is_private = false and obj.username = request.user %}
     Evitamos que se muestre duplicado un "Te gusta la sugerencia X"
 {% else %}
 
     {% if obj.instance.user.username = request.user.username %}
-        <!-- Es de mi timeline -->        
+        {% comment %}  Es de mi timeline {% endcomment %} 
         <div class="avatar">
             <a href="{% url fb_public_profile request.user %}" title="Ver perfil en GeoRemindMe">
                 <img class="user-picture" src="{% embedded_avatar request.user %}" alt="{{request.user}} avatar"/>

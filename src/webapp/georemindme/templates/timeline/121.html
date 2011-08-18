@@ -1,12 +1,9 @@
 {% load tags %}
 
-<!--
-Mensaje nº 121<br>
-{{obj}}
--->
-<!--
-121: Ha hecho un comentario en una sugerencia | UT
--->
+{% comment %} 
+    Mensaje nº 121
+    121: Ha hecho un comentario en una sugerencia | UT
+{% endcomment %} 
 
 {% if obj.instance.user.username = request.user.username %}
     <div class="avatar">

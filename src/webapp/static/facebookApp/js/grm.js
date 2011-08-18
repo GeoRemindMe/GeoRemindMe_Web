@@ -345,10 +345,10 @@ GRM.loadTimeline = function(params){
                 success: function(data){
                     
                     $(container).attr("value",data[0]);
-                    
+                    asd=data;
                     $.each(data[1], function(index,suggestion){
                         //$(template).tmpl( {element:suggestion} ).appendTo(container);
-                        console.log(suggestion)
+                        //console.log(suggestion)
                     });
 
                     //Ocultamos el botones de cargar más si se ha alcanzado el limite

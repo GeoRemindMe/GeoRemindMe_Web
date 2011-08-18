@@ -1,12 +1,9 @@
 {% load tags %}
 
-<!--
-Mensaje nº 101<br>
-{{obj}}
--->
-<!--
-101: Te han empezado a seguir
--->
+{% comment %} 
+    Mensaje nº 101
+    101: Te han empezado a seguir
+{% endcomment %} 
 
 
 {% if request.user = obj.instance.username %}   

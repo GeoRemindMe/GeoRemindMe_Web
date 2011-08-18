@@ -1,44 +1,43 @@
 $(document).ready(function(){
     resizeIframe();
-    
-//    GRM.init();
-
-    
     setTimelineBehaviour()
-    
-
 });
 
-function setTimelineBehaviour(){
-    $(".like-dislike").like();
-    $(".remember-forget").remember();
-    $(".removable").removable(); 
-    showHideActionBar();
-    setCommentsBehaviour();   
+function setTimelineBehaviour(page){
+    
+    if (typeof page == "undefined" )
+        page='';
+    else
+        page='.'+page+' ';
+    
+    $(page + ".like-dislike").like();
+    $(page + ".remember-forget").remember();
+    $(page + ".removable").removable(); 
+    showHideActionBar(page);
+    setCommentsBehaviour(page);   
 }
 
-function showHideActionBar(){
+function showHideActionBar(page){
     //Show and hide action-bar
-    $('#chronology div.timeline-msg,#chronology li.suggestion-comment').hover(
+    $('#chronology'+ page +' div.timeline-msg,#chronology '+ page +' li.suggestion-comment').hover(
         function(){$(this).find('.action-bar').css('visibility','visible')},
         function(){$(this).find('.action-bar').css('visibility','hidden')}
     )
 }
 
-function setCommentsBehaviour(){
+function setCommentsBehaviour(page){
     
-    $('.show-all-comments').click(function(){
+    $(page+'.show-all-comments').click(function(){
         //Después de mostrar los comentarios ocultamos el botón
         $(this).parent().find('.long-list').slideDown('fast', function(){
             resizeIframe();
             $(this).parentsUntil('.suggestion-element').parent().find('.show-all-comments').remove();
             
         });
-        
     });
     
     //Al pulsar en comentar ponemos el foco en el input
-    $('.focusInput').click(function(){
+    $(page+'.focusInput').click(function(){
         var commentBox=$(this).parentsUntil('li').parent().find('.input-box')
         
         if(commentBox.hasClass('hidden'))
@@ -47,12 +46,12 @@ function setCommentsBehaviour(){
         commentBox.find('textarea').focus()
     });
     
-    setCommentFormsBehaviour();
+    setCommentFormsBehaviour(page);
 }
 
-function setCommentFormsBehaviour(){
+function setCommentFormsBehaviour(page){
     
-    $('.commentForm').find("textarea").focus(function(){
+    $(page+'.commentForm').find("textarea").focus(function(){
         $(this).css('color','black');
         if($(this).attr('empty')=="true"){
             $(this).css('width','430px');
@@ -65,7 +64,7 @@ function setCommentFormsBehaviour(){
         }
     })
     
-    $('.commentForm').find("textarea").blur(function(){
+    $(page+'.commentForm').find("textarea").blur(function(){
         if($(this).val()=="")
             $(this).attr('empty',"true");
         
@@ -74,7 +73,7 @@ function setCommentFormsBehaviour(){
         
     })
     
-    $('.commentForm').find("textarea").keyup(function(e) {
+    $(page+'.commentForm').find("textarea").keyup(function(e) {
         e.preventDefault();
         if(e.keyCode == 13) {
             //If keypress==enter -> submit

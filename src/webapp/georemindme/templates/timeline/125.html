@@ -1,15 +1,13 @@
 {% load tags %}
-<!--
-Mensaje nº 125<br>
--->
-<!--
-125: A [X] le gusta un comentario | UT
--->
+
+{% comment %} 
+    Mensaje nº 125
+    125: A [X] le gusta un comentario | UT
+{% endcomment %} 
 
 {%if not obj.instance.user.username = obj.instance.instance.user.username %}
-    <!--
-        Si me gusta un comentario mío no se muestra
-    -->
+    {% comment %}  Si me gusta un comentario mío no se muestra {% endcomment %} 
+    
     {% if obj.instance.user.username = request.user.username %}
         <div class="avatar">
             <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">

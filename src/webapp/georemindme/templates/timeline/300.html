@@ -1,10 +1,8 @@
 {% load tags %}
-<!--
-Mensaje nº 300
--->
-<!--
-300: Nueva sugerencia
--->
+{% comment %} 
+    Mensaje nº 300
+    300: Nueva sugerencia
+{% endcomment %} 
 
 <div class="avatar">
     <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
@@ -12,7 +10,7 @@ Mensaje nº 300
     </a>
 </div>
 <div class="timeline-msg">
-    <!--Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar-->
+    {% comment %}  Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar {% endcomment %} 
     
     {% if obj.instance.user.username = request.user.username %}
         <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
@@ -56,7 +54,7 @@ Mensaje nº 300
     </span>
 
 </div>
-<!-- Si hay comentarios en la sugerencia -->
+{% comment %}  Si hay comentarios en la sugerencia {% endcomment %} 
 
 <div class="comment-box clear" value="{{obj.instance.id}}">
 
@@ -68,7 +66,7 @@ Mensaje nº 300
             {% for c in obj.comments.1 reversed %}
                 <li {% if forloop.revcounter > 2 %} class="long-list suggestion-comment" {% else %} class="suggestion-comment" {% endif %} >
                     
-                    <!-- Añadimos el botón de borrar comentario-->
+                    {% comment %}  Añadimos el botón de borrar comentario {% endcomment %} 
                     {% if c.username = user.username %}
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}

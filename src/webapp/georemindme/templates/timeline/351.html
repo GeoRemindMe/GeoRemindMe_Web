@@ -1,17 +1,17 @@
 {% load tags %}
-<!--
-Mensaje nº 350<br>
--->
-<!--
-350: Nueva lista de sugerencias creada
--->
+
+{% comment %} 
+    Mensaje nº 350
+    350: Nueva lista de sugerencias creada
+{% endcomment %} 
+
 <div class="avatar">
     <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
         <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
     </a>
 </div>
 
-<!--Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar-->
+{% comment %}  Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar {% endcomment %} 
 {% if not obj.is_private %}
     {% if obj.username = user.username %}
         <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
@@ -48,7 +48,7 @@ Mensaje nº 350<br>
 </span>
 
 
-<!-- Si hay comentarios en la sugerencia -->
+{% comment %}  Si hay comentarios en la sugerencia {% endcomment %} 
 
 <div class="comment-box" value="{{obj.instance.id}}">
 
