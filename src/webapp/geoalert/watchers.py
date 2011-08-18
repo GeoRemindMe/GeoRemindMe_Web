@@ -7,7 +7,7 @@ from exceptions import *
 
 from geouser.models_acc import UserTimelineSystem, UserTimeline
 from models_poi import *
-
+from models import Alert, AlertSuggestion, Suggestion
 
 def new_alert(sender, **kwargs):
     '''
