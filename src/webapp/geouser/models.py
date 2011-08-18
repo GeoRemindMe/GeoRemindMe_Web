@@ -140,7 +140,7 @@ class User(polymodel.PolyModel, HookedModel):
         from geouser.models_acc import UserTimelineSystem
         query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
-        if query_id is not None:
+        if query_id is not None and len(query_id)>=2:
             if query_id[0] is not None:  # recuperamos los cursores anteriores
                 chrono_id = query_id[0]
                 query_chrono = query_chrono.with_cursor(start_cursor=chrono_id)
