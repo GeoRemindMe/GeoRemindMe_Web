@@ -8,7 +8,7 @@
 {% if obj.instance.user.username = request.user.username %}
     <div class="avatar">
         <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
-            <img class="user-picture" src="{% embedded_avatar request.user %}" alt="{{request.user}} avatar"/>
+            <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
         </a>
     </div>
     

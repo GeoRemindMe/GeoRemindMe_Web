@@ -13,7 +13,7 @@
         {% comment %}  Es de mi timeline {% endcomment %} 
         <div class="avatar">
             <a href="{% url fb_public_profile request.user %}" title="Ver perfil en GeoRemindMe">
-                <img class="user-picture" src="{% embedded_avatar request.user %}" alt="{{request.user}} avatar"/>
+                <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">
