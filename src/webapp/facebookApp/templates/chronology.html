@@ -13,6 +13,16 @@
             
             GRM.updateTabCounters();
             
+            if($("#activity").length!=0){
+                $('.load-more').attr("type","activity");
+            }else if($("#public-profile").length!=0){
+                $('.load-more').attr("type","timeline");
+            }else if($("#notifications").length!=0){
+                $('.load-more').attr("type","notifications");
+            }
+        
+    
+            
             //Adding behaviour to tab content
             $('#tabMenu li').not('.clear-box').click(function(){
                 tab_id=$('#tabMenu li.active').attr('id')
@@ -61,9 +71,9 @@
 			//Cargar más elementos del Timeline
             $(".load-more").click(function(){
                 GRM.loadTimeline({
-                    'query_id':$(this).attr('value'),
+                    //'query_id':$(this).attr('value'),
                     container:'#chronology',
-                    url:'{% url get_activity_timeline %}',
+                    url:'/ajax/get/'+$(this).attr('type')+'/',
                 });
             });
 

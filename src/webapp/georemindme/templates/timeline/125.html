@@ -13,8 +13,11 @@
             <div class="avatar">
                 <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
                     <img src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
-                </a><br>
+                </a>
+<!--
+                <br>
                 <a href="{% url fb_public_profile obj.instance.user.username %}/"  class="black-link">{{obj.instance.user.username}}</a>:
+-->
             </div>
             <div class="timeline-msg">
                 <span class="small-text">Te ha gustado el comentario  <a href="{% url fb_public_profile obj.instance.user.username %}"  class="black-link">{{obj.instance.instance.user.username}}</a>:</span>

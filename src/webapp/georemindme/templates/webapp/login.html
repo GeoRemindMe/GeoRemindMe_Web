@@ -1,105 +1,87 @@
-{% extends "webapp/base.html" %}
+<!DOCTYPE HTML>
+<html lang="es-ES">
+<head>
+	<meta charset="UTF-8">
+	<title>GeoRemindMe!</title>
+	<meta name="google-site-verification" content="VzbSgMqvrPL6WuAhRfBzAFXM0GyU73igO1yjheV2Tc4" />
 
-{% load i18n %}
-
-{%block extra_css%}
-	<link rel="stylesheet" href="/static/webapp/style/easySlider.css" type="text/css" media="screen, projection" />
-{%endblock%}
-
-{%block extra_js%}
-	<script type="text/javascript">
-	   
-	$(document).ready(function(){
-	
-	   /*
-		* Here the triggers with animations and validations of the 
-		* register form
-	   */
-		$("input[name='registerEmail']")
-			.focus(function(){
-			 if ($(this).val()=="email") 
-				$(this).val('');
-			 $('#imgEmailLogin').attr('src','/static/webapp/img/mailActive.png');
-		  })
-			.blur(checkEmail);
-		
-	   
-		$("#userRegisterPass1,#userRegisterPass2")
-		  .blur(checkPasswords)
-		  .keyup(checkPasswords)
-		  .focus(function(){$('#imgPasswordLogin').attr('src','/static/webapp/img/passIconActive.png')})
-		  .blur(function(){$('#imgPasswordLogin').attr('src','/static/webapp/img/passIconInactive.png')});
-
-		  
-	   //With this you can check the terms making click on the text
-	   $('#textTermsCheckbox').click(function(){
-		  if(!$("#termsCheckbox").is(':checked'))
-			 $("#termsCheckbox").attr('checked',true);
-		  else
-			 $("#termsCheckbox").attr('checked',false);
-	   });
-	   
-	   
-	   {% if login%}setTimeout(function(){$('#signinBtn').click();},500);{%endif%}
-	});
+	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.6/jquery.min.js" type="text/javascript">
+		document.ready(function() {
+		        var options = { opacity: 0.75 };
+		        $('.reflect').reflect(options);
+		    });
 	</script>
-{%endblock%}
-
-<!-- **************** BODY **************-->
-
-{%block tooltipLogo%}{%endblock%}
-{%block section%}id="private-beta"{%endblock%}
-{% block content %}{%endblock%}
-
-{% block login %} 
-          
-          
-    <div id="signin-c">
-    <div id="signin_controls">
-    {% if not user.is_authenticated %}
-
-
-
-    <div class="common-form standard-form" id="signinMenu">  
-        <a href="/login/facebook">Login using Facebook</a>
-        <a href="/login/twitter">Login using Twitter</a>
-        <p class="new_msg">{% trans "Login"%}</p>
-        <form action="." id="signin" method="post">  
-            {% csrf_token %}
-            
-            <p class="loginMail">        
-                <input type="text" tabindex="4" title="username" value="email" name="user_login-email" id="username" placeholder="email" accesskey="e"/>
-            </p>
-            <span id="msgLoginEmail"><span id="txtMsgLoginEmail"></span></span>
-
-
-            <p class="loginPassword">                 
-                <input type="password" tabindex="5" title="password" value="password" name="user_login-password" id="password" placeholder="{% trans "Password" %}" accesskey="r"/>
-            </p>
-            <span class="msgNoOK" style="display:none;"></span>
-
-            
-            <p class="forgot">
-            <a id="resend_password_link" href="/remind/" accesskey="o">{% trans "Forgot your password?"%}</a>
-            </p>
-            
-            <p>
-                <span class="remember">
-                    <input type="checkbox" tabindex="6" value="1" name="user_login-remember_me" id="remember"/>
-                    <label for="remember">{% trans "Remember me on this computer" %}</label>
-                </span>
-                <input type="hidden" name="next" value="{{ next }}" id="next" />
-                <input type="submit" tabindex="7" value="{% trans "Sign in" %}" id="signin_submit" accesskey="b"/>
-            </p>
-            <input type="hidden" value="" id="signin_q" name="q"/>
-            <hr>
-        </form>
-    </div>
-    {% else %}
-        <span id="have_an_account">
-            <span>{% blocktrans with user.email as email %}Hello {{ email }} ! {% endblocktrans %}</span><a tabindex="3" href="/dashboard/">{% trans "Go to dashboard" %}</a>
-        </span>
-    {% endif %}
-    </div>
-{% endblock %}
-
+	
+</head>
+<body>
+	<header id="header" class="container">
+		<img src="/static/webapp/img/logo.png" alt="" id="logo">
+		<nav id="header-nav">
+			<ul>
+				<li><a href="#">Ayuda</a></li>
+				<li><a href="#">Blog</a></li>
+				<li><a href="#">Móvil</a></li>
+				<li><a href="#">Comunidad</a></li>
+			</ul>
+		</nav>
+	
+		<a href="#" id="login-btn">Identifícate</a>
+		
+	</header>
+	<div id="background">
+		<div id="main" class="container">
+			<section id="left-block">
+				<img src="/static/webapp/img/left-arrow.png" alt="" id="left-arrow">
+				<div id="rollover">
+					<p class="intro-text"><span class="bigger-intro-text">Compartir y recibir sugerencias de</span> <br>
+					amigos, instituciones, tiendas, etc</p>
+					<div class="users-box">
+						<article>
+							<img src="/static/webapp/img/kaos.png" alt="" class="user-avatar">
+							<p class="user-name">hhkaos</p>
+							<p class="user-suggestion">Deberías ir al hackathon. Conoces mucha gente y aprendes un montón. Ya verás lo enrrollados que sosmos.</p>
+						</article>
+						<article>
+							<img src="/static/webapp/img/anna.png" alt="" class="user-avatar">
+							<p class="user-name">annalogik</p>
+							<p class="user-suggestion">Y tenemos galletitas! :D</p>
+						</article>
+					</div>
+				</div>
+				<img src="/static/webapp/img/right-arrow.png" alt="" id="right-arrow">
+				
+				<p class="bottom-p">Ya somos XXX personas compartiendo YYY sugerencias.</p>
+			</section>
+			<section id="right-block">
+				<h2>¿Eres nuevo?</h2>
+				<p>Crea tu perfil utilizando una de tus cuentas.</p>
+				<ul>
+					<li><a href="#"><img src="/static/webapp/img/facebook.png" alt="Facebook"></a></li>
+					<li><a href="#"><img src="/static/webapp/img/twitter.png" alt="Twitter"></a></li>
+					<li><a href="#"><img src="/static/webapp/img/googleplus.png" alt="Google+"></a></li>
+				</ul>
+				<a href="#" id="register-btn">Regístrate</a>
+				
+				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
+			</section>
+			<div id="avatar-chain">
+				<!-- EL contenedor soporta hasta 20 imagenes de avatar como máximo -->
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+			</div>
+		</div>
+	</div>
+	
+	<footer id="footer" class="container">
+		<div class="footer-links">
+			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+		</div>
+		<div class="footer-links right-links">
+			<a href="#">Empleo</a> · <a href="#">Prensa</a> · <a href="#">Mapa del sitio</a>
+		</div>
+	</footer>
+</body>
+</html>
