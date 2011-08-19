@@ -271,6 +271,8 @@
                     });
                     
                     //Si se mostraba en el mensaje de vacío lo borramos
+                    console.log(suggestionID);
+                    console.log(element);
                     if(element.parent().css('display')=="none"){
                         element.parent().show();
                         element.parent().parent().find('.empty-msg').hide();
@@ -649,21 +651,23 @@
                                 </div>
                                 <div class="expanded" style="display:none">
                                     <dl>                                        
+                                        {%if k.description or not k.user.username != user.username %}
                                         <dt>Descripción:</dt>
                                         <dd class=" {% if k.user.username == user.username%}editable{% endif %}" value="textarea">
                                             {%if k.description %}{{k.description}} {% else %}<em>Sin descripción</em>{% endif %}
                                             
                                         </dd>
+                                        {%endif%}
                                         
                                         <dt>Lugar:</dt>
-                                        <dd>
+                                        <dd style="width:390px">
                                             <a class="placeName" href="{% url fb_view_place k.poi.slug%}">{{k.poi.name}}</a> ({{k.poi.address}}) 
-                                             {% if k.user.username != user.username%}<a href="{% url fb_edit_suggestions k.id %}">Editar</a>{% endif %}
+                                             {% if k.user.username == user.username%}<a href="{% url fb_edit_suggestions k.id %}">Editar</a>{% endif %}
                                         </dd>
                                         
                                         <dt>Tags:</dt>
                                             <dd style="width:390px">
-                                                <ul class="removable-tag-list" {% if k.tags|length = 0 %}style="display:none"{% endif %}>
+                                                <ul {% if k.user.username == user.username%}class="removable-tag-list"{%endif%} {% if k.tags|length = 0 %}style="display:none"{% endif %}>
                                                     {% for tag in k.tags %}
                                                         <li class="tag_{{tag}} {% if k.user.username == user.username%}removable{% endif %}" value="{{k.id}}">{{tag}}</li>
                                                     {% endfor %}
@@ -674,24 +678,27 @@
                                                 </em>
                                                 
                                             </dd>
-                                        <dt>Fecha:</dt>
-                                        {% if k.date_starts != None or k.date_ends != None%}
-                                        <dd class="{% if k.user.username == user.username%}editable{% endif %}">
-                                            {% if k.date_starts != None %}
-                                                {{k.date_starts}}
-                                            {% endif %}
-                                            {% if k.date_ends != None %}
-                                                {{k.date_ends}}
-                                            {% endif %}    
-                                        </dd>
-                                        {% endif %}
-                                        <dd class="{% if k.user.username == user.username%}editable{% endif %}">
-                                            <em>Sin fecha</em>
-                                        </dd>
-                                        
-                                        <dt>Listas:</dt>
-                                        <dd style="width:390px">
                                             
+                                        {%if k.date_starts or k.date_ends or k.user.username == user.username %}
+                                            <dt>Fecha:</dt>
+                                            {% if k.date_starts != None or k.date_ends != None%}
+                                                <dd class="{% if k.user.username == user.username%}editable{% endif %}">
+                                                    {% if k.date_starts != None %}
+                                                        {{k.date_starts}}
+                                                    {% endif %}
+                                                    {% if k.date_ends != None %}
+                                                        {{k.date_ends}}
+                                                    {% endif %}    
+                                                </dd>
+                                            {% endif %}
+                                            <dd class="{% if k.user.username == user.username%}editable{% endif %}">
+                                                <em>Sin fecha</em>
+                                            </dd>
+                                        {% endif %}
+                                        
+                                        
+                                        <dt>Mis listas:</dt>
+                                        <dd style="width:390px">
                                                 <ul class="removable-sugestion-list" {% if k.lists|length = 0 %}style="display:none"{% endif %}>
                                                     {% for obj in k.lists %}
                                                         {% if obj.user.username = request.user.username %}
@@ -700,8 +707,9 @@
                                                     {% endfor %}
                                                 </ul>
                                             
-                                                <em class="empty-msg {% if k.user.username == user.username%}editable{% endif %}" value="{{k.id}}">
-                                                    Añadir a lista
+                                                
+                                                <em class="empty-msg" value="{{k.id}}">
+                                                    Haz clic aquí para añadir a una lista
                                                 </em>
                                             
                                         </dd>
@@ -719,7 +727,7 @@
                                         </dd>
 
                                         <dt>Autor:</dt>
-                                        <dd><a href="{% url fb_public_profile k.user.username %}" class="black-link">{{k.user.username}}</a></dd>
+                                        <dd><a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a></dd>
                                         
                                     </dl>
                                     
@@ -797,7 +805,7 @@
                                             <dt>Sugerencias</dt>
                                             <dd class="suggestions">
                                                 
-                                                <ul {% if obj.instances|length = 0 %} style="display:none" {%endif%}>
+                                                <ul class="removable-suggestions-in-lists" {% if obj.instances|length = 0 %} style="display:none" {%endif%}>
                                                     {% for k in obj.instances %}
                                                         <li  class="list_{{obj.id}} {% if obj.user.username == user.username%}removable{% endif %}" value="{{k.id}}">{{k}}</li>
                                                     {% endfor %}

@@ -105,7 +105,7 @@
         settings.autoheight = 'auto' == settings.height;
         
         return this.each(function() {
-            console.debug(this)
+            //~ console.debug(this)
 
             /* save this to self because this changes when scope changes */
             var self = this;  
