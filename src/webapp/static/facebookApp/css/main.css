@@ -1676,7 +1676,8 @@ input{
         background: url("/static/facebookApp/img/maximize_minimize.gif") no-repeat scroll 0 0 transparent;
         float: right;
         height: 15px;
-        margin-top: 5px;
+        margin-right: 5px;
+        margin-top: 10px;
         width: 15px;
     }
     div.suggestionExpanded{
@@ -1776,9 +1777,12 @@ input{
         div#content div.collapsed,div#content div.expanded{
             border:0;
             cursor:default;
+            padding: 0.5em 0;
         }
         div#content div.expanded{
+            margin-top: 0;
             padding-bottom: 1em;
+            padding-top: 0;
             
         }
         
@@ -1826,13 +1830,19 @@ input{
                 float: left;
                 font-weight: bold;
                 margin-right: 1em;
+                margin-top: 5px;
                 min-width: 85px;
             }
             div#content div.expanded dd{
                 display: inline-block;
+                margin-top: 5px;
                 float: left;
                 margin: 0;
             }
+                div#content div.expanded dt.share-row,
+                div#content div.expanded dd.share-row{
+                    margin-top:5px;
+                }
                 div#content div.expanded dd a.placeName{
                     color:black;
                     text-decoration:none;
@@ -1840,9 +1850,29 @@ input{
                 div#content div.expanded dd a.placeName:hover{
                     text-decoration:underline;
                 }
-                div#content div.expanded dd.editable form input{
                 
+                div#content form.editable-fields textarea,div#content form.editable-fields input{
+                    border: 1px solid #AAAAAA;
+                    clear: left;
+                    float: left;
+                    margin-right: 5px;
+                    outline: medium none;
                 }
+                div#content form.editable-fields button{
+                    background-color: #3B5998;
+                    border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
+                    border-style: solid;
+                    border-width: 1px;
+                    color: white;
+                    cursor: pointer;
+                    float: left;
+                    font-size: 0.9em;
+                    font-weight: normal;
+                    margin-right: 5px;
+                    padding: 2px 5px 3px;
+                    text-align: center;
+                }
+                
                 div#content div.expanded dd ul{
                     list-style:none;
                     margin: 0;
@@ -1913,7 +1943,7 @@ input{
             width:5%;
         }
         .suggestionName{
-            width:500px;
+            width:495px;
             cursor:pointer;
         }
         .collapsed:hover{

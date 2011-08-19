@@ -31,16 +31,20 @@
             $('.editable[value="textarea"]').editable('suggestions/add', { 
                  type      : 'textarea',
                  cancel    : 'Cancel',
-                 submit    : 'OK',
+                 submit    : 'Guardar',
                  indicator : 'Saving...',
-                 tooltip   : 'Click to edit...'
+                 tooltip   : 'Click to edit...',
+                 cssclass  : 'editable-fields',
+                 height    : '20'
              });
             $('.editable:not([value="textarea"])').editable('suggestions/add', { 
                  type      : 'text',
                  cancel    : 'Cancel',
-                 submit    : 'OK',
+                 submit    : 'Guardar',
                  indicator : 'Saving...',
-                 tooltip   : 'Click to edit...'
+                 tooltip   : 'Click to edit...',
+                 cssclass  : 'editable-fields',
+                 height    : '20'
              });
             
             $('.empty-msg').parent().find('ul').each(function(i,elem){
@@ -205,7 +209,7 @@
             })
             
             
-            $('.empty-msg').click(function(){
+            $('.add-on-list').click(function(){
                 $("#checkBox_"+$(this).attr('value')).attr('checked',true);
                 $(".dropDrownBtn").click()
             });
@@ -271,8 +275,6 @@
                     });
                     
                     //Si se mostraba en el mensaje de vacío lo borramos
-                    console.log(suggestionID);
-                    console.log(element);
                     if(element.parent().css('display')=="none"){
                         element.parent().show();
                         element.parent().parent().find('.empty-msg').hide();
@@ -646,7 +648,7 @@
                                 <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                 <div class="collapsed">
                                     <span class="checkBox"><input type="checkbox" id="checkBox_{{k.id}}" value="{{k.id}}" name="suggestions" /></span>
-                                    <span class="suggestionName">{{k.name}}{% if k.user.username != user.username%} (<em>{{k.user.username}}</em>){% endif %}</span>
+                                    <span class="suggestionName">{{k.name}}</span>
                                     <span class="suggestionName_editable {% if k.user.username == user.username%}editable{% endif %}" style="display:none">{{k.name}}</span>
                                 </div>
                                 <div class="expanded" style="display:none">
@@ -708,14 +710,14 @@
                                                 </ul>
                                             
                                                 
-                                                <em class="empty-msg" value="{{k.id}}">
+                                                <em class="empty-msg add-on-list" value="{{k.id}}">
                                                     Haz clic aquí para añadir a una lista
                                                 </em>
                                             
                                         </dd>
                                         
-                                        <dt><strong>Compartir:</strong></dt>
-                                        <dd>
+                                        <dt class="share-row"><strong>Compartir:</strong></dt>
+                                        <dd class="share-row">
                                             <ul class="share-suggestion">
                                                 <li><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
 <!--
