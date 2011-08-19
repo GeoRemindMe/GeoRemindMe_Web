@@ -1,5 +1,6 @@
 $(document).ready(function(){
-    resizeIframe();
+    if(typeof(resizeIframe)!="undefined")
+        resizeIframe();
     setTimelineBehaviour();
     
     

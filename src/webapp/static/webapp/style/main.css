@@ -535,6 +535,9 @@ div#left-col hr, #right-col hr, hr {
 div.removable {
 	margin-right: 0;
 }
+div.removable a{
+    visibility:hidden;
+}
 
 div.help-icon img {
     margin-right: 5px;

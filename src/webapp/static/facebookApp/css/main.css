@@ -1840,6 +1840,9 @@ input{
                 div#content div.expanded dd a.placeName:hover{
                     text-decoration:underline;
                 }
+                div#content div.expanded dd.editable form input{
+                
+                }
                 div#content div.expanded dd ul{
                     list-style:none;
                     margin: 0;
