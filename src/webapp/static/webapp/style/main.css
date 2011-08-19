@@ -353,7 +353,6 @@ body {
 #account-info {
 	display: inline;
 	float: right;
-	margin-top: 11px;
 }
 
 #account-info a {
@@ -498,6 +497,7 @@ div#left-col hr, #right-col hr, hr {
 
 .follow-button {
     width: 90px;
+	margin-left: 10px;
 }
 
 .follow-button a {
@@ -518,4 +518,22 @@ div#left-col hr, #right-col hr, hr {
 
 .user-img {
 	padding-left: 0;
+}
+
+#left-col #friends-to-follow li .avatar .user-img {
+	padding-left: 0;
+	width: 50px;
+	display: inline-block;
+}
+
+div.removable {
+	margin-right: 0;
+}
+
+div.help-icon img {
+    margin-right: 5px;
+}
+
+div.removable a {
+	display: none;
 }
