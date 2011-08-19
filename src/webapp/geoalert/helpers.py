@@ -23,7 +23,10 @@ class EventHelper(object):
             raise TypeError()
         q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
         p = PagedQuery(q, id = query_id)
-        return [p.id, p.fetch_page(page), p.page_count()]
+        from georemindme.funcs import prefetch_refprops
+        events = p.fetch_page(page)
+        events = prefetch_refprops(events, self._klass.user, self._klass.poi)
+        return [p.id, events, p.page_count()]
 
     def get_by_id(self, id):
         '''
@@ -112,7 +115,10 @@ class EventHelper(object):
         events = self._klass.all().filter('_tags_list =', tagInstance.key())
         p = PagedQuery(events, id = query_id)
         events_lists = []
-        for event in p.fetch_page(page):
+        from georemindme.funcs import prefetch_refprops
+        events = p.fetch_page(page)
+        events = prefetch_refprops(events, self._klass.user, self._klass.poi)
+        for event in events:
             if event.user.key() == querier.key():
                 events_lists.append(event)
             elif hasattr(event, '_vis'):
@@ -132,7 +138,10 @@ class EventHelper(object):
             raise TypeError
         events = self._klass.all().filter('_tags_list =', tagInstance.key()).filter('user =', owner)
         p = PagedQuery(events, id = query_id)
-        return [p.id, p.fetch_page(page)]
+        from georemindme.funcs import prefetch_refprops
+        events = p.fetch_page(page)
+        events = prefetch_refprops(events, self._klass.user, self._klass.poi)
+        return [p.id, events]
 
     def get_by_last_sync(self, user, last_sync):
         '''
@@ -202,7 +211,7 @@ class SuggestionHelper(EventHelper):
             suggestion = self._klass.all().filter('slug =', slug).get()
             if suggestion is None:
                 try:
-                    suggestion = Suggestion.get_by_id(int(slug))
+                    suggestion = self._klass.get_by_id(int(slug))
                 except:
                     raise TypeError
             if suggestion is not None:
@@ -234,24 +243,12 @@ class SuggestionHelper(EventHelper):
         p = PagedQuery(q, id = query_id)
         suggestions = p.fetch_page(page)
         from georemindme.funcs import prefetch_refprops
-        suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
+        suggestions = prefetch_refprops(suggestions, self._klass.user, self._klass.poi)
         from geolist.models import ListSuggestion
         for s in suggestions:
             lists = ListSuggestion.objects.get_by_suggestion(s, querier)
             setattr(s, 'lists', lists)
         return [p.id, suggestions, p.page_count()]
-
-    def get_by_userALL(self, user, page = 1, query_id = None):
-        '''
-        Obtiene una lista con todos los Eventos
-        de un usuario
-        '''
-        if not isinstance(user, User):
-            raise TypeError()
-        q = self._klass.gql('WHERE user = :1 ORDER BY modified DESC', user)
-        p = PagedQuery(q, id = query_id)
-
-        return [p.id, p.fetch_page(page), p.page_count()]
 
     def get_by_place(self, place, page=1, query_id=None, async=False, querier=None):
         if not isinstance(querier, User):
@@ -262,11 +259,13 @@ class SuggestionHelper(EventHelper):
             return p.id, q.run()
         else:
             from geovote.models import Vote
+            from georemindme.funcs import prefetch_refprops
+            suggestions = p.fetch_page(page)
+            suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
             [p.id, [{'instance': suggestion,
                      'has_voted':  Vote.objects.user_has_voted(querier, suggestion.key()),
                      'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
-                     } for suggestion in p.fetch_page(page)
-                    ]
+                     } for suggestion in suggestions]
              ]
 
     def get_by_id_user(self, id, user, querier):
@@ -334,11 +333,14 @@ class SuggestionHelper(EventHelper):
         p = PagedQuery(q, id = query_id)
         if async:
             return p.id, q.run()
-        return [p.id, [index.parent() for index in p.fetch_page(page)]]
+        from georemindme.funcs import fetch_parents
+        suggestions = fetch_parents(p.fetch_page(page))
+        return [p.id, suggestions]
     
     def load_suggestions_by_user_following(self, query_id, suggestions):
-        # FIXME: no usar
-        return [query_id, [index.parent() for index in suggestions]]
+        from georemindme.funcs import fetch_parents
+        suggestions = fetch_parents(suggestions)
+        return [query_id, suggestions]
 
 
 class AlertSuggestionHelper(AlertHelper):

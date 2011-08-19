@@ -142,18 +142,14 @@ class User(polymodel.PolyModel, HookedModel):
         query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
         if query_id is not None and len(query_id)>=2:
-            if query_id[0] is not None:  # recuperamos los cursores anteriores
-                chrono_id = query_id[0]
-                query_chrono = query_chrono.with_cursor(start_cursor=chrono_id)
-            if query_id[1] is not None:
-                activity_id = query_id[1]
-                query_activity = query_activity.with_cursor(start_cursor=activity_id)
+            cursor_chronology = query_id[0]
+            query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology)
+            cursor_activity = query_id[1]
+            query_activity = query_activity.with_cursor(start_cursor=cursor_activity)
         timeline = []
         from geovote.models import Comment, Vote
         from geoalert.models import Event
         from geolist.models import List
-        cursor_chronology = None
-        cursor_activity = None
         for activity_timeline in query_activity:
             for chrono in query_chrono:
                 if len(timeline) >= TIMELINE_PAGE_SIZE:

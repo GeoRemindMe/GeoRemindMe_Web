@@ -126,10 +126,11 @@ class ListSuggestion(List, Visibility):
         if not self._is_private():
             if ListFollowersIndex.all().ancestor(self.key()).count() == 0:
                 return True
+            timelines = []
             for list in ListFollowersIndex.all().ancestor(self.key()):
                 for key in list.users:
-                    timeline = UserTimelineSystem(user=self.user, msg_id=351, instance=self)
-                    timeline.put()
+                    timelines.append(UserTimelineSystem(user=key, msg_id=351, instance=self))
+            db.put(timelines)
             return True
 
     @classmethod
@@ -198,8 +199,9 @@ class ListSuggestion(List, Visibility):
                 self.keys.remove(db.Key.from_path('Event', int(deleted)))
             except:
                 pass
-        keys = set(self.keys)
-        keys |= set([db.Key.from_path('Event', int(instance)) for instance in instances])
+        keys = self.keys
+        keys.extend([db.Key.from_path('Event', int(instance)) for instance in instances])
+        keys = set(keys)
         self.keys = [k for k in keys]
         self._vis = vis
         self.put()
@@ -357,8 +359,9 @@ class ListRequested(ListSuggestion):
             elif self.is_private():
                 from georemindme.exceptions import ForbiddenAccess
                 raise ForbiddenAccess
-        keys = set(self.keys)
-        keys |= set([db.Key.from_path('Event', int(instance)) for instance in instances])
+        keys = self.keys
+        keys.extend([db.Key.from_path('Event', int(instance)) for instance in instances])
+        keys = set(keys)
         self.keys = [k for k in keys]
         self._vis = vis
         self.put(querier=querier)
@@ -407,8 +410,9 @@ class ListAlert(List):
         if list is not None:  # la lista con ese nombre ya existe, la editamos
             if description is not None:
                 list.description = description
-            keys = set(list.keys)
-            keys |= set([db.Key.from_path('Event', int(instance)) for instance in instances])
+            keys = list.keys
+            keys.extend([db.Key.from_path('Event', int(instance)) for instance in instances])
+            keys = set(keys)
             list.keys = [k for k in keys]
             list.put()
             return list

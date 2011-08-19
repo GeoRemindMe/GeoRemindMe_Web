@@ -14,7 +14,10 @@ class POIHelper(object):
     def search(self, word, page=1, query_id = None):
         q = self._klass.all().search(word).order('-modified')
         p = PagedQuery(q, id = query_id)
-        return [p.id, p.fetch_page(page)]
+        from georemindme.funcs import prefetch_refprops
+        pois = p.fetch_page(page)
+        pois = prefetch_refprops(pois, self._klass.user)
+        return [p.id, pois]
     
     def get_by_id_user(self, id, user):
         try:
@@ -40,7 +43,10 @@ class PrivatePlaceHelper(POIHelper):
         
         q = self._klass.gql('WHERE business = :1 AND user = :2 ORDER BY created DESC', business, user)
         p = PagedQuery(q, id = query_id)
-        return [p.id, p.fetch_page(page)]
+        from georemindme.funcs import prefetch_refprops
+        pois = p.fetch_page(page)
+        pois = prefetch_refprops(pois, self._klass.user, self._klass.business)
+        return [p.id, pois]
     
     def get_by_address_or_point_user(self, address, user, location = None):
         if not isinstance(user, User):
@@ -110,7 +116,11 @@ class PlaceHelper(POIHelper):
                                                )
                        )
         results = list(query[9:].split()) #  chapuza :)
-        places = [self.get_by_id(result) for result in results]
+        
+        places = [db.Key.from_path(self._klass.kind(), result) for result in results]
+        places = db.get(places)
+        from georemindme.funcs import prefetch_refprops
+        places = prefetch_refprops(places, self._klass.user)
         return places
     
 
@@ -118,6 +128,5 @@ class BusinessHelper(object):
     def get_by_name(self, business):
         if not isinstance(business, basestring):
             raise AttributeError()
-
         return Business.all().filter('name =', business).get()
     

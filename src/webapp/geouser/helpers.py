@@ -90,11 +90,13 @@ class UserHelper(object):
         from models_acc import UserFollowingIndex
         followers = UserFollowingIndex.gql('WHERE following = :1 ORDER BY created DESC', userkey)
         p = PagedQuery(followers, id = query_id)
+        from georemindme.funcs import fetch_parents
+        users = fetch_parents(p.fetch_page(page))
         return [p.id, [{'id':u.id, 
                         'username':u.username, 
                         'is_following': u.has_follower(userkey=userkey),
                         'profile':u.profile } 
-                       for u in (index.parent() for index in p.fetch_page(page))]]
+                       for u in users]]
     
     def get_followings(self, userid = None, username=None, page=1, query_id=None):
         """Obtiene la lista de personas a las que sigue el usuario
@@ -123,11 +125,13 @@ class UserHelper(object):
         from models_acc import UserFollowingIndex
         followings = UserFollowingIndex.all().ancestor(userkey).order('-created')
         p = PagedQuery(followings, id = query_id)
-        users = [db.get(index.following) for index in p.fetch_page(page)]  # devuelve una lista anidada con otra
+        users = [index.following for index in p.fetch_page(page)]  # devuelve una lista anidada con otra
+        users = db.get([item for sublist in users for item in sublist])
         return [p.id, [{'id':u.id, 
                         'username':u.username, 
                         'profile':u.profile 
-                        } for sublist in users for u in sublist]]
+                        } for u in users]
+                ]
 
     def _get(self, string=None):
         from models import User

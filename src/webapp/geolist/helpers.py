@@ -19,7 +19,9 @@ class ListHelper(object):
         q = self._klass.all().filter('_vis =', 'public').filter('active =', True).order('-modified')
         from georemindme.paging import PagedQuery
         p = PagedQuery(q, id = query_id)
-        return [p.id, p.fetch_page(page)]
+        from georemindme.funcs import prefetch_refprops
+        lists = prefetch_refprops(p.fetch_page(page), self._klass.user)
+        return [p.id, lists]
 
     def get_by_id(self, id):
         '''
@@ -90,10 +92,14 @@ class ListHelper(object):
         indexes = ListFollowersIndex.all().filter('keys =', user.key())
         if async:
             return indexes.run()
-        return [index.parent().to_dict(resolve=resolve) for index in indexes if index.parent().active]
+        from georemindme.funcs import fetch_parents
+        lists = fetch_parents(indexes)
+        return [list.to_dict(resolve=resolve) for list in lists if list.active]
     
     def load_list_user_following_by_async(self, lists_async, resolve=False):
-        return [index.parent().to_dict(resolve=resolve) for index in lists_async if index.parent().active]
+        from georemindme.funcs import fetch_parents
+        lists = fetch_parents(lists_async)
+        return [list.to_dict(resolve=resolve) for list in lists if list.active]
 
     def get_shared_list(self, user):
         '''
@@ -118,7 +124,9 @@ class ListHelper(object):
         if not all:
             from georemindme.paging import PagedQuery
             p = PagedQuery(q, id = query_id)
-            return [p.id, p.fetch_page(page), p.page_count()]
+            from georemindme.funcs import prefetch_refprops
+            lists = prefetch_refprops(p.fetch_page(page), self._klass.user)
+            return [p.id, lists, p.page_count()]
         else:
             return q.run()
         
@@ -132,14 +140,16 @@ class ListHelper(object):
         lists = self._klass.all().filter('_tags_list =', tagInstance.key())
         p = PagedQuery(lists, id = query_id)
         return_list = []
-        for event in p.fetch_page(page):
-            if event.user.key() == querier.key():
-                return_list.append(event)
-            elif hasattr(event, '_vis'):
-                if event._is_public():
-                    return_list.append(event)
-                elif event._is_shared() and event.user_invited(querier):
-                    return_list.append(event)
+        from georemindme.funcs import prefetch_refprops
+        lists = prefetch_refprops(p.fetch_page(page), self._klass.user)
+        for list in lists:
+            if list.user.key() == querier.key():
+                return_list.append(list)
+            elif hasattr(list, '_vis'):
+                if list._is_public():
+                    return_list.append(list)
+                elif list._is_shared() and list.user_invited(querier):
+                    return_list.append(list)
         if len(return_list) != 0:
             return [p.id, return_list]
         return None
@@ -153,6 +163,8 @@ class ListSuggestionHelper(ListHelper):
             raise TypeError()
         lists = self._klass.all().filter('keys =', suggestion.key()).filter('active =', True)
         lists_loaded = []
+        from georemindme.funcs import prefetch_refprops
+        lists = prefetch_refprops(lists, self._klass.user)
         for list in lists:
             if not querier.is_authenticated():
                 if list._is_public():
