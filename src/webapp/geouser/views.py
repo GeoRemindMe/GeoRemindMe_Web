@@ -195,6 +195,9 @@ def dashboard(request, template='webapp/dashboard.html'):
     """
     friends_to_follow=request.user.get_friends_to_follow()
     chronology = request.user.get_activity_timeline()
+    # FIXME: CHAPUZA, LA PLANTILLA ESPERA RECIBIR EL QUERY_ID EN JSON :)
+    from django.utils import simplejson
+    chronology[0] = simplejson.dumps(chronology[0])
     return  render_to_response(template, {
                                           'friends_to_follow': friends_to_follow,
                                           'chronology': chronology,
