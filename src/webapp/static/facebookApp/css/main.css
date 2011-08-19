@@ -1846,6 +1846,22 @@ input{
                     padding: 0;
                 }
                     div#content div.expanded dd ul li{
+                        border: 0 none;
+                        display: inline-block;
+                        margin: 0;
+                    }
+                    div#content div.expanded dd ul li:after{
+                        content: ", ";
+                    }
+                    div#content div.expanded dd ul.share-suggestion li:after,
+                    div#content div.expanded dd ul.removable-tag-list li:after,
+                    div#content div.expanded dd ul.removable-sugestion-list li:after{
+                        content:none;
+                    }
+                    div#content div.expanded dd ul.share-suggestion li,
+                    div#content div.expanded dd ul.removable-sugestion-list li,
+                    div#content div.expanded dd ul.removable-tag-list li,
+                    div#content div.expanded dd ul.removable-suggestions-in-lists li{
                         border: 1px dotted;
                         color: black;
                         display: inline-block;
@@ -1959,7 +1975,13 @@ input{
             outline:none;
             padding: 2px;
         }
+        
 */
+        #filter-suggestions,
+        #filter-lists{
+            border: 0 none;
+            outline:none;
+        }
         input#filter-suggestions:active,
         input#filter-lists:active{
             border: 0px;

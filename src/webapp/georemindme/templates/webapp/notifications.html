@@ -1,0 +1,16 @@
+{% extends "webapp/chronology.html" %}
+{% load i18n %}
+{% load humanize %}
+
+
+{% block id %} id="notifications" {%endblock%}
+
+{% block pre_chronology %} 
+    <h1>Notificaciones</h1>
+    <div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-notifications"></div>
+    
+    <div class="help-txt" style="display:none" id="help-notifications-text" title="Ayuda: Actividad en tu red">
+        <p>Texto de ayuda</p>
+        <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
+    </div>
+{%endblock%}

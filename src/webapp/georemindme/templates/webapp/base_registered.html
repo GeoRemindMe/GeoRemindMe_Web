@@ -34,14 +34,13 @@
 </head>
 <body>
 	<header id="header" class="container">
-		<img src="/static/webapp/img/logo.png" alt="" id="logo">
+		<img src="/static/webapp/img/logo2.png" alt="" id="logo">
 		
 		<input type="search" placeholder="Busca sugerencias">
 		
 		<div id="account-info">
-			<img src="/static/webapp/img/avatar.png" alt="">
-			<a href="#">Mi perfil</a>
-			<a href="/logout/">Salir</a>
+			<a href="{% url public_profile request.user.username %}"><img src="{% embedded_avatar request.user.username %}" alt=""></a>
+			<a href="{% url logout %}">Salir</a>
 		</div>
 		
 		
@@ -52,15 +51,17 @@
 				<a href="#" id="add-suggestion-btn">Añadir sugerencia</a>
 				{% block nav %}
 				<ul>
-                    <li class="menu-icons main-menu-icons" id=""><a id="activity-icon" href="#" title="Dashboard">Actividad</a></li>
-                    <li class="menu-icons main-menu-icons" id=""><a id="vault-icon" href="#">Tu mochila</a></li>
+                    <li class="menu-icons main-menu-icons" id=""><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
+                    <li class="menu-icons main-menu-icons" id=""><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
 <!--
                     <li class="menu-icons main-menu-icons"><a id="suggestions-icon" href="{{user_suggestions}}">Tus sugerencias</a></li>
 -->
-                    <li class="menu-icons main-menu-icons" id=""><a id="notifications-icon" href="#">Notificaciones</a></li>
+                    <li class="menu-icons main-menu-icons" id=""><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
                     <li class="menu-icons main-menu-icons"><a id="places-icon" href="#">Sitios</a></li>
-                    <li class="menu-icons main-menu-icons" id=""><a id="profile-icon" href="#">Mi perfil</a></li>
-                    <li class="menu-icons main-menu-icons" id=""><a id="settings-icon" href="#">Configuración</a></li>
+<!--
+                    <li class="menu-icons main-menu-icons" id=""><a id="profile-icon" href="{% url public_profile request.user.username %}">Mi perfil</a></li>
+-->
+                    <li class="menu-icons main-menu-icons" id=""><a id="settings-icon" href="{% url profile_settings %}">Configuración</a></li>
                 </ul>
 				{% block extraContent %} {% endblock %}
 				{% endblock %}

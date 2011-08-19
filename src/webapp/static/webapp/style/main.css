@@ -133,7 +133,13 @@ body {
 	background-color: #ff913c;
 	width: 100%;
 }
-
+#background:after{
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0px;
+    visibility: hidden;
+}
 #main {
 	min-height: 415px;
 	background: url('/static/webapp/img/bg.png') no-repeat;
@@ -353,7 +359,6 @@ body {
 #account-info {
 	display: inline;
 	float: right;
-	margin-top: 11px;
 }
 
 #account-info a {
@@ -388,11 +393,14 @@ body {
 }
 
 #right-col {
-	width: 710px;
+	width: 690px;
 	float: left;
-	margin-top:30px;
-	
-	
+	border-left: 1px solid #FFFFFF;
+}
+
+#right-col h1 {
+	color: #FFFFFF;
+	text-shadow: 0px 1px 0px #000000;
 }
 
 
@@ -464,4 +472,74 @@ body {
 }
 #settings-icon {
     background-position: 5px -145px;
+}
+
+#base {
+	min-height: auto;
+}
+
+ul#tabMenu li {
+	color: #FF913C;
+}
+
+ul#tabMenu li.active {
+    color: #FF913C;
+}
+
+ul#tabMenu {
+    border-bottom: 1px dotted #FFFFFF;
+}
+
+ul#chronology li {
+    background-color: #FFFFFF;
+	border-bottom:none;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+div#left-col hr, #right-col hr, hr {
+    border: 1px solid #FFFFFF;
+}
+
+.follow-button {
+    width: 90px;
+	margin-left: 10px;
+}
+
+.follow-button a {
+	
+}
+
+#left-col #friends-to-follow {
+	margin-top: 10px;
+}
+
+#left-col #friends-to-follow li a {
+    width: auto;
+}
+
+#friends-to-follow li:hover{
+    background: none;
+}
+
+.user-img {
+	padding-left: 0;
+}
+
+#left-col #friends-to-follow li .avatar .user-img {
+	padding-left: 0;
+	width: 50px;
+	display: inline-block;
+}
+
+div.removable {
+	margin-right: 0;
+}
+
+div.help-icon img {
+    margin-right: 5px;
+}
+
+div.removable a {
+	display: none;
 }
