@@ -340,9 +340,8 @@ GRM.loadTimeline = function(params){
             var container=params['container'];
             var url=params['url'];
             
-            var data={
-                query_id: $(container).attr("value")
-            }
+            var data="query_id="+$(container).attr("value");
+            
 
             
             $.ajax({
