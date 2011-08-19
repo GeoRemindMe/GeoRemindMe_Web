@@ -146,6 +146,9 @@ class User(polymodel.PolyModel, HookedModel):
             query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology)
             cursor_activity = query_id[1]
             query_activity = query_activity.with_cursor(start_cursor=cursor_activity)
+        else:
+            cursor_activity = None
+            cursor_chronology = None
         timeline = []
         from geovote.models import Comment, Vote
         from geoalert.models import Event
