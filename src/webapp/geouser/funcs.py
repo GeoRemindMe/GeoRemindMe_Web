@@ -85,5 +85,3 @@ def login_func(request, email = None, password = None, remember_me = False, user
         error = _("The email/password you entered is incorrect"
                   "<br/>Please make sure your caps lock is off and try again")
     return error, redirect
-
-

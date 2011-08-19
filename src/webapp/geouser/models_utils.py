@@ -32,6 +32,7 @@ class _Notification(db.Model):
     
     @property
     def instance(self):
+        from geovote.models import Vote
         return self.timeline.instance
     
     @property

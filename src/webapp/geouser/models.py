@@ -137,7 +137,8 @@ class User(polymodel.PolyModel, HookedModel):
         return UserTimeline.objects.get_by_id(self.id, querier=querier, query_id=query_id)
 
     def get_activity_timeline(self, query_id=None):
-        from geouser.models_acc import UserTimelineSystem
+        from geouser.models_acc import UserTimelineSystem, UserTimeline
+        from georemindme.funcs import single_prefetch_refprops
         query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
         if query_id is not None and len(query_id)>=2:
@@ -159,6 +160,7 @@ class User(polymodel.PolyModel, HookedModel):
                         break
                 chrono_timeline = db.get(chrono.parent())
                 if chrono_timeline is not None and chrono_timeline.created > activity_timeline.modified:
+                    chrono_timeline = single_prefetch_refprops(chrono_timeline, UserTimeline.user, UserTimeline.instance)
                     timeline.append({
                                     'id': chrono_timeline.id, 'created': chrono_timeline.created,
                                     'modified': chrono_timeline.modified,
@@ -176,6 +178,7 @@ class User(polymodel.PolyModel, HookedModel):
                     break
             if len(timeline) >= TIMELINE_PAGE_SIZE:
                 break
+            activity_timeline = single_prefetch_refprops(activity_timeline, UserTimeline.user, UserTimeline.instance)
             timeline.append({
                             'id': activity_timeline.id, 'created': activity_timeline.created,
                             'modified': activity_timeline.modified,
@@ -193,12 +196,23 @@ class User(polymodel.PolyModel, HookedModel):
         return chronology
 
     def get_notifications_timeline(self, query_id=None):
+        def prefetch_timeline(entities):
+            # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
+            """
+                Carga todos los timelines apuntados por _Notifications
+                de una sola vez
+            """
+            fields = [(entity, _Notification.timeline) for entity in entities]
+            ref_keys = [_Notification.timeline.get_value_for_datastore(x) for x, _Notification.timeline in fields]
+            from geovote.models import Vote, Comment
+            from geolist.models import List
+            return db.get(set(ref_keys))
         from models_utils import _Notification
-        from geolist.models import List
         query = _Notification.all().filter('owner =', self).order('-_created')
         if query_id is not None:
             query = query.with_cursor(query_id)
         timelines = query.fetch(TIMELINE_PAGE_SIZE)
+        timelines = prefetch_timeline(timelines)
         return [query.cursor(), [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username,

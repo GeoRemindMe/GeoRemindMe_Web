@@ -92,7 +92,6 @@ class UserHelper(object):
         p = PagedQuery(followers, id = query_id)
         return [p.id, [{'id':u.id, 
                         'username':u.username, 
-                        'avatar': u.profile.avatar,
                         'is_following': u.has_follower(userkey=userkey),
                         'profile':u.profile } 
                        for u in (index.parent() for index in p.fetch_page(page))]]
@@ -125,9 +124,10 @@ class UserHelper(object):
         followings = UserFollowingIndex.all().ancestor(userkey).order('-created')
         p = PagedQuery(followings, id = query_id)
         users = [db.get(index.following) for index in p.fetch_page(page)]  # devuelve una lista anidada con otra
-        return [p.id, [{'id':u.id, 'username':u.username, 
-                        'avatar':u.profile.avatar, 'profile':u.profile }
-                        for sublist in users for u in sublist]]
+        return [p.id, [{'id':u.id, 
+                        'username':u.username, 
+                        'profile':u.profile 
+                        } for sublist in users for u in sublist]]
 
     def _get(self, string=None):
         from models import User

@@ -100,13 +100,15 @@ class UserTimelineHelper(object):
             query = query.with_cursor(start_cursor=query_id)
         timelines = query.fetch(10)
         query_id = query.cursor()
+        from georemindme.funcs import prefetch_refprops
+        timelines = prefetch_refprops(timelines, UserTimeline.user, UserTimeline.instance)
         if querier is None:
             from models_acc import UserTimelineSystem
             return [query_id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
-                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'instance': timeline.instance,
                         'has_voted':  Vote.objects.user_has_voted(db.Key.from_path(User.kind(), userid), timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance),
@@ -118,7 +120,7 @@ class UserTimelineHelper(object):
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
-                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'instance': timeline.instance,
                         'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance, querier=querier),
@@ -130,7 +132,7 @@ class UserTimelineHelper(object):
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
-                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'instance': timeline.instance,
                         'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None and querier.is_authenticated()else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance, querier=querier),

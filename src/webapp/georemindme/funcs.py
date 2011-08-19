@@ -88,3 +88,35 @@ def u_slugify(txt):
         txt = re.sub('"', "'", txt, re.UNICODE) # replace double quotes with single quotes
         txt = re.sub(r'[?,:!@#~`+=$%^&\\*()\[\]{}<>]ñ','',txt, re.UNICODE) # remove some characters altogether
         return txt
+    
+
+def prefetch_refprops(entities, *props):
+    # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
+    """
+        Carga todas las referencias de un grupo de objetos
+        en una sola consulta al datastore
+    """
+    fields = [(entity, prop) for entity in entities for prop in props]
+    ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields]
+    ref_keys = filter(None, ref_keys)
+    ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
+    for (entity, prop), ref_key in zip(fields, ref_keys):
+        if ref_key is not None:
+            prop.__set__(entity, ref_entities[ref_key])
+    return entities
+
+
+def single_prefetch_refprops(entity, *props):
+    # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
+    """
+        Carga todas las referencias de un objeto
+        en una sola consulta al datastore
+    """
+    fields = [(entity, prop) for prop in props]
+    ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields]
+    ref_keys = filter(None, ref_keys)
+    ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
+    for (entity, prop), ref_key in zip(fields, ref_keys):
+        if ref_key is not None:
+            prop.__set__(entity, ref_entities[ref_key])
+    return entity

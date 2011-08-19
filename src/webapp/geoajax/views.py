@@ -404,7 +404,8 @@ def get_activity_timeline(request):
         
         :returns: lista de la forma [query_id, [(id, username, avatar)]]
     """ 
-    query_id = request.POST.getlist('query_id')
+    query_id = list(request.POST.getlist('query_id'))
+    query_id = simplejson.loads(query_id[0])
     activity = geouser.get_activity_timeline(request, query_id=query_id)
     from funcs import render_timeline
     activity[1] = render_timeline(request, activity[1])

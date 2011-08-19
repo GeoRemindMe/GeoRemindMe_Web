@@ -233,6 +233,8 @@ class SuggestionHelper(EventHelper):
             q = self._klass.gql('WHERE user = :1 AND _vis = :2 ORDER BY modified DESC', user, 'public')
         p = PagedQuery(q, id = query_id)
         suggestions = p.fetch_page(page)
+        from georemindme.funcs import prefetch_refprops
+        suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
         from geolist.models import ListSuggestion
         for s in suggestions:
             lists = ListSuggestion.objects.get_by_suggestion(s, querier)

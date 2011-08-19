@@ -79,7 +79,8 @@ class Taggable(db.Model):
     @property
     def _tags(self):
         """Lee la lista de tags y devuelve las instancias"""
-        self.__tags = Tag.get(self._tags_list)
+        if self.__tags is None:
+            self.__tags = Tag.get(self._tags_list)
         return self.__tags
     
     @property
