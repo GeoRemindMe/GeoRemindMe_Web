@@ -475,7 +475,7 @@ body {
 }
 
 #base {
-	min-height: 415px;
+	min-height: auto;
 }
 
 ul#tabMenu li {
