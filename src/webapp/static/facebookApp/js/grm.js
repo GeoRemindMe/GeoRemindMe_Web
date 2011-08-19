@@ -351,7 +351,7 @@ GRM.loadTimeline = function(params){
                 data: data,
                 success: function(data){
                     
-                    $(container).attr("value",data[0]);
+                    $(container).attr("value",'["'+data[0][0]+'","'+data[0][1]+'"]');
                     var nextPage=parseInt($(container).attr("page"))+1;
                     $(container).attr("page",nextPage);
                     
