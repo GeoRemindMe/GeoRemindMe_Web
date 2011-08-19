@@ -351,25 +351,32 @@ GRM.loadTimeline = function(params){
                 data: data,
                 success: function(data){
                     
-                    $(container).attr("value",'["'+data[0][0]+'","'+data[0][1]+'"]');
-                    var nextPage=parseInt($(container).attr("page"))+1;
-                    $(container).attr("page",nextPage);
+                    if(data[1].length>0){
+                        if(data[0].length==2)
+                            $(container).attr("value",'["'+data[0][0]+'","'+data[0][1]+'"]');
+                        else
+                            $(container).attr("value",data[0]);
+                        var nextPage=parseInt($(container).attr("page"))+1;
+                        $(container).attr("page",nextPage);
+                        
+                        $.each(data[1], function(index,suggestion){
+                            var temp=$(suggestion).appendTo(container);
+                            //Anadimos el valor de la página para añadir comportamientos
+                            $(temp).first().attr('value',nextPage);
+                        });
+                        
+                        setTimelineBehaviour(nextPage);
+                        
+                        GRM.updateTabCounters();
+                        
+                        //Volvemos a filtrar la pestaña activa forzando evento click
+                        $('#'+$('ul#tabMenu .active').attr('id')).click()
+                    }
                     
-                    $.each(data[1], function(index,suggestion){
-                        var temp=$(suggestion).appendTo(container);
-                        //Anadimos el valor de la página para añadir comportamientos
-                        $(temp).first().attr('value',nextPage);
-                    });
-                    
-                    setTimelineBehaviour(nextPage);
-                    
-                    GRM.updateTabCounters();
-                    
-                    //Volvemos a filtrar la pestaña activa forzando evento click
-                    $('#'+$('ul#tabMenu .active').attr('id')).click()
-                    
-                    //Ocultamos el botones de cargar más si se ha alcanzado el limite
-                    
+                    if(data[1].length<10){
+                        //Si no hay más datos ocultamos el boton de cargar más
+                        $(".load-more").hide();
+                    }
                 }
             });
         }
