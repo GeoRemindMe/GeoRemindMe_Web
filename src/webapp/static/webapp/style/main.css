@@ -541,5 +541,5 @@ div.help-icon img {
 }
 
 div.removable a {
-	display: none;
+	visibility: none;
 }
