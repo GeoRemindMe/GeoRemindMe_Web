@@ -1,0 +1,183 @@
+{% load i18n %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{LANGUAGE_CODE}}">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="{% trans "Manage your geolocated alerts on your Android smartphone. Coming soon on your iPhone, iPad, Blackberry and other mobile devices."%}"/>
+<meta name="keywords" content="{% trans "geolocation application, geolocation app, geolocated alerts, geolocated reminders, android app alerts, android geolocation, iphone geolocation, iphone app alerts"%}"/>
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+
+<title>{% block title %}{% trans "GeoRemindMe - Application for geolocated alerts"%}{%endblock%}</title>
+
+<link rel="stylesheet" href="/static/webapp/style/screen.css" type="text/css" media="screen, projection" />
+<link rel="stylesheet" href="/static/webapp/style/style.css" type="text/css" media="screen, projection" />
+<link rel="stylesheet" href="/static/webapp/style/print.css" type="text/css" media="print" />
+
+
+
+<script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+<script type="text/javascript" src="/static/webapp/js/jquery.preload-1.0.8-min.js"></script> 
+<script type="text/javascript" src="/static/webapp/js/common.js"></script>
+
+{% block extra_js %}{%endblock%}
+
+<!--
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+-->
+
+<script type="text/javascript" src="/static/webapp/js/base.js"></script> 
+
+<!--[if IE]>
+<link rel="stylesheet" href="/static/webapp/style/ie.css" type="text/css"
+media="screen, projection" />
+<![endif]-->
+
+<!--[if lt IE 9]>
+<script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+<![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wait-mask"></div>
+   <div class="container" {%block section%}{%endblock%}>
+   
+      
+      <div id="header">
+         
+         <span id="logo"><a href="/" {%block tooltipLogo%}title="{% trans "Go flying to the homepage. Tweet! Tweet!" %}"{%endblock%} accesskey="q"><img src="/static/webapp/img/logoHeader.png" alt="GeoRemindMe"/></a></span>
+      {% block login %} 
+      <div id="topnav">
+      
+         <div id="signin-c">
+          <div id="signin_controls">
+{% if not user.is_authenticated %}
+         <span id="have_an_account">
+                <span>{% trans "Do you already have an account?" %}</span><a tabindex="3" class="signin menu-open closedLoginBtn" href="#" id="signinBtn" accesskey="w">{% trans "Log in" %}</a>
+         </span>
+          
+        <!-- Este cÃ³digo comentado es el menÃº desplegable para el login de usuario, hay que implementarlo con un script-->
+          <div class="common-form standard-form" id="signinMenu" style="display:none;">  
+             <form action="." id="signin" method="post">  
+                 
+                 <p class="loginMail">        
+                  <input type="text" tabindex="4" title="username" value="email" name="user_login-email" id="username" placeholder="email" accesskey="e"/>
+                 
+             </p>
+             <span id="msgLoginEmail"><span id="txtMsgLoginEmail"></span></span>
+            
+
+                 <p class="loginPassword">                 
+                  <input type="password" tabindex="5" title="password" value="password" name="user_login-password" id="password" placeholder="{% trans "Password" %}" accesskey="r"/>
+              
+                 </p>
+
+             <span class="msgNoOK" style="display:none;"></span>
+
+                 <!--
+                  <p class="forgot">
+                  <a id="resend_password_link" href="" accesskey="o">{% trans "Forgot your password?"%}</a>
+                 </p>
+                 -->
+             <p>
+                  <span class="remember">
+              <input type="checkbox" tabindex="6" value="1" name="user_login-remember_me" id="remember"/>
+                  <label for="remember">{% trans "Remember me on this computer" %}</label>
+              </span>
+              <input type="hidden" name="next" value="{{ next }}" id="next" />
+              <input type="submit" tabindex="7" value="{% trans "Sign in" %}" id="signin_submit" accesskey="b"/>
+                 </p>
+                 <input type="hidden" value="" id="signin_q" name="q"/>
+             </form>
+         </div>
+{% else %}
+ <span id="have_an_account">
+            <span>{% blocktrans with user.email as email %}Hello {{ email }} ! {% endblocktrans %}</span><a tabindex="3" href="/dashboard/">{% trans "Go to dashboard" %}</a>
+         </span>
+       <!-- Fin del menu de login-->
+{% endif %}
+        </div>
+</div>
+   {% endblock %}
+
+      </div>
+       {%block breadcumb %}{%endblock%}
+       
+      </div>
+
+    <div id="main-container">   
+    {% block content %}{%endblock%}
+             <div id="networks">
+         <p>{% trans "Follow us on"%}:</p>
+         <ul>
+          <li><a href="http://blog.georemindme.com" title="{% trans "Visit our Blog"%}" accesskey="j"><img src="/static/webapp/img/wp_icon.png" title="{% trans "Visit our Blog"%}" alt="Wordpress logo"/></a></li>      
+          <li><a href="http://www.twitter.com/GeoRemindMe" title="{% trans "Follow us on Twitter"%}" accesskey="l"><img src="/static/webapp/img/twitter_icon.png" title="{% trans "Follow us on Twitter"%}" alt="Twitter logo"/></a></li>
+          <li><a href="http://www.facebook.com/georemindme" title="{% trans "Follow us on Facebook"%}"  accesskey="k"><img src="/static/webapp/img/fb_icon.png" title="{% trans "Follow us on Facebook"%}" alt="Facebook logo"/></a></li>
+          
+         </ul>
+         </div>
+    </div>
+
+
+      <hr class="hr-especial"/>
+     
+     
+     
+      <div id="footer" class="span-24 last">
+         <div id="contact" class="vertical-ruler-big">
+            <h3>{% trans "More info"%}</h3>
+            <ul>
+               <li class="vertical-ruler"><a href="{% url contact %}" title="{% trans "Contact"%}"  accesskey="z">{% trans "Contact us"%}</a></li>
+               <li class="vertical-ruler"><a href="{% url privacy %}" title="{% trans "How do we care about your data"%}" accesskey="x">{% trans "Privacy Policy"%}</a></li>
+               <li><a href="{% url tos %}" title="{% trans "Meet the requirements for using the application"%}" accesskey="c">{% trans "Terms of Service"%}</a></li>
+            </ul>
+         </div>
+         <div id="support" class="vertical-ruler-big">
+            <h3>{% trans "They supports this project"%}:</h3>
+            <ul>
+               <li class="vertical-ruler"><a href="{% trans "http://blog.georemindme.com/codeko-sponsors-georemindme/" %}" title="{% trans "Official Sponsor"%}" accesskey="a">Codeko</a><span></span></li>
+               <li class="vertical-ruler"><a href="http://osl.ugr.es/?s=georemindme" title="{% trans "Free Software Office UGR (Spain)" %}" accesskey="d">OSL</a><span></span></li>
+               <li class="vertical-ruler"><a href="{% trans "http://blog.georemindme.com/georemindme-is-going-to-france/"%}" title="{% trans "Forum Innovact Campus"%}" accesskey="g">Innovact Campus</a><span></span></li>
+               <li><a href="{% trans "http://blog.georemindme.com/category/achievements/"%}" title="{% trans "See who else support us"%}" accesskey="g">{% trans "See all"%}</a></li>
+            </ul>
+         </div>
+         <div id="language">
+         {% get_available_languages as LANGUAGES %}
+         {% get_current_language as LANGUAGE_CODE %}
+            <h3><label accesskey="v" for="language-bar">{% trans "Language:" %}</label></h3>
+            <form action="/lang/" method="post">
+            {% csrf_token %}
+                   <select name="lang" id="language-bar" onchange="this.form.submit()" onsubmit="this.form.submit()">
+                  {% for code, name in LANGUAGES %}
+                     <option {%if LANGUAGE_CODE == code %}selected="selected"{% endif %} value="{{code}}" hreflang="{{code}}">{{name}}</option>
+                    {% endfor %}
+                  </select>
+                  {% csrf_token %}
+               <input type="hidden" name="next" value="{{ request.path }}" />
+            </form>
+         </div>
+      </div>
+      <script type="text/javascript"> 
+ 
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-19272923-2']);
+        _gaq.push(['_trackPageview']);
+       
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+       
+      </script> 
+      
+      
+    </div>
+
+</body>
+
+</html>

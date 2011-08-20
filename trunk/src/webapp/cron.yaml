@@ -1,0 +1,4 @@
+cron:
+- description: daily stats summary job
+  url: /stats/daily/
+  schedule: every 24 hours
