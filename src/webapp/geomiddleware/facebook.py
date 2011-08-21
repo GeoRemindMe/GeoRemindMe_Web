@@ -16,6 +16,7 @@ class FacebookMiddleware(object):
                                     }
                 request.csrf_processing_done = True
                 request.method = 'GET'
+                from facebookApp.watchers import *
             except:
                 request.csrf_processing_done = False
         else:
@@ -24,3 +25,4 @@ class FacebookMiddleware(object):
                 request.facebook = cookie
                 request.facebook['client'] = FacebookClient(cookie["access_token"])
                 request.csrf_processing_done = True
+                from facebookApp.watchers import *
