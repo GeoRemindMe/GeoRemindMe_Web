@@ -219,6 +219,7 @@ class PrivatePlace(POI):
             privateplace_modified.send(sender=self)
         else:
             super(PrivatePlace, self).put()
+            from watchers import new_place
             privateplace_new.send(sender=self)
         
         
