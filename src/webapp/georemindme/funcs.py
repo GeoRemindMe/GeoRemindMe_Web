@@ -87,6 +87,7 @@ def u_slugify(txt):
         txt = re.sub('(\d):(\d)', r'\1-\2', txt, re.UNICODE) # replace colons between numbers with dashes
         txt = re.sub('"', "'", txt, re.UNICODE) # replace double quotes with single quotes
         txt = re.sub(r'[?,:!@#~`+=$%^&\\*()\[\]{}<>]ñ','',txt, re.UNICODE) # remove some characters altogether
+        txt = txt.encode('ascii', 'ignore')
         return txt
     
 
@@ -103,6 +104,17 @@ def prefetch_refprops(entities, *props):
     for (entity, prop), ref_key in zip(fields, ref_keys):
         prop.__set__(entity, ref_entities[ref_key])
     return entities
+
+def prefetch_refpropsEntity(entities, *props):
+    # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
+    """
+        Carga todas las referencias de un grupo de objetos
+        en una sola consulta al datastore
+    """
+    fields = [(entity, prop) for entity in entities for prop in props]
+    ref_keys = [x[prop] for x, prop in fields]
+    ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
+    return ref_entities
 
 
 def single_prefetch_refprops(entity, *props):

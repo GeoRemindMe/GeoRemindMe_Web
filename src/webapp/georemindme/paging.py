@@ -15,6 +15,7 @@ CAMBIOS: Añadido soporte para SearchableModel
 """
 from google.appengine.ext import db, search
 import google.appengine.api.memcache as memcache
+from google.appengine.api import datastore
 from datetime import datetime
 import logging
 import pickle
@@ -141,6 +142,7 @@ class PagedQuery(object):
                 elif isinstance(query_to_check, db.GqlQuery): self._query_type = 'GqlQuery'
                 elif isinstance(query_to_check, search.SearchableQuery): self._query_type = 'Query'
                 elif isinstance(query_to_check, search.SearchableMultiQuery): self._query_type = 'Query'
+                elif isinstance(query_to_check, datastore.Query): self._query_type ='DSQuery'
                 else: 
                     raise TypeError('Query type not supported: ' + type(query).__name__)
                 
@@ -163,34 +165,39 @@ class PagedQuery(object):
                 else:
                         self.id #force id to be assigned now    
                         self._restore_if_required()     
-                
                 self._check_page_number(page_number)    
-
                 if self._has_cursor_for_page(page_number):
                         offset = 0
-                        self._query.with_cursor(self._get_cursor_for_page(page_number))
+                        if self._query_type == 'DSQuery':
+                            self._query.__cursor = self._get_cursor_for_page(page_number)
+                        else:
+                            self._query.with_cursor(self._get_cursor_for_page(page_number))
                         self._num_cursor_queries += 1 
                 elif page_number > 1:
-                        
                         #if we can not use a cursor, we need to use the offset method
                         #the offset method errors if it is out of range. Therefore:
                         #if page_number > 1 and page_number > self.page_count(): return []
-                        
-                        self._query.with_cursor(None)                   
+                        if self._query_type == 'DSQuery':
+                            self._query.__cursor = None
+                        else:
+                            self._query.with_cursor(None)                   
                         offset = (self.page_size * (page_number -1))
-                        
                         #record that we did an offset query. Useful for testing
                         self._num_offset_queries += 1
                 else:
                         self._num_page1_queries += 1
-                        self._query.with_cursor(None)
+                        if self._query_type == 'DSQuery':
+                            self._query.__cursor = None
+                        else:
+                            self._query.with_cursor(None)
                         offset= 0
-
                 results = self.fetch(limit=self.page_size, offset=offset)
                 
                 self._update_cursors_with_results(page_number, results)
-                
-                self._query.with_cursor(None)
+                if self._query_type == 'DSQuery':
+                    self._query.__cursor = None
+                else:
+                    self._query.with_cursor(None)
                 self._persist_if_required()
 
                 return results
@@ -250,7 +257,8 @@ class PagedQuery(object):
                 db.Query.fetch() precisely.
                 @see: http://code.google.com/appengine/docs/python/datastore/queryclass.html
                 '''
-                
+                if self._query_type == 'DSQuery':
+                    return self._query.Get(limit, offset)
                 return self._query.fetch(limit,offset)
         
         def filter(self, property_operator, value):

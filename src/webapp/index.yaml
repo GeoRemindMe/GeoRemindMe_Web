@@ -26,6 +26,12 @@ indexes:
   - name: deleted
   - name: instance
   - name: created
+
+- kind: Comment
+  properties:
+  - name: deleted
+  - name: instance
+  - name: created
     direction: desc
 
 - kind: Comment
@@ -40,6 +46,12 @@ indexes:
   - name: deleted
   - name: instance.key
   - name: -created
+
+- kind: Comment
+  properties:
+  - name: instance
+  - name: votes
+    direction: desc
 
 - kind: Event
   properties:
