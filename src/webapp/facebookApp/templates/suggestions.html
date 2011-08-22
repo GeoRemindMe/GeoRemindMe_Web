@@ -510,10 +510,14 @@
         }
 
         function get_suggestion_id(obj){
+            var hash={};
             var parents=$(obj).parentsUntil('#suggestion-list');
             var suggestion_element=Array.pop(parents)
-            value=($(suggestion_element).attr("id")).substring(11,($(suggestion_element).attr("id")).length);
-            return value;
+            hash['eventid']=($(suggestion_element).attr("id")).substring(11,($(suggestion_element).attr("id")).length);
+            hash['name']=$(suggestion_element).find('.editable_name').html()
+            hash['visibility']='public';
+						 
+            return hash;
         }
 
         //Establece los campos editables de las sugerencias de las que se es autor
@@ -531,7 +535,7 @@
                  onblur    : 'ignore',
                  placeholder : "Sin descripción",
                  onsubmit  : function(settings, original){
-                     settings['submitdata']={'eventid': get_suggestion_id(this)}
+                     settings['submitdata']=get_suggestion_id(this);
                  },
                  name      : 'description'
              });
@@ -782,7 +786,7 @@
                                         <dd><a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a></dd>
                                         
                                         <dt>Visibilidad:</dt>
-                                        <dd>{{k.visible}}</dd>
+                                        <dd>{{k.get_visibility}}{{k.is_public}}{{k}}</dd>
                                         
                                     </dl>
                                     
