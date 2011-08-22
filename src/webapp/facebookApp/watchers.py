@@ -13,7 +13,7 @@ def new_suggestion(sender, **kwargs):
                 "name": "En %(sitio)s" % {'sitio':sender.poi.name},
                 "link": settings.WEB_APP+"suggestion/"+sender.slug,
                 "caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
-                #"picture": "http://www.example.com/thumbnail.jpg",
+                "picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
             }
     if sender.description is not None:
         params["description"]=sender.description
@@ -52,7 +52,7 @@ def new_list(sender, **kwargs):
         post_id = fb_client.consumer.put_wall_post("He creado una lista de sugerencias ", params)
     elif isinstance(sender, ListRequested):        
         fb_client=FacebookClient(user=sender.user)
-        post_id = fb_client.consumer.put_wall_post("Necesito sugerencias", params)
+        post_id = fb_client.consumer.put_wall_post("Necesito sugerencias, ¿me podéis ayudar?", params)
     else:
         return
     
@@ -67,8 +67,8 @@ def new_comment(sender, **kwargs):
         params= {
                     "name": sender.instance.name,
                     "link": sender.instance.get_absolute_url(),
-                    "caption": "{*actor*} posted a new review",
-                    "picture": "http://localhost:8080/user/picture/"+sender.instance.user.username,
+                    "caption": "Sugerencia de "+sender.instance.user.username,
+                    "picture": environ['HTTP_HOST'] +"/user/"+sender.instance.user.username+"/picture",
                 }
         if sender.instance._is_public():
             params["privacy"]= {'value':'EVERYONE'}
@@ -94,29 +94,32 @@ def new_vote(sender, **kwargs):
         fb_client=FacebookClient(user=sender.user)
         if isinstance(sender.instance, Comment):
             params= {
-                        "name": sender.instance.instance.name,
                         "link": environ['HTTP_HOST'] + sender.instance.instance.get_absolute_url(),
-                        #"caption": "{*actor*} posted a new review",
-                        #"picture": "http://www.example.com/thumbnail.jpg",
+                        "caption": sender.instance.user.username,
+                        #"picture": "http://georemindme.com/media/img/whatsup.png"
+                        "picture": environ['HTTP_HOST'] +"/user/"+sender.instance.instance.user.username+"/picture",
                     }
             if isinstance(sender.instance.instance, Suggestion):
-                message = "Me ha gustado el comentario \"%(comentario)s\" de %(autor)s en la sugerencia" % {'comentario': sender.instance.msg,
+                params["name"]= sender.instance.instance.name
+                message = "Me gusta el comentario: \"%(comentario)s\" de %(autor)s en la sugerencia:" % {'comentario': sender.instance.msg,
                                                                                                            'autor':sender.instance.user.username
                                                                                                            }
             else:
-                message = "Me ha gustado el comentario \"%(comentario)s\" de %(autor)s en la lista de sugerencias" % {'comentario': sender.instance.msg,
+                params["name"]="Ver lista de sugerencias: "+ sender.instance.instance.name
+                message = "Me gusta el comentario: \"%(comentario)s\" de %(autor)s" % {'comentario': sender.instance.msg,
                                                                                                                       'autor': sender.instance.user.username
                                                                                                                       }
                 
         elif isinstance(sender.instance, Suggestion):
-            message = "Me ha gustado la sugerencia de %(autor)s" % {
+            message = "Me gusta la sugerencia de %(autor)s:" % {
                                                                    'autor':sender.instance.user.username
                                                                    }
             params= {
-                        "name": sender.instance.name.encode('utf-8'),
-                        #"caption": "{*actor*} posted a new review",
-                        #"picture": "http://www.example.com/thumbnail.jpg",
-                        "link": environ['HTTP_HOST'] + sender.instance.get_absolute_url()
+                        "name": sender.instance.name,
+                        "link": environ['HTTP_HOST'] + sender.instance.get_absolute_url(),
+                        "caption": sender.instance.user.username,
+                        #"picture": "http://georemindme.com/media/img/whatsup.png"
+                        "picture": environ['HTTP_HOST'] +"/user/"+sender.instance.user.username+"/picture",
                     }
         if hasattr(sender.instance,"description"):
             params['description']=sender.instance.description
@@ -127,6 +130,7 @@ def new_vote(sender, **kwargs):
         else:
             params["privacy"]= {'value':'CUSTOM','friends':'SELF'}
         
+        #~ raise Exception(params["picture"])
         post_id = fb_client.consumer.put_wall_post(message.encode('utf-8'), params)
         from models import _FacebookPost
         fb_post = _FacebookPost(instance=str(sender.key()), post=post_id['id'])
