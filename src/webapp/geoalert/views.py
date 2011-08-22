@@ -313,7 +313,7 @@ def add_suggestion(request, template='webapp/add_suggestion.html'):
                                )
     
 @login_required
-def save_suggestion(request, form):
+def save_suggestion(request, form, id=None):
     """ Añade una sugerencia
     :param form: formulario con los datos
     :type form: :class:`geoalert.forms.RemindForm`
@@ -321,7 +321,7 @@ def save_suggestion(request, form):
     :type: :class:`string`
     :returns: :class:`geoalert.models.Suggestion`
     """
-    sug = form.save(user = request.user)
+    sug = form.save(user = request.user, id=id)
     return sug
 
 

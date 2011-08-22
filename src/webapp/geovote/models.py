@@ -52,22 +52,19 @@ class CommentHelper(object):
             raise TypeError
         from georemindme.paging import PagedQuery
         from google.appengine.api import datastore
-        q = datastore.Query('Comment')
-        q.update({'user =': user.key(), 'deleted =': False})
-        q.Order('-created')
-        # q = Comment.all().filter('user =', user).filter('deleted =', False).order('-created')
+        q = datastore.Query('Comment', {'user =': user.key(), 'deleted =': False})
+        q.Order(('created', datastore.Query.DESCENDING))
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
-        return [p.id,  [{'id': comment.id,
-                        'created': comment.created,
-                        'modified': comment.modified, 
-                        'msg': comment.msg,
-                        'username': comment.user.username,
-                        'instance': comment.instance if comment.instance is not None else None,
-                        'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
-                        'vote_counter': comment.votes,
-                        }
-                       for comment in comments]]
+        from georemindme.funcs import prefetch_refpropsEntity
+        prefetch = prefetch_refpropsEntity(comments, 'user')
+        [comment.set_unindexed_properties(['id', 'username','has_voted', 'vote_counter']) for comment in comments]
+        [comment.update({'id': comment.key().id(),
+                         'username': prefetch[comment['user']].username,
+                         'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                         'vote_counter': comment['votes'],}) 
+                         for comment in comments]
+        return [p.id, comments]
     
     def get_by_instance(self, instance, query_id=None, page=1, querier = None, async=False):
         """
@@ -84,6 +81,8 @@ class CommentHelper(object):
         """
         if querier is not None and not isinstance(querier, User):
             raise TypeError
+        if instance is None:
+            return None
         from georemindme.paging import PagedQuery
         from google.appengine.api import datastore
         q = datastore.Query(kind='Comment', filters={'instance =': instance.key(), 'deleted =': False})
@@ -107,19 +106,25 @@ class CommentHelper(object):
         if querier is not None and not isinstance(querier, User):
             raise TypeError
         comments_loaded = []
+        comments_objects = []
         for comment in comments_async:
+            comments_objects.append(comment)
+            if len(comments_objects) > 7:
+                    break
+        from georemindme.funcs import prefetch_refprops
+        comments_objects = prefetch_refprops(comments_objects, Comment.user, Comment.instance)
+        for comment in comments_objects:
             comments_loaded.append({'id': comment.id,
                                     'created': comment.created,
                                     'modified': comment.modified, 
                                     'msg': comment.msg,
                                     'username': comment.user.username,
-                                    'instance': comment.instance if comment.instance is not None else None,
+                                    'instance': comment.instance,
                                     'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
                                     'vote_counter': comment.votes,
                                     }
                                   )
-            if len(comments_loaded) > 7:
-                    break
+            
         return [query_id, comments_loaded]
     
     def get_by_id_user(self, id, user):

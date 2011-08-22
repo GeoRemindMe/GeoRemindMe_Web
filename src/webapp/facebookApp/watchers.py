@@ -67,9 +67,10 @@ list_new.connect(new_list)
 
 def new_comment(sender, **kwargs):
     if hasattr(sender.instance, '_vis'):
+        from os import environ
         params= {
                     "name": sender.instance.name,
-                    "link": sender.instance.get_absolute_url(),
+                    "link": environ['HTTP_HOST'] + sender.instance.get_absolute_url(),
                     "caption": "Sugerencia de "+sender.instance.user.username,
                     "picture": environ['HTTP_HOST'] +"/user/"+sender.instance.user.username+"/picture",
                 }
