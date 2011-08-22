@@ -51,7 +51,11 @@ class CommentHelper(object):
         if querier is not None and not isinstance(querier, User):
             raise TypeError
         from georemindme.paging import PagedQuery
-        q = Comment.all().filter('user =', user).filter('deleted =', False).order('-created')
+        from google.appengine.api import datastore
+        q = datastore.Query('Comment')
+        q.update({'user =': user.key(), 'deleted =': False})
+        q.Order('-created')
+        # q = Comment.all().filter('user =', user).filter('deleted =', False).order('-created')
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
         return [p.id,  [{'id': comment.id,
@@ -81,6 +85,8 @@ class CommentHelper(object):
         if querier is not None and not isinstance(querier, User):
             raise TypeError
         from georemindme.paging import PagedQuery
+        from google.appengine.api import datastore
+
         q = Comment.all().filter('instance =', instance).filter('deleted =', False).order('-created')
         p = PagedQuery(q, id = query_id, page_size=7)
         if async:

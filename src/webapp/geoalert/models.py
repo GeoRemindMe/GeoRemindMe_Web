@@ -397,10 +397,10 @@ class Suggestion(Event, Visibility, Taggable):
         if from_comment:
             super(Suggestion, self).put()
             return self
-        from georemindme.funcs import u_slugify
+        from django.template.defaultfilters import slugify
         if self.slug is None:
-            name = self.name.lower()
-            self.slug = u_slugify('%s'% (name))
+            name = self.name.lower()[:32]
+            self.slug = unicode(slugify('%s'% (name)))
         p = Suggestion.all().filter('slug =', self.slug).get()
         if p is not None:
             if not self.is_saved() or p.key() != self.key():
