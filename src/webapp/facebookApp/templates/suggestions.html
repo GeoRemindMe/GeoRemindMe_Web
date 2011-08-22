@@ -233,6 +233,65 @@
                 $('#suggestion-list-lists .not-mine').fadeIn('slow');
             });
             
+            
+            /* CREANDO LOS BOTONES DE COMPARTIR */
+            $('.share a').click(function(e){e.preventDefault();});
+			$('.share').click(function(){
+				var template;
+				
+				if($(this).attr("type")=="link"){
+					template="#shareLink";
+					settings={ 
+						buttons: [],
+						dialogClass: 'link-dialog',
+						title: "Compartir enlace"
+					}
+				}else if($(this).attr("type")=="twitter"){
+					template="#shareTwitter";
+					settings={ 
+						title: "Compartir en Twitter",
+						dialogClass: 'twitter-dialog',
+						buttons: [{
+							text: "Enviar",
+							click: function() { 
+								//$(this).dialog("close"); 
+								asd=$(this).find('.twitter-share-button')
+								console.log($(this).find('.twitter-share-button'));
+								$(this).find('.twitter-share-button').click();
+							}
+						}] 
+					}
+				}else if($(this).attr("type")=="wall"){
+					template="#shareFacebook";
+					settings={ 
+						title: "Compartir en Facebook",
+						dialogClass: 'facebook-dialog',
+						buttons: [{
+							text: "Publicar",
+							click: function() { 
+								//$(this).dialog("close"); 
+								asd=$(this).find('.twitter-share-button')
+								console.log($(this).find('.twitter-share-button'));
+								$(this).find('.twitter-share-button').click();
+							}
+						},{
+							text: "Cancelar",
+							click: function() { 
+								$(this).dialog("close"); 
+							}
+						}] 
+					}
+				}
+					
+				var obj=$(template).tmpl({link:$(this).attr("href")})//.appendTo("#suggestion-list-lists");
+				$('#share-text').html(obj);
+				setRemainingCharCounter('#id_name','#twitter-counter');
+				$('#id_name').keyup();
+				$('#share-text').dialog(settings);
+				$('#share-text').dialog("open");
+			})
+			/* FIN CREANDO LOS BOTONES DE COMPARTIR */
+			
         });//END $(document).ready
 
         /*
@@ -584,7 +643,7 @@
              });
         }
         
-
+        
         /**
          * jQuery.fn.sortElements
          * --------------
@@ -651,6 +710,7 @@
          
         })();        
     </script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
 {%endblock%}
 
 {% block goBack %}{%endblock%}
@@ -785,12 +845,12 @@
                                         <dt class="share-row"><strong>Compartir:</strong></dt>
                                         <dd class="share-row">
                                             <ul class="share-suggestion">
-                                                <li><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
+                                                <li class="share" type="link" href="{{ k.get_short_url }}"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
 <!--
                                                 <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
 -->
-                                                <li><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
-                                                <li><a class="share-suggestion facebook-icon" href="">Muro</a></li>
+                                                <li class="share" type="twitter" href="{{ k.get_short_url }}"><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
+                                                <li class="share" type="wall" href="{{ k.get_short_url }}"><a class="share-suggestion facebook-icon" href="">Muro</a></li>
                                             </ul>
                                         </dd>
 
@@ -1020,4 +1080,37 @@
         </div>
     </script>
     
+    <div class="help-txt" style="display:none" id="share-text" title="Compartir">
+        
+    </div>
+    
+    <script id="shareLink" type="text/x-jquery-tmpl">
+		<p>Con este enlace cualquier persona podrá acceder tu recomendación</p>
+		<input type="text" value="${link}" readonly="readonly">
+    </script>
+    <script id="shareTwitter" type="text/x-jquery-tmpl">
+		{% if profile.sociallinks.twitter %}
+			{% comment %}
+				Si tiene la cuenta de Twitter asociada le dejamos escribir directamente:
+			{% endcomment %}
+		{% else %}
+			<p>Envía esta sugerencia a tus seguidores en Twitter.</p>
+			<textarea id="id_name">${link}</textarea>
+			<span id="twitter-counter">140</span>
+			<div style="display:none">
+			   <a href="http://twitter.com/share" class="twitter-share-button"
+				  data-url="http://dev.twitter.com/pages/tweet_button"
+				  data-via="your_screen_name"
+				  data-text="Checking out this page about Tweet Buttons"
+				  data-related="anywhere:The Javascript API"
+				  data-count="vertical">Tweet</a>
+			</div>
+		{% endif %}
+    </script>
+    <script id="shareFacebook" type="text/x-jquery-tmpl">
+		
+			<p>Envía esta sugerencia a tu muro de Facebook:</p>
+			<textarea id="id_name">${link}</textarea>
+		
+    </script>
 {% endblock %}

@@ -2208,8 +2208,36 @@ input{
         cursor:pointer;
     }
     
+    div.ui-dialog div#share-text.help-txt input{
+		width:98%;
+    }
+    div.ui-dialog div#share-text.help-txt textarea{
+		display: block;
+		float: right;
+		font-size: 1.2em;
+		margin-right: 0.4em;
+		margin-top: 0.3em;
+		width:98%;
+    }
+    div.ui-dialog div#share-text.help-txt span#twitter-counter{
+		display: block;
+		float: right;
+		font-size: 1.4em;
+		margin-right: 0.5em;
+    }
     
-    
+    .twitter-dialog #ui-dialog-title-share-text{
+		background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 0 transparent;
+		padding-left: 2em;
+    }
+    .facebook-dialog #ui-dialog-title-share-text{
+		background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 -32px transparent;
+		padding-left: 2em;
+    }
+    .link-dialog #ui-dialog-title-share-text{
+		background: url("/static/facebookApp/img/share.png") no-repeat scroll 0 0 transparent;
+		padding-left: 2em;
+    }
     /****************************
      *      
      *  View suggestion details

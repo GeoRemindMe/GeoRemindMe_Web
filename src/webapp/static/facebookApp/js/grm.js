@@ -517,3 +517,19 @@ function showMessage(txt,msgClass){
         $('#notification-msg').fadeIn('slow').delay(3000).fadeOut('slow')
     }
 }
+'#id_name','#counter'
+function setRemainingCharCounter(input,counter){
+    $(input).keyup(function(){
+        charLeft=140-$(input).val().length;
+        $(counter).text(charLeft);
+        if(charLeft<0)
+            $(counter).css("color","red")
+        if(charLeft>-1)
+            $(counter).css("color","#777")
+        
+    })
+    
+    //$('#id_name').trigger('keyup');
+}
+
+
