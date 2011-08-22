@@ -172,6 +172,7 @@ def do_vote_comment(request, instance_id, vote=1):
     if comment is None:
         return None
     vote = Vote.do_vote(user=request.user, instance=comment, count=vote)
+    
     return {'vote': vote, 'votes': _get_vote(comment.key())}
 
 
