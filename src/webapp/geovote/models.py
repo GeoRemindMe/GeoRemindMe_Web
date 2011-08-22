@@ -86,8 +86,8 @@ class CommentHelper(object):
             raise TypeError
         from georemindme.paging import PagedQuery
         from google.appengine.api import datastore
-
-        q = Comment.all().filter('instance =', instance).filter('deleted =', False).order('-created')
+        q = datastore.Query(kind=Comment.kind(), filters={'instance =': instance.key(), 'deleted =': False})
+        q.Order(('created', datastore.Query.ASCENDING))
         p = PagedQuery(q, id = query_id, page_size=7)
         if async:
             return p.id, q.run()

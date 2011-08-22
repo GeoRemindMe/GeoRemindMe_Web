@@ -26,6 +26,12 @@ indexes:
   - name: deleted
   - name: instance
   - name: created
+
+- kind: Comment
+  properties:
+  - name: deleted
+  - name: instance
+  - name: created
     direction: desc
 
 - kind: Comment
