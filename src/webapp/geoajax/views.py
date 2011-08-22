@@ -160,10 +160,7 @@ def add_suggestion(request):
     form = SuggestionForm(request.POST)
     if form.is_valid():
         eventid = request.POST.get('eventid', None)
-        if eventid:
-            sug = geoalert.edit_suggestion(request, eventid, form)
-        else: 
-            sug = geoalert.save_suggestion(request, form)
+        sug = geoalert.save_suggestion(request, form, id=eventid)
         return HttpResponse(simplejson.dumps(dict(id=sug.id)), mimetype="application/json")
     else:
         return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
