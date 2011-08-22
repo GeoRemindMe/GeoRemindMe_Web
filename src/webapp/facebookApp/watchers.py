@@ -5,13 +5,13 @@ from geoalert.signals import suggestion_new, suggestion_deleted
 from geolist.signals import list_new, list_deleted
 from geovote.signals import comment_new, comment_deleted, vote_new, vote_deleted
 from geoauth.clients.facebook import FacebookClient
-
+from django.conf import settings
 
 def new_suggestion(sender, **kwargs):
     fb_client=FacebookClient(user=sender.user)
     params= {
                 "name": "En %(sitio)s" % {'sitio':sender.poi.name.encode('utf-8')},
-                "link": "http://localhost:8080/suggestion/"+sender.slug,
+                "link": settings.WEB_APP+"suggestion/"+sender.slug.encode('utf-8'),
                 "caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name.encode('utf-8')},
                 #"picture": "http://www.example.com/thumbnail.jpg",
             }
@@ -32,48 +32,25 @@ suggestion_new.connect(new_suggestion)
 
 def new_list(sender, **kwargs):
     from geolist.models import ListSuggestion, ListRequested
+
+    params= {
+            "name": sender.name,
+            "link": settings.WEB_APP+sender.get_absolute_url()
+            }
+
+    if sender.description is not None:                
+            params["description"]= "This is a longer description of the attachment"
+    
+    if sender._is_public():
+        params["privacy"]={'value':'EVERYONE'}
+    else:
+        params["privacy"]={'value':'CUSTOM','friends':'SELF'}
     if isinstance(sender, ListSuggestion):
-        if sender._is_public():
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'EVERYONE'}
-                }
-        else:
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'CUSTOM','friends':'SELF'}
-                }
         fb_client=FacebookClient(user=sender.user)
-        post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha creado una lista" % {'id':sender.id, 'name':sender.name.encode('utf-8')}, params)
+        post_id = fb_client.consumer.put_wall_post("He creado una lista de sugerencias ", params)
     elif isinstance(sender, ListRequested):        
-        if sender._is_public():
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'EVERYONE'}
-                }
-        else:
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'CUSTOM','friends':'SELF'}
-                }
         fb_client=FacebookClient(user=sender.user)
-        post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha iniciado una peticion de sugerencias" % {'id':sender.id, 'name':sender.name.encode('utf-8')}, params)
+        post_id = fb_client.consumer.put_wall_post("Necesito sugerencias", params)
     else:
         return
     
@@ -87,7 +64,7 @@ def new_comment(sender, **kwargs):
     if hasattr(sender.instance, '_vis'):
         params= {
                     "name": sender.instance.name,
-                    "link": "http://localhost:8080/suggestion/"+sender.instance.slug,
+                    "link": settings.WEB_APP+"suggestion/"+sender.instance.slug,
                     "caption": "{*actor*} posted a new review",
                     "picture": "http://localhost:8080/user/picture/"+sender.instance.user.username,
                 }
@@ -114,14 +91,14 @@ def new_vote(sender, **kwargs):
         if isinstance(sender.instance, Comment):
             params= {
                         "name": sender.instance.instance.name.encode('utf-8'),
-                        "link": "http://localhost:8080/suggestion/"+sender.instance.instance.slug.encode('utf-8'),
+                        "link": settings.WEB_APP+"suggestion/"+sender.instance.instance.slug.encode('utf-8'),
                         #"caption": "{*actor*} posted a new review",
                         #"picture": "http://www.example.com/thumbnail.jpg",
                     }
         else:
             params= {
                         "name": sender.instance.name.encode('utf-8'),
-                        "link": "http://localhost:8080/suggestion/"+sender.instance.slug.encode('utf-8'),
+                        "link": settings.WEB_APP+"suggestion/"+sender.instance.slug.encode('utf-8'),
                         #"caption": "{*actor*} posted a new review",
                         #"picture": "http://www.example.com/thumbnail.jpg",
                     }
