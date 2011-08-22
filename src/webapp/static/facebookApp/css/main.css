@@ -1911,6 +1911,10 @@ input{
                     div#content div.expanded dd ul li:after{
                         content: ", ";
                     }
+                    div#content div.expanded dd ul.removable-suggestions-in-lists li:after{
+						content: none;
+                    }
+                    
                     div#content div.expanded dd ul.share-suggestion li:after,
                     div#content div.expanded dd ul.removable-tag-list li:after,
                     div#content div.expanded dd ul.removable-sugestion-list li:after{
@@ -1930,9 +1934,11 @@ input{
                         padding: 0;
                     }
                     div#content div.suggestionList div.expanded dd.suggestions ul li{
-                        display: block;
-                        margin: 0.3em 0 0.7em 0;
-                        padding: 0em 1.5em;
+                        font-size: 12px;
+						font-weight: normal;
+						margin: 0.3em 0 0.7em 2em;
+						padding: 0 1.5em;
+						width:430px;
                     }
                     
                     div#content div.expanded dd ul li.removable{
@@ -1942,7 +1948,9 @@ input{
                         background: url("/static/facebookApp/img/delete.png") no-repeat scroll right 1px #EEEEEE;
                         cursor:pointer;
                     }
-            
+                    div#content div.expanded dd ul.removable-suggestions-in-lists li.removable:hover{
+						background: url("/static/facebookApp/img/delete2.png") no-repeat scroll 450px 2px #EEEEEE;
+					}
             div#content div.expanded a.btn{
                 clear:both
             }
@@ -2041,6 +2049,11 @@ input{
         #filter-lists{
             border: 0 none;
             outline:none;
+            width:130px;
+        }
+        #tabMenu #filter-suggestions,
+        #tabMenu #filter-lists{
+			width:auto;
         }
         input#filter-suggestions:active,
         input#filter-lists:active{
