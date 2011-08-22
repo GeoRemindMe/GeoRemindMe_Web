@@ -13,6 +13,17 @@ indexes:
 - kind: Comment
   properties:
   - name: deleted
+  - name: -created
+
+- kind: Comment
+  properties:
+  - name: deleted
+  - name: instance
+  - name: -created
+
+- kind: Comment
+  properties:
+  - name: deleted
   - name: instance
   - name: created
     direction: desc
