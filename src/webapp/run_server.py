@@ -6,7 +6,7 @@ SERV=/home/hhkaos/Apps/google_appengine/dev_appserver.py
 REPO=/home/hhkaos/workspace/GeoRemindMe_Web
 
 $SERV \
-	--datastore_path=$REPO/src/webapp/fixtures/dev_appserver.datastore \
+	--datastore_path=$REPO/src/fixtures/dev_appserver.datastore \
 	$REPO/src/webapp/
 
 read
