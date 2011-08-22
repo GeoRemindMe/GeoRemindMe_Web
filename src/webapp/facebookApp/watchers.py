@@ -6,14 +6,17 @@ from geolist.signals import list_new, list_deleted
 from geovote.signals import comment_new, comment_deleted, vote_new, vote_deleted
 from geoauth.clients.facebook import FacebookClient
 from django.conf import settings
+from os import environ
 
 def new_suggestion(sender, **kwargs):
+    
     fb_client=FacebookClient(user=sender.user)
     params= {
-                "name": "En %(sitio)s" % {'sitio':sender.poi.name},
+                "name": "Ver detalles de la sugerencia",
                 "link": settings.WEB_APP+"suggestion/"+sender.slug,
-                "caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
-                "picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
+                "caption": "Destalles del sitio (%(sitio)s), comentarios, etc." % {'sitio':sender.poi.name},
+                #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
+                #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
             }
     if sender.description is not None:
         params["description"]=sender.description
@@ -89,7 +92,7 @@ comment_new.connect(new_comment)
 def new_vote(sender, **kwargs):
     from geovote.models import Comment
     from geoalert.models import Suggestion
-    from os import environ
+    
     if hasattr(sender.instance, '_vis'):
         fb_client=FacebookClient(user=sender.user)
         if isinstance(sender.instance, Comment):

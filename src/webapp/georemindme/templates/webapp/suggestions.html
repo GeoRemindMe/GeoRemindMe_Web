@@ -650,10 +650,7 @@
                                 <div class="expanded" style="display:none">
                                     <dl>                                        
                                         <dt>Descripción:</dt>
-                                        <dd class=" {% if k.user.username == user.username%}editable{% endif %}" value="textarea">
-                                            {%if k.description %}{{k.description}} {% else %}<em>Sin descripción</em>{% endif %}
-                                            
-                                        </dd>
+                                        <dd class=" {% if k.user.username == user.username%}editable{% endif %}" value="textarea">{%if k.description %}{{k.description}} {% else %}<em>Sin descripción</em>{% endif %}</dd>
                                         
                                         <dt>Lugar:</dt>
                                         <dd>

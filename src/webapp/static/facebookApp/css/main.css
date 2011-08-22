@@ -1686,7 +1686,17 @@ input{
     .maximize-minimize span{
         visibility:hidden;
     }
-    #suggestions .editable:hover{
+    #suggestions .collapsed .editable_name{
+        width: 490px;
+    }
+    #suggestions .editable_name,
+    #suggestions .editable_description,
+    #suggestions .editable_tags{
+        width:390px;
+    }
+    #suggestions .editable_name:hover,
+    #suggestions .editable_description:hover,
+    #suggestions .editable_tags:hover{
         background-color:#FEFF99
     }
     #suggestions .show-more{
@@ -1830,7 +1840,9 @@ input{
                 float: left;
                 font-weight: bold;
                 margin-right: 1em;
+/*
                 margin-top: 5px;
+*/
                 min-width: 85px;
             }
             div#content div.expanded dd{
@@ -1851,11 +1863,24 @@ input{
                     text-decoration:underline;
                 }
                 
+                div#content .expanded form.editable-fields{
+                    width: 390px;
+                }
+                
+                div#content .collapsed form.editable-fields{
+                    width: 490px;
+                }
+                div#content .collapsed form.editable-fields input{
+                    width:345px;
+                }
+                
                 div#content form.editable-fields textarea,div#content form.editable-fields input{
                     border: 1px solid #AAAAAA;
                     clear: left;
                     float: left;
                     margin-right: 5px;
+                    width:100%;
+                    clear:both;
                     outline: medium none;
                 }
                 div#content form.editable-fields button{
@@ -1940,7 +1965,9 @@ input{
         }
             
         .checkBox{
-            width:5%;
+            float: left;
+            margin-right: 2px;
+            width: 5%;
         }
         .suggestionName{
             width:495px;
