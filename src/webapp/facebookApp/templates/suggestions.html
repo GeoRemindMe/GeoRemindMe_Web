@@ -512,9 +512,13 @@
         function get_suggestion_id(obj){
             var hash={};
             var parents=$(obj).parentsUntil('#suggestion-list');
-            var suggestion_element=Array.pop(parents)
+            var suggestion_element=Array.pop(parents);
             hash['eventid']=($(suggestion_element).attr("id")).substring(11,($(suggestion_element).attr("id")).length);
-            hash['name']=$(suggestion_element).find('.editable_name').html()
+            var if_editing_name=$('form.editable-fields input[name="name"]').val();
+            if(typeof(if_editing_name)!="undefined")
+				hash['name']=if_editing_name;
+            else
+				hash['name']=$(suggestion_element).find('.editable_name').html();
             hash['visibility']='public';
 						 
             return hash;
@@ -550,7 +554,7 @@
                  onblur    : 'ignore',
                  width     : 'none',
                  onsubmit  : function(settings, original){
-                     settings['submitdata']={'eventid': get_suggestion_id(this)}
+                     settings['submitdata']=get_suggestion_id(this);
                  },
                  name      : 'name'
              });
@@ -566,7 +570,7 @@
                  width     : 'none',
                  placeholder : "Esta lista no tiene tags",
                  onsubmit  : function(settings, original){
-                     settings['submitdata']={'eventid': get_suggestion_id(this)}
+                     settings['submitdata']=get_suggestion_id(this);
                  },
                  name      : 'tags'
              });
