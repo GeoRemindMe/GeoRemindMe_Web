@@ -211,10 +211,18 @@
             
             $('#filterMySuggestions').toggle(function(){
                 $(this).addClass('pressed');
-                $('#suggestion-list .not-mine').fadeOut('slow');
+                var tmp=$('#suggestion-list .not-mine')
+                tmp.fadeOut('slow');
+                var counter=parseInt($('#suggestions-tab-counter').html());
+                $('#suggestions-tab-counter').html(counter-tmp.length);
+                
             },function(){
                 $(this).removeClass('pressed');
-                $('#suggestion-list .not-mine').fadeIn('slow');
+                var tmp=$('#suggestion-list .not-mine');
+                tmp.fadeIn('slow');
+                var counter=parseInt($('#suggestions-tab-counter').html());
+                $('#suggestions-tab-counter').html(counter+tmp.length);
+                
             });
             
             $('#filterMyLists').toggle(function(){
@@ -511,7 +519,7 @@
 
         function get_suggestion_id(obj){
             var hash={};
-            var parents=$(obj).parentsUntil('#suggestion-list');
+            var parents=$(obj).parentsUntil(':regex(id,(suggestion-list|suggestion-list-lists))');
             var suggestion_element=Array.pop(parents);
             hash['eventid']=($(suggestion_element).attr("id")).substring(11,($(suggestion_element).attr("id")).length);
             var if_editing_name=$('form.editable-fields input[name="name"]').val();
@@ -790,7 +798,7 @@
                                         <dd><a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a></dd>
                                         
                                         <dt>Visibilidad:</dt>
-                                        <dd>{{k.get_visibility}}{{k.is_public}}{{k}}</dd>
+                                        <dd>{{k.get_visibility}}{{k.is_public}}</dd>
                                         
                                     </dl>
                                     
@@ -853,17 +861,17 @@
                         <div id="suggestion-list-lists">
                         {% if lists %}
                             {% for obj in lists %}
-                                <div id="list_{{obj.id}}" class="suggestion suggestionList{% if k.user.username != user.username%} not-mine{%endif%}">
+                                <div id="list_{{obj.id}}" class="suggestion suggestionList{% if obj.user.username != user.username%} not-mine{%endif%}">
                                     <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
                                     <div class="collapsed">
                                         <span class="checkBox"><input type="checkbox" id="checkBox_{{obj.id}}" value="{{obj.id}}" name="lists" /></span>
                                         <span class="suggestionName">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.count}}</span> sugerencias, autor: {{obj.user.username}} )</span>
-                                        <span class="suggestionName_editable {% if k.user.username == user.username%}editable{% endif %}" style="display:none">{{obj.name}}</span>                                        
+                                        <span class="suggestionName_editable {% if obj.user.username == user.username%}editable_name{% endif %}" style="display:none">{{obj.name}}</span>                                        
                                     </div>
                                     <div class="expanded" style="display:none">
                                         <dl>
                                             <dt>Descripción:</dt>
-                                            <dd class="{% if k.user.username == user.username%}editable{% endif %}">{{obj.description}}</dd>
+                                            <dd class="{% if obj.user.username == user.username%}editable_description{% endif %}">{%if obj.description%}{{obj.description}}{%endif%}</dd>
                                             
                                             <dt>Sugerencias</dt>
                                             <dd class="suggestions">
@@ -874,14 +882,14 @@
                                                     {% endfor %}
                                                 </ul>
                                                 
-                                                <em class="empty-msg {% if k.user.username == user.username%}editable{% endif %}" value="{{k.id}}" {% if obj.instances|length > 0 %} style="display:none" {%endif%}>
+                                                <em class="empty-msg {% if obj.user.username == user.username%}editable{% endif %}" value="{{obj.id}}" {% if obj.instances|length > 0 %} style="display:none" {%endif%}>
                                                     No hay sugerencias en esta lista
                                                 </em>
                                                 
                                             </dd>
                                             
                                             <dt>Tags:</dt>
-                                            <dd>
+                                            <dd {% if obj.user.username == user.username%}class="editable_tags"{%endif%}>
                                                 {% if obj.tags %}
                                                     {{obj.tags}}
                                                 {% else %}
@@ -901,18 +909,21 @@
                                             <dd><a href="{% url fb_public_profile obj.user.username %}">{{obj.user.username}}</a></dd>
                                         </dl>
                                         
-                                        <p class="big statistics">Estadísticas:</p>
-                                        <dl>
-                                            
-                                            <dt>Personas que han guardado la lista: </dt>
-                                            <dd>{{obj.counters.followers}}</dd>
-                                            
-                                            <dt>Comentarios recibidos:</dt>
-                                            <dd>{{obj.counters.comments}}</dd>
-                                            
-                                            <dt>Última modificación:</dt>
-                                            <dd>{{obj.modified}}</dd>
-                                        </dl>
+                                        <div class="show-more-text" style="display:none">
+											<p class="big statistics">Estadísticas:</p>
+											<dl>
+												
+												<dt>Personas que han guardado la lista: </dt>
+												<dd>{{obj.counters.followers}}</dd>
+												
+												<dt>Comentarios recibidos:</dt>
+												<dd>{{obj.counters.comments}}</dd>
+												
+												<dt>Última modificación:</dt>
+												<dd>{{obj.modified}}</dd>
+											</dl>
+										</div>
+										<span class="show-more">Mostrar estadísticas</span>
                                     </div>
                                 </div>
                             {% endfor %}
