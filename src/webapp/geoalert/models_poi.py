@@ -278,14 +278,14 @@ class Place(POI):
         if from_comment:
             super(Place, self).put()
             return self
-        from georemindme.funcs import u_slugify
+        from django.template.defaultfilters import slugify
         if self.slug is None:
             name = self.name.lower()
             if self.city is not None:
                 city = self.city.lower()
-                self.slug = u_slugify('%s-%s'% (name, city))
+                self.slug = unicode(slugify('%s-%s'% (name, city)))
             else:
-                self.slug = u_slugify('%s' % name)
+                self.slug = unicode(slugify('%s' % name))
                 self.city = name
         p = Place.all().filter('slug =', self.slug).get()
         if p is not None:

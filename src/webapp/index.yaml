@@ -35,6 +35,12 @@ indexes:
   - name: votes
     direction: desc
 
+- kind: Comment
+  properties:
+  - name: deleted
+  - name: instance.key
+  - name: -created
+
 - kind: Event
   properties:
   - name: _vis
