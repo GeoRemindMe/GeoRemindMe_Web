@@ -506,6 +506,7 @@ def share_on_twitter(request, suggestion_id, msg):
         tw_client=TwitterClient(user=request.user)
         tw_client.send_tweet(msg, suggestion.poi.location)
     except:
+        raise
         return None
     return True
     
