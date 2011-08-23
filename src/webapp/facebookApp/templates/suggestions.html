@@ -237,6 +237,7 @@
                 $('#suggestion-list-lists .not-mine').fadeIn('slow');
             });
             
+
             
             /* CREANDO LOS BOTONES DE COMPARTIR */
             $('.share a').click(function(e){e.preventDefault();});
@@ -815,7 +816,17 @@
                                     <span class="suggestionName_editable" style="display:none"  value="{{k.id}}">{{k.name}}</span>
                                 </div>
                                 <div class="expanded" style="display:none">
-                                    <dl>                                        
+                                    <dl> 
+                                        {% if k.user.username != user.username%}
+                                            <dt>Autor:</dt>
+                                            <dd>
+                                                <a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a>
+                                                <div class="help-icon">
+                                                    <img id="help-suggestion" alt="Help" src="/static/facebookApp/img/help.png">
+                                                </div>
+                                            </dd>
+                                        {%endif%}
+                                        
                                         {%if k.description or not k.user.username != user.username %}
                                         <dt>Descripción:</dt>
                                         <dd class=" {% if k.user.username == user.username%}editable_description{% endif %}" type="textarea" value="{{k.id}}">{%if k.description %}{{k.description}}{% else %}{% endif %}</dd>
@@ -881,9 +892,6 @@
                                                 <li class="share" type="wall" href="{{ k.get_short_url }}"><a class="share-suggestion facebook-icon" href="">Muro</a></li>
                                             </ul>
                                         </dd>
-
-                                        <dt>Autor:</dt>
-                                        <dd><a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a></dd>
                                         
                                         <dt>Visibilidad:</dt>
                                         <dd>{{k.get_visibility}}{{k.is_public}}</dd>
@@ -958,6 +966,8 @@
                                     </div>
                                     <div class="expanded" style="display:none">
                                         <dl>
+                                            <dt>Autor:</dt>
+                                            <dd><a href="{% url fb_public_profile obj.user.username %}">{{obj.user.username}}</a></dd>
                                             <dt>Descripción:</dt>
                                             <dd class="{% if obj.user.username == user.username%}editable_list_description{% endif %}">{%if obj.description%}{{obj.description}}{%endif%}</dd>
                                             
@@ -977,9 +987,7 @@
                                             </dd>
                                             
                                             <dt>Tags:</dt>
-                                            <dd {% if obj.user.username == user.username%}class="editable_list_tags"{%endif%}>
-                                                {% if obj.tags %}{{obj.tags}}{% endif %}
-                                            </dd>
+                                            <dd {% if obj.user.username == user.username%}class="editable_list_tags"{%endif%}>{% if obj.tags %}{% for tag in obj.tags %}{{tag}}{%if not forloop.last%}, {%endif%}{%endfor%}{% endif %}</dd>
                                             <dt><strong>Compartir:</strong></dt>
                                             <dd>
                                                 <ul class="share-suggestion">
@@ -991,8 +999,8 @@
                                                     <li class="share" type="wall" href="{{ k.get_short_url }}"><a class="share-suggestion facebook-icon" href="">Muro</a></li>
                                                 </ul>
                                             </dd>
-                                            <dt>Autor:</dt>
-                                            <dd><a href="{% url fb_public_profile obj.user.username %}">{{obj.user.username}}</a></dd>
+                                            <dt>Visibilidad:</dt>
+                                            <dd>Pública</dd>
                                         </dl>
                                         
                                         <div class="show-more-text" style="display:none">
@@ -1139,4 +1147,13 @@
 			<textarea id="id_name">${link}</textarea>
 		
     </script>
+    
+    <div class="help-txt" style="display:none" id="help-suggestion-text" title="Información">
+        <p>Solo el autor de una sugerencia puede modificar sus campos descripción, tags y corregir la localización.</p>
+        <p>Tu podrás incluir esta sugerencia en cualquiera de tus listas, compartirla con otros usuarios, valorarla y comentarla.</p>
+        <p>Además podrás comentar, valorar y guardar en tu baúl aquellas sugerencias y listas de sugerencias que te hayan gustado.</p>
+        <p>Si tienes alguna duda o sugerencia puedes hacerla aquí:</p>
+        
+
+    </div>
 {% endblock %}
