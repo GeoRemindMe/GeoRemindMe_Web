@@ -181,7 +181,7 @@
             
             //On LISTS tab, add new list
             $('.addNewList').click(function(){
-               console.log("Añadimos nueva lista") 
+               //console.log("Añadimos nueva lista") 
             });
             
             $('#new-list-btn span#text').click(function(){                
@@ -265,18 +265,44 @@
 						buttons: [{
 							text: "Enviar",
 							click: function() { 
-								//$(this).dialog("close"); 
+								
 								var linkEl = $(this).find('.twitter-share-button');
-                                var field = $(this).find('.twitter-share-button textarea');
-                                linkEl.attr("data-url")="http://ejemplo.com"
-                                linkEl.attr("data-text")= $(field).val();
-                                console.log($(field).val())
-                                if ( linkEl.attr('onclick') === undefined ) {
-                                    document.location = linkEl.attr('href');
-                                } else {
-                                    linkEl.click ();
-                                }
+                                if($(linkEl).length!=0){
+                                    //Este comportamiento es para los usuarios
+                                    //que no tienen cuenta de twitter asociada
+                                    var field = $(this).find('textarea');
+                                    linkEl.attr("href","http://twitter.com/share?text="+$(field).val()+"&url=")
+                                    if(linkEl.attr('onclick') === undefined || linkEl.attr('onclick')==null){
+                                        window.open(linkEl.attr('href'));
+                                    } else {
+                                        linkEl.click ();
+                                    }
+                                    $(this).dialog("close"); 
+                                }else{
+                                    var element=$(this).find('textarea');
                                 
+                                    var params;
+                                    if($(element).attr("event-type")=="event")
+                                        params={
+                                            "event_id"  : $(element).attr("data-id"),
+                                            "msg"       : $(element).val()
+                                        }
+                                    else
+                                        params={
+                                            "list_id"  : $(element).attr("data-id"),
+                                            "msg"       : $(element).val()
+                                        }
+                                        
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/ajax/share/twitter/",
+                                        data: params,
+                                        context: $(this),
+                                        success: function(data){
+                                            $(this).dialog("close"); 
+                                        }
+                                    });
+                                }
 							}
 						},{
 							text: "Cancelar",
@@ -293,7 +319,7 @@
 						buttons: [{
 							text: "Publicar",
 							click: function() { 
-								asdasd=$(this);
+								
 								var element=$(this).find('textarea');
                                 
                                 var params;
@@ -314,7 +340,7 @@
                                     data: params,
                                     context: $(this),
                                     success: function(data){
-                                        console.log("Hecho!");
+//                                        console.log("Hecho!");
                                         $(this).dialog("close"); 
                                     }
                                 });
@@ -327,7 +353,7 @@
 						}] 
 					}
 				}
-                console.log($(this).attr("data-type")+","+$(this).attr("value")+","+$(this).attr("data-href"))
+                
 				var obj=$(template).tmpl({
                     "type"        :$(this).attr("data-type"),
                     "elem_id"     :$(this).attr("value"),
@@ -1174,10 +1200,7 @@
 			{% endcomment %}
 		{% else %}
 			<div style="display:none">
-			   <a href="http://twitter.com/share" class="twitter-share-button"
-				  data-url="http://dev.twitter.com/pages/tweet_button"
-				  data-via="GeoRemindMe"
-				  data-text="Yeaph!">Tweet</a>
+			   <a href="http://twitter.com/share" class="twitter-share-button" target="_blank">Tweet</a>
 			</div>
 		{% endif %}
     </script>
