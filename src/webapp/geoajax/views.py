@@ -477,7 +477,10 @@ def add_list_suggestion(request):
     list_description = request.POST.get('description', None)
     list_instances = request.POST.getlist('suggestions[]')
     list_instances_del = request.POST.getlist('suggestions_del[]')
-    list_tags = request.POST.getlist('tags')
+    if not 'tags' in request.POST:
+        list_tags = None
+    else:
+        list_tags = request.POST.getlist('tags')
     list = geolist.add_list_suggestion(request, id=list_id, name = list_name,
                                  description = list_description,
                                  instances = list_instances,

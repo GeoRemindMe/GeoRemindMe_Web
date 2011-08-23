@@ -316,7 +316,7 @@ class Suggestion(Event, Visibility, Taggable):
             sugg._vis = vis
             if sugg.is_active() != active:
                 sugg.toggle_active()
-            if tags is not None:
+            if tags != '':
                 sugg._tags_setter(tags)
             else:
                 sugg.put()

@@ -188,9 +188,8 @@ class ListSuggestion(List, Visibility, Taggable):
                               _vis=vis
                               )
         if tags is not None:
-            list._tags_setter(tags)
-        else:
-            list.put()
+            list._tags_setter(tags, commit=False)
+        list.put()
         return list
 
     def update(self, name=None, description=None, instances=[], instances_del=[], tags=None, vis='public'):
@@ -223,9 +222,8 @@ class ListSuggestion(List, Visibility, Taggable):
         self.keys = [k for k in keys]
         self._vis = vis
         if tags is not None:
-            self._tags_setter(tags)
-        else:
-            self.put()
+            self._tags_setter(tags, commit=False)
+        self.put()
 
     def del_follower(self, user):
         """
@@ -390,7 +388,6 @@ class ListRequested(ListSuggestion):
         self._vis = vis
         if tags is not None:
             self._tags_setter(tags, commit=False)
-        
         self.put(querier=querier)
 
     def _post_put_sync(self, querier, **kwargs):
