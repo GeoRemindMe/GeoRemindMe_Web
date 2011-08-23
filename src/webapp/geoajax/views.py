@@ -732,3 +732,8 @@ def add_suggestion_tags(request):
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(response, cls=JSONEncoder),
                         mimetype='application/json')
+    
+    
+@ajax_request
+def share_on_facebook(request):
+    event_id = request.POST.get('event_id', None)

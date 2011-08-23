@@ -303,10 +303,8 @@ class Suggestion(Event, Visibility, Taggable):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        if poi is None:
-            raise TypeError()
         if id is not None:  # como se ha pasado un id, queremos modificar una alerta existente
-            sugg = cls.objects.get_by_id_user(id, user)
+            sugg = cls.objects.get_by_id_user(id, user, querier=user)
             if sugg is None:
                 return None
             sugg.name = name if name is not None else sugg.name
@@ -323,6 +321,8 @@ class Suggestion(Event, Visibility, Taggable):
                 sugg.put()
             return sugg
         else:
+            if poi is None:
+                raise TypeError()
             sugg = Suggestion(name = name, description = description, date_starts = date_starts,
                           date_ends = date_ends, poi = poi, user = user, _vis=vis)
             if not active:
