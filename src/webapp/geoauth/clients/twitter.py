@@ -133,7 +133,7 @@ class TwitterClient(Client):
             body['lon'] = poi.lon
         body['wrap_links'] = 'true' if wrap_links else 'false'
         from urllib import urlencode
-        response, content = self.request('https://twitter.com/account/verify_credentials.json', urlencode(body))
+        response, content = self.request('https://twitter.com/account/verify_credentials.json', method='POST', body=urlencode(body))
         if response['status'] != 200:
             raise TwitterAPIError(response['status'], response)
         return simplejson.loads(content)
