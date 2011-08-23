@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load filters %}
 
 {% block title %}Tu mochila de sugerencias{% endblock %}
 
@@ -961,7 +962,7 @@
                                         </dd>
                                         
                                         <dt>Visibilidad:</dt>
-                                        <dd>{{k.get_visibility}}{{k.is_public}}</dd>
+                                        <dd>{{k|private:"_get_visibility"}}</dd>
                                         
                                     </dl>
                                     
@@ -1022,6 +1023,7 @@
 
                     
                         <div id="suggestion-list-lists">
+                        
                         {% if lists %}
                             {% for obj in lists %}
                                 <div id="list_{{obj.id}}" class="suggestion suggestionList{% if obj.user.username != user.username%} not-mine{%endif%}">
@@ -1033,8 +1035,10 @@
                                     </div>
                                     <div class="expanded" style="display:none">
                                         <dl>
-                                            <dt>Autor:</dt>
-                                            <dd><a href="{% url fb_public_profile obj.user.username %}">{{obj.user.username}}</a></dd>
+                                            {% if obj.user.username != user.username%}
+                                                <dt>Autor:</dt>
+                                                <dd><a href="{% url fb_public_profile obj.user.username %}">{{obj.user.username}}</a></dd>
+                                            {% endif %}
                                             <dt>Descripción:</dt>
                                             <dd class="{% if obj.user.username == user.username%}editable_list_description{% endif %}">{%if obj.description%}{{obj.description}}{%endif%}</dd>
                                             
@@ -1067,7 +1071,7 @@
                                                 </ul>
                                             </dd>
                                             <dt>Visibilidad:</dt>
-                                            <dd>Pública</dd>
+                                            <dd>{{obj.visibility}}</dd>
                                         </dl>
                                         
                                         <div class="show-more-text" style="display:none">
@@ -1161,8 +1165,7 @@
                             <li><a class="share-suggestion facebook-icon" href="">Muro</a></li>
                         </ul>
                     </dd>
-                    <dt>Autor:</dt>
-                    <dd><a href="{% url fb_public_profile obj.user.username %}">${obj.user.username}</a></dd>
+                    
                 </dl>
                 
                 <p class="big statistics">Estadísticas:</p>

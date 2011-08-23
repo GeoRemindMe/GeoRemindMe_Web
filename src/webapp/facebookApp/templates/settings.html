@@ -68,7 +68,7 @@
                     </td>
                     <td>
                         {% if not user.twitter_user.has_perms %}
-                            <a href="/ext/twitter/contacts?cls&nologin" target="_blank">Autorizar</a> 
+                            <a href="/ext/twitter/perms" target="_blank">Autorizar</a> 
                         {% else %}
                             <a href="/oauth/revocate/twitter" target="_blank">Revocar</a>
                         {% endif %}
