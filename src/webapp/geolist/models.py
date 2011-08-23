@@ -19,6 +19,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     created = db.DateTimeProperty(auto_now_add = True)
     modified = db.DateTimeProperty(auto_now=True)
     active = db.BooleanProperty(default=True)
+    short_url = db.URLProperty()
     count = db.IntegerProperty(default=0)  # numero de sugerencias en la lista
 
     _counters = None
@@ -41,6 +42,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     def _pre_put(self):
         self.count = len(self.keys)
         if not self.is_saved():
+            self._get_short_url()
             self._new = True
 
     def _post_put_sync(self, **kwargs):
@@ -86,6 +88,17 @@ class List(db.polymodel.PolyModel, HookedModel):
     
     def get_absolute_fburl(self):
         return '/fb%s' % self.get_absolute_url()
+    
+    def _get_short_url(self):
+        from libs.vavag import VavagRequest
+        from django.conf import settings
+        from os import environ
+        try:
+            client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
+            response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()),)
+            self.short_url = response['results']['packUrl']
+        except:
+            self.short_url = None
 
 
 class ListSuggestion(List, Visibility):

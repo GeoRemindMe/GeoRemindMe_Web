@@ -733,7 +733,38 @@ def add_suggestion_tags(request):
     return HttpResponse(simplejson.dumps(response, cls=JSONEncoder),
                         mimetype='application/json')
     
-    
+
+@ajax_request
+def get_short_url(request):
+    url = request.POST.get('url', None)
+    from libs.vavag import VavagRequest, VavagException
+    from django.conf import settings
+    try:
+        client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
+        response =  client.set_pack(url)
+        return HttpResponse(simplejson.dumps(response['results']['packUrl']),
+                            mimetype='application/json')
+    except VavagException, e:
+        return HttpResponseBadRequest(simplejson.dumps(e.msg),
+                                      mimetype='application/json')
+    except:
+        return HttpResponseBadRequest()
+
+
 @ajax_request
 def share_on_facebook(request):
+    response = None
     event_id = request.POST.get('event_id', None)
+    if event_id is not None:
+        response = geoalert.share_on_facebook(request, event_id)
+    else:
+        list_id =request.POST.get('list_id', None)
+        response = geolist.share_on_facebook(request, list_id)
+    if response is not None:
+        return HttpResponse(simplejson.dumps(response),
+                            mimetype='application/json')
+    return HttpResponseBadRequest()
+         
+        
+    
+    

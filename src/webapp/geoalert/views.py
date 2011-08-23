@@ -458,3 +458,37 @@ def get_suggestion_following(request, page=1, query_id=None, async=False):
                                                     async=async
                                                     )
     
+
+@login_required
+def share_on_facebook(request, suggestion_id):
+    suggestion = Suggestion.objects.get_by_id_querier(suggestion_id, request.user)
+    if suggestion is None:
+        return None
+    if not suggestion._is_public():
+        return False
+    if suggestion.short_url is None:
+        suggestion._get_short_url()
+    from geoauth.clients.facebook import FacebookClient
+    from os import environ
+    fb_client=FacebookClient(user=request.user)
+    params= {
+                "name": "Ver detalles de la sugerencia",
+                "link": suggestion.short_url if suggestion.short_url is not None else '%s%s' % (environ['HTTP_HOST'], suggestion.get_absolute_url()),
+                "caption": "Destalles del sitio (%(sitio)s), comentarios, etc." % {'sitio': suggestion.poi.name},
+                #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
+                #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
+            }
+    if suggestion.description is not None:
+        params["description"]= suggestion.description
+    #Pasamos todos los valores a UTF-8
+    params = dict([k, v.encode('utf-8')] for k, v in params.items())
+    try:        
+        post_id = fb_client.consumer.put_wall_post("%(sugerencia)s" % {
+                                                           'sugerencia': suggestion.name.encode('utf-8')
+                                                           }, 
+                                                       params)
+    except:
+        return None
+    return post_id
+    
+    

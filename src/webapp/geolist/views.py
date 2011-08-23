@@ -442,3 +442,38 @@ def view_list(request, id, template='webapp/view_list.html'):
                                 },
                                 context_instance=RequestContext(request)
                               )
+    
+
+@login_required
+def share_on_facebook(request, suggestion_id):
+    list = List.objects.get_by_id_querier(suggestion_id, request.user)
+    if list is None:
+        return None
+    if not list._is_public():
+        return False
+    if list.short_url is None:
+        list._get_short_url()
+    from geoauth.clients.facebook import FacebookClient
+    from os import environ
+    fb_client=FacebookClient(user=request.user)
+    params= {
+                "name": "Ver detalles de la sugerencia",
+                "link": list.short_url if list.short_url is not None else '%s%s' % (environ['HTTP_HOST'], list.get_absolute_url()),
+                #"caption": "Destalles del sitio (%(sitio)s), comentarios, etc." % {'sitio': list.poi.name},
+                #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
+                #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
+            }
+    if list.description is not None:
+        params["description"]= list.description
+    #Pasamos todos los valores a UTF-8
+    params = dict([k, v.encode('utf-8')] for k, v in params.items())
+    try:        
+        post_id = fb_client.consumer.put_wall_post("%(sugerencia)s" % {
+                                                           'sugerencia': list.name.encode('utf-8')
+                                                           }, 
+                                                       params)
+    except:
+        return None
+    return post_id
+    
+    
