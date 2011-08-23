@@ -732,6 +732,11 @@
             tags_field["name"]="tags";
             $('.editable_tags').editable('/ajax/add/suggestion/', tags_field);
             
+            visibility_field=tags_field;
+            tags_field["name"]="visibility";
+            tags_field["type"]="select";
+            //$('.editable_tags').editable('/ajax/add/suggestion/', tags_field);
+            
             //Now we set editable tags for suggestions LISTS
             name_field=tags_field;
             name_field["name"]="name";
@@ -744,6 +749,8 @@
             tags_field["placeholder"]="Esta lista de sugerencias no tiene tags";
             tags_field["name"]="tags";
             $('.editable_list_tags').editable('/ajax/suggestion/list/modify/', tags_field);             
+            
+            
              
         }
         
@@ -962,7 +969,7 @@
                                         </dd>
                                         
                                         <dt>Visibilidad:</dt>
-                                        <dd>{{k|private:"_get_visibility"}}</dd>
+                                        <dd value="{{k|private:'_get_visibility'}}">{{k|private:"_get_visibility"}}</dd>
                                         
                                     </dl>
                                     
@@ -1071,7 +1078,7 @@
                                                 </ul>
                                             </dd>
                                             <dt>Visibilidad:</dt>
-                                            <dd>{{obj.visibility}}</dd>
+                                            <dd value="{{obj.visibility}}">{{obj.visibility}}</dd>
                                         </dl>
                                         
                                         <div class="show-more-text" style="display:none">
@@ -1197,7 +1204,7 @@
         <textarea id="twitter_msg" data-id="${elem_id}" event-type="${type}">${link}</textarea>
         <span id="twitter-counter">140</span>
         
-        {% if user.twitter_user %}
+        {% if user.has_perms_twitter %}
 			{% comment %}
 				Si tiene la cuenta de Twitter asociada le dejamos escribir directamente:
 			{% endcomment %}
