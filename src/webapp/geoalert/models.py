@@ -288,7 +288,7 @@ class Suggestion(Event, Visibility, Taggable):
                 self.put()
             else:
                 from os import environ
-                return '%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
+                return 'http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
         return self._short_url
     
     @property
