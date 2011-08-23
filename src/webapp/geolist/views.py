@@ -44,7 +44,7 @@ def add_list_alert(request, name=None, description=None, instances=None):
     return list.id
 
 @login_required
-def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[]):
+def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[], tags=None):
     '''
     Modifica una lista de usuarios
 
@@ -63,12 +63,12 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         list = ListRequested.objects.get_by_id_querier(id, request.user)
         if list is not None:
             try:
-                list.update(querier=request.user, instances=instances)
+                list.update(querier=request.user, instances=instances, tags=tags)
                 return list
             except:
                 from django.http import HttpResponseForbidden
                 return HttpResponseForbidden
-    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, instances_del=instances_del)
+    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del)
     return list
 
 @login_required
@@ -442,3 +442,41 @@ def view_list(request, id, template='webapp/view_list.html'):
                                 },
                                 context_instance=RequestContext(request)
                               )
+    
+
+@login_required
+def share_on_facebook(request, suggestion_id):
+    list = List.objects.get_by_id_querier(suggestion_id, request.user)
+    if list is None:
+        return None
+    if not list._is_public():
+        return False
+    if list.short_url is None:
+        list._get_short_url()
+    from geoauth.clients.facebook import FacebookClient
+    from os import environ
+    try:
+        fb_client=FacebookClient(user=request.user)
+    except:
+        return None
+    params= {
+                "name": "Ver detalles de la sugerencia",
+                "link": list.short_url if list.short_url is not None else '%s%s' % (environ['HTTP_HOST'], list.get_absolute_url()),
+                #"caption": "Destalles del sitio (%(sitio)s), comentarios, etc." % {'sitio': list.poi.name},
+                #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
+                #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
+            }
+    if list.description is not None:
+        params["description"]= list.description
+    #Pasamos todos los valores a UTF-8
+    params = dict([k, v.encode('utf-8')] for k, v in params.items())
+    try:        
+        post_id = fb_client.consumer.put_wall_post("%(sugerencia)s" % {
+                                                           'sugerencia': list.name.encode('utf-8')
+                                                           }, 
+                                                       params)
+    except:
+        return None
+    return post_id
+    
+    

@@ -268,6 +268,7 @@ class Suggestion(Event, Visibility, Taggable):
     modified = db.DateTimeProperty(auto_now=True)
     user = db.ReferenceProperty(User, collection_name='suggestions')
     has = db.StringListProperty(default=[u'active:T',])
+    short_url = db.URLProperty()
     
     _counters = None
     
@@ -307,7 +308,7 @@ class Suggestion(Event, Visibility, Taggable):
             sugg = cls.objects.get_by_id_user(id, user, querier=user)
             if sugg is None:
                 return None
-            sugg.name = name if name is not None else sugg.name
+            #sugg.name = name if name is not None else sugg.name
             sugg.description = description if description is not None else sugg.description
             sugg.date_starts = date_starts if date_starts is not None else sugg.date_starts
             sugg.date_ends = date_ends if date_ends is not None else sugg.date_ends
@@ -413,8 +414,20 @@ class Suggestion(Event, Visibility, Taggable):
             super(Suggestion, self).put()
             suggestion_modified.send(sender=self)
         else:
+            self._get_short_url()
             super(Suggestion, self).put()
             suggestion_new.send(sender=self)
+            
+    def _get_short_url(self):
+        from libs.vavag import VavagRequest
+        from django.conf import settings
+        from os import environ
+        try:
+            client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
+            response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()),)
+            self.short_url = response['results']['packUrl']
+        except:
+            self.short_url = None
             
     def delete(self):
         from django.conf import settings

@@ -84,6 +84,8 @@ class VavagRequest(Http):
         """
             Creates a new pack of urls
         """
+        if pack is None:
+            raise TypeError
         request_url = self.URL_set_pack % {
                                        'version': self.version,
                                        'method': self.method,

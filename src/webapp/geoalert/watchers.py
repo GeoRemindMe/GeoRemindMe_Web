@@ -24,6 +24,7 @@ def new_alert(sender, **kwargs):
     sender.user.counters.set_alerts(value=+1)
 alert_new.connect(new_alert)
 
+
 def modified_alert(sender, **kwargs):
     '''
     Se modifica una alerta
@@ -37,6 +38,7 @@ def modified_alert(sender, **kwargs):
         return
     timeline.put()
 alert_modified.connect(modified_alert)
+
 
 def deleted_alert(sender, **kwargs):
     '''
@@ -53,6 +55,7 @@ def deleted_alert(sender, **kwargs):
     sender.user.counters.set_alerts(value=-1)
 alert_deleted.connect(deleted_alert)
 
+
 def done_alert(sender, **kwargs):
     from models import Alert, AlertSuggestion
     if isinstance(sender, Alert):
@@ -64,6 +67,7 @@ def done_alert(sender, **kwargs):
     timeline.put()
 alert_done.connect(done_alert)
 
+
 def new_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=300)
     p = db.put_async([timeline])
@@ -73,6 +77,7 @@ def new_suggestion(sender, **kwargs):
     p.get_result()
 suggestion_new.connect(new_suggestion)
 
+
 def modified_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=301)
     p = db.put_async([timeline])
@@ -81,6 +86,7 @@ def modified_suggestion(sender, **kwargs):
     p.get_result()
 #suggestion_modified.connect(modified_suggestion)
 
+
 def deleted_suggestion(sender, **kwargs):
     from geouser.models_acc import UserTimelineBase
     query = UserTimelineBase.all().filter('instance =', sender.key()).run()
@@ -88,6 +94,7 @@ def deleted_suggestion(sender, **kwargs):
     for q in query:
         q.delete()
 suggestion_deleted.connect(deleted_suggestion)
+
 
 def new_following_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=303, visible=False)
@@ -102,26 +109,31 @@ def new_following_suggestion(sender, **kwargs):
             notification.put()
 suggestion_following_new.connect(new_following_suggestion)
 
+
 def deleted_following_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=304, visible=False)
     timeline.put()
     sender.counters.set_followers(-1)
 suggestion_following_deleted.connect(deleted_following_suggestion)
 
+
 def new_privateplace(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=400)
     timeline.put()
 #privateplace_new.connect(new_privateplace)
+
 
 def modified_privateplace(sender, **kwargs):    
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=401)
     timeline.put()
 #privateplace_modified.connect(modified_privateplace)
 
+
 def deleted_privateplace(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=402)
     timeline.put()
 #privateplace_deleted.connect(deleted_privateplace)
+
 
 def new_place(sender, **kwargs):
     #timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=450)
@@ -129,10 +141,12 @@ def new_place(sender, **kwargs):
     sender.insert_ft()
 place_new.connect(new_place)
 
+
 def modified_place(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=451)
     timeline.put()
 #place_modified.connect(modified_place)
+
 
 def deleted_place(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=452)

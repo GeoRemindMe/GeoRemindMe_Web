@@ -36,7 +36,7 @@ urlpatterns = patterns('geoajax.views',
     (r'^get/suggestion/list/$', 'get_list_suggestion'),
     (r'^get/comment/event/$', 'get_comments_event'),
     (r'^get/comment/list/$', 'get_comments_list'),
-    (r'^get/place/near$', 'get_place_near'),
+    (r'^get/place/near/$', 'get_place_near'),
     (r'^search/tag/suggestions/$', 'search_tag_suggestion'),
     (r'^vote/suggestion/$', 'do_vote_suggestion'),
     (r'^vote/comment/$', 'do_vote_comment'),
@@ -50,6 +50,7 @@ urlpatterns = patterns('geoajax.views',
 	(r'^exists/$', 'exists'),
 	(r'^contact/$', 'contact'),
 	(r'^keep-up-to-date/$', 'keepuptodate'),
-    (r'^searchconfgoogle/$', 'mod_searchconfig_google')
-
+    (r'^searchconfgoogle/$', 'mod_searchconfig_google'),
+    (r'^get/short/$', 'get_short_url', {}, 'short_url'),
+    (r'^share/facebook/$', 'share_on_facebook', {}, 'share_on_facebook'),
 )
