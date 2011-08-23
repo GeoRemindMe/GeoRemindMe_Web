@@ -8,7 +8,9 @@
     <script type="text/javascript" src="/static/facebookApp/js/vault.js"></script>
 
     <script type="text/javascript" src="/static/webapp/js/jquery.jeditable.js"></script>
+<!--
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+-->
     <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     <script type="text/javascript">        
@@ -208,6 +210,8 @@
             });
             
             $("[placeholder]").placeholder();
+            $("#new-list input").css("color","black")
+            $("#new-list input").css("font-style","normal")
             
             $('#filterMySuggestions').toggle(function(){
                 $(this).addClass('pressed');
@@ -487,6 +491,22 @@
 
         function setExpandible(obj){
             $(obj+' .maximize-minimize').toggle(function(){
+                    //Lo primero que hacemos es cerrar todas aquellas listas/sugerencias
+                    //que ya estén desplegadas --> Accordion
+                    var elementsList=Array.pop($(this).parentsUntil(".tab-content"));
+                    var elements;
+                    if($(elementsList).attr("id")=="suggestion-list-lists")
+                        elements=$(elementsList).children()
+                    else
+                        elements=$(elementsList).parent().children()
+                    
+                    $(elements).each(function(i,elem){
+                        if($(elem).find(".expanded").css("display")!="none"){
+                            $(elem).find(".maximize-minimize").click()
+                            
+                        }
+                    })
+                    //A continuación expandimos
                     $(this).parent().find('div.expanded').slideDown('fast');
                     $(this).parent().find('.suggestionName').toggle();
                     $(this).parent().find('.suggestionName_editable').toggle();

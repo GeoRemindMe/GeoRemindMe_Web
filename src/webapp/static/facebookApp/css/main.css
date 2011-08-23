@@ -2183,6 +2183,9 @@ input{
         text-decoration: underline;
 */
     }
+    #new-list-btn span#text{
+        width:100%
+    }
     #new-list{
         margin-right:4px;
         width: 97%;
