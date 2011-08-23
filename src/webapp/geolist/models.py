@@ -20,7 +20,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     created = db.DateTimeProperty(auto_now_add = True)
     modified = db.DateTimeProperty(auto_now=True)
     active = db.BooleanProperty(default=True)
-    short_url = db.URLProperty()
+    _short_url = db.URLProperty()
     count = db.IntegerProperty(default=0)  # numero de sugerencias en la lista
 
     _counters = None
@@ -29,6 +29,13 @@ class List(db.polymodel.PolyModel, HookedModel):
     @property
     def id(self):
         return self.key().id()
+    
+    @property
+    def short_url(self):
+        if self._short_url is None:
+            self._get_short_url()
+            self.put()
+        return self._short_url
 
     @property
     def counters(self):

@@ -268,7 +268,7 @@ class Suggestion(Event, Visibility, Taggable):
     modified = db.DateTimeProperty(auto_now=True)
     user = db.ReferenceProperty(User, collection_name='suggestions')
     has = db.StringListProperty(default=[u'active:T',])
-    short_url = db.URLProperty()
+    _short_url = db.URLProperty()
     
     _counters = None
     
@@ -280,6 +280,12 @@ class Suggestion(Event, Visibility, Taggable):
         '''
         return [[], 'name', 'description', 'poi']
     
+    @property
+    def short_url(self):
+        if self._short_url is None:
+            self._get_short_url()
+            self.put()
+        return self._short_url
     
     @property
     def counters(self):

@@ -460,7 +460,7 @@ def get_suggestion_following(request, page=1, query_id=None, async=False):
     
 
 @login_required
-def share_on_facebook(request, suggestion_id):
+def share_on_facebook(request, suggestion_id, msg):
     suggestion = Suggestion.objects.get_by_id_querier(suggestion_id, request.user)
     if suggestion is None:
         return None
@@ -493,5 +493,23 @@ def share_on_facebook(request, suggestion_id):
     except:
         return None
     return post_id
+
+@login_required
+def share_on_twitter(request, suggestion_id, msg):
+    suggestion = Suggestion.objects.get_by_id_querier(suggestion_id, request.user)
+    if suggestion is None:
+        return None
+    if not suggestion._is_public():
+        return False
+    if suggestion.short_url is None:
+        suggestion._get_short_url()
+    from geoauth.clients.twitter import TwitterClient
+    from os import environ
+    try:
+        tw_client=TwitterClient(user=request.user)
+        tw_client.send_tweet(msg, suggestion.poi.location)
+    except:
+        return None
+    return True
     
     

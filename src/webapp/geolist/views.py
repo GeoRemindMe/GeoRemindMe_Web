@@ -445,8 +445,8 @@ def view_list(request, id, template='webapp/view_list.html'):
     
 
 @login_required
-def share_on_facebook(request, suggestion_id):
-    list = List.objects.get_by_id_querier(suggestion_id, request.user)
+def share_on_facebook(request, id, msg):
+    list = List.objects.get_by_id_querier(id, request.user)
     if list is None:
         return None
     if not list._is_public():
@@ -478,5 +478,23 @@ def share_on_facebook(request, suggestion_id):
     except:
         return None
     return post_id
+
+@login_required
+def share_on_twitter(request, id, msg):
+    list = List.objects.get_by_id_querier(id, request.user)
+    if list is None:
+        return None
+    if not list._is_public():
+        return False
+    if list.short_url is None:
+        list._get_short_url()
+    from geoauth.clients.twitter import TwitterClient
+    from os import environ
+    try:
+        tw_client=TwitterClient(user=request.user)
+        tw_client.send_tweet(msg)
+    except:
+        return None
+    return True
     
     

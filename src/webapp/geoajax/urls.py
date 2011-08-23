@@ -53,4 +53,5 @@ urlpatterns = patterns('geoajax.views',
     (r'^searchconfgoogle/$', 'mod_searchconfig_google'),
     (r'^get/short/$', 'get_short_url', {}, 'short_url'),
     (r'^share/facebook/$', 'share_on_facebook', {}, 'share_on_facebook'),
+    (r'^share/twitter/$', 'share_on_twitter', {}, 'share_on_twitter'),
 )
