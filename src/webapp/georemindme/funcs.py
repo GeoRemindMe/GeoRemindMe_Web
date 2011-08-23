@@ -140,6 +140,4 @@ def fetch_parents(entities):
     """
     ref_keys = [x.parent_key() for x in entities if x.parent_key() is not None]
     ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
-    parents = []    
-    parents.extend([ref_entities[entity.parent_key()] for entity in entities])
-    return parents
+    return ref_entities.values()
