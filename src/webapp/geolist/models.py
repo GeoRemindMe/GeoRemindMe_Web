@@ -80,6 +80,7 @@ class List(db.polymodel.PolyModel, HookedModel):
                     'count': self.count,
                     'counters': self.counters.to_dict(),
                     'keys': [i.id() for i in self.keys],
+                    'visibility': self._get_visibility(),
                     }
             if resolve:
                 dict['instances'] = db.get(self.keys)
