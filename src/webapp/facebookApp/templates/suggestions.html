@@ -978,11 +978,7 @@
                                             
                                             <dt>Tags:</dt>
                                             <dd {% if obj.user.username == user.username%}class="editable_list_tags"{%endif%}>
-                                                {% if obj.tags %}
-                                                    {{obj.tags}}
-                                                {% else %}
-                                                    <em>Esta lista no tiene tags</em>
-                                                {% endif %}
+                                                {% if obj.tags %}{{obj.tags}}{% endif %}
                                             </dd>
                                             <dt><strong>Compartir:</strong></dt>
                                             <dd>
