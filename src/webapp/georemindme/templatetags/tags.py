@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from django import template
+from django.template.defaultfilters import stringfilter
 
 register = template.Library()
 
@@ -137,3 +138,5 @@ def embedded_avatar(username):
         except:
             return 'http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png'
     return encoded_image
+
+

@@ -769,6 +769,7 @@ def share_on_facebook(request):
     if response is not None:
         return HttpResponse(simplejson.dumps(response),
                             mimetype='application/json')
+    raise Exception(response)
     return HttpResponseBadRequest()
 
 
@@ -776,11 +777,12 @@ def share_on_facebook(request):
 def share_on_twitter(request):
     response = None
     event_id = request.POST.get('event_id', None)
+    msg = request.POST.get('msg', None)
     if event_id is not None:
-        response = geoalert.share_on_twitter(request, event_id)
+        response = geoalert.share_on_twitter(request, event_id, msg)
     else:
         list_id =request.POST.get('list_id', None)
-        response = geolist.share_on_twitter(request, list_id)
+        response = geolist.share_on_twitter(request, list_id, msg)
     if response is not None:
         return HttpResponse(simplejson.dumps(response),
                             mimetype='application/json')
