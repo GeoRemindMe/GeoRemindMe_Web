@@ -470,7 +470,10 @@ def share_on_facebook(request, suggestion_id):
         suggestion._get_short_url()
     from geoauth.clients.facebook import FacebookClient
     from os import environ
-    fb_client=FacebookClient(user=request.user)
+    try:
+        fb_client=FacebookClient(user=request.user)
+    except:
+        return None
     params= {
                 "name": "Ver detalles de la sugerencia",
                 "link": suggestion.short_url if suggestion.short_url is not None else '%s%s' % (environ['HTTP_HOST'], suggestion.get_absolute_url()),

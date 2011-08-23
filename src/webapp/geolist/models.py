@@ -5,6 +5,7 @@ from google.appengine.ext import db
 
 from geouser.models import User
 from georemindme.models_utils import Visibility, HookedModel
+from geotags.models import Taggable
 from georemindme.decorators import classproperty
 from models_indexes import ListCounter
 
@@ -101,7 +102,7 @@ class List(db.polymodel.PolyModel, HookedModel):
             self.short_url = None
 
 
-class ListSuggestion(List, Visibility):
+class ListSuggestion(List, Visibility, Taggable):
     '''
     Lista agrupando sugerencias, que no tienen porque ser sugerencias
     creadas por el mismo usuario que crea la lista.
@@ -147,7 +148,7 @@ class ListSuggestion(List, Visibility):
             return True
 
     @classmethod
-    def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], vis='public'):
+    def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], tags = None, vis='public'):
         """
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
@@ -172,8 +173,9 @@ class ListSuggestion(List, Visibility):
                 list.update(name=name, 
                             description=description,
                             instances=instances, 
-                            instances_del=instances_del, 
-                            vis=vis 
+                            instances_del=instances_del,
+                            tags=tags, 
+                            vis=vis
                             )
                 return list
             return False
@@ -185,10 +187,13 @@ class ListSuggestion(List, Visibility):
                               keys=[k for k in keys], 
                               _vis=vis
                               )
-        list.put()
+        if tags is not None:
+            list._tags_setter(tags)
+        else:
+            list.put()
         return list
 
-    def update(self, name=None, description=None, instances=[], instances_del=[], vis='public'):
+    def update(self, name=None, description=None, instances=[], instances_del=[], tags=None, vis='public'):
         """
         Actualiza una lista de alertas
 
@@ -217,7 +222,10 @@ class ListSuggestion(List, Visibility):
         keys = set(keys)
         self.keys = [k for k in keys]
         self._vis = vis
-        self.put()
+        if tags is not None:
+            self._tags_setter(tags)
+        else:
+            self.put()
 
     def del_follower(self, user):
         """
@@ -295,7 +303,7 @@ class ListRequested(ListSuggestion):
         return ListRequestedHelper()
 
     @classmethod
-    def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], vis='public'):
+    def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], tags=None, vis='public'):
         """
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
@@ -323,6 +331,7 @@ class ListRequested(ListSuggestion):
                             description=description, 
                             instances=instances, 
                             instances_del=instances_del, 
+                            tags=tags,
                             vis=vis 
                             )
                 return list
@@ -334,10 +343,12 @@ class ListRequested(ListSuggestion):
                              keys=[k for k in keys], 
                              _vis=vis
                              )
+        if tags is not None:
+            list._tags_setter(tags, commit=False)    
         list.put()
         return list
 
-    def update(self, querier, name=None, description=None, instances=[], instances_del=[], vis='public'):
+    def update(self, querier, name=None, description=None, instances=[], instances_del=[], tags=None, vis='public'):
         '''
         Actualiza una lista de alertas
 
@@ -377,6 +388,9 @@ class ListRequested(ListSuggestion):
         keys = set(keys)
         self.keys = [k for k in keys]
         self._vis = vis
+        if tags is not None:
+            self._tags_setter(tags, commit=False)
+        
         self.put(querier=querier)
 
     def _post_put_sync(self, querier, **kwargs):

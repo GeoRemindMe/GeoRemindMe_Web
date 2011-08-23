@@ -277,7 +277,7 @@ class SuggestionHelper(EventHelper):
         '''
         if not isinstance(user, User) or not isinstance(querier, User):
             raise TypeError()
-        event = self._klass.get_by_id(int(id))
+        event = self._klass.get_by_id(id)
         if event is None:
             return None
         from geolist.models import ListSuggestion

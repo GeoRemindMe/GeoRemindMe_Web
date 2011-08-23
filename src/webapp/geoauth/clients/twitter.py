@@ -17,6 +17,7 @@ class TwitterAPIError(Exception):
 class TwitterClient(Client):
     url_credentials = 'https://twitter.com/account/verify_credentials.json'
     url_friends = 'http://api.twitter.com/version/friends/ids.json'
+    url_statuses_update = 'https://api.twitter.com/1/statuses/update.json' 
     user = None
     
     def __init__(self, token=None, user=None):
@@ -35,7 +36,6 @@ class TwitterClient(Client):
     
     def get_user_info(self):
         """Obtiene la infomacion del perfil del usuario"""
-        
         response, content = self.request('https://twitter.com/account/verify_credentials.json')
         if response['status'] != 200:
             raise TwitterAPIError(response['status'], response)
@@ -123,3 +123,18 @@ class TwitterClient(Client):
             self.user.settings.put()
             self.authorize(user)
         return user
+    
+    def send_tweet(self, msg, poi=None, wrap_links=False):
+        body = {
+                'status': msg.encode('utf-8'),
+                }
+        if poi is not None:
+            body['lat'] = poi.lat
+            body['lon'] = poi.lon
+        body['wrap_links'] = 'true' if wrap_links else 'false'
+        from urllib import urlencode
+        response, content = self.request('https://twitter.com/account/verify_credentials.json', urlencode(body))
+        if response['status'] != 200:
+            raise TwitterAPIError(response['status'], response)
+        return simplejson.loads(content)
+        

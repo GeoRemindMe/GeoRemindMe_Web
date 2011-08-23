@@ -44,7 +44,7 @@ def add_list_alert(request, name=None, description=None, instances=None):
     return list.id
 
 @login_required
-def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[]):
+def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[], tags=None):
     '''
     Modifica una lista de usuarios
 
@@ -63,12 +63,12 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         list = ListRequested.objects.get_by_id_querier(id, request.user)
         if list is not None:
             try:
-                list.update(querier=request.user, instances=instances)
+                list.update(querier=request.user, instances=instances, tags=tags)
                 return list
             except:
                 from django.http import HttpResponseForbidden
                 return HttpResponseForbidden
-    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, instances_del=instances_del)
+    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del)
     return list
 
 @login_required
@@ -455,7 +455,10 @@ def share_on_facebook(request, suggestion_id):
         list._get_short_url()
     from geoauth.clients.facebook import FacebookClient
     from os import environ
-    fb_client=FacebookClient(user=request.user)
+    try:
+        fb_client=FacebookClient(user=request.user)
+    except:
+        return None
     params= {
                 "name": "Ver detalles de la sugerencia",
                 "link": list.short_url if list.short_url is not None else '%s%s' % (environ['HTTP_HOST'], list.get_absolute_url()),
