@@ -257,6 +257,7 @@
 							}}] 
 					}
 				}else if($(this).attr("type")=="twitter"){
+                    //DIALOGO DE TWITTER
 					template="#shareTwitter";
 					settings={ 
 						title: "Compartir en Twitter",
@@ -265,9 +266,17 @@
 							text: "Enviar",
 							click: function() { 
 								//$(this).dialog("close"); 
-								asd=$(this).find('.twitter-share-button')
-								console.log($(this).find('.twitter-share-button'));
-								$(this).find('.twitter-share-button').click();
+								var linkEl = $(this).find('.twitter-share-button');
+                                var field = $(this).find('.twitter-share-button textarea');
+                                linkEl.attr("data-url")="http://ejemplo.com"
+                                linkEl.attr("data-text")= $(field).val();
+                                console.log($(field).val())
+                                if ( linkEl.attr('onclick') === undefined ) {
+                                    document.location = linkEl.attr('href');
+                                } else {
+                                    linkEl.click ();
+                                }
+                                
 							}
 						},{
 							text: "Cancelar",
@@ -276,6 +285,7 @@
 							}}] 
 					}
 				}else if($(this).attr("type")=="wall"){
+                    //DIALOGO DE FACEBOOK
 					template="#shareFacebook";
 					settings={ 
 						title: "Compartir en Facebook",
@@ -283,10 +293,31 @@
 						buttons: [{
 							text: "Publicar",
 							click: function() { 
-								//$(this).dialog("close"); 
-								asd=$(this).find('.twitter-share-button')
-								console.log($(this).find('.twitter-share-button'));
-								$(this).find('.twitter-share-button').click();
+								asdasd=$(this);
+								var element=$(this).find('textarea');
+                                
+                                var params;
+                                if($(element).attr("event-type")=="event")
+                                    params={
+                                        "event_id"  : $(element).attr("data-id"),
+                                        "msg"       : $(element).val()
+                                    }
+                                else
+                                    params={
+                                        "list_id"  : $(element).attr("data-id"),
+                                        "msg"       : $(element).val()
+                                    }
+                                    
+								$.ajax({
+                                    type: "POST",
+                                    url: "/ajax/share/facebook/",
+                                    data: params,
+                                    context: $(this),
+                                    success: function(data){
+                                        console.log("Hecho!");
+                                        $(this).dialog("close"); 
+                                    }
+                                });
 							}
 						},{
 							text: "Cancelar",
@@ -296,10 +327,15 @@
 						}] 
 					}
 				}
-					
-				var obj=$(template).tmpl({link:$(this).attr("href")})//.appendTo("#suggestion-list-lists");
+                console.log($(this).attr("data-type")+","+$(this).attr("value")+","+$(this).attr("data-href"))
+				var obj=$(template).tmpl({
+                    "type"        :$(this).attr("data-type"),
+                    "elem_id"     :$(this).attr("value"),
+                    "link"        :$(this).attr("data-href")
+                });
+                
 				$('#share-text').html(obj);
-				setRemainingCharCounter('#id_name','#twitter-counter');
+				setRemainingCharCounter('#twitter_msg','#twitter-counter');
 				$('#id_name').keyup();
 				$('#share-text').dialog(settings);
 				$('#share-text').dialog("open");
@@ -503,7 +539,8 @@
             $(obj+' .maximize-minimize').toggle(function(){
                     //Lo primero que hacemos es cerrar todas aquellas listas/sugerencias
                     //que ya estén desplegadas --> Accordion
-                    var elementsList=Array.pop($(this).parentsUntil(".tab-content"));
+                    var parents=$(this).parentsUntil(".tab-content");
+                    var elementsList=parents[parents.length-1];
                     var elements;
                     if($(elementsList).attr("id")=="suggestion-list-lists")
                         elements=$(elementsList).children()
@@ -609,7 +646,7 @@
         function get_suggestion_id(obj){
             var hash={};
             var parents=$(obj).parentsUntil(':regex(id,(suggestion-list|suggestion-list-lists))');
-            var suggestion_element=Array.pop(parents);
+            var suggestion_element=parents[parents.length-1];
             if($(suggestion_element).hasClass("suggestionList"))
                 hash['list_id']=($(suggestion_element).attr("id")).substring(5,($(suggestion_element).attr("id")).length);
             else
@@ -818,12 +855,14 @@
                                 <div class="expanded" style="display:none">
                                     <dl> 
                                         {% if k.user.username != user.username%}
-                                            <dt>Autor:</dt>
-                                            <dd>
-                                                <a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a>
+                                            <dt>
+                                                Autor:
                                                 <div class="help-icon">
                                                     <img id="help-suggestion" alt="Help" src="/static/facebookApp/img/help.png">
                                                 </div>
+                                            </dt>
+                                            <dd>
+                                                <a href="{% url fb_public_profile k.user.username %}">{{k.user.username}}</a>
                                             </dd>
                                         {%endif%}
                                         
@@ -884,12 +923,14 @@
                                         <dt class="share-row"><strong>Compartir:</strong></dt>
                                         <dd class="share-row">
                                             <ul class="share-suggestion">
-                                                <li class="share" type="link" href="{{ k.get_short_url }}"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
+                                                <li class="share" type="link" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="event"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
 <!--
                                                 <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
 -->
-                                                <li class="share" type="twitter" href="{{ k.get_short_url }}"><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
-                                                <li class="share" type="wall" href="{{ k.get_short_url }}"><a class="share-suggestion facebook-icon" href="">Muro</a></li>
+                                                <li class="share" type="twitter" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="event"><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
+                                                {% if user.facebook_user %}
+                                                    <li class="share" type="wall" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="event"><a class="share-suggestion facebook-icon" href="">Muro</a></li>
+                                                {% endif %}
                                             </ul>
                                         </dd>
                                         
@@ -991,12 +1032,12 @@
                                             <dt><strong>Compartir:</strong></dt>
                                             <dd>
                                                 <ul class="share-suggestion">
-                                                    <li class="share" type="link" href="{{ k.get_short_url }}"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
+                                                    <li class="share" type="link" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
     <!--
                                                     <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
     -->
-                                                    <li class="share" type="twitter" href="{{ k.get_short_url }}"><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
-                                                    <li class="share" type="wall" href="{{ k.get_short_url }}"><a class="share-suggestion facebook-icon" href="">Muro</a></li>
+                                                    <li class="share" type="twitter" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
+                                                    <li class="share" type="wall" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion facebook-icon" href="">Muro</a></li>
                                                 </ul>
                                             </dd>
                                             <dt>Visibilidad:</dt>
@@ -1123,28 +1164,27 @@
 		<input type="text" value="${link}" readonly="readonly">
     </script>
     <script id="shareTwitter" type="text/x-jquery-tmpl">
-		{% if profile.sociallinks.twitter %}
+		<p>Envía esta sugerencia a tus seguidores en Twitter.</p>
+        <textarea id="twitter_msg" data-id="${elem_id}" event-type="${type}">${link}</textarea>
+        <span id="twitter-counter">140</span>
+        
+        {% if user.twitter_user %}
 			{% comment %}
 				Si tiene la cuenta de Twitter asociada le dejamos escribir directamente:
 			{% endcomment %}
 		{% else %}
-			<p>Envía esta sugerencia a tus seguidores en Twitter.</p>
-			<textarea id="id_name">${link}</textarea>
-			<span id="twitter-counter">140</span>
 			<div style="display:none">
 			   <a href="http://twitter.com/share" class="twitter-share-button"
 				  data-url="http://dev.twitter.com/pages/tweet_button"
-				  data-via="your_screen_name"
-				  data-text="Checking out this page about Tweet Buttons"
-				  data-related="anywhere:The Javascript API"
-				  data-count="vertical">Tweet</a>
+				  data-via="GeoRemindMe"
+				  data-text="Yeaph!">Tweet</a>
 			</div>
 		{% endif %}
     </script>
     <script id="shareFacebook" type="text/x-jquery-tmpl">
 		
 			<p>Envía esta sugerencia a tu muro de Facebook:</p>
-			<textarea id="id_name">${link}</textarea>
+			<textarea id="facebook_msg" data-id="${elem_id}" event-type="${type}">${link}</textarea>
 		
     </script>
     

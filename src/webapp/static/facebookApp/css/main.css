@@ -396,6 +396,17 @@ input{
         height: 22px;
         margin: 6px 0;
     }
+    
+    div#content div.expanded div.help-icon{
+        border-bottom:0;
+        margin:0;
+        display: inline;
+        float: none;
+    }
+    div#content div.expanded div.help-icon img{
+    height: 13px;
+    width: 13px;
+    }
     #activity div.help-icon{
         height: 16px;
         margin: 15px 0;
@@ -2212,7 +2223,9 @@ input{
     }
     
     div.ui-dialog div#share-text.help-txt input{
-		width:98%;
+		display: block;
+        margin: 0 auto;
+        width: 200px;
     }
     div.ui-dialog div#share-text.help-txt textarea{
 		display: block;
