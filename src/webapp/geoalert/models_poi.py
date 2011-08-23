@@ -332,8 +332,9 @@ class Place(POI):
         """
         if google_places_id is None and google_places_reference is not None:
                 from mapsServices.places.GPRequest import GPRequest
-                search = GPRequest().retrieve_reference(google_places_reference)
-                return Place.insert_or_update_google(name=search['result']['name'],
+                try:
+                    search = GPRequest().retrieve_reference(google_places_reference)
+                    return Place.insert_or_update_google(name=search['result']['name'],
                                 address=search['result'].get('formatted_address'), 
                                 city=_get_city(search['result'].get('address_components')),
                                 location=db.GeoPt(search['result']['geometry']['location']['lat'], search['result']['geometry']['location']['lng']),
@@ -341,6 +342,8 @@ class Place(POI):
                                 google_places_id=search['result']['id'],
                                 user = user
                                 )
+                except:
+                    return None
         place = cls.objects.get_by_google_id(google_places_id)
         if not isinstance(location, db.GeoPt):
             location = db.GeoPt(location)

@@ -135,4 +135,4 @@ class GPRequest(Http):
         json = simplejson.loads(content)
         if json['status'] == 'OK':
             return json
-        raise GPAPIError(json['status'])
+        raise GPAPIError(json['status'], json['status'])

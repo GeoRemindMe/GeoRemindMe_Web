@@ -347,7 +347,7 @@ def add_suggestion_invitation(request, eventid, username):
 
 
 @login_required
-def edit_suggestion(request, suggestion_id, form, template='webapp/add_suggestion.html'):
+def edit_suggestion(request, suggestion_id, template='webapp/add_suggestion.html'):
     """ Edita una sugerencia
         
             :param form: formulario con los datos
@@ -355,7 +355,6 @@ def edit_suggestion(request, suggestion_id, form, template='webapp/add_suggestio
             
             :returns: :class:`geoalert.models.Suggestion`
     """
-    from geoalert.forms import SuggestionForm
     s = Suggestion.objects.get_by_id(suggestion_id)
     return  render_to_response(template, {
                                                         'eventid':suggestion_id,
