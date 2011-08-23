@@ -486,10 +486,7 @@ def share_on_facebook(request, suggestion_id, msg):
     #Pasamos todos los valores a UTF-8
     params = dict([k, v.encode('utf-8')] for k, v in params.items())
     try:        
-        post_id = fb_client.consumer.put_wall_post("%(sugerencia)s" % {
-                                                           'sugerencia': suggestion.name.encode('utf-8')
-                                                           }, 
-                                                       params)
+        post_id = fb_client.consumer.put_wall_post(msg, params)
     except:
         return None
     return post_id

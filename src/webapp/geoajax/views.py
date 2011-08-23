@@ -769,6 +769,7 @@ def share_on_facebook(request):
     if response is not None:
         return HttpResponse(simplejson.dumps(response),
                             mimetype='application/json')
+    raise Exception(response)
     return HttpResponseBadRequest()
 
 
