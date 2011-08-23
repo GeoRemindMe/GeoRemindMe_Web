@@ -34,7 +34,11 @@ class List(db.polymodel.PolyModel, HookedModel):
     def short_url(self):
         if self._short_url is None:
             self._get_short_url()
-            self.put()
+            if self._short_url is not None:
+                self.put()
+            else:
+                from os import environ
+                return '%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
         return self._short_url
 
     @property
@@ -103,10 +107,10 @@ class List(db.polymodel.PolyModel, HookedModel):
         from os import environ
         try:
             client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
-            response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()),)
-            self.short_url = response['results']['packUrl']
+            response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
+            self._short_url = response['results']['packUrl']
         except:
-            self.short_url = None
+            self._short_url = None
 
 
 class ListSuggestion(List, Visibility, Taggable):

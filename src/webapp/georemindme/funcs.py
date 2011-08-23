@@ -105,6 +105,7 @@ def prefetch_refprops(entities, *props):
         prop.__set__(entity, ref_entities[ref_key])
     return entities
 
+
 def prefetch_refpropsEntity(entities, *props):
     # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
     """
@@ -139,5 +140,4 @@ def fetch_parents(entities):
         directamente en una sola consulta al datastore
     """
     ref_keys = [x.parent_key() for x in entities if x.parent_key() is not None]
-    ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
-    return ref_entities.values()
+    return [x for x in db.get(set(ref_keys))]

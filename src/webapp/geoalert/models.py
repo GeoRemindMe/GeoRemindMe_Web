@@ -268,7 +268,7 @@ class Suggestion(Event, Visibility, Taggable):
     modified = db.DateTimeProperty(auto_now=True)
     user = db.ReferenceProperty(User, collection_name='suggestions')
     has = db.StringListProperty(default=[u'active:T',])
-    _short_url = db.URLProperty()
+    _short_url = db.TextProperty()
     
     _counters = None
     
@@ -284,7 +284,11 @@ class Suggestion(Event, Visibility, Taggable):
     def short_url(self):
         if self._short_url is None:
             self._get_short_url()
-            self.put()
+            if self._short_url is not None:
+                self.put()
+            else:
+                from os import environ
+                return '%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
         return self._short_url
     
     @property
@@ -430,10 +434,10 @@ class Suggestion(Event, Visibility, Taggable):
         from os import environ
         try:
             client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
-            response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()),)
-            self.short_url = response['results']['packUrl']
+            response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
+            self._short_url = response['results']['packUrl']
         except:
-            self.short_url = None
+            self._short_url = None
             
     def delete(self):
         from django.conf import settings
@@ -477,7 +481,7 @@ class Suggestion(Event, Visibility, Taggable):
         return simplejson.dumps(self.to_dict())
 
     def get_absolute_url(self):
-        return '/suggestion/%s/' % self.slug if self.slug is not None and self.slug != '' else self.id
+        return '/suggestion/%s/' % self.slug.encode('utf-8') if self.slug is not None and self.slug != '' else self.id
     
     def get_absolute_fburl(self):
         return '/fb%s' % self.get_absolute_url()
