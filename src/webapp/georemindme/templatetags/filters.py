@@ -9,5 +9,5 @@ register = template.Library()
 def private(value, arg):
     private = getattr(value,arg)
     if callable(private):
-        return private
+        return private()
     return private
