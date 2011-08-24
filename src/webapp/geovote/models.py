@@ -249,6 +249,12 @@ class Comment(Visibility):
             self.put()
             comment_deleted.send(self)
             
+    def __str__(self):
+        return unicode(self.msg).encode('utf-8')
+
+    def __unicode__(self):
+        return self.msg
+            
 
 from georemindme.models_utils import ShardedCounter
 class VoteCounter(ShardedCounter):

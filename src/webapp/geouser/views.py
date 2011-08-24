@@ -33,9 +33,6 @@ def register(request):
         user = None
         if f.is_valid():
             user = f.save(language=request.session['LANGUAGE_CODE'])
-            if user:
-                from django.contrib import messages
-                messages.success(request, _("User registration complete, a confirmation email have been sent to %s. Redirecting to dashboard...") % user)
         return user, f
     return HttpResponseRedirect(reverse('georemindme.views.register_panel'))
 

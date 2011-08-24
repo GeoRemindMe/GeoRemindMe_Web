@@ -150,7 +150,7 @@ class EventHelper(object):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        return self._klass.all().filter('user =', user).filter('modified >', last_sync).order('-modified')
+        return self._klass.all().filter('user =', user).filter('modified >', last_sync).order('-modified').fetch(50)
 
 
 class AlertHelper(EventHelper):

@@ -10,7 +10,6 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.contrib import messages
 
 from geouser.forms import LoginForm
 from geouser.decorators import login_required
@@ -120,10 +119,8 @@ def client_access_request(request, provider, next=None):
     try:
         if not request.session[provider]['request_token']['oauth_token'] == request.GET.get('oauth_token') \
             and request.GET.get('oauth_verifier') :
-            messages.error(request, _("Invalid response from server."))
             return HttpResponseRedirect(reverse('georemindme.views.home'))
     except:
-        messages.error(request, _("Invalid response from server."))
         return HttpResponseRedirect(reverse('georemindme.views.home'))
     #lee el token recibido
     token = oauth2.Token(request.GET.get('oauth_token'), 
@@ -146,19 +143,16 @@ def client_access_request(request, provider, next=None):
         from clients.twitter import TwitterClient
         client = TwitterClient(token=oauth2.Token(token['oauth_token'], token['oauth_token_secret']))
         if request.user.is_authenticated():#usuario ya esta logeado, guardamos el token de su cuenta
-            if client.authorize(request.user, login = False if 'nologin' in request.GET else True):
-                messages.success(request, _('Got access from %s' % provider))
+            client.authorize(request.user, login = False if 'nologin' in request.GET else True)
         else:
             user = client.authenticate()
-            messages.success(request, _('Logged from %s' % provider))
             init_user_session(request, user)
     
     elif provider == 'google':
         from clients.google import GoogleClient
         client = GoogleClient(token=oauth2.Token(token['oauth_token'], token['oauth_token_secret']))
         if request.user.is_authenticated():#usuario ya esta logeado, guardamos el token de su cuenta
-            if client.authorize(request.user):
-                messages.success(request, _('Got access from %s' % provider))
+            client.authorize(request.user)
         else:
             raise OAUTHException()
     else:
@@ -237,11 +231,9 @@ def facebook_access_request(request, next=None):
         from clients.facebook import FacebookClient
         client = FacebookClient(access_token = token['access_token'])
         if request.user.is_authenticated():#usuario ya esta logeado, guardamos el token de su cuenta
-            if client.authorize(request.user):
-                messages.success(request, _('Got access from Facebook'))
+            client.authorize(request.user)
         else:
             user = client.authenticate()
-            messages.success(request, _('Logged from Facebook'))
             init_user_session(request, user)
     if next is None:
         next = reverse('geouser.views.dashboard')
