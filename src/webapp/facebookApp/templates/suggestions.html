@@ -684,7 +684,11 @@
             else
 				hash['name']=$(suggestion_element).find('.suggestionName').html();
 
-            hash['visibility']=$(suggestion_element).find('.editable_visibility select').val();
+            
+            if($(suggestion_element).find('.editable_visibility select').length>0)
+                hash['visibility']=$(suggestion_element).find('.editable_visibility select').val();
+            else
+                hash['visibility']=$(suggestion_element).find('.editable_visibility').attr("value");
 						 
             return hash;
         }

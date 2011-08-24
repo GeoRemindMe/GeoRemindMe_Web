@@ -67,10 +67,10 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if not user.twitter_user.has_perms %}
+                        {% if not user.has_perms_twitter %}
                             <a href="/ext/twitter/perms" target="_blank">Autorizar</a> 
                         {% else %}
-                            <a href="/oauth/revocate/twitter" target="_blank">Revocar</a>
+                            <a href="http://twitter.com/settings/applications" target="_blank">Revocar</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -84,11 +84,14 @@
                         {% endif %}
                     </td>
                     <td>
+                        <em>Esperando la API de Google+</em>
+<!--
                         {% if not user.google_user.has_perms %}
                             <a href="/ext/google/contacts?cls" target="_blank">Autorizar</a> 
                         {% else %}
                             <a href=""/oauth/revocate/google" target="_blank">Revocar</a>
                         {% endif %}
+-->
                     </td>
                 </tr>
             </table>
