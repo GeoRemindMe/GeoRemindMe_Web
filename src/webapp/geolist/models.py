@@ -81,6 +81,9 @@ class List(db.polymodel.PolyModel, HookedModel):
                     'counters': self.counters.to_dict(),
                     'keys': [i.id() for i in self.keys],
                     'visibility': self._get_visibility(),
+                    'get_absolute_url': self.get_absolute_url(),
+                    'get_absolute_fburl': self.get_absolute_fburl(),
+                    'short_url': self.short_url,
                     }
             if resolve:
                 dict['instances'] = db.get(self.keys)
