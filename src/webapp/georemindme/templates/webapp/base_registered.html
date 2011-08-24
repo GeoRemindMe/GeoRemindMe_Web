@@ -33,21 +33,21 @@
 	
 </head>
 <body>
-	<header id="header" class="container">
-		<a href="/"><img src="/static/webapp/img/logo2.png" alt="" id="logo"></a>
+	<div id="bg-header">
+	<header id="header-top" class="container">
+		<a href="/"><img src="/static/webapp/img/logo3.png" alt="" id="logo"></a>
 		
 		<div id="search_bar">
-            <input type="search" placeholder="Busca sugerencias"><br>
+            <input type="search" placeholder="Comming soon..." readonly><br>
             Ejemplo: tapas en granada, turismo, paisajes, etc.
         </div>
 		
 		<div id="account-info">
 			<a href="{% url public_profile request.user.username %}"><img src="{% embedded_avatar request.user.username %}" alt=""></a>
-			<a href="{% url logout %}">Salir</a>
+			<a href="{% url logout %}" id="logout-btn">Salir</a>
 		</div>
-		
-		
 	</header>
+	</div>
 	<div id="background">
 		<div id="base" class="container">
 			<section id="left-col">

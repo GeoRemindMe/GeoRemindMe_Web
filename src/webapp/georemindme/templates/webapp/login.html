@@ -59,9 +59,9 @@
 	</script>
 	
 </head>
-<body>
+<body id="loginSec">
     <div id="notification-msg" style="display:none">Mensaje con lo que sea</div>
-	<header id="header" class="container">
+	<header id="header-top" class="container">
 		<a href="/"><img src="/static/webapp/img/logo2.png" alt="" id="logo"></a>
 		<nav id="header-nav">
 			<ul>
@@ -71,11 +71,15 @@
 				<li><a href="http://team.georemindme.com/">Comunidad</a></li>
 			</ul>
 		</nav>
-	
-		<a href="#" id="login-btn">Identifícate</a>
+		
+		<input type="submit" id="login-btn" value="Entrar" />
+		<input type="text" name="password" placeholder="Password"  />
+		<input type="text" name="email" placeholder="Email"/>
+		
+		
 		
 	</header>
-	<div id="background">
+	<div id="background-login">
 		<div id="main" class="container">
 			<section id="left-block">
 				

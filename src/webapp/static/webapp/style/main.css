@@ -50,6 +50,20 @@ table {
 
 /*------- HOME STYLE ---------*/
 
+#loginSec #header-top input{
+	border: 1px solid #CCCCCC;
+    display: inline;
+    float: right;
+    height: 1.5em;
+    margin-right: 5px;
+    width: 130px;
+}
+
+#bg-header{
+	background-color: #FF913C;
+	
+}
+
 body {
 	background-color: #FFFFFF;
 	font-family: Helvetica Neue, Arial, sans-serif;
@@ -61,21 +75,23 @@ body {
 	margin: 0 auto;
 }
 
-#header {
-	height: 70px;
-    margin: 5px auto;
+#header-top {
+	height: 80px;
+    margin: 0 auto;
 }
 
 #logo {
 	width: 200px;
 	float: left;
+	padding:5px 0
 }
 
 #header-nav {
 	float: left;
     font-size: 12px;
-    margin: 28px auto 0;
-    width: 605px;
+    margin: 31px auto 0;
+    padding-left: 20px;
+    width: 380px;
 }
 
 #header-nav ul {
@@ -108,7 +124,7 @@ body {
 	text-decoration: underline;
 }
 
-#header a#login-btn {
+#header-top a#logout-btn,#header-top input#login-btn {
 	display: block;
 	color: #000000;
 	text-decoration: none;
@@ -137,6 +153,18 @@ body {
 	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
 	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
 }
+#header-top input#login-btn{
+	float: right;
+    font-size: 0.9em;
+    height:24px;
+    line-height: 20px;
+    margin-right: 0;
+    margin-top: 24px;
+    width: auto;
+}
+#header-top a#logout-btn {
+	width:80px;
+}
 
 #login-btn a {
 	color: #000000;
@@ -145,18 +173,15 @@ body {
 	height: 132px;
 }
 
-#background {
-	background-color: #ff913c;
+#background{
+	
 	width: 100%;
     font-size: 0.9em;
 }
-#background:after{
-    clear: both;
-    content: ".";
-    display: block;
-    height: 0px;
-    visibility: hidden;
+#background-login{
+	background-color: #ff913c;
 }
+
 #main {
 	min-height: 415px;
 	background: url('/static/webapp/img/bg.png') no-repeat;
@@ -459,7 +484,7 @@ body {
     text-decoration: none;
 	margin-top: 16px;
 	margin-left: 10px;
-    line-height: 20px;
+    line-height: 30px;
 }
 
 #account-info a:hover {
@@ -468,44 +493,50 @@ body {
 
 #account-info img {
 	float: left;
-	height: 20px;
-	width: 20px;
+	height: 30px;
+	width: 30px;
 }
 
-#header input {
+#header-top input {
 	border: 1px solid #AAAAAA;
-    margin-left:130px;
-	margin-right:auto;
-	margin-top:20px;
+    
+	
+	margin-top:25px;
     outline: medium none;
     width: 300px;
 }
 #search_bar{
-    color: #555555;
+    border-left: 1px solid #CCCCCC;
+    color: white;
     float: left;
-    font-size: 0.9em;
+    font-size: 1em;
+    font-weight: bold;
     line-height: 1.5em;
-    padding-top: 20px;
-    text-align: center;
-    width: 600px;
+    margin-left: 15px;
+    padding: 5px 0 15px 15px;
+    text-align: left;
+    
+
 }
 
 #left-col {
 	float: left;
-	width: 250px;
+	width: 215px;
 	clear: left;
-	margin-top: 30px;
+	margin-top: 20px;
 }
 
 #right-col {
-	width: 690px;
+	width: 725px;
 	float: left;
-	border-left: 1px solid #FFFFFF;
+	border-left: 1px solid #ccc;
 }
 
 #right-col h1 {
-	color: #FFFFFF;
+	color: #555555;
+/*
 	text-shadow: 0px 1px 0px #000000;
+*/
 }
 
 
@@ -544,8 +575,22 @@ body {
     background: linear-gradient(top, #ffea64 0%,#ffab25 100%); /* W3C */
 }
 
+#left-col a#add-suggestion-btn{
+	font-size: 1.2em;
+    height: auto;
+    line-height: 3em;
+    margin: 0;
+    width: 150px;
+}
+
 #left-col ul {
-	margin-top: 40px;
+	border-top: 1px solid #CCCCCC;
+    font-size: 1.2em;
+    margin-top: 20px;
+    
+}
+#left-col ul li{
+	padding:5px 0;
 }
 
 #left-col li a{
@@ -598,11 +643,11 @@ body {
 }
 
 ul#tabMenu li {
-	color: #FF913C;
+	color: black;
 }
 
 ul#tabMenu li.active {
-    color: #FF913C;
+    color: black;
 }
 
 ul#tabMenu {
@@ -621,8 +666,10 @@ div#left-col hr, #right-col hr, hr {
 }
 
 .follow-button {
-    width: 90px;
-	margin-left: 10px;
+    margin-left: 10px;
+    padding-right: 10px;
+}
+.follow-button span{
 }
 
 .follow-button a {
@@ -634,6 +681,8 @@ div#left-col hr, #right-col hr, hr {
 }
 
 #left-col #friends-to-follow li a {
+    line-height: 2em;
+    padding: 0 5px 0 26px;
     width: auto;
 }
 
@@ -687,4 +736,13 @@ div.removable a {
 .success{
     background-color: #C4FF89;
     
+}
+
+
+/*
+ * BAG
+ */
+
+.suggestionName {
+	width: 660px;
 }
