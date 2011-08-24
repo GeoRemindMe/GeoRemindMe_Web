@@ -481,7 +481,9 @@ body {
 
 #header input {
 	border: 1px solid #AAAAAA;
-    margin-right: auto;
+    margin-left:130px;
+	margin-right:auto;
+	margin-top:20px;
     outline: medium none;
     width: 300px;
 }
@@ -659,4 +661,10 @@ div.help-icon img {
 
 div.removable a {
 	visibility: none;
+}
+
+#center-col {
+	width: 690;
+	margin-left: 135px;
+	margin-right: 135px;
 }
