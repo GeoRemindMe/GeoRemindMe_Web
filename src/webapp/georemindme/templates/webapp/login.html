@@ -6,10 +6,16 @@
 	<meta name="google-site-verification" content="VzbSgMqvrPL6WuAhRfBzAFXM0GyU73igO1yjheV2Tc4" />
 
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.6/jquery.min.js" type="text/javascript">
-		document.ready(function() {
-		        var options = { opacity: 0.75 };
-		        $('.reflect').reflect(options);
+	<script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
+    
+    <script type="text/javascript">
+		$(document).ready(function() {
+		        
+                
+                $('#register-menu li').click(function(e){
+                    $('#register-menu li.active').removeClass("active");
+                    $(this).addClass("active");
+                })
 		    });
 	</script>
 	
@@ -57,10 +63,10 @@
 			<section id="right-block">
 				<h2>¿Eres nuevo?</h2>
 				<p>Crea tu perfil utilizando una de tus cuentas.</p>
-				<ul>
-					<li><a href="#"><img src="/static/webapp/img/facebook.png" alt="Facebook"></a></li>
-					<li><a href="#"><img src="/static/webapp/img/twitter.png" alt="Twitter"></a></li>
-					<li><a href="#"><img src="/static/webapp/img/Google.png" alt="Google+"></a></li>
+				<ul id="register-menu">
+					<li><img src="/static/webapp/img/facebook.png" alt="Facebook"></li>
+					<li><img src="/static/webapp/img/twitter.png" alt="Twitter"></li>
+					<li><img src="/static/webapp/img/Google.png" alt="Google"></li>
 				</ul>
 				<a href="#" id="register-btn">Regístrate</a>
 				
@@ -68,8 +74,6 @@
 			</section>
 <!--
 			<div id="avatar-chain">
-				<!-- EL contenedor soporta hasta 20 imagenes de avatar como máximo -->
-<!--
 				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
 				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
 				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
