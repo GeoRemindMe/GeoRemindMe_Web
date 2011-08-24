@@ -45,7 +45,6 @@
                     }else{
                         var register_link="http://localhost:8080/login/"+network.attr('id')+"/?cls";
                         $(this).attr('href',register_link)
-                        console.log(register_link)
                         if($(this).attr('onclick') === undefined || $(this).attr('onclick')==null){
                             window.location=$(this).attr('href');
                         } else {
