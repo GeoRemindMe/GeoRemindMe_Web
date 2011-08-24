@@ -8,17 +8,27 @@
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
 	<script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
+
     
     <script type="text/javascript">
 		$(document).ready(function() {
 		        
                 
                 $('#register-menu li').click(function(e){
-                    $('#register-menu li.active').removeClass("active");
-                    $(this).addClass("active");
+                    
+                    var lastActive=$('#register-menu li.active');
+                    $(lastActive).removeClass("active");
+                    if($(lastActive).attr("id")!=$(this).attr("id")){
+                        //Si no está deseleccionado lo activamos
+                        $(this).addClass("active");
+                    }
                 });
                 
                 $("[placeholder]").placeholder();
+                
+
+                
                 $('.register-text-aux').toggle(function(){
                         $('#registerForm').slideDown(400);
                     },function(){
@@ -31,7 +41,7 @@
                     var network=$('#register-menu li.active');
                     if(network.length==0){
                         //Mensaje
-                        console.log("Selecciona la red");
+                        showMessage("Primero selecciona una de la redes","error")
                     }else{
                         var register_link="http://localhost:8080/login/"+network.attr('id')+"/?cls";
                         $(this).attr('href',register_link)
@@ -51,14 +61,15 @@
 	
 </head>
 <body>
+    <div id="notification-msg" style="display:none">Mensaje con lo que sea</div>
 	<header id="header" class="container">
-		<img src="/static/webapp/img/logo2.png" alt="" id="logo">
+		<a href="/"><img src="/static/webapp/img/logo2.png" alt="" id="logo"></a>
 		<nav id="header-nav">
 			<ul>
-				<li><a href="#">Ayuda</a></li>
-				<li><a href="#">Blog</a></li>
-				<li><a href="#">Móvil</a></li>
-				<li><a href="#">Comunidad</a></li>
+				<li><a href="http://help.georemindme.com/">Ayuda</a></li>
+				<li><a href="http://blog.georemindme.com">Blog</a></li>
+				<li><a href="http://m.georemindme.com/">Móvil</a></li>
+				<li><a href="http://team.georemindme.com/">Comunidad</a></li>
 			</ul>
 		</nav>
 	
@@ -109,10 +120,10 @@
 				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
                 <div style="display:none" id="registerForm">
                     <form action="" method="POST">
-                        <input type="text" name="username" placeholder="Nombre de usuario"/>
-                        <input type="text" name="email" placeholder= "Email" />
-                        <input type="password" name="pass1" placeholder="Contraseña" />
-                        <input type="password" name="pass2" placeholder="Repita la contraseña" />
+                        <input type="text" name="username" value="" placeholder="Nombre de usuario"/>
+                        <input type="text" name="email" value="" placeholder= "Email" />
+                        <input type="password" name="pass1" id="pass1"/>
+                        <input type="password" name="pass2" id="pass2"/>
                         <input type="submit" value="Continuar"/>
                     </form>
                 </div>
@@ -137,7 +148,7 @@
 -->
 		</div>
 		<div class="footer-links right-links">
-			<a href="#">Empleo</a> · <a href="#">Prensa</a> · <a href="#">Mapa del sitio</a>
+			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
 		</div>
 	</footer>
 </body>
