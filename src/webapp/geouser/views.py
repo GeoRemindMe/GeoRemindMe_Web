@@ -252,7 +252,10 @@ def public_profile(request, username, template='webapp/profile.html'):
             timeline = profile_user.get_profile_timeline(querier=request.user)
         show_followers = settings.show_followers,
         show_followings = settings.show_followings
-    
+    if not request.user.is_authenticated():
+        from string import rfind
+        pos = rfind(template, '.html')
+        template = template[:pos] + '_anonymous' + template[pos:]
     return render_to_response(template, {'profile': profile, 
                                          'counters': counters.next(),
                                          'sociallinks': sociallinks.next(),
