@@ -137,6 +137,7 @@ body {
 #background {
 	background-color: #ff913c;
 	width: 100%;
+    font-size: 0.8em;
 }
 #background:after{
     clear: both;
