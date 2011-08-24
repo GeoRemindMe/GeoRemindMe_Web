@@ -79,6 +79,8 @@ class CommentHelper(object):
             
             :returns: [query_id, [:class:`geovote.models.Comment`]]
         """
+        if querier is not None and not querier.is_authenticated():
+            querier = None
         if querier is not None and not isinstance(querier, User):
             raise TypeError
         if instance is None:

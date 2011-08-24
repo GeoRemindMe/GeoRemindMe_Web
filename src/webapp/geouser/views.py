@@ -212,7 +212,7 @@ def public_profile(request, username, template='webapp/profile.html'):
     :type username: ni idea
     """
     from geoalert.views import get_suggestion
-    if request.user.username.lower() == username.lower():
+    if request.user.is_authenticated() and request.user.username.lower() == username.lower():
         # Si el usuario esta viendo su propio perfil
         profile = request.user.profile
         counters = request.user.counters_async()
@@ -254,15 +254,15 @@ def public_profile(request, username, template='webapp/profile.html'):
         show_followings = settings.show_followings
     
     return render_to_response(template, {'profile': profile, 
-                                                'counters': counters.next(),
-                                                'sociallinks': sociallinks.next(),
-                                                'chronology': timeline, 
-                                                'suggestions': suggestions,
-                                                'is_following': is_following,
-                                                'is_follower': is_follower, 
-                                                'show_followers': show_followers,
-                                                'show_followings': show_followings
-                                                }, context_instance=RequestContext(request))
+                                         'counters': counters.next(),
+                                         'sociallinks': sociallinks.next(),
+                                         'chronology': timeline, 
+                                         'suggestions': suggestions,
+                                         'is_following': is_following,
+                                         'is_follower': is_follower, 
+                                         'show_followers': show_followers,
+                                         'show_followings': show_followings
+                                        }, context_instance=RequestContext(request))
 
 
 @login_required
