@@ -36,7 +36,10 @@
 	<header id="header" class="container">
 		<img src="/static/webapp/img/logo2.png" alt="" id="logo">
 		
-		<input type="search" placeholder="Busca sugerencias">
+		<div id="search_bar">
+            <input type="search" placeholder="Busca sugerencias"><br>
+            Ejemplo: tapas en granada, turismo, paisajes, etc.
+        </div>
 		
 		<div id="account-info">
 			<a href="{% url public_profile request.user.username %}"><img src="{% embedded_avatar request.user.username %}" alt=""></a>
