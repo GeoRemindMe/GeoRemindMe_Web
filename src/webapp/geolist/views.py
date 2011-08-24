@@ -44,7 +44,7 @@ def add_list_alert(request, name=None, description=None, instances=None):
     return list.id
 
 @login_required
-def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[], tags=None):
+def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[], tags=None, vis=None):
     '''
     Modifica una lista de usuarios
 
@@ -63,12 +63,12 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         list = ListRequested.objects.get_by_id_querier(id, request.user)
         if list is not None:
             try:
-                list.update(querier=request.user, instances=instances, tags=tags)
+                list.update(querier=request.user, instances=instances, tags=tags, vis=vis)
                 return list
             except:
                 from django.http import HttpResponseForbidden
                 return HttpResponseForbidden
-    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del)
+    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del, vis=vis)
     return list
 
 @login_required

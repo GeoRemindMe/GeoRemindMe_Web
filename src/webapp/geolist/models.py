@@ -352,7 +352,7 @@ class ListRequested(ListSuggestion):
                              user=user, 
                              description=description, 
                              keys=[k for k in keys], 
-                             _vis=vis
+                             _vis=vis if vis is not None else 'public'
                              )
         if tags is not None:
             list._tags_setter(tags, commit=False)    
@@ -398,7 +398,8 @@ class ListRequested(ListSuggestion):
         keys.extend([db.Key.from_path('Event', int(instance)) for instance in instances])
         keys = set(keys)
         self.keys = [k for k in keys]
-        self._vis = vis
+        if vis is not None:
+            self._vis = vis
         if tags is not None:
             self._tags_setter(tags, commit=False)
         self.put(querier=querier)
