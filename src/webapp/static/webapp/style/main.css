@@ -640,3 +640,9 @@ div.help-icon img {
 div.removable a {
 	visibility: none;
 }
+
+#center-col {
+	width: 690;
+	margin-left: 135px;
+	margin-right: 135px;
+}
