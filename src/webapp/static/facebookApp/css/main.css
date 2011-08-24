@@ -1894,6 +1894,9 @@ input{
                     clear:both;
                     outline: medium none;
                 }
+                div#content form.editable-fields select{
+                    float:left;
+                }
                 div#content form.editable-fields button{
                     background-color: #3B5998;
                     border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;

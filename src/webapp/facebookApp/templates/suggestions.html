@@ -683,7 +683,8 @@
 				hash['name']=if_editing_name;
             else
 				hash['name']=$(suggestion_element).find('.suggestionName').html();
-            hash['visibility']='public';
+
+            hash['visibility']=$(suggestion_element).find('.editable_visibility select').val();
 						 
             return hash;
         }
@@ -706,8 +707,22 @@
                  }
              }
             
-            //First we set editable tags for suggestions
-            var description_field=tags_field=name_field=base_settings;
+        
+            var description_field=tags_field=name_field=visibility_field=base_settings;
+            
+            name_field["name"]="name";
+            name_field["type"]="text";
+            name_field["width"]="4900";
+            name_field["onsubmit"]=function(settings, original){
+                 settings['submitdata']=get_suggestion_id(this);
+                 //Guardamos el valor modificado en una var. temporal
+                 tmp=$(this).find("input").val();
+                 console.log(tmp)
+                 asd=this
+            }
+            $('.editable_list_name').editable('/ajax/suggestion/list/modify/', name_field);
+            
+            description_field["name"]="description";
             description_field["type"]="textarea";
             description_field["height"]="40";
             description_field["width"]="390";
@@ -717,9 +732,12 @@
                  //Guardamos el valor modificado en una var. temporal
                  tmp=$(this).find("textarea").val();
             }
-            description_field["name"]="description";
             $('.editable_description').editable('/ajax/add/suggestion/', description_field);
             
+            description_field["placeholder"]="Esta lista aúno tiene descripción";
+            $('.editable_list_description').editable('/ajax/suggestion/list/modify/', description_field);
+            
+            tags_field["name"]="tags";
             tags_field["type"]="text";
             tags_field["height"]="20";
             tags_field["width"]="none";
@@ -727,31 +745,27 @@
             tags_field["onsubmit"]=function(settings, original){
                  settings['submitdata']=get_suggestion_id(this);
                  //Guardamos el valor modificado en una var. temporal
-                 tmp=$(this).find("input").val();
+                 tmp=$(this).find("input").val()
             }
-            tags_field["name"]="tags";
             $('.editable_tags').editable('/ajax/add/suggestion/', tags_field);
             
-            visibility_field=tags_field;
-            tags_field["name"]="visibility";
-            tags_field["type"]="select";
-            //$('.editable_tags').editable('/ajax/add/suggestion/', tags_field);
-            
-            //Now we set editable tags for suggestions LISTS
-            name_field=tags_field;
-            name_field["name"]="name";
-            $('.editable_list_name').editable('/ajax/suggestion/list/modify/', name_field);
-            
-            description_field["placeholder"]="Esta lista aúno tiene descripción";
-            description_field["name"]="description";
-            $('.editable_list_description').editable('/ajax/suggestion/list/modify/', description_field);
-            
             tags_field["placeholder"]="Esta lista de sugerencias no tiene tags";
-            tags_field["name"]="tags";
             $('.editable_list_tags').editable('/ajax/suggestion/list/modify/', tags_field);             
             
-            
-             
+            visibility_field["name"]="visibility";
+            visibility_field["type"]="select";
+            visibility_field["data"]="{'public':'Pública','private':'Privada'}";
+            visibility_field["onsubmit"]=function(settings, original){
+                 settings['submitdata']=get_suggestion_id(this);
+                 //Guardamos el valor modificado en una var. temporal
+                 var privacy=$(this).find("select").val()
+                 if(privacy=="private")
+                    tmp="Privada";
+                 else
+                    tmp="Pública";
+            }
+            $('.editable_visibility').editable('/ajax/add/suggestion/', visibility_field);
+            $('.editable_list_visibility').editable('/ajax/suggestion/list/modify/', visibility_field);             
         }
         
         
@@ -969,7 +983,7 @@
                                         </dd>
                                         
                                         <dt>Visibilidad:</dt>
-                                        <dd value="{{k|private:'_get_visibility'}}">{{k|private:"_get_visibility"}}</dd>
+                                        <dd {% if k.user.username == user.username%}class="editable_visibility"{%endif%} value="{{k|private:'_get_visibility'}}">{% if k|private:"_get_visibility" = "public" %}Pública{%else%}Privada{%endif%}</dd>
                                         
                                     </dl>
                                     
@@ -1069,16 +1083,16 @@
                                             <dt><strong>Compartir:</strong></dt>
                                             <dd>
                                                 <ul class="share-suggestion">
-                                                    <li class="share" type="link" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
+                                                    <li class="share" type="link" data-href="{{ obj.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
     <!--
                                                     <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
     -->
-                                                    <li class="share" type="twitter" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
-                                                    <li class="share" type="wall" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion facebook-icon" href="">Muro</a></li>
+                                                    <li class="share" type="twitter" data-href="{{ obj.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
+                                                    <li class="share" type="wall" data-href="{{ obj.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion facebook-icon" href="">Muro</a></li>
                                                 </ul>
                                             </dd>
                                             <dt>Visibilidad:</dt>
-                                            <dd value="{{obj.visibility}}">{{obj.visibility}}</dd>
+                                            <dd {% if obj.user.username == user.username%}class="editable_list_visibility"{%endif%} value="{{obj.visibility}}">{% if obj.visibility = "public" %}Pública{%else%}Privada{%endif%}</dd>
                                         </dl>
                                         
                                         <div class="show-more-text" style="display:none">
@@ -1203,7 +1217,7 @@
 		<p>Envía esta sugerencia a tus seguidores en Twitter.</p>
         <textarea id="twitter_msg" data-id="${elem_id}" event-type="${type}">${link}</textarea>
         <span id="twitter-counter">140</span>
-        
+        {{user.has_perms_twitter}}
         {% if user.has_perms_twitter %}
 			{% comment %}
 				Si tiene la cuenta de Twitter asociada le dejamos escribir directamente:
