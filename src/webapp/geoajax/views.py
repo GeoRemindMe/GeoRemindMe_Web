@@ -477,6 +477,7 @@ def add_list_suggestion(request):
     list_description = request.POST.get('description', None)
     list_instances = request.POST.getlist('suggestions[]')
     list_instances_del = request.POST.getlist('suggestions_del[]')
+    list_vis = request.POST.getlist('visibility', None)
     if not 'tags' in request.POST:
         list_tags = None
     else:
@@ -485,7 +486,8 @@ def add_list_suggestion(request):
                                  description = list_description,
                                  instances = list_instances,
                                  instances_del = list_instances_del,
-                                 tags=list_tags
+                                 tags=list_tags,
+                                 vis=list_vis
                                  )
     if list is False:
         return HttpResponseForbidden()
@@ -769,7 +771,6 @@ def share_on_facebook(request):
     if response is not None:
         return HttpResponse(simplejson.dumps(response),
                             mimetype='application/json')
-    raise Exception(response)
     return HttpResponseBadRequest()
 
 
