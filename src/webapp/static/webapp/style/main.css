@@ -148,7 +148,7 @@ body {
 #background {
 	background-color: #ff913c;
 	width: 100%;
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 #background:after{
     clear: both;
@@ -222,7 +222,7 @@ body {
     border-radius: 15px;
     background-color: #FFEC72;
 }
-#right-block a#register-btn {
+#right-block a#register-btn, #registerForm input[type="submit"]{
 /*
 	background: url('/static/webapp/img/register-bg.png') repeat-x;
 */
@@ -252,6 +252,25 @@ body {
 	box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
 	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
 	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
+}
+#registerForm input[type="submit"]{
+    border: 0 none;
+    font-size: 1.3em;
+    line-height: 30px;
+    height: 30px;
+    margin: 0 auto;
+    width: 100px;
+}
+
+#registerForm{
+    margin:10px 0;
+}
+#registerForm input{
+    display: block;
+    font-size: 1.2em;
+    height: 2em;
+    margin: 5px auto;
+    width: 250px;
 }
 
 .footer-links {
@@ -404,6 +423,7 @@ body {
 	margin-top: 20px;
 	font-size: 14px;
 	margin-left: 30px;
+    cursor:pointer;
 }
 
 .bottom-p {

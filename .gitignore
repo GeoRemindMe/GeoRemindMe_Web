@@ -6,3 +6,4 @@ src/webapp/settings.py
 /.settings
 virtualme/*
 src/webapp/run_server.py
+/webapp/fixtures
