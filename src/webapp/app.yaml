@@ -21,15 +21,11 @@ handlers:
   script: main.py
   secure: optional
 
-- url: /service/.*
-  script: main.py
+- url: /api/(.*)
+  script: service/api/main.py
   secure: always
 
-- url: /dashboard/.*
-  script: main.py
-  secure: always
-
-- url: /admin(.*)
+- url: /admin/(.*)
   script: appengine_admin/main.py
   secure: always
   
@@ -43,14 +39,6 @@ handlers:
 - url: /.*
   script: main.py
   secure: optional
-  
-- url: /media/admin
-  static_dir: django/contrib/admin/media/
-  expiration: '0'
-
-- url: /media
-  static_dir: _generated_media/
-  expiration: '365d'
 
 builtins:
 - appstats: on

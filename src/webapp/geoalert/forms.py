@@ -108,7 +108,7 @@ class SuggestionForm(forms.Form):
     description = forms.CharField(required=False,widget=forms.Textarea())
     tags = forms.CharField(required=False)    
     done = forms.BooleanField(required=False)
-    visibility = forms.ChoiceField(required=True, choices=VISIBILITY_CHOICES)
+    visibility = forms.ChoiceField(required=False, choices=VISIBILITY_CHOICES)
     
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)

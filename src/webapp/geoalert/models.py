@@ -323,7 +323,8 @@ class Suggestion(Event, Visibility, Taggable):
             sugg.date_starts = date_starts if date_starts is not None else sugg.date_starts
             sugg.date_ends = date_ends if date_ends is not None else sugg.date_ends
             sugg.poi = poi if poi is not None else sugg.poi
-            sugg._vis = vis
+            if vis != '':
+                sugg._vis = vis
             if sugg.is_active() != active:
                 sugg.toggle_active()
             if tags != '':
