@@ -6,11 +6,47 @@
 	<meta name="google-site-verification" content="VzbSgMqvrPL6WuAhRfBzAFXM0GyU73igO1yjheV2Tc4" />
 
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.6/jquery.min.js" type="text/javascript">
-		document.ready(function() {
-		        var options = { opacity: 0.75 };
-		        $('.reflect').reflect(options);
-		    });
+	<script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    
+    <script type="text/javascript">
+		$(document).ready(function() {
+		        
+                
+                $('#register-menu li').click(function(e){
+                    $('#register-menu li.active').removeClass("active");
+                    $(this).addClass("active");
+                });
+                
+                $("[placeholder]").placeholder();
+                $('.register-text-aux').toggle(function(){
+                        $('#registerForm').slideDown(400);
+                    },function(){
+                        $('#registerForm').slideUp(400);
+                })
+                
+                $('#register-btn').click(function(e){
+                    e.preventDefault();
+                    
+                    var network=$('#register-menu li.active');
+                    if(network.length==0){
+                        //Mensaje
+                        console.log("Selecciona la red");
+                    }else{
+                        var register_link="http://localhost:8080/login/"+network.attr('id')+"/?cls";
+                        $(this).attr('href',register_link)
+                        console.log(register_link)
+                        if($(this).attr('onclick') === undefined || $(this).attr('onclick')==null){
+                            window.location=$(this).attr('href');
+                        } else {
+                            $(this).click ();
+                        }
+                    }
+                    
+                })
+                
+        });
+        
 	</script>
 	
 </head>
@@ -32,7 +68,8 @@
 	<div id="background">
 		<div id="main" class="container">
 			<section id="left-block">
-				<img src="/static/webapp/img/left-arrow.png" alt="" id="left-arrow">
+				
+                <div id="left-arrow"><img src="/static/webapp/img/left-arrow.png" alt=""></div>
 				<div id="rollover">
 					<p class="intro-text"><span class="bigger-intro-text"><strong>Compartir y recibir sugerencias</strong> usando tus redes sociales</span></p>
 					<div class="users-box">
@@ -48,26 +85,40 @@
 						</article>
 					</div>
 				</div>
-				<img src="/static/webapp/img/right-arrow.png" alt="" id="right-arrow">
+				<div id="right-arrow">
+                    <span>&nbsp;</span>
+<!--
+                    <img src="/static/webapp/img/right-arrow.png" alt="">
+-->
+                </div>
 				
+<!--
 				<p class="bottom-p">Ya somos XXX personas compartiendo YYY sugerencias.</p>
+-->
 			</section>
 			<section id="right-block">
 				<h2>¿Eres nuevo?</h2>
 				<p>Crea tu perfil utilizando una de tus cuentas.</p>
-				<ul>
-					<li><a href="#"><img src="/static/webapp/img/facebook.png" alt="Facebook"></a></li>
-					<li><a href="#"><img src="/static/webapp/img/twitter.png" alt="Twitter"></a></li>
-					<li><a href="#"><img src="/static/webapp/img/googleplus.png" alt="Google+"></a></li>
+				<ul id="register-menu">
+					<li id="facebook"><img src="/static/webapp/img/facebook.png" alt="Facebook"></li>
+					<li id="twitter"><img src="/static/webapp/img/twitter.png" alt="Twitter"></li>
+					<li id="google"><img src="/static/webapp/img/Google.png" alt="Google"></li>
 				</ul>
-				<a href="#" id="register-btn">Regístrate</a>
+				<a href="http://localhost:8080/ext/twitter/perms" id="register-btn">Regístrate</a>
 				
 				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
+                <div style="display:none" id="registerForm">
+                    <form action="" method="POST">
+                        <input type="text" name="username" placeholder="Nombre de usuario"/>
+                        <input type="text" name="email" placeholder= "Email" />
+                        <input type="password" name="pass1" placeholder="Contraseña" />
+                        <input type="password" name="pass2" placeholder="Repita la contraseña" />
+                        <input type="submit" value="Continuar"/>
+                    </form>
+                </div>
 			</section>
 <!--
 			<div id="avatar-chain">
-				<!-- EL contenedor soporta hasta 20 imagenes de avatar como máximo -->
-<!--
 				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
 				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
 				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
