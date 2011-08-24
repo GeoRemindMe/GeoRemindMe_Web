@@ -53,6 +53,7 @@ table {
 body {
 	background-color: #FFFFFF;
 	font-family: Helvetica Neue, Arial, sans-serif;
+    font-size:0.8em
 }
 
 .container {
@@ -62,7 +63,7 @@ body {
 
 #header {
 	height: 70px;
-    margin-top: 10px;
+    margin-top: 0px;
 }
 
 #logo {
@@ -200,7 +201,17 @@ body {
 	margin-top: 4px;
 	margin-left: 50px;
 }
-
+#register-menu li{
+    cursor:pointer;
+}
+#register-menu li.active img{
+    -moz-box-shadow: 0 0 5px 5px #FFEC72;
+    -webkit-box-shadow: 0 0 5px 5px #FFEC72;
+    box-shadow: 0 0 5px 5px #FFEC72;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    background-color: #FFEC72;
+}
 #right-block a#register-btn {
 	background: url('/static/webapp/img/register-bg.png') repeat-x;
 	color: #000000;
@@ -368,16 +379,20 @@ body {
 
 #account-info {
 	display: inline;
-	float: right;
+    float: right;
+    font-size: 1.1em;
+    margin-right: 10px;
+    margin-top: 5px
 }
 
 #account-info a {
-	color: #FF913C;
+	color: black;
     display: block;
     float: left;
     text-decoration: none;
 	margin-top: 16px;
 	margin-left: 10px;
+    line-height: 20px;
 }
 
 #account-info a:hover {
@@ -386,13 +401,24 @@ body {
 
 #account-info img {
 	float: left;
-	height: 48px;
-	width: 48px;
+	height: 20px;
+	width: 20px;
 }
 
 #header input {
-	margin-left: 200px;
-	margin-top: 28px;
+	border: 1px solid #AAAAAA;
+    margin-right: auto;
+    outline: medium none;
+    width: 300px;
+}
+#search_bar{
+    color: #555555;
+    float: left;
+    font-size: 0.9em;
+    line-height: 1.5em;
+    padding-top: 20px;
+    text-align: center;
+    width: 600px;
 }
 
 #left-col {
@@ -540,6 +566,10 @@ div#left-col hr, #right-col hr, hr {
 	padding-left: 0;
 	width: 50px;
 	display: inline-block;
+}
+.user-img img{
+    width:25px;
+    height:25px;
 }
 
 div.removable {
