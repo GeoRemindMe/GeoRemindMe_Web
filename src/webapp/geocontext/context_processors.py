@@ -18,7 +18,8 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 """
 from geouser.models import AnonymousUser
 from georemindme.forms import ContactForm
-import settings
+from django.conf import settings
+from string import find
 
 def geoAuth(request):
     """
@@ -32,8 +33,8 @@ def geoAuth(request):
                                 u'canvasName': settings.FACEBOOK_APP['canvas_name'],
                             },
             'notifications': request.user.counters.notifications if request.user.is_authenticated() else None,
+            'in_facebook': True if request.path.find('/fb/') == 0 else False,
             }
-    
     return parameters
     
         

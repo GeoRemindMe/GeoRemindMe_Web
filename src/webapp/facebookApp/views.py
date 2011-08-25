@@ -120,6 +120,7 @@ def view_place(request, place_id):
     from geoalert.views import view_place
     return view_place(request, place_id, template='view_place.html')
 
+
 @facebook_required
 def view_tag_suggestions(request, slug):
     from geotags.views import view_tag_suggestions
@@ -159,31 +160,14 @@ def edit_settings(request):
 
 @facebook_required
 def followers_panel(request, username):
-    if username == request.user.username:
-        followers=request.user.get_followers()
-    else:
-        from geouser.api import get_followers
-        followers = get_followers(request.user, username=username)
-    return  render_to_response('followers.html', {'followers': followers[1],
-                                                  'username_page':username,
-                                                  },
-                                                  context_instance=RequestContext(request)
-                               )
+    from geouser.views import followers_panel
+    return followers_panel(request, username, template='followers.html')
 
 
 @facebook_required
 def followings_panel(request, username):
-    if username == request.user.username:
-        followings=request.user.get_followings()
-        user=request.user
-    else:
-        from geouser.api import get_followings
-        followings = get_followings(request.user, username=username)
-    return  render_to_response('followings.html', {'followings': followings[1],
-                                                   'username_page':username
-                                                   },
-                                                   context_instance=RequestContext(request)
-                               )
+    from geouser.views import followings_panel
+    return followings_panel(request, username, template='followings.html')
 
 
 def test_users(request):

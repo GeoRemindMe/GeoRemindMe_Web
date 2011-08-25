@@ -303,6 +303,33 @@ def profile_settings(request, template='webapp/settings.html'):
                                                 },
                                             context_instance=RequestContext(request)
                                 )
+    
+
+def followers_panel(request, username, template='followers.html'):
+    if request.user.is_authenticated():
+        if username == request.user.username:
+            followers=request.user.get_followers()
+    else:
+        from geouser.api import get_followers
+        followers = get_followers(request.user, username=username)
+    return  render_to_response(template, {'followers': followers[1],
+                                          'username_page':username,
+                                          },
+                                          context_instance=RequestContext(request)
+                               )
+    
+def followings_panel(request, username, template):
+    if request.user.is_authenticated():
+        if username == request.user.username:
+            followings=request.user.get_followings()
+    else:
+        from geouser.api import get_followings
+        followings = get_followings(request.user, username=username)
+    return  render_to_response(template, {'followings': followings[1],
+                                           'username_page':username
+                                           },
+                                           context_instance=RequestContext(request)
+                               )
 #===============================================================================
 # CONFIRM VIEW
 #===============================================================================

@@ -344,6 +344,8 @@ def block_contacts(request):
             request.user.settings.put()
             return HttpResponse(simplejson.dumps(True))
     return HttpResponse(simplejson.dumps(True))
+
+
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
@@ -473,6 +475,7 @@ def add_list_suggestion(request):
         return HttpResponse(list.to_json(), mimetype="application/json")
     return HttpResponse(list, mimetype="application/json")
 
+
 @ajax_request
 def add_suggestion_list_invitation(request):
     """
@@ -486,11 +489,13 @@ def add_suggestion_list_invitation(request):
     invitation = geolist.add_suggestion_list_invitation(request, eventid, username)
     return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
 
+
 @ajax_request
 def add_list_follower(request):
     list_id = request.POST.get('list_id')
     added = geolist.add_list_follower(request, list_id)
     return HttpResponse(simplejson.dumps(added), mimetype="application/json")
+
 
 def delete_list_follower(request):
     list_id = request.POST.get('list_id')
@@ -668,8 +673,3 @@ def share_on_twitter(request):
         return HttpResponse(simplejson.dumps(response),
                             mimetype='application/json')
     return HttpResponseBadRequest()
-
-         
-        
-    
-    
