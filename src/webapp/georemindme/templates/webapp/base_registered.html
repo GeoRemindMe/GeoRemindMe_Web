@@ -47,6 +47,9 @@
                 interval: 0, // number = milliseconds for onMouseOver polling interval
                 timeout: 500, // number = milliseconds delay before onMouseOut
                 over: function() {
+					var tmp=$('#dropdown-list').width();
+					tmp=52-tmp;
+					$('#dropdown-list').css("margin-left",tmp+'px')
                     $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
                 },
                 out: function() {
@@ -55,10 +58,17 @@
                 }
             }
             
-            $(".dropDrownBtn, .submenu ").hoverIntent(hiConfig);
-            $(".dropDrownBtn").click(function(){
+            $(".user-dropDrownBtn, .user-submenu ").hoverIntent(hiConfig);
+            $(".user-dropDrownBtn").click(function(){
+				//Alineamos el menu desplegable desde la esquina sup-izq.
+				var tmp=$('#dropdown-list').width();
+				tmp=52-tmp;
+				$('#dropdown-list').css("margin-left",tmp+'px')
+				
                 $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
             })
+            
+            
         });
     </script>
 	<!--[if lt IE 9]>
@@ -79,10 +89,10 @@
         </div>
 		
 		<div id="account-info">
-			<div id="user-menu" class="dropDrownBtn">
+			<div id="user-menu" class="user-dropDrownBtn">
 				<a href="{% url public_profile request.user.username %}">
 				<img src="{% embedded_avatar request.user.username %}" alt=""></a><span>.</span>
-				<ul class="submenu" style="display:none" id="dropdown-list">
+				<ul class="user-submenu" style="display:none" id="dropdown-list">
 					<li><a href="{% url public_profile user.username %}">Mi perfil</a></li>
 					<li><a href="{% url profile_settings %}">Configuración</a></li>
 					<li><a href="{% url logout %}">Desconectar</a></li>
