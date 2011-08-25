@@ -175,12 +175,12 @@ def url2(parser, token):
         from django.template import TemplateSyntaxError
         raise TemplateSyntaxError("'%s' takes at least two argument"
                                   " (path to a view)" % bits[0])
-    is_facebook = parser.compile_filter(bits[1])
+    in_facebook = parser.compile_filter(bits[1])
     viewname = bits[2]
-    if bool(is_facebook) and viewname.find('fb_') == -1:
+    if bool(in_facebook) and viewname.find('fb_') == -1:
         fb_viewname = '%s%s' % ('fb_', viewname)
         token.contents = token.contents.replace(viewname, fb_viewname, 1)
-    token.contents = token.contents.replace( 'is_facebook', '', 1)
+    token.contents = token.contents.replace( 'in_facebook', '', 1)
     from django.template.defaulttags import url
     return url(parser, token)
         
