@@ -8,7 +8,7 @@ from django.views.decorators.cache import never_cache
 
 from decorators import ajax_request
 from geouser.models import User
-import geouser.views as geouser
+import geouser.api as geouser
 from geouser.funcs import login_func
 from geoalert.forms import RemindForm, SuggestionForm
 import geoalert.views as geoalert
@@ -264,7 +264,7 @@ def get_followers(request):
     query_id = request.POST.get('query_id', None)
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
-    followers = geouser.get_followers(request, userid, username, page, query_id)
+    followers = geouser.get_followers(request.user, userid, username, page, query_id)
     return HttpResponse(simplejson.dumps(followers), mimetype="application/json")  # los None se parsean como null
 
 @ajax_request
@@ -283,18 +283,9 @@ def get_followings(request):
     query_id = request.POST.get('query_id', None)
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
-    followings = geouser.get_followings(request, userid, username, page, query_id)
+    followings = geouser.get_followings(request.user, userid, username, page, query_id)
     return HttpResponse(simplejson.dumps(followings), mimetype="application/json")
 
-@ajax_request
-def get_friends(request):
-    """
-    Devuelve una lista con los usuarios que siguen y sigue el usuario
-    
-        :returns: lista de la forma (id, username)
-    """
-    friends = geouser.get_friends(request)
-    return HttpResponse(simplejson.dumps(friends), mimetype="application/json")
 
 @ajax_request
 def add_following(request):
@@ -310,8 +301,9 @@ def add_following(request):
     username = request.POST.get('username', None)
     if username == 'None':
         username=None
-    added = geouser.add_following(request, userid=userid, username=username)
+    added = geouser.add_following(request.user, userid=userid, username=username)
     return HttpResponse(simplejson.dumps(added), mimetype="application/json")
+
     
 @ajax_request
 def delete_following(request):
@@ -327,20 +319,6 @@ def delete_following(request):
     username = request.POST.get('username', None)
     deleted = geouser.del_following(request, userid=userid, username=username)
     return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
-
-@ajax_request
-def get_contacts_google(request):
-    return geouser.get_perms_google(request)
-
-@ajax_request
-def get_friends_facebook(request):
-    friends = geouser.get_friends_facebook(request)
-    return HttpResponse(simplejson.dumps(friends))
-
-@ajax_request
-def get_friends_twitter(request):
-    friends = geouser.get_friends_twitter(request)
-    return HttpResponse(simplejson.dumps(friends))
 
 
 @ajax_request
@@ -385,7 +363,7 @@ def get_profile_timeline(request):
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     query_id = request.POST.get('query_id', None)
-    timeline = geouser.get_profile_timeline(request, userid, username, query_id=query_id)
+    timeline = geouser.get_profile_timeline(request.user, userid, username, query_id=query_id)
     from funcs import render_timeline
     timeline[1] = render_timeline(request, timeline[1])
     return HttpResponse(simplejson.dumps(timeline), mimetype="application/json")
@@ -403,7 +381,7 @@ def get_activity_timeline(request):
     """ 
     query_id = list(request.POST.getlist('query_id'))
     query_id = simplejson.loads(query_id[0])
-    activity = geouser.get_activity_timeline(request, query_id=query_id)
+    activity = geouser.get_activity_timeline(request.user, query_id=query_id)
     from funcs import render_timeline
     activity[1] = render_timeline(request, activity[1])
     return HttpResponse(simplejson.dumps(activity), mimetype="application/json")
@@ -420,7 +398,7 @@ def get_notifications_timeline(request):
         :returns: lista de la forma [query_id, [(id, username, avatar)]]
     """ 
     query_id = request.POST.get('query_id', None)
-    chronology = geouser.get_notifications_timeline(request, query_id=query_id)
+    chronology = geouser.get_notifications_timeline(request.user, query_id=query_id)
     from funcs import render_timeline
     chronology[1] = render_timeline(request, chronology[1])
     return HttpResponse(simplejson.dumps(chronology), mimetype="application/json")

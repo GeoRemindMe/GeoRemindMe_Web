@@ -162,14 +162,8 @@ def followers_panel(request, username):
     if username == request.user.username:
         followers=request.user.get_followers()
     else:
-        from geouser.models import User
-        user = User.objects.get_by_username(username)
-        if user is None:
-            raise Http404
-        if user.settings.show_followers:
-            followers = user.get_followers()
-        else:
-            followers = None
+        from geouser.api import get_followers
+        followers = get_followers(request.user, username=username)
     return  render_to_response('followers.html', {'followers': followers[1],
                                                   'username_page':username,
                                                   },
@@ -183,15 +177,8 @@ def followings_panel(request, username):
         followings=request.user.get_followings()
         user=request.user
     else:
-        from geouser.models import User
-        user = User.objects.get_by_username(username)
-        if user is None:
-            raise Http404
-        if user.settings.show_followings:
-            followings = user.get_followings()
-        else:
-            followings = None
-    
+        from geouser.api import get_followings
+        followings = get_followings(request.user, username=username)
     return  render_to_response('followings.html', {'followings': followings[1],
                                                    'username_page':username
                                                    },

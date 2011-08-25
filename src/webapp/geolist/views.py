@@ -409,7 +409,7 @@ def view_list(request, id, template='webapp/view_list.html'):
                                   )
             if len(suggestions_loaded) > 7:
                     break
-            from georemindme.funcs import prefetch_refprops
+        from georemindme.funcs import prefetch_refprops
         from geoalert.models import Suggestion
         suggestions = prefetch_refprops(suggestions, Suggestion.user)
         return suggestions_loaded
