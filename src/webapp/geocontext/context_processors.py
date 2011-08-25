@@ -27,7 +27,6 @@ def geoAuth(request):
     """
     parameters = {
             'user' : request.user,
-            'contactForm' : ContactForm(),
             'app_settings' :{
                                 u'appId': settings.OAUTH['facebook']['app_key'],
                                 u'canvasName': settings.FACEBOOK_APP['canvas_name'],

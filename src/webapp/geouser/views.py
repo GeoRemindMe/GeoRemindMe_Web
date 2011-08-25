@@ -317,7 +317,8 @@ def followers_panel(request, username, template='followers.html'):
                                           },
                                           context_instance=RequestContext(request)
                                )
-    
+
+
 def followings_panel(request, username, template):
     if request.user.is_authenticated():
         if username == request.user.username:
