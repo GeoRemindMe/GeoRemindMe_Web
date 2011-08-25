@@ -422,13 +422,13 @@ def view_list(request, id, template='webapp/view_list.html'):
     from google.appengine.ext import db
     from geoalert.models import Event
     suggestions_async = db.get(list.keys)
-    from geovote.views import get_comments_list
-    query_id, comments_async = get_comments_list(request, list.id, async=True)
+    from geovote.api import get_comments
+    query_id, comments_async = get_comments(request.user, list.id, 'List', async=True)
     from geovote.models import Vote
     from geovote.models import Comment
     has_voted = Vote.objects.user_has_voted(request.user, list.key())
     vote_counter = Vote.objects.get_vote_counter(list.key())
-    #comments = get_comments_list(request, list.id)
+    #comments = get_comments_list(request.user, list.id)
     top_comments = Comment.objects.get_top_voted(list, request.user)
     user_follower = list.has_follower(request.user)
     return render_to_response(template,

@@ -13,7 +13,7 @@ from geouser.funcs import login_func
 from geoalert.forms import RemindForm, SuggestionForm
 import geoalert.views as geoalert
 import geolist.views as geolist
-import geovote.views as geovote
+import geovote.api as geovote
 
 """
 .. module:: views
@@ -512,7 +512,7 @@ def delete_comment(request):
     return HttpResponse(simplejson.dumps(comment), mimetype="application/json")
 
 @ajax_request
-def do_comment_event(request):
+def do_comment(request, kind):
     """
     Realiza un comentario a un evento (alerta, sugerencia, etc.)
     Parametros POST
@@ -521,13 +521,14 @@ def do_comment_event(request):
     """
     instance_id = request.POST['instance_id']
     msg = request.POST['msg']
-    comment = geovote.do_comment_event(request, instance_id, msg)
+    comment = geovote.do_comment(request.user, instance_id, kind, msg)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(comment, cls=JSONEncoder),
                         mimetype="application/json")
     
+
 @ajax_request
-def get_comments_event(request):
+def get_comments(request, kind):
     """
     Obtiene todas los comentarios visibles de un evento
     Parametros POST
@@ -538,46 +539,15 @@ def get_comments_event(request):
     instance_id = request.POST['instance_id']
     query_id = request.POST.get('query_id', None)
     page = request.POST.get('page', 1)
-    comments = geovote.get_comments_event(request, instance_id, query_id, page) 
+    comments = geovote.get_comments(request.user, instance_id, kind, query_id, page) 
     
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(comments, cls=JSONEncoder),
                         mimetype="application/json")
 
-@ajax_request
-def do_comment_list(request):
-    """
-    Realiza un comentario a una lista
-    Parametros POST
-        instance_id: lista a comentar
-        msg: mensaje
-    """
-    instance_id = request.POST['instance_id']
-    msg = request.POST['msg']
-    comment = geovote.do_comment_list(request, instance_id, msg)
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(comment, cls=JSONEncoder),
-                        mimetype="application/json")
-    
-@ajax_request
-def get_comments_list(request):
-    """
-    Obtiene todas los comentarios visibles de una lista
-    Parametros POST
-        instance_id: lista a mostrar
-        page: pagina a mostrar
-        query_id: id de la consulta de pagina
-    """
-    instance_id = request.POST['instance_id']
-    query_id = request.POST.get('query_id', None)
-    page = request.POST.get('page', 1)
-    comments = geovote.get_comments_list(request, instance_id, query_id, page) 
-    
-    return HttpResponse(simplejson.dumps(comments),
-                        mimetype="application/json")
 
 @ajax_request
-def do_vote_suggestion(request):
+def do_vote(request, **kwargs):
     """
     Vota una sugerencia
     Parametros POST
@@ -587,79 +557,11 @@ def do_vote_suggestion(request):
     instance_id = request.POST['instance_id']
     puntuation = request.POST.get('puntuation', 1)
     
-    vote = geovote.do_vote_suggestion(request, instance_id, puntuation)
+    vote = geovote.do_vote(request.user, kwargs['kind'], instance_id, puntuation)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
                         mimetype="application/json")
     
-@ajax_request
-def do_vote_list(request):
-    """
-    Vota una lista
-    Parametros POST
-        instance_id: lista a votar
-        puntuation: puntuacion a añadir
-    """
-    instance_id = request.POST['instance_id']
-    puntuation = request.POST['puntuation']
-    vote = geovote.do_vote_list(request, instance_id, puntuation)
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                        mimetype="application/json")
-    
-@ajax_request
-def do_vote_comment(request):
-    """
-    Vota un comentario
-    Parametros POST
-        instance_id: comentario
-        puntuation: puntuacion a añadir
-    """
-    instance_id = request.POST['instance_id']
-    puntuation = request.POST['puntuation']
-    vote = geovote.do_vote_comment(request, instance_id, puntuation)
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                        mimetype="application/json")
-    
-@ajax_request
-def get_vote_suggestion(request):
-    """
-    Obtiene el contador de votos de una sugerencia
-    Parametros POST
-        instance_id: sugerencia a mostrar
-    """
-    instance_id = request.POST['instance_id']
-    vote = geovote.get_vote_suggestion(request, instance_id) 
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                        mimetype="application/json")
-
-@ajax_request
-def get_vote_list(request):
-    """
-    Obtiene el contador de votos de una lista
-    Parametros POST
-        instance_id: sugerencia a mostrar
-    """
-    instance_id = request.POST['instance_id']
-    vote = geovote.get_vote_list(request, instance_id) 
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                        mimetype="application/json")
-
-@ajax_request
-def get_vote_comment(request):
-    """
-    Obtiene el contador de votos de un comentario
-    Parametros POST
-        instance_id: sugerencia a mostrar
-    """
-    instance_id = request.POST['instance_id']
-    vote = geovote.get_vote_comment(request, instance_id) 
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder), 
-                        mimetype="application/json")
 
 @ajax_request
 def mod_searchconfig_google(request):

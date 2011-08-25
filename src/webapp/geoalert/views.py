@@ -28,8 +28,8 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     suggestion = Suggestion.objects.get_by_slug_querier(slug, querier=request.user)
     if suggestion is None:
         raise Http404 
-    from geovote.views import get_comments_event
-    query_id, comments_async = get_comments_event(request, suggestion.id, async=True)
+    from geovote.api import get_comments
+    query_id, comments_async = get_comments(request.user, suggestion.id, 'Event', async=True)
     from geovote.models import Vote, Comment
     from geolist.models import ListSuggestion
     has_voted = Vote.objects.user_has_voted(request.user, suggestion.key())
