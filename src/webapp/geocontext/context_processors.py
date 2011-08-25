@@ -19,7 +19,7 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 from geouser.models import AnonymousUser
 from georemindme.forms import ContactForm
 from django.conf import settings
-from string import find
+
 
 def geoAuth(request):
     """

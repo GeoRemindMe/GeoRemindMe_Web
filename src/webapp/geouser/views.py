@@ -250,8 +250,7 @@ def public_profile(request, username, template='webapp/profile.html'):
         show_followers = settings.show_followers,
         show_followings = settings.show_followings
     if not request.user.is_authenticated():
-        from string import rfind
-        pos = rfind(template, '.html')
+        pos = template.rfind('.html')
         template = template[:pos] + '_anonymous' + template[pos:]
     return render_to_response(template, {'profile': profile, 
                                          'counters': counters.next(),

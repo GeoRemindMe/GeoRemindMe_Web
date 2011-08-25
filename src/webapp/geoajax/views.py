@@ -513,7 +513,7 @@ def delete_comment(request):
         commentid: id del comentario a borrar
     """
     commentid = request.POST['comment_id']
-    comment = geovote.delete_comment(request, commentid)
+    comment = geovote.delete_comment(request.user, commentid)
     return HttpResponse(simplejson.dumps(comment), mimetype="application/json")
 
 @ajax_request
