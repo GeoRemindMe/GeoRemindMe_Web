@@ -1,9 +1,9 @@
-src/webapp/settings.py
 *.pyc
 .project
 .git
 .pydevproject
-/.settings
 virtualme/*
-src/webapp/run_server.py
-/webapp/fixtures
+/.settings
+/src/webapp/run_server.py
+/src/webapp/fixtures/dev_appserver.datastore
+/src/webapp/settings.py
