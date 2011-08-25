@@ -5,6 +5,8 @@
     101: Te han empezado a seguir
 {% endcomment %} 
 
+{% include "timeline/urls_rename.html %}
+
 <li class="msg-{{obj.msg_id}}">
     {% if request.user = obj.instance.username %}   
         Te has empezado a seguir?

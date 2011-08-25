@@ -1,4 +1,9 @@
 {% load tags %}
+
+{% url dashboard as dashboard %}
+{% url notifications as notifications_section %}
+{% url user_suggestions as user_suggestions %}
+
 <!DOCTYPE HTML>
 <html lang="es-ES">
 <head>
@@ -8,7 +13,9 @@
     </title>
 	<link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
-	
+    
+    <link href='http://fonts.googleapis.com/css?family=Alike|Crimson+Text:400,600,700|Goudy+Bookletter+1911|Unna' rel='stylesheet' type='text/css'>
+    
     <meta name="description" content="Track and share your runs with friends.">
     
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
@@ -26,40 +33,47 @@
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
 
     {% block extra_js %}{%endblock%}
-
+    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("[placeholder]").placeholder();
+        });
+    </script>
 	<!--[if lt IE 9]>
 	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	
 </head>
 <body>
-	<div id="bg-header">
+	<div id="bg-header" class="orange-gradient">
 	<header id="header-top" class="container">
 		<a href="/"><img src="/static/webapp/img/logo3.png" alt="" id="logo"></a>
 		
 		<div id="search_bar">
-            <input type="search" placeholder="Comming soon..." readonly><br>
-            Ejemplo: tapas en granada, turismo, paisajes, etc.
+            <input type="search" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly><br>
+<!--
+            //Ejemplo: tapas en granada, turismo, paisajes, etc.
+-->
         </div>
 		
 		<div id="account-info">
 			<a href="{% url public_profile request.user.username %}"><img src="{% embedded_avatar request.user.username %}" alt=""></a>
-			<a href="{% url logout %}" id="logout-btn">Salir</a>
+			<a href="{% url logout %}" id="logout-btn">Desconectar</a>
 		</div>
 	</header>
 	</div>
 	<div id="background">
 		<div id="base" class="container">
-			<section id="left-col">
+			<div id="left-col">
 				<a href="#" id="add-suggestion-btn">Añadir sugerencia</a>
 				{% block nav %}
 				<ul>
-                    <li class="menu-icons main-menu-icons" id=""><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
-                    <li class="menu-icons main-menu-icons" id=""><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
+                    <li class="menu-icons main-menu-icons" id="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
+                    <li class="menu-icons main-menu-icons" id="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
 <!--
                     <li class="menu-icons main-menu-icons"><a id="suggestions-icon" href="{{user_suggestions}}">Tus sugerencias</a></li>
 -->
-                    <li class="menu-icons main-menu-icons" id=""><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
+                    <li class="menu-icons main-menu-icons" id="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
                     <li class="menu-icons main-menu-icons"><a id="places-icon" href="#">Sitios</a></li>
 <!--
                     <li class="menu-icons main-menu-icons" id=""><a id="profile-icon" href="{% url public_profile request.user.username %}">Mi perfil</a></li>
@@ -68,21 +82,25 @@
                 </ul>
 				{% block extraContent %} {% endblock %}
 				{% endblock %}
-			</section>
-			<section id="right-col">
+			</div>
+			<div id="right-col">
 				{% block body %}{% endblock %}
-			</section>
+			</div>
 			
 		</div>
 	</div>
 	
-	<footer id="footer" class="container">
+    <footer id="footer" class="container">
 		<div class="footer-links">
-			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> 
+<!--
+            · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+-->
 		</div>
 		<div class="footer-links right-links">
-			<a href="#">Empleo</a> · <a href="#">Prensa</a> · <a href="#">Mapa del sitio</a>
+			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
 		</div>
 	</footer>
+    <div id="templates"></div>
 </body>
 </html>

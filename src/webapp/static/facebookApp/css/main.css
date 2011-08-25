@@ -27,6 +27,7 @@ input{
 }
     div#left-col a#logo img{
         border:0;
+        padding-top: 0.5em;
         width:170px;
     }
     
@@ -854,7 +855,9 @@ input{
         width: 100px;
         cursor: pointer;
     }
-    
+    div.waiting{
+        background: url("/static/facebookApp/img/spinning-icons/wait_blue.gif") no-repeat scroll 10px 2px #3B5998;
+    }
     /****************************
      *      
      * Create Social Profile 

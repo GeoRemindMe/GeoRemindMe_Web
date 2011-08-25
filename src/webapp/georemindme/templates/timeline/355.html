@@ -5,6 +5,8 @@
     Te gusta una lista de sugerencias
 {% endcomment %} 
 
+
+
 <li class="msg-{{obj.msg_id}}">
     {% if obj.is_private = false and obj.username = request.user %}
         Evitamos que se muestre duplicado un "Te gusta la sugerencia X"

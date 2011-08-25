@@ -341,7 +341,7 @@ GRM.loadTimeline = function(params){
             var url=params['url'];
             
             var data="query_id="+$(container).attr("value");
-            
+            $('.load-more').addClass("waiting");
 
             
             $.ajax({
@@ -349,7 +349,7 @@ GRM.loadTimeline = function(params){
                 url: url,
                 data: data,
                 success: function(data){
-                    
+                    $('.load-more').removeClass("waiting");
                     if(data[1].length>0){
                         if(data[0].length==2)
                             $(container).attr("value",'["'+data[0][0]+'","'+data[0][1]+'"]');
@@ -370,6 +370,8 @@ GRM.loadTimeline = function(params){
                         
                         //Volvemos a filtrar la pestaña activa forzando evento click
                         $('#'+$('ul#tabMenu .active').attr('id')).click()
+                        
+                        
                     }
                     
                     if(data[1].length<10){

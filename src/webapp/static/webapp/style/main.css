@@ -60,14 +60,29 @@ table {
 }
 
 #bg-header{
-	background-color: #FF913C;
-	
+/*
+	//background-color: #FF913C;
+
+*/
+	box-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
+}
+.orange-gradient{
+    background: #ffa84c; /* Old browsers */
+    background: -moz-linear-gradient(top, #ffa84c 0%, #ff7b0d 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffa84c), color-stop(100%,#ff7b0d)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* Opera11.10+ */
+    background: -ms-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* IE10+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); /* IE6-9 */
+    background: linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* W3C */
 }
 
 body {
 	background-color: #FFFFFF;
-	font-family: Helvetica Neue, Arial, sans-serif;
-    font-size:0.8em
+	font-family: "Crimson Text",Helvetica Neue, Arial, sans-serif;
+    font-size:12px;
 }
 
 .container {
@@ -163,7 +178,11 @@ body {
     width: auto;
 }
 #header-top a#logout-btn {
-	width:80px;
+	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+    font-size: 1em;
+    height: 25px;
+    line-height: 25px;
+    width: 80px;
 }
 
 #login-btn a {
@@ -474,7 +493,7 @@ body {
     float: right;
     font-size: 1.1em;
     margin-right: 10px;
-    margin-top: 5px
+    margin-top: 18px;
 }
 
 #account-info a {
@@ -482,7 +501,7 @@ body {
     display: block;
     float: left;
     text-decoration: none;
-	margin-top: 16px;
+	margin-top: 14px;
 	margin-left: 10px;
     line-height: 30px;
 }
@@ -495,15 +514,19 @@ body {
 	float: left;
 	height: 30px;
 	width: 30px;
+    box-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
 }
 
 #header-top input {
 	border: 1px solid #AAAAAA;
-    
-	
-	margin-top:25px;
+    height: 1.5em;
+    line-height: 1.5em;
+    margin-top: 32px;
     outline: medium none;
-    width: 300px;
+    padding: 2px;
+    width: 400px;
 }
 #search_bar{
     border-left: 1px solid #CCCCCC;
@@ -515,7 +538,7 @@ body {
     margin-left: 15px;
     padding: 5px 0 15px 15px;
     text-align: left;
-    
+    font-size:1.1em;
 
 }
 
@@ -534,6 +557,7 @@ body {
 
 #right-col h1 {
 	color: #555555;
+    font-size:1.3em;
 /*
 	text-shadow: 0px 1px 0px #000000;
 */
@@ -576,10 +600,10 @@ body {
 }
 
 #left-col a#add-suggestion-btn{
-	font-size: 1.2em;
+	font-size: 1.3em;
     height: auto;
     line-height: 3em;
-    margin: 0;
+    margin: 0 auto 1em;
     width: 150px;
 }
 
@@ -590,7 +614,7 @@ body {
     
 }
 #left-col ul li{
-	padding:5px 0;
+	padding:3px 0;
 }
 
 #left-col li a{
@@ -649,20 +673,30 @@ ul#tabMenu li {
 ul#tabMenu li.active {
     color: black;
 }
+#active-section, div #left-col li#active-section:hover {
+    background-color: #D8DFEA;
+}
 
 ul#tabMenu {
-    border-bottom: 1px dotted #FFFFFF;
+    border-bottom: 1px dotted #cccccc;
+}
+div#left-col li:hover {
+    background-color: #EFF2F7;
 }
 
 ul#chronology li {
     background-color: #FFFFFF;
+/*
 	border-bottom:none;
+*/
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
 
 div#left-col hr, #right-col hr, hr {
-    border: 1px solid #FFFFFF;
+    color: #CCCCCC;
+    height: 1px;
+    border: 1px solid #CCCCCC;
 }
 
 .follow-button {
@@ -676,8 +710,35 @@ div#left-col hr, #right-col hr, hr {
 	
 }
 
+/*
+ * DASHBOARD 
+ */
+
+div#left-col ul {
+    font-size: 1.3em;
+}
+div#left-col ul#friends-to-follow li div.avatar a.user-img img {
+    height: 30px;
+    width:30px;
+}
+div#left-col ul#friends-to-follow li a {
+    background-position: 6px 7px;
+    font-family: "Crimson Text";
+    font-size: 1.2em;
+    font-weight: normal;
+    padding: 1px 3px 1px 26px;
+    width: auto;
+}
+
+#left-col p{
+    font-size: 1.2em;
+    font-weight: bold;
+    line-height: 2.2em;
+}
 #left-col #friends-to-follow {
-	margin-top: 10px;
+	border: 0 none;
+    font-size: 1em;
+    margin-top: 10px;
 }
 
 #left-col #friends-to-follow li a {
@@ -696,7 +757,7 @@ div#left-col hr, #right-col hr, hr {
 
 #left-col #friends-to-follow li .avatar .user-img {
 	padding-left: 0;
-	width: 50px;
+	width: 25pxpx;
 	display: inline-block;
 }
 .user-img img{
@@ -738,6 +799,9 @@ div.removable a {
     
 }
 
+ul#chronology li div.timeline-msg {
+    width:585;
+}
 
 /*
  * BAG
@@ -745,4 +809,91 @@ div.removable a {
 
 .suggestionName {
 	width: 660px;
+}
+
+/*
+ * COMMON
+ */
+.btn,.load-more {
+    border-color:#D9DFEA #873A00 #873A00 #D9DFEA;
+    background: #ffa84c; /* Old browsers */
+    background: -moz-linear-gradient(top, #ffa84c 0%, #ff7b0d 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffa84c), color-stop(100%,#ff7b0d)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* Opera11.10+ */
+    background: -ms-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* IE10+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); /* IE6-9 */
+    background: linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* W3C */
+}
+
+div#left-col li a {
+    width: 185px;
+}
+
+#right-col .section .header, .right-col .section .article .header {
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+#right-col {
+    font-size:1.2em;
+}
+
+div#left-col li a {
+
+    line-height: 14px;
+
+}
+
+#active-section, div #left-col li#active-section:hover {
+    background-color: #FFA244;
+}
+div #left-col li:hover{
+    background-color: #ffdcc2;
+}
+
+/*
+ * SETTINGS
+ */
+div#profile div.section ul{
+    list-style: disc outside none;
+    margin: 1em 2em;
+}
+div#profile div.section ul li{
+    padding: 10px 0;
+}
+div#profile div.section ul li strong{
+    font-weight:bold;
+}
+div#right-col #profile table{
+    border-collapse: collapse;
+    margin: 0 auto 1em;
+    width: 535px;
+}
+
+#edit-settings-btn,.load-more {
+/*
+    color: #5E2B03;
+*/
+    color:white;
+    font-weight: normal;
+    line-height: 2em;
+    padding: 0 15px 0;
+    height: auto;
+    font-size: 1em;
+    font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+
+}
+div.waiting{
+    background-color: #FF8C26;
+    background-image: url("/static/facebookApp/img/spinning-icons/wait_orange.gif");
+    background-position: 10px 4px;
+    background-repeat: no-repeat;
+    color: white;
+}
+/*
+ * CHRONOLOGY
+ */
+ul#tabMenu li {
+    margin-left: 10px;
+    font-size: 1.1em;
 }
