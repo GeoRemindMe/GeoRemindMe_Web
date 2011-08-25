@@ -222,7 +222,7 @@ class Comment(Visibility):
         
         if msg is None or msg == '':
             raise TypeError('msg is empty')
-        comment = Comment(user=user, instance=instance, msg=msg)
+        comment = Comment(user=user, instance=instance, msg=msg, _vis=instance._vis if hasattr(instance, '_vis') else 'private')
         comment.put()
         if getattr(instance, 'counter', None) is not None:
             instance.counter.set_comments()

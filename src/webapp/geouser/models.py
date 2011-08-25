@@ -34,7 +34,7 @@ class AnonymousUser(object):
         return -1
     
     def key(self):
-        return -1
+        return "iamanonymousyeah"
 
 
 class User(polymodel.PolyModel, HookedModel):

@@ -5,6 +5,8 @@
     125: A [X] le gusta un comentario | UT
 {% endcomment %} 
 
+
+
 <li class="msg-{{obj.msg_id}}">
     {%if not obj.instance.user.username = obj.instance.instance.user.username %}
         {% comment %}  Si me gusta un comentario mío no se muestra {% endcomment %} 
@@ -41,7 +43,7 @@
         {% endif %}
                 <br><em class="comment">{{obj.instance.instance.msg}}</em><br>
                 <span class="suggestionPlace">
-                    En la sugerencia: {{obj.instance.instance.instance.name|truncatewords:10}} <br>
+                    En la sugerencia: <strong><a href="{% url fb_view_suggestion obj.instance.instance.instance.slug %}">{{obj.instance.instance.instance.name|truncatewords:10}}</a></strong> <br>
                 </span>
 
                 <span class="timestamp">  {{obj.created|naturaltime}}</span>  

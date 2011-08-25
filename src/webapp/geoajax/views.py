@@ -8,12 +8,12 @@ from django.views.decorators.cache import never_cache
 
 from decorators import ajax_request
 from geouser.models import User
-import geouser.views as geouser
+import geouser.api as geouser
 from geouser.funcs import login_func
 from geoalert.forms import RemindForm, SuggestionForm
 import geoalert.views as geoalert
 import geolist.views as geolist
-import geovote.views as geovote
+import geovote.api as geovote
 
 """
 .. module:: views
@@ -264,7 +264,7 @@ def get_followers(request):
     query_id = request.POST.get('query_id', None)
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
-    followers = geouser.get_followers(request, userid, username, page, query_id)
+    followers = geouser.get_followers(request.user, userid, username, page, query_id)
     return HttpResponse(simplejson.dumps(followers), mimetype="application/json")  # los None se parsean como null
 
 @ajax_request
@@ -283,18 +283,9 @@ def get_followings(request):
     query_id = request.POST.get('query_id', None)
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
-    followings = geouser.get_followings(request, userid, username, page, query_id)
+    followings = geouser.get_followings(request.user, userid, username, page, query_id)
     return HttpResponse(simplejson.dumps(followings), mimetype="application/json")
 
-@ajax_request
-def get_friends(request):
-    """
-    Devuelve una lista con los usuarios que siguen y sigue el usuario
-    
-        :returns: lista de la forma (id, username)
-    """
-    friends = geouser.get_friends(request)
-    return HttpResponse(simplejson.dumps(friends), mimetype="application/json")
 
 @ajax_request
 def add_following(request):
@@ -310,8 +301,9 @@ def add_following(request):
     username = request.POST.get('username', None)
     if username == 'None':
         username=None
-    added = geouser.add_following(request, userid=userid, username=username)
+    added = geouser.add_following(request.user, userid=userid, username=username)
     return HttpResponse(simplejson.dumps(added), mimetype="application/json")
+
     
 @ajax_request
 def delete_following(request):
@@ -327,20 +319,6 @@ def delete_following(request):
     username = request.POST.get('username', None)
     deleted = geouser.del_following(request, userid=userid, username=username)
     return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
-
-@ajax_request
-def get_contacts_google(request):
-    return geouser.get_perms_google(request)
-
-@ajax_request
-def get_friends_facebook(request):
-    friends = geouser.get_friends_facebook(request)
-    return HttpResponse(simplejson.dumps(friends))
-
-@ajax_request
-def get_friends_twitter(request):
-    friends = geouser.get_friends_twitter(request)
-    return HttpResponse(simplejson.dumps(friends))
 
 
 @ajax_request
@@ -366,6 +344,8 @@ def block_contacts(request):
             request.user.settings.put()
             return HttpResponse(simplejson.dumps(True))
     return HttpResponse(simplejson.dumps(True))
+
+
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
@@ -385,7 +365,7 @@ def get_profile_timeline(request):
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     query_id = request.POST.get('query_id', None)
-    timeline = geouser.get_profile_timeline(request, userid, username, query_id=query_id)
+    timeline = geouser.get_profile_timeline(request.user, userid, username, query_id=query_id)
     from funcs import render_timeline
     timeline[1] = render_timeline(request, timeline[1])
     return HttpResponse(simplejson.dumps(timeline), mimetype="application/json")
@@ -403,7 +383,7 @@ def get_activity_timeline(request):
     """ 
     query_id = list(request.POST.getlist('query_id'))
     query_id = simplejson.loads(query_id[0])
-    activity = geouser.get_activity_timeline(request, query_id=query_id)
+    activity = geouser.get_activity_timeline(request.user, query_id=query_id)
     from funcs import render_timeline
     activity[1] = render_timeline(request, activity[1])
     return HttpResponse(simplejson.dumps(activity), mimetype="application/json")
@@ -420,7 +400,7 @@ def get_notifications_timeline(request):
         :returns: lista de la forma [query_id, [(id, username, avatar)]]
     """ 
     query_id = request.POST.get('query_id', None)
-    chronology = geouser.get_notifications_timeline(request, query_id=query_id)
+    chronology = geouser.get_notifications_timeline(request.user, query_id=query_id)
     from funcs import render_timeline
     chronology[1] = render_timeline(request, chronology[1])
     return HttpResponse(simplejson.dumps(chronology), mimetype="application/json")
@@ -495,6 +475,7 @@ def add_list_suggestion(request):
         return HttpResponse(list.to_json(), mimetype="application/json")
     return HttpResponse(list, mimetype="application/json")
 
+
 @ajax_request
 def add_suggestion_list_invitation(request):
     """
@@ -508,11 +489,13 @@ def add_suggestion_list_invitation(request):
     invitation = geolist.add_suggestion_list_invitation(request, eventid, username)
     return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
 
+
 @ajax_request
 def add_list_follower(request):
     list_id = request.POST.get('list_id')
     added = geolist.add_list_follower(request, list_id)
     return HttpResponse(simplejson.dumps(added), mimetype="application/json")
+
 
 def delete_list_follower(request):
     list_id = request.POST.get('list_id')
@@ -530,11 +513,11 @@ def delete_comment(request):
         commentid: id del comentario a borrar
     """
     commentid = request.POST['comment_id']
-    comment = geovote.delete_comment(request, commentid)
+    comment = geovote.delete_comment(request.user, commentid)
     return HttpResponse(simplejson.dumps(comment), mimetype="application/json")
 
 @ajax_request
-def do_comment_event(request):
+def do_comment(request, kind):
     """
     Realiza un comentario a un evento (alerta, sugerencia, etc.)
     Parametros POST
@@ -543,13 +526,14 @@ def do_comment_event(request):
     """
     instance_id = request.POST['instance_id']
     msg = request.POST['msg']
-    comment = geovote.do_comment_event(request, instance_id, msg)
+    comment = geovote.do_comment(request.user, instance_id, kind, msg)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(comment, cls=JSONEncoder),
                         mimetype="application/json")
     
+
 @ajax_request
-def get_comments_event(request):
+def get_comments(request, kind):
     """
     Obtiene todas los comentarios visibles de un evento
     Parametros POST
@@ -560,46 +544,15 @@ def get_comments_event(request):
     instance_id = request.POST['instance_id']
     query_id = request.POST.get('query_id', None)
     page = request.POST.get('page', 1)
-    comments = geovote.get_comments_event(request, instance_id, query_id, page) 
+    comments = geovote.get_comments(request.user, instance_id, kind, query_id, page) 
     
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(comments, cls=JSONEncoder),
                         mimetype="application/json")
 
-@ajax_request
-def do_comment_list(request):
-    """
-    Realiza un comentario a una lista
-    Parametros POST
-        instance_id: lista a comentar
-        msg: mensaje
-    """
-    instance_id = request.POST['instance_id']
-    msg = request.POST['msg']
-    comment = geovote.do_comment_list(request, instance_id, msg)
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(comment, cls=JSONEncoder),
-                        mimetype="application/json")
-    
-@ajax_request
-def get_comments_list(request):
-    """
-    Obtiene todas los comentarios visibles de una lista
-    Parametros POST
-        instance_id: lista a mostrar
-        page: pagina a mostrar
-        query_id: id de la consulta de pagina
-    """
-    instance_id = request.POST['instance_id']
-    query_id = request.POST.get('query_id', None)
-    page = request.POST.get('page', 1)
-    comments = geovote.get_comments_list(request, instance_id, query_id, page) 
-    
-    return HttpResponse(simplejson.dumps(comments),
-                        mimetype="application/json")
 
 @ajax_request
-def do_vote_suggestion(request):
+def do_vote(request, **kwargs):
     """
     Vota una sugerencia
     Parametros POST
@@ -609,79 +562,11 @@ def do_vote_suggestion(request):
     instance_id = request.POST['instance_id']
     puntuation = request.POST.get('puntuation', 1)
     
-    vote = geovote.do_vote_suggestion(request, instance_id, puntuation)
+    vote = geovote.do_vote(request.user, kwargs['kind'], instance_id, puntuation)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
                         mimetype="application/json")
     
-@ajax_request
-def do_vote_list(request):
-    """
-    Vota una lista
-    Parametros POST
-        instance_id: lista a votar
-        puntuation: puntuacion a añadir
-    """
-    instance_id = request.POST['instance_id']
-    puntuation = request.POST['puntuation']
-    vote = geovote.do_vote_list(request, instance_id, puntuation)
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                        mimetype="application/json")
-    
-@ajax_request
-def do_vote_comment(request):
-    """
-    Vota un comentario
-    Parametros POST
-        instance_id: comentario
-        puntuation: puntuacion a añadir
-    """
-    instance_id = request.POST['instance_id']
-    puntuation = request.POST['puntuation']
-    vote = geovote.do_vote_comment(request, instance_id, puntuation)
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                        mimetype="application/json")
-    
-@ajax_request
-def get_vote_suggestion(request):
-    """
-    Obtiene el contador de votos de una sugerencia
-    Parametros POST
-        instance_id: sugerencia a mostrar
-    """
-    instance_id = request.POST['instance_id']
-    vote = geovote.get_vote_suggestion(request, instance_id) 
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                        mimetype="application/json")
-
-@ajax_request
-def get_vote_list(request):
-    """
-    Obtiene el contador de votos de una lista
-    Parametros POST
-        instance_id: sugerencia a mostrar
-    """
-    instance_id = request.POST['instance_id']
-    vote = geovote.get_vote_list(request, instance_id) 
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
-                        mimetype="application/json")
-
-@ajax_request
-def get_vote_comment(request):
-    """
-    Obtiene el contador de votos de un comentario
-    Parametros POST
-        instance_id: sugerencia a mostrar
-    """
-    instance_id = request.POST['instance_id']
-    vote = geovote.get_vote_comment(request, instance_id) 
-    from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder), 
-                        mimetype="application/json")
 
 @ajax_request
 def mod_searchconfig_google(request):
@@ -788,8 +673,3 @@ def share_on_twitter(request):
         return HttpResponse(simplejson.dumps(response),
                             mimetype='application/json')
     return HttpResponseBadRequest()
-
-         
-        
-    
-    

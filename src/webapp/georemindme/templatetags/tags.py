@@ -140,3 +140,38 @@ def embedded_avatar(username):
     return encoded_image
 
 
+class AssignNode(template.Node):
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+        
+    def render(self, context):
+        context[self.name] = self.value.resolve(context, True)
+        return ''
+
+
+@register.tag(name='assign')
+def do_assign(parser, token):
+    """
+    Assign an expression to a variable in the current context.
+    
+    Syntax::
+        {% assign [name] [value] %}
+    Example::
+        {% assign list entry.get_related %}
+        
+    """
+    bits = token.contents.split()
+    if len(bits) != 3:
+        raise template.TemplateSyntaxError("'%s' tag takes two arguments" % bits[0])
+    value = parser.compile_filter(bits[2])
+    return AssignNode(bits[1], value)
+
+
+@register.simple_tag
+def url2(in_facebook, viewname, var=None):
+    if bool(in_facebook) and viewname.find('/fb/') == -1:
+        viewname = '%s%s' % ('/fb', viewname)
+    return viewname
+        
+        

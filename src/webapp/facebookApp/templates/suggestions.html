@@ -195,6 +195,7 @@
             
             
             $('.add-on-list').click(function(){
+                $(':regex(id,^(checkBox_))').attr('checked',false);
                 $("#checkBox_"+$(this).attr('value')).attr('checked',true);
                 $(".dropDrownBtn").click()
             });

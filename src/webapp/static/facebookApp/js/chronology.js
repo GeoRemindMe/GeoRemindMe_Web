@@ -77,7 +77,8 @@ function setCommentFormsBehaviour(page){
     $(page+'.commentForm').find("textarea").focus(function(){
         $(this).css('color','black');
         if($(this).attr('empty')=="true"){
-            $(this).css('width','430px');
+            var width=$(this).parent().parent().width()-45;
+            $(this).css('width',width+'px');
             $(this).css('font-style','normal');
             $(this).css('font-size','1.1em');
             $(this).parent().parent().find("img").removeClass('hidden');
@@ -127,8 +128,8 @@ function setCommentFormsBehaviour(page){
 }
 
 function resetInput(obj){
-    
-    $(obj).css('width','470px');
+    var width=$(obj).parent().parent().width()-10;
+    $(obj).css('width',width+'px');
     $(obj).css('color','#999');
     $(obj).css('font-style','italic');
     $(obj).css('font-size','0.9em');

@@ -19,6 +19,15 @@ def login_required(func, *args, **kwargs):
     from views import login
     return login(args[0])
 
+
+@decorator
+def login_forced(func, *args, **kwargs):
+    querier = args[0]
+    if querier.is_authenticated():
+        return func(*args, **kwargs)
+    from django.http import HttpResponseForbidden
+    return HttpResponseForbidden()
+
     
 @decorator
 def admin_required(func, *args, **kwargs):
