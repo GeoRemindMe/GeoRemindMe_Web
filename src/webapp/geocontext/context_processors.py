@@ -32,7 +32,7 @@ def geoAuth(request):
                                 u'canvasName': settings.FACEBOOK_APP['canvas_name'],
                             },
             'notifications': request.user.counters.notifications if request.user.is_authenticated() else None,
-            'in_facebook': True if request.path.find('/fb/') == 0 else False,
+            'in_facebook': True if (request.path.find('/fb/') == 0) or (request.is_ajax() and request.META['HTTP_REFERER'].find('/fb/') != -1) else False,
             }
     return parameters
     
