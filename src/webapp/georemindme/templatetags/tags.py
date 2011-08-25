@@ -168,20 +168,10 @@ def do_assign(parser, token):
     return AssignNode(bits[1], value)
 
 
-@register.tag
-def url2(parser, token):
-    bits = token.split_contents()
-    if len(bits) < 3:
-        from django.template import TemplateSyntaxError
-        raise TemplateSyntaxError("'%s' takes at least two argument"
-                                  " (path to a view)" % bits[0])
-    in_facebook = parser.compile_filter(bits[1])
-    viewname = bits[2]
-    if bool(in_facebook) and viewname.find('fb_') == -1:
-        fb_viewname = '%s%s' % ('fb_', viewname)
-        token.contents = token.contents.replace(viewname, fb_viewname, 1)
-    token.contents = token.contents.replace( 'in_facebook', '', 1)
-    from django.template.defaulttags import url
-    return url(parser, token)
+@register.simple_tag
+def url2(in_facebook, viewname, var=None):
+    if bool(in_facebook) and viewname.find('/fb/') == -1:
+        viewname = '%s%s' % ('/fb', viewname)
+    return viewname
         
         
