@@ -50,12 +50,18 @@ table {
 
 /*------- HOME STYLE ---------*/
 
+#loginSec #header-top form{
+	float: right;
+	margin-top: 10px;
+	width: 350px;
+	text-align: right;
+}
 #loginSec #header-top input{
 	border: 1px solid #CCCCCC;
     display: inline;
-    float: right;
     height: 1.5em;
     margin-right: 5px;
+    margin-top: 10px;
     width: 130px;
 }
 
@@ -206,6 +212,13 @@ body {
 #background-login{
 	background-color: #ff913c;
 }
+#background-login:after{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+}
 
 #main {
 	min-height: 415px;
@@ -315,6 +328,7 @@ body {
     margin: 5px auto;
     width: 250px;
 }
+
 
 .footer-links {
 	font-size: 14px;
