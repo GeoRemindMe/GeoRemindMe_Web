@@ -91,12 +91,15 @@ body {
 }
 
 #header-top {
-	height: 80px;
+	height: 55px;
     margin: 0 auto;
 }
 
 #logo {
+/*
 	width: 200px;
+*/
+    height:45px;
 	float: left;
 	padding:5px 0
 }
@@ -174,7 +177,10 @@ body {
     height:24px;
     line-height: 20px;
     margin-right: 0;
+/*
     margin-top: 24px;
+*/
+    margin-top: 10px;
     width: auto;
 }
 #header-top a#logout-btn {
@@ -182,7 +188,7 @@ body {
     font-size: 1em;
     height: 25px;
     line-height: 25px;
-    width: 80px;
+    width: 100px;
 }
 
 #login-btn a {
@@ -493,7 +499,9 @@ body {
     float: right;
     font-size: 1.1em;
     margin-right: 10px;
+/*
     margin-top: 18px;
+*/
 }
 
 #account-info a {
@@ -523,7 +531,7 @@ body {
 	border: 1px solid #AAAAAA;
     height: 1.5em;
     line-height: 1.5em;
-    margin-top: 32px;
+    margin-top: 7px;
     outline: medium none;
     padding: 2px;
     width: 400px;
@@ -695,8 +703,11 @@ ul#chronology li {
 
 div#left-col hr, #right-col hr, hr {
     color: #CCCCCC;
+    background-color: #CCCCCC;
+/*
     height: 1px;
     border: 1px solid #CCCCCC;
+*/
 }
 
 .follow-button {
@@ -894,6 +905,25 @@ div.waiting{
  * CHRONOLOGY
  */
 ul#tabMenu li {
+    font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+    background-color: #FFB265;
+    font-size: 1em;
     margin-left: 10px;
-    font-size: 1.1em;
+    padding: 3px 5px;
+}
+
+ul#chronology div.comment-box ul li, 
+ul#chronology div.input-box, 
+#activity div.show-all-comments {
+    background-color: #ffe9d3;
+}
+
+ul#chronology div.input-box textarea{
+    width: 640px;
+    font-size:1em !important;
+}
+
+#notifications .unread-item {
+    background-color: #FFE9D3;
+    border: 1px dotted #CCC;
 }
