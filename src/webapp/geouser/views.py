@@ -80,7 +80,7 @@ def login_google(request):
             if hasattr(request, 'facebook'):
                 return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
             from funcs import get_next
-            return HttpResponse(get_next(request))
+            return HttpResponseRedirect(get_next(request))
         if not guser:#user is not registered, register it
             from models import User
             user = User.objects.get_by_email(ugoogle.email())
@@ -97,7 +97,6 @@ def login_google(request):
             from funcs import init_user_session
             init_user_session(request, guser.user)
         return HttpResponseRedirect(get_next(request))
-    #not google user
     return HttpResponseRedirect(users.create_login_url(reverse('geouser.views.login_google')))
 
 
@@ -130,7 +129,7 @@ def login_twitter(request):
         #callback_url=None
     from geoauth.views import authenticate_request
     #client_token_request(request, 'twitter', callback_url=callback_url)
-    return authenticate_request(request, 'twitter', cls=True)
+    return authenticate_request(request, 'twitter', cls=cls)
 
 
 #===============================================================================
