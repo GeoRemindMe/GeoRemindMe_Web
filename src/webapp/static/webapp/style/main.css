@@ -879,7 +879,7 @@ div.removable a {
 #notification-msg{
     border: 1px dotted #CCCCCC;
     left: 50%;
-    padding: 1em;
+    padding: 0.5em 1em;
     position: absolute;
 }
 .error{
@@ -887,6 +887,13 @@ div.removable a {
 }
 .success{
     background-color: #C4FF89;
+    
+}
+
+.logged .success{
+    background-color: #C4FF89;
+    font-size: 1.2em;
+    margin:63px auto 0;
     
 }
 
