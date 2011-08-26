@@ -684,7 +684,8 @@ body {
 }
 
 #left-col a#add-suggestion-btn{
-	font-size: 1.3em;
+	font-family: Alike;
+	font-size: 1.4em;
     height: auto;
     line-height: 3em;
     margin: 0 auto 1em;
@@ -970,6 +971,7 @@ a:visited{
 
 div#left-col li a {
     width: 185px;
+	font-family: Alike;
 }
 
 #right-col .section .header, .right-col .section .article .header {
