@@ -809,8 +809,7 @@ ul#chronology li {
 /*
 	border-bottom:none;
 */
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	
 }
 
 div#left-col hr, #right-col hr, hr {
@@ -1101,7 +1100,7 @@ ul#chronology div.input-box textarea{
 ul#chronology li div.timeline-msg {
     border-bottom: 0 none;
     float: left;
-    width: 650px;
+    width: 600px;
 }
 
 
@@ -1112,3 +1111,11 @@ ul#chronology li div.timeline-msg {
 ul#user-resume li:hover {
 	background: #FFB265;
 }
+<<<<<<< HEAD
+=======
+
+#user-info {
+    width: 589px;
+}
+
+>>>>>>> Working on Base Anonymous
