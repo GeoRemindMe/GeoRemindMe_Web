@@ -214,8 +214,8 @@ class URL2Node(template.Node):
         from django.core.urlresolvers import reverse, NoReverseMatch
         from django.conf import settings
         args = [arg.resolve(context) for arg in self.args]
-        from django.utils.encoding import smart_unicode
-        kwargs = dict([(smart_unicode(k), v.resolve(context).encode('utf-8'))
+        from django.utils.encoding import smart_str
+        kwargs = dict([(smart_str(k), v.resolve(context).encode('utf-8'))
                        for k, v in self.kwargs.items()])
 
         view_name = self.view_name
