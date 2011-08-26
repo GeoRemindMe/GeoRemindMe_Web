@@ -32,8 +32,10 @@
                 
                 $('.register-text-aux').toggle(function(){
                         $('#registerForm').slideDown(400);
+                        $("#register-with-social").slideUp(400);
                     },function(){
                         $('#registerForm').slideUp(400);
+                        $("#register-with-social").slideDown(400);
                 })
                 
                 $('#register-btn').click(function(e){
@@ -151,13 +153,16 @@
 			</section>
 			<section id="right-block">
 				<h2>¿Eres nuevo?</h2>
-				<p>Crea tu perfil utilizando una de tus cuentas.</p>
-				<ul id="register-menu">
-					<li id="twitter"><img src="/static/webapp/img/twitter.png" alt="Twitter"></li>
-                    <li id="facebook" class="active"><img src="/static/webapp/img/facebook.png" alt="Facebook"></li>
-					<li id="google"><img src="/static/webapp/img/Google.png" alt="Google"></li>
-				</ul>
-				<a href="http://localhost:8080/ext/twitter/perms" id="register-btn">Regístrate</a>
+                <div id="register-with-social">
+                    <p>Crea tu perfil utilizando una de tus cuentas.</p>
+                    <ul id="register-menu">
+                        <li id="twitter"><img src="/static/webapp/img/twitter.png" alt="Twitter"></li>
+                        <li id="facebook" class="active"><img src="/static/webapp/img/facebook.png" alt="Facebook"></li>
+                        <li id="google"><img src="/static/webapp/img/Google.png" alt="Google"></li>
+                    </ul>
+                    <a href="http://localhost:8080/ext/twitter/perms" id="register-btn">Regístrate</a>
+                </div>
+				
 				
 				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
                 <div style="display:none" id="registerForm">
