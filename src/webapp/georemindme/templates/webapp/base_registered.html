@@ -72,7 +72,11 @@
     <div id="notification-msg" style="display:none"></div>
 	<div id="bg-header" class="orange-gradient">
 	<header id="header-top" class="container">
-		<a href="/"><img src="/static/webapp/img/logo3.png" alt="" id="logo"></a>
+		<div id="logo-link">
+            <a href="/">
+                <img src="/static/webapp/img/logo3.png" alt="" id="logo">
+            </a>
+        </div>
 		
 		<div id="search_bar">
             <input type="search" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly><br>
@@ -80,20 +84,20 @@
             //Ejemplo: tapas en granada, turismo, paisajes, etc.
 -->
         </div>
-		
-		<div id="account-info">
-			<div id="user-menu" class="dropDrownBtn">
-				<a href="{% url public_profile request.user.username %}">
-				<img src="{% embedded_avatar request.user.username %}" alt=""></a><span>.</span>
-				<ul class="submenu" style="display:none" id="dropdown-list">
-					<li><a href="{% url public_profile user.username %}">Mi perfil</a></li>
-					<li><a href="{% url profile_settings %}">Configuración</a></li>
-					<li><a href="{% url logout %}">Desconectar</a></li>
-				</ul>
-			</div>
-			
-			
-		</div>
+
+		{% if user.username %}
+            <div id="account-info">
+                <div id="user-menu" class="dropDrownBtn">
+                    <a href="{% url public_profile request.user.username %}">
+                    <img src="{% embedded_avatar request.user.username %}" alt=""></a><span>.</span>
+                    <ul class="submenu" style="display:none" id="dropdown-list">
+                        <li><a href="{% url public_profile user.username %}">Mi perfil</a></li>
+                        <li><a href="{% url profile_settings %}">Configuración</a></li>
+                        <li><a href="{% url logout %}">Desconectar</a></li>
+                    </ul>
+                </div>			
+            </div>
+        {% endif %}
 	</header>
 	</div>
 	<div id="background">
