@@ -9,5 +9,5 @@ urlpatterns = patterns('geoalert.views',
     url(r'^suggestions/add/', 'add_suggestion', {}, 'add_suggestion'),
     url(r'^suggestion/(?P<slug>[^/]*)/$', 'suggestion_profile',{},'view_suggestion'),
     url(r'^(?i)place/gref/(?P<reference>[^/]*)/$', 'add_from_google_reference'),
-    url(r'^(?i)place/(?P<slug>[^/]*)/$', 'view_place'),
+    url(r'^(?i)place/(?P<slug>[^/]*)/$', 'view_place',{},'view_place'),
 )

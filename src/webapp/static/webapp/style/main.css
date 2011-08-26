@@ -484,7 +484,7 @@ body {
     background: linear-gradient(left, rgba(233,232,233,1) 0%,rgba(255,255,255,1) 100%); /* W3C */
 }
 #right-arrow span,#left-arrow span{
-    background: url("/static/webapp/img/right-arrow.png") no-repeat scroll 0 0 transparent;
+    background: url("/static/webapp/img/left-right-arrow.png") no-repeat scroll 0 0 transparent;
     display: block;
     height: 18px;
     margin-left: 3px;
@@ -492,7 +492,7 @@ body {
     width: 18px;
 }
 #left-arrow span{
-    background: url("/static/webapp/img/left-arrow.png") no-repeat scroll 0 0 transparent;
+    background: url("/static/webapp/img/left-right-arrow.png") no-repeat scroll 0 -18px transparent;
 }
 #right-arrow img,#left-arrow img{
     padding-top:120px;
