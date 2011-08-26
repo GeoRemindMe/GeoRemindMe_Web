@@ -1,4 +1,0 @@
-To launch the local server with the fixtures you should run something like this:
-./dev_appserver.py \
-    --datastore_path="[PATH_TO_REPO]/src/webapp/fixtures/dev_appserver.datastore" \
-    [PATH_TO_REPO]/src/webapp/

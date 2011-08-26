@@ -215,22 +215,19 @@ class URL2Node(template.Node):
         from django.conf import settings
         args = [arg.resolve(context) for arg in self.args]
         from django.utils.encoding import smart_str
-        kwargs = dict([(smart_str(k), v.resolve(context).encode('utf-8'))
+        kwargs = dict([(smart_str(k, 'ascii'), v.resolve(context))
                        for k, v in self.kwargs.items()])
-
         view_name = self.view_name
         in_facebook = self.in_facebook.resolve(context)
         if not self.legacy_view_name:
             view_name = view_name.resolve(context)
         if in_facebook and view_name.find('fb_') == -1:
             view_name = '%s%s' % ('fb_', view_name)
-
         # Try to look up the URL twice: once given the view name, and again
         # relative to what we guess is the "main" app. If they both fail,
         # re-raise the NoReverseMatch unless we're using the
         # {% url ... as var %} construct in which cause return nothing.
         url = ''
-        args = [k.encode('utf-8') if isinstance(k, basestring) else k for k in args ]
         try:
             url = reverse(view_name, args=args, kwargs=kwargs, current_app=context.current_app)
         except NoReverseMatch, e:
