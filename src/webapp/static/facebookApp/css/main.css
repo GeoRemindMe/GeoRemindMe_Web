@@ -659,7 +659,7 @@ input{
             
             ul#chronology li span.like-text, 
             #view-suggestion ul#comment-list li span.like-text,span.like-text{
-                background: url("/static/facebookApp/img/like_min.png") no-repeat scroll -2px 1px transparent;
+                background: url("/static/facebookApp/img/like_min.png") no-repeat scroll -2px 4px transparent;
 /*
                 color: black;
 */

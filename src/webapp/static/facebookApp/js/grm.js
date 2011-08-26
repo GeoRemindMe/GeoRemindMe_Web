@@ -246,13 +246,14 @@ GRM.removable = function() {
                 custom_url="/ajax/delete/"+type+"/";
             
             var data = { eventid:id,  comment_id:id, list_id:id, userid:id};
-            
+            GRM.wait();
             $.ajax({
                 type: "POST",
                 url: custom_url,
                 data: data,
                 dataType:'json',
                 context:$(this),
+                complete: function() { GRM.nowait();},
                 success: function(msg){
                     
                     if(msg==true){
