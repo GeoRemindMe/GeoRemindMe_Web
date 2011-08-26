@@ -92,8 +92,8 @@ def login_google(request):
                 from georemindme.funcs import make_random_string
                 user = User.register(email=ugoogle.email(), password=make_random_string(length=6))
                 guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
-                from funcs import init_user_session
-                init_user_session(request, user)
+            from funcs import init_user_session
+            init_user_session(request, user)
         #checks google account is confirmed, only load his account
         from funcs import get_next
         return HttpResponseRedirect(get_next(request))
