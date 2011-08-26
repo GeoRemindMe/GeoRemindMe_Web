@@ -50,19 +50,87 @@ table {
 
 /*------- HOME STYLE ---------*/
 #loginSec #header-top form{
+    margin-top: -7px;
+    
+}
+#login-submenu{
+    font-size: 0.8em;
+    margin-left: 7px;
+    margin-top: 5px;
+}
+
+#login-submenu span{
+    cursor:pointer;
+    float: left;
+    line-height: 15px;
+    margin-right: 27px;
+}
+
+#login-submenu a{
+    text-decoration: none;
+}
+#login-submenu a:hover{
+    text-decoration: underline;
+}
+
+#loginSec #header-top #login-submenu span input{
+    display: inline-block;
+    margin: 0;
+    vertical-align: text-top;
+}
+
+#login-bar{
     float: right;
+    font-size: 1.1em;
+    margin-top: 32px;
     text-align: right;
     width: 350px;
-    margin-top:28px;
+}
+#login-bar p, #login-bar ul,#login-bar ul  li{
+    display:inline;
+    float:left;
+}
+#login-bar p{
+    color: #555555;
+    display: inline-block;
+    font-size: 1.1em;
+    line-height: 32px;
 }
 #loginSec #header-top input{
 	border: 1px solid #CCCCCC;
     display: inline;
-    font-size: 0.9em;
+    font-size: 0.8em;
     height: 1.2em;
     margin-right: 5px;
     margin-top: 10px;
     width: 130px
+}
+#login-bar ul li{
+    background:url("/static/facebookApp/img/sprite_social.png") no-repeat scroll 0 0 transparent;
+    display: inline-block;
+    height: 32px;
+    margin-left: 10px;
+    cursor:pointer;
+}
+#login-bar ul li.twitter{
+    background-position:0 0;
+}
+#login-bar ul li.google{
+    background-position:0 -32px;
+}
+#login-bar ul li.facebook{
+    background-position:0 -64px;
+}
+#login-bar ul li.georemindme{
+    background-position:0 -96px;
+}
+#login-bar ul li span{
+    display: block;
+    font-size: 0.5em;
+    margin: 0;
+    padding: 0;
+    visibility: hidden;
+    width: 32px;
 }
 
 #bg-header{
@@ -874,6 +942,16 @@ div.removable a {
 /*
  * COMMON
  */
+a:visited{
+    color:blue;
+}
+.link{
+    color:blue;
+    cursor:pointer;
+}
+.link:hover{
+    text-decoration:underline;
+}
 .btn,.load-more {
     border-color:#D9DFEA #873A00 #873A00 #D9DFEA;
     background: #ffa84c; /* Old browsers */
