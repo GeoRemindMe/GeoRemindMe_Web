@@ -190,8 +190,34 @@ def dashboard(request, template='webapp/dashboard.html'):
         
         :return: Solo devuelve errores si el proceso falla.
     """
+    from forms import SocialUserForm
     if request.user.username is None:
-        return render_to_response('webapp/create_social_profile.html', {}, RequestContext(request))
+        if request.method == 'POST':
+            f = SocialUserForm(request.POST, 
+                               prefix='user_set_username', 
+                               initial = { 'email': request.user.email,
+                                           'username': request.user.username,
+                                         }
+                               )
+            if f.is_valid():
+                    user = f.save(request.user)
+                    if not user:
+                        return render_to_response('webapp/create_social_profile.html', {'form': f}, 
+                                       context_instance=RequestContext(request)
+                                      )
+            else:
+                return render_to_response('webapp/create_social_profile.html', {'form': f}, 
+                                       context_instance=RequestContext(request)
+                                      )
+        else:
+            f = SocialUserForm(prefix='user_set_username', 
+                               initial = { 'email': request.user.email,
+                                           'username': request.user.username,
+                                         }
+                               )
+            return render_to_response('webapp/create_social_profile.html', {'form': f}, 
+                                       context_instance=RequestContext(request)
+                                      )
     friends_to_follow=request.user.get_friends_to_follow()
     chronology = request.user.get_activity_timeline()
     # FIXME: CHAPUZA, LA PLANTILLA ESPERA RECIBIR EL QUERY_ID EN JSON :)
