@@ -230,7 +230,7 @@ class URL2Node(template.Node):
         # re-raise the NoReverseMatch unless we're using the
         # {% url ... as var %} construct in which cause return nothing.
         url = ''
-        #args = [k.encode('utf-8') for k in args]
+        args = [k.encode('utf-8') if isinstance(k, basestring) else k for k in args ]
         try:
             url = reverse(view_name, args=args, kwargs=kwargs, current_app=context.current_app)
         except NoReverseMatch, e:
