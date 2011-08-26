@@ -311,6 +311,7 @@ input{
         font-size:0.9em;
         border:1px solid #ccc;
         padding: 5px;
+        margin: 10px 0;
     }
     .note a{
         color: inherit;
@@ -909,6 +910,10 @@ input{
         margin: 0 auto;
         padding: 0;
         width: 450px;        
+    }
+    
+    #last-step{
+        margin-bottom: 10px;
     }
     
     #link-social-accounts li{
