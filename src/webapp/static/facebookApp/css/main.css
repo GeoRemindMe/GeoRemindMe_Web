@@ -1798,6 +1798,10 @@ input{
             cursor:pointer;
             border-bottom: 1px solid #DDDDDD;
         }
+        
+        div#suggestions div.suggestion{
+        }
+        
         div#content div.collapsed,div#content div.expanded{
             border:0;
             cursor:default;

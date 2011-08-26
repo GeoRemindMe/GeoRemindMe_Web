@@ -373,7 +373,7 @@ GRM.loadTimeline = function(params){
                         
                         
                     }
-                    
+                    showMessage("Se han cargado "+data[1].length+" elementos nuevos","success");
                     if(data[1].length<10){
                         //Si no hay más datos ocultamos el boton de cargar más
                         $(".load-more").hide();

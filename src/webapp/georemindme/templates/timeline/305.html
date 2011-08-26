@@ -15,32 +15,32 @@
         {% if obj.instance.user.username = request.user.username %}
             {% comment %}  Es de mi timeline {% endcomment %} 
             <div class="avatar">
-                <a href="{% url fb_public_profile request.user %}" title="Ver perfil en GeoRemindMe">
+                <a href="{% url2 in_facebook public_profile request.user %}" title="Ver perfil en GeoRemindMe">
                     <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
                 </a>
             </div>
             <div class="timeline-msg">
-                <span class="small-text">Te gusta la sugerencia de <a href="{% url fb_public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:</span>
+                <span class="small-text">Te gusta la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:</span>
         {% else %}
             <div class="avatar">
-                <a href="{% url fb_public_profile obj.username %}" title="Ver perfil en GeoRemindMe">
+                <a href="{% url2 in_facebook public_profile obj.username %}" title="Ver perfil en GeoRemindMe">
                     <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
                 </a>
             </div>
             <div class="timeline-msg">
                 <span class="small-text">
-                    A <a href="{% url fb_public_profile obj.username %}" class="black-link">{{obj.username}}</a> le gusta 
+                    A <a href="{% url2 in_facebook public_profile obj.username %}" class="black-link">{{obj.username}}</a> le gusta 
                     {% if obj.instance.instance.user.username = request.user.username %}
                         <strong>tu sugerencia</strong>:
                     {% else %}
-                        la sugerencia de <a href="{% url fb_public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:
+                        la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:
                     {% endif %}
                 </span>
         {% endif %}
                 
-                <br><a href="{% url fb_view_suggestion obj.instance.instance.slug %}" class="black-link">{{obj.instance.instance}}</a><br>
-                <span class="suggestionPlace">En <a href="{% url fb_view_place obj.instance.instance.poi.slug %}">{{obj.instance.instance.poi.name}}</a></span><br>
-                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url fb_view_suggestion obj.instance.instance.slug %}">Detalles</a></span>
+                <br><a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="black-link">{{obj.instance.instance}}</a><br>
+                <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}">{{obj.instance.instance.poi.name}}</a></span><br>
+                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}">Detalles</a></span>
             </div>
     {% endif %}
 </li>

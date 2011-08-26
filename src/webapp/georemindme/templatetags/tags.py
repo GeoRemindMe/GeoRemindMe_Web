@@ -215,7 +215,7 @@ class URL2Node(template.Node):
         from django.conf import settings
         args = [arg.resolve(context) for arg in self.args]
         from django.utils.encoding import smart_str
-        kwargs = dict([(smart_str(k), v.resolve(context).encode('utf-8'))
+        kwargs = dict([(smart_str(k, 'ascii'), v.resolve(context))
                        for k, v in self.kwargs.items()])
 
         view_name = self.view_name
@@ -230,7 +230,6 @@ class URL2Node(template.Node):
         # re-raise the NoReverseMatch unless we're using the
         # {% url ... as var %} construct in which cause return nothing.
         url = ''
-        args = [k.encode('utf-8') if isinstance(k, basestring) else k for k in args ]
         try:
             url = reverse(view_name, args=args, kwargs=kwargs, current_app=context.current_app)
         except NoReverseMatch, e:

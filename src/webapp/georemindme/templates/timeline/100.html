@@ -9,15 +9,15 @@
         NO entra porque en chronology está puesto que no
     {% else %}
         <div class="avatar">
-            <a href="{% url fb_public_profile obj.username %}" title="{{obj.username}}">
+            <a href="{% url2 in_facebook public_profile obj.username %}" title="{{obj.username}}">
                 <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
             </a>
         </div>
         
         {% if obj.instance.username = request.user.username %}
-            <a href="{% url fb_public_profile obj.username %}" class="black-link">{{obj.username}}</a> ahora te está siguiendo<br>
+            <a href="{% url2 in_facebook public_profile obj.username %}" class="black-link">{{obj.username}}</a> ahora te está siguiendo<br>
         {% else %}
-            <a href="{% url fb_public_profile obj.username %}" class="black-link">{{obj.username}}</a> ahora sigue a <a href="{% url fb_public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
+            <a href="{% url2 in_facebook public_profile obj.username %}" class="black-link">{{obj.username}}</a> ahora sigue a <a href="{% url2 in_facebook public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
         {% endif %}
     {% endif %}
 

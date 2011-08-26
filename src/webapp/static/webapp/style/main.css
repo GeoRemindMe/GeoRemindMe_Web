@@ -55,7 +55,7 @@ table {
 }
 #login-submenu{
     font-size: 0.8em;
-    margin-left: 7px;
+    
     margin-top: 5px;
 }
 
@@ -77,13 +77,14 @@ table {
     display: inline-block;
     margin: 0;
     vertical-align: text-top;
+    width:auto;
 }
 
 #login-bar{
     float: right;
     font-size: 1.1em;
     margin-top: 32px;
-    text-align: right;
+    
     width: 350px;
 }
 #login-bar p, #login-bar ul,#login-bar ul  li{
@@ -342,7 +343,27 @@ body {
 #register-menu li{
     cursor:pointer;
 }
-#register-menu li.active img{
+#register-menu li.active{
+    background-color: #FFE270 !important;
+ }
+#register-menu li#twitter{
+    background: url("/static/webapp/img/social_big.png") no-repeat scroll 0 0 transparent;
+ }
+ #register-menu li#facebook{
+    background: url("/static/webapp/img/social_big.png") no-repeat scroll 0 -63px transparent;
+ }
+ #register-menu li#google{
+    background: url("/static/webapp/img/social_big.png") no-repeat scroll 0 -124px transparent;
+ }
+ 
+#register-menu span{
+    display: block;
+    height: 60px;
+    visibility: hidden;
+    width: 60px;
+}
+
+#register-menu li.active{
     -moz-box-shadow: 0 0 5px 5px #FFEC72;
     -webkit-box-shadow: 0 0 5px 5px #FFEC72;
     box-shadow: 0 0 5px 5px #FFEC72;
@@ -545,6 +566,10 @@ body {
 	font-size: 14px;
 	margin-left: 30px;
     cursor:pointer;
+}
+
+#right-block p.register-text-aux.close{
+    background-position:left bottom;
 }
 
 .bottom-p {
@@ -880,7 +905,7 @@ div.removable a {
 #notification-msg{
     border: 1px dotted #CCCCCC;
     left: 50%;
-    padding: 1em;
+    padding: 0.5em 1em;
     position: absolute;
 }
 .error{
@@ -888,6 +913,13 @@ div.removable a {
 }
 .success{
     background-color: #C4FF89;
+    
+}
+
+.logged .success{
+    background-color: #C4FF89;
+    font-size: 1.2em;
+    margin:63px auto 0;
     
 }
 

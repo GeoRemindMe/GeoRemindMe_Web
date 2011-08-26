@@ -33,9 +33,11 @@
                 $('.register-text-aux').toggle(function(){
                         $('#registerForm').slideDown(400);
                         $("#register-with-social").slideUp(400);
+                        $(this).addClass("close");
                     },function(){
                         $('#registerForm').slideUp(400);
                         $("#register-with-social").slideDown(400);
+                        $(this).removeClass("close");
                 })
                 
                 $('#register-btn').click(function(e){
@@ -109,7 +111,7 @@
                     <input type="submit" id="login-btn" value="Entrar" />
                     <div id="login-submenu">
                         <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> Recordarme</span>
-                        <span><a href="/remind/">Recuperar contraseña</a></span>
+                        <span><a href="/remind/" class="link">Recuperar contraseña</a></span>
                         <span class="link" onclick="javascript:showMenu()">Cancelar</span>
                     </div>
                     {% csrf_token %}
@@ -156,9 +158,9 @@
                 <div id="register-with-social">
                     <p>Crea tu perfil utilizando una de tus cuentas.</p>
                     <ul id="register-menu">
-                        <li id="twitter"><img src="/static/webapp/img/twitter.png" alt="Twitter"></li>
-                        <li id="facebook" class="active"><img src="/static/webapp/img/facebook.png" alt="Facebook"></li>
-                        <li id="google"><img src="/static/webapp/img/Google.png" alt="Google"></li>
+                        <li id="twitter"><span>Twitter</span></li>
+                        <li id="facebook" class="active"><span>Facebook</span></li>
+                        <li id="google"><span>Google</span></li>
                     </ul>
                     <a href="http://localhost:8080/ext/twitter/perms" id="register-btn">Regístrate</a>
                 </div>

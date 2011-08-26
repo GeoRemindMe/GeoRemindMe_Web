@@ -29,9 +29,11 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
 	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+    
 
     {% block extra_js %}{%endblock%}
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
@@ -66,7 +68,8 @@
 	<![endif]-->
 	
 </head>
-<body>
+<body class="logged">
+    <div id="notification-msg" style="display:none"></div>
 	<div id="bg-header" class="orange-gradient">
 	<header id="header-top" class="container">
 		<a href="/"><img src="/static/webapp/img/logo3.png" alt="" id="logo"></a>
