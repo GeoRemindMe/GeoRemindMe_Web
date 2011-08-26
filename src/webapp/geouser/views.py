@@ -189,7 +189,7 @@ def dashboard(request, template='webapp/dashboard.html'):
         
         :return: Solo devuelve errores si el proceso falla.
     """
-    if request.user.username == '':
+    if request.user.username is None:
         return render_to_response('webapp/create_social_profile.html', {}, RequestContext(request))
     friends_to_follow=request.user.get_friends_to_follow()
     chronology = request.user.get_activity_timeline()
@@ -210,7 +210,9 @@ def public_profile(request, username, template='webapp/profile.html'):
     :type username: ni idea
     """
     from geoalert.views import get_suggestion
-    if request.user.is_authenticated() and request.user.username.lower() == username.lower():
+    if request.user.is_authenticated() \
+     and request.user.username is not None \
+     and request.user.username.lower() == username.lower():
         # Si el usuario esta viendo su propio perfil
         profile = request.user.profile
         counters = request.user.counters_async()
