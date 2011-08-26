@@ -217,14 +217,12 @@ class URL2Node(template.Node):
         from django.utils.encoding import smart_str
         kwargs = dict([(smart_str(k, 'ascii'), v.resolve(context))
                        for k, v in self.kwargs.items()])
-
         view_name = self.view_name
         in_facebook = self.in_facebook.resolve(context)
         if not self.legacy_view_name:
             view_name = view_name.resolve(context)
         if in_facebook and view_name.find('fb_') == -1:
             view_name = '%s%s' % ('fb_', view_name)
-
         # Try to look up the URL twice: once given the view name, and again
         # relative to what we guess is the "main" app. If they both fail,
         # re-raise the NoReverseMatch unless we're using the

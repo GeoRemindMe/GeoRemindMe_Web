@@ -4,6 +4,6 @@
 .pydevproject
 virtualme/*
 /.settings
-/src/webapp/run_server.py
-/src/webapp/fixtures/dev_appserver.datastore
+/src/fixtures/run_server.py
+/src/fixtures/fixtures/dev_appserver.datastore
 /src/webapp/settings.py
