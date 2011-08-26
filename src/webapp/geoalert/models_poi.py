@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db, search
 from google.appengine.ext.db import polymodel
 
-from geomodel.geomodel import GeoModel
 from georemindme.decorators import classproperty
 from georemindme.models_utils import Visibility
 from geouser.models import User
@@ -48,13 +47,14 @@ class Business(db.Model):
     
 
 
-class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
+class POI(polymodel.PolyModel, search.SearchableModel):
     ''' Puntos de interes '''
     name = db.StringProperty()
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty(auto_now=True)
     user = db.ReferenceProperty(User, required=False)  # el usuario que creo el POI
     address = db.StringProperty()
+    location = db.GeoPtProperty()
     
     
     @classmethod
