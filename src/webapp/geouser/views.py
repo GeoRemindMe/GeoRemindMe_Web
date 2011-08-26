@@ -77,25 +77,25 @@ def login_google(request):
             guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
             if not guser:
                 guser = GoogleUser.register(user=request.user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
-            if hasattr(request, 'facebook'):
-                return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
-            from funcs import get_next
-            return HttpResponseRedirect(get_next(request))
-        if not guser:#user is not registered, register it
+            else:
+                guser.update(ugoogle.email(), realname=ugoogle.nickname())
+        else:#user is not registered, register it
             from models import User
             user = User.objects.get_by_email(ugoogle.email())
             if user:
-                guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
+                guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
+                if guser is None:
+                    guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
+                else:
+                    guser.update(ugoogle.email(), realname=ugoogle.nickname())
             else:
                 from georemindme.funcs import make_random_string
                 user = User.register(email=ugoogle.email(), password=make_random_string(length=6))
                 guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
-            from funcs import init_user_session
-            init_user_session(request, user)
-        else:#checks google account is confirmed, only load his account
-            guser.update(ugoogle.email(), realname=ugoogle.nickname())
-            from funcs import init_user_session
-            init_user_session(request, guser.user)
+                from funcs import init_user_session
+                init_user_session(request, user)
+        #checks google account is confirmed, only load his account
+        from funcs import get_next
         return HttpResponseRedirect(get_next(request))
     return HttpResponseRedirect(users.create_login_url(reverse('geouser.views.login_google')))
 
