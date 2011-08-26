@@ -141,8 +141,9 @@ def logout(request):
         :return: Redirige al usuario a donde le diga la función login_panel.
     """
     request.session.delete()
-    return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
-    ##return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
+    from google.appengine.api import users
+    #return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
+    return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
 
 
 #===============================================================================
