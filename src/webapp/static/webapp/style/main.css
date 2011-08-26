@@ -1107,3 +1107,7 @@ ul#chronology li div.timeline-msg {
 ul#chronology li div.timeline-msg {
     width:585;
 }
+
+ul#user-resume li:hover {
+	background: #FFB265;
+}
