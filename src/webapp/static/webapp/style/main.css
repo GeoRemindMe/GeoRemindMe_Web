@@ -943,10 +943,10 @@ div.removable a {
  * COMMON
  */
 a:visited{
-    color:blue;
+    color:#3896FF;
 }
 .link{
-    color:blue;
+    color:#3896FF;
     cursor:pointer;
 }
 .link:hover{
