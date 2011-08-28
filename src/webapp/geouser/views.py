@@ -33,9 +33,6 @@ def register(request):
         user = None
         if f.is_valid():
             user = f.save(language=request.session['LANGUAGE_CODE'])
-            if user:
-                from django.contrib import messages
-                messages.success(request, _("User registration complete, a confirmation email have been sent to %s. Redirecting to dashboard...") % user)
         return user, f
     return HttpResponseRedirect(reverse('georemindme.views.register_panel'))
 
@@ -80,27 +77,26 @@ def login_google(request):
             guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
             if not guser:
                 guser = GoogleUser.register(user=request.user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
-            if hasattr(request, 'facebook'):
-                return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
-            from funcs import get_next
-            return HttpResponse(get_next(request))
-        if not guser:#user is not registered, register it
+            else:
+                guser.update(ugoogle.email(), realname=ugoogle.nickname())
+        else:#user is not registered, register it
             from models import User
             user = User.objects.get_by_email(ugoogle.email())
             if user:
-                guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
+                guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
+                if guser is None:
+                    guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
+                else:
+                    guser.update(ugoogle.email(), realname=ugoogle.nickname())
             else:
                 from georemindme.funcs import make_random_string
                 user = User.register(email=ugoogle.email(), password=make_random_string(length=6))
                 guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
             from funcs import init_user_session
             init_user_session(request, user)
-        else:#checks google account is confirmed, only load his account
-            guser.update(ugoogle.email(), realname=ugoogle.nickname())
-            from funcs import init_user_session
-            init_user_session(request, guser.user)
+        #checks google account is confirmed, only load his account
+        from funcs import get_next
         return HttpResponseRedirect(get_next(request))
-    #not google user
     return HttpResponseRedirect(users.create_login_url(reverse('geouser.views.login_google')))
 
 
@@ -133,7 +129,7 @@ def login_twitter(request):
         #callback_url=None
     from geoauth.views import authenticate_request
     #client_token_request(request, 'twitter', callback_url=callback_url)
-    return authenticate_request(request, 'twitter', cls=True)
+    return authenticate_request(request, 'twitter', cls=cls)
 
 
 #===============================================================================
@@ -145,8 +141,9 @@ def logout(request):
         :return: Redirige al usuario a donde le diga la función login_panel.
     """
     request.session.delete()
-    return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
-    ##return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
+    from google.appengine.api import users
+    #return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
+    return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
 
 
 #===============================================================================
@@ -193,6 +190,34 @@ def dashboard(request, template='webapp/dashboard.html'):
         
         :return: Solo devuelve errores si el proceso falla.
     """
+    from forms import SocialUserForm
+    if request.user.username is None:
+        if request.method == 'POST':
+            f = SocialUserForm(request.POST, 
+                               prefix='user_set_username', 
+                               initial = { 'email': request.user.email,
+                                           'username': request.user.username,
+                                         }
+                               )
+            if f.is_valid():
+                    user = f.save(request.user)
+                    if not user:
+                        return render_to_response('webapp/create_social_profile.html', {'form': f}, 
+                                       context_instance=RequestContext(request)
+                                      )
+            else:
+                return render_to_response('webapp/create_social_profile.html', {'form': f}, 
+                                       context_instance=RequestContext(request)
+                                      )
+        else:
+            f = SocialUserForm(prefix='user_set_username', 
+                               initial = { 'email': request.user.email,
+                                           'username': request.user.username,
+                                         }
+                               )
+            return render_to_response('webapp/create_social_profile.html', {'form': f}, 
+                                       context_instance=RequestContext(request)
+                                      )
     friends_to_follow=request.user.get_friends_to_follow()
     chronology = request.user.get_activity_timeline()
     # FIXME: CHAPUZA, LA PLANTILLA ESPERA RECIBIR EL QUERY_ID EN JSON :)
@@ -212,7 +237,9 @@ def public_profile(request, username, template='webapp/profile.html'):
     :type username: ni idea
     """
     from geoalert.views import get_suggestion
-    if request.user.username.lower() == username.lower():
+    if request.user.is_authenticated() \
+     and request.user.username is not None \
+     and request.user.username.lower() == username.lower():
         # Si el usuario esta viendo su propio perfil
         profile = request.user.profile
         counters = request.user.counters_async()
@@ -252,17 +279,19 @@ def public_profile(request, username, template='webapp/profile.html'):
             timeline = profile_user.get_profile_timeline(querier=request.user)
         show_followers = settings.show_followers,
         show_followings = settings.show_followings
-    
+    if not request.user.is_authenticated():
+        pos = template.rfind('.html')
+        template = template[:pos] + '_anonymous' + template[pos:]
     return render_to_response(template, {'profile': profile, 
-                                                'counters': counters.next(),
-                                                'sociallinks': sociallinks.next(),
-                                                'chronology': timeline, 
-                                                'suggestions': suggestions,
-                                                'is_following': is_following,
-                                                'is_follower': is_follower, 
-                                                'show_followers': show_followers,
-                                                'show_followings': show_followings
-                                                }, context_instance=RequestContext(request))
+                                         'counters': counters.next(),
+                                         'sociallinks': sociallinks.next(),
+                                         'chronology': timeline, 
+                                         'suggestions': suggestions,
+                                         'is_following': is_following,
+                                         'is_follower': is_follower, 
+                                         'show_followers': show_followers,
+                                         'show_followings': show_followings
+                                        }, context_instance=RequestContext(request))
 
 
 @login_required
@@ -303,6 +332,34 @@ def profile_settings(request, template='webapp/settings.html'):
                                                 },
                                             context_instance=RequestContext(request)
                                 )
+    
+
+def followers_panel(request, username, template='followers.html'):
+    if request.user.is_authenticated():
+        if username == request.user.username:
+            followers=request.user.get_followers()
+    else:
+        from geouser.api import get_followers
+        followers = get_followers(request.user, username=username)
+    return  render_to_response(template, {'followers': followers[1],
+                                          'username_page':username,
+                                          },
+                                          context_instance=RequestContext(request)
+                               )
+
+
+def followings_panel(request, username, template):
+    if request.user.is_authenticated():
+        if username == request.user.username:
+            followings=request.user.get_followings()
+    else:
+        from geouser.api import get_followings
+        followings = get_followings(request.user, username=username)
+    return  render_to_response(template, {'followings': followings[1],
+                                           'username_page':username
+                                           },
+                                           context_instance=RequestContext(request)
+                               )
 #===============================================================================
 # CONFIRM VIEW
 #===============================================================================
@@ -388,103 +445,6 @@ def remind_user_code(request, user, code):
     return render_to_response('webapp/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
 
 
-#===============================================================================
-# FUNCIONES DE FOLLOWERS Y FOLLOWINGS
-#===============================================================================
-def get_followers(request, userid=None, username=None, page=1, query_id=None):
-    """**Descripción**: Obtiene la lista de followers de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado.
-        
-		:param userid: id del usuario (user.id)
-		:type userid: string
-		:param username: nombre del usuario (user.username)
-		:type username: string
-		:param page: número de página a mostrar
-		:type page: int
-		:param query_id: identificador de búsqueda
-		:type query_id: int
-		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
-    """
-    if userid is None and username is None:
-        if request.user.is_authenticated():
-            return request.user.get_followers(page=page, query_id=query_id)
-        return None
-    else:
-        from models import User
-        from models_acc import UserSettings
-        if userid:
-            profile_key = User.objects.get_by_id(userid, keys_only=True)
-        elif username:
-            profile_key = User.objects.get_by_username(username, keys_only=True)
-        settings = UserSettings.objects.get_by_id(profile_key.name())
-        if settings.show_followers:
-            return User.objects.get_followers(userid=userid, username=username, page=page, query_id=query_id)
-    return None
-
-
-def get_followings(request, userid=None, username=None, page=1, query_id=None):
-    """**Descripción**: Obtiene la lista de followings de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado
-        
-		:param userid: id del usuario (user.id)
-		:type userid: string
-		:param username: nombre del usuario (user.username)
-		:type username: string
-		:param page: número de página a mostrar
-		:type page: int
-		:param query_id: identificador de búsqueda
-		:type query_id: int
-		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
-    """
-    if userid is None and username is None:
-        if request.user.is_authenticated():
-            return request.user.get_followings(page=page, query_id=query_id)
-        return None
-    else:
-        from models import User
-        from models_acc import UserSettings
-        if userid:
-            user_key = User.objects.get_by_id(userid, keys_only=True)
-        elif username:
-            user_key = User.objects.get_by_username(username, keys_only=True)
-        settings = UserSettings.objects.get_by_id(user_key.name())
-        if settings.show_followings:
-            return User.objects.get_followings(userid=userid, username=username, page=page, query_id=query_id)
-    return None
-
-
-@login_required
-def get_friends(request):
-    users = request.user.get_friends().get_result()
-    if len(users) > 0:
-        return [(u.id, u.username) for u in users]
-    return None
-
-
-@login_required
-def add_following(request, userid=None, username=None):
-    """**Descripción**:	Añade un  nuevo usuario a la lista de following del usuario logeado
-    
-		:param userid: id del usuario (user.id)
-		:type userid: string
-		:param username: nombre del usuario (user.username)
-		:type username: string
-		:return: booleano con el resultado de la operación
-    """
-    return request.user.add_following(followid=userid, followname=username)
-
-
-@login_required
-def del_following(request, userid=None, username=None):
-    """**Descripción**: Borra un usuario de la lista de following del usuario logeado
-		
-		:param userid: id del usuario (user.id)
-		:type userid: string
-		:param username: nombre del usuario (user.username)
-		:type username: string
-		:return: boolean con el resultado de la operacion
-    """
-    return request.user.del_following(followid=userid, followname=username)
-
-
 @login_required
 def get_contacts_google(request):
     """**Descripción**: Obtiene una lista con los contactos en gmail que
@@ -558,38 +518,9 @@ def get_friends_twitter(request):
     return render_to_response('webapp/contacts_twitter.html', {'contacts' : contacts, },
                               context_instance=RequestContext(request))
     
-
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
-def get_profile_timeline(request, userid = None, username = None, query_id=None):
-    """**Descripción**: Obtiene la lista de timeline de un usuario, si no se recibe userid o username, se obtiene la lista del usuario logueado
-        
-		:param userid: id del usuario (user.id)
-		:type userid: string
-		:param username: nombre del usuario (user.username)
-		:type username: string
-		:param page: número de página a mostrar
-		:type page: int
-		:param query_id: identificador de búsqueda
-		:type query_id: int
-		:return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad            
-    """
-    if userid is None and username is None:
-        if request.user.is_authenticated():
-            return request.user.get_profile_timeline(query_id=query_id)
-        return None
-    else:
-        from models import User
-        if userid:
-            user_profile = User.objects.get_by_id(userid)
-        elif username:
-            user_profile = User.objects.get_by_username(username)
-        if user_profile.settings.show_timeline:
-            return user_profile.get_profile_timeline(query_id=query_id, querier=request.user)
-    return None
-
-
 @login_required
 def notifications(request, template='webapp/notifications.html'):
     timeline = request.user.get_notifications_timeline()
@@ -600,32 +531,6 @@ def notifications(request, template='webapp/notifications.html'):
                                           } , RequestContext(request))
 
 
-@login_required
-def get_activity_timeline(request, query_id=None):
-    """**Descripción**: Obtiene la lista de timeline de actividad del usuario logueado
-
-        :param page: número de página a mostrar
-        :type page: int
-        :param query_id: identificador de búsqueda
-        :type query_id: int
-        :return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
-    """
-    return request.user.get_activity_timeline(query_id=query_id)
-
-@login_required
-def get_notifications_timeline(request,query_id=None):
-    """**Descripción**: Obtiene la lista de timeline de actividad del usuario logueado
-
-        :param page: número de página a mostrar
-        :type page: int
-        :param query_id: identificador de búsqueda
-        :type query_id: int
-        :return: lista de tuplas de la forma (id, username), None si el usuario tiene privacidad
-    """
-    request.user.counters.set_notifications(-10)
-    return request.user.get_notifications_timeline(query_id=query_id)
-
-    
 def get_avatar(request, username):
     from models import User
     user = User.objects.get_by_username(username)
@@ -657,6 +562,7 @@ def update(request):
     from google.appengine.ext.deferred import defer
     defer(__update_users)  # mandar email de notificacion
     return HttpResponse('Updating users...')
+
 
 def __update_users():
     from models import User

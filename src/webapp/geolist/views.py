@@ -44,7 +44,7 @@ def add_list_alert(request, name=None, description=None, instances=None):
     return list.id
 
 @login_required
-def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[]):
+def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[], tags=None, vis=None):
     '''
     Modifica una lista de usuarios
 
@@ -63,12 +63,12 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         list = ListRequested.objects.get_by_id_querier(id, request.user)
         if list is not None:
             try:
-                list.update(querier=request.user, instances=instances)
+                list.update(querier=request.user, instances=instances, tags=tags, vis=vis)
                 return list
             except:
                 from django.http import HttpResponseForbidden
                 return HttpResponseForbidden
-    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, instances_del=instances_del)
+    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del, vis=vis)
     return list
 
 @login_required
@@ -409,6 +409,9 @@ def view_list(request, id, template='webapp/view_list.html'):
                                   )
             if len(suggestions_loaded) > 7:
                     break
+        from georemindme.funcs import prefetch_refprops
+        from geoalert.models import Suggestion
+        suggestions = prefetch_refprops(suggestions, Suggestion.user)
         return suggestions_loaded
     try:
         list = ListSuggestion.objects.get_by_id_querier(id, request.user)
@@ -419,12 +422,13 @@ def view_list(request, id, template='webapp/view_list.html'):
     from google.appengine.ext import db
     from geoalert.models import Event
     suggestions_async = db.get(list.keys)
+    from geovote.api import get_comments
+    query_id, comments_async = get_comments(request.user, list.id, 'List', async=True)
     from geovote.models import Vote
-    from geovote.views import get_comments_list
     from geovote.models import Comment
     has_voted = Vote.objects.user_has_voted(request.user, list.key())
     vote_counter = Vote.objects.get_vote_counter(list.key())
-    query_id, comments_async = get_comments_list(request, list.id, async=True)
+    #comments = get_comments_list(request.user, list.id)
     top_comments = Comment.objects.get_top_voted(list, request.user)
     user_follower = list.has_follower(request.user)
     return render_to_response(template,
@@ -438,3 +442,59 @@ def view_list(request, id, template='webapp/view_list.html'):
                                 },
                                 context_instance=RequestContext(request)
                               )
+    
+
+@login_required
+def share_on_facebook(request, id, msg):
+    list = List.objects.get_by_id_querier(id, request.user)
+    if list is None:
+        return None
+    if not list._is_public():
+        return False
+    if list.short_url is None:
+        list._get_short_url()
+    from geoauth.clients.facebook import FacebookClient
+    from os import environ
+    try:
+        fb_client=FacebookClient(user=request.user)
+    except:
+        return None
+    params= {
+                "name": "Ver detalles de la sugerencia",
+                "link": list.short_url if list.short_url is not None else '%s%s' % (environ['HTTP_HOST'], list.get_absolute_url()),
+                #"caption": "Destalles del sitio (%(sitio)s), comentarios, etc." % {'sitio': list.poi.name},
+                #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
+                #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
+            }
+    if list.description is not None:
+        params["description"]= list.description
+    #Pasamos todos los valores a UTF-8
+    params = dict([k, v.encode('utf-8')] for k, v in params.items())
+    try:        
+        post_id = fb_client.consumer.put_wall_post("%(sugerencia)s" % {
+                                                           'sugerencia': list.name.encode('utf-8')
+                                                           }, 
+                                                       params)
+    except:
+        return None
+    return post_id
+
+@login_required
+def share_on_twitter(request, id, msg):
+    list = List.objects.get_by_id_querier(id, request.user)
+    if list is None:
+        return None
+    if not list._is_public():
+        return False
+    if list.short_url is None:
+        list._get_short_url()
+    from geoauth.clients.twitter import TwitterClient
+    from os import environ
+    try:
+        tw_client=TwitterClient(user=request.user)
+        tw_client.send_tweet(msg)
+    except:
+        return None
+    return True
+    
+    

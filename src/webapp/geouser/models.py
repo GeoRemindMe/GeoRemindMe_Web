@@ -34,7 +34,7 @@ class AnonymousUser(object):
         return -1
     
     def key(self):
-        return -1
+        return "iamanonymousyeah"
 
 
 class User(polymodel.PolyModel, HookedModel):
@@ -727,6 +727,12 @@ class User(polymodel.PolyModel, HookedModel):
                 'get_absolute_url': self.get_absolute_url(),
                 'get_absolute_fburl': self.get_absolute_fburl(),
                 }
+        
+    def has_perms_twitter(self):
+        access_token = db.GqlQuery('SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user', provider='twitter', user=self.key()).get()
+        if access_token is None:
+            return False
+        return True
 
 from helpers import UserHelper
 from watchers import *

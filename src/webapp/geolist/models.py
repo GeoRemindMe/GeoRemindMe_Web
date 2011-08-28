@@ -5,6 +5,7 @@ from google.appengine.ext import db
 
 from geouser.models import User
 from georemindme.models_utils import Visibility, HookedModel
+from geotags.models import Taggable
 from georemindme.decorators import classproperty
 from models_indexes import ListCounter
 
@@ -19,6 +20,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     created = db.DateTimeProperty(auto_now_add = True)
     modified = db.DateTimeProperty(auto_now=True)
     active = db.BooleanProperty(default=True)
+    _short_url = db.URLProperty()
     count = db.IntegerProperty(default=0)  # numero de sugerencias en la lista
 
     _counters = None
@@ -27,6 +29,17 @@ class List(db.polymodel.PolyModel, HookedModel):
     @property
     def id(self):
         return self.key().id()
+    
+    @property
+    def short_url(self):
+        if self._short_url is None:
+            self._get_short_url()
+            if self._short_url is not None:
+                self.put()
+            else:
+                from os import environ
+                return 'http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
+        return self._short_url
 
     @property
     def counters(self):
@@ -41,6 +54,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     def _pre_put(self):
         self.count = len(self.keys)
         if not self.is_saved():
+            self._get_short_url()
             self._new = True
 
     def _post_put_sync(self, **kwargs):
@@ -66,6 +80,10 @@ class List(db.polymodel.PolyModel, HookedModel):
                     'count': self.count,
                     'counters': self.counters.to_dict(),
                     'keys': [i.id() for i in self.keys],
+                    'visibility': self._get_visibility(),
+                    'get_absolute_url': self.get_absolute_url(),
+                    'get_absolute_fburl': self.get_absolute_fburl(),
+                    'short_url': self.short_url,
                     }
             if resolve:
                 dict['instances'] = db.get(self.keys)
@@ -86,9 +104,20 @@ class List(db.polymodel.PolyModel, HookedModel):
     
     def get_absolute_fburl(self):
         return '/fb%s' % self.get_absolute_url()
+    
+    def _get_short_url(self):
+        from libs.vavag import VavagRequest
+        from django.conf import settings
+        from os import environ
+        try:
+            client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
+            response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
+            self._short_url = response['results']['packUrl']
+        except:
+            self._short_url = None
 
 
-class ListSuggestion(List, Visibility):
+class ListSuggestion(List, Visibility, Taggable):
     '''
     Lista agrupando sugerencias, que no tienen porque ser sugerencias
     creadas por el mismo usuario que crea la lista.
@@ -134,7 +163,7 @@ class ListSuggestion(List, Visibility):
             return True
 
     @classmethod
-    def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], vis='public'):
+    def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], tags = None, vis='public'):
         """
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
@@ -159,8 +188,9 @@ class ListSuggestion(List, Visibility):
                 list.update(name=name, 
                             description=description,
                             instances=instances, 
-                            instances_del=instances_del, 
-                            vis=vis 
+                            instances_del=instances_del,
+                            tags=tags, 
+                            vis=vis
                             )
                 return list
             return False
@@ -170,12 +200,14 @@ class ListSuggestion(List, Visibility):
                               user=user, 
                               description=description, 
                               keys=[k for k in keys], 
-                              _vis=vis
+                              _vis=vis if vis is not None else 'public'
                               )
+        if tags is not None:
+            list._tags_setter(tags, commit=False)
         list.put()
         return list
 
-    def update(self, name=None, description=None, instances=[], instances_del=[], vis='public'):
+    def update(self, name=None, description=None, instances=[], instances_del=[], tags=None, vis='public'):
         """
         Actualiza una lista de alertas
 
@@ -203,7 +235,10 @@ class ListSuggestion(List, Visibility):
         keys.extend([db.Key.from_path('Event', int(instance)) for instance in instances])
         keys = set(keys)
         self.keys = [k for k in keys]
-        self._vis = vis
+        if vis is not None:
+            self._vis = vis
+        if tags is not None:
+            self._tags_setter(tags, commit=False)
         self.put()
 
     def del_follower(self, user):
@@ -282,7 +317,7 @@ class ListRequested(ListSuggestion):
         return ListRequestedHelper()
 
     @classmethod
-    def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], vis='public'):
+    def insert_list(cls, user, id=None, name=None, description = None, instances=[], instances_del=[], tags=None, vis='public'):
         """
         Crea una nueva lista, en el caso de que exista una con ese nombre,
         se añaden las alertas
@@ -310,6 +345,7 @@ class ListRequested(ListSuggestion):
                             description=description, 
                             instances=instances, 
                             instances_del=instances_del, 
+                            tags=tags,
                             vis=vis 
                             )
                 return list
@@ -319,12 +355,14 @@ class ListRequested(ListSuggestion):
                              user=user, 
                              description=description, 
                              keys=[k for k in keys], 
-                             _vis=vis
+                             _vis=vis if vis is not None else 'public'
                              )
+        if tags is not None:
+            list._tags_setter(tags, commit=False)    
         list.put()
         return list
 
-    def update(self, querier, name=None, description=None, instances=[], instances_del=[], vis='public'):
+    def update(self, querier, name=None, description=None, instances=[], instances_del=[], tags=None, vis='public'):
         '''
         Actualiza una lista de alertas
 
@@ -363,7 +401,10 @@ class ListRequested(ListSuggestion):
         keys.extend([db.Key.from_path('Event', int(instance)) for instance in instances])
         keys = set(keys)
         self.keys = [k for k in keys]
-        self._vis = vis
+        if vis is not None:
+            self._vis = vis
+        if tags is not None:
+            self._tags_setter(tags, commit=False)
         self.put(querier=querier)
 
     def _post_put_sync(self, querier, **kwargs):

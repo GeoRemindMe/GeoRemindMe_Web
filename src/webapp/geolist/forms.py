@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from georemindme.models_utils import VISIBILITY_CHOICES
 
 
-class SuggestionForm(forms.Form):
+class ListRequestedForm(forms.Form):
     name = forms.CharField(required=True)
     description = forms.CharField(required=False,widget=forms.Textarea())    
     visibility = forms.ChoiceField(required=True, choices=VISIBILITY_CHOICES)

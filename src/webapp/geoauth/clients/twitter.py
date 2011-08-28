@@ -15,8 +15,10 @@ class TwitterAPIError(Exception):
         self.type = type
 
 class TwitterClient(Client):
-    url_credentials = 'https://twitter.com/account/verify_credentials.json'
-    url_friends = 'http://api.twitter.com/version/friends/ids.json'
+    url_credentials = 'https://twitter.com/account/verify_credentials.json/'
+    url_friends = 'http://api.twitter.com/1/friends/ids.json/'
+    url_user_info = 'http://api.twitter.com/1/users/show.json/'
+    url_statuses_update = 'https://api.twitter.com/1/statuses/update.json/' 
     user = None
     
     def __init__(self, token=None, user=None):
@@ -35,14 +37,13 @@ class TwitterClient(Client):
     
     def get_user_info(self):
         """Obtiene la infomacion del perfil del usuario"""
-        
-        response, content = self.request('https://twitter.com/account/verify_credentials.json')
+        response, content = self.request(self.url_credentials)
         if response['status'] != 200:
             raise TwitterAPIError(response['status'], response)
         return simplejson.loads(content)
     
     def get_other_user_info(self, id):
-        response, content = self.request('http://api.twitter.com/1/users/show.json/?user_id=%s' % id)
+        response, content = self.request(self.url_user_info+'?user_id=%s' % id)
         if response['status'] != 200:
             raise TwitterAPIError(response['status'], response)
         return simplejson.loads(content)
@@ -51,7 +52,7 @@ class TwitterClient(Client):
     def get_friends(self):
         twitterInfo = self.get_user_info()
         response, content = self.request(
-                                        'http://api.twitter.com/1/friends/ids.json/?user_id=%s&screen_name=%s' % (
+                                        self.url_friends + '?user_id=%s&screen_name=%s' % (
                                                                        twitterInfo['id'], 
                                                                        twitterInfo['screen_name']
                                                                        ),
@@ -122,4 +123,19 @@ class TwitterClient(Client):
             self.user.settings.sync_avatar_with = 'twitter' #  por defecto, si el usuario es nuevo sincronizamos con facebook
             self.user.settings.put()
             self.authorize(user)
-        return user
+        return self.user
+    
+    def send_tweet(self, msg, poi=None, wrap_links=False):
+        body = {
+                'status': msg.encode('utf-8'),
+                }
+        if poi is not None:
+            body['lat'] = poi.lat
+            body['lon'] = poi.lon
+        body['wrap_links'] = 'true' if wrap_links else 'false'
+        from urllib import urlencode
+        response, content = self.request(self.url_statuses_update, method='POST', body=urlencode(body))
+        if response['status'] != 200:
+            raise TwitterAPIError(response['status'], response)
+        return simplejson.loads(content)
+        

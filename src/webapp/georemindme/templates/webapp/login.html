@@ -1,3 +1,4 @@
+{% load tags %}
 <!DOCTYPE HTML>
 <html lang="es-ES">
 <head>
@@ -6,33 +7,131 @@
 	<meta name="google-site-verification" content="VzbSgMqvrPL6WuAhRfBzAFXM0GyU73igO1yjheV2Tc4" />
 
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.6/jquery.min.js" type="text/javascript">
-		document.ready(function() {
-		        var options = { opacity: 0.75 };
-		        $('.reflect').reflect(options);
-		    });
+	<script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
+
+    
+    <script type="text/javascript">
+		$(document).ready(function() {
+		        
+                
+                $('#register-menu li').click(function(e){
+                    
+                    var lastActive=$('#register-menu li.active');
+                    $(lastActive).removeClass("active");
+                    if($(lastActive).attr("id")!=$(this).attr("id")){
+                        //Si no está deseleccionado lo activamos
+                        $(this).addClass("active");
+                    }
+                });
+                
+                //$("[placeholder]").placeholder();
+                
+
+                
+                $('.register-text-aux').toggle(function(){
+                        $('#registerForm').slideDown(400);
+                        $("#register-with-social").slideUp(400);
+                        $(this).addClass("close");
+                    },function(){
+                        $('#registerForm').slideUp(400);
+                        $("#register-with-social").slideDown(400);
+                        $(this).removeClass("close");
+                })
+                
+                $('#register-btn').click(function(e){
+                    e.preventDefault();
+                    
+                    var network=$('#register-menu li.active');
+                    if(network.length==0){
+                        //Mensaje
+                        showMessage("Primero selecciona una de la redes","error")
+                    }else{
+                        var register_link="/login/"+network.attr('id')+"/";
+                        $(this).attr('href',register_link)
+                        if($(this).attr('onclick') === undefined || $(this).attr('onclick')==null){
+                            window.location=$(this).attr('href');
+                        } else {
+                            $(this).click ();
+                        }
+                    }
+                    
+                })
+                
+                $('.georemindme').click(function(){
+                   $('#login-bar p').hide();
+                   $('#login-bar ul').hide();
+                   $('#georemindme-form').show();
+                });
+                
+        });
+        
+        function showMenu(){
+            $('#login-bar p').show();
+            $('#login-bar ul').show();
+            $('#georemindme-form').hide();
+        }
+        function checkUncheck(obj){
+            var checkbox=$(obj).find('input');
+            if($(checkbox).attr('checked')==true)
+                $(checkbox).attr('checked',false);
+            else
+                $(checkbox).attr('checked',true)
+        }
+        
 	</script>
 	
 </head>
-<body>
-	<header id="header" class="container">
-		<img src="/static/webapp/img/logo2.png" alt="" id="logo">
+<body id="loginSec">
+    <div id="notification-msg" style="display:none">Mensaje con lo que sea</div>
+	<header id="header-top" class="container">
+		<a href="/"><img src="/static/webapp/img/logo2.png" alt="" id="logo"></a>
 		<nav id="header-nav">
 			<ul>
-				<li><a href="#">Ayuda</a></li>
-				<li><a href="#">Blog</a></li>
-				<li><a href="#">Móvil</a></li>
-				<li><a href="#">Comunidad</a></li>
+				<li><a href="http://help.georemindme.com/">Ayuda</a></li>
+				<li><a href="http://blog.georemindme.com">Blog</a></li>
+				<li><a href="http://m.georemindme.com/">Móvil</a></li>
+				<li><a href="http://team.georemindme.com/">Comunidad</a></li>
 			</ul>
 		</nav>
-	
-		<a href="#" id="login-btn">Identifícate</a>
+		
+        <div id="login-bar">
+            <p>Identifícate usando:</p>
+            <ul>
+                <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para identificarte"><span>Twitter</span></li>
+                <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para identificarte"><span>Facebook</span></li>
+                <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para identificarte"><span>Google</span></li>
+                <li class="georemindme" title="Identifícate usando tus datos de GeoRemindMe"><span>GeoRemindMe</span></li>
+            </ul>
+            <div id="georemindme-form" style="display:none">
+                <form action="." method="post">
+                    <input type="text" name="email" placeholder="Email"/>
+                    <input type="password" name="password"/>
+                    <input type="submit" id="login-btn" value="Entrar" />
+                    <div id="login-submenu">
+                        <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> Recordarme</span>
+                        <span><a href="/remind/" class="link">Recuperar contraseña</a></span>
+                        <span class="link" onclick="javascript:showMenu()">Cancelar</span>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+		
+		
 		
 	</header>
-	<div id="background">
+	<div id="background-login">
 		<div id="main" class="container">
 			<section id="left-block">
-				<img src="/static/webapp/img/left-arrow.png" alt="" id="left-arrow">
+				
+                <div id="left-arrow">
+<!--
+                    <img src="/static/webapp/img/left-arrow.png" alt="">
+-->
+                    <span>&nbsp;</span>
+                </div>
 				<div id="rollover">
 					<p class="intro-text"><span class="bigger-intro-text"><strong>Compartir y recibir sugerencias</strong> usando tus redes sociales</span></p>
 					<div class="users-box">
@@ -48,31 +147,50 @@
 						</article>
 					</div>
 				</div>
-				<img src="/static/webapp/img/right-arrow.png" alt="" id="right-arrow">
+				<div id="right-arrow">
+                    <span>&nbsp;</span>
+<!--
+                    <img src="/static/webapp/img/right-arrow.png" alt="">
+-->
+                </div>
 				
+<!--
 				<p class="bottom-p">Ya somos XXX personas compartiendo YYY sugerencias.</p>
+-->
 			</section>
 			<section id="right-block">
 				<h2>¿Eres nuevo?</h2>
-				<p>Crea tu perfil utilizando una de tus cuentas.</p>
-				<ul>
-					<li><a href="#"><img src="/static/webapp/img/facebook.png" alt="Facebook"></a></li>
-					<li><a href="#"><img src="/static/webapp/img/twitter.png" alt="Twitter"></a></li>
-					<li><a href="#"><img src="/static/webapp/img/googleplus.png" alt="Google+"></a></li>
-				</ul>
-				<a href="#" id="register-btn">Regístrate</a>
+                <div id="register-with-social">
+                    <p>Crea tu perfil utilizando una de tus cuentas.</p>
+                    <ul id="register-menu">
+                        <li id="twitter"><span>Twitter</span></li>
+                        <li id="facebook" class="active"><span>Facebook</span></li>
+                        <li id="google"><span>Google</span></li>
+                    </ul>
+                    <a href="http://localhost:8080/ext/twitter/perms" id="register-btn">Regístrate</a>
+                </div>
+				
 				
 				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
+                <div style="display:none" id="registerForm">
+                    <form action="" method="POST">
+                        <input type="text" name="username" value="" placeholder="Nombre de usuario"/>
+                        <input type="text" name="email" value="" placeholder= "Email" />
+                        <input type="password" name="pass1" id="pass1"/>
+                        <input type="password" name="pass2" id="pass2"/>
+                        <input type="submit" value="Continuar"/>
+                    </form>
+                </div>
 			</section>
 <!--
 			<div id="avatar-chain">
-				<!-- EL contenedor soporta hasta 20 imagenes de avatar como máximo -->
 				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
 				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
 				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
 				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
 			</div>
 -->
+
 		</div>
 	</div>
 	
@@ -84,7 +202,7 @@
 -->
 		</div>
 		<div class="footer-links right-links">
-			<a href="#">Empleo</a> · <a href="#">Prensa</a> · <a href="#">Mapa del sitio</a>
+			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
 		</div>
 	</footer>
 </body>

@@ -108,7 +108,7 @@ class SuggestionForm(forms.Form):
     description = forms.CharField(required=False,widget=forms.Textarea())
     tags = forms.CharField(required=False)    
     done = forms.BooleanField(required=False)
-    visibility = forms.ChoiceField(required=True, choices=VISIBILITY_CHOICES)
+    visibility = forms.ChoiceField(required=False, choices=VISIBILITY_CHOICES)
     
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
@@ -142,9 +142,21 @@ class SuggestionForm(forms.Form):
             poi = Place.insert_or_update_google(user=kwargs['user'],
                                                 google_places_reference=self.cleaned_data['place_reference']
                                                 )
-        if poi is None:
-            raise AttributeError
-        suggestion = Suggestion.update_or_insert(
+        id = kwargs.get('id', None)
+        if id is not None:
+            suggestion = Suggestion.update_or_insert(
+                                 id = kwargs.get('id', None), name = self.cleaned_data['name'],
+                                 description = self.cleaned_data['description'], 
+                                 date_starts = self.cleaned_data['starts'],
+                                 date_ends = self.cleaned_data['ends'], poi = poi,
+                                 user = kwargs['user'], done = self.cleaned_data.get('done', False),
+                                 tags = self.cleaned_data.get('tags', None),
+                                 vis = self.cleaned_data['visibility'],
+                                 )
+        else:
+            if poi is None:
+                raise AttributeError
+            suggestion = Suggestion.update_or_insert(
                          id = kwargs.get('id', None), name = self.cleaned_data['name'],
                          description = self.cleaned_data['description'], 
                          date_starts = self.cleaned_data['starts'],

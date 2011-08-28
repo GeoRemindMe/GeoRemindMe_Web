@@ -51,19 +51,20 @@ class CommentHelper(object):
         if querier is not None and not isinstance(querier, User):
             raise TypeError
         from georemindme.paging import PagedQuery
-        q = Comment.all().filter('user =', user).filter('deleted =', False).order('-created')
+        from google.appengine.api import datastore
+        q = datastore.Query('Comment', {'user =': user.key(), 'deleted =': False})
+        q.Order(('created', datastore.Query.DESCENDING))
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
-        return [p.id,  [{'id': comment.id,
-                        'created': comment.created,
-                        'modified': comment.modified, 
-                        'msg': comment.msg,
-                        'username': comment.user.username,
-                        'instance': comment.instance if comment.instance is not None else None,
-                        'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
-                        'vote_counter': comment.votes,
-                        }
-                       for comment in comments]]
+        from georemindme.funcs import prefetch_refpropsEntity
+        prefetch = prefetch_refpropsEntity(comments, 'user')
+        [comment.set_unindexed_properties(['id', 'username','has_voted', 'vote_counter']) for comment in comments]
+        [comment.update({'id': comment.key().id(),
+                         'username': prefetch[comment['user']].username,
+                         'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                         'vote_counter': comment['votes'],}) 
+                         for comment in comments]
+        return [p.id, comments]
     
     def get_by_instance(self, instance, query_id=None, page=1, querier = None, async=False):
         """
@@ -78,42 +79,54 @@ class CommentHelper(object):
             
             :returns: [query_id, [:class:`geovote.models.Comment`]]
         """
+        if querier is not None and not querier.is_authenticated():
+            querier = None
         if querier is not None and not isinstance(querier, User):
             raise TypeError
+        if instance is None:
+            return None
         from georemindme.paging import PagedQuery
-        q = Comment.all().filter('instance =', instance).filter('deleted =', False).order('-created')
+        from google.appengine.api import datastore
+        q = datastore.Query(kind='Comment', filters={'instance =': instance.key(), 'deleted =': False})
+        q.Order(('created', datastore.Query.DESCENDING))
         p = PagedQuery(q, id = query_id, page_size=7)
         if async:
+            q = Comment.all().filter('instance =', instance).filter('deleted =', False).order('-created')
             return p.id, q.run()
         comments = p.fetch_page(page)
-        return [p.id, [{'id': comment.id,
-                        'created': comment.created,
-                        'modified': comment.modified, 
-                        'msg': comment.msg,
-                        'username': comment.user.username,
-                        'instance': comment.instance if comment.instance is not None else None,
-                        'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
-                        'vote_counter': comment.votes,
-                        }
-                       for comment in comments]]
+        from georemindme.funcs import prefetch_refpropsEntity
+        prefetch = prefetch_refpropsEntity(comments, 'user')
+        [comment.set_unindexed_properties(['id', 'username','has_voted', 'vote_counter']) for comment in comments]
+        [comment.update({'id': comment.key().id(),
+                         'username': prefetch[comment['user']].username,
+                         'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                         'vote_counter': comment['votes'],}) 
+                         for comment in comments]
+        return [p.id, comments]
         
     def load_comments_from_async(self, query_id, comments_async, querier):
         if querier is not None and not isinstance(querier, User):
             raise TypeError
         comments_loaded = []
+        comments_objects = []
         for comment in comments_async:
+            comments_objects.append(comment)
+            if len(comments_objects) > 7:
+                    break
+        from georemindme.funcs import prefetch_refprops
+        comments_objects = prefetch_refprops(comments_objects, Comment.user, Comment.instance)
+        for comment in comments_objects:
             comments_loaded.append({'id': comment.id,
                                     'created': comment.created,
                                     'modified': comment.modified, 
                                     'msg': comment.msg,
                                     'username': comment.user.username,
-                                    'instance': comment.instance if comment.instance is not None else None,
+                                    'instance': comment.instance,
                                     'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
                                     'vote_counter': comment.votes,
                                     }
                                   )
-            if len(comments_loaded) > 7:
-                    break
+            
         return [query_id, comments_loaded]
     
     def get_by_id_user(self, id, user):
@@ -138,7 +151,6 @@ class CommentHelper(object):
             return None
         if not isinstance(querier, User):
             raise AttributeError()
-        
         comment = Comment.get_by_id(id)
         if comment is not None:
             if comment.deleted:
@@ -162,19 +174,20 @@ class CommentHelper(object):
             import memcache
             top = None #memcache.get(memcache.get('%stopcomments_%s' % (memcache.version, instance.key())))
             if top is None:
-                top = Comment.all().filter('instance =', instance).filter('votes >', 0).filter('deleted =', False).order('-votes').fetch(3, 0)
-                if top is not None:
-                    comments = [{'id': comment.id,
-                                'created': comment.created,
-                                'modified': comment.modified, 
-                                'msg': comment.msg,
-                                'username': comment.user.username,
-                                'instance': comment.instance if comment.instance is not None else None,
-                                'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
-                                'vote_counter': comment.votes,
-                        }
-                       for comment in top]
-                    memcache.set('%stopcomments_%s' % (memcache.version, instance.key()), comments, 300)
+                from google.appengine.api import datastore
+                top = datastore.Query('Comment', {'instance =': instance.key(), 'votes >': 0})
+                top.Order(('votes', datastore.Query.DESCENDING))
+                top = top.Get(3)
+                if len(top) > 0:
+                    from georemindme.funcs import prefetch_refpropsEntity
+                    prefetch = prefetch_refpropsEntity(top, 'user')
+                    [comment.set_unindexed_properties(['id', 'username','has_voted', 'vote_counter']) for comment in top]
+                    [comment.update({'id': comment.key().id(),
+                         'username': prefetch[comment['user']].username,
+                         'has_voted':  Vote.objects.user_has_voted(querier, comment.key()),
+                         'vote_counter': comment['votes'],}) 
+                         for comment in top]
+                    memcache.set('%stopcomments_%s' % (memcache.version, instance.key()), top, 300)
         return top
         
 
@@ -209,7 +222,7 @@ class Comment(Visibility):
         
         if msg is None or msg == '':
             raise TypeError('msg is empty')
-        comment = Comment(user=user, instance=instance, msg=msg)
+        comment = Comment(user=user, instance=instance, msg=msg, _vis=instance._vis if hasattr(instance, '_vis') else 'private')
         comment.put()
         if getattr(instance, 'counter', None) is not None:
             instance.counter.set_comments()
@@ -236,6 +249,12 @@ class Comment(Visibility):
             self.put()
             comment_deleted.send(self)
             
+    def __str__(self):
+        return unicode(self.msg).encode('utf-8')
+
+    def __unicode__(self):
+        return self.msg
+            
 
 from georemindme.models_utils import ShardedCounter
 class VoteCounter(ShardedCounter):
@@ -259,6 +278,8 @@ class VoteHelper(object):
             
             :returns: True si ya ha votado, False en caso contrario
         """
+        if user is None:
+            return None
         if isinstance(user, db.Key):
             vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND user = :user', ins=instance_key, user=user).get()
         else:
@@ -280,8 +301,10 @@ class VoteHelper(object):
             
             :returns: :class:`geovote.models.Vote` o None
         """
-        vote = Vote.all().filter('instance =', instance_key).filter('user =', user).get()
-        return vote
+        from google.appengine.api import datastore
+        vote = datastore.Query('Vote', {'instance =': instance_key, 'user =': user.key()})
+        vote = vote.Get(1)
+        return vote[0] if len(vote) > 0 else None
     
     def get_vote_counter(self, instance_key):
         """
@@ -327,6 +350,7 @@ class Vote(db.Model):
         vote = cls.objects.get_user_vote(user, instance.key())
         if vote is not None:
             if count < 0:
+                vote = Vote.from_entity(vote)
                 vote_deleted.send(sender=vote)
                 vote.delete()
                 return True

@@ -150,7 +150,7 @@ class EventHelper(object):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        return self._klass.all().filter('user =', user).filter('modified >', last_sync).order('-modified')
+        return self._klass.all().filter('user =', user).filter('modified >', last_sync).order('-modified').fetch(50)
 
 
 class AlertHelper(EventHelper):
@@ -277,7 +277,7 @@ class SuggestionHelper(EventHelper):
         '''
         if not isinstance(user, User) or not isinstance(querier, User):
             raise TypeError()
-        event = self._klass.get_by_id(int(id))
+        event = self.get_by_id(id)
         if event is None:
             return None
         from geolist.models import ListSuggestion

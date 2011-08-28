@@ -1,0 +1,75 @@
+{% load tags %}
+<!DOCTYPE HTML>
+<html lang="es-ES">
+<head>
+	<meta charset="UTF-8">
+	<title>
+      {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
+    </title>
+	<link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
+	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
+    
+    <link href='http://fonts.googleapis.com/css?family=Alike|Crimson+Text:400,600,700|Goudy+Bookletter+1911|Unna' rel='stylesheet' type='text/css'>
+    
+    <meta name="description" content="Track and share your runs with friends.">
+    
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+    
+    <script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
+<!--
+    <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
+-->
+<!--
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+-->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+    <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+
+    {% block extra_js %}{%endblock%}
+
+	<!--[if lt IE 9]>
+	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+</head>
+<body>
+	<div id="bg-header" class="orange-gradient">
+	<header id="header-top" class="container">
+		<a href="/"><img src="/static/webapp/img/logo3.png" alt="" id="logo"></a>
+		
+		<div id="search_bar">
+            <input type="search" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly><br>
+<!--
+            //Ejemplo: tapas en granada, turismo, paisajes, etc.
+-->
+        </div>
+		
+		
+	</header>
+	</div>
+	<div id="background">
+		<div id="base" class="container">
+			
+			<section id="center-col">
+				{% block body %}{% endblock %}
+			</section>
+			
+		</div>
+	</div>
+	
+	<footer id="footer" class="container">
+		<div class="footer-links">
+			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> 
+<!--
+            · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+-->
+		</div>
+		<div class="footer-links right-links">
+			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
+		</div>
+	</footer>
+</body>
+</html>

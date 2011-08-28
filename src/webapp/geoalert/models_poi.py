@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db, search
 from google.appengine.ext.db import polymodel
 
-from geomodel.geomodel import GeoModel
 from georemindme.decorators import classproperty
 from georemindme.models_utils import Visibility
 from geouser.models import User
@@ -48,13 +47,14 @@ class Business(db.Model):
     
 
 
-class POI(polymodel.PolyModel, search.SearchableModel, GeoModel):
+class POI(polymodel.PolyModel, search.SearchableModel):
     ''' Puntos de interes '''
     name = db.StringProperty()
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty(auto_now=True)
     user = db.ReferenceProperty(User, required=False)  # el usuario que creo el POI
     address = db.StringProperty()
+    location = db.GeoPtProperty()
     
     
     @classmethod
@@ -278,14 +278,14 @@ class Place(POI):
         if from_comment:
             super(Place, self).put()
             return self
-        from georemindme.funcs import u_slugify
+        from django.template.defaultfilters import slugify
         if self.slug is None:
             name = self.name.lower()
             if self.city is not None:
                 city = self.city.lower()
-                self.slug = u_slugify('%s-%s'% (name, city))
+                self.slug = unicode(slugify('%s-%s'% (name, city)))
             else:
-                self.slug = u_slugify('%s' % name)
+                self.slug = unicode(slugify('%s' % name))
                 self.city = name
         p = Place.all().filter('slug =', self.slug).get()
         if p is not None:
@@ -303,7 +303,7 @@ class Place(POI):
         
 
     def get_absolute_url(self):
-        return '/place/%s/' % self.slug
+        return '/place/%s/' % self.slug.encode('utf-8')
     
     def get_absolute_fburl(self):
         return '/fb%s' % self.get_absolute_url()
@@ -332,8 +332,9 @@ class Place(POI):
         """
         if google_places_id is None and google_places_reference is not None:
                 from mapsServices.places.GPRequest import GPRequest
-                search = GPRequest().retrieve_reference(google_places_reference)
-                return Place.insert_or_update_google(name=search['result']['name'],
+                try:
+                    search = GPRequest().retrieve_reference(google_places_reference)
+                    return Place.insert_or_update_google(name=search['result']['name'],
                                 address=search['result'].get('formatted_address'), 
                                 city=_get_city(search['result'].get('address_components')),
                                 location=db.GeoPt(search['result']['geometry']['location']['lat'], search['result']['geometry']['location']['lng']),
@@ -341,6 +342,8 @@ class Place(POI):
                                 google_places_id=search['result']['id'],
                                 user = user
                                 )
+                except:
+                    return None
         place = cls.objects.get_by_google_id(google_places_id)
         if not isinstance(location, db.GeoPt):
             location = db.GeoPt(location)

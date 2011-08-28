@@ -49,13 +49,11 @@ def login_func(request, email = None, password = None, remember_me = False, user
             :param f: Login form
             :type user: :class:`georemindme.forms.LoginForm`
     """
-    from django.contrib import messages
     error = ''
     redirect = ''
     if user is not None:
         redirect = get_next(request)
         init_user_session(request, user, remember=remember_me)
-        messages.success(request, _("Welcome, %s") % request.session['user'])
         return error, redirect
     from models import User
     user = User.objects.get_by_email(email)
@@ -76,7 +74,6 @@ def login_func(request, email = None, password = None, remember_me = False, user
             else:
                 redirect = get_next(request)
                 init_user_session(request, user, remember=remember_me, from_rpc=from_rpc)
-                messages.success(request, _("Welcome, %s") % request.session['user'])
             return error, redirect
     request.session["attemp"] = request.session.get("attemp", 0) + 1
     if from_rpc:

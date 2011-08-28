@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from django import template
+from django.template.defaultfilters import stringfilter
 
 register = template.Library()
 
@@ -137,3 +138,119 @@ def embedded_avatar(username):
         except:
             return 'http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png'
     return encoded_image
+
+
+class AssignNode(template.Node):
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+        
+    def render(self, context):
+        context[self.name] = self.value.resolve(context, True)
+        return ''
+
+
+@register.tag(name='assign')
+def do_assign(parser, token):
+    """
+    Assign an expression to a variable in the current context.
+    
+    Syntax::
+        {% assign [name] [value] %}
+    Example::
+        {% assign list entry.get_related %}
+        
+    """
+    bits = token.contents.split()
+    if len(bits) != 3:
+        raise template.TemplateSyntaxError("'%s' tag takes two arguments" % bits[0])
+    value = parser.compile_filter(bits[2])
+    return AssignNode(bits[1], value)
+
+
+@register.tag
+def url2(parser, token):
+    """
+    based on default tag
+    """
+    bits = token.split_contents()
+    if len(bits) < 2:
+        from django.template import TemplateSyntaxError
+        raise TemplateSyntaxError("'%s' takes at least one argument"
+                                  " (path to a view)" % bits[0])
+    in_facebook = parser.compile_filter(bits[1])
+    viewname = bits[2]
+    args = []
+    kwargs = {}
+    asvar = None
+    bits = bits[3:]
+    if len(bits) >= 2 and bits[-2] == 'as':
+        asvar = bits[-1]
+        bits = bits[:-2]
+    import re
+    kwarg_re = re.compile(r"(?:(\w+)=)?(.+)")
+    if len(bits):
+        for bit in bits:
+            match = kwarg_re.match(bit)
+            if not match:
+                raise TemplateSyntaxError("Malformed arguments to url tag")
+            name, value = match.groups()
+            if name:
+                kwargs[name] = parser.compile_filter(value)
+            else:
+                args.append(parser.compile_filter(value))
+    return URL2Node(viewname, args, kwargs, asvar, legacy_view_name=True, in_facebook=in_facebook)
+
+class URL2Node(template.Node):
+    def __init__(self, view_name, args, kwargs, asvar, legacy_view_name=True, in_facebook=False):
+        self.view_name = view_name
+        self.in_facebook = in_facebook
+        self.legacy_view_name = legacy_view_name
+        self.args = args
+        self.kwargs = kwargs
+        self.asvar = asvar
+
+    def render(self, context):
+        from django.core.urlresolvers import reverse, NoReverseMatch
+        from django.conf import settings
+        args = [arg.resolve(context) for arg in self.args]
+        from django.utils.encoding import smart_str
+        kwargs = dict([(smart_str(k, 'ascii'), v.resolve(context))
+                       for k, v in self.kwargs.items()])
+        view_name = self.view_name
+        in_facebook = self.in_facebook.resolve(context)
+        if not self.legacy_view_name:
+            view_name = view_name.resolve(context)
+        if in_facebook and view_name.find('fb_') == -1:
+            view_name = '%s%s' % ('fb_', view_name)
+        # Try to look up the URL twice: once given the view name, and again
+        # relative to what we guess is the "main" app. If they both fail,
+        # re-raise the NoReverseMatch unless we're using the
+        # {% url ... as var %} construct in which cause return nothing.
+        url = ''
+        try:
+            url = reverse(view_name, args=args, kwargs=kwargs, current_app=context.current_app)
+        except NoReverseMatch, e:
+            if settings.SETTINGS_MODULE:
+                project_name = settings.SETTINGS_MODULE.split('.')[0]
+                try:
+                    url = reverse(project_name + '.' + view_name,
+                              args=args, kwargs=kwargs,
+                              current_app=context.current_app)
+                except NoReverseMatch:
+                    if self.asvar is None:
+                        # Re-raise the original exception, not the one with
+                        # the path relative to the project. This makes a
+                        # better error message.
+                        raise e
+            else:
+                if self.asvar is None:
+                    raise e
+
+        if self.asvar:
+            context[self.asvar] = url
+            return ''
+        else:
+            return url
+        
+        

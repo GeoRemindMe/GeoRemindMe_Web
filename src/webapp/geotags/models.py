@@ -87,7 +87,7 @@ class Taggable(db.Model):
     def tags(self):
         return [tag.name for tag in self._tags]
         
-    def _tags_setter(self, tags):
+    def _tags_setter(self, tags, commit=True):
         from types import UnicodeType, StringType, ListType
         """Crea la lista o añade el tag"""
         if type(tags) is StringType:
@@ -106,7 +106,8 @@ class Taggable(db.Model):
                 if tagInstance is not None and not tagInstance.key() in self._tags_list:
                     self._tags_list.append(tagInstance.key())
                     tagInstance.inc_count()
-            self.put()
+            if commit:
+                self.put()
         else:
             raise AttributeError
 

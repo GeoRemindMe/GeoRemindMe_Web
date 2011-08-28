@@ -53,7 +53,8 @@ function setCommentsBehaviour(page){
     $(page+'.show-all-comments').click(function(){
         //Después de mostrar los comentarios ocultamos el botón
         $(this).parent().find('.long-list').slideDown('fast', function(){
-            resizeIframe();
+            if(typeof(resizeIframe)!="undefined")
+                resizeIframe();
             $(this).parentsUntil('.suggestion-element').parent().find('.show-all-comments').remove();
             
         });
@@ -77,7 +78,8 @@ function setCommentFormsBehaviour(page){
     $(page+'.commentForm').find("textarea").focus(function(){
         $(this).css('color','black');
         if($(this).attr('empty')=="true"){
-            $(this).css('width','430px');
+            var width=$(this).parent().parent().width()-45;
+            $(this).css('width',width+'px');
             $(this).css('font-style','normal');
             $(this).css('font-size','1.1em');
             $(this).parent().parent().find("img").removeClass('hidden');
@@ -127,8 +129,8 @@ function setCommentFormsBehaviour(page){
 }
 
 function resetInput(obj){
-    
-    $(obj).css('width','470px');
+    var width=$(obj).parent().parent().width()-10;
+    $(obj).css('width',width+'px');
     $(obj).css('color','#999');
     $(obj).css('font-style','italic');
     $(obj).css('font-size','0.9em');
@@ -148,7 +150,7 @@ function sendComment2(textarea,element_id,elemType){
         msg=textarea.val();
         msg=msg.substring(0,msg.length-1);
     }
-
+    GRM.wait();
     $.ajax({
         type: "POST",
         url: "/ajax/add/comment/"+elemType+"/",
@@ -157,6 +159,7 @@ function sendComment2(textarea,element_id,elemType){
             instance_id:element_id,
             msg:msg
         },
+        complete: function() { GRM.nowait();},
         success: function(response){
 
             //console.log(response)
@@ -165,7 +168,8 @@ function sendComment2(textarea,element_id,elemType){
             c.find(".like-dislike").like();
             c.find(".removable").removable();
             //resetInput(textarea);
-            resizeIframe();
+            if(typeof(resizeIframe)!="undefined")
+                resizeIframe();
         },
         error:{
         }

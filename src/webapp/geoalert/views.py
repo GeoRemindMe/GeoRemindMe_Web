@@ -28,8 +28,8 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     suggestion = Suggestion.objects.get_by_slug_querier(slug, querier=request.user)
     if suggestion is None:
         raise Http404 
-    from geovote.views import get_comments_event
-    query_id, comments_async = get_comments_event(request, suggestion.id, async=True)
+    from geovote.api import get_comments
+    query_id, comments_async = get_comments(request.user, suggestion.id, 'Event', async=True)
     from geovote.models import Vote, Comment
     from geolist.models import ListSuggestion
     has_voted = Vote.objects.user_has_voted(request.user, suggestion.key())
@@ -313,7 +313,7 @@ def add_suggestion(request, template='webapp/add_suggestion.html'):
                                )
     
 @login_required
-def save_suggestion(request, form):
+def save_suggestion(request, form, id=None):
     """ Añade una sugerencia
     :param form: formulario con los datos
     :type form: :class:`geoalert.forms.RemindForm`
@@ -321,7 +321,7 @@ def save_suggestion(request, form):
     :type: :class:`string`
     :returns: :class:`geoalert.models.Suggestion`
     """
-    sug = form.save(user = request.user)
+    sug = form.save(user = request.user, id=id)
     return sug
 
 
@@ -347,7 +347,7 @@ def add_suggestion_invitation(request, eventid, username):
 
 
 @login_required
-def edit_suggestion(request, suggestion_id, form, template='webapp/add_suggestion.html'):
+def edit_suggestion(request, suggestion_id, template='webapp/add_suggestion.html'):
     """ Edita una sugerencia
         
             :param form: formulario con los datos
@@ -355,7 +355,6 @@ def edit_suggestion(request, suggestion_id, form, template='webapp/add_suggestio
             
             :returns: :class:`geoalert.models.Suggestion`
     """
-    from geoalert.forms import SuggestionForm
     s = Suggestion.objects.get_by_id(suggestion_id)
     return  render_to_response(template, {
                                                         'eventid':suggestion_id,
@@ -458,4 +457,57 @@ def get_suggestion_following(request, page=1, query_id=None, async=False):
                                                     query_id=query_id,
                                                     async=async
                                                     )
+    
+
+@login_required
+def share_on_facebook(request, suggestion_id, msg):
+    suggestion = Suggestion.objects.get_by_id_querier(suggestion_id, request.user)
+    if suggestion is None:
+        return None
+    if not suggestion._is_public():
+        return False
+    if suggestion.short_url is None:
+        suggestion._get_short_url()
+    from geoauth.clients.facebook import FacebookClient
+    from os import environ
+    try:
+        fb_client=FacebookClient(user=request.user)
+    except:
+        return None
+    params= {
+                "name": "Ver detalles de la sugerencia",
+                "link": suggestion.short_url if suggestion.short_url is not None else '%s%s' % (environ['HTTP_HOST'], suggestion.get_absolute_url()),
+                "caption": "Destalles del sitio (%(sitio)s), comentarios, etc." % {'sitio': suggestion.poi.name},
+                #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
+                #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
+            }
+    if suggestion.description is not None:
+        params["description"]= suggestion.description
+    #Pasamos todos los valores a UTF-8
+    params = dict([k, v.encode('utf-8')] for k, v in params.items())
+    try:        
+        post_id = fb_client.consumer.put_wall_post(msg, params)
+    except:
+        return None
+    return post_id
+
+@login_required
+def share_on_twitter(request, suggestion_id, msg):
+    suggestion = Suggestion.objects.get_by_id_querier(suggestion_id, request.user)
+    if suggestion is None:
+        return None
+    if not suggestion._is_public():
+        return False
+    if suggestion.short_url is None:
+        suggestion._get_short_url()
+    from geoauth.clients.twitter import TwitterClient
+    from os import environ
+    try:
+        tw_client=TwitterClient(user=request.user)
+        tw_client.send_tweet(msg, suggestion.poi.location)
+    except:
+        raise
+        return None
+    return True
+    
     

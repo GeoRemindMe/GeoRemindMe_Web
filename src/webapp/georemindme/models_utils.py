@@ -120,11 +120,15 @@ class Visibility(db.Model):
             :returns: True si esta invitado, False en caso contrario
         '''
         from georemindme.models_indexes import Invitation
+        if hasattr(self, 'instance'):
+            obj = self.instance
+        else:
+            obj = self
         if set_status is None:
-            invitation = Invitation.objects.is_user_invited(self, user)
+            invitation = Invitation.objects.is_user_invited(obj, user)
             return invitation
         else:
-            invitation = Invitation.objects.get_invitation(self, user)
+            invitation = Invitation.objects.get_invitation(obj, user)
             if invitation is not None:
                 invitation.set_status(set_status)
         return invitation
@@ -133,8 +137,12 @@ class Visibility(db.Model):
         if not self.is_saved():
             raise NotImplementedError
         if sender.key() == self.user.key():
+            if hasattr(self, 'instance'):
+                obj = self.instance
+            else:
+                obj = self
             from georemindme.models_indexes import Invitation
-            invitation = Invitation.send_invitation(sender=sender, to=to, instance=self)
+            invitation = Invitation.send_invitation(sender=sender, to=to, instance=obj)
             if invitation is not None:
                 return True
             return False

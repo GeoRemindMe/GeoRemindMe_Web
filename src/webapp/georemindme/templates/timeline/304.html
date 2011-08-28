@@ -5,14 +5,16 @@
     304: Dejar de seguir una sugerencia
 {% endcomment %} 
 
+
+
 <li class="msg-{{obj.msg_id}}">
     <div class="avatar">
-        <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
+        <a href="{% url2 in_facebook public_profile request.user %}" title="{{request.user}}">
             <img class="user-picture" src="{% embedded_avatar request.user %}" alt="{{request.user}} avatar"/>
         </a>
     </div>
     <div class="timeline-msg">
-        Ya no tienes la sugerencia de <a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a> en <a href="{% url fb_user_suggestions%}">tu baúl</a>:<br>
+        Ya no tienes la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a> en <a href="{% url2 in_facebook user_suggestions%}">tu baúl</a>:<br>
         {{obj.instance.name}}<br>
         <span class="timestamp">  {{obj.created|naturaltime}}</span>  
     </div>

@@ -4,15 +4,18 @@
     Mensaje nº 320
     320: Nueva alerta ligada a sugerencia
 {% endcomment %} 
+
+
+
 <li class="msg-{{obj.msg_id}}">
     <div class="avatar">
-        <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
+        <a href="{% url2 in_facebook public_profile request.user %}" title="{{request.user}}">
             <img src="{% embedded_avatar request.user %}" alt="{{request.user}} avatar"/>
         </a>
     </div>
     <div class="timeline-msg">
-        Nueva alerta ligada a la sugerencia de <a href="{% url fb_public_profile obj.instance.suggestion.user.username %}">{{obj.instance.suggestion.user.username}}</a>:<br>
-        <a href="{% url fb_view_suggestion obj.instance.suggestion.slug %}">{{obj.instance.suggestion.name}}</a><br>
+        Nueva alerta ligada a la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.suggestion.user.username %}">{{obj.instance.suggestion.user.username}}</a>:<br>
+        <a href="{% url2 in_facebook view_suggestion obj.instance.suggestion.slug %}">{{obj.instance.suggestion.name}}</a><br>
         <span class="timestamp">  {{obj.created|naturaltime}}</span>  
     </div>
 </li>

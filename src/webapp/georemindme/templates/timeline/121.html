@@ -5,10 +5,12 @@
     121: Ha hecho un comentario en una sugerencia | UT
 {% endcomment %} 
 
+
+
 <li class="msg-{{obj.msg_id}}">
     {% if obj.instance.user.username = request.user.username %}
         <div class="avatar">
-            <a href="{% url fb_public_profile request.user %}" title="{{request.user}}">
+            <a href="{% url2 in_facebook public_profile request.user %}" title="{{request.user}}">
                 <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
             </a>
         </div>
@@ -18,12 +20,12 @@
             <span class="small-text">Has añadido:</span><br>
     {% else %}
         <div class="avatar">
-            <a href="{% url fb_public_profile obj.instance.user.username %}" title="{{obj.instance.user.username}}">
+            <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" title="{{obj.instance.user.username}}">
                 <img class="user-picture" src="{% embedded_avatar obj.instance.user.username %}" alt="{{obj.instance.user.username}} avatar"/>
             </a>
         </div>
         <div class="timeline-msg">
-            <span class="small-text"><a href="{% url fb_public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a> ha añadido:</span><br>
+            <span class="small-text"><a href="{% url2 in_facebook public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a> ha añadido:</span><br>
     {% endif %}
             
 
@@ -37,7 +39,7 @@
             {% else %}
                 la lista de sugerencias
             {% endif %}
-            : <a href="{% url fb_view_list obj.instance.instance.id %}" class="small-link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
+            : <a href="{% url2 in_facebook view_list obj.instance.instance.id %}" class="small-link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
             
             
             <span class="timestamp">  {{obj.created|naturaltime}}</span>

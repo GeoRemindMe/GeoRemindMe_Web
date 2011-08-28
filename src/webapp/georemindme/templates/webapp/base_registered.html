@@ -1,4 +1,9 @@
 {% load tags %}
+
+{% url dashboard as dashboard %}
+{% url notifications as notifications_section %}
+{% url user_suggestions as user_suggestions %}
+
 <!DOCTYPE HTML>
 <html lang="es-ES">
 <head>
@@ -8,7 +13,9 @@
     </title>
 	<link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
-	
+    
+    <link href='http://fonts.googleapis.com/css?family=Alike|Crimson+Text:400,600,700|Goudy+Bookletter+1911|Unna' rel='stylesheet' type='text/css'>
+    
     <meta name="description" content="Track and share your runs with friends.">
     
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
@@ -22,64 +29,119 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+    
 
     {% block extra_js %}{%endblock%}
-
+    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("[placeholder]").placeholder();
+            
+            
+            // Menu desplegable "Listas"
+            // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
+            hiConfig = {
+                sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
+                interval: 0, // number = milliseconds for onMouseOver polling interval
+                timeout: 500, // number = milliseconds delay before onMouseOut
+                over: function() {
+                    $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+                },
+                out: function() {
+                    if($("#dropdown-list").hasClass('visible-display')==false)
+                        $(this).find('ul:first').slideUp(400);
+                }
+            }
+            
+            $(".dropDrownBtn, .submenu ").hoverIntent(hiConfig);
+            $(".dropDrownBtn").click(function(){
+                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+            })
+        });
+    </script>
 	<!--[if lt IE 9]>
 	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	
 </head>
-<body>
-	<header id="header" class="container">
-		<img src="/static/webapp/img/logo2.png" alt="" id="logo">
+<body class="logged">
+    <div id="wait-mask" style="display:none"></div>
+    <div id="notification-msg" style="display:none"></div>
+	<div id="bg-header" class="orange-gradient">
+	<header id="header-top" class="container">
+		<div id="logo-link">
+            <a href="/">
+                <img src="/static/webapp/img/logo3.png" alt="" id="logo">
+            </a>
+        </div>
 		
-		<input type="search" placeholder="Busca sugerencias">
-		
-		<div id="account-info">
-			<a href="{% url public_profile request.user.username %}"><img src="{% embedded_avatar request.user.username %}" alt=""></a>
-			<a href="{% url logout %}">Salir</a>
-		</div>
-		
-		
+		<div id="search_bar">
+            <input type="search" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly><br>
+<!--
+            //Ejemplo: tapas en granada, turismo, paisajes, etc.
+-->
+        </div>
+
+		{% if user.username %}
+            <div id="account-info">
+                <div id="user-menu" class="dropDrownBtn">
+                    <a href="{% url public_profile request.user.username %}">
+                    <img src="{% embedded_avatar request.user.username %}" alt=""></a><span>.</span>
+                    <ul class="submenu" style="display:none" id="dropdown-list">
+                        <li><a href="{% url public_profile user.username %}">Mi perfil</a></li>
+                        <li><a href="{% url profile_settings %}">Configuración</a></li>
+                        <li><a href="{% url logout %}">Desconectar</a></li>
+                    </ul>
+                </div>			
+            </div>
+        {% endif %}
 	</header>
+	</div>
 	<div id="background">
 		<div id="base" class="container">
-			<section id="left-col">
-				<a href="#" id="add-suggestion-btn">Añadir sugerencia</a>
+			<div id="left-col">
+				<a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
 				{% block nav %}
 				<ul>
-                    <li class="menu-icons main-menu-icons" id=""><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
-                    <li class="menu-icons main-menu-icons" id=""><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
+                    <li class="menu-icons main-menu-icons" id="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
+                    <li class="menu-icons main-menu-icons" id="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
 <!--
                     <li class="menu-icons main-menu-icons"><a id="suggestions-icon" href="{{user_suggestions}}">Tus sugerencias</a></li>
 -->
-                    <li class="menu-icons main-menu-icons" id=""><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
+                    <li class="menu-icons main-menu-icons" id="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
                     <li class="menu-icons main-menu-icons"><a id="places-icon" href="#">Sitios</a></li>
 <!--
                     <li class="menu-icons main-menu-icons" id=""><a id="profile-icon" href="{% url public_profile request.user.username %}">Mi perfil</a></li>
 -->
+<!--
                     <li class="menu-icons main-menu-icons" id=""><a id="settings-icon" href="{% url profile_settings %}">Configuración</a></li>
+-->
                 </ul>
 				{% block extraContent %} {% endblock %}
 				{% endblock %}
-			</section>
-			<section id="right-col">
+			</div>
+			<div id="right-col">
 				{% block body %}{% endblock %}
-			</section>
+			</div>
 			
 		</div>
 	</div>
 	
-	<footer id="footer" class="container">
+    <footer id="footer" class="container">
 		<div class="footer-links">
-			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> 
+<!--
+            · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+-->
 		</div>
 		<div class="footer-links right-links">
-			<a href="#">Empleo</a> · <a href="#">Prensa</a> · <a href="#">Mapa del sitio</a>
+			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
 		</div>
 	</footer>
+    <div id="templates"></div>
 </body>
 </html>

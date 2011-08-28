@@ -246,13 +246,14 @@ GRM.removable = function() {
                 custom_url="/ajax/delete/"+type+"/";
             
             var data = { eventid:id,  comment_id:id, list_id:id, userid:id};
-            
+            GRM.wait();
             $.ajax({
                 type: "POST",
                 url: custom_url,
                 data: data,
                 dataType:'json',
                 context:$(this),
+                complete: function() { GRM.nowait();},
                 success: function(msg){
                     
                     if(msg==true){
@@ -341,7 +342,7 @@ GRM.loadTimeline = function(params){
             var url=params['url'];
             
             var data="query_id="+$(container).attr("value");
-            
+            $('.load-more').addClass("waiting");
 
             
             $.ajax({
@@ -349,7 +350,7 @@ GRM.loadTimeline = function(params){
                 url: url,
                 data: data,
                 success: function(data){
-                    
+                    $('.load-more').removeClass("waiting");
                     if(data[1].length>0){
                         if(data[0].length==2)
                             $(container).attr("value",'["'+data[0][0]+'","'+data[0][1]+'"]');
@@ -370,8 +371,10 @@ GRM.loadTimeline = function(params){
                         
                         //Volvemos a filtrar la pestaña activa forzando evento click
                         $('#'+$('ul#tabMenu .active').attr('id')).click()
+                        
+                        
                     }
-                    
+                    showMessage("Se han cargado "+data[1].length+" elementos nuevos","success");
                     if(data[1].length<10){
                         //Si no hay más datos ocultamos el boton de cargar más
                         $(".load-more").hide();
@@ -517,3 +520,19 @@ function showMessage(txt,msgClass){
         $('#notification-msg').fadeIn('slow').delay(3000).fadeOut('slow')
     }
 }
+'#id_name','#counter'
+function setRemainingCharCounter(input,counter){
+    $(input).keyup(function(){
+        charLeft=140-$(input).val().length;
+        $(counter).text(charLeft);
+        if(charLeft<0)
+            $(counter).css("color","red")
+        if(charLeft>-1)
+            $(counter).css("color","#777")
+        
+    })
+    
+    //$('#id_name').trigger('keyup');
+}
+
+

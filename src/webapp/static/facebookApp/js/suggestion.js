@@ -51,7 +51,7 @@ function getCountryName(code){
 $(document).ready(function() {
     
     //Set characters counter OnKeyUp
-    setRemainingCharCounter();
+    setRemainingCharCounter('#id_name','#counter');
     
      //~ key: 'AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710', // add your key here    
     //Google Maps - Direction Input Autocomplete address
@@ -263,19 +263,7 @@ function centerMap(address,region) {
 }
 
 
-function setRemainingCharCounter(){
-    $('#id_name').keyup(function(){
-        charLeft=140-$('#id_name').val().length;
-        $('#counter').text(charLeft);
-        if(charLeft<0)
-            $('#counter').css("color","red")
-        if(charLeft>-1)
-            $('#counter').css("color","#777")
-        
-    })
-    
-    //$('#id_name').trigger('keyup');
-}
+
 
 function loadGMaps(defaultX,defaultY,canvas) {
     

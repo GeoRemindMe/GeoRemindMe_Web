@@ -1,4 +1,6 @@
 # coding=utf-8
+
+
 from google.appengine.ext import db
 
 from geoalert.signals import suggestion_new, suggestion_deleted
@@ -9,25 +11,23 @@ from geoauth.clients.facebook import FacebookClient
 
 def new_suggestion(sender, **kwargs):
     fb_client=FacebookClient(user=sender.user)
+    from django.conf import settings
+    params= {
+                "name": "Ver detalles de la sugerencia",
+                "link": settings.WEB_APP+"suggestion/"+sender.slug,
+                "caption": "Destalles del sitio (%(sitio)s), comentarios, etc." % {'sitio':sender.poi.name},
+                #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
+                #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
+            }
+    if sender.description is not None:
+        params["description"]=sender.description
+    #Pasamos todos los valores a UTF-8
+    params = dict([k, v.encode('utf-8')] for k, v in params.items())        
     if sender._is_public():
-        params= {
-                "name": "Link name",
-                "link": "http://www.example.com/",
-                "caption": "{*actor*} posted a new review",
-                "description": "This is a longer description of the attachment",
-                "picture": "http://www.example.com/thumbnail.jpg",
-                "privacy": {'value':'EVERYONE'}
-            }
+        params["privacy"]={'value':'EVERYONE'}
     else:
-        params= {
-                "name": "Link name",
-                "link": "http://www.example.com/",
-                "caption": "{*actor*} posted a new review",
-                "description": "This is a longer description of the attachment",
-                "picture": "http://www.example.com/thumbnail.jpg",
-                "privacy": {'value':'CUSTOM','friends':'SELF'}
-            }
-    post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha creado una sugerencia" % {'id':sender.id, 'name':sender.name.encode('utf-8')}, params)
+        params["privacy"]={'value':'CUSTOM','friends':'SELF'}
+    post_id = fb_client.consumer.put_wall_post("%(sugerencia)s" % {'sugerencia':sender.name.encode('utf-8')}, params)
     from models import _FacebookPost
     fb_post = _FacebookPost(instance=str(sender.key()), post=post_id['id'])
     fb_post.put()
@@ -36,51 +36,25 @@ suggestion_new.connect(new_suggestion)
 
 def new_list(sender, **kwargs):
     from geolist.models import ListSuggestion, ListRequested
+    from django.conf import settings
+    fb_client=FacebookClient(user=sender.user)
+    params= {
+            "name": sender.name,
+            "link": settings.WEB_APP+sender.get_absolute_url()
+            }
+    if sender.description is not None:                
+            params["description"]= "This is a longer description of the attachment"
+    params = dict([k, v.encode('utf-8')] for k, v in params.items())
+    if sender._is_public():
+        params["privacy"]={'value':'EVERYONE'}
+    else:
+        params["privacy"]={'value':'CUSTOM','friends':'SELF'}
     if isinstance(sender, ListSuggestion):
-        if sender._is_public():
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'EVERYONE'}
-                }
-        else:
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'CUSTOM','friends':'SELF'}
-                }
-        fb_client=FacebookClient(user=sender.user)
-        post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha creado una lista" % {'id':sender.id, 'name':sender.name.encode('utf-8')}, params)
+        post_id = fb_client.consumer.put_wall_post("He creado una lista de sugerencias ", params)
     elif isinstance(sender, ListRequested):        
-        if sender._is_public():
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'EVERYONE'}
-                }
-        else:
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'CUSTOM','friends':'SELF'}
-                }
-        fb_client=FacebookClient(user=sender.user)
-        post_id = fb_client.consumer.put_wall_post("%(id)s (%(name)s) ha iniciado una peticion de sugerencias" % {'id':sender.id, 'name':sender.name.encode('utf-8')}, params)
+        post_id = fb_client.consumer.put_wall_post("Necesito sugerencias, ¿me podéis ayudar?", params)
     else:
         return
-    
     from models import _FacebookPost
     fb_post = _FacebookPost(instance=str(sender.key()), post=post_id['id'])
     fb_post.put()
@@ -89,26 +63,21 @@ list_new.connect(new_list)
 
 def new_comment(sender, **kwargs):
     if hasattr(sender.instance, '_vis'):
-        if sender.instance._is_public():
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'EVERYONE'}
-                }
-        else:
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'CUSTOM','friends':'SELF'}
-                }
         fb_client=FacebookClient(user=sender.user)
-        post_id = fb_client.consumer.put_wall_post("%(id)s (%(username)s) ha escrito en" % {'id':sender.id, 'username':sender.user.username}, params)
+        from os import environ
+        params= {
+                    "name": sender.instance.name,
+                    "link": environ['HTTP_HOST'] + sender.instance.get_absolute_url(),
+                    "caption": "Sugerencia de "+sender.instance.user.username,
+                    "picture": environ['HTTP_HOST'] +"/user/"+sender.instance.user.username+"/picture/",
+                }
+        params = dict([k, v.encode('utf-8')] for k, v in params.items())
+        if sender.instance._is_public():
+            params["privacy"]= {'value':'EVERYONE'}
+                
+        else:
+            params["privacy"]= {'value':'CUSTOM','friends':'SELF'}
+        post_id = fb_client.consumer.put_wall_post(sender.msg, params)
         from models import _FacebookPost
         fb_post = _FacebookPost(instance=str(sender.key()), post=post_id['id'])
         fb_post.put()
@@ -118,27 +87,51 @@ comment_new.connect(new_comment)
 
 
 def new_vote(sender, **kwargs):
+    from geovote.models import Comment
+    from geoalert.models import Suggestion
+    from os import environ
     if hasattr(sender.instance, '_vis'):
-        if sender.instance._is_public():
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'EVERYONE'}
-                }
-        else:
-            params= {
-                    "name": "Link name",
-                    "link": "http://www.example.com/",
-                    "caption": "{*actor*} posted a new review",
-                    "description": "This is a longer description of the attachment",
-                    "picture": "http://www.example.com/thumbnail.jpg",
-                    "privacy": {'value':'CUSTOM','friends':'SELF'}
-                }
         fb_client=FacebookClient(user=sender.user)
-        post_id = fb_client.consumer.put_wall_post("%(id)s (%(username)s) ha escrito en" % {'id':sender.id, 'username':sender.user.username}, params)
+        if isinstance(sender.instance, Comment):
+            params= {
+                        "link": environ['HTTP_HOST'] + sender.instance.instance.get_absolute_url(),
+                        "caption": sender.instance.user.username,
+                        #"picture": "http://georemindme.com/media/img/whatsup.png"
+                        "picture": environ['HTTP_HOST'] +"/user/"+sender.instance.instance.user.username+"/picture",
+                    }
+            if isinstance(sender.instance.instance, Suggestion):
+                params["name"]= sender.instance.instance.name
+                message = "Me gusta el comentario: \"%(comentario)s\" de %(autor)s en la sugerencia:" % {'comentario': sender.instance.msg,
+                                                                                                           'autor':sender.instance.user.username
+                                                                                                           }
+            else:
+                params["name"]="Ver lista de sugerencias: "+ sender.instance.instance.name
+                message = "Me gusta el comentario: \"%(comentario)s\" de %(autor)s" % {'comentario': sender.instance.msg,
+                                                                                                                      'autor': sender.instance.user.username
+                                                                                                                      }
+                
+        elif isinstance(sender.instance, Suggestion):
+            message = "Me gusta la sugerencia de %(autor)s:" % {
+                                                                   'autor':sender.instance.user.username
+                                                                   }
+            params= {
+                        "name": sender.instance.name,
+                        "link": environ['HTTP_HOST'] + sender.instance.get_absolute_url(),
+                        "caption": sender.instance.user.username,
+                        #"picture": "http://georemindme.com/media/img/whatsup.png"
+                        "picture": environ['HTTP_HOST'] +"/user/"+sender.instance.user.username+"/picture",
+                    }
+        if hasattr(sender.instance,"description"):
+            params['description']=sender.instance.description
+        # codificamos todo el diccionario de parametros, antes de añadir el parametro privacy
+        params = dict([k, v.encode('utf-8')] for k, v in params.items())
+        if sender.instance._is_public():
+            params["privacy"]= {'value':'EVERYONE'}
+        else:
+            params["privacy"]= {'value':'CUSTOM','friends':'SELF'}
+        
+        #~ raise Exception(params["picture"])
+        post_id = fb_client.consumer.put_wall_post(message.encode('utf-8'), params)
         from models import _FacebookPost
         fb_post = _FacebookPost(instance=str(sender.key()), post=post_id['id'])
         fb_post.put()
@@ -165,5 +158,8 @@ comment_deleted.connect(deleted_post)
 def disconnect_all():
     suggestion_new.disconnect(new_suggestion)
     list_new.disconnect(new_list)
+    comment_new.disconnect(new_comment)
+    vote_new.disconnect(new_vote)
     suggestion_deleted.disconnect(deleted_post)
     list_deleted.disconnect(deleted_post)
+    comment_deleted.disconnect(deleted_post)

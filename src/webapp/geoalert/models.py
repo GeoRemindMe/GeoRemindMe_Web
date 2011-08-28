@@ -268,6 +268,7 @@ class Suggestion(Event, Visibility, Taggable):
     modified = db.DateTimeProperty(auto_now=True)
     user = db.ReferenceProperty(User, collection_name='suggestions')
     has = db.StringListProperty(default=[u'active:T',])
+    _short_url = db.TextProperty()
     
     _counters = None
     
@@ -279,6 +280,16 @@ class Suggestion(Event, Visibility, Taggable):
         '''
         return [[], 'name', 'description', 'poi']
     
+    @property
+    def short_url(self):
+        if self._short_url is None:
+            self._get_short_url()
+            if self._short_url is not None:
+                self.put()
+            else:
+                from os import environ
+                return 'http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
+        return self._short_url
     
     @property
     def counters(self):
@@ -294,7 +305,7 @@ class Suggestion(Event, Visibility, Taggable):
     def update_or_insert(cls, id = None, name = None, description = None,
                          date_starts = None, date_ends = None, poi = None,
                          user = None, done = False, active = True, tags = None, 
-                         vis = 'public'):
+                         vis = 'public', commit=True):
         '''
             Crea una sugerencia nueva, si recibe un id, la busca y actualiza.
             
@@ -303,34 +314,35 @@ class Suggestion(Event, Visibility, Taggable):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        if poi is None:
-            raise TypeError()
         if id is not None:  # como se ha pasado un id, queremos modificar una alerta existente
-            sugg = cls.objects.get_by_id_user(id, user)
+            sugg = cls.objects.get_by_id_user(id, user, querier=user)
             if sugg is None:
                 return None
-            sugg.name = name if name is not None else sugg.name
+            #sugg.name = name if name is not None else sugg.name
             sugg.description = description if description is not None else sugg.description
             sugg.date_starts = date_starts if date_starts is not None else sugg.date_starts
             sugg.date_ends = date_ends if date_ends is not None else sugg.date_ends
             sugg.poi = poi if poi is not None else sugg.poi
-            sugg._vis = vis
+            if vis != '':
+                sugg._vis = vis
             if sugg.is_active() != active:
                 sugg.toggle_active()
-            if tags is not None:
-                sugg._tags_setter(tags)
-            else:
+            if tags != '':
+                sugg._tags_setter(tags, commit=commit)
+            elif commit:
                 sugg.put()
             return sugg
         else:
+            if poi is None:
+                raise TypeError()
             sugg = Suggestion(name = name, description = description, date_starts = date_starts,
                           date_ends = date_ends, poi = poi, user = user, _vis=vis)
             if not active:
                 sugg.toggle_active()
-            sugg.put()
-            sugg._tags_setter(tags)
-            counter = SuggestionCounter(parent=sugg)
-            counter.put()
+            if tags != '':
+                sugg._tags_setter(tags, commit=commit)
+            elif commit:
+                sugg.put()
             return sugg
         
     def add_follower(self, user):
@@ -397,10 +409,10 @@ class Suggestion(Event, Visibility, Taggable):
         if from_comment:
             super(Suggestion, self).put()
             return self
-        from georemindme.funcs import u_slugify
+        from django.template.defaultfilters import slugify
         if self.slug is None:
-            name = self.name.lower()
-            self.slug = u_slugify('%s'% (name))
+            name = self.name.lower()[:32]
+            self.slug = unicode(slugify('%s'% (name)))
         p = Suggestion.all().filter('slug =', self.slug).get()
         if p is not None:
             if not self.is_saved() or p.key() != self.key():
@@ -414,7 +426,22 @@ class Suggestion(Event, Visibility, Taggable):
             suggestion_modified.send(sender=self)
         else:
             super(Suggestion, self).put()
+            counter = SuggestionCounter(parent=self)
+            put = db.put_async(counter)
+            self._get_short_url()
+            put.get_result()
             suggestion_new.send(sender=self)
+            
+    def _get_short_url(self):
+        from libs.vavag import VavagRequest
+        from django.conf import settings
+        from os import environ
+        try:
+            client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
+            response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
+            self._short_url = response['results']['packUrl']
+        except:
+            self._short_url = None
             
     def delete(self):
         from django.conf import settings
@@ -458,7 +485,7 @@ class Suggestion(Event, Visibility, Taggable):
         return simplejson.dumps(self.to_dict())
 
     def get_absolute_url(self):
-        return '/suggestion/%s/' % self.slug if self.slug is not None and self.slug != '' else self.id
+        return '/suggestion/%s/' % self.slug.encode('utf-8') if self.slug is not None and self.slug != '' else self.id
     
     def get_absolute_fburl(self):
         return '/fb%s' % self.get_absolute_url()

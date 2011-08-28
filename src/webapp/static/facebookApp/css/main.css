@@ -27,6 +27,7 @@ input{
 }
     div#left-col a#logo img{
         border:0;
+        padding-top: 0.5em;
         width:170px;
     }
     
@@ -310,6 +311,7 @@ input{
         font-size:0.9em;
         border:1px solid #ccc;
         padding: 5px;
+        margin: 10px 0;
     }
     .note a{
         color: inherit;
@@ -395,6 +397,17 @@ input{
         float:right;
         height: 22px;
         margin: 6px 0;
+    }
+    
+    div#content div.expanded div.help-icon{
+        border-bottom:0;
+        margin:0;
+        display: inline;
+        float: none;
+    }
+    div#content div.expanded div.help-icon img{
+    height: 13px;
+    width: 13px;
     }
     #activity div.help-icon{
         height: 16px;
@@ -647,7 +660,7 @@ input{
             
             ul#chronology li span.like-text, 
             #view-suggestion ul#comment-list li span.like-text,span.like-text{
-                background: url("/static/facebookApp/img/like_min.png") no-repeat scroll -2px 1px transparent;
+                background: url("/static/facebookApp/img/like_min.png") no-repeat scroll -2px 4px transparent;
 /*
                 color: black;
 */
@@ -843,7 +856,9 @@ input{
         width: 100px;
         cursor: pointer;
     }
-    
+    div.waiting{
+        background: url("/static/facebookApp/img/spinning-icons/wait_blue.gif") no-repeat scroll 10px 2px #3B5998;
+    }
     /****************************
      *      
      * Create Social Profile 
@@ -895,6 +910,10 @@ input{
         margin: 0 auto;
         padding: 0;
         width: 450px;        
+    }
+    
+    #last-step{
+        margin-bottom: 10px;
     }
     
     #link-social-accounts li{
@@ -1686,7 +1705,17 @@ input{
     .maximize-minimize span{
         visibility:hidden;
     }
-    #suggestions .editable:hover{
+    #suggestions .collapsed .editable_name{
+        width: 490px;
+    }
+    #suggestions .editable_name,
+    #suggestions .editable_description,
+    #suggestions .editable_tags{
+        width:390px;
+    }
+    #suggestions .editable_name:hover,
+    #suggestions .editable_description:hover,
+    #suggestions .editable_tags:hover{
         background-color:#FEFF99
     }
     #suggestions .show-more{
@@ -1774,6 +1803,10 @@ input{
             cursor:pointer;
             border-bottom: 1px solid #DDDDDD;
         }
+        
+        div#suggestions div.suggestion{
+        }
+        
         div#content div.collapsed,div#content div.expanded{
             border:0;
             cursor:default;
@@ -1830,7 +1863,9 @@ input{
                 float: left;
                 font-weight: bold;
                 margin-right: 1em;
+/*
                 margin-top: 5px;
+*/
                 min-width: 85px;
             }
             div#content div.expanded dd{
@@ -1851,12 +1886,28 @@ input{
                     text-decoration:underline;
                 }
                 
+                div#content .expanded form.editable-fields{
+                    width: 390px;
+                }
+                
+                div#content .collapsed form.editable-fields{
+                    width: 490px;
+                }
+                div#content .collapsed form.editable-fields input{
+                    width:345px;
+                }
+                
                 div#content form.editable-fields textarea,div#content form.editable-fields input{
                     border: 1px solid #AAAAAA;
                     clear: left;
                     float: left;
                     margin-right: 5px;
+                    width:100%;
+                    clear:both;
                     outline: medium none;
+                }
+                div#content form.editable-fields select{
+                    float:left;
                 }
                 div#content form.editable-fields button{
                     background-color: #3B5998;
@@ -1886,6 +1937,10 @@ input{
                     div#content div.expanded dd ul li:after{
                         content: ", ";
                     }
+                    div#content div.expanded dd ul.removable-suggestions-in-lists li:after{
+						content: none;
+                    }
+                    
                     div#content div.expanded dd ul.share-suggestion li:after,
                     div#content div.expanded dd ul.removable-tag-list li:after,
                     div#content div.expanded dd ul.removable-sugestion-list li:after{
@@ -1905,9 +1960,11 @@ input{
                         padding: 0;
                     }
                     div#content div.suggestionList div.expanded dd.suggestions ul li{
-                        display: block;
-                        margin: 0.3em 0 0.7em 0;
-                        padding: 0em 1.5em;
+                        font-size: 12px;
+						font-weight: normal;
+						margin: 0.3em 0 0.7em 2em;
+						padding: 0 1.5em;
+						width:430px;
                     }
                     
                     div#content div.expanded dd ul li.removable{
@@ -1917,7 +1974,9 @@ input{
                         background: url("/static/facebookApp/img/delete.png") no-repeat scroll right 1px #EEEEEE;
                         cursor:pointer;
                     }
-            
+                    div#content div.expanded dd ul.removable-suggestions-in-lists li.removable:hover{
+						background: url("/static/facebookApp/img/delete2.png") no-repeat scroll 450px 2px #EEEEEE;
+					}
             div#content div.expanded a.btn{
                 clear:both
             }
@@ -1940,7 +1999,9 @@ input{
         }
             
         .checkBox{
-            width:5%;
+            float: left;
+            margin-right: 2px;
+            width: 5%;
         }
         .suggestionName{
             width:495px;
@@ -2014,6 +2075,11 @@ input{
         #filter-lists{
             border: 0 none;
             outline:none;
+            width:130px;
+        }
+        #tabMenu #filter-suggestions,
+        #tabMenu #filter-lists{
+			width:auto;
         }
         input#filter-suggestions:active,
         input#filter-lists:active{
@@ -2143,6 +2209,9 @@ input{
         text-decoration: underline;
 */
     }
+    #new-list-btn span#text{
+        width:100%
+    }
     #new-list{
         margin-right:4px;
         width: 97%;
@@ -2168,8 +2237,38 @@ input{
         cursor:pointer;
     }
     
+    div.ui-dialog div#share-text.help-txt input{
+		display: block;
+        margin: 0 auto;
+        width: 300px;
+    }
+    div.ui-dialog div#share-text.help-txt textarea{
+		display: block;
+		float: right;
+		font-size: 1.2em;
+		margin-right: 0.4em;
+		margin-top: 0.3em;
+		width:98%;
+    }
+    div.ui-dialog div#share-text.help-txt span#twitter-counter{
+		display: block;
+		float: right;
+		font-size: 1.4em;
+		margin-right: 0.5em;
+    }
     
-    
+    .twitter-dialog #ui-dialog-title-share-text{
+		background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 0 transparent;
+		padding-left: 2em;
+    }
+    .facebook-dialog #ui-dialog-title-share-text{
+		background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 0 -32px transparent;
+		padding-left: 2em;
+    }
+    .link-dialog #ui-dialog-title-share-text{
+		background: url("/static/facebookApp/img/share.png") no-repeat scroll 0 0 transparent;
+		padding-left: 2em;
+    }
     /****************************
      *      
      *  View suggestion details

@@ -5,16 +5,18 @@
     101: Te han empezado a seguir
 {% endcomment %} 
 
+{% include "timeline/urls_rename.html %}
+
 <li class="msg-{{obj.msg_id}}">
     {% if request.user = obj.instance.username %}   
         Te has empezado a seguir?
     {% else %}
         <div class="avatar">
-            <a href="{% url fb_public_profile obj.instance %}" title="{{obj.instance}}">
+            <a href="{% url2 in_facebook public_profile obj.instance %}" title="{{obj.instance}}">
                 <img class="user-picture" src="{% url user_avatar obj.instance %}" alt="{{obj.instance}} avatar"/>
             </a>
         </div>
-        <a href="{% url fb_public_profile obj.instance %}">{{obj.instance}}</a> ahora te está siguiendo.<br>
+        <a href="{% url2 in_facebook public_profile obj.instance %}">{{obj.instance}}</a> ahora te está siguiendo.<br>
     {% endif %}
 
     <span class="timestamp">{{obj.created|naturaltime}}</span>  

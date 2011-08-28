@@ -9,7 +9,7 @@
     <div class="section">
             <div class="header">
                 <h2>Notificaciones</h2>
-                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+                <div class="help-icon"><img id="help-accounts-control" alt="Help" src="/static/facebookApp/img/help.png"></div>
             </div>
             
             <p>Te llegarán notificaciones por email cuando:</p>
@@ -36,10 +36,10 @@
         <div class="section">
             <div class="header">
                 <h2>Privacidad</h2>
-                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+                <div class="help-icon"><img id="help-accounts-control" alt="Help" src="/static/facebookApp/img/help.png"></div>
             </div>
             
-            <p><strong>Visibilidad del perfil</strong>: {{settings_form.show_public_profile}}</p>
+            <p><strong>Perfil público</strong>: {{settings_form.show_public_profile}}</p>
             {% if settings_form.show_public_profile.errors %}
                  <span class="error-msg" id="email-error">
                     {{settings_form.show_public_profile.errors}}
@@ -50,7 +50,7 @@
 		<div class="section">	
 			<div class="header">
                 <h2>Idioma</h2>
-                <p><a href=""><img src="/static/facebookApp/img/help.png" alt="Help"></a></p>
+                <div class="help-icon"><img id="help-accounts-control" alt="Help" src="/static/facebookApp/img/help.png"></div>
             </div>
            Idioma de la interfaz:
            {{settings_form.language}}
