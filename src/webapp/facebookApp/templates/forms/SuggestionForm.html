@@ -18,16 +18,18 @@
         <p id="suggestion-place">
             <label>¿Dónde?</label>
             
+            {%comment%}
             <ul id="tabMenu" class="clear">
                 <li id="place-tab" class="active" onclick="javascript:activateTab('place')">Establecimiento</li>
                 <li id="address-tab" onclick="javascript:activateTab('address')">Dirección</li>
             </ul>
+            {%endcomment%}
             <div id="address-container">
                 <div id="address-form">
                     <input type="text" id="address" name="address">
                 </div>
                 <div id="place-form">
-                    <label for="place">Nombre:</label> <input type="text" id="place" name="place" value="{{poi_name}}">
+                    {#<label for="place">Nombre:</label>#}<input type="text" id="place" name="place" value="{{poi_name}}">
                 </div>
                 
                 <!-- GOOGLE MAPS CANVAS -->
