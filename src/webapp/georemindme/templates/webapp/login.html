@@ -99,6 +99,7 @@
 			$('#userRegisterPass1,#userRegisterPass2').blur(function() { checkPasswords(false) });
 			/*** check email ***/
 			$('#registerEmail').blur(function() { checkEmail(); });
+			$('#registerEmail').keyup(function() { $('#emailStatus').hide();$('#registerEmail').next('div').text(''); });
 
         
 			/*** register form ***/
@@ -167,9 +168,20 @@
 		function checkEmail() {
 			
 			var email = $('#registerEmail').val();
+			var item = $('#registerEmail').next('div');
+			var st = $('#emailStatus');
+			st.show();
+			item.text('');
+
+			if (email=='Email') {
+				item.text('Necesitamos que rellenes el email');
+				st.removeClass("ok").addClass("no-ok");
+				return false;
+				}
 			
 			if (!GRM.common.checkemail(email)) {
-				showMessage("Email inválido","error");
+				item.text('E-mail inválido');
+				st.removeClass("ok").addClass("no-ok");
 				return false;
 			}
 			else {
@@ -182,11 +194,13 @@
 					success: function(data){ 
 				
 						if(data.result){
-							showMessage("Ya estas registrado mamon","error");
+							item.text("Esta cuenta ya está siendo usada");
+							st.removeClass("ok").addClass("no-ok");
 						}
 						else
 						{
-							showMessage("Todavía no estas registrado! A que esperas!");
+							//item.text("Esta cuenta ya está siendo usada");
+							st.removeClass("no-ok").addClass("ok");
 						}
 					}
 				});
@@ -338,8 +352,8 @@
 <!--
                         <input type="text" name="" value="" placeholder="Nombre de usuario"/>
 -->
-                        <span id="emailStatus" style="float:right" class="ok">&nbsp;</span><input type="text" name="registerEmail" id="registerEmail" placeholder= "Email" />
-                        <div>Esta cuenta de correo ya está siendo usada</div>
+                        <span id="emailStatus" style="float:right;display:none;" class="ok">&nbsp;</span><input type="text" name="registerEmail" id="registerEmail" placeholder= "Email" />
+                        <div></div>
                         <input type="password" name="userRegisterPass1" id="userRegisterPass1" placeholder="Contraseña"/>
                         <input type="password" name="userRegisterPass2" id="userRegisterPass2" placeholder="Repite la contraseña"/>
                         <div>Las contraseñas no coinciden</div>
