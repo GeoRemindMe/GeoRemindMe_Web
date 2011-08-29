@@ -4,7 +4,7 @@ from protorpc import message_types
 from protorpc import remote
 from protorpc import messages
 
-from messages import Suggestion, Suggestions, ClientId
+from messages import Suggestion, Suggestions
 
 class GetSuggestionRequest(messages.Message):
     query_id = messages.IntegerField(1)
@@ -41,8 +41,8 @@ class SuggestionService(remote.Service):
             t = Suggestion(
                            name = a.name,
                            description = a.description,
-                           poi_lat = a.poi.poi.lat,
-                           poi_lon = a.poi.poi.lon,
+                           poi_lat = a.poi.location.lat,
+                           poi_lon = a.poi.location.lon,
                            poi_id = a.poi.id,
                            places_reference = a.poi.google_places_reference,
                            modified = int(mktime(a.modified.utctimetuple())),

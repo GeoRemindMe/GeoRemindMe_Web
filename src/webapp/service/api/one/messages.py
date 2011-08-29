@@ -38,9 +38,8 @@ class Suggestions(messages.Message):
 class Site(messages.Message):
     name = messages.StringField(1, required=True)
     address = messages.StringField(2)
-    poi_lat = messages.FloatField(3)
-    poi_lon = messages.FloatField(4)
-    places_reference = messages.StringField(6)
+    lat = messages.FloatField(3)
+    lon = messages.FloatField(4)
     
     
 class Sites(messages.Message):

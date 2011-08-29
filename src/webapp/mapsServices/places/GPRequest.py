@@ -133,6 +133,4 @@ class GPRequest(Http):
         if response['status'] != 200:
             raise GPAPIError(response['status'], 'ERROR IN REQUEST')
         json = simplejson.loads(content)
-        if json['status'] == 'OK':
-            return json
-        raise GPAPIError(json['status'], json['status'])
+        return json
