@@ -24,7 +24,7 @@
         
         
         <h1>Editar perfil</h1>
-
+        
         <div class="section">
             <form method="post" action="." id="editForm">
             <div id="avatar">
@@ -34,8 +34,6 @@
                     <br>
                     Cambiar foto
 -->
-
-                    
                 </span> 
                 <div>
                     Usar el avatar de: <br>
@@ -53,15 +51,18 @@
 				<dl>
 					<dt><label for="id_user_set_profile-username">Nombre de usuario</label>:</dt>
 					<dd>{{form.username}}</dd>
+                    <span class="error-msg">{{form.errors.username}}</span>
 					
 					<dt>Password:</dt>
 					<dd><span id="editPass" class="hoverlink">Editar password</span></dd>
 					
 					<dt><label for="id_user_set_profile-email">Email</label>:</dt>
 					<dd>{{form.email}}</dd>
+                    <span class="error-msg">{{form.errors.email}}</span>
 					
 					<dt><label for="id_user_set_profile-description">Descripción</label>:</dt>
 					<dd>{{form.description}}</dd>
+                    <span class="error-msg">{{form.errors.description}}</span>
 					
 				</dl>
                 <hr>
@@ -71,9 +72,12 @@
 
 <script id="passForm" type="text/x-jquery-tmpl">
 <div id="passForm2">
-    <input type="password" name="old_password" id="old_pass" placeholder="Antigua contraseña"/>
-    <input type="password" name="password1" id="pass1" placeholder="Nueva contraseña"/>
-    <input type="password" name="password2" id="pass2" placeholder="Repite la contraseña"/>
+    <input type="password" name="user_set_profile-old_password" id="old_pass" placeholder="Antigua contraseña"/>
+    {{form.errors.old_password}}
+    <input type="password" name="user_set_profile-password1" id="pass1" placeholder="Nueva contraseña"/>
+    {{form.errors.password1}}
+    <input type="password" name="user_set_profile-password2" id="pass2" placeholder="Repite la contraseña"/>
+    {{form.errors.password2}}
 </div>
 </script>
     
