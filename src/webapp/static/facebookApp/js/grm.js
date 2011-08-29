@@ -429,7 +429,12 @@ GRM.updateTabCounters = function(){
 }
 
 GRM.wait = function() {
-    $("#wait-mask").show();
+    if ($("#wait-mask").size()==0) {
+        $("body").append("<div id='wait-mask' style='position:fixed;height:100%;width:100%;top:0px;left:0px;z-index:1000;cursor:wait;'></div>");
+        }
+    else {
+        $("#wait-mask").show();
+    }
 }
 
 GRM.nowait = function() {
@@ -472,6 +477,12 @@ GRM.search = function(str,containers,fields)
             
             });
     }
+}
+
+GRM.common.checkemail = function(email) {
+	var regexp  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	
+	return (regexp.test(email));				
 }
 
 GRM.autocomplete.frompoint = function() {
