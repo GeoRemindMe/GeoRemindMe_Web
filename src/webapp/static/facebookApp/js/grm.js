@@ -1,4 +1,4 @@
-GRM = { common : {} };
+GRM = { common : {}, autocomplete : {} };
 
 GRM.common.extend = function(m, e){
     var e = e || this;
@@ -473,6 +473,14 @@ GRM.search = function(str,containers,fields)
             });
     }
 }
+
+GRM.autocomplete.frompoint = function() {
+    
+    }
+
+GRM.autocomplete.topoint = function() {
+    
+    }
 
 jQuery.fn.search = function(container,fields) {
     return this.each(function(){
