@@ -1,0 +1,79 @@
+﻿{% extends "admin_base.html" %}
+
+{% block content %}
+            <h2>Admin :: {{ moduleTitle }}</h2>
+            <p class="createNew"><a href="{{ urlPrefix }}/{{ moduleTitle }}/new/">Create new</a></p>
+            <table class="itemList" cellspacing="0">
+                <thead>
+                <tr>
+                    {% for property in listProperties %}
+                    <th>{{property.verbose_name}}</th>
+                    {% endfor %}
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in items %}
+                <tr>
+                    {% for property in item.listProperties %}
+                    {% if forloop.first %}
+                    <td><a href="{{ urlPrefix }}/{{ moduleTitle }}/edit/{{ item.key }}/">
+                        {% ifequal property.typeName "BlobProperty" %}
+                        Binary content
+                        {% else %}
+                        {{ property.value|escape }}
+                        {% endifequal %}
+                    </a></td>
+                    {% else %}
+                    <td>
+                        {% ifequal property.typeName "BlobProperty" %}
+                            {% if property.value %}
+                                <a href="{{urlPrefix}}/{{moduleTitle}}/get_blob_contents/{{property.name}}/{{ item.key }}/">File uploaded: {{property.meta.File_Name}}</a>
+                            {% else %}
+                            None
+                            {% endif %}
+                        {% else %}
+                            {{ property.value|escape }}
+                        {% endifequal %}
+                    </td>
+                    {% endif %}
+                    {% endfor %}
+                    <td><a href="{{ urlPrefix }}/{{ moduleTitle }}/delete/{{ item.key }}/" onclick='return confirm("Are you sure?");'>Delete</a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <!-- paging -->
+            <p>
+                {% ifnotequal page.first page.last %}
+                    {% ifnotequal page.first page.current %}
+                    <a href="?page={{page.first}}">First</a>
+                    {% else %}
+                    First
+                    {% endifnotequal %}
+                {% else %}
+                    First
+                {% endifnotequal %}
+                {% if page.prev %}
+                    <a href="?page={{page.prev}}">Previous</a>
+                {% else %}
+                    Previous
+                {% endif %}
+                {{page.current}} of {{page.maxpages}}
+                {% if page.next %}
+                    <a href="?page={{page.next}}">Next</a>
+                {% else %}
+                    Next
+                {% endif %}
+                {% ifnotequal page.first page.last %}
+                    {% ifnotequal page.last page.current %}
+                    <a href="?page={{page.last}}">Last</a>
+                    {% else %}
+                    Last
+                    {% endifnotequal %}
+                {% else %}
+                    Last
+                {% endifnotequal %}
+            </p>
+            <!-- EOF paging -->
+{% endblock %}

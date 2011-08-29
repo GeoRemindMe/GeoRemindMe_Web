@@ -1542,6 +1542,7 @@ input{
         font-size: 1.1em;
         height: 45px;
         line-height: 1.7em;
+        resize: none;
         margin: 11px auto;
         display:block;
         padding: 0.7em;

@@ -1,0 +1,15 @@
+{% extends "webapp/base.html" %}
+
+{% load i18n %}
+{% block login %}{%endblock%}
+{% block content %}
+           {{appInfo}}
+			
+                      <form action="{{request.get_full_path}}" id="signin" method="post">  
+           {% csrf_token %}
+
+              <input type="submit" tabindex="7" value="{% trans "Accept" %}" name="accept">
+			<input type="submit" tabindex="7" value="{% trans "Deny" %}" name="deny">
+             </form>
+{%endblock%}
+

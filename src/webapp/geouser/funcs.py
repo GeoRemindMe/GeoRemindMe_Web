@@ -56,8 +56,11 @@ def login_func(request, email = None, password = None, remember_me = False, user
         init_user_session(request, user, remember=remember_me)
         return error, redirect
     from models import User
-    user = User.objects.get_by_email(email)
-    if user is None:
+    from django.core.validators import validate_email
+    try:
+        validate_email(email.decode('utf8'))
+        user = User.objects.get_by_email(email)
+    except:
         user = User.objects.get_by_username(email)
     if user:
         if user.check_password(password):
