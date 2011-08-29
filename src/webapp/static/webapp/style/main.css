@@ -428,12 +428,19 @@ body {
 #registerForm{
     margin:10px 0;
 }
-#registerForm input{
+#registerForm input,#registerForm div{
     display: block;
     font-size: 1.2em;
     height: 2em;
     margin: 5px auto;
     width: 250px;
+}
+#registerForm div{
+	color: white;
+    font-size: 1em;
+    height: 1.3em;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
 }
 
 
@@ -1189,7 +1196,7 @@ div#agreement{
     margin-right: 5px;
     width: auto;
     vertical-align: baseline;
-    margin-top: 0;
+    margin-top: 3px;
 }
 div#agreement #textTermsCheckbox{    
 	color: white;
@@ -1200,7 +1207,23 @@ div#agreement #textTermsCheckbox{
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.75);
     -moz-text-shadow: 0px 1px 1px rgba(0,0,0,.75);
 	-webkit-text-shadow: 0px 1px 1px rgba(0,0,0,.75);
-    width: 230px;
+    width: 225px;
+}
+
+#emailStatus{
+	float: right;
+    margin-left: 360px;
+    margin-top: 10px;
+    position: absolute;
+    background: url("/static/webapp/img/sprite_sticks_vertical.png") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 20px;
+    width: 20px;
+}
+#emailStatus.ok{
+}
+#emailStatus.no-ok{
+	background-position: 0 -20px;
 }
 
 #registerForm input[type="submit"]{

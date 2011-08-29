@@ -261,9 +261,11 @@
 <!--
                         <input type="text" name="" value="" placeholder="Nombre de usuario"/>
 -->
-                        <input type="text" name="registerEmail" id="registerEmail" placeholder= "Email" />
+                        <span id="emailStatus" style="float:right" class="ok">&nbsp;</span><input type="text" name="registerEmail" id="registerEmail" placeholder= "Email" />
+                        <div>Esta cuenta de correo ya está siendo usada</div>
                         <input type="password" name="userRegisterPass1" id="userRegisterPass1" placeholder="Contraseña"/>
                         <input type="password" name="userRegisterPass2" id="userRegisterPass2" placeholder="Repite la contraseña"/>
+                        <div>Las contraseñas no coinciden</div>
                         <div id="agreement">
                             <input type="checkbox" id="termsCheckbox" title="Check this box if you agree" value="terms"/>
                             <span id="textTermsCheckbox">I have read and I accept the <a href="/tos" class="hoverlink">Terms of Service</a>.</span>
