@@ -14,7 +14,8 @@ class GetSuggestionRequest(messages.Message):
 class GetSyncSuggestion(messages.Message):
     last_sync = messages.IntegerField(1)
     suggestions = messages.MessageField(Suggestion, 2, repeated=True)
-    
+
+
 class AddSyncSuggestion(messages.Message):
     suggestions = messages.MessageField(Suggestion, 2, repeated=True)
   

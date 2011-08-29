@@ -3,6 +3,6 @@
 .git
 .pydevproject
 virtualme/*
-/.settings
-/src/fixtures/*
-/src/webapp/settings.py
+.settings
+src/fixtures/*
+src/webapp/settings.py

@@ -169,17 +169,59 @@ class UserProfileForm(forms.Form):
     email = forms.EmailField(label=_('email'), required=True)
     description = forms.CharField(widget=forms.TextInput(), required=False)
     sync_avatar_with = forms.ChoiceField(label=_('Sync your  avatar with'), choices=AVATAR_CHOICES)
+    old_password = forms.CharField(label=_("Current password"), required=False,
+                               max_length=settings.MAX_PWD_LENGTH,
+                               min_length=settings.MIN_PWD_LENGTH,
+                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               )
+    password = forms.CharField(label=_("New password"), required=False,
+                               max_length=settings.MAX_PWD_LENGTH,
+                               min_length=settings.MIN_PWD_LENGTH,
+                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               )
+    password2 = forms.CharField(label=_("Repeat new password"), required=False,
+                               max_length=settings.MAX_PWD_LENGTH,
+                               min_length=settings.MIN_PWD_LENGTH,
+                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               )
     
+    def clean(self):
+        """
+         Clean data and check if the old pass is input and the two passwords are the same
+        """
+        cleaned_data = self.cleaned_data
+        old_pass = cleaned_data.get('old_password')
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
 
+        if password or password2:
+            if old_pass:  # to change password, user must write old pass first
+                if password.find(' ') != -1:
+                    msg = _("Passwords can't have white spaces")
+                    self._errors['password'] = self.error_class([msg])
+                elif password != password2:
+                    msg = _("Passwords must be the same.")
+                    self._errors['password'] = self.error_class([msg])
+            else:
+                msg = _("Old password needed.")
+                self._errors['old_password'] = self.error_class([msg])
+        return cleaned_data
+    
     def save(self, user):
-#        if file is not None:
-#            if 'image/' in file.type:
-#                user.profile.avatar = file
         from geouser.models import User
         try:
-            user.update(username=self.cleaned_data['username'], 
-                        email=self.cleaned_data['email'], description=self.cleaned_data['description'], 
-                        sync_avatar_with = self.cleaned_data['sync_avatar_with'])
+            if self.cleaned_data['password'] is not None:
+                user.update(username=self.cleaned_data['username'], 
+                            email=self.cleaned_data['email'], 
+                            description=self.cleaned_data['description'], 
+                            sync_avatar_with = self.cleaned_data['sync_avatar_with'],
+                            password = self.cleaned_data['password'], 
+                            old_password=self.cleaned_data['old_password'])
+            else: 
+                user.update(username=self.cleaned_data['username'], 
+                            email=self.cleaned_data['email'], 
+                            description=self.cleaned_data['description'], 
+                            sync_avatar_with = self.cleaned_data['sync_avatar_with'])
             return True
         except User.UniqueEmailConstraint:  # email already in use
                 msg = _("Email already in use")
