@@ -10,151 +10,228 @@
 	<script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
-    <script type="text/javascript" src="/static/webapp/js/base.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/common.js"></script>
 
     
     <script type="text/javascript">
 		$(document).ready(function() {
-		        $('#loginForm').submit(function(e){
-                    e.preventDefault();
-                    $.ajax({
-                        type: "POST",
-                        url: "/ajax/login/",
-                        dataType:'json',
-                        data: {
-                            "user_login-email":$(this).find('[name="email"]').val(),
-                            "user_login-password":$(this).find('[name="password"]').val(),
-                            "csrfmiddlewaretoken":$(this).find('[name="csrfmiddlewaretoken"]').val()
-                        },
-                        success: function(msg){
-                            if(msg.error!="")
-                                showMessage(msg.error,"error");
-                            else
-                                window.location=msg._redirect;
-                        }
-                    });
-                });
-                
-                $('#textTermsCheckbox').toggle(function(){
-                    $(this).parent().find('input').attr('checked',true);
-                },function(){
-                    $(this).parent().find('input').attr('checked',false);
-                });
-                
-                $('#register-menu li').click(function(e){
-                    
-                    var lastActive=$('#register-menu li.active');
-                    $(lastActive).removeClass("active");
-                    if($(lastActive).attr("id")!=$(this).attr("id")){
-                        //Si no está deseleccionado lo activamos
-                        $(this).addClass("active");
-                    }
-                });
-                
+			
+			/*** login function ***/
+			$('#loginForm').submit(function(e){
+				e.preventDefault();
+				$.ajax({
+					type: "POST",
+					url: "/ajax/login/",
+					dataType:'json',
+					data: {
+						"user_login-email":$(this).find('[name="email"]').val(),
+						"user_login-password":$(this).find('[name="password"]').val(),
+						"csrfmiddlewaretoken":$(this).find('[name="csrfmiddlewaretoken"]').val()
+					},
+					success: function(msg){
+						if(msg.error!="")
+							showMessage(msg.error,"error");
+						else
+							window.location=msg._redirect;
+					}
+				});
+			});
+			
+			/*** terms check ***/
+			$('#textTermsCheckbox').click(function(){
+				var item = $(this).parent().find('input');
+				item.attr('checked',!item.is(':checked'));
+			});
+			
+			/*** select social ***/
+			$('#register-menu li').click(function(e){
+				
+				var lastActive=$('#register-menu li.active');
+				$(lastActive).removeClass("active");
+				if($(lastActive).attr("id")!=$(this).attr("id")){
+					//Si no está deseleccionado lo activamos
+					$(this).addClass("active");
+				}
+			});
+			
+			/*** placeholding ***/
+			$("[placeholder]").placeholder();
+			
+			/*** slide up/down register ***/
+			$('.register-text-aux').toggle(function(){
+					$('#registerForm').slideDown(400);
+					$("#register-with-social").slideUp(400);
+					$(this).addClass("close");
+				},function(){
+					$('#registerForm').slideUp(400);
+					$("#register-with-social").slideDown(400);
+					$(this).removeClass("close");
+			})
+			
+			/*** social register button ***/
+			$('#register-btn').click(function(e){
+				e.preventDefault();
+				
+				var network=$('#register-menu li.active');
+				if(network.length==0){
+					//Mensaje
+					showMessage("Primero selecciona una de la redes","error")
+				}else{
+					var register_link="/login/"+network.attr('id')+"/";
+					$(this).attr('href',register_link)
+					if($(this).attr('onclick') === undefined || $(this).attr('onclick')==null){
+						window.location=$(this).attr('href');
+					} else {
+						$(this).click ();
+					}
+				}
+				
+			})
 
-                $("[placeholder]").placeholder();
-                
-                $('.register-text-aux').toggle(function(){
-                        $('#registerForm').slideDown(400);
-                        $("#register-with-social").slideUp(400);
-                        $(this).addClass("close");
-                    },function(){
-                        $('#registerForm').slideUp(400);
-                        $("#register-with-social").slideDown(400);
-                        $(this).removeClass("close");
-                })
-                
-                $('#register-btn').click(function(e){
-                    e.preventDefault();
-                    
-                    var network=$('#register-menu li.active');
-                    if(network.length==0){
-                        //Mensaje
-                        showMessage("Primero selecciona una de la redes","error")
-                    }else{
-                        var register_link="/login/"+network.attr('id')+"/";
-                        $(this).attr('href',register_link)
-                        if($(this).attr('onclick') === undefined || $(this).attr('onclick')==null){
-                            window.location=$(this).attr('href');
-                        } else {
-                            $(this).click ();
-                        }
-                    }
-                    
-                })
-                
-                $('.georemindme').click(function(){
-                   $('#login-bar p').hide();
-                   $('#login-bar ul').hide();
-                   $('#georemindme-form').show();
-                });
-                
-        });
+			/*** show georemindme login ***/
+			$('.georemindme').click(function(){
+			   $('#login-bar p').hide();
+			   $('#login-bar ul').hide();
+			   $('#georemindme-form').show();
+			});
+			
+			/*** check passwords ***/
+			$('#userRegisterPass1,#userRegisterPass2').blur(function() { checkPasswords(false) });
+			/*** check email ***/
+			$('#registerEmail').blur(function() { checkEmail(); });
+
         
-        $('#registerForm').submit(function (e){
-           
-           if (typeof(REQUEST) != "undefined" && REQUEST)
-              REQUEST.abort();
-           
-           e.preventDefault();
-           
-           if (!validateForm()){
-              showMessage("error");
-              return;
-          }
-           
-           data = {
-              "user_register-email":$('#registerEmail').val(),
-              "user_register-password":$('#userRegisterPass1').val(),
-              "user_register-password2":$('#userRegisterPass2').val()
-              };
-           
-           $("#wait-mask").show();
-           
-           $('#msgRegisterEmail').hide();
-           $('#msgRegisterPass').hide();
-           
-           REQUEST = $.ajax({
-              url: AJAX_URL+"/register/",
-              dataType: 'json',
-              data: data,
-              success: function(data){
-                 if (typeof(data.errors)!="undefined")
-                 {
-                    if(typeof(data.errors.email)!="undefined"){
-                       showMessage(data.errors.email,"error")
-                    }
-                    if (typeof(data.errors.password)!="undefined"){
-                       showMessage(data.errors.password,"error")
-                    }
-                    
-                    $("#wait-mask").hide();
-                 }
-                 else
-                 {
-                    if(typeof(data._redirect)!="undefined")
-                    {
-                       REDIRECT = data._redirect;
-                       setTimeout(function(){window.location = REDIRECT}, 1000);
-                    }
-                 }
-                 
-                 REQUEST=null;
-              },
-              error: function(data){$("#wait-mask").hide();REQUEST=null;},
-              type:"POST",
-              async:true
-            });
-           
-           // Si es correcto => Redirect
-        });
+			/*** register form ***/
+			$('#registerFormForm').submit(function (e){
 
+			   if (typeof(REQUEST) != "undefined" && REQUEST)
+				  REQUEST.abort();
+			   
+			   e.preventDefault();
+			   
+			   var a = checkPasswords();
+			   var b = checkEmail(true);
+			   var c = checkTerms();
+			   
+			   if (!a || !b || !c){
+				  return;
+			  }
+			   
+			   var data = {
+				  "user_register-email":function() { return $('#registerEmail').val() },
+				  "user_register-password":function() { return $('#userRegisterPass1').val() },
+				  "user_register-password2":function() { return $('#userRegisterPass2').val() }
+				  };
+			   
+			   GRM.wait();
+			   
+			   $('#msgRegisterEmail').hide();
+			   $('#msgRegisterPass').hide();
+			   
+			   REQUEST = $.ajax({
+				  url: "/ajax/register/",
+				  dataType: 'json',
+				  data: data,
+				  success: function(data){
+					 if (typeof(data.errors)!="undefined")
+					 {
+						if(typeof(data.errors.email)!="undefined"){
+						   showMessage(data.errors.email,"error")
+						}
+						if (typeof(data.errors.password)!="undefined"){
+						   showMessage(data.errors.password,"error")
+						}
+						
+					   GRM.nowait();
+					 }
+					 else
+					 {
+						if(typeof(data._redirect)!="undefined")
+						{
+						   REDIRECT = data._redirect;
+						   setTimeout(function(){window.location = REDIRECT}, 1000);
+						}
+					 }
+					 
+					 REQUEST=null;
+				  },
+				  error: function(data){GRM.nowait();REQUEST=null;},
+				  type:"POST",
+				  async:true
+				});
+			   
+			   // Si es correcto => Redirect
+			});
+		});
+		
+		function checkEmail() {
+			
+			var email = $('#registerEmail').val();
+			
+			if (!GRM.common.checkemail(email)) {
+				showMessage("Email inválido","error");
+				return false;
+			}
+			else {
+				$.ajax({
+					url:"/ajax/exists/",
+					type:'post',
+					dataType:'json',
+					data: {email: email  },
+					async:true,
+					success: function(data){ 
+				
+						if(data.result){
+							showMessage("Ya estas registrado mamon","error");
+						}
+						else
+						{
+							showMessage("Todavía no estas registrado! A que esperas!");
+						}
+					}
+				});
+			}
+			
+			return true;
+			}
+
+		function checkTerms() {
+			if (!$('#termsCheckbox').is(":checked")) {
+			   showMessage("Debes de estar de acuerdo con blabla","error");
+			   return false;
+			}
+			return true;
+			}
+
+		function checkPasswords(emptymessage) {
+			
+			var pwd1 = $('#userRegisterPass1').val(), pwd2 = $('#userRegisterPass2').val();
+			
+			if (pwd1.length==0 || pwd2.length==0) {
+				if (emptymessage)
+					showMessage("Las contraseñas estan vacias","error");
+				return false;
+				}
+			
+			if (pwd1!=pwd2){
+				showMessage("Las contraseñas no coinciden","error");
+				return false;
+				}
+			
+			if (pwd1.length<6){
+				showMessage("Contraseña demasiado cortas","error");
+				return false;
+				}
+			
+			return true;
+			}
         
         function showMenu(){
             $('#login-bar p').show();
             $('#login-bar ul').show();
             $('#georemindme-form').hide();
         }
+		
         function checkUncheck(obj){
             var checkbox=$(obj).find('input');
             if($(checkbox).attr('checked')==true)
@@ -257,7 +334,7 @@
 				
 				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
                 <div style="display:none" id="registerForm">
-                    <form action="." method="POST" id="registerForm">
+                    <form action="." method="POST" id="registerFormForm">
 <!--
                         <input type="text" name="" value="" placeholder="Nombre de usuario"/>
 -->
@@ -270,8 +347,8 @@
                             <input type="checkbox" id="termsCheckbox" title="Check this box if you agree" value="terms"/>
                             <span id="textTermsCheckbox">I have read and I accept the <a href="/tos" class="hoverlink">Terms of Service</a>.</span>
                         </div>
+						{% csrf_token %}
                         <input type="submit" value="Continuar"/>
-                        {% csrf_token %}
                     </form>
                 </div>
 			</section>
