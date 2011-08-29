@@ -307,8 +307,10 @@ def edit_profile (request, template='webapp/edit_profile.html'):
         if f.is_valid():
             modified = f.save(user=request.user)
             if modified:
-                return HttpResponseRedirect('/fb/user/%s/' % request.user.username)
-
+                if request.in_facebook:
+                    return HttpResponseRedirect('/fb/user/%s/' % request.user.username)
+                else:
+                    return HttpResponseRedirect('/user/%s/' % request.user.username)
     else:
         f = UserProfileForm(initial={'username': request.user.username,
                                      'email': request.user.email,
