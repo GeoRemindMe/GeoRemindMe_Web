@@ -83,7 +83,9 @@ table {
 
 #loginSec #header-top form{
 	float: right;
+/*
 	margin-top: 10px;
+*/
 	width: 350px;
 	text-align: right;
 }
