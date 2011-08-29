@@ -1,6 +1,9 @@
 jQuery.fn.placeholder = function() 
 {
+	var counter=0;
+	
 	return this.each(function(){
+		
 		if ($(this).is("textarea"))
 		{
 			var placeholder = $(this).attr("placeholder");
@@ -29,8 +32,6 @@ jQuery.fn.placeholder = function()
 			)
 		}
 		else if ($(this).is("input")) {
-		
-		var counter=0;
 			var id = $(this).attr("id");
 			var tabindex = $(this).attr("tabindex");
 			var placeholder = $(this).attr("placeholder");
@@ -38,6 +39,7 @@ jQuery.fn.placeholder = function()
 			if($(this).attr("type")=="password")
 			{
 				var thisdummy = 'dummy' + counter;
+				console.debug(counter);
 				
 				$(this).hide();
 				$(this).after('<input type="text" id="' + thisdummy + '"/>');
