@@ -14,7 +14,25 @@
     
     <script type="text/javascript">
 		$(document).ready(function() {
-		        
+		        $('#loginForm').submit(function(e){
+                    e.preventDefault();
+                    $.ajax({
+                        type: "POST",
+                        url: "/ajax/login/",
+                        dataType:'json',
+                        data: {
+                            email:$(this).find('[name="email"]').val(),
+                            password:$(this).find('[name="password"]').val(),
+                            csrfmiddlewaretoken:$(this).find('[name="csrfmiddlewaretoken"]').val()
+                        },
+                        success: function(msg){
+                            if(msg.error!="")
+                                showMessage(msg.error,"error");
+                            else
+                                window.location=msg._redirect;
+                        }
+                    });
+                });
                 
                 $('#register-menu li').click(function(e){
                     
@@ -26,9 +44,7 @@
                     }
                 });
                 
-                //$("[placeholder]").placeholder();
-                
-
+                $("[placeholder]").placeholder();
                 
                 $('.register-text-aux').toggle(function(){
                         $('#registerForm').slideDown(400);
@@ -85,6 +101,7 @@
 </head>
 <body id="loginSec">
     <div id="notification-msg" style="display:none">Mensaje con lo que sea</div>
+
 	<header id="header-top" class="container">
 		<a href="/"><img src="/static/webapp/img/logo2.png" alt="" id="logo"></a>
 		<nav id="header-nav">
@@ -95,7 +112,7 @@
 				<li><a href="http://team.georemindme.com/">Comunidad</a></li>
 			</ul>
 		</nav>
-		
+        
         <div id="login-bar">
             <p>Identifícate usando:</p>
             <ul>
@@ -105,9 +122,9 @@
                 <li class="georemindme" title="Identifícate usando tus datos de GeoRemindMe"><span>GeoRemindMe</span></li>
             </ul>
             <div id="georemindme-form" style="display:none">
-                <form action="." method="post">
+                <form action="." method="post" id="loginForm">
                     <input type="text" name="email" placeholder="Email"/>
-                    <input type="password" name="password"/>
+                    <input type="password" name="password" id="password" placeholder="Contraseña"/>
                     <input type="submit" id="login-btn" value="Entrar" />
                     <div id="login-submenu">
                         <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> Recordarme</span>
@@ -176,8 +193,7 @@
                     <form action="" method="POST">
                         <input type="text" name="username" value="" placeholder="Nombre de usuario"/>
                         <input type="text" name="email" value="" placeholder= "Email" />
-                        <input type="password" name="pass1" id="pass1"/>
-                        <input type="password" name="pass2" id="pass2"/>
+                        <input type="password" name="pass1" id="pass1" placeholder="Contraseña"/>
                         <input type="submit" value="Continuar"/>
                     </form>
                 </div>
