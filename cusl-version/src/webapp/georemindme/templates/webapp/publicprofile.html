@@ -1,0 +1,32 @@
+{% if user.is_authenticated %}
+	<p>Eres {{user.username}}</p>
+{% else %}
+	<p>No estas logueado</p>
+{% endif %}	
+<h1>Perfil publico: {{profile.username}}</h1>
+{% if profile.username != user.username %}
+	{% if is_following %}
+	{{is_following}}
+		<p>Ya sigues a este usuario</p>
+	{% else %}
+		<p><a href="follow_link">Seguir usuario</a></p>
+	{% endif %}
+	{% if is_follower %}
+		<p>Este usuario te sigue!</p>
+	{% endif %}
+{% endif %}
+{% if show_followers %}
+	<p>Se muestran los followers, se iria a mostrar followers</p>
+{% endif %}
+{% if show_followings %}
+<p>Se muestran los followings, se iria a mostrar followings</p>
+{% endif %}
+<p>Followers: {{ counters.followers }} - Followings: {{ counters.following }} - Influenced: {{ counters.influenced }} 
+- Suggested: {{ counters.suggested }} - Supported: {{ counters.supported }} </p>
+
+<p>Esta seria el id del query para paginar el timeline: {{timeline.0}}
+<br>Timeline:
+<br>{% for t in timeline.1%}
+{{t}}
+{% endfor %}
+</p>
