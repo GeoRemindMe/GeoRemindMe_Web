@@ -1185,10 +1185,14 @@ form p.clear span {
 }
 
 div#agreement{
+    clear: both;
+    display: block;
+    height: 38px;
     margin: 0 auto;
     text-align: justify;
     width: 250px;
 }
+
 
 #registerForm div#agreement input {
     display: inline;
