@@ -187,74 +187,74 @@ function checkPasswords(event){
 	}
 }
 
-//Here we add the behaviours to all the elements
-$(document).ready(function(){
-	
-	//Starting with the start button
-	renderStartBtn();
-	$('#iframeVideo').append('<iframe title="YouTube video player" width="440" height="274" src="http://www.youtube.com/embed/Sc42jveY8PI?hd=1"></iframe>');
-	//Then the login button
-    $("#signinBtn").click(function(e){
-		e.preventDefault();
-		e.stopPropagation();
-		
-		
-	});
-    
-    IN_SIGNIN = false;
-    $('#signinMenu').mouseover(function(){IN_SIGNIN = true;});
-    $('#signinMenu').mouseout(function(){IN_SIGNIN = false;});
-        
+//~ //Here we add the behaviours to all the elements
+//~ $(document).ready(function(){
+	//~ 
+	//~ //Starting with the start button
+	//~ renderStartBtn();
+	//~ $('#iframeVideo').append('<iframe title="YouTube video player" width="440" height="274" src="http://www.youtube.com/embed/Sc42jveY8PI?hd=1"></iframe>');
+	//~ //Then the login button
+    //~ $("#signinBtn").click(function(e){
+		//~ e.preventDefault();
+		//~ e.stopPropagation();
+		//~ 
+		//~ 
+	//~ });
+    //~ 
+    //~ IN_SIGNIN = false;
+    //~ $('#signinMenu').mouseover(function(){IN_SIGNIN = true;});
+    //~ $('#signinMenu').mouseout(function(){IN_SIGNIN = false;});
+        //~ 
     //~ $(document).children().click(function(e){
         //~ if (IN_SIGNIN) return;
         //~ $('#signinMenu').hide();
 		//~ $('#signinBtn').removeClass('openedLoginBtn');
 		//~ $('#signinBtn').addClass('closedLoginBtn');
 	//~ });
-    
-
-	$('#username').focus(function(){
-			$('.loginMail').css('background-image','url("/static/webapp/img/mailActive.png")');
-		})
-		.one('focus',function(){$(this).val('');})
-		.blur(function(){
-			$('.loginMail').css('background-image','url("/static/webapp/img/mailInactive.png")');
-			if($(this).val().length>0 && !echeck($(this).val())){
-					$('#msgLoginEmail').removeClass('msgOK');
-					$('#msgLoginEmail').addClass('msgNoOK');
-					$('#txtMsgLoginEmail').html('El email no es válido, por favor revíselo');
-					
-				}else{
-					
-					$('#msgLoginEmail').html('');
-					$('#msgLoginEmail').hide();
-				}
-		});
-		
-	$('#password').focus(function(){
-			$('.loginPassword').css('background-image','url("/static/webapp/img/passIconActive.png")');
-		})
-		.one('focus',function(){$(this).val('');})
-		.blur(function(){
-			$('.loginPassword').css('background-image','url("/static/webapp/img/passIconInactive.png")');
-		})		
-		.keypress(function(e)
-		{
-			var code = (e.keyCode ? e.keyCode : e.which);
-			if (code == 13) $("#signin_submit").click();
-			
-		});
-	
-	$('#signin_submit').click(login);
-	
-	$.preload([ 'passIconInactive', 'passIconActive', 'mailInactive', 'mailActive','loginBtn' ], {
-		base:'/static/webapp/img/',
-		ext:'.png'
-	});
-	
-	AJAX_URL = "/ajax/"
-	
-	/*$('#signin').submit(function(){alert("submit");});*/
-	
-	$(document).placeholder();
-});
+    //~ 
+//~ 
+	//~ $('#username').focus(function(){
+			//~ $('.loginMail').css('background-image','url("/static/webapp/img/mailActive.png")');
+		//~ })
+		//~ .one('focus',function(){$(this).val('');})
+		//~ .blur(function(){
+			//~ $('.loginMail').css('background-image','url("/static/webapp/img/mailInactive.png")');
+			//~ if($(this).val().length>0 && !echeck($(this).val())){
+					//~ $('#msgLoginEmail').removeClass('msgOK');
+					//~ $('#msgLoginEmail').addClass('msgNoOK');
+					//~ $('#txtMsgLoginEmail').html('El email no es válido, por favor revíselo');
+					//~ 
+				//~ }else{
+					//~ 
+					//~ $('#msgLoginEmail').html('');
+					//~ $('#msgLoginEmail').hide();
+				//~ }
+		//~ });
+		//~ 
+	//~ $('#password').focus(function(){
+			//~ $('.loginPassword').css('background-image','url("/static/webapp/img/passIconActive.png")');
+		//~ })
+		//~ .one('focus',function(){$(this).val('');})
+		//~ .blur(function(){
+			//~ $('.loginPassword').css('background-image','url("/static/webapp/img/passIconInactive.png")');
+		//~ })		
+		//~ .keypress(function(e)
+		//~ {
+			//~ var code = (e.keyCode ? e.keyCode : e.which);
+			//~ if (code == 13) $("#signin_submit").click();
+			//~ 
+		//~ });
+	//~ 
+	//~ $('#signin_submit').click(login);
+	//~ 
+	//~ $.preload([ 'passIconInactive', 'passIconActive', 'mailInactive', 'mailActive','loginBtn' ], {
+		//~ base:'/static/webapp/img/',
+		//~ ext:'.png'
+	//~ });
+	//~ 
+	//~ AJAX_URL = "/ajax/"
+	//~ 
+	//~ /*$('#signin').submit(function(){alert("submit");});*/
+	//~ 
+	//~ $(document).placeholder();
+//~ });

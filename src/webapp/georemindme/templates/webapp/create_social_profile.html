@@ -33,7 +33,7 @@
         <p>Antes de empezar solo necesitamos comentarte 2 cositas.</p>
         
         <hr>
-        <div id="step-one">
+        <div id="step-one"  {% if form.errors %} style="display:none" {% endif %}>
             <h2>Paso 1: Conéctate con tus amigos</h2>
             <p>
                 Si quieres, te diremos cuales de tus conocidos ya están en GeoRemindMe.<br>
@@ -48,7 +48,7 @@
                 <strong class="show-more" onclick="javascript:toggle_showMore()">[Ver más]</strong><strong>Nota</strong>: En ningún momento enviaremos mensajes a tus contacto <p id="show-more-text"> patapin, patapan</p>
             </div>
         </div>
-        <div id="step-two" style="display:none">
+        <div id="step-two" {% if not form.errors %} style="display:none" {% endif %}>
             <h2>Paso 2:Completa tu perfil</h2>
             <p>
                 Por último, y para poder terminar de configurar tu cuenta,

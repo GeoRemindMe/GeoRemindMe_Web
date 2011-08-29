@@ -1,4 +1,4 @@
-GRM = { common : {} };
+GRM = { common : {}, autocomplete : {} };
 
 GRM.common.extend = function(m, e){
     var e = e || this;
@@ -474,6 +474,14 @@ GRM.search = function(str,containers,fields)
     }
 }
 
+GRM.autocomplete.frompoint = function() {
+    
+    }
+
+GRM.autocomplete.topoint = function() {
+    
+    }
+
 jQuery.fn.search = function(container,fields) {
     return this.each(function(){
         $(this).keyup(function(){GRM.search($(this).val(),  container, fields)});
@@ -515,7 +523,7 @@ function sendComment(btn,elemType,id) {
 
 function showMessage(txt,msgClass){
     if($('#notification-msg').css("display")=="none"){
-        $('#notification-msg').text(txt)
+        $('#notification-msg').html(txt)
         $('#notification-msg').addClass(msgClass)
         $('#notification-msg').fadeIn('slow').delay(3000).fadeOut('slow')
     }

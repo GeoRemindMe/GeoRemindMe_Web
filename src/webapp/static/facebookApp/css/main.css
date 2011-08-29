@@ -236,8 +236,11 @@ input{
     #notification-msg{
         border: 1px dotted #CCCCCC;
         left: 50%;
-        padding: 1em;
+        line-height: 2em;
+        margin-left: -200px;
+        padding: 0.5em 1em;
         position: absolute;
+        width: 400px;
     }
     .error{
         background-color: #FCC7C7;
@@ -448,7 +451,7 @@ input{
     }
     #go-back{
         cursor:pointer;
-        color:blue;
+        color:#3896FF;
         text-decoration:underline;
         float:right;
     }
@@ -497,12 +500,12 @@ input{
     }
     
     .link{
-        color:blue;
+        color:#3896FF;
         text-decoration:underline;
         cursor:pointer;
     }
     .hoverlink{
-        color:blue;
+        color:#3896FF;
         text-decoration:none;
     }
     .hoverlink:hover{
@@ -717,7 +720,7 @@ input{
                     }
                     
                 ul#chronology div.show-all-comments{
-                    color: blue;
+                    color: #3896FF;
                     font-size: 0.9em;
                     line-height: 1em;
                     padding: 0.3em;
@@ -996,7 +999,7 @@ input{
         padding-left: 5px;
     }
     #profile dl dd, #edit-profile dl dd{
-        padding-left: 100px;
+        padding-left: 110px;
     }
     
    #right-col #profile .section .header h2{
@@ -1098,7 +1101,8 @@ input{
         text-align: center;
         width: 300px;
     }
-    #edit-profile input[type="text"]{
+    #edit-profile input[type="text"],
+    #edit-profile input[type="password"]{
         width: 240px;
     }
     #edit-profile hr{
@@ -1504,7 +1508,7 @@ input{
         width: 100%;
     }
     #add-suggestion #show-details{
-        color:blue;
+        color:#3896FF;
         text-decoration:underline;
         cursor:pointer;
     }
@@ -1538,6 +1542,7 @@ input{
         font-size: 1.1em;
         height: 45px;
         line-height: 1.7em;
+        resize: none;
         margin: 11px auto;
         display:block;
         padding: 0.7em;
@@ -1547,6 +1552,7 @@ input{
         border-radius: 4px;
         -moz-border-radius: 4px;
         -webkit-border-radius: 4px;
+        
     }
     #suggestion-item textarea#id_name:focus{
         border: 1px solid #CCC;
@@ -1557,9 +1563,9 @@ input{
         -moz-border-radius: 4px;
         -webkit-border-radius: 4px;
 
-        -moz-box-shadow: 0 0 5px blue;
-        -webkit-box-shadow: 0 0 5px blue;
-        box-shadow: 0 0 5px blue;
+        -moz-box-shadow: 0 0 5px #3896FF;
+        -webkit-box-shadow: 0 0 5px #3896FF;
+        box-shadow: 0 0 5px #3896FF;
         
         padding: 0.7em;
         margin: 11px auto;
@@ -1680,6 +1686,26 @@ input{
         }
         #google-places-settings input[type="text"]#radius{   
             width:60px;
+        }
+        
+        #details-form{
+            margin: -8px 0.7em 1.5em;
+            color:555555;
+        }
+        #details-form span{
+            font-weight:bold;
+            margin: 0 0.5em;
+        }
+        #add-suggestion div.help-icon{
+        }
+        #add-suggestion #social-share{
+            float:right;
+        }
+        #add-suggestion #social-share ul{
+            list-style:none;
+        }
+        #add-suggestion #social-share ul li{
+            display:inline-block;
         }
     /****************************
      *      
@@ -2220,7 +2246,7 @@ input{
         width:100%
     }
     div#cancel-link{
-        color:blue;
+        color:#3896FF;
         text-decoration:underline;
         font-size:0.9em;
         text-align:right;
@@ -2278,7 +2304,7 @@ input{
     }
     #view-suggestion .show-more{
 		float: none;
-		color: blue;
+		color: #3896FF;
 		margin: 0.5em 0;
 		display: block;
     }
@@ -2381,7 +2407,7 @@ input{
     #view-suggestion ul#tag-list input[type="submit"]{
         background-color: inherit;
         border: 0;
-        color: blue;
+        color: #3896FF;
         text-decoration:underline;
         float: right;
         padding: 0;
@@ -2567,7 +2593,7 @@ input{
 		font-size:1.5em
     }
     #view-suggestion span.likeBtn span.hoverlink{
-		color:blue;
+		color:#3896FF;
 		text-decoration:underline;
     }
     #view-suggestion #wapiblock{

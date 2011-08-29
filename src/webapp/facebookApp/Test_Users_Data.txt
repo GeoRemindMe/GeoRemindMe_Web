@@ -13,7 +13,7 @@ John // georemindme on fixtures/dev_appserver.datastore
 "login_url":"https:\/\/www.facebook.com\/platform\/test_account_login.php?user_id=100002613914665&n=OxDCISYTD1rozk5",
 "email":"wtzyoxs_yangsteinwitzmanbergsky@tfbnw.net","password":"63209221"}
 
-Sandra
+Sandra // dugo on fixtures/dev_appserver.datastore
 {"id":"100002605604401","access_token":"102408026518300|a94c0f4e77daa95516350d51.0-100002605604401|LuSKuqPT-5jbZ_rLOSkC1RDfIIs",
 "login_url":"https:\/\/www.facebook.com\/platform\/test_account_login.php?user_id=100002605604401&n=WzBUrbrUSwwMyOa",
 "email":"cfcjysc_bowerssky@tfbnw.net","password":"1468582744"}

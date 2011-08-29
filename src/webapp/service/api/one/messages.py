@@ -32,6 +32,18 @@ class Suggestion(messages.Message):
 
 class Suggestions(messages.Message):
     query_id = messages.StringField(1)
-    suggestions = messages.MessageField(Suggestion, 2, repeated=True))
+    suggestions = messages.MessageField(Suggestion, 2, repeated=True)
+    
+    
+class Site(messages.Message):
+    name = messages.StringField(1, required=True)
+    address = messages.StringField(2)
+    lat = messages.FloatField(3)
+    lon = messages.FloatField(4)
+    
+    
+class Sites(messages.Message):
+    sites = messages.MessageField(Site, 1, repeated=True)
+    
     
 
