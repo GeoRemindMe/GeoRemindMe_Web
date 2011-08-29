@@ -99,7 +99,7 @@
 			$('#userRegisterPass1,#userRegisterPass2').blur(function() { checkPasswords(false) });
 			/*** check email ***/
 			$('#registerEmail').blur(function() { checkEmail(); });
-			$('#registerEmail').keyup(function() { $('#emailStatus').hide();$('#registerEmail').next('div').text(''); });
+			$('#registerEmail').keyup(function() { $('#emailStatus').hide(); $('#registerEmail').next('div').hide();$('#registerEmail').next('div').text(''); });
 
         
 			/*** register form ***/
@@ -172,15 +172,18 @@
 			var st = $('#emailStatus');
 			st.show();
 			item.text('');
+			
 
 			if (email=='Email') {
 				item.text('Necesitamos que rellenes el email');
+				item.show();
 				st.removeClass("ok").addClass("no-ok");
 				return false;
 				}
 			
 			if (!GRM.common.checkemail(email)) {
 				item.text('E-mail inválido');
+				item.show();
 				st.removeClass("ok").addClass("no-ok");
 				return false;
 			}
@@ -195,12 +198,14 @@
 				
 						if(data.result){
 							item.text("Esta cuenta ya está siendo usada");
+							item.show();
 							st.removeClass("ok").addClass("no-ok");
 						}
 						else
 						{
 							//item.text("Esta cuenta ya está siendo usada");
 							st.removeClass("no-ok").addClass("ok");
+							item.hide();
 						}
 					}
 				});

@@ -442,6 +442,7 @@ body {
     font-size: 1em;
     height: 1.3em;
     text-align: center;
+    display:none;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
 }
 
@@ -1227,9 +1228,11 @@ div#agreement #textTermsCheckbox{
     width: 20px;
 }
 #emailStatus.ok{
+	display:block;
 }
 #emailStatus.no-ok{
 	background-position: 0 -20px;
+	display:block;
 }
 
 #registerForm input[type="submit"]{
