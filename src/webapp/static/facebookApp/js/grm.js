@@ -523,7 +523,7 @@ function sendComment(btn,elemType,id) {
 
 function showMessage(txt,msgClass){
     if($('#notification-msg').css("display")=="none"){
-        $('#notification-msg').text(txt)
+        $('#notification-msg').html(txt)
         $('#notification-msg').addClass(msgClass)
         $('#notification-msg').fadeIn('slow').delay(3000).fadeOut('slow')
     }
