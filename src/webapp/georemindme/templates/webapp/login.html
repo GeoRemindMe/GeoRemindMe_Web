@@ -21,9 +21,9 @@
                         url: "/ajax/login/",
                         dataType:'json',
                         data: {
-                            email:$(this).find('[name="email"]').val(),
-                            password:$(this).find('[name="password"]').val(),
-                            csrfmiddlewaretoken:$(this).find('[name="csrfmiddlewaretoken"]').val()
+                            "user_login-email":$(this).find('[name="email"]').val(),
+                            "user_login-password":$(this).find('[name="password"]').val(),
+                            "csrfmiddlewaretoken":$(this).find('[name="csrfmiddlewaretoken"]').val()
                         },
                         success: function(msg){
                             if(msg.error!="")
