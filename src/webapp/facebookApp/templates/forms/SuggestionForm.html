@@ -1,4 +1,5 @@
 {% load i18n %}
+<div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-activity"></div>
 <form id="add-suggestion-form" action="javascript: return false;" >
 <!--
         name = forms.CharField(required=True)
@@ -13,8 +14,16 @@
         <p id="suggestion-item">
             <label>¿Qué sugieres?</label>
             <textarea id="id_name" name="name">{{name}}</textarea>
-            <span id="counter"></span>
+            <span id="counter">140</span>
         </p>
+        
+        <div id="details-form">Añadir: 
+            <span id="add-to-lists" class="hoverlink">A listas</span>| 
+            <span id="add-tags" class="hoverlink">Etiquetas</span> | 
+            <span id="add-details" class="hoverlink">Detalles</span> | 
+            <span id="add-date" class="hoverlink">Fecha</span> 
+        </div>    
+        
         <p id="suggestion-place">
             <label>¿Dónde?</label>
             
@@ -88,7 +97,9 @@
             
         </p>
         
+<!--
         <span id="add-more-details" onclick="javascript:showMoreDetails()">Añadir más detalles</span>
+-->
         <div id="more-details">
             <p>
                 <label>{{f.tags.label}}:</label>
@@ -118,7 +129,17 @@
         
         
         <div>
-            <span class="btn" id="submit-button" onclick="saveSuggestion()">Enviar</span>
+            <span id="social-share">
+                Compartir con: 
+                <ul>
+                    <li>Facebook</li>
+                    <li>Twitter</li>
+                </ul>
+            </span>
+            <div class="clear">
+                <span>Visiblidad</span>
+                <span class="btn" id="submit-button" onclick="saveSuggestion()">Enviar</span>
+            </div>
         </div>
         <hr>
     </form>

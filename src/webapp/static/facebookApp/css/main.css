@@ -1552,6 +1552,7 @@ input{
         border-radius: 4px;
         -moz-border-radius: 4px;
         -webkit-border-radius: 4px;
+        
     }
     #suggestion-item textarea#id_name:focus{
         border: 1px solid #CCC;
@@ -1686,6 +1687,26 @@ input{
         #google-places-settings input[type="text"]#radius{   
             width:60px;
         }
+        
+        #details-form{
+            margin: -8px 0.7em 1.5em;
+            color:555555;
+        }
+        #details-form span{
+            font-weight:bold;
+            margin: 0 0.5em;
+        }
+        #add-suggestion div.help-icon{
+        }
+        #add-suggestion #social-share{
+            float:right;
+        }
+        #add-suggestion #social-share ul{
+            list-style:none;
+        }
+        #add-suggestion #social-share ul li{
+            display:inline-block;
+        }
     /****************************
      *      
      *  Suggestion panel (Vault)
@@ -1751,7 +1772,7 @@ input{
             background-color: #EEEEEE;
             border: 1px dotted #DDDDDD;
             border-bottom:0;
-            color: #3896FF;
+            color: blue;
             cursor: pointer;
             display: inline-block;
             font-weight: normal;
