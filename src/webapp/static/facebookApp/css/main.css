@@ -451,7 +451,7 @@ input{
     }
     #go-back{
         cursor:pointer;
-        color:blue;
+        color:#3896FF;
         text-decoration:underline;
         float:right;
     }
@@ -500,12 +500,12 @@ input{
     }
     
     .link{
-        color:blue;
+        color:#3896FF;
         text-decoration:underline;
         cursor:pointer;
     }
     .hoverlink{
-        color:blue;
+        color:#3896FF;
         text-decoration:none;
     }
     .hoverlink:hover{
@@ -720,7 +720,7 @@ input{
                     }
                     
                 ul#chronology div.show-all-comments{
-                    color: blue;
+                    color: #3896FF;
                     font-size: 0.9em;
                     line-height: 1em;
                     padding: 0.3em;
@@ -1508,7 +1508,7 @@ input{
         width: 100%;
     }
     #add-suggestion #show-details{
-        color:blue;
+        color:#3896FF;
         text-decoration:underline;
         cursor:pointer;
     }
@@ -1562,9 +1562,9 @@ input{
         -moz-border-radius: 4px;
         -webkit-border-radius: 4px;
 
-        -moz-box-shadow: 0 0 5px blue;
-        -webkit-box-shadow: 0 0 5px blue;
-        box-shadow: 0 0 5px blue;
+        -moz-box-shadow: 0 0 5px #3896FF;
+        -webkit-box-shadow: 0 0 5px #3896FF;
+        box-shadow: 0 0 5px #3896FF;
         
         padding: 0.7em;
         margin: 11px auto;
@@ -1751,7 +1751,7 @@ input{
             background-color: #EEEEEE;
             border: 1px dotted #DDDDDD;
             border-bottom:0;
-            color: blue;
+            color: #3896FF;
             cursor: pointer;
             display: inline-block;
             font-weight: normal;
@@ -2225,7 +2225,7 @@ input{
         width:100%
     }
     div#cancel-link{
-        color:blue;
+        color:#3896FF;
         text-decoration:underline;
         font-size:0.9em;
         text-align:right;
@@ -2283,7 +2283,7 @@ input{
     }
     #view-suggestion .show-more{
 		float: none;
-		color: blue;
+		color: #3896FF;
 		margin: 0.5em 0;
 		display: block;
     }
@@ -2386,7 +2386,7 @@ input{
     #view-suggestion ul#tag-list input[type="submit"]{
         background-color: inherit;
         border: 0;
-        color: blue;
+        color: #3896FF;
         text-decoration:underline;
         float: right;
         padding: 0;
@@ -2572,7 +2572,7 @@ input{
 		font-size:1.5em
     }
     #view-suggestion span.likeBtn span.hoverlink{
-		color:blue;
+		color:#3896FF;
 		text-decoration:underline;
     }
     #view-suggestion #wapiblock{

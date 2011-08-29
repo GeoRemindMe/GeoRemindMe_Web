@@ -1114,11 +1114,56 @@ ul#chronology li div.timeline-msg {
 ul#user-resume li:hover {
 	background: #FFB265;
 }
-<<<<<<< HEAD
-=======
 
 #user-info {
     width: 589px;
 }
 
->>>>>>> Working on Base Anonymous
+
+form #terms span {
+    cursor: pointer;
+    line-height: 20px;
+    margin-top: 10px;
+    text-align: left;
+}
+form p.clear span {
+    clear: none;
+    display: block;
+    float: right;
+    width: 210px;
+}
+
+div#agreement{
+    margin: 0 auto;
+    text-align: justify;
+    width: 250px;
+}
+
+#registerForm div#agreement input {
+    display: inline;
+    float: left;
+    margin-right: 5px;
+    width: auto;
+    vertical-align: baseline;
+    margin-top: 0;
+}
+div#agreement #textTermsCheckbox{    
+	color: white;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 2em;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.75);
+    -moz-text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+	-webkit-text-shadow: 0px 1px 1px rgba(0,0,0,.75);
+    width: 230px;
+}
+
+#registerForm input[type="submit"]{
+    margin-top:10px
+}
+
+a.hoverlink{
+    color:blue;
+    text-shadow: none;
+}

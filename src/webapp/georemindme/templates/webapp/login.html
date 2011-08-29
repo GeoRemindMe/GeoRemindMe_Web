@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/base.js"></script>
 
     
     <script type="text/javascript">
@@ -32,6 +33,12 @@
                                 window.location=msg._redirect;
                         }
                     });
+                });
+                
+                $('#textTermsCheckbox').toggle(function(){
+                    $(this).parent().find('input').attr('checked',true);
+                },function(){
+                    $(this).parent().find('input').attr('checked',false);
                 });
                 
                 $('#register-menu li').click(function(e){
@@ -82,6 +89,65 @@
                 });
                 
         });
+        
+        $('#registerForm').submit(function (e){
+           
+           if (typeof(REQUEST) != "undefined" && REQUEST)
+              REQUEST.abort();
+           
+           e.preventDefault();
+           
+           if (!validateForm()){
+              showMessage("error");
+              return;
+          }
+           
+           data = {
+              "user_register-email":$('#registerEmail').val(),
+              "user_register-password":$('#userRegisterPass1').val(),
+              "user_register-password2":$('#userRegisterPass2').val()
+              };
+           
+           $("#wait-mask").show();
+           
+           $('#msgRegisterEmail').hide();
+           $('#msgRegisterPass').hide();
+           
+           REQUEST = $.ajax({
+              url: AJAX_URL+"/register/",
+              dataType: 'json',
+              data: data,
+              success: function(data){
+                 if (typeof(data.errors)!="undefined")
+                 {
+                    if(typeof(data.errors.email)!="undefined"){
+                       showMessage(data.errors.email,"error")
+                    }
+                    if (typeof(data.errors.password)!="undefined"){
+                       showMessage(data.errors.password,"error")
+                    }
+                    
+                    $("#wait-mask").hide();
+                 }
+                 else
+                 {
+                    if(typeof(data._redirect)!="undefined")
+                    {
+                       REDIRECT = data._redirect;
+                       setTimeout(function(){window.location = REDIRECT}, 1000);
+                    }
+                 }
+                 
+                 REQUEST=null;
+              },
+              error: function(data){$("#wait-mask").hide();REQUEST=null;},
+              type:"POST",
+              async:true
+            });
+           
+           // Si es correcto => Redirect
+        });
+
         
         function showMenu(){
             $('#login-bar p').show();
@@ -190,11 +256,19 @@
 				
 				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
                 <div style="display:none" id="registerForm">
-                    <form action="" method="POST">
-                        <input type="text" name="username" value="" placeholder="Nombre de usuario"/>
-                        <input type="text" name="email" value="" placeholder= "Email" />
-                        <input type="password" name="pass1" id="pass1" placeholder="Contraseña"/>
+                    <form action="." method="POST" id="registerForm">
+<!--
+                        <input type="text" name="" value="" placeholder="Nombre de usuario"/>
+-->
+                        <input type="text" name="registerEmail" id="registerEmail" placeholder= "Email" />
+                        <input type="password" name="userRegisterPass1" id="userRegisterPass1" placeholder="Contraseña"/>
+                        <input type="password" name="userRegisterPass2" id="userRegisterPass2" placeholder="Repite la contraseña"/>
+                        <div id="agreement">
+                            <input type="checkbox" id="termsCheckbox" title="Check this box if you agree" value="terms"/>
+                            <span id="textTermsCheckbox">I have read and I accept the <a href="/tos" class="hoverlink">Terms of Service</a>.</span>
+                        </div>
                         <input type="submit" value="Continuar"/>
+                        {% csrf_token %}
                     </form>
                 </div>
 			</section>
