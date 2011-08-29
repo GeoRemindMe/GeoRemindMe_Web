@@ -39,7 +39,6 @@ jQuery.fn.placeholder = function()
 			if($(this).attr("type")=="password")
 			{
 				var thisdummy = 'dummy' + counter;
-				console.debug(counter);
 				
 				$(this).hide();
 				$(this).after('<input type="text" id="' + thisdummy + '"/>');
