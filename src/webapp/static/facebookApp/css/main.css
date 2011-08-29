@@ -311,6 +311,7 @@ input{
         font-size:0.9em;
         border:1px solid #ccc;
         padding: 5px;
+        margin: 10px 0;
     }
     .note a{
         color: inherit;
@@ -659,7 +660,7 @@ input{
             
             ul#chronology li span.like-text, 
             #view-suggestion ul#comment-list li span.like-text,span.like-text{
-                background: url("/static/facebookApp/img/like_min.png") no-repeat scroll -2px 1px transparent;
+                background: url("/static/facebookApp/img/like_min.png") no-repeat scroll -2px 4px transparent;
 /*
                 color: black;
 */
@@ -909,6 +910,10 @@ input{
         margin: 0 auto;
         padding: 0;
         width: 450px;        
+    }
+    
+    #last-step{
+        margin-bottom: 10px;
     }
     
     #link-social-accounts li{
@@ -1798,6 +1803,10 @@ input{
             cursor:pointer;
             border-bottom: 1px solid #DDDDDD;
         }
+        
+        div#suggestions div.suggestion{
+        }
+        
         div#content div.collapsed,div#content div.expanded{
             border:0;
             cursor:default;

@@ -1,0 +1,65 @@
+{% extends "webapp/base_registered.html" %}
+{% load i18n %}
+
+
+{% block mainButton %}{% endblock %}
+
+{% block nav %} 
+    {% include "register_menu.html" %}
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    function toggle_showMore(){
+        if($('#show-more-text').css('display')!="none")
+            $('.show-more').html("[Ver más]")
+        else
+            $('.show-more').html("[Ocultar]")
+        
+        $('#show-more-text').toggle('slow')
+    }
+    $(document).ready(function(){
+        $('#last-step').click(function(){
+            $('#step-one').slideUp(400);
+            $('#step-two').slideDown(400);
+        })
+    });
+</script>
+{% endblock %}
+
+{% block body %}
+    <div id="social-profile">
+        <h1>¡Genial ya estás dentro!, solo 1 minuto más</h1>
+        <p>Antes de empezar solo necesitamos comentarte 2 cositas.</p>
+        
+        <hr>
+        <div id="step-one">
+            <h2>Paso 1: Conéctate con tus amigos</h2>
+            <p>
+                Si quieres, te diremos cuales de tus conocidos ya están en GeoRemindMe.<br>
+                <strong>Danos permiso para</strong>:
+            </p>
+            <ul id="link-social-accounts">
+                <li><a id="google" href="/ext/google/contacts/" target="_blank"><strong>Buscar</strong> entre mis contactos de Gmail</a></li>
+                <li><a id="twitter" href="/ext/twitter/contacts/" target="_blank"><strong>Buscar</strong> entre las personas que sigo en Twitter</a></li>
+            </ul>
+            <span class="btn" id="last-step">Último paso</span>
+            <div class="note clear">
+                <strong class="show-more" onclick="javascript:toggle_showMore()">[Ver más]</strong><strong>Nota</strong>: En ningún momento enviaremos mensajes a tus contacto <p id="show-more-text"> patapin, patapan</p>
+            </div>
+        </div>
+        <div id="step-two" style="display:none">
+            <h2>Paso 2:Completa tu perfil</h2>
+            <p>
+                Por último, y para poder terminar de configurar tu cuenta,
+                necesitamos que nos confirmes cual quieres que sea tu nombre
+                de usuario <sup>(1)</sup>.
+            </p>
+            {% include "forms/SocialUserForm.html" %}
+            <hr>
+            <p class="footer-notes">
+                (1) El nombre de usuario será usado para....
+            </p>
+        </div>
+    </div>
+{%endblock%}

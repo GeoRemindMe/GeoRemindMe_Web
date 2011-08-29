@@ -1,3 +1,4 @@
+{% load tags %}
 <!DOCTYPE HTML>
 <html lang="es-ES">
 <head>
@@ -25,14 +26,19 @@
                     }
                 });
                 
+
                 //$("[placeholder]:not(input[type='password'])").placeholder();
-                
+               
 
                 
                 $('.register-text-aux').toggle(function(){
                         $('#registerForm').slideDown(400);
+                        $("#register-with-social").slideUp(400);
+                        $(this).addClass("close");
                     },function(){
                         $('#registerForm').slideUp(400);
+                        $("#register-with-social").slideDown(400);
+                        $(this).removeClass("close");
                 })
                 
                 $('#register-btn').click(function(e){
@@ -43,7 +49,7 @@
                         //Mensaje
                         showMessage("Primero selecciona una de la redes","error")
                     }else{
-                        var register_link="http://localhost:8080/login/"+network.attr('id')+"/?cls";
+                        var register_link="/login/"+network.attr('id')+"/";
                         $(this).attr('href',register_link)
                         if($(this).attr('onclick') === undefined || $(this).attr('onclick')==null){
                             window.location=$(this).attr('href');
@@ -54,7 +60,26 @@
                     
                 })
                 
+                $('.georemindme').click(function(){
+                   $('#login-bar p').hide();
+                   $('#login-bar ul').hide();
+                   $('#georemindme-form').show();
+                });
+                
         });
+        
+        function showMenu(){
+            $('#login-bar p').show();
+            $('#login-bar ul').show();
+            $('#georemindme-form').hide();
+        }
+        function checkUncheck(obj){
+            var checkbox=$(obj).find('input');
+            if($(checkbox).attr('checked')==true)
+                $(checkbox).attr('checked',false);
+            else
+                $(checkbox).attr('checked',true)
+        }
         
 	</script>
 	
@@ -71,13 +96,29 @@
 				<li><a href="http://team.georemindme.com/">Comunidad</a></li>
 			</ul>
 		</nav>
-		<form action="." method="post">
-			<input type="text" name="email" placeholder="Email"/>
-			<input type="password" name="password" />
-			<input type="submit" id="login-btn" value="Entrar" />
-			
-			
-		</form>
+        <div id="login-bar">
+            <p>Identifícate usando:</p>
+            <ul>
+                <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para identificarte"><span>Twitter</span></li>
+                <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para identificarte"><span>Facebook</span></li>
+                <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para identificarte"><span>Google</span></li>
+                <li class="georemindme" title="Identifícate usando tus datos de GeoRemindMe"><span>GeoRemindMe</span></li>
+            </ul>
+            <div id="georemindme-form" style="display:none">
+                <form action="." method="post">
+                    <input type="text" name="email" placeholder="Email"/>
+                    <input type="password" name="password"/>
+                    <input type="submit" id="login-btn" value="Entrar" />
+                    <div id="login-submenu">
+                        <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> Recordarme</span>
+                        <span><a href="/remind/" class="link">Recuperar contraseña</a></span>
+                        <span class="link" onclick="javascript:showMenu()">Cancelar</span>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+		
 		
 		
 	</header>
@@ -85,7 +126,12 @@
 		<div id="main" class="container">
 			<section id="left-block">
 				
-                <div id="left-arrow"><img src="/static/webapp/img/left-arrow.png" alt=""></div>
+                <div id="left-arrow">
+<!--
+                    <img src="/static/webapp/img/left-arrow.png" alt="">
+-->
+                    <span>&nbsp;</span>
+                </div>
 				<div id="rollover">
 					<p class="intro-text"><span class="bigger-intro-text"><strong>Compartir y recibir sugerencias</strong> usando tus redes sociales</span></p>
 					<div class="users-box">
@@ -114,13 +160,16 @@
 			</section>
 			<section id="right-block">
 				<h2>¿Eres nuevo?</h2>
-				<p>Crea tu perfil utilizando una de tus cuentas.</p>
-				<ul id="register-menu">
-					<li id="twitter"><img src="/static/webapp/img/twitter.png" alt="Twitter"></li>
-                    <li id="facebook" class="active"><img src="/static/webapp/img/facebook.png" alt="Facebook"></li>
-					<li id="google"><img src="/static/webapp/img/Google.png" alt="Google"></li>
-				</ul>
-				<a href="http://localhost:8080/ext/twitter/perms" id="register-btn">Regístrate</a>
+                <div id="register-with-social">
+                    <p>Crea tu perfil utilizando una de tus cuentas.</p>
+                    <ul id="register-menu">
+                        <li id="twitter"><span>Twitter</span></li>
+                        <li id="facebook" class="active"><span>Facebook</span></li>
+                        <li id="google"><span>Google</span></li>
+                    </ul>
+                    <a href="http://localhost:8080/ext/twitter/perms" id="register-btn">Regístrate</a>
+                </div>
+				
 				
 				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
                 <div style="display:none" id="registerForm">

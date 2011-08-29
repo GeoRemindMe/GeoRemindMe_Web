@@ -8,7 +8,9 @@
     </title>
 	<link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
-	
+    
+    <link href='http://fonts.googleapis.com/css?family=Alike|Crimson+Text:400,600,700|Goudy+Bookletter+1911|Unna' rel='stylesheet' type='text/css'>
+    
     <meta name="description" content="Track and share your runs with friends.">
     
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
@@ -24,6 +26,7 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
 
     {% block extra_js %}{%endblock%}
 
@@ -33,15 +36,20 @@
 	
 </head>
 <body>
-	<header id="header" class="container">
-		<a href="/"><img src="/static/webapp/img/logo2.png" alt="" id="logo"></a>
+	<div id="bg-header" class="orange-gradient">
+	<header id="header-top" class="container">
+		<a href="/"><img src="/static/webapp/img/logo3.png" alt="" id="logo"></a>
 		
-		<input type="search" placeholder="Busca sugerencias">
-		
-		<a href="#" id="login-btn">Identifícate</a>
+		<div id="search_bar">
+            <input type="search" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly><br>
+<!--
+            //Ejemplo: tapas en granada, turismo, paisajes, etc.
+-->
+        </div>
 		
 		
 	</header>
+	</div>
 	<div id="background">
 		<div id="base" class="container">
 			

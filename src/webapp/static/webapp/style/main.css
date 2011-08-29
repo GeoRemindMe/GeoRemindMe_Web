@@ -49,6 +49,37 @@ table {
 }
 
 /*------- HOME STYLE ---------*/
+#loginSec #header-top form{
+    margin-top: -7px;
+    
+}
+#login-submenu{
+    font-size: 0.8em;
+    
+    margin-top: 5px;
+}
+
+#login-submenu span{
+    cursor:pointer;
+    float: left;
+    line-height: 15px;
+    margin-right: 27px;
+}
+
+#login-submenu a{
+    text-decoration: none;
+}
+#login-submenu a:hover{
+    text-decoration: underline;
+}
+
+#loginSec #header-top #login-submenu span input{
+    display: inline-block;
+    margin: 0;
+    vertical-align: text-top;
+    width:auto;
+}
+
 
 #loginSec #header-top form{
 	float: right;
@@ -56,13 +87,59 @@ table {
 	width: 350px;
 	text-align: right;
 }
+#login-bar{
+    float: right;
+    font-size: 1.1em;
+    margin-top: 32px;
+    
+    width: 350px;
+}
+#login-bar p, #login-bar ul,#login-bar ul  li{
+    display:inline;
+    float:left;
+}
+#login-bar p{
+    color: #555555;
+    display: inline-block;
+    font-size: 1.1em;
+    line-height: 32px;
+}
 #loginSec #header-top input{
 	border: 1px solid #CCCCCC;
     display: inline;
-    height: 1.5em;
+    font-size: 0.8em;
+    height: 1.2em;
     margin-right: 5px;
     margin-top: 10px;
-    width: 130px;
+    width: 130px
+}
+#login-bar ul li{
+    background:url("/static/facebookApp/img/sprite_social.png") no-repeat scroll 0 0 transparent;
+    display: inline-block;
+    height: 32px;
+    margin-left: 10px;
+    cursor:pointer;
+}
+#login-bar ul li.twitter{
+    background-position:0 0;
+}
+#login-bar ul li.google{
+    background-position:0 -32px;
+}
+#login-bar ul li.facebook{
+    background-position:0 -64px;
+}
+#login-bar ul li.georemindme{
+    background-position:0 -96px;
+}
+#login-bar ul li span{
+    display: block;
+    font-size: 0.5em;
+    margin: 0;
+    padding: 0;
+    visibility: hidden;
+    width: 32px;
+
 }
 
 #bg-header{
@@ -101,28 +178,40 @@ body {
     margin: 0 auto;
 }
 
+#loginSec #header-top {
+    height:85px;
+}
+#loginSec #logo{
+	width: 200px;
+    padding: 5px 0 0;
+    height:auto;
+    float:left;
+}
+
 #logo {
 /*
-	width: 200px;
+
 */
     height:45px;
-	float: left;
-	padding:5px 35px 0;
+	padding:5px 0 0;
+}
+#logo-link{
+    display:inline-block;
+    width:215px;
+    float:left;
+    text-align: center;
 }
 
 #header-nav {
 	float: left;
     font-size: 12px;
-    margin: 31px auto 0;
-    padding-left: 20px;
-    width: 380px;
+    margin: 41px auto 0;
+    padding-left: 55px;
 }
 
 #header-nav ul {
 	list-style: none outside none;
     margin: 0 auto;
-    padding-left: 70px;
-    width: 400px;
 }
 
 #header-nav ul li {
@@ -178,15 +267,13 @@ body {
 	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
 }
 #header-top input#login-btn{
-	float: right;
+    float: right;
     font-size: 0.9em;
-    height:24px;
+    height: 20px;
     line-height: 20px;
     margin-right: 0;
-/*
-    margin-top: 24px;
-*/
-    margin-top: 10px;
+    margin-top: 9px;
+    padding: 0 5px;
     width: auto;
 }
 #header-top a#logout-btn {
@@ -277,7 +364,27 @@ body {
 #register-menu li{
     cursor:pointer;
 }
-#register-menu li.active img{
+#register-menu li.active{
+    background-color: #FFE270 !important;
+ }
+#register-menu li#twitter{
+    background: url("/static/webapp/img/social_big.png") no-repeat scroll 0 0 transparent;
+ }
+ #register-menu li#facebook{
+    background: url("/static/webapp/img/social_big.png") no-repeat scroll 0 -63px transparent;
+ }
+ #register-menu li#google{
+    background: url("/static/webapp/img/social_big.png") no-repeat scroll 0 -124px transparent;
+ }
+ 
+#register-menu span{
+    display: block;
+    height: 60px;
+    visibility: hidden;
+    width: 60px;
+}
+
+#register-menu li.active{
     -moz-box-shadow: 0 0 5px 5px #FFEC72;
     -webkit-box-shadow: 0 0 5px 5px #FFEC72;
     box-shadow: 0 0 5px 5px #FFEC72;
@@ -399,7 +506,7 @@ body {
     background: linear-gradient(left, rgba(233,232,233,1) 0%,rgba(255,255,255,1) 100%); /* W3C */
 }
 #right-arrow span,#left-arrow span{
-    background: url("/static/webapp/img/right-arrow.png") no-repeat scroll 0 0 transparent;
+    background: url("/static/webapp/img/left-right-arrow.png") no-repeat scroll 0 0 transparent;
     display: block;
     height: 18px;
     margin-left: 3px;
@@ -407,7 +514,7 @@ body {
     width: 18px;
 }
 #left-arrow span{
-    background: url("/static/webapp/img/left-arrow.png") no-repeat scroll 0 0 transparent;
+    background: url("/static/webapp/img/left-right-arrow.png") no-repeat scroll 0 -18px transparent;
 }
 #right-arrow img,#left-arrow img{
     padding-top:120px;
@@ -483,6 +590,10 @@ body {
     cursor:pointer;
 }
 
+#right-block p.register-text-aux.close{
+    background-position:left bottom;
+}
+
 .bottom-p {
 	color: #FFFFFF;
 	font-weight: bold;
@@ -545,9 +656,6 @@ body {
 	float: left;
 	height: 30px;
 	width: 30px;
-    box-shadow: 0px 1px 1px rgba(0,0,0,.75);
-	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
-	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
 }
 
 #header-top input {
@@ -560,15 +668,18 @@ body {
     width: 400px;
 }
 #search_bar{
-    border-left: 1px solid #CCCCCC;
-    color: white;
-    float: left;
-    font-size: 1.1em;
-    font-weight: bold;
-    line-height: 1.5em;
-    margin-left: 15px;
-    padding: 10px 0 10px 15px;
-    text-align: left;
+border-left: 1px solid #CCC;
+color: white;
+float: left;
+font-size: 1.1em;
+font-weight: bold;
+line-height: 55px;
+/*
+margin-left: 15px;
+*/
+padding-left: 15px;
+text-align: left;
+height: 55px;
 
 }
 
@@ -630,7 +741,8 @@ body {
 }
 
 #left-col a#add-suggestion-btn{
-	font-size: 1.3em;
+	font-family: Alike;
+	font-size: 1.4em;
     height: auto;
     line-height: 3em;
     margin: 0 auto 1em;
@@ -654,10 +766,7 @@ body {
     text-decoration: none;
     width: 100%;
 }
-#left-col li:hover{
-    background: url('/static/webapp/img/list-bg.png') no-repeat 0 0;
-	height: 26px;
-}
+
 
 .menu-icons a{
     background-repeat: no-repeat;
@@ -704,7 +813,14 @@ ul#tabMenu li.active {
     color: black;
 }
 #active-section, div #left-col li#active-section:hover {
-    background-color: #D8DFEA;
+    background: #ffa84c; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffa84c 0%, #ff7b0d 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffa84c), color-stop(100%,#ff7b0d)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* W3C */
 }
 
 ul#tabMenu {
@@ -820,7 +936,7 @@ div.removable a {
 #notification-msg{
     border: 1px dotted #CCCCCC;
     left: 50%;
-    padding: 1em;
+    padding: 0.5em 1em;
     position: absolute;
 }
 .error{
@@ -828,6 +944,13 @@ div.removable a {
 }
 .success{
     background-color: #C4FF89;
+    
+}
+
+.logged .success{
+    background-color: #C4FF89;
+    font-size: 1.2em;
+    margin:63px auto 0;
     
 }
 
@@ -905,6 +1028,16 @@ div.removable a {
 /*
  * COMMON
  */
+a:visited{
+    color:#3896FF;
+}
+.link{
+    color:#3896FF;
+    cursor:pointer;
+}
+.link:hover{
+    text-decoration:underline;
+}
 .btn,.load-more {
     border-color:#D9DFEA #873A00 #873A00 #D9DFEA;
     background: #ffa84c; /* Old browsers */
@@ -919,6 +1052,7 @@ div.removable a {
 
 div#left-col li a {
     width: 185px;
+	font-family: Alike;
 }
 
 #right-col .section .header, .right-col .section .article .header {
@@ -1011,9 +1145,18 @@ ul#chronology li div.timeline-msg {
     border-bottom: 0 none;
     float: left;
     width: 648px;
+
 }
 
 
 ul#chronology li div.timeline-msg {
     width:585;
+}
+
+ul#user-resume li:hover {
+	background: #FFB265;
+}
+
+#user-info {
+    width: 589px;
 }

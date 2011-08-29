@@ -123,7 +123,7 @@ class TwitterClient(Client):
             self.user.settings.sync_avatar_with = 'twitter' #  por defecto, si el usuario es nuevo sincronizamos con facebook
             self.user.settings.put()
             self.authorize(user)
-        return user
+        return self.user
     
     def send_tweet(self, msg, poi=None, wrap_links=False):
         body = {

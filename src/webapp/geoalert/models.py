@@ -305,7 +305,7 @@ class Suggestion(Event, Visibility, Taggable):
     def update_or_insert(cls, id = None, name = None, description = None,
                          date_starts = None, date_ends = None, poi = None,
                          user = None, done = False, active = True, tags = None, 
-                         vis = 'public'):
+                         vis = 'public', commit=True):
         '''
             Crea una sugerencia nueva, si recibe un id, la busca y actualiza.
             
@@ -328,8 +328,8 @@ class Suggestion(Event, Visibility, Taggable):
             if sugg.is_active() != active:
                 sugg.toggle_active()
             if tags != '':
-                sugg._tags_setter(tags)
-            else:
+                sugg._tags_setter(tags, commit=commit)
+            elif commit:
                 sugg.put()
             return sugg
         else:
@@ -339,10 +339,10 @@ class Suggestion(Event, Visibility, Taggable):
                           date_ends = date_ends, poi = poi, user = user, _vis=vis)
             if not active:
                 sugg.toggle_active()
-            sugg.put()
-            sugg._tags_setter(tags)
-            counter = SuggestionCounter(parent=sugg)
-            counter.put()
+            if tags != '':
+                sugg._tags_setter(tags, commit=commit)
+            elif commit:
+                sugg.put()
             return sugg
         
     def add_follower(self, user):
@@ -425,8 +425,11 @@ class Suggestion(Event, Visibility, Taggable):
             super(Suggestion, self).put()
             suggestion_modified.send(sender=self)
         else:
-            self._get_short_url()
             super(Suggestion, self).put()
+            counter = SuggestionCounter(parent=self)
+            put = db.put_async(counter)
+            self._get_short_url()
+            put.get_result()
             suggestion_new.send(sender=self)
             
     def _get_short_url(self):

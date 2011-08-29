@@ -77,27 +77,26 @@ def login_google(request):
             guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
             if not guser:
                 guser = GoogleUser.register(user=request.user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
-            if hasattr(request, 'facebook'):
-                return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
-            from funcs import get_next
-            return HttpResponse(get_next(request))
-        if not guser:#user is not registered, register it
+            else:
+                guser.update(ugoogle.email(), realname=ugoogle.nickname())
+        else:#user is not registered, register it
             from models import User
             user = User.objects.get_by_email(ugoogle.email())
             if user:
-                guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
+                guser = GoogleUser.objects.get_by_id(ugoogle.user_id())
+                if guser is None:
+                    guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
+                else:
+                    guser.update(ugoogle.email(), realname=ugoogle.nickname())
             else:
                 from georemindme.funcs import make_random_string
                 user = User.register(email=ugoogle.email(), password=make_random_string(length=6))
                 guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
             from funcs import init_user_session
             init_user_session(request, user)
-        else:#checks google account is confirmed, only load his account
-            guser.update(ugoogle.email(), realname=ugoogle.nickname())
-            from funcs import init_user_session
-            init_user_session(request, guser.user)
+        #checks google account is confirmed, only load his account
+        from funcs import get_next
         return HttpResponseRedirect(get_next(request))
-    #not google user
     return HttpResponseRedirect(users.create_login_url(reverse('geouser.views.login_google')))
 
 
@@ -130,7 +129,7 @@ def login_twitter(request):
         #callback_url=None
     from geoauth.views import authenticate_request
     #client_token_request(request, 'twitter', callback_url=callback_url)
-    return authenticate_request(request, 'twitter', cls=True)
+    return authenticate_request(request, 'twitter', cls=cls)
 
 
 #===============================================================================
@@ -142,8 +141,9 @@ def logout(request):
         :return: Redirige al usuario a donde le diga la función login_panel.
     """
     request.session.delete()
-    return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
-    ##return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
+    from google.appengine.api import users
+    #return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
+    return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
 
 
 #===============================================================================
@@ -190,6 +190,34 @@ def dashboard(request, template='webapp/dashboard.html'):
         
         :return: Solo devuelve errores si el proceso falla.
     """
+    from forms import SocialUserForm
+    if request.user.username is None:
+        if request.method == 'POST':
+            f = SocialUserForm(request.POST, 
+                               prefix='user_set_username', 
+                               initial = { 'email': request.user.email,
+                                           'username': request.user.username,
+                                         }
+                               )
+            if f.is_valid():
+                    user = f.save(request.user)
+                    if not user:
+                        return render_to_response('webapp/create_social_profile.html', {'form': f}, 
+                                       context_instance=RequestContext(request)
+                                      )
+            else:
+                return render_to_response('webapp/create_social_profile.html', {'form': f}, 
+                                       context_instance=RequestContext(request)
+                                      )
+        else:
+            f = SocialUserForm(prefix='user_set_username', 
+                               initial = { 'email': request.user.email,
+                                           'username': request.user.username,
+                                         }
+                               )
+            return render_to_response('webapp/create_social_profile.html', {'form': f}, 
+                                       context_instance=RequestContext(request)
+                                      )
     friends_to_follow=request.user.get_friends_to_follow()
     chronology = request.user.get_activity_timeline()
     # FIXME: CHAPUZA, LA PLANTILLA ESPERA RECIBIR EL QUERY_ID EN JSON :)
@@ -209,7 +237,9 @@ def public_profile(request, username, template='webapp/profile.html'):
     :type username: ni idea
     """
     from geoalert.views import get_suggestion
-    if request.user.is_authenticated() and request.user.username.lower() == username.lower():
+    if request.user.is_authenticated() \
+     and request.user.username is not None \
+     and request.user.username.lower() == username.lower():
         # Si el usuario esta viendo su propio perfil
         profile = request.user.profile
         counters = request.user.counters_async()

@@ -246,13 +246,14 @@ GRM.removable = function() {
                 custom_url="/ajax/delete/"+type+"/";
             
             var data = { eventid:id,  comment_id:id, list_id:id, userid:id};
-            
+            GRM.wait();
             $.ajax({
                 type: "POST",
                 url: custom_url,
                 data: data,
                 dataType:'json',
                 context:$(this),
+                complete: function() { GRM.nowait();},
                 success: function(msg){
                     
                     if(msg==true){
@@ -373,7 +374,7 @@ GRM.loadTimeline = function(params){
                         
                         
                     }
-                    
+                    showMessage("Se han cargado "+data[1].length+" elementos nuevos","success");
                     if(data[1].length<10){
                         //Si no hay más datos ocultamos el boton de cargar más
                         $(".load-more").hide();

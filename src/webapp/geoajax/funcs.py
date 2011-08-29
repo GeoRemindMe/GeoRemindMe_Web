@@ -32,7 +32,9 @@ def render_timeline(request, timeline):
         for t in timeline:
             rendered_timeline.append(render_to_string(
                                                       'timeline/%s.html' % t['msg_id'], 
-                                                      {'obj': t},
+                                                      {
+                                                       'obj': t,
+                                                       },
                                                       context_instance=RequestContext(request))
                                                      )
         return rendered_timeline
