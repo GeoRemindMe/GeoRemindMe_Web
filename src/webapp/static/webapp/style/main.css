@@ -80,6 +80,13 @@ table {
     width:auto;
 }
 
+
+#loginSec #header-top form{
+	float: right;
+	margin-top: 10px;
+	width: 350px;
+	text-align: right;
+}
 #login-bar{
     float: right;
     font-size: 1.1em;
@@ -132,6 +139,7 @@ table {
     padding: 0;
     visibility: hidden;
     width: 32px;
+
 }
 
 #bg-header{
@@ -291,6 +299,13 @@ body {
 #background-login{
 	background-color: #ff913c;
 }
+#background-login:after{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+}
 
 #main {
 	min-height: 415px;
@@ -420,6 +435,7 @@ body {
     margin: 5px auto;
     width: 250px;
 }
+
 
 .footer-links {
 	font-size: 14px;
@@ -607,7 +623,9 @@ body {
 	display: inline;
     float: right;
     font-size: 1.1em;
+/*
     margin-right: 10px;
+*/
 /*
     margin-top: 18px;
 */
@@ -621,9 +639,17 @@ body {
 	
     line-height: 30px;
 }
+#account-info li a {
+	float: none;
+    padding: 0 5px;
+    
+}
 
-#account-info a:hover {
-	text-decoration: underline;
+#account-info li a:hover {
+	float: none;
+    padding: 0 5px;
+    text-decoration: underline;
+    background-color: white;
 }
 
 #account-info img {
@@ -940,7 +966,9 @@ div.removable a {
     
     border: 1px solid #BBBBBB;
     float: left;
+/*
     margin-right: 10px;
+*/
     margin-top: 14px;
     
     background: #f9f9f9; /* Old browsers */
@@ -965,7 +993,11 @@ div.removable a {
     padding-right: 50px;
 }
 
-.dropDrownBtn ul.submenu, .dropDrownBtn ul {
+.dropDrownBtn ul.submenu, 
+.dropDrownBtn ul,
+.user-dropDrownBtn ul.user-submenu, 
+.user-dropDrownBtn ul
+{
     background-color: #EEEEEE;
     border: 1px solid #CCCCCC;
     clear: both;
@@ -975,6 +1007,18 @@ div.removable a {
     position: absolute;
     text-align: left;
     width: auto;
+}
+
+.user-dropDrownBtn ul.user-submenu li:hover{
+	background-color:#eee;
+}
+.dropDrownBtn ul.submenu, 
+.dropDrownBtn ul{
+	margin: 0 0 0 -10px;
+	padding:0;
+}
+.user-dropDrownBtn ul.user-submenu {
+	padding:0;
 }
 /*
  * BAG
@@ -1103,7 +1147,8 @@ ul#chronology div.input-box textarea{
 ul#chronology li div.timeline-msg {
     border-bottom: 0 none;
     float: left;
-    width: 600px;
+    width: 648px;
+
 }
 
 
@@ -1118,7 +1163,6 @@ ul#user-resume li:hover {
 #user-info {
     width: 589px;
 }
-
 
 form #terms span {
     cursor: pointer;

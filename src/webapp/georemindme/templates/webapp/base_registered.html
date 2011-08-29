@@ -49,6 +49,9 @@
                 interval: 0, // number = milliseconds for onMouseOver polling interval
                 timeout: 500, // number = milliseconds delay before onMouseOut
                 over: function() {
+					var tmp=$('#dropdown-list').width();
+					tmp=52-tmp;
+					$('#dropdown-list').css("margin-left",tmp+'px')
                     $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
                 },
                 out: function() {
@@ -57,10 +60,17 @@
                 }
             }
             
-            $(".dropDrownBtn, .submenu ").hoverIntent(hiConfig);
-            $(".dropDrownBtn").click(function(){
+            $(".user-dropDrownBtn, .user-submenu ").hoverIntent(hiConfig);
+            $(".user-dropDrownBtn").click(function(){
+				//Alineamos el menu desplegable desde la esquina sup-izq.
+				var tmp=$('#dropdown-list').width();
+				tmp=52-tmp;
+				$('#dropdown-list').css("margin-left",tmp+'px')
+				
                 $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
             })
+            
+            
         });
     </script>
 	<!--[if lt IE 9]>
@@ -85,6 +95,7 @@
             //Ejemplo: tapas en granada, turismo, paisajes, etc.
 -->
         </div>
+
 
 		{% if user.username %}
             <div id="account-info">
