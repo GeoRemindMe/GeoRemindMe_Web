@@ -8,6 +8,7 @@ urlpatterns = patterns('geoalert.views',
 	url(r'^suggestions/$', 'user_suggestions', {}, 'user_suggestions'),
     url(r'^suggestions/add/', 'add_suggestion', {}, 'add_suggestion'),
     url(r'^suggestion/(?P<slug>[^/]*)/$', 'suggestion_profile',{},'view_suggestion'),
+    url(r'^suggestions/edit/(?P<suggestion_id>\d+)/$', 'edit_suggestion', {}, 'edit_suggestions'),
     url(r'^(?i)place/gref/(?P<reference>[^/]*)/$', 'add_from_google_reference'),
     url(r'^(?i)place/(?P<slug>[^/]*)/$', 'view_place',{},'view_place'),
 )

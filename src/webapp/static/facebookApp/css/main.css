@@ -402,6 +402,9 @@ input{
         height: 22px;
         margin: 6px 0;
     }
+    #add-suggestion div.help-icon{
+        margin-top:0;
+    }
     
     div#content div.expanded div.help-icon{
         border-bottom:0;
@@ -1508,7 +1511,7 @@ input{
         clear: both;
         display: block;
         height: 4em;
-        width: 100%;
+    
     }
     #add-suggestion #show-details{
         color:#3896FF;
@@ -1521,7 +1524,81 @@ input{
     }
     #add-suggestion #more-details.visible,
     #add-suggestion #more-details div p{
-        display:block;
+        display: block;
+        margin-left: 0.7em;
+        margin-top: 0;
+        font-weight: normal;
+    }
+    
+    #date input{
+        border: 1px solid #CCCCCC;
+        color: #3A3935;
+        height: 15px;
+        line-height: 15px;
+        margin: 0 3px;
+        padding: 5px;
+        text-align: center;
+    }
+    #id_tags{
+        border: 1px solid #CCCCCC;
+        height: 15px;
+        line-height: 15px;
+        margin: 0 3px;
+        padding: 5px;
+        width:70%
+    }
+    p.center{
+        text-align:center
+    }
+    
+/*
+    select{
+        background-color: #DDD;
+
+        
+        border-radius: 0;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+
+        
+        border-left: 1px solid black;
+        border-right: 1px solid;
+        border-bottom: 1px solid;
+        border-top: 1px solid;
+
+               
+        box-sizing: border-box;
+        color: black;
+        cursor: default;
+        display: inline-block;
+        float: none;
+        font-family: Arial;
+        font-size: 13px;
+        font-weight: normal;
+        height: 19px;
+        letter-spacing: normal;
+        line-height: normal;
+        margin: 2px;
+        min-height: 0px;
+        outline-color: #9E9484;
+        outline-style: auto;
+        outline-width: 5px;
+        padding-left: 0px;
+        text-align: -webkit-auto;
+        text-indent: 0px;
+        text-shadow: none;
+        text-transform: none;
+        white-space: pre;
+        width: 88px;
+        word-spacing: 0px;
+    }
+*/
+    
+    #more-details label{
+        font-weight: bold;
+        height: 15px;
+        line-height: 15px;
+        padding-left: 0.7em
     }
     
     #add-suggestion #error-msg{
@@ -1542,7 +1619,8 @@ input{
         font-size: 1.7em;
         margin: 0 0.4em 0.6em;
     }
-    #suggestion-item textarea#id_name{
+    #suggestion-item textarea#id_name,
+    textarea#id_description{
         font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
         font-size: 1.1em;
         height: 45px;
@@ -1705,7 +1783,7 @@ input{
         }
         
         #details-form{
-            margin: -8px 0.7em 1.5em;
+            margin: 0 0.7em 1.5em;
             color:555555;
         }
         #details-form span{
@@ -1715,10 +1793,6 @@ input{
         #details-form span.used{
             color: #555555;
             cursor: pointer;
-        }
-        #details-form span.used:hover{
-            text-decoration:none;
-            
         }
         
         #add-suggestion div.help-icon{
@@ -2145,7 +2219,8 @@ input{
             top: 3px;;
         }
         
-        #suggestions #content .btn, .selectCheckBox{
+        #suggestions #content .btn, .selectCheckBox,
+        select{
             -moz-border-radius: 3px 3px 3px 3px;
             -webkit-border-radius: 3px;
             border-radius: 3px;
