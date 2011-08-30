@@ -19,7 +19,9 @@
         <div id="more-details">
             <p id="lists">
                 <label>Listas:</label>
-                {{lists}}
+                {% for obj in lists %}
+                    {{obj.name}}, 
+                {% endfor %}
             </p>
             <p id="tags">
                 <label>Etiquetas:</label>
@@ -27,17 +29,18 @@
             </p>
             <p id="description">
                 <label>Detalles:</label>
-                {{f.description}}
+                <textarea name="description" cols="40" rows="10" id="id_description" placeholder="Información adicional, por ejemplo: enlaces, teléfonos, etc."></textarea>
                 <span id="counter"></span>
             </p>
             <div id="date">
                 <p><strong>Fecha:</strong> <br>Si esta sugerencia solo es posible hacerla en unas fechas concretas por favor indícanos cuales son.</p>
                 <p class="center">
-                    <input title="Fecha de inicio" size="9" id="start-date" class="date-type" autocomplete="off" placeholder="mm/dd/aa">
+                    De <input title="Fecha de inicio" size="9" id="start-date" class="date-type" autocomplete="off" placeholder="mm/dd/aa">
                     <input title="Hora de inicio" size="9" id="start-hour" class="hour-type" autocomplete="off"  placeholder="hh:mm">
                     a
                     <input title="Fecha de fin" size="9" id="end-date" class="date-type" autocomplete="off" placeholder="mm/dd/aa">
                     <input title="Hora de fin" size="9" id="end-hour" class="hour-type" autocomplete="off" placeholder="hh:mm">
+                    <div><input type="checkbox" checked> Se puede hacer en cualquier momento</div>
                 </p>
             </div>
         </div>
