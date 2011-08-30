@@ -320,19 +320,26 @@ function prepareAutocomplete() {
       source: function(request, response) {
         var pos = map.getCenter();
         var x=pos.lat(),y=pos.lng()
+        var data = { name: request.term, lat: x, lon: y, "X-CSRFToken": function(){return getCookie('csrftoken');} };
+        data = JSON.stringify(data);
         $.ajax({
+
             url: "/api/1/MapService.get",
+            contentType:"application/json",
             dataType:"json",
             type:"POST",
-            data: { name: request.term, lat: x, lon: y, "X-CSRFToken": function(){return getCookie('csrftoken');} },
+            data: data,
             success: function(data) {
-
-                response($.map(results, function(item) {
+                
+                if (typeof data.sites == "undefined" || data.sites.length==0)
+                    return;
+                
+                response($.map(data.sites, function(item) {
                             return {
-                              label:  item[0],
-                              value: item[1],
-                              latitude: item[2],
-                              longitude: item[3]
+                              label:  item.name,
+                              value: item.name,
+                              latitude: item.lat,
+                              longitude: item.lon
                             }
                           }));
 
