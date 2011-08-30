@@ -1539,6 +1539,16 @@ input{
         padding: 5px;
         text-align: center;
     }
+    #date div input{
+        float: left;
+        margin-right: 6px;
+    }
+    #add-suggestion #more-details #date div{
+        display: block;
+        margin: 0 auto 0.5em;
+        width: 440px;
+        line-height: 15px;
+    }
     #id_tags{
         border: 1px solid #CCCCCC;
         height: 15px;
