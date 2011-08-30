@@ -8,7 +8,34 @@
     <script type="text/javascript">
         
         $(document).ready(function(){
+
             if (typeof resizeIframe != "undefined") resizeIframe();
+
+            
+            $('#visibility').toggle(function(){
+                
+                },function(){
+            })
+            
+            $('#social-share ul li span').click(function(){
+                if($(this).hasClass("facebook-active")){
+                    $(this).removeClass("facebook-active").addClass("facebook-inactive");
+                    $(this).parent().addClass("inactive");
+                }
+                else if($(this).hasClass("facebook-inactive")){
+                    $(this).removeClass("facebook-inactive").addClass("facebook-active");
+                    $(this).parent().removeClass("inactive");
+                }
+                else if($(this).hasClass("twitter-active")){
+                    $(this).removeClass("twitter-active").addClass("twitter-inactive");
+                    $(this).parent().addClass("inactive");
+                }
+                else if($(this).hasClass("twitter-inactive")){
+                    $(this).removeClass("twitter-inactive").addClass("twitter-active");
+                    $(this).parent().removeClass("inactive");
+                }
+            })
+
         });
         
         I18N = {}

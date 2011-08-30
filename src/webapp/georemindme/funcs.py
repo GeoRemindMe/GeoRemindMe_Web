@@ -139,5 +139,16 @@ def fetch_parents(entities):
         Carga y devuelve la lista de parents
         directamente en una sola consulta al datastore
     """
+    
     ref_keys = [x.parent_key() for x in entities if x.parent_key() is not None]
+    return [x for x in db.get(set(ref_keys))]
+
+def fetch_parentsKeys(entities):
+    # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
+    """
+        Carga y devuelve la lista de parents
+        directamente en una sola consulta al datastore
+    """
+    
+    ref_keys = [x.parent() for x in entities]
     return [x for x in db.get(set(ref_keys))]

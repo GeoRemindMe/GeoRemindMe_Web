@@ -195,15 +195,15 @@
                         <li class="comment-element" {% if forloop.first %}style="border-top:0px"{% endif %}>
                     
                             <!-- Añadimos el botón de borrar comentario-->
-                            {% if c.user.username = user.username %}
+                            {% if c.username = user.username %}
                                 <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                             {% endif %}
                                                     
-                            <span class="user"><img src="{% url user_avatar c.user.username %}" alt="{{c.user.username}} avatar"></span>
+                            <span class="user"><img src="{% url user_avatar c.username %}" alt="{{c.username}} avatar"></span>
                             <div style="float:left;width:460px;">
-                                <span class="msg"><a href="{% url fb_public_profile c.user.username%}" class="black-link">{{c.user.username}}</a>: {{c.msg}}</span>
+                                <span class="msg"><a href="{% url fb_public_profile c.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
                                 <span class="timestamp">{{c.created|naturaltime}}</span> 
-                                {% if c.user.username != user.username %}
+                                {% if c.username != user.username %}
                                     <span class="action-bar" style="display:none">
                                         &nbsp;-
                                         <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">

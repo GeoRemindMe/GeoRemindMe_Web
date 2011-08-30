@@ -43,22 +43,24 @@ class Tag(db.Model):
             return tag
         return super(Tag, cls).get_or_insert(key_name, **kwargs)
     
-    def desc_count(self, value=1):
-        def _tx(value):
+    @classmethod
+    def desc_count(cls, key, value=1):
+        def _tx(key, value):
             value = int(value)
-            obj = Tag.get(self.key())
+            obj = Tag.get(key)
             if obj.count > 0:
                 obj.count -= value
                 obj.put()
-        db.run_in_transaction(_tx, value)
-            
-    def inc_count(self, value=1):
-        def _tx(value):
+        db.run_in_transaction(_tx, key, value)
+    
+    @classmethod        
+    def inc_count(cls, key, value=1):
+        def _tx(key, value):
             value = int(value)
-            obj = Tag.get(self.key())
+            obj = Tag.get(key)
             obj.count += value
             obj.put()
-        db.run_in_transaction(_tx, value)
+        db.run_in_transaction(_tx, key, value)
         
     def __str__(self):
         return unicode(self.name).encode('utf-8')
@@ -75,17 +77,21 @@ class Taggable(db.Model):
     """
     _tags_list = db.ListProperty(db.Key, default=[])
     __tags = None
+    __tags_named = None
     
     @property
     def _tags(self):
         """Lee la lista de tags y devuelve las instancias"""
         if self.__tags is None:
-            self.__tags = Tag.get(self._tags_list)
+            from google.appengine.api import datastore
+            self.__tags = datastore.Get(self._tags_list)
         return self.__tags
     
     @property
     def tags(self):
-        return [tag.name for tag in self._tags]
+        if self.__tags_named is None:
+            self.__tags_named =  [tag['name'] for tag in self._tags]
+        return self.__tags_named
         
     def _tags_setter(self, tags, commit=True):
         from types import UnicodeType, StringType, ListType
@@ -96,33 +102,12 @@ class Taggable(db.Model):
             tags = tags.split(SEPARATOR)
         if type(tags) is ListType:
             tags = [t.strip().lower() for t in tags]
-            loaded_tags = db.get_async(self._tags_list)  # carga todos los tags existentes en una lista
-            for tagInstance in loaded_tags.get_result():
-                if tagInstance.name not in tags:  #  un tag ya no esta en la lista nueva, lo borramos
-                    self._tags_list.remove(tagInstance.key())
-                    tagInstance.desc_count()
             for tag in tags:  # recorremos toda la lista de tags y añadirmos los que sean nuevos
                 tagInstance = Tag.get_or_insert(name=tag)
                 if tagInstance is not None and not tagInstance.key() in self._tags_list:
                     self._tags_list.append(tagInstance.key())
-                    tagInstance.inc_count()
+                    Tag.inc_count(tagInstance.key())
             if commit:
                 self.put()
         else:
             raise AttributeError
-
-#    def _remove_tag(self, name):
-#        tagInstance = Tag.objects.get_by_name(name)
-#        if tagInstance is None:
-#            return False
-#        self.__tags_list.remove(tagInstance.key())
-#        tagInstance.desc_count()
-#        return True
-#        
-#    def _add_tag(self, name):
-#        tagInstance = Tag.get_or_insert(name=name)
-#        if tagInstance is None:
-#            return False
-#        self.__tags_list.append(tagInstance.key())
-#        tagInstance.inc_count()
-#        return True
