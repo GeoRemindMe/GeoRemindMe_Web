@@ -88,8 +88,9 @@
                         <p>Foursquare settings</p>
                     </div>
                 </div>
-            </div>
+            
             {%endcomment%}
+            </div>
             
 <!--
             {{f.place_id}}
@@ -126,20 +127,23 @@
         </div>
         
         
-        
+        <hr>
         
         <div>
-            <span id="social-share">
-                Compartir con: 
+            <span id="social-share" class="clear">
+                Compartir también en: 
                 <ul>
-                    <li>Facebook</li>
-                    <li>Twitter</li>
+                    <li><span class="facebook-active">&nbsp;</span></li>
+                    <li><span class="twitter-active">&nbsp;</span></li>
                 </ul>
             </span>
-            <div class="clear">
-                <span>Visiblidad</span>
-                <span class="btn" id="submit-button" onclick="saveSuggestion()">Enviar</span>
-            </div>
+            <span class="btn" id="submit-button" onclick="saveSuggestion()">Enviar</span>
+            <span id="visibility" class="public-icon dropDrownBtn">
+                <span value="public">Pública</span>
+                <span value="private" style="display:none">Privada</span>
+            </span>
+                
+            
         </div>
-        <hr>
+        
     </form>
