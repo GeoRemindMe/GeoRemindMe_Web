@@ -357,16 +357,22 @@ class Suggestion(Event, Visibility, Taggable):
             
             :returns: :class:`geoalert.models.AlertSuggestion`    
         '''
-        def _tx(sug_key, user_key):
+        if self.user.key() == self.user.key():
+            return False
+        def _tx(sug_key, user_key, counter_key):
             # TODO : cambiar a contador con sharding
             sug = db.get(sug_key)
+            counter = SuggestionCounter.all().ancestor(self).get_async()
             # indice con personas que siguen la sugerencia
             index = SuggestionFollowersIndex.all().ancestor(sug).filter('count <', 80).get()
             if index is None:
                 index = SuggestionFollowersIndex(parent=sug)
             index.keys.append(user_key)
             index.count += 1
-            index.put()
+            db.put_async([index])
+            counter = counter.get_result()
+            counter.set_followers()
+
         if SuggestionFollowersIndex.all().ancestor(self).filter('keys =', user.key()).count() != 0:
             a = AlertSuggestion.objects.get_by_sugid_user(self.id, user)
             if a is None:
@@ -378,13 +384,16 @@ class Suggestion(Event, Visibility, Taggable):
         else:
             if self.user_invited(user):
                 trans = db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
+                if trans:
+                    self.user_invited(user, set_status=1)
             else:
                 raise ForbiddenAccess()
-        self.user_invited(user, set_status=1) 
-        alert = AlertSuggestion.update_or_insert(suggestion = self, user = user)
-        suggestion_following_new.send(sender=self, user=user)
-
-        return alert
+        if trans:
+            alert = AlertSuggestion.update_or_insert(suggestion = self, user = user)
+            suggestion_following_new.send(sender=self, user=user)
+            return alert
+        return None
+        
     
     def del_follower(self, user):
         '''
@@ -396,11 +405,14 @@ class Suggestion(Event, Visibility, Taggable):
         def _tx(sug_key, index_key, user_key):
             sug = db.get_async(sug_key)
             index = db.get_async(index_key)
+            counter = SuggestionCounter.all().ancestor(self).get_async()
             sug = sug.get_result()
             index = index.get_result()
             index.keys.remove(user_key)
             index.count -= 1
             db.put_async([index, sug])
+            counter = counter.get_result()
+            counter.set_followers(-1)
         index = SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get()
         if index is not None:
             db.run_in_transaction(_tx, self.key(), index.key(), user.key())
