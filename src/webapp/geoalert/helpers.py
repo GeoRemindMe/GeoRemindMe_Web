@@ -210,10 +210,7 @@ class SuggestionHelper(EventHelper):
         if suggestion is None:
             suggestion = self._klass.all().filter('slug =', slug).get()
             if suggestion is None:
-                try:
-                    suggestion = self._klass.get_by_id(int(slug))
-                except:
-                    raise TypeError
+                suggestion = self.get_by_id(slug)
             if suggestion is not None:
                 if suggestion._is_private():
                     if not querier.is_authenticated():

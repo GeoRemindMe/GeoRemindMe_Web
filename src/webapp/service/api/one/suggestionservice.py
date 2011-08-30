@@ -28,8 +28,8 @@ class SuggestionService(remote.Service):
     #decorador para indicar los metodos del servicio
     @remote.method(GetSuggestionRequest, Suggestions)
     def get_suggestions(self, request):
-        from geouser.models import User
-        user = User.objects.get_by_username('jneight')
+        from os import environ
+        user= environ['user']
         from time import mktime
         from geoalert.models import Suggestion as SuggestionModel
         suggestions = SuggestionModel.objects.get_by_user(user,
@@ -55,11 +55,11 @@ class SuggestionService(remote.Service):
     
     @remote.method(GetSyncSuggestion, Suggestions)
     def sync_suggestions(self, request):
-        from geouser.models import User
         if len(request.suggestions) > 20:
             from protorpc.remote import ApplicationError
             raise ApplicationError("Too many suggestions")
-        user = User.objects.get_by_username('jneight')
+        from os import environ
+        user= environ['user']
         from datetime import datetime
         from time import mktime
         if request.last_sync is None:

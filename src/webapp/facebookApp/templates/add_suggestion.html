@@ -9,6 +9,93 @@
         
         $(document).ready(function(){
             resizeIframe();
+            
+            $("#add-details").toggle(function(){
+                $('#description').slideDown('slow',function(){
+                    $("#add-details").addClass('used');
+                    resizeIframe();
+                });
+            },function(){
+                $('#description').slideUp('slow',function(){
+                    $("#add-details").removeClass('used');
+                    resizeIframe();
+                });
+            });
+            
+            
+            $("#add-tags").toggle(function(){
+                $('#tags').slideDown('slow',function(){
+                    $("#add-tags").addClass('used');
+                    resizeIframe();
+                });
+            },function(){
+                $('#tags').slideUp('slow',function(){
+                    $("#add-tags").removeClass('used');
+                    resizeIframe();
+                });
+            });
+            
+            
+            $("#add-date").toggle(function(){
+                $('#date').slideDown('slow',function(){
+                    $("#add-date").addClass('used');
+                    resizeIframe();
+                });
+            },function(){
+                $('#date').slideUp('slow',function(){
+                    $("#add-date").removeClass('used');
+                    resizeIframe();
+                });
+            });
+            
+            
+            $("#add-to-lists").toggle(function(){
+                $('#description').slideDown('slow',function(){
+                    $("#add-details").addClass('used');
+                    resizeIframe();
+                });
+            },function(){
+                $('#description').slideUp('slow',function(){
+                    $("#add-details").removeClass('used');
+                    resizeIframe();
+                });
+            });
+            
+            resizeIframe();
+            
+            $('#visibility span').click(function(){
+                var element=$(this).parent().find("span[value='private']");
+                var publicElement=$(this).parent().find("span[value='public']");
+                if($(element).css("display")=="none"){
+                    $(element).show()
+                    publicElement.hide()
+                    $('#social-share').fadeOut('slow');
+                }else{
+                    $(element).hide()
+                    publicElement.show()
+                    $('#social-share').fadeIn('slow');
+                }
+                
+            });
+            
+            $('#social-share ul li span').click(function(){
+                if($(this).hasClass("facebook-active")){
+                    $(this).removeClass("facebook-active").addClass("facebook-inactive");
+                    $(this).parent().addClass("inactive");
+                }
+                else if($(this).hasClass("facebook-inactive")){
+                    $(this).removeClass("facebook-inactive").addClass("facebook-active");
+                    $(this).parent().removeClass("inactive");
+                }
+                else if($(this).hasClass("twitter-active")){
+                    $(this).removeClass("twitter-active").addClass("twitter-inactive");
+                    $(this).parent().addClass("inactive");
+                }
+                else if($(this).hasClass("twitter-inactive")){
+                    $(this).removeClass("twitter-inactive").addClass("twitter-active");
+                    $(this).parent().removeClass("inactive");
+                }
+            })
         });
         
         I18N = {}
@@ -33,16 +120,7 @@
         searchconfig_google['location']='{{user.settings.searchconfig_google.location}}';
         searchconfig_google['type']='{{user.settings.searchconfig_google.type}}';
         
-        $("#details-form").click(function(){
-        });
-        $("#add-details").click(function(){
-        });
-        $("#add-tags").click(function(){
-        });
-        $("#add-date").click(function(){
-        });
-        $("#add-to-lists").click(function(){
-        });
+        
     </script>
     <script src="/static/facebookApp/js/suggestion.js"></script>
     <!--<script src="/static/webapp/js/dashboard.js"></script>-->

@@ -182,6 +182,7 @@
 
 			if (email=='Email') {
 				item.text('Necesitamos que rellenes el email');
+                //$(email).addClass('error');
 				item.show();
 				st.removeClass("ok").addClass("no-ok");
 				st.show();
@@ -226,7 +227,7 @@
 
 		function checkTerms() {
 			if (!$('#termsCheckbox').is(":checked")) {
-			   showMessage("Debes de estar de acuerdo con blabla","error");
+			   showMessage("Para poder crear una cuenta primero necesitas leer y aceptar las condiciones de uso.","error");
 			   return false;
 			}
 			return true;
@@ -238,21 +239,25 @@
 			var item = $('#passwordStatus');
 			
 			if (pwd1.length==0 || pwd2.length==0) {
+
 				if (emptymessage) {
 					item.text("Debes rellenar los dos campos de las contraseñas");
 					item.show();
 				}
+
 				return false;
 				}
 			
 			if (pwd1!=pwd2){
-				item.text("Las contraseñas no coinciden");
+
+				item.text("Las contraseñas no coinciden, por favor vuelva a introducirlas");
 				item.show();
+
 				return false;
 				}
 			
 			if (pwd1.length<6){
-				item.text("Contraseña demasiado corta");
+				item.text("La contraseña tiene que tener al menos 6 caracteres");
 				item.show();
 				return false;
 				}
@@ -379,7 +384,7 @@
                         <div id='passwordStatus'>Las contraseñas no coinciden</div>
                         <div id="agreement">
                             <input type="checkbox" id="termsCheckbox" title="Check this box if you agree" value="terms"/>
-                            <span id="textTermsCheckbox">I have read and I accept the <a href="/tos" class="hoverlink">Terms of Service</a>.</span>
+                            <span id="textTermsCheckbox">He leido y acepto las <a href="/tos" class="hoverlink">Condiciones de uso</a>.</span>
                         </div>
 						{% csrf_token %}
                         <input type="submit" value="Continuar"/>
