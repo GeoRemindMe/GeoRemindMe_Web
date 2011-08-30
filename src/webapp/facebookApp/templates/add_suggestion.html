@@ -3,22 +3,28 @@
 
 {% block extra_js %}
     <link rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css"> 
-    
+    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     
     <script type="text/javascript">
         
         $(document).ready(function(){
             resizeIframe();
             
+            /*** placeholding ***/
+			$("[placeholder]").placeholder();
+            
+
+            $( ".date-type" ).datepicker();
+            
             $("#add-details").toggle(function(){
                 $('#description').slideDown('slow',function(){
                     $("#add-details").addClass('used');
                     resizeIframe();
                 });
-            },function(){
-                $('#description').slideUp('slow',function(){
-                    $("#add-details").removeClass('used');
-                    resizeIframe();
+                },function(){
+                    $('#description').slideUp('slow',function(){
+                        $("#add-details").removeClass('used');
+                        resizeIframe();
                 });
             });
             
@@ -28,11 +34,11 @@
                     $("#add-tags").addClass('used');
                     resizeIframe();
                 });
-            },function(){
-                $('#tags').slideUp('slow',function(){
-                    $("#add-tags").removeClass('used');
-                    resizeIframe();
-                });
+                },function(){
+                    $('#tags').slideUp('slow',function(){
+                        $("#add-tags").removeClass('used');
+                        resizeIframe();
+                    });
             });
             
             
@@ -50,13 +56,13 @@
             
             
             $("#add-to-lists").toggle(function(){
-                $('#description').slideDown('slow',function(){
-                    $("#add-details").addClass('used');
+                $('#lists').slideDown('slow',function(){
+                    $("#add-to-lists").addClass('used');
                     resizeIframe();
                 });
             },function(){
-                $('#description').slideUp('slow',function(){
-                    $("#add-details").removeClass('used');
+                $('#lists').slideUp('slow',function(){
+                    $("#add-to-lists").removeClass('used');
                     resizeIframe();
                 });
             });

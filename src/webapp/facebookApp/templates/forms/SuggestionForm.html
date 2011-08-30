@@ -18,11 +18,11 @@
         </p>
         <div id="more-details">
             <p id="lists">
-                <label>{{f.tags.label}}:</label>
-                {{f.tags}}
+                <label>Listas:</label>
+                {{lists}}
             </p>
             <p id="tags">
-                <label>{{f.tags.label}}:</label>
+                <label>Etiquetas:</label>
                 {{f.tags}}
             </p>
             <p id="description">
@@ -31,14 +31,13 @@
                 <span id="counter"></span>
             </p>
             <div id="date">
-                <p>Si esta sugerencia solo es posible hacerla en unas fechas concretas por favor indícanos cuales son.</p>
-                <p>
-                    <label>{{f.starts.label}}:</label>
-                    {{f.starts}}
-                </p>
-                <p>
-                    <label>{{f.ends.label}}:</label>
-                    {{f.ends}}
+                <p><strong>Fecha:</strong> <br>Si esta sugerencia solo es posible hacerla en unas fechas concretas por favor indícanos cuales son.</p>
+                <p class="center">
+                    <input title="Fecha de inicio" size="9" id="start-date" class="date-type" autocomplete="off" placeholder="mm/dd/aa">
+                    <input title="Hora de inicio" size="9" id="start-hour" class="hour-type" autocomplete="off"  placeholder="hh:mm">
+                    a
+                    <input title="Fecha de fin" size="9" id="end-date" class="date-type" autocomplete="off" placeholder="mm/dd/aa">
+                    <input title="Hora de fin" size="9" id="end-hour" class="hour-type" autocomplete="off" placeholder="hh:mm">
                 </p>
             </div>
         </div>
