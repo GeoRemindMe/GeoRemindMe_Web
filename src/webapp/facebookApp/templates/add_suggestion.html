@@ -10,7 +10,56 @@
         $(document).ready(function(){
             resizeIframe();
             
+            $("#add-details").toggle(function(){
+                $('#description').slideDown('slow',function(){
+                    $("#add-details").addClass('used');
+                    resizeIframe();
+                });
+            },function(){
+                $('#description').slideUp('slow',function(){
+                    $("#add-details").removeClass('used');
+                    resizeIframe();
+                });
+            });
             
+            
+            $("#add-tags").toggle(function(){
+                $('#tags').slideDown('slow',function(){
+                    $("#add-tags").addClass('used');
+                    resizeIframe();
+                });
+            },function(){
+                $('#tags').slideUp('slow',function(){
+                    $("#add-tags").removeClass('used');
+                    resizeIframe();
+                });
+            });
+            
+            
+            $("#add-date").toggle(function(){
+                $('#date').slideDown('slow',function(){
+                    $("#add-date").addClass('used');
+                    resizeIframe();
+                });
+            },function(){
+                $('#date').slideUp('slow',function(){
+                    $("#add-date").removeClass('used');
+                    resizeIframe();
+                });
+            });
+            
+            
+            $("#add-to-lists").toggle(function(){
+                $('#description').slideDown('slow',function(){
+                    $("#add-details").addClass('used');
+                    resizeIframe();
+                });
+            },function(){
+                $('#description').slideUp('slow',function(){
+                    $("#add-details").removeClass('used');
+                    resizeIframe();
+                });
+            });
             
             resizeIframe();
             
@@ -70,17 +119,6 @@
         searchconfig_google['region_code']='{{user.settings.searchconfig_google.region_code}}';
         searchconfig_google['location']='{{user.settings.searchconfig_google.location}}';
         searchconfig_google['type']='{{user.settings.searchconfig_google.type}}';
-        
-        $("#details-form").click(function(){
-        });
-        $("#add-details").click(function(){
-        });
-        $("#add-tags").click(function(){
-        });
-        $("#add-date").click(function(){
-        });
-        $("#add-to-lists").click(function(){
-        });
         
         
     </script>

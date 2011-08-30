@@ -1515,10 +1515,12 @@ input{
         text-decoration:underline;
         cursor:pointer;
     }
-    #add-suggestion #more-details{
+    #add-suggestion #more-details p,
+    #add-suggestion #more-details div{
         display:none;
     }
-    #add-suggestion #more-details.visible{
+    #add-suggestion #more-details.visible,
+    #add-suggestion #more-details div p{
         display:block;
     }
     
@@ -1710,6 +1712,15 @@ input{
             font-weight:bold;
             margin: 0 0.5em;
         }
+        #details-form span.used{
+            color: #555555;
+            cursor: pointer;
+        }
+        #details-form span.used:hover{
+            text-decoration:none;
+            
+        }
+        
         #add-suggestion div.help-icon{
         }
         #add-suggestion #social-share{

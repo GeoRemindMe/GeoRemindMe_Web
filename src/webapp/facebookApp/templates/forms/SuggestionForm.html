@@ -16,7 +16,32 @@
             <textarea id="id_name" name="name">{{name}}</textarea>
             <span id="counter">140</span>
         </p>
-        
+        <div id="more-details">
+            <p id="lists">
+                <label>{{f.tags.label}}:</label>
+                {{f.tags}}
+            </p>
+            <p id="tags">
+                <label>{{f.tags.label}}:</label>
+                {{f.tags}}
+            </p>
+            <p id="description">
+                <label>Detalles:</label>
+                {{f.description}}
+                <span id="counter"></span>
+            </p>
+            <div id="date">
+                <p>Si esta sugerencia solo es posible hacerla en unas fechas concretas por favor indícanos cuales son.</p>
+                <p>
+                    <label>{{f.starts.label}}:</label>
+                    {{f.starts}}
+                </p>
+                <p>
+                    <label>{{f.ends.label}}:</label>
+                    {{f.ends}}
+                </p>
+            </div>
+        </div>
         <div id="details-form">Añadir: 
             <span id="add-to-lists" class="hoverlink">A listas</span>| 
             <span id="add-tags" class="hoverlink">Etiquetas</span> | 
@@ -101,30 +126,7 @@
 <!--
         <span id="add-more-details" onclick="javascript:showMoreDetails()">Añadir más detalles</span>
 -->
-        <div id="more-details">
-            <p>
-                <label>{{f.tags.label}}:</label>
-                {{f.tags}}
-            </p>
-            <p>
-                <label>{{f.description.label}}:</label>
-                {{f.description}}
-                <span id="counter"></span>
-            </p>
-            <p>
-                <label>{{f.visibility.label}}:</label>
-                {{f.visibility}}
-            </p>
-            <p>Si esta sugerencia solo es posible hacerla en unas fechas concretas por favor indícanos cuales son.</p>
-            <p>
-                <label>{{f.starts.label}}:</label>
-                {{f.starts}}
-            </p>
-            <p>
-                <label>{{f.ends.label}}:</label>
-                {{f.ends}}
-            </p>
-        </div>
+        
         
         
         <hr>
