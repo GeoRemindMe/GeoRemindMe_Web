@@ -314,7 +314,7 @@ def add_suggestion(request, template='webapp/add_suggestion.html'):
     lists = [l.to_dict(resolve=False) for l in lists]
     lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=False))
     return  render_to_response(template, {'f': f,
-                                          'list': lists,
+                                          'lists': lists,
                                           },
                                context_instance=RequestContext(request)
                                )
