@@ -20,6 +20,9 @@ class MapService(remote.Service):
     #decorador para indicar los metodos del servicio
     @remote.method(GetSiteReverseRequest, Sites)
     def get(self, request):
+        if request.name is not None and len(request.name) < 3:
+            from protorpc.remote import ApplicationError
+            raise ApplicationError("Name too small")
         from google.appengine.ext.db import GeoPt
         poi = GeoPt(request.lat, request.lon)
         from mapsServices.places.GPRequest import GPRequest
