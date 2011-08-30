@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #Path to google app engine server
-SERV=/home/hhkaos/Apps/google_appengine/dev_appserver.py
+SERV=$/Apps/google_appengine/dev_appserver.py
 #Path to git repository
-REPO=/home/hhkaos/workspace/GeoRemindMe_Web
+REPO=$/workspace/GeoRemindMe_Web
 
 $SERV \
 	--datastore_path=$REPO/src/fixtures/dev_appserver.datastore \
