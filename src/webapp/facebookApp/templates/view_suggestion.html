@@ -199,9 +199,9 @@
                                 <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                             {% endif %}
                                                     
-                            <span class="user"><img src="{% url user_avatar c.user.username %}" alt="{{c.user.username}} avatar"></span>
+                            <span class="user"><img src="{% url user_avatar c.username %}" alt="{{c.user.username}} avatar"></span>
                             <div style="float:left;width:460px;">
-                                <span class="msg"><a href="{% url fb_public_profile c.user.username%}" class="black-link">{{c.user.username}}</a>: {{c.msg}}</span>
+                                <span class="msg"><a href="{% url fb_public_profile c.user.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
                                 <span class="timestamp">{{c.created|naturaltime}}</span> 
                                 {% if c.user.username != user.username %}
                                     <span class="action-bar" style="display:none">
