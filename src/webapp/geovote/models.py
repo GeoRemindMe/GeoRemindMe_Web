@@ -168,7 +168,7 @@ class CommentHelper(object):
         return None     
     
     def get_top_voted(self, instance, querier):
-        if querier is not None and not isinstance(querier, User):
+        if querier is None:
             raise TypeError
         if instance is not None:
             import memcache

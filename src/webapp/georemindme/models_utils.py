@@ -141,6 +141,8 @@ class Visibility(db.Model):
                 obj = self.instance
             else:
                 obj = self
+            if obj._is_private():
+                obj._vis = 'shared'
             from georemindme.models_indexes import Invitation
             invitation = Invitation.send_invitation(sender=sender, to=to, instance=obj)
             if invitation is not None:

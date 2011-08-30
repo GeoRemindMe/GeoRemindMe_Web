@@ -24,11 +24,8 @@ class TimelineService(remote.Service):
     #decorador para indicar los metodos del servicio
     @remote.method(GetActivityRequest, Timelines)
     def get_activity(self, request):
-        
         from os import environ
-        from geouser.models import User
-        activity = User.objects.get_by_username('jneight')
-        activity = activity.get_activity_timeline()
+        activity = environ['user'].get_activity_timeline()
         timelines = []
         from time import mktime
         from geovote.models import Comment, Vote

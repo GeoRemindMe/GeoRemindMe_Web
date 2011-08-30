@@ -5,13 +5,15 @@ class OAuthware(object):
         self.wrapped_app = app
         
     def __call__(self, environ, start_response):
+        import os
+        return self.wrapped_app(environ, start_response)
         import libs.oauth2 as oauth2
         if 'HTTP_X_GEOREMINDME_SESSION' in environ:
             session_id = environ['HTTP_X_GEOREMINDME_SESSION']
             from geomiddleware.sessions.store import SessionStore
             session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
             if session is not None:
-                environ['user'] = session.user
+                os.environ['user'] = session.user
                 session.put()
                 return self.wrapped_app(environ, start_response)
         elif 'HTTP_AUTHORIZATION' in environ:
@@ -24,7 +26,7 @@ class OAuthware(object):
                 from geoauth.models import OAUTH_Token
                 token = OAUTH_Token.get_token(oauth_request.parameters['oauth_token'])
                 if token.access:
-                    environ['user'] = token.user
+                    os.environ['user'] = token.user
                     return self.wrapped_app(environ, start_response)
         elif environ['REQUEST_METHOD'] == 'POST':
             import Cookie

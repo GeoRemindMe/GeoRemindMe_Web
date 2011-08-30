@@ -89,16 +89,19 @@ class ListHelper(object):
             :param user: usuario del que buscar las listas
             :type user: :class:`geouser.models.User`
         '''
-        indexes = ListFollowersIndex.all().filter('keys =', user.key())
+        from google.appengine.api import datastore
+        q = datastore.Query('ListFollowersIndex', {'keys =': user.key()}, keys_only=True)
         if async:
+            indexes = db.GqlQuery('SELECT __key__ FROM ListFollowersIndex WHERE keys = :1', user.key())
             return indexes.run()
-        from georemindme.funcs import fetch_parents
-        lists = fetch_parents(indexes)
+        indexes = q.Run()
+        from georemindme.funcs import fetch_parentsKeys
+        lists = fetch_parentsKeys(indexes)
         return [list.to_dict(resolve=resolve) for list in lists if list.active]
     
     def load_list_user_following_by_async(self, lists_async, resolve=False):
-        from georemindme.funcs import fetch_parents
-        lists = fetch_parents(lists_async)
+        from georemindme.funcs import fetch_parentsKeys
+        lists = fetch_parentsKeys(lists_async)
         return [list.to_dict(resolve=resolve) for list in lists if list.active]
 
     def get_shared_list(self, user):

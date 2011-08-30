@@ -282,6 +282,9 @@ class Suggestion(Event, Visibility, Taggable):
     
     @property
     def short_url(self):
+        from os import environ
+        if environ['REMOTE_ADDR'] == '127.0.0.1':
+            return 'http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
         if self._short_url is None:
             self._get_short_url()
             if self._short_url is not None:
