@@ -318,9 +318,25 @@ function prepareAutocomplete() {
       autoFocus: true,
       minLength:3,
       source: function(request, response) {
-        var pos = map.getCenter();
-        var x=pos.lat(),y=pos.lng()
-        var data = { name: request.term, lat: x, lon: y, "X-CSRFToken": function(){return getCookie('csrftoken');} };
+        
+        var x,y,term;
+        
+        // search by marker drag
+        if (request.term.indexOf(GRM.common.token) == 0) {
+            request.term = request.term.substring(GRM.common.token.length,request.term.length).split(',');
+            x=parseFloat(request.term[0]);
+            y=parseFloat(request.term[1]);
+            term="hotel";
+        }
+        // search by text input
+        else {
+            var pos = map.getCenter();
+            x=pos.lat();
+            y=pos.lng();
+            term=request.term;
+            }
+          
+        var data = { name: term, lat: x, lon: y, "X-CSRFToken": function(){return getCookie('csrftoken');} };
         data = JSON.stringify(data);
         $.ajax({
 
@@ -350,28 +366,43 @@ function prepareAutocomplete() {
       //This bit is executed upon selection of an address
       select: function(event, ui) {
           
-        if (typeof(EDITING)!="undefined" && EDITING)
+        var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+        
+        if (typeof(GRM.marker) == "undefined")
         {
-            $('#edit-'+EDITING+' .location').val(ui.item.formatted_address);
-
-            var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
-            
-            if (typeof(tasks[EDITING].marker) == "undefined")
-            {
-                tasks[EDITING]['marker'] = createMarker(EDITING,location.lat(),location.lng());
-                tasks[EDITING].marker.setAnimation(google.maps.Animation.DROP);
-                tasks[EDITING].marker.setIcon(new google.maps.MarkerImage("/static/webapp/img/marcador03.png"));
-                tasks[EDITING].marker.setVisible(true);
-                tasks[EDITING].marker.setDraggable(true);
-            }
-            else
-                tasks[EDITING].marker.setPosition(location);
-                
-            map.setCenter(location);
+            GRM['marker'] = createMarker(location.lat(),location.lng());
         }
-      }
+        else
+            GRM.marker.setPosition(location);
+            
+        map.panTo(location);
+        }
     });
 
+}
+
+function createMarker(x,y)
+{
+    var icon = new google.maps.MarkerImage("/static/webapp/img/marcador02.png"); // or /static/webapp/img/marcador03.png
+    var myLatlng = new google.maps.LatLng(x,y);
+    
+    var marker = new google.maps.Marker({
+        map: map,
+        draggable: false,
+        position: myLatlng,
+        icon: icon
+    });
+
+    marker.setVisible(true);
+    marker.setDraggable(true);
+    marker.setAnimation(google.maps.Animation.DROP);
+
+    // set marker events
+    //google.maps.event.addListener(marker, 'click', function(){highlightTask(this.task,false);});
+    //google.maps.event.addListener(marker, 'dblclick', function(){editTask(this.task);});
+    google.maps.event.addListener(marker, 'dragend', function(){updateAddressByMarker(this);});
+    
+    return marker;
 }
 
 function codeLatLng(input) {
@@ -466,29 +497,16 @@ function insertToolbar(map){
     
     //Asignamos el comportamiento
     google.maps.event.addDomListener(btnPollo, 'click', function() {   
-        var pos = map.getCenter();   
-        var myLatlng = new google.maps.LatLng(pos.lat(),pos.lng());
+        var location = map.getCenter();
         
-        if(marker==undefined){
-            //En caso de que no se haya inicializado nunca creamos un
-            //nuevo marcador
-            marker = new google.maps.Marker({
-                map: map,
-                draggable: false,
-                position: myLatlng,
-                icon: new google.maps.MarkerImage("/static/webapp/img/marcador02.png")
-            });
-            google.maps.event.addListener(marker, 'dragend', function(){updateAddressByMarker(this);});
-        }else{
-            //Sino tan solo actualizamos la posición
-            marker.setPosition(myLatlng);
+        if (typeof(GRM.marker) == "undefined")
+        {
+            GRM['marker'] = createMarker(location.lat(),location.lng());
         }
+        else
+            GRM.marker.setPosition(location);
             
-        //Centramos el marcador
-        marker.setIcon(new google.maps.MarkerImage("/static/webapp/img/marcador03.png"));
-        marker.setAnimation(google.maps.Animation.DROP);
-        marker.setDraggable(true);
-        marker.setFlat(false);
+        map.panTo(location);
     });
     
 
@@ -503,13 +521,8 @@ function insertToolbar(map){
 }
 
 function updateAddressByMarker(marker){
-    geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            if (results && results[0]) {
-                $('#address').val(results[0].formatted_address);
-            }
-        }
-    });
+    var pos = GRM.marker.getPosition();
+    $('#address').autocomplete("search",GRM.common.token+pos.lat()+","+pos.lng());
 }
 
 function activateTab(tab){

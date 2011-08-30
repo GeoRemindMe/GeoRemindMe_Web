@@ -1,5 +1,7 @@
 GRM = { common : {}, autocomplete : {} };
 
+GRM.common.token = "*****GRMtoken****";
+
 GRM.common.extend = function(m, e){
     var e = e || this;
     for (var x in m) e[x] = m[x];
