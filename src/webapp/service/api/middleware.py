@@ -35,7 +35,7 @@ class OAuthware(object):
                     import re
                     token = re.sub('[^a-zA-Z0-9]', '', str(token.decode('ascii', 'ignore')))
                     return token
-                csrf_cookie = csrf_cookie.value()
+                csrf_cookie = csrf_cookie.value
                 csrf_token = _sanitize_token(csrf_cookie)
                 post_env = environ.copy()
                 a = post_env['wsgi.input'].read()

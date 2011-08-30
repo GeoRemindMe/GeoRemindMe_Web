@@ -30,7 +30,7 @@ function facebookInit(config) {
   FB.Event.subscribe('auth.sessionChange', handleSessionChange);
 
   FB.Canvas.setAutoResize();
-  resizeIframe();
+  if (typeof resizeIframe != "undefined") resizeIframe();
   // ensure we're always running on apps.facebook.com
   // if we are opening http://localhost:8080/fb/ or
   // georemindme.appspot.com/fb we will be redirected

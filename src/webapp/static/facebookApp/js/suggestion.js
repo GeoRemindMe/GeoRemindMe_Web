@@ -55,21 +55,7 @@ $(document).ready(function() {
     
      //~ key: 'AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710', // add your key here    
     //Google Maps - Direction Input Autocomplete address
-    $('#address').geo_autocomplete(new google.maps.Geocoder, {
-		mapkey: 'ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw', 
-		selectFirst: false,
-		minChars: 3,
-		cacheLength: 50,
-		width: 530,
-        mapwidth:0,
-        mapheight:0,
-		scroll: true,
-		scrollHeight: 150,
-        geocoder_region:'Spain',
-        geocoder_types: 'locality,street_address,sublocality,neighborhood,country',
-	}).result(function(_event, _data) {
-		if (_data) map.fitBounds(_data.geometry.viewport);
-	});
+
     
     //Set resizable canvas
     $('#address-container').resizable({
@@ -78,7 +64,7 @@ $(document).ready(function() {
         handles: 'n,s',
         alsoResize: "#map_canvas",
         stop: function(event, ui) {
-            resizeIframe()     
+            if (typeof resizeIframe != "undefined") resizeIframe()     
         }
     });
 
@@ -93,7 +79,7 @@ $(document).ready(function() {
         
     var lat = parseFloat(latlngStr[0]);
     var lng = parseFloat(latlngStr[1]);
-    loadGMaps(lat,lng,"map_canvas").ready();
+    loadGMaps(lat,lng,"map_canvas");
     
     
     
@@ -304,8 +290,80 @@ function loadGMaps(defaultX,defaultY,canvas) {
     
     insertToolbar(map)
     
-    placesAutocomplete();
+    prepareAutocomplete();
     
+
+}
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+function prepareAutocomplete() {
+
+    $("#address").autocomplete({
+     //This bit uses the geocoder to fetch address values
+      autoFocus: true,
+      minLength:3,
+      source: function(request, response) {
+        var pos = map.getCenter();
+        var x=pos.lat(),y=pos.lng()
+        $.ajax({
+            url: "/api/1/MapService.get",
+            dataType:"json",
+            type:"POST",
+            data: { name: request.term, lat: x, lon: y, "X-CSRFToken": function(){return getCookie('csrftoken');} },
+            success: function(data) {
+
+                response($.map(results, function(item) {
+                            return {
+                              label:  item[0],
+                              value: item[1],
+                              latitude: item[2],
+                              longitude: item[3]
+                            }
+                          }));
+
+                }
+            
+            });
+      },
+      //This bit is executed upon selection of an address
+      select: function(event, ui) {
+          
+        if (typeof(EDITING)!="undefined" && EDITING)
+        {
+            $('#edit-'+EDITING+' .location').val(ui.item.formatted_address);
+
+            var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+            
+            if (typeof(tasks[EDITING].marker) == "undefined")
+            {
+                tasks[EDITING]['marker'] = createMarker(EDITING,location.lat(),location.lng());
+                tasks[EDITING].marker.setAnimation(google.maps.Animation.DROP);
+                tasks[EDITING].marker.setIcon(new google.maps.MarkerImage("/static/webapp/img/marcador03.png"));
+                tasks[EDITING].marker.setVisible(true);
+                tasks[EDITING].marker.setDraggable(true);
+            }
+            else
+                tasks[EDITING].marker.setPosition(location);
+                
+            map.setCenter(location);
+        }
+      }
+    });
 
 }
 

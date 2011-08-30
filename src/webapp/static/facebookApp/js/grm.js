@@ -408,7 +408,7 @@ GRM.sendComment = function(type,text,id,callback){
         
             c.find(".like-dislike").like();
             c.find(".removable").removable();
-            resizeIframe();
+            if (typeof resizeIframe != "undefined") resizeIframe();
             
             showMessage("El comentario ha sido añadido con éxito", "success")
             

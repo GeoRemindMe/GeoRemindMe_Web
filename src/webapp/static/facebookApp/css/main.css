@@ -1622,7 +1622,7 @@ input{
     }
     
     #address-form{
-        display:none;
+        /*display:none;*/
     }
     #place-form label{
         clear: left;
