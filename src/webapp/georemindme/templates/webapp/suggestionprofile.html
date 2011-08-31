@@ -1,0 +1,290 @@
+{% extends "webapp/base_registered.html" %}
+
+{% load i18n %}
+{% load tags %}
+
+{% block title %}Ver sugerencia{% endblock %}
+{% block extra_js %}
+    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script src="/static/facebookApp/js/grm.js"></script>
+    <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl={{user.settings.language}}"></script>
+    
+    <script type="text/javascript">
+    $(document).ready(function(){
+        if (typeof resizeIframe != "undefined") resizeIframe();
+        $('#comment-list li,#popular-comments li').hover(
+            function(){$(this).find('.action-bar').show()},
+            function(){$(this).find('.action-bar').hide()}
+        );
+        
+        //Set like & dislike, remember and removable behaviour
+        GRM.init()
+        
+        //Load Panoramios photos
+        var latlngStr = "{{suggestion.poi.location}}".split(",",2);
+        var ne={}
+        var sw={}
+
+        ne['lat']=parseFloat(latlngStr[0])+0.003004;
+        ne['lng']=parseFloat(latlngStr[1])+0.002604;
+
+        sw['lat']=parseFloat(latlngStr[0])-0.000848;
+        sw['lng']=parseFloat(latlngStr[1])-0.002609;
+        
+        var myRequest = new panoramio.PhotoRequest({
+          'rect': {'sw': {'lat': sw['lat'], 'lng': sw['lng']}, 'ne': {'lat': ne['lat'], 'lng': ne['lng']}}
+        });
+        
+        var myOptions = {
+          'width': 300,
+          'height': 80,
+          'columns': 3,
+          'rows': 1,
+          'croppedPhotos': true,
+        };
+        
+        var wapiblock = document.getElementById('panoramio-imgs');
+        widget = new panoramio.PhotoListWidget(wapiblock, myRequest, myOptions);
+        widget.setPosition(0);
+        
+        $('.panoramio-wapi-loaded-img-div,.panoramio-wapi-images,').css('background-color','#f9f9f9')
+		$('.panoramio-wapi-tos').remove()
+		
+		
+		panoramio.events.listen(widget, panoramio.events.EventType.PHOTO_CHANGED, function(){
+			$('.panoramio-wapi-empty-img-div').remove()
+		});
+		
+		$('#panoramio-imgs').append('<div class="panoramio-wapi-tos" style="width: 296px; color: black ! important; background-color: #f9f9f9 ! important;"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span><br>Photos are copyrighted by their owners</span></div>');
+    });
+    function toggle_showMore(){
+        if($('#show-more-text').css('display')!="none")
+            $('.show-more').html("Más información")
+        else
+            $('.show-more').html("[Ocultar]")
+        
+        $('#show-more-text').toggle('slow')
+    }
+    </script>
+{%endblock%}
+
+{% block body %}
+    <div id="view-suggestion">
+        
+        <div class="suggestion">
+            <h1>{{suggestion.name}}</h1>
+
+            <a title="Más detalles sobre: {{suggestion.poi.name}}" href="{{suggestion.poi.get_absolute_fburl}}"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x150&maptype=roadmap
+&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false"></a>
+            
+            {% if suggestion.user.username != user.username %}
+				<div class="right" style="clear: right;">
+                    <span class="likeBtn btn">
+                        <span class="like-dislike" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
+                            Votos:<br>
+                            <span class="dislike">
+                                <span class="counter {% if not has_voted %}increase{% endif %}">{{suggestion.counters.votes}}</span><br>
+                                <span class="text like-text hoverlink">Ya no me gusta</span> 
+                            </span>
+                            
+                            <span class="like">
+                                <span class="black counter">{{suggestion.counters.votes}}</span><br>
+                                <span class="text like-text hoverlink" >Me gusta</span> 
+                            </span> 
+                        </span>
+                    </span>
+                
+                
+                
+                <span class="btn likeBtn" id="save-btn">
+                    Seguidores:<br>
+                    <span title="Recibe novedades"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if obj.user_follower%}remember="true"{%endif%}>
+                        <span class="black counter">{{suggestion.counters.followers}}</span><br>
+                        <span class="remember hoverlink">
+                            Guardar
+                        </span>
+                        <span class="forget hoverlink">
+                            Guardada
+                        </span>
+                    </span>
+                </span>
+            </div>
+        {% else %}
+            <div class="right" style="clear: right;">
+                <span class="likeBtn btn">
+                    <span class="like-dislike" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
+                        Votos:<br>
+                        <span class="black counter">{{suggestion.counters.votes}}</span><br>
+                    </span>
+                </span>
+            
+            
+            
+            <span class="btn likeBtn" id="save-btn">
+                Seguidores:<br>
+                <span title="Recibe novedades"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if obj.user_follower%}remember="true"{%endif%}>
+                    <span class="black counter">{{suggestion.counters.followers}}</span><br>
+                    
+                </span>
+            </span>
+        </div>
+        {% endif %}
+            
+            {% if suggestion.description %}
+                <p><strong>Instrucciones/explicación</strong>: {{suggestion.description}} </p>
+            {% endif %}    
+            
+            <p>
+                 <strong>Lugar</strong>: <a href="{{suggestion.poi.get_absolute_fburl}}">{{suggestion.poi.name}}</a>
+            </p>
+            <p>
+                <strong>Dirección</strong>:<br>
+                <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="black-link" target="_blank">{{suggestion.poi.address}}</a>
+                
+            </p>
+            {% if suggestion.date_starts or suggestion.date_ends %}
+            <p>
+                    <strong>Fecha</strong>: 
+                    [25/04/2011 al 30/05/2011]<br>
+                {% endif %}
+            </p>
+			
+<!--
+            <p>Reportar localización errónea</p>
+            <p>Reportar sugerencia duplicada</p>
+-->
+<!--
+			<hr class="clear">
+-->
+			
+			<div id="wapiblock"><strong>Pictures of the area:</strong><div id="panoramio-imgs"></div></div>
+			<span class="show-more" onclick="javascript:toggle_showMore()">Más información</span>
+			
+			<div id="show-more-text">
+			{% if suggestion.tags %}
+                <p id="tag-list-label"><strong>Palabras clave</strong>:</p> 
+                <ul id="tag-list">
+                {% for tag in suggestion.tags %}
+                    <li>
+<!--
+                        <form action="{% url fb_search_suggestions tag %}" method="post">
+                            <input type="hidden" name="suggestion" value="suggestion">
+                            <input type="submit" value="{{tag}}">
+                        </form>
+-->
+                        {{tag}}
+                        {%if not forloop.last %}, {%endif%}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+			
+			<p>
+				<strong>Autor</strong>: <a href="{% url fb_public_profile suggestion.user.username %}">{{suggestion.user.username}}</a>
+			</p>
+			</div>
+        </div>
+
+        
+        
+        {% if top_comments %}
+            <div id="popular-box" class="clear">
+                <p class="popular">Los comentarios más populares</p>
+                <ul class="comments" id="popular-comments">
+                    {% for c in top_comments %}
+                        <li class="comment-element" {% if forloop.first %}style="border-top:0px"{% endif %}>
+                    
+                            <!-- Añadimos el botón de borrar comentario-->
+                            {% if c.username = user.username %}
+                                <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
+                            {% endif %}
+                                                    
+                            <span class="user"><img src="{% url user_avatar c.username %}" alt="{{c.username}} avatar"></span>
+                            <div style="float:left;width:460px;">
+                                <span class="msg"><a href="{% url fb_public_profile c.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
+                                <span class="timestamp">{{c.created|naturaltime}}</span> 
+                                {% if c.username != user.username %}
+                                    <span class="action-bar" style="display:none">
+                                        &nbsp;-
+                                        <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
+                                            <span class="dislike">
+                                                <span class="hoverlink">Ya no me gusta</span> 
+                                                <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+                                            </span>
+                                            
+                                            <span class="like">
+                                                <span class="hoverlink">Me gusta</span> 
+                                            </span>
+                                        </span>
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        <p class="clear big">¿Tienes algo que añadir a esta sugerencia?</p>
+        <textarea id="msg"></textarea>
+<!--
+        <ul id="feeling">
+            <li>Happy</li>
+            <li>Glad</li>
+            <li>Sad</li>
+        </ul>
+-->
+        <span class="btn" onclick="sendComment(this,'event',{{suggestion.id}});">Comentar</span>
+        
+        {% if comments %}
+        <ul class="comments" id="comment-list">
+            {% for c in comments.1 %}
+                <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
+                    
+                    <!-- Añadimos el botón de borrar comentario-->
+                    {% if c.username = user.username %}
+                        <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
+                    {% endif %}
+                                            
+                    <span class="user"><img src="{% url user_avatar c.username %}" alt="{{c.username}} avatar"></span>
+                    <div style="float:left;width:460px">
+                        <span class="msg"><a href="{% url fb_public_profile c.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
+                        <span class="timestamp">{{c.created|naturaltime}}</span> 
+                        {% if c.username != user.username %}
+                            <span class="action-bar" style="display:none">
+                                &nbsp;- 
+                                <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
+                                    <span class="dislike">
+                                        <span class="hoverlink">Ya no me gusta</span> 
+                                        <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+                                    </span>
+                                    
+                                    <span class="like">
+                                        <span class="hoverlink">Me gusta</span> 
+                                    </span>
+                                </span>
+                            </span>
+                        {% endif %}
+                        
+                    </div>
+                </li>
+            {% endfor %}
+
+        </ul>
+        {% endif %}
+        {% if comments.1|length == 8 %}
+            <div class="load-more">Cargar más</div>
+        {% endif %}
+    </div>
+    
+    <script id="commentTemplate" type="text/x-jquery-tmpl">
+        <li class="suggestion-element">
+            <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
+            <span class="user"><img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar"></span>
+            <div style="float:left;width:460px">
+                <span class="msg"><a href="{% url fb_public_profile user.username%}" class="black-link">{{user.username}}</a>: ${msg}</span>
+                <span class="timestamp">0 minutes ago</span>
+            </div>
+        </li>
+    </script>
+{% endblock %}
