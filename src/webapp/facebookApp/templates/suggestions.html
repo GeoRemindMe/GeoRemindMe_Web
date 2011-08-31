@@ -146,9 +146,8 @@
                             
                             setExpandible('#list_'+data.id);
                             
-							//Editable fields
-							//set_editable_fields();
-							$('.editable_list_name').editable('/ajax/suggestion/list/modify/', name_field);
+							//Setting up editable fields AGAIN
+							set_editable_fields();
                             
                             //Aumentamos el contador de las listas
                             $('#lists-tab-counter').text(parseInt($('#lists-tab-counter').text())+1);
@@ -1116,7 +1115,7 @@
             <div class="expanded" style="display:none">
                 <dl>
                     <dt>Descripción:</dt>
-                    <dd class="editable">Sin descripción</dd>
+                    <dd class="editable_list_description">Sin descripción</dd>
                     
                     <dt>Sugerencias</dt>
                     <dd class="suggestions">
