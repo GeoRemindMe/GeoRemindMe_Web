@@ -285,9 +285,9 @@ GRM.menuList = function(settings) {
             
             //console.log("settings.onLiClick="+settings.onLiClick)
             if(settings.onLiClick!=null)
-                $(this).find('.submenu li:not(dropDownBtn-btn)').click(settings.onLiClick);
+                $(this).find('.submenu li:not(.dropDownBtn-btn,.new-list-btn)').click(settings.onLiClick);
             else
-                $(this).find('.submenu li:not(dropDownBtn-btn)').click(function(){submenuLiBehave(this)})
+                $(this).find('.submenu li:not(.dropDownBtn-btn,.new-list-btn)').click(function(){submenuLiBehave(this)})
             
             //Enter behave when adding new list on Suggestions Tab
             $(".new-list-btn span.new-list").keyup(function(e) {
@@ -311,7 +311,7 @@ GRM.menuList = function(settings) {
                         
                         $.ajax({
                             type: "POST",
-                            url: "{% url modify_suggestion_list %}",
+                            url: url["modify_suggestion_list"],
                             data: {
                                 name: $(this).find('input').val(),
                                 suggestions: suggestionList
