@@ -98,7 +98,24 @@
             //Ejemplo: tapas en granada, turismo, paisajes, etc.
 -->
         </div>
-
+        <div id="nav-menu">
+            {% block nav %}
+				<ul>
+                    <li id="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
+                    <li id="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
+<!--
+                    <li class="menu-icons main-menu-icons"><a id="suggestions-icon" href="{{user_suggestions}}">Tus sugerencias</a></li>
+-->
+                    <li id="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
+<!--
+                    <li class="menu-icons main-menu-icons" id=""><a id="profile-icon" href="{% url public_profile request.user.username %}">Mi perfil</a></li>
+-->
+<!--
+                    <li class="menu-icons main-menu-icons" id=""><a id="settings-icon" href="{% url profile_settings %}">Configuración</a></li>
+-->
+                </ul>
+            {% endblock %}
+        </div>
 
 		{% if user.username %}
             <div id="account-info">
@@ -121,31 +138,15 @@
 	</div>
 	<div id="background">
 		<div id="base" class="container">
-			<div id="left-col">
-				<a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
-				{% block nav %}
-				<ul>
-                    <li class="menu-icons main-menu-icons" id="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
-                    <li class="menu-icons main-menu-icons" id="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
-<!--
-                    <li class="menu-icons main-menu-icons"><a id="suggestions-icon" href="{{user_suggestions}}">Tus sugerencias</a></li>
--->
-                    <li class="menu-icons main-menu-icons" id="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
-                    <li class="menu-icons main-menu-icons"><a id="places-icon" href="#">Sitios</a></li>
-<!--
-                    <li class="menu-icons main-menu-icons" id=""><a id="profile-icon" href="{% url public_profile request.user.username %}">Mi perfil</a></li>
--->
-<!--
-                    <li class="menu-icons main-menu-icons" id=""><a id="settings-icon" href="{% url profile_settings %}">Configuración</a></li>
--->
-                </ul>
-				{% block extraContent %} {% endblock %}
-				{% endblock %}
-			</div>
+			
 			<div id="right-col">
 				{% block body %}{% endblock %}
 			</div>
-			
+			<div id="left-col">
+				<a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
+				
+                {% block extraContent %} {% endblock %}
+			</div>
 		</div>
 	</div>
 	
