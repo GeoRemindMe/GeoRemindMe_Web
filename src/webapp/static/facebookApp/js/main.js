@@ -29,7 +29,7 @@ function facebookInit(config) {
   });
   FB.Event.subscribe('auth.sessionChange', handleSessionChange);
 
-  FB.Canvas.setAutoResize();
+  //FB.Canvas.setAutoResize();
   if (typeof resizeIframe != "undefined") resizeIframe();
   // ensure we're always running on apps.facebook.com
   // if we are opening http://localhost:8080/fb/ or
