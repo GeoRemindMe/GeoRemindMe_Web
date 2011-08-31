@@ -53,6 +53,7 @@ function goHome() {
 
 function resizeIframe() {
     var tam=$('#right-col').height(); //Get height of the iframe
+    console.log("Entro y tam="+tam);
     //~ tam=tam+250;
     //~ console.log('Resize to '+tam);
     FB.Canvas.setSize({ height: tam });

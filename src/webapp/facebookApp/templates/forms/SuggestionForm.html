@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-activity"></div>
+<div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-add-suggestion"></div>
 <form id="add-suggestion-form" action="javascript: return false;" >
 <!--
         name = forms.CharField(required=True)
@@ -17,7 +17,7 @@
             <span id="counter">140</span>
         </p>
         <div id="more-details">
-            <p id="lists">
+            <span id="lists">
                 <label>Añadir a las siguientes listas:</label>
 
                 
@@ -38,7 +38,7 @@
                         </li>
                     </ul>
                 </span>
-            </p>
+            </span>
             <p id="tags">
                 <label>Etiquetas:</label>
                 {{f.tags}}
@@ -152,20 +152,58 @@
         <hr>
         
         <div>
-            <span id="social-share" class="clear">
-                Compartir también en: 
-                <ul>
-                    <li><span class="facebook-active">&nbsp;</span></li>
-                    <li><span class="twitter-active">&nbsp;</span></li>
-                </ul>
-            </span>
+            
+                <span id="social-share" class="clear" {% if not user.settings.show_public_profile %} style="display:none"{% endif %}>
+                    Compartir también en 
+                    <ul>
+                        {% if user.facebook_user %}
+                            <li><span class="facebook-active" title="Enviar sugerencia a mi muro de Facebook">&nbsp;</span></li>
+                        {% else %}
+                            <li><span class="facebook-inactive request-access" id="perms-facebook" title="Activar permisos para comunicarse con Facebook">&nbsp;</span></li>
+                        {% endif %}
+                        
+                        {% if user.has_perms_twitter %}
+                            <!--Tenemos permiso para enviar la sugerencia a Twitter -->
+                            <li><span class="twitter-active" title="Enviar sugerencia a mi cuenta de Twitter">&nbsp;</span></li>
+                        {% else %}
+                            <li><span class="twitter-inactive request-access" id="perms-twitter" title="Activar permisos para comunicarse con Twitter">&nbsp;</span></li>
+                        {% endif %}
+                    </ul>
+                </span>
+            
             <span class="btn" id="submit-button" onclick="saveSuggestion()">Enviar</span>
-            <span id="visibility" class="public-icon">
-                <span value="public">Pública</span>
-                <span value="private" style="display:none">Privada</span>
+            <span id="visibility" class="public-icon" >
+                {% if user.settings.show_public_profile %}
+                    <span value="public" title="La sugerencia será visible para todos los usuarios">Pública</span>
+                    <span value="private" style="display:none" title="La sugerencia solo la podrás ver tú">Privada</span>
+                {% else %}
+                    <span value="public" style="display:none" title="La sugerencia será visible para todos los usuarios">Pública</span>
+                    <span value="private" title="La sugerencia solo la podrás ver tú">Privada</span>
+                {% endif %}
             </span>
                 
             
         </div>
         
     </form>
+    
+<div class="help-txt" style="display:none" id="help-add-suggestion-text" title="Ayuda sobre el panel de añadir sugerencias">
+        <p>En esta sección....</p>
+        
+    </div>
+{% if not user.facebook_user %}
+    <div class="help-txt" style="display:none" id="perms-facebook-text" title="Información">
+        <p>Para poder enviar tus sugerencias a Facebook necesitas instalarte la aplicación de Facebook.</p>
+        <p><a href="http://apps.facebook.com/georemindme">Instalar la aplicación de GeoRemindMe para Facebook</a></p>
+        <p>Recuerda que en cualquier momento puedes revocar el permiso desde la <a href="{% url profile_settings %}">configuración de tu cuenta</a>.</p>
+    </div>
+{% endif %}
+
+{% if not user.has_perms_twitter %}
+    <div class="help-txt" style="display:none" id="perms-twitter-text" title="Información">
+        <p>Para poder enviar tus sugerencias a Twitter necesitamos que personalmente nos des permiso para hacerlo.</p>
+        <p><a href="/ext/twitter/perms" target="_blank">Conceder permiso a GeoRemindMe para publicar en Twitter</a></p>
+        <p>Una vez concedidos los permisos por favor refresca la página (pulsando F5).</p>
+        <p>Recuerda que en cualquier momento puedes revocar el permiso desde la <a href="{% url profile_settings %}">configuración de tu cuenta</a>.</p>
+    </div>
+{% endif %}

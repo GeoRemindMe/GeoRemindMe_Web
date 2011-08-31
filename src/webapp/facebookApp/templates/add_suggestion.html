@@ -129,12 +129,13 @@
                 
             });
             
+            //Toggle share suggestion on social networks
             $('#social-share ul li span').click(function(){
                 if($(this).hasClass("facebook-active")){
                     $(this).removeClass("facebook-active").addClass("facebook-inactive");
                     $(this).parent().addClass("inactive");
                 }
-                else if($(this).hasClass("facebook-inactive")){
+                else if($(this).hasClass("facebook-inactive") && ! $(this).hasClass("request-access")){
                     $(this).removeClass("facebook-inactive").addClass("facebook-active");
                     $(this).parent().removeClass("inactive");
                 }
@@ -142,11 +143,25 @@
                     $(this).removeClass("twitter-active").addClass("twitter-inactive");
                     $(this).parent().addClass("inactive");
                 }
-                else if($(this).hasClass("twitter-inactive")){
+                else if($(this).hasClass("twitter-inactive") && ! $(this).hasClass("request-access")){
                     $(this).removeClass("twitter-inactive").addClass("twitter-active");
                     $(this).parent().removeClass("inactive");
                 }
             })
+            
+            //Show perms
+            $('.request-access').each(function(i,elem){
+                if($(elem).hasClass("twitter-inactive"))
+                    $(elem).click(function(){
+                        $('#'+$(this).attr('id')+'-text').dialog("open");
+                    });
+                else if($(elem).hasClass("facebook-inactive"))
+                    $(elem).click(function(){
+                        $('#'+$(this).attr('id')+'-text').dialog("open");
+                    });
+            });
+            
+            
         });
         
         I18N = {}
