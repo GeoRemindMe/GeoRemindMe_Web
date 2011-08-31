@@ -58,7 +58,7 @@ class GPRequest(Http):
                 :returns: diccionario con los resultados
                 :raises: :class:`GPAPIError`
         """                
-        url = self._search_url + 'location=%s,%s&radius=%s' % (pos.lat, pos.lon, radius)
+        url = 'location=%s,%s&radius=%s' % (pos.lat, pos.lon, radius)
         if types is not None:
             if type(types) != type(list()):
                 types = list(types)
@@ -69,6 +69,7 @@ class GPRequest(Http):
         if name is not None:
             url = url + '&name=%s' % name
         url = url + '&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
+        url = self._search_url + self._parse_get(url)
         return self._do_request(url)
     
     def retrieve_reference(self, reference, language=None, sensor=False):
@@ -111,7 +112,7 @@ class GPRequest(Http):
                 }
         if types is not None:
             dict['types'] = types
-        url = self._add_url + '&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
+        url = self._add_url + self._parse_get('&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key))
         return self._do_request(url, method='POST', body=dict.__str__())
     
     def delete_place(self, reference, sensor = False):
@@ -134,3 +135,7 @@ class GPRequest(Http):
             raise GPAPIError(response['status'], 'ERROR IN REQUEST')
         json = simplejson.loads(content)
         return json
+    
+    def _parse_get(self, string):
+        from urllib import quote_plus
+        return quote_plus(string)
