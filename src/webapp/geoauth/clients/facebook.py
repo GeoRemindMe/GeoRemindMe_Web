@@ -50,6 +50,7 @@ _parse_json = json.loads
 from geoauth.models import OAUTH_Access
 from geoauth.exceptions import OAUTHException
 from geouser.models import User
+from geouser.models import urlfetch
 from geouser.models_social import FacebookUser
 from georemindme.funcs import make_random_string
 
@@ -93,18 +94,19 @@ class FacebookClient(object):
         self._fb_id = me['id']
         return me
     
-    def get_friends(self):
+    def get_friends(self, rpc=None):
         if self._fb_id is None:
             self.get_user_info()
-        friends = self.consumer.get_connections(self._fb_id, "friends")
+        friends = self.consumer.get_connections(self._fb_id, "friends", rpc=rpc)
         return friends
     
-    def get_friends_to_follow(self):
+    def get_friends_to_follow(self, rpc=None):
         """Devuelve un array de amigos con id, username, avatar, uid"""
+        if rpc is not None:
+            self.get_friends(rpc=rpc)
+            return rpc
         friends = self.get_friends()
         friends = friends['data']
-        
-        from geouser.models_social import FacebookUser
         registered = {}
         for f in friends:
             user_to_follow = FacebookUser.objects.get_by_id(f['id'])
@@ -168,6 +170,39 @@ class FacebookClient(object):
         except:
             return False
         
+        
+class FacebookFriendsRPC(object):
+    def fetch_friends(self, user):
+        from geouser.models import urlfetch
+        self.rpc = urlfetch.create_rpc(callback=self.handle_results)
+        self.user = user
+        self.friends = {}
+        try:
+            fbclient = FacebookClient(user=user)
+            self.rpc = fbclient.get_friends_to_follow(rpc=self.rpc)
+        except:
+            return None
+        return self.rpc
+    
+    def handle_results(self):
+        result = self.rpc.get_result()
+        from django.utils import simplejson
+        from geouser.models_social import FacebookUser
+        if result.status_code != 200:
+            return {}
+        friends_result = simplejson.loads(result.content)
+        if 'data' in friends_result:
+            friends_result = friends_result['data']
+        for f in friends_result:
+            user_to_follow = FacebookUser.objects.get_by_id(f['id'])
+            if user_to_follow is not None and user_to_follow.user.username is not None and not self.user.is_following(user_to_follow.user):
+                self.friends[user_to_follow.user.id]= {
+                                           'username':user_to_follow.user.username, 
+                                           'uid':user_to_follow.uid,
+                                           'id': user_to_follow.user.id,
+                                           }
+        return self.friends
+        
 
 class GraphAPI(object):
     """A client for the Facebook Graph API.
@@ -216,9 +251,9 @@ class GraphAPI(object):
         args["ids"] = ",".join(ids)
         return self.request("", args)
 
-    def get_connections(self, id, connection_name, **args):
+    def get_connections(self, id, connection_name, rpc=None, **args):
         """Fetchs the connections for given object."""
-        return self.request(id + "/" + connection_name, args)
+        return self.request(id + "/" + connection_name, args, rpc=rpc)
 
     def put_object(self, parent_object, connection_name, **data):
         """Writes the given object to the graph, connected to the given parent.
@@ -354,7 +389,7 @@ class GraphAPI(object):
         content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
         return content_type, body
 
-    def request(self, path, args=None, post_args=None):
+    def request(self, path, args=None, post_args=None, rpc=None):
         """Fetches the given path in the Graph API.
 
         We translate args to a valid query string. If post_args is given,
@@ -366,7 +401,13 @@ class GraphAPI(object):
                 post_args["access_token"] = self.access_token
             else:
                 args["access_token"] = self.access_token
-        post_data = None if post_args is None else urllib.urlencode(post_args)        
+        post_data = None if post_args is None else urllib.urlencode(post_args) 
+        if rpc is not None:
+            return urlfetch.make_fetch_call(rpc, "https://graph.facebook.com/" + path + "?" +
+                                            urllib.urlencode(args), 
+                                            method='GET' if post_data is None else 'POST',
+                                            payload=post_data)
+                 
         response, content = self.req.request("https://graph.facebook.com/" + path + "?" +
                                             urllib.urlencode(args), 
                                             method='GET' if post_data is None else 'POST',

@@ -54,12 +54,19 @@ class GoogleClient(Client):
         #run_on_appengine(self._client)
         pass
         
-    def get_contacts(self):
-        return self._client.GetContacts()
+    def get_contacts(self, rpc=None):
+        request = self._client.GetContacts(rpc=rpc)
+        if rpc is not None:
+            from geouser.models import urlfetch
+            return urlfetch.make_fetch_call(rpc, str(request.uri), headers=request.headers)
+        return request
     
-    def get_contacts_to_follow(self):
+    def get_contacts_to_follow(self, rpc=None):
         from geouser.models import User
         registered = []
+        if rpc is not None:
+            self.get_contacts(rpc=rpc)
+            return rpc
         feed = self.get_contacts()
         for i, entry in enumerate(feed.entry):
             for email in entry.email:
@@ -71,3 +78,39 @@ class GoogleClient(Client):
                                                 'id': user_to_follow.user.id,
                                                 }
         return registered
+    
+    
+class GoogleFriendsRPC(object):
+    def fetch_friends(self, user):
+        from geouser.models import urlfetch
+        self.rpc = urlfetch.create_rpc(callback=self.handle_results)
+        self.user = user
+        self.friends = {}
+        try:
+            goclient = GoogleClient(user=user)
+            self.rpc = goclient.get_contacts_to_follow(rpc=self.rpc)
+            
+        except:
+            return None
+        return self.rpc
+    
+    def handle_results(self):
+        result = self.rpc.get_result()
+        from django.utils import simplejson
+        if result.status_code != 200:
+            return {}
+        # recibimos en xml, parsear resultado
+        from libs.atom.core import parse
+        from libs.gdata.contacts.data import ContactsFeed
+        contacts = parse(result.content, ContactsFeed,)
+        for i, entry in enumerate(contacts.entry):
+            for email in entry.email:
+                from geouser.models import User
+                user_to_follow = User.objects.get_by_email(email.address)
+                if user_to_follow is not None and user_to_follow.username is not None and not self.user.is_following(user_to_follow):
+                    self.friends[user_to_follow.id]={ 
+                                                'username': user_to_follow.username, 
+                                                'email': user_to_follow.email,
+                                                'id': user_to_follow.user.id,
+                                                }
+        return self.friends

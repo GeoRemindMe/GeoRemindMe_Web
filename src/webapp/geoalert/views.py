@@ -206,7 +206,7 @@ def add_from_foursquare_id(request, venueid):
     return redirect(place.get_absolute_url(), permanent=True)
 
 
-def view_place(request, slug, template='webapp/place.html'):
+def view_place(request, slug, template='webapp/view_place.html'):
     """ Devuelve la vista con informacion de un lugar
        
            :param slug: slug identificativo del lugar

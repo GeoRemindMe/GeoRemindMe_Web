@@ -49,8 +49,16 @@ class TwitterClient(Client):
         return simplejson.loads(content)
     
     
-    def get_friends(self):
+    def get_friends(self, rpc=None):
         twitterInfo = self.get_user_info()
+        if rpc is not None:
+            from geouser.models import urlfetch
+            return urlfetch.make_fetch_call(rpc, self.url_friends + '?user_id=%s&screen_name=%s' % (
+                                                       twitterInfo['id'], 
+                                                       twitterInfo['screen_name']
+                                                       ),
+                                            method='GET'
+                                            )
         response, content = self.request(
                                         self.url_friends + '?user_id=%s&screen_name=%s' % (
                                                                        twitterInfo['id'], 
@@ -62,8 +70,11 @@ class TwitterClient(Client):
             raise TwitterAPIError(response['status'], content)
         return content
     
-    def get_friends_to_follow(self):
+    def get_friends_to_follow(self, rpc=None):
         from geouser.models_social import TwitterUser
+        if rpc is not None:
+            self.get_friends(rpc=rpc)
+            return rpc
         ids = self.get_friends()
         registered = []
         for i in ids:
@@ -138,4 +149,36 @@ class TwitterClient(Client):
         if response['status'] != 200:
             raise TwitterAPIError(response['status'], response)
         return simplejson.loads(content)
+        
+class TwitterFriendsRPC(object):
+    def fetch_friends(self, user):
+        from geouser.models import urlfetch
+        self.rpc = urlfetch.create_rpc(callback=self.handle_results)
+        self.user = user
+        self.friends = {}
+        try:
+            twclient = TwitterClient(user=user)
+            self.rpc = twclient.get_friends_to_follow(rpc=self.rpc)
+        except:
+            return None
+        return self.rpc
+    
+    def handle_results(self):
+        result = self.rpc.get_result()
+        from django.utils import simplejson
+        if result.status_code != 200:
+            return {}
+        friends_result = simplejson.loads(result.content)
+        if 'data' in friends_result:
+            friends_result = friends_result['data']
+        for i in friends_result:
+            user_to_follow = TwitterUser.objects.get_by_id(i)
+            if user_to_follow is not None and user_to_follow.user.username is not None and not self.user.is_following(user_to_follow.user):
+                info = self.get_others_user_info(id=user_to_follow.id)
+                self.friends[user_to_follow.user.id] = { 
+                                               'username': user_to_follow.user.username, 
+                                               'twittername': info['screen_name'],
+                                               'id': user_to_follow.user.id,
+                                               }
+        return self.friends
         

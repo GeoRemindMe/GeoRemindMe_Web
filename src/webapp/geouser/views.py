@@ -218,13 +218,29 @@ def dashboard(request, template='webapp/dashboard.html'):
             return render_to_response('webapp/create_social_profile.html', {'form': f}, 
                                        context_instance=RequestContext(request)
                                       )
-    friends_to_follow=request.user.get_friends_to_follow()
+    #------------------------------------------------------------------------------ 
+    import memcache
+    friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
+    if friends is None: # lanzamos las peticiones asincronas
+        handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
     chronology = request.user.get_activity_timeline()
     # FIXME: CHAPUZA, LA PLANTILLA ESPERA RECIBIR EL QUERY_ID EN JSON :)
     from django.utils import simplejson
     chronology[0] = simplejson.dumps(chronology[0])
+    if friends is None:
+        for rpc in list_rpc:
+            rpc.wait()
+        friends = {} # diccionario con todos los amigos
+        #los unimos en uno
+        [friends.update(rpc.friends) for rpc in handlers_rpcs]
+        if len(friends) > 0:
+            if len(request.user.settings.blocked_friends_sug)>0:
+                for k in friends.keys():
+                    if k in request.user.settings.blocked_friends_sug:
+                        del friends[k]
+            memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 11235)
     return  render_to_response(template, {
-                                          'friends_to_follow': friends_to_follow,
+                                          'friends_to_follow': friends,
                                           'chronology': chronology,
                                           } , RequestContext(request)
                                )
@@ -337,9 +353,8 @@ def profile_settings(request, template='webapp/settings.html'):
     
 
 def followers_panel(request, username, template='followers.html'):
-    if request.user.is_authenticated():
-        if username == request.user.username:
-            followers=request.user.get_followers()
+    if request.user.is_authenticated() and username == request.user.username:
+		followers=request.user.get_followers()
     else:
         from geouser.api import get_followers
         followers = get_followers(request.user, username=username)
@@ -351,9 +366,8 @@ def followers_panel(request, username, template='followers.html'):
 
 
 def followings_panel(request, username, template):
-    if request.user.is_authenticated():
-        if username == request.user.username:
-            followings=request.user.get_followings()
+    if request.user.is_authenticated() and username == request.user.username:
+		followings=request.user.get_followings()
     else:
         from geouser.api import get_followings
         followings = get_followings(request.user, username=username)

@@ -92,6 +92,8 @@ class AtomPubClient(object):
     # Any unrecognized arguments are assumed to be capable of modifying the
     # HTTP request.
     for name, value in kwargs.iteritems():
+      if name == 'rpc':
+          continue
       if value is not None:
         value.modify_request(http_request)
     # Default to an http request if the protocol scheme is not set.
@@ -114,6 +116,8 @@ class AtomPubClient(object):
           http_request.method, str(http_request.uri)))
     # Perform the fully specified request using the http_client instance.
     # Sends the request to the server and returns the server's response.
+    if kwargs['rpc'] is not None:
+        return http_request
     return self.http_client.request(http_request)
 
   Request = request

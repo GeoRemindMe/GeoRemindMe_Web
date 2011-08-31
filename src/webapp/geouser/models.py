@@ -10,6 +10,7 @@
 from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
+from google.appengine.api import urlfetch
 
 from georemindme.models_utils import HookedModel
 from georemindme.decorators import classproperty
@@ -693,35 +694,78 @@ class User(polymodel.PolyModel, HookedModel):
     def get_absolute_fburl(self):
         return '/fb%s' % self.get_absolute_url()
 
-    def get_friends_to_follow(self):
+    def get_friends_to_follow(self, rpc=False):
         import memcache
         friends = memcache.get('%sfriends_to_%s' % (memcache.version, self.key()))
         if friends is None:
-            friends = {}
-            from geoauth.clients.facebook import FacebookClient
+#            def _handle_result_fb(rpc):
+#                result = rpc.get_result()
+#                from django.utils import simplejson
+#                from geouser.models_social import FacebookUser
+#                if result.status_code != 200:
+#                    return {}
+#                friends = simplejson.loads(result.content)
+#                if 'data' in friends:
+#                    friends = friends['data']
+#                for f in friends:
+#                    user_to_follow = FacebookUser.objects.get_by_id(f['id'])
+#                    if user_to_follow is not None and user_to_follow.user.username is not None and not self.user.is_following(user_to_follow.user):
+#                        friends_facebook[user_to_follow.user.id]= {
+#                                                   'username':user_to_follow.user.username, 
+#                                                   'uid':user_to_follow.uid,
+#                                                   'id': user_to_follow.user.id,
+#                                                   }
+#                return friends_facebook
+#            def _create_callback_fb(rpc):
+#                return lambda: _handle_result_fb(rpc)
+            friends_rpc = [] # lista de rpcs
+#            friends_facebook = {}
+#            friends_twitter = {}
+#            friends_google = {}
+            
+            #RPC PARA FACEBOOK
             try:
-                fbclient = FacebookClient(user=self)
-                friends.update(fbclient.get_friends_to_follow())
+#                rpc = urlfetch.create_rpc()
+#                rpc.callback = _create_callback_fb(rpc)
+#                from geoauth.clients.facebook import FacebookClient
+#                fbclient = FacebookClient(user=self)
+#                friends_rpc.append(fbclient.get_friends_to_follow(rpc=rpc))
+                from geoauth.clients.facebook import FacebookFriendsRPC
+                fb_rpc = FacebookFriendsRPC()
+                friends_rpc.append(fb_rpc.fetch_friends(self))
             except:
                 pass
+            #RPC PARA TWITTER
             try:
-                from geoauth.clients.twitter import TwitterClient
-                twclient = TwitterClient(user=self)
-                friends.update(twclient.get_friends_to_follow())
+                from geoauth.clients.twitter import TwitterFriendsRPC
+                tw_rpc = TwitterFriendsRPC()
+                friends_rpc.append(tw_rpc.fetch_friends(self))
             except:
                 pass
+            #RPC PARA GOOGLE
             try:
-                from geoauth.clients.google import GoogleClient
-                goclient = GoogleClient(user=self)
-                friends.update(goclient.get_contacts_to_follow())
+                from geoauth.clients.google import GoogleFriendsRPC
+                go_rpc = GoogleFriendsRPC()
+                friends_rpc.append(go_rpc.fetch_friends(self))
             except:
                 pass
+            friends_rpc = filter(None, friends_rpc)
+            if rpc:
+                return [fb_rpc, tw_rpc, go_rpc], friends_rpc
+            
+            for rpc in friends_rpc:
+                rpc.wait()
+            friends = {} # diccionario con todos los amigos
+            #los unimos en uno
+            friends.update(fb_rpc.friends)
+            friends.update(tw_rpc.friends)
+            #friends.update(friends_google)
             if len(friends) > 0:
                 if len(self.settings.blocked_friends_sug)>0:
                     for k in friends.keys():
                         if k in self.settings.blocked_friends_sug:
                             del friends[k]
-                memcache.set('%sfriends_to_%s' % (memcache.version, self.key()), friends, 300)
+                memcache.set('%sfriends_to_%s' % (memcache.version, self.key()), friends, 11235)
         return friends
 
     def to_dict(self):
