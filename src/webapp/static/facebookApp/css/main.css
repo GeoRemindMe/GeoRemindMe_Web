@@ -1519,7 +1519,8 @@ input{
         cursor:pointer;
     }
     #add-suggestion #more-details p,
-    #add-suggestion #more-details div{
+    #add-suggestion #more-details div,
+    span#lists{
         display:none;
         margin: 0 0 0.5em;
     }

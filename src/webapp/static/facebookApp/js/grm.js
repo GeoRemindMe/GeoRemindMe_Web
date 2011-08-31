@@ -261,7 +261,7 @@ GRM.menuList = function(settings) {
     }, settings);
        
     return this.each(function(){
-        alert("Entro");
+        
         // Menu desplegable "Listas"
             // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
             hiConfig = {
