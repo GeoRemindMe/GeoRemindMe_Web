@@ -1521,6 +1521,7 @@ input{
     #add-suggestion #more-details p,
     #add-suggestion #more-details div{
         display:none;
+        margin: 0 0 0.5em;
     }
     #add-suggestion #more-details.visible,
     #add-suggestion #more-details div p{
@@ -1576,7 +1577,7 @@ input{
         text-align: center;
     }
     #suggestion-item{
-        height: 110px;
+        height: 104px;
         margin-bottom:0;
     }
     #suggestion-item label,#suggestion-place,#add-more-details{
