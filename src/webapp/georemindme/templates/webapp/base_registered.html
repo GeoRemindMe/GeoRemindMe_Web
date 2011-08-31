@@ -99,10 +99,10 @@
 
 		{% if user.username %}
             <div id="account-info">
-                <div id="user-menu" class="dropDrownBtn">
+                <div id="user-menu" class="user-dropDrownBtn">
                     <a href="{% url public_profile request.user.username %}">
                     <img src="{% embedded_avatar request.user.username %}" alt=""></a><span>.</span>
-                    <ul class="submenu" style="display:none" id="dropdown-list">
+                    <ul class="user-submenu" style="display:none" id="dropdown-list">
                         <li><a href="{% url public_profile user.username %}">Mi perfil</a></li>
                         <li><a href="{% url profile_settings %}">Configuración</a></li>
                         <li><a href="{% url logout %}">Desconectar</a></li>
