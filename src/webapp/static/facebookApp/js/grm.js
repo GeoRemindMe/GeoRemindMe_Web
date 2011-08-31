@@ -226,6 +226,167 @@ GRM.remember = function(settings) {
     });
 };
 
+/*
+    <span class="btn dropDrownBtn">
+        Guardar en
+        <ul class="submenu" style="display:none" id="dropdown-list">
+            {% if lists %}
+                {% for obj in lists %}
+                    {% if obj.user.username = request.user.username %}
+                        <!-- Solo se muestran mis listas -->
+                        <li id="listid-{{obj.id}}">{{obj.name}} (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <li id="new-list-btn">
+                <span id="text">Nueva lista...</span>
+                <span id="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">Cancel</div>
+            </li>
+        </ul>
+    </span>
+    
+    $('.dropDownBtn').menuList({onNewList: function(){}});
+*/
+GRM.menuList = function(settings) {
+    
+    settings = jQuery.extend({
+        onNewList: null,
+        
+    }, settings);
+       
+    return this.each(function(){
+        // Menu desplegable "Listas"
+            // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
+            hiConfig = {
+                sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
+                interval: 0, // number = milliseconds for onMouseOver polling interval
+                timeout: 500, // number = milliseconds delay before onMouseOut
+                over: function() {
+                    $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+                },
+                out: function() {
+                    if($("#dropdown-list").hasClass('visible-display')==false)
+                        $(this).find('ul:first').slideUp(400);
+                }
+            }
+            
+            $(this).hoverIntent(hiConfig);
+            $(this).find('.submenu').hoverIntent(hiConfig);
+            $(this).click(function(){
+                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+            })
+            
+            $(this).find('.submenu li').click(function(){submenuLiBehave(this)})
+            
+            //Enter behave when adding new list on Suggestions Tab
+            $("#new-list-btn span#new-list").keyup(function(e) {
+                var suggestionList=[];
+                e.preventDefault();
+                if (e.which == 27){
+                    //On press escape
+                    closeDropdown();
+                }else if(e.keyCode == 13) {
+                    if(settings.onNewList!=null)
+                        settings.onNewList;
+                    else{
+                        //On press enter
+                        //Comprobamos si hay sugerencias seleccionadas para añadirlas
+                        var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
+                        if( checkedSuggestions.length>0){
+                            checkedSuggestions.each(function(){
+                                suggestionList.push($(this).attr('id').substring(9,$(this).attr('id').length))
+                            })
+                        }
+                        
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url modify_suggestion_list %}",
+                            data: {
+                                name: $(this).find('input').val(),
+                                suggestions: suggestionList
+                            },
+                            dataType:'json',
+                            success: function(data){
+                                //Añadimos la lista al desplegable
+                                $("<li id=\"listid-"+data.id+"\">"+data.name+" (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('#new-list-btn');
+                                $('#listid-'+data.id).click(function(){submenuLiBehave(this)});
+                                
+                                //Añadimos la lista en la pestaña listas
+                                
+                                //Reordenamos alfabéticamente la lista desplegable
+                                $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
+                                    return $(a).text().toLowerCase() > $(b).text().toLowerCase() ? 1 : -1;
+                                });
+                                
+                                $("#dropdown-list").removeClass('visible-display');
+                                
+                                //Añadimos a la sugerencia dentro de la lista de sugerencias 
+                                //las nuevas listas en las que se encuentra
+                                updateSuggestions(data);
+                                
+                                //Actualizamos el contador de la lista con el número de sugerencias
+                                updateCounter(data.id,data.keys.length);
+                                
+                                //Añadimos la lista a la pestaña listas
+                                var suggestions=[];
+                                $(data.keys).each(function(){
+                                    suggestions.push({
+                                            id:this,
+                                            name:$('#suggestion_'+this+' .suggestionName_editable').text()
+                                        })
+                                })
+                                var obj=$("#listTemplate").tmpl({obj:data, keys:suggestions}).appendTo("#suggestion-list-lists");
+                                if(obj.find('.suggestions ul li').length > 0){
+                                    tmp=obj;
+                                    obj.find('.suggestions ul').show();
+                                    obj.find('.suggestions .empty-msg').hide();
+                                    obj.find('.suggestions li.removable').click(function(){
+                                        var unparsedString=$(this).attr('class').split(" ")[0];
+                                        var listID = unparsedString.substring(5,unparsedString.length)
+                                        removeFromList(this,listID);
+                                    });
+                                }
+                                
+                                
+                                setExpandible('#list_'+data.id);
+                                
+                                //Aumentamos el contador de las listas
+                                $('#lists-tab-counter').text(parseInt($('#lists-tab-counter').text())+1);
+                                
+                                //Mostrar mensaje de éxito
+                                showMessage("La lista ha sido añadida con éxito","success")
+                                
+                                
+                            }
+                        });
+                    }
+                    
+                        
+                    
+                    $("#new-list-btn span#text").css('display','inline-block')
+                    $("#new-list-btn span#new-list").css('display','none')
+                    $("#new-list-btn div#cancel-link").css('display','none')
+                    $("#new-list-btn span#new-list").find('input').val("");
+                }                
+            });
+            
+            //Reordenamos alfabéticamente la lista desplegable
+            $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
+                return $(a).text().toLowerCase() > $(b).text().toLowerCase() ? 1 : -1;
+            });
+            
+            //Convierte el texto de nueva lista en un input field
+            $('#new-list-btn span#text').click(function(){                
+                $("#new-list-btn span#text").css('display','none')
+                $("#new-list-btn span#new-list").css('display','inline-block')
+                $("#new-list-btn span#new-list").find('input').focus()
+                $("#new-list-btn div#cancel-link").css('display','block')
+                $("#dropdown-list").addClass('visible-display');
+            })
+        
+    });
+}
+
 GRM.removable = function() {
 
     return this.each(function(){
@@ -554,6 +715,15 @@ function setRemainingCharCounter(input,counter){
     })
     
     //$('#id_name').trigger('keyup');
+}
+
+//Cierra el menu desplegable
+function closeDropdown(){
+    $("#dropdown-list").removeClass('visible-display');
+    $("#new-list-btn span#text").css('display','inline-block');
+    $("#new-list-btn span#new-list").css('display','none');
+    $("#new-list-btn div#cancel-link").css('display','none');
+    $("#new-list-btn span#new-list").find('input').val("");
 }
 
 

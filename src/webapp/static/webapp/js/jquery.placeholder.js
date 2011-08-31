@@ -11,25 +11,20 @@ jQuery.fn.placeholder = function()
 			
 			$(this).css({color:'#999999',"font-style":"italic"});
 			
-			$(this).bind('focus', function()
-			{
-				if($(this).html()==placeholder)
+			$(this).bind('focus', function(){
+				if($(this).val()==placeholder)
 				{
-					$(this).html("");
-					$(this).css({color:'#000'});
+					$(this).val("");
+					$(this).css({color:'inherit',"font-style":"normal"});
 				}
-			}
-			)
+			});
 			
-			$(this).bind('blur', function()
-			{
-				if($(this).html()=="")
-				{
-					$(this).html(placeholder);
-					$(this).css({color:'#999999'});
+			$(this).bind('blur', function(){
+                if($(this).val()==""){
+					$(this).val(placeholder);
+					$(this).css({color:'#999999',"font-style":"italic"});
 				}
-			}
-			)
+			});
 		}
 		else if ($(this).is("input")) {
 			var id = $(this).attr("id");
@@ -77,7 +72,7 @@ jQuery.fn.placeholder = function()
 					if($(this).val()==placeholder)
 					{
 						$(this).val("");
-						$(this).css({color:'#000'});
+						$(this).css({color:'inherit',"font-style":"normal"});
 					}
 				}
 				)
@@ -87,7 +82,7 @@ jQuery.fn.placeholder = function()
 					if($(this).val()=="")
 					{
 						$(this).val(placeholder);
-						$(this).css({color:'#999999'});
+						$(this).css({color:'#999999',"font-style":"italic"});
 					}
 				}
 				)

@@ -19,9 +19,11 @@
             //Asignamos comportamiento ONCLICK a cada fila --> Desplegar detalles
             setExpandible('.suggestion');
             
+            //Searchable input fields
             $('#filter-suggestions').search('#suggestion-list > div',['.suggestionName_editable']);
             $('#filter-lists').search('#suggestion-list-lists > div',['.suggestionName_editable']);
             
+            //Select all checkbox
             $('#checkBox_all').click(function(){
                 if($('#checkBox_all').is(':checked'))
                     $(':regex(id,^(checkBox_))').attr('checked',true);
@@ -29,9 +31,10 @@
                     $(':regex(id,^(checkBox_))').attr('checked',false);
             });
             
-            //$('.editable').editable({editBy:"dblclick"});
+            //Editable fields
             set_editable_fields();
             
+            //Show empty msg if there are no elements
             $('.empty-msg').parent().find('ul').each(function(i,elem){
                 if($(elem).children().length==0){
                     $(elem).hide();
@@ -41,7 +44,6 @@
                 }
             })
 
-            
             //Adding behaviour to tab content
             $('#tabMenu li').click(function(){
                 tab_id=$('#tabMenu li.active').attr('id')
@@ -173,18 +175,16 @@
                 removeFromList(this,listID);
             });
             
+            //Añade el comportamiento a las sugerencias que se pueden 
+            //eliminar de una lista y a las listas a las que pertenece
+            //una sugerencia.
             $('#suggestion-list-lists .suggestions li.removable').click(function(){
                 var unparsedString=$(this).attr('class').split(" ")[0];
                 var listID = unparsedString.substring(5,unparsedString.length)
                 removeFromList(this,listID);
             });
             
-            
-            //On LISTS tab, add new list
-            $('.addNewList').click(function(){
-               //console.log("Añadimos nueva lista") 
-            });
-            
+            //Convierte el texto de nueva lista en un input field
             $('#new-list-btn span#text').click(function(){                
                 $("#new-list-btn span#text").css('display','none')
                 $("#new-list-btn span#new-list").css('display','inline-block')
@@ -193,14 +193,21 @@
                 $("#dropdown-list").addClass('visible-display');
             })
             
+                        
+            //On LISTS tab, add new list
+            $('.addNewList').click(function(){
+               //console.log("Añadimos nueva lista") 
+            });
             
+            //Selecciona la sugerencia actual, desmarca las demas y despliega
+            //la lista
             $('.add-on-list').click(function(){
                 $(':regex(id,^(checkBox_))').attr('checked',false);
                 $("#checkBox_"+$(this).attr('value')).attr('checked',true);
                 $(".dropDrownBtn").click()
             });
             
-            
+            //Mostrar y ocultar estadísticas
             $('.show-more').click(function (){
                 var textElement=$(this).parent().find('.show-more-text');
                 if($(textElement).css('display')!="none")
@@ -211,10 +218,14 @@
                 $(textElement).toggle('slow')
             });
             
+            //Placeholders
             $("[placeholder]").placeholder();
             $("#new-list input").css("color","black")
             $("#new-list input").css("font-style","normal")
             
+            //------------------------------------
+            //Boton de filtrar mis sugerencias
+            //------------------------------------
             $('#filterMySuggestions').toggle(function(){
                 $(this).addClass('pressed');
                 var tmp=$('#suggestion-list .not-mine')
@@ -231,6 +242,9 @@
                 
             });
             
+            //------------------------------------
+            //Boton de filtrar mis listas
+            //------------------------------------
             $('#filterMyLists').toggle(function(){
                 $(this).addClass('pressed');
                 $('#suggestion-list .not-mine').fadeOut('slow');
@@ -240,8 +254,10 @@
             });
             
 
-            
-            /* CREANDO LOS BOTONES DE COMPARTIR */
+            // ------------------------------------
+            // CREANDO LOS BOTONES DE COMPARTIR 
+            // CON LAS REDES SOCIALES
+            // ------------------------------------
             $('.share a').click(function(e){e.preventDefault();});
 			$('.share').click(function(){
 				var template;
@@ -377,6 +393,9 @@
          * 
          * 
          */
+        
+        
+        
 
         
         // Actualizamos la información de en que listas se encuentra
@@ -533,13 +552,7 @@
             
         }
         
-        function closeDropdown(){
-            $("#dropdown-list").removeClass('visible-display');
-            $("#new-list-btn span#text").css('display','inline-block');
-            $("#new-list-btn span#new-list").css('display','none');
-            $("#new-list-btn div#cancel-link").css('display','none');
-            $("#new-list-btn span#new-list").find('input').val("");
-        }
+        
 
         function toogleSuggestion(obj){
             var suggestion_id=$(obj).parent().attr('id').substr(11)
@@ -550,19 +563,20 @@
         }
 
 
-        function loadSuggestionsPage(page){
-            GRM.loadPage({
-                page:page,
-                "total_pages":{{suggestions.2}},
-                container:'#suggestion-list',
-                url:'/ajax/get/suggestion/',
-                template: "#suggestionTemplate",
-                data:{
-                        'query_id':"{{suggestions.0}}",
-                    }                
-            });
-        }
+        //function loadSuggestionsPage(page){
+        //    GRM.loadPage({
+        //        page:page,
+        //        "total_pages":{{suggestions.2}},
+        //        container:'#suggestion-list',
+        //        url:'/ajax/get/suggestion/',
+        //        template: "#suggestionTemplate",
+        //        data:{
+        //                'query_id':"{{suggestions.0}}",
+        //            }                
+        //    });
+        //}
 
+        //Establece el comportamiento a un objeto para poder expandirse
         function setExpandible(obj){
             $(obj+' .maximize-minimize').toggle(function(){
                     //Lo primero que hacemos es cerrar todas aquellas listas/sugerencias
@@ -611,6 +625,7 @@
             })
         }
 
+        //Elimina las sugerencias marcadas
         function removeSuggestions(){
             temp=$("input[name='suggestions']:checked")
             $.each(temp, function(index,value){
@@ -634,6 +649,8 @@
                 });
             })
         }
+        
+        //Elimina las listas marcadas
         function removeLists(){
             temp=$("input[name='lists']:checked")
             $.each(temp, function(index,value){
@@ -671,6 +688,7 @@
             $(counterClass).text(val);
         }
 
+        //Obtiene el id de una sugerencia
         function get_suggestion_id(obj){
             var hash={};
             var parents=$(obj).parentsUntil(':regex(id,(suggestion-list|suggestion-list-lists))');
@@ -865,6 +883,8 @@
 -->
                         
                         <span class="btn removeBtn" onclick="removeSuggestions()">Eliminar</span>
+                        
+                        <!-- Menu desplegable de listas -->
                         <span class="btn dropDrownBtn">
                             Guardar en
                             <ul class="submenu" style="display:none" id="dropdown-list">
@@ -882,6 +902,7 @@
                                 </li>
                             </ul>
                         </span>
+                        <!-- Fin -->
                         
                         <span class="btn removeBtn filter"><input type="text" id="filter-suggestions" placeholder="Filtrar por nombre"></span>
                         <span class="btn removeBtn" id="filterMySuggestions">Mis sugerencias</span>
