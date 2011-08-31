@@ -127,7 +127,8 @@
 			   var data = {
 				  "user_register-email":function() { return $('#registerEmail').val() },
 				  "user_register-password":function() { return $('#userRegisterPass1').val() },
-				  "user_register-password2":function() { return $('#userRegisterPass2').val() }
+				  "user_register-password2":function() { return $('#userRegisterPass2').val() },
+                  "csrfmiddlewaretoken": function() { return $('#registerFormForm input[type="hidden"]').val()}
 				  };
 			   
 			   GRM.wait();
@@ -201,7 +202,10 @@
 					url:"/ajax/exists/",
 					type:'post',
 					dataType:'json',
-					data: {email: email  },
+					data: {
+                        email: email,
+                        "csrfmiddlewaretoken": $('#registerFormForm input[type="hidden"]').val() 
+                    },
 					async:true,
 					success: function(data){ 
 				
