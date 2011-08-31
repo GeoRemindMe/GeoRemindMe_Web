@@ -1309,3 +1309,7 @@ a.hoverlink{
     color:blue;
     text-shadow: none;
 }
+
+#add-suggestion{
+    margin-top:1em;
+}
