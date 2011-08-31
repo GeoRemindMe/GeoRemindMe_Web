@@ -23,7 +23,7 @@ handlers:
 
 - url: /api/(.*)
   script: service/api/main.py
-  secure: always
+  secure: optional
 
 - url: /admin/(.*)
   script: appengine_admin/main.py

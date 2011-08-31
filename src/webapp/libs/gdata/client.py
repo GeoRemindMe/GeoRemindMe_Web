@@ -265,6 +265,8 @@ class GDClient(libs.atom.client.AtomPubClient):
         uri=uri, auth_token=auth_token, http_request=http_request, **kwargs)
     # On success, convert the response body using the desired converter
     # function if present.
+    if kwargs['rpc'] is not None:
+        return response
     if response is None:
       return None
     if response.status == 200 or response.status == 201:

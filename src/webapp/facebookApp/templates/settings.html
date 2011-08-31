@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load tags %}
 
 {% block title %}Configuración de la cuenta{% endblock %}
 {% block goBack %}{%endblock%}
@@ -7,7 +8,7 @@
     <div id="profile">
         
         <h1>Configuración de la cuenta</h1>
-        <a href="{% url fb_edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
+        <a href="{% url2 in_facebook edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
         
         <div class="section">
             <div class="header">
@@ -129,7 +130,7 @@
                     {%if LANGUAGE_CODE == code %}{{name}}{% endif %} 
 
                 {% endfor %}
-                <a href="{% url fb_edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
+                <a href="{% url2 in_facebook edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
             </p>
         </div>
         

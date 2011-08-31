@@ -1,5 +1,6 @@
 {% extends "webapp/base_registered.html" %}
 {% load i18n %}
+{% load tags %}
 
 {% block title %}Configuración de la cuenta{% endblock %}
 {% block goBack %}{%endblock%}
@@ -7,7 +8,7 @@
     <div id="profile">
         
         <h1>Configuración de la cuenta</h1>
-        <a href="{% url fb_edit_profile %}" class="btn" id="edit-settings-btn">Editar</a> 
+        <a href="{% url2 in_facebook edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
         
         <div class="section">
             <div class="header">
@@ -67,10 +68,10 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if not user.twitter_user.has_perms %}
-                            <a href="/ext/twitter/contacts?cls&nologin" target="_blank">Autorizar</a> 
+                        {% if not user.has_perms_twitter %}
+                            <a href="/ext/twitter/perms" target="_blank">Autorizar</a> 
                         {% else %}
-                            <a href="/oauth/revocate/twitter" target="_blank">Revocar</a>
+                            <a href="http://twitter.com/settings/applications" target="_blank">Revocar</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -84,11 +85,14 @@
                         {% endif %}
                     </td>
                     <td>
+                        <em>Esperando la API de Google+</em>
+<!--
                         {% if not user.google_user.has_perms %}
                             <a href="/ext/google/contacts?cls" target="_blank">Autorizar</a> 
                         {% else %}
                             <a href=""/oauth/revocate/google" target="_blank">Revocar</a>
                         {% endif %}
+-->
                     </td>
                 </tr>
             </table>
@@ -126,7 +130,7 @@
                     {%if LANGUAGE_CODE == code %}{{name}}{% endif %} 
 
                 {% endfor %}
-                <a href="{% url fb_edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
+                <a href="{% url2 in_facebook edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
             </p>
         </div>
         

@@ -55,11 +55,16 @@ class InvitationHelper(object):
         return invitation
     
     def get_invitations_pending(self, user, page = 1, query_id = None):
+        raise NotImplementedError()
         if not isinstance(user, User):
             raise TypeError
-        q = Invitation.all().filter('to =', user).filter('status =', 0)
+        from google.appengine.api import datastore
+        q = datastore.Query('Invitation', {'to =': user.key(), 'status': 0})
         from paging import PagedQuery
         p = PagedQuery(q, id = query_id)
+        invitations = p.fetch_page(page)
+        from georemindme.funcs import prefetch_refpropsEntity
+        prefetch = prefetch_refpropsEntity(invitations, 'sender', 'to', 'instance')
         return [p.id, [i.to_dict() for i in p.fetch_page(page)], p.page_count()]
     
 
