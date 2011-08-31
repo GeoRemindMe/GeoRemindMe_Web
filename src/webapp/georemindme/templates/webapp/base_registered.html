@@ -70,7 +70,10 @@
                 $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
             })
             
-            
+            $("#left-col").css("height",$(this).height()+'px');
+            $("#right-col").bind("resize",function(){
+                $("#left-col").css("height",$(this).height()+'px');
+            });
         });
     </script>
 	<!--[if lt IE 9]>
