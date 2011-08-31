@@ -146,6 +146,10 @@
                             
                             setExpandible('#list_'+data.id);
                             
+							//Editable fields
+							//set_editable_fields();
+							$('.editable_list_name').editable('/ajax/suggestion/list/modify/', name_field);
+                            
                             //Aumentamos el contador de las listas
                             $('#lists-tab-counter').text(parseInt($('#lists-tab-counter').text())+1);
                             
@@ -1100,14 +1104,14 @@
         </div>
     </script>
     
-    
+    <!-- A MODIFICAR -->
     <script id="listTemplate" type="text/x-jquery-tmpl">
         <div id="list_${obj.id}" class="suggestion suggestionList">
             <div class="maximize-minimize suggestionCollapsed"><span>.</span></div>
             <div class="collapsed">
                 <span class="checkBox"><input type="checkbox" id="checkBox_${obj.id}" value="${obj.id}" name="lists" /></span>
-                <span class="suggestionName">${obj.name} (<span class="list-${obj.id}-counter">${obj.count}</span> sugerencias, autor: ${obj.user.username} )</span>
-                <span class="suggestionName_editable editable" style="display:none">${obj.name}</span>                                        
+                <span class="suggestionName">${obj.name}</span>
+                <span class="suggestionName_editable editable_list_name" style="display:none">${obj.name}</span>                                        
             </div>
             <div class="expanded" style="display:none">
                 <dl>
