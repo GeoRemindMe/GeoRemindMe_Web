@@ -1689,9 +1689,15 @@ input{
 /*
         margin: 10px 0 0 5px;
 */
+        border-color: -moz-use-text-color -moz-use-text-color #CCCCCC;
+        border-style: none solid solid none;
+        border-width: 0 0 1px;
         font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
         font-size: 1.1em;
-        width: 450px;
+        height: 1.7em;
+        line-height: 1.5em;
+        padding: 5px;
+        width: 538px;
 
     }
     .btnGmaps{
