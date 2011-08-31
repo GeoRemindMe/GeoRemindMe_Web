@@ -227,7 +227,11 @@ GRM.remember = function(settings) {
 };
 
 /*
-    <span class="btn dropDrownBtn">
+    HOW TO USE
+    --------------------------------
+    HTML Template needed:
+    
+    <span class="btn dropDownBtn">
         Guardar en
         <ul class="submenu" style="display:none" id="dropdown-list">
             {% if lists %}
@@ -238,19 +242,21 @@ GRM.remember = function(settings) {
                     {% endif %}
                 {% endfor %}
             {% endif %}
-            <li id="new-list-btn">
+            <li class="new-list-btn">
                 <span id="text">Nueva lista...</span>
-                <span id="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">Cancel</div>
+                <span class="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">Cancel</div>
             </li>
         </ul>
     </span>
     
+    Javascript call at onready
     $('.dropDownBtn').menuList({onNewList: function(){}});
 */
 GRM.menuList = function(settings) {
     
     settings = jQuery.extend({
         onNewList: null,
+        onLiClick: null
         
     }, settings);
        
@@ -276,19 +282,23 @@ GRM.menuList = function(settings) {
                 $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
             })
             
-            $(this).find('.submenu li').click(function(){submenuLiBehave(this)})
+            //console.log("settings.onLiClick="+settings.onLiClick)
+            if(settings.onLiClick!=null)
+                $(this).find('.submenu li:not(dropDownBtn-btn)').click(settings.onLiClick);
+            else
+                $(this).find('.submenu li:not(dropDownBtn-btn)').click(function(){submenuLiBehave(this)})
             
             //Enter behave when adding new list on Suggestions Tab
-            $("#new-list-btn span#new-list").keyup(function(e) {
+            $(".new-list-btn span.new-list").keyup(function(e) {
                 var suggestionList=[];
                 e.preventDefault();
                 if (e.which == 27){
                     //On press escape
                     closeDropdown();
                 }else if(e.keyCode == 13) {
-                    if(settings.onNewList!=null)
-                        settings.onNewList;
-                    else{
+                    if(settings.onNewList!=null){
+                        settings.onNewList($(this).find('input').val());
+                    }else{
                         //On press enter
                         //Comprobamos si hay sugerencias seleccionadas para añadirlas
                         var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
@@ -308,13 +318,13 @@ GRM.menuList = function(settings) {
                             dataType:'json',
                             success: function(data){
                                 //Añadimos la lista al desplegable
-                                $("<li id=\"listid-"+data.id+"\">"+data.name+" (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('#new-list-btn');
+                                $("<li id=\"listid-"+data.id+"\">"+data.name+" (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
                                 $('#listid-'+data.id).click(function(){submenuLiBehave(this)});
                                 
                                 //Añadimos la lista en la pestaña listas
                                 
                                 //Reordenamos alfabéticamente la lista desplegable
-                                $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
+                                $('.submenu li').not('li.new-list-btn').sortElements(function(a, b){
                                     return $(a).text().toLowerCase() > $(b).text().toLowerCase() ? 1 : -1;
                                 });
                                 
@@ -363,24 +373,24 @@ GRM.menuList = function(settings) {
                     
                         
                     
-                    $("#new-list-btn span#text").css('display','inline-block')
-                    $("#new-list-btn span#new-list").css('display','none')
-                    $("#new-list-btn div#cancel-link").css('display','none')
-                    $("#new-list-btn span#new-list").find('input').val("");
+                    $(".new-list-btn span#text").css('display','inline-block')
+                    $(".new-list-btn span.new-list").css('display','none')
+                    $(".new-list-btn div#cancel-link").css('display','none')
+                    $(".new-list-btn span.new-list").find('input').val("");
                 }                
             });
             
             //Reordenamos alfabéticamente la lista desplegable
-            $('.submenu li').not('li#new-list-btn').sortElements(function(a, b){
+            $('.submenu li').not('li.new-list-btn').sortElements(function(a, b){
                 return $(a).text().toLowerCase() > $(b).text().toLowerCase() ? 1 : -1;
             });
             
             //Convierte el texto de nueva lista en un input field
-            $('#new-list-btn span#text').click(function(){                
-                $("#new-list-btn span#text").css('display','none')
-                $("#new-list-btn span#new-list").css('display','inline-block')
-                $("#new-list-btn span#new-list").find('input').focus()
-                $("#new-list-btn div#cancel-link").css('display','block')
+            $('.new-list-btn span#text').click(function(){                
+                $(".new-list-btn span#text").css('display','none')
+                $(".new-list-btn span.new-list").css('display','inline-block')
+                $(".new-list-btn span.new-list").find('input').focus()
+                $(".new-list-btn div#cancel-link").css('display','block')
                 $("#dropdown-list").addClass('visible-display');
             })
         
@@ -665,6 +675,7 @@ jQuery.fn.search = function(container,fields) {
 jQuery.fn.like = GRM.like;
 jQuery.fn.remember = GRM.remember;
 jQuery.fn.removable = GRM.removable;
+jQuery.fn.menuList = GRM.menuList;
 
 GRM.init = function() {
         $(".like-dislike").like();
@@ -720,10 +731,75 @@ function setRemainingCharCounter(input,counter){
 //Cierra el menu desplegable
 function closeDropdown(){
     $("#dropdown-list").removeClass('visible-display');
-    $("#new-list-btn span#text").css('display','inline-block');
-    $("#new-list-btn span#new-list").css('display','none');
-    $("#new-list-btn div#cancel-link").css('display','none');
-    $("#new-list-btn span#new-list").find('input').val("");
+    $(".new-list-btn span#text").css('display','inline-block');
+    $(".new-list-btn span.new-list").css('display','none');
+    $(".new-list-btn div#cancel-link").css('display','none');
+    $(".new-list-btn span.new-list").find('input').val("");
 }
 
 
+/**
+ * jQuery.fn.sortElements
+ * --------------
+ * @param Function comparator:
+ *   Exactly the same behaviour as [1,2,3].sort(comparator)
+ *   
+ * @param Function getSortable
+ *   A function that should return the element that is
+ *   to be sorted. The comparator will run on the
+ *   current collection, but you may want the actual
+ *   resulting sort to occur on a parent or another
+ *   associated element.
+ *   
+ *   E.g. $('td').sortElements(comparator, function(){
+ *      return this.parentNode; 
+ *   })
+ *   
+ *   The <td>'s parent (<tr>) will be sorted instead
+ *   of the <td> itself.
+ */
+jQuery.fn.sortElements = (function(){
+ 
+    var sort = [].sort;
+ 
+    return function(comparator, getSortable) {
+ 
+        getSortable = getSortable || function(){return this;};
+ 
+        var placements = this.map(function(){
+ 
+            var sortElement = getSortable.call(this),
+                parentNode = sortElement.parentNode,
+ 
+                // Since the element itself will change position, we have
+                // to have some way of storing its original position in
+                // the DOM. The easiest way is to have a 'flag' node:
+                nextSibling = parentNode.insertBefore(
+                    document.createTextNode(''),
+                    sortElement.nextSibling
+                );
+ 
+            return function() {
+ 
+                if (parentNode === this) {
+                    throw new Error(
+                        "You can't sort elements if any one is a descendant of another."
+                    );
+                }
+ 
+                // Insert before flag:
+                parentNode.insertBefore(this, nextSibling);
+                // Remove flag:
+                parentNode.removeChild(nextSibling);
+ 
+            };
+ 
+        });
+ 
+        return sort.call(this, comparator).each(function(i){
+            placements[i].call(getSortable.call(this));
+        });
+ 
+    };
+ 
+})();  

@@ -60,8 +60,8 @@
                 }
             }
             
-            $(".user-dropDrownBtn, .user-submenu ").hoverIntent(hiConfig);
-            $(".user-dropDrownBtn").click(function(){
+            $(".user-dropDownBtn, .user-submenu ").hoverIntent(hiConfig);
+            $(".user-dropDownBtn").click(function(){
 				//Alineamos el menu desplegable desde la esquina sup-izq.
 				var tmp=$('#dropdown-list').width();
 				tmp=52-tmp;
@@ -99,7 +99,7 @@
 
 		{% if user.username %}
             <div id="account-info">
-                <div id="user-menu" class="user-dropDrownBtn">
+                <div id="user-menu" class="user-dropDownBtn">
                     <a href="{% url public_profile request.user.username %}">
                     <img src="{% embedded_avatar request.user.username %}" alt=""></a><span>.</span>
                     <ul class="user-submenu" style="display:none" id="dropdown-list">

@@ -1560,50 +1560,7 @@ input{
     p.center{
         text-align:center
     }
-    
-/*
-    select{
-        background-color: #DDD;
-
-        
-        border-radius: 0;
-        -moz-border-radius: 0;
-        -webkit-border-radius: 0;
-
-        
-        border-left: 1px solid black;
-        border-right: 1px solid;
-        border-bottom: 1px solid;
-        border-top: 1px solid;
-
-               
-        box-sizing: border-box;
-        color: black;
-        cursor: default;
-        display: inline-block;
-        float: none;
-        font-family: Arial;
-        font-size: 13px;
-        font-weight: normal;
-        height: 19px;
-        letter-spacing: normal;
-        line-height: normal;
-        margin: 2px;
-        min-height: 0px;
-        outline-color: #9E9484;
-        outline-style: auto;
-        outline-width: 5px;
-        padding-left: 0px;
-        text-align: -webkit-auto;
-        text-indent: 0px;
-        text-shadow: none;
-        text-transform: none;
-        white-space: pre;
-        width: 88px;
-        word-spacing: 0px;
-    }
-*/
-    
+       
     #more-details label{
         font-weight: bold;
         height: 15px;
@@ -1895,6 +1852,15 @@ input{
         .public-icon{
             background-position: 0 2px;
         }
+    
+    ul#dropdown-list.submenu  span.checkbox{
+        background: url("/static/facebookApp/img/checkbox.png") no-repeat scroll 0 -2px transparent;
+        padding-left: 20px;
+    }
+    ul#dropdown-list.submenu  span.checkbox.checked{
+        background: url("/static/facebookApp/img/checkbox.png") no-repeat scroll 0 -22px transparent;
+        padding-left: 20px;
+    }
     /****************************
      *      
      *  Suggestion panel (Vault)
@@ -2235,8 +2201,10 @@ input{
             top: 3px;;
         }
         
-        #suggestions #content .btn, .selectCheckBox,
-        select{
+        #suggestions #content .btn, 
+        .selectCheckBox,
+        select,
+        .dropDownBtn{
             -moz-border-radius: 3px 3px 3px 3px;
             -webkit-border-radius: 3px;
             border-radius: 3px;
@@ -2344,13 +2312,20 @@ input{
     .removeBtn, .addNewList{
         float:none;
     }
-    .dropDrownBtn{
+    .dropDownBtn{
         float:none;
     }
-    #suggestions #content span.dropDrownBtn { 
-        background: url("/static/webapp/img/dropdownmenu.png") no-repeat scroll 96% 5px transparent !important;
+    
+    #suggestions #content span.dropDownBtn,
+    span.dropDownBtn{ 
+        display:inline-block;
         list-style: none outside none;
-        padding-right: 15px;
+        
+    }
+    .save-at{
+        background: url("/static/webapp/img/dropdownmenu.png") no-repeat scroll 96% 4px transparent !important;
+        margin-right: -4px;
+        padding-right: 17px;
     }
     ul.share-suggestion a.share-suggestion{
         background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 4px 3px transparent;
@@ -2379,7 +2354,7 @@ input{
     }
     
     /* Submenu */
-    .dropDrownBtn ul.submenu,.dropDrownBtn ul { 
+    .dropDownBtn ul.submenu,.dropDownBtn ul { 
         background-color: white;
         border: 1px solid #CCCCCC;
         clear: both;
@@ -2389,13 +2364,14 @@ input{
         position: absolute;
         text-align: left;
         width: auto;
+        z-index: 2;
     }
-    .dropDrownBtn ul.submenu li { 
+    .dropDownBtn ul.submenu li { 
         background-image: none;
         float: none;
         padding: 4px;
     }
-    .dropDrownBtn ul.submenu li:hover{
+    .dropDownBtn ul.submenu li:hover{
         background-color:#EEEEEE;
     }
     
@@ -2414,7 +2390,7 @@ input{
     #suggestions ul.submenu input[type="checkbox"]{
         margin: 0 7px 0 2px;
     }
-    #new-list-btn{
+    .new-list-btn{
         min-width: 80px;
 /*
         border-top: 1px solid #AAAAAA;
@@ -2424,14 +2400,14 @@ input{
         text-decoration: underline;
 */
     }
-    #new-list-btn span#text{
+    .new-list-btn span#text{
         width:100%
     }
-    #new-list{
+    .new-list{
         margin-right:4px;
         width: 97%;
     }
-    #new-list input{
+    .new-list input{
         width:100%
     }
     div#cancel-link{

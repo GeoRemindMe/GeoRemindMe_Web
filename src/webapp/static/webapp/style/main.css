@@ -1007,10 +1007,10 @@ div.removable a {
     padding-right: 50px;
 }
 
-.dropDrownBtn ul.submenu, 
-.dropDrownBtn ul,
-.user-dropDrownBtn ul.user-submenu, 
-.user-dropDrownBtn ul
+.dropDownBtn ul.submenu, 
+.dropDownBtn ul,
+.user-dropDownBtn ul.user-submenu, 
+.user-dropDownBtn ul
 {
     background-color: #EEEEEE;
     border: 1px solid #CCCCCC;
@@ -1023,15 +1023,15 @@ div.removable a {
     width: auto;
 }
 
-.user-dropDrownBtn ul.user-submenu li:hover{
+.user-dropDownBtn ul.user-submenu li:hover{
 	background-color:#eee;
 }
-.dropDrownBtn ul.submenu, 
-.dropDrownBtn ul{
+.dropDownBtn ul.submenu, 
+.dropDownBtn ul{
 	margin: 0 0 0 -10px;
 	padding:0;
 }
-.user-dropDrownBtn ul.user-submenu {
+.user-dropDownBtn ul.user-submenu {
 	padding:0;
 }
 /*
