@@ -195,7 +195,7 @@
     <div class="help-txt" style="display:none" id="perms-facebook-text" title="Información">
         <p>Para poder enviar tus sugerencias a Facebook necesitas instalarte la aplicación de Facebook.</p>
         <p><a href="http://apps.facebook.com/georemindme">Instalar la aplicación de GeoRemindMe para Facebook</a></p>
-        <p>Recuerda que en cualquier momento puedes revocar el permiso desde la <a href="{% url profile_settings %}">configuración de tu cuenta</a>.</p>
+        <p>Recuerda que en cualquier momento puedes revocar el permiso desde la <a href="{% url2 in_facebook profile_settings %}">configuración de tu cuenta</a>.</p>
     </div>
 {% endif %}
 
@@ -204,6 +204,6 @@
         <p>Para poder enviar tus sugerencias a Twitter necesitamos que personalmente nos des permiso para hacerlo.</p>
         <p><a href="/ext/twitter/perms" target="_blank">Conceder permiso a GeoRemindMe para publicar en Twitter</a></p>
         <p>Una vez concedidos los permisos por favor refresca la página (pulsando F5).</p>
-        <p>Recuerda que en cualquier momento puedes revocar el permiso desde la <a href="{% url profile_settings %}">configuración de tu cuenta</a>.</p>
+        <p>Recuerda que en cualquier momento puedes revocar el permiso desde la <a href="{% url2 in_facebook profile_settings %}">configuración de tu cuenta</a>.</p>
     </div>
 {% endif %}

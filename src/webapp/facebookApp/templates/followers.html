@@ -18,11 +18,11 @@
     {% for f in followers %}
         <li>
             <div class="avatar">
-                <a href="{% url fb_public_profile f.username%}" title="Ver perfil en GeoRemindMe">
+                <a href="{% url2 in_facebook public_profile f.username%}" title="Ver perfil en GeoRemindMe">
                     <img src="{% url user_avatar f.username%}" alt="Avatar">
                 </a>
                 <br>
-                <a href="{% url fb_public_profile f.username%}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
+                <a href="{% url2 in_facebook public_profile f.username%}" title="Ver perfil en GeoRemindMe">{{ f.username }}</a>
             </div>
 
             {% ifequal user.username username_page %}
@@ -40,10 +40,10 @@
             
             <div class="user-data">
                 <ul>
-                    <li><a href="{% url fb_public_profile f.username%}" title="Sugerencias hechas"><span>{{ f.profile.parent.counters.suggested }}</span>Sugerencias</a></li>
-                    <li><a href="{% url fb_followers_panel f.username%}" title="Personas que le siguen"><span>{{ f.profile.parent.counters.followers }}</span>Seguidores</a></li>
-                    <li><a href="{% url fb_public_profile f.username%}" title="Recomendaciones suyas que te han gustado"><span>{{ f.profile.parent.counters.influenced }}</span>Impactos</a></li>
-                    <li><a href="{% url fb_followings_panel f.username%}" title="Personas a las que sigue"><span>{{ f.profile.parent.counters.followings }}</span>Siguiendo</a></li>
+                    <li><a href="{% url2 in_facebook public_profile f.username%}" title="Sugerencias hechas"><span>{{ f.profile.parent.counters.suggested }}</span>Sugerencias</a></li>
+                    <li><a href="{% url2 in_facebook followers_panel f.username%}" title="Personas que le siguen"><span>{{ f.profile.parent.counters.followers }}</span>Seguidores</a></li>
+                    <li><a href="{% url2 in_facebook public_profile f.username%}" title="Recomendaciones suyas que te han gustado"><span>{{ f.profile.parent.counters.influenced }}</span>Impactos</a></li>
+                    <li><a href="{% url2 in_facebook followings_panel f.username%}" title="Personas a las que sigue"><span>{{ f.profile.parent.counters.followings }}</span>Siguiendo</a></li>
                 </ul>
             </div>
             <hr>
