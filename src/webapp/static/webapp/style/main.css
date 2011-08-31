@@ -1015,7 +1015,7 @@ div#left-col li a {
     font-weight: bold;
     margin-bottom: 1em;
 }
-#right-col {
+#right-col, #center-col {
     font-size:1.2em;
 }
 
@@ -1111,11 +1111,9 @@ ul#chronology li div.timeline-msg {
 ul#user-resume li:hover {
 	background: #FFB265;
 }
-<<<<<<< HEAD
-=======
 
 #user-info {
-    width: 589px;
+    width: 585px;
 }
 
->>>>>>> Working on Base Anonymous
+
