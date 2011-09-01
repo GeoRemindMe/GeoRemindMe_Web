@@ -16,84 +16,11 @@
     <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     <script type="text/javascript">        
-        $(document).ready(function(){    
-            //Asignamos comportamiento ONCLICK a cada fila --> Desplegar detalles
-            setExpandible('.suggestion');
-            
-            //Searchable input fields
-            $('#filter-suggestions').search('#suggestion-list > div',['.suggestionName_editable']);
-            $('#filter-lists').search('#suggestion-list-lists > div',['.suggestionName_editable']);
-            
-            //Select all checkbox
-            $('#checkBox_all').click(function(){
-                if($('#checkBox_all').is(':checked'))
-                    $(':regex(id,^(checkBox_))').attr('checked',true);
-                else
-                    $(':regex(id,^(checkBox_))').attr('checked',false);
-            });
-            
-            //Editable fields
-            set_editable_fields();
-            
-            //Show empty msg if there are no elements
-            $('.empty-msg').parent().find('ul').each(function(i,elem){
-                if($(elem).children().length==0){
-                    $(elem).hide();
-                    $(elem).parent().find('.empty-msg').show();
-                }else{
-                    $(elem).parent().find('.empty-msg').hide();
-                }
-            })
-
-            //Adding behaviour to tab content
-            $('#tabMenu li').click(function(){
-                tab_id=$('#tabMenu li.active').attr('id')
-                $('#'+tab_id+'_content').addClass('hidden');
-                $('#tabMenu li.active').removeClass('active');
-                
-                tab_id=$(this).attr('id')
-                $('#'+tab_id+'_content').removeClass('hidden');
-                $(this).addClass('active');
-            })
-            
-            $('span.btn.dropDownBtn').menuList();
-            
-           
-            
-            //On expanded view of a suggestion--> Remove suggestion from a list
-            $('.removable-sugestion-list li').click(function(){
-                var unparsedString=$(this).attr('class').split(" ")[0];
-                var listID = unparsedString.substring(5,unparsedString.length)
-                removeFromList(this,listID);
-            });
-            
-            //Añade el comportamiento a las sugerencias que se pueden 
-            //eliminar de una lista y a las listas a las que pertenece
-            //una sugerencia.
-            $('#suggestion-list-lists .suggestions li.removable').click(function(){
-                var unparsedString=$(this).attr('class').split(" ")[0];
-                var listID = unparsedString.substring(5,unparsedString.length)
-                removeFromList(this,listID);
-            });
-            
-
-            
-                        
-            //On LISTS tab, add new list
-            $('.addNewList').click(function(){
-               //console.log("Añadimos nueva lista") 
-            });
-            
-            //Selecciona la sugerencia actual, desmarca las demas y despliega
-            //la lista
-            $('.add-on-list').click(function(){
-                $(':regex(id,^(checkBox_))').attr('checked',false);
-                $("#checkBox_"+$(this).attr('value')).attr('checked',true);
-                $(".dropDownBtn").click()
-            });
-            
-            //Mostrar y ocultar estadísticas
-            $('.show-more').click(function (){
+    
+			
+		// SACO ESTO A UNA FUNCIÓN APARTE PARA REUTILIZARLO
+		// AL CREAR UNA NUEVA LISTA
+		function show_and_hide_stats_callback(){
                 var textElement=$(this).parent().find('.show-more-text');
                 if($(textElement).css('display')!="none")
                     $(this).html("Mostrar estadísticas")
@@ -101,44 +28,11 @@
                     $(this).html("Ocultar estadísticas")
                 
                 $(textElement).toggle('slow')
-            });
-            
-            //Placeholders
-            $("[placeholder]").placeholder();
-            $(".new-list input").css("color","black")
-            $(".new-list input").css("font-style","normal")
-            
-            //------------------------------------
-            //Boton de filtrar mis sugerencias
-            //------------------------------------
-            $('#filterMySuggestions').toggle(function(){
-                $(this).addClass('pressed');
-                var tmp=$('#suggestion-list .not-mine')
-                tmp.fadeOut('slow');
-                var counter=parseInt($('#suggestions-tab-counter').html());
-                $('#suggestions-tab-counter').html(counter-tmp.length);
-                
-            },function(){
-                $(this).removeClass('pressed');
-                var tmp=$('#suggestion-list .not-mine');
-                tmp.fadeIn('slow');
-                var counter=parseInt($('#suggestions-tab-counter').html());
-                $('#suggestions-tab-counter').html(counter+tmp.length);
-                
-            });
-            
-            //------------------------------------
-            //Boton de filtrar mis listas
-            //------------------------------------
-            $('#filterMyLists').toggle(function(){
-                $(this).addClass('pressed');
-                $('#suggestion-list .not-mine').fadeOut('slow');
-            },function(){
-                $(this).removeClass('pressed');
-                $('#suggestion-list-lists .not-mine').fadeIn('slow');
-            });
-            
-
+            }
+			
+		// SACO ESTO A UNA FUNCIÓN APARTE PARA REUTILIZARLO
+		// AL CREAR UNA NUEVA LISTA
+		function create_share_links(){
             // ------------------------------------
             // CREANDO LOS BOTONES DE COMPARTIR 
             // CON LAS REDES SOCIALES
@@ -270,6 +164,127 @@
 				$('#share-text').dialog("open");
 			})
 			/* FIN CREANDO LOS BOTONES DE COMPARTIR */
+		}
+    
+    
+    
+        $(document).ready(function(){    
+            //Asignamos comportamiento ONCLICK a cada fila --> Desplegar detalles
+            setExpandible('.suggestion');
+            
+            //Searchable input fields
+            $('#filter-suggestions').search('#suggestion-list > div',['.suggestionName_editable']);
+            $('#filter-lists').search('#suggestion-list-lists > div',['.suggestionName_editable']);
+            
+            //Select all checkbox
+            $('#checkBox_all').click(function(){
+                if($('#checkBox_all').is(':checked'))
+                    $(':regex(id,^(checkBox_))').attr('checked',true);
+                else
+                    $(':regex(id,^(checkBox_))').attr('checked',false);
+            });
+            
+            //Editable fields
+            set_editable_fields();
+            
+            //Show empty msg if there are no elements
+            $('.empty-msg').parent().find('ul').each(function(i,elem){
+                if($(elem).children().length==0){
+                    $(elem).hide();
+                    $(elem).parent().find('.empty-msg').show();
+                }else{
+                    $(elem).parent().find('.empty-msg').hide();
+                }
+            })
+
+            //Adding behaviour to tab content
+            $('#tabMenu li').click(function(){
+                tab_id=$('#tabMenu li.active').attr('id')
+                $('#'+tab_id+'_content').addClass('hidden');
+                $('#tabMenu li.active').removeClass('active');
+                
+                tab_id=$(this).attr('id')
+                $('#'+tab_id+'_content').removeClass('hidden');
+                $(this).addClass('active');
+            })
+            
+            $('span.btn.dropDownBtn').menuList();
+            
+           
+            
+            //On expanded view of a suggestion--> Remove suggestion from a list
+            $('.removable-sugestion-list li').click(function(){
+                var unparsedString=$(this).attr('class').split(" ")[0];
+                var listID = unparsedString.substring(5,unparsedString.length)
+                removeFromList(this,listID);
+            });
+            
+            //Añade el comportamiento a las sugerencias que se pueden 
+            //eliminar de una lista y a las listas a las que pertenece
+            //una sugerencia.
+            $('#suggestion-list-lists .suggestions li.removable').click(function(){
+                var unparsedString=$(this).attr('class').split(" ")[0];
+                var listID = unparsedString.substring(5,unparsedString.length)
+                removeFromList(this,listID);
+            });
+            
+
+            
+                        
+            //On LISTS tab, add new list
+            $('.addNewList').click(function(){
+               //console.log("Añadimos nueva lista") 
+            });
+            
+            //Selecciona la sugerencia actual, desmarca las demas y despliega
+            //la lista
+            $('.add-on-list').click(function(){
+                $(':regex(id,^(checkBox_))').attr('checked',false);
+                $("#checkBox_"+$(this).attr('value')).attr('checked',true);
+                $(".dropDownBtn").click()
+            });
+            
+            // Comportamiento del botón mostrar y ocultar estadísticas
+            $('.show-more').click(show_and_hide_stats_callback);
+            
+            
+            //Placeholders
+            $("[placeholder]").placeholder();
+            $(".new-list input").css("color","black")
+            $(".new-list input").css("font-style","normal")
+            
+            //------------------------------------
+            //Boton de filtrar mis sugerencias
+            //------------------------------------
+            $('#filterMySuggestions').toggle(function(){
+                $(this).addClass('pressed');
+                var tmp=$('#suggestion-list .not-mine')
+                tmp.fadeOut('slow');
+                var counter=parseInt($('#suggestions-tab-counter').html());
+                $('#suggestions-tab-counter').html(counter-tmp.length);
+                
+            },function(){
+                $(this).removeClass('pressed');
+                var tmp=$('#suggestion-list .not-mine');
+                tmp.fadeIn('slow');
+                var counter=parseInt($('#suggestions-tab-counter').html());
+                $('#suggestions-tab-counter').html(counter+tmp.length);
+                
+            });
+            
+            //------------------------------------
+            //Boton de filtrar mis listas
+            //------------------------------------
+            $('#filterMyLists').toggle(function(){
+                $(this).addClass('pressed');
+                $('#suggestion-list .not-mine').fadeOut('slow');
+            },function(){
+                $(this).removeClass('pressed');
+                $('#suggestion-list-lists .not-mine').fadeIn('slow');
+            });
+            
+
+			create_share_links();
 			
         });//END $(document).ready
 
@@ -645,7 +660,7 @@
             }
             $('.editable_description').editable('/ajax/add/suggestion/', description_field);
             
-            description_field["placeholder"]="Esta lista aúno tiene descripción";
+            description_field["placeholder"]="Esta lista aún no tiene descripción";
             $('.editable_list_description').editable('/ajax/suggestion/list/modify/', description_field);
             
             tags_field["name"]="tags";
@@ -1000,12 +1015,12 @@
             <div class="expanded" style="display:none">
                 <dl>
                     <dt>Descripción:</dt>
-                    <dd class="editable_list_description">Sin descripción</dd>
+                    <dd class="editable_list_description"></dd>
                     
                     <dt>Sugerencias</dt>
                     <dd class="suggestions">
                         
-                        <ul style="display:none">
+                         <ul class="removable-suggestions-in-lists" style="display:none">
                             {% templatetag openvariable %}each keys{% templatetag closevariable %}
                                 <li  class="list_${obj.id} removable" value="${$value.id}">${$value.name}</li>
                             {% templatetag openvariable %}/each{% templatetag closevariable %}
@@ -1018,39 +1033,55 @@
                     </dd>
                     
                     <dt>Tags:</dt>
-                    <dd>
-<!--
+                    <dd class="editable_list_tags">
+
                         {% if obj.tags %}
                             {% templatetag openvariable %}obj.tags{% templatetag closevariable %}
-                        {% else %}
-                            <em>Esta lista no tiene tags</em>
                         {% endif %}
--->
+
                     </dd>
                     <dt><strong>Compartir:</strong></dt>
                     <dd>
                         <ul class="share-suggestion">
-                            <li><a class="share-suggestion link-icon" href="{% url2 in_facebook view_suggestion k.id %}">Enlace</a></li>
-                            <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
-                            <li><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
-                            <li><a class="share-suggestion facebook-icon" href="">Muro</a></li>
+							<li class="share" type="link" data-href="${obj.short_url}" data-type="list">
+								<a class="share-suggestion link-icon" href="">Enlace</a>
+							</li>
+							<li class="share" type="twitter" data-href="${obj.short_url}" data-type="list">
+								<a class="share-suggestion twitter-icon" href="">Twitter</a></li>
+							<li class="share" type="wall" data-href="${obj.short_url}" data-type="list">
+								<a class="share-suggestion facebook-icon" href="">Muro</a>
+							</li>
                         </ul>
                     </dd>
                     
+					<dt>Visibilidad:</dt>
+					<dd class="editable_list_visibility" value="${obj.visibility}">
+						{% if obj.visibility == "public" %}
+                            Pública
+                        {% else %}
+                            Privada
+                        {% endif %}
+						
+					</dd>
+                    
                 </dl>
                 
-                <p class="big statistics">Estadísticas:</p>
-                <dl>
-                    
-                    <dt>Personas que han guardado la lista: </dt>
-                    <dd>${obj.counters.followers}</dd>
-                    
-                    <dt>Comentarios recibidos:</dt>
-                    <dd>${obj.counters.comments}</dd>
-                    
-                    <dt>Última modificación:</dt>
-                    <dd>${obj.modified}</dd>
-                </dl>
+				<div class="show-more-text" style="display:none">
+					<p class="big statistics">Estadísticas:</p>
+					<dl>
+						
+						<dt>Personas que han guardado la lista: </dt>
+						<dd>${obj.counters.followers}</dd>
+						
+						<dt>Comentarios recibidos:</dt>
+						<dd>${obj.counters.comments}</dd>
+						
+						<dt>Última modificación:</dt>
+						<dd>${obj.modified}<</dd>
+					</dl>
+				</div>
+				<span class="show-more">Mostrar estadísticas</span>
+                
             </div>
         </div>
     </script>
