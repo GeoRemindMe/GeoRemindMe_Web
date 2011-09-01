@@ -1247,6 +1247,11 @@ div.removable a {
 a:visited{
     color:#3896FF;
 }
+
+ul#chronology a:visited{
+    color:blue;
+}
+
 .link{
     color:#3896FF;
     cursor:pointer;
@@ -1342,9 +1347,21 @@ div.waiting{
     background-repeat: no-repeat;
     color: white;
 }
-#close-suggestions,
-#trending-suggestions{
+#close-suggestions img,
+#trending-suggestions img{
+    display: block;
+    float: left;
+    margin: 5px 11px 0 11px;
+    width: 25px;
 
+}
+#close-suggestions a.clean,
+#trending-suggestions a.clean{
+    border:0;
+    line-height:auto;
+    margin:0;
+    padding:0;
+    width:auto;
 }
 
 
@@ -1369,7 +1386,7 @@ ul#tabMenu li {
 ul#chronology div.comment-box ul li, 
 ul#chronology div.input-box, 
 #activity div.show-all-comments {
-    background-color: #ffe9d3;
+    background-color: #FFF0C6;
 }
 
 /*
@@ -1493,4 +1510,27 @@ a.hoverlink{
 }
 a.small-link,ul#chronology .suggestionPlace a {
     font-weight: normal;
+}
+
+
+
+
+/*
+ *  VIEW-SUGGESTION Details 
+ */
+
+#view-suggestion div.suggestion h1 {
+    line-height:1.5em;
+}
+
+#view-suggestion span.likeBtn span.hoverlink {
+    color:blue;
+}
+
+ul#chronology div.comment-box {
+font-size: 0.9em;
+}
+
+#view-list #suggestion-list .msg {
+    font-size: 1.1em;
 }
