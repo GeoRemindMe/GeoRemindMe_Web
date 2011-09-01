@@ -39,7 +39,7 @@
             {% else %}
                 la sugerencia
             {% endif %}
-            : <a href="{% url2 in_facebook view_suggestion obj.instance.instance.id %}" class="small-link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
+            : <a href="{% url2 in_facebook view_suggestion obj.instance.instance.id %}" class="small-link link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
             
             
             <span class="timestamp">  {{obj.created|naturaltime}}</span>
@@ -49,7 +49,9 @@
                     <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="comment">
                         <span class="dislike">
                             <span class="hoverlink">Ya no me gusta</span> 
+<!--
                             <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
+-->
                         </span>
                         
                         <span class="like">

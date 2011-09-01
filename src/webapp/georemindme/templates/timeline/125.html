@@ -31,19 +31,22 @@
                 </a>
             </div>
             <div class="timeline-msg">
-                <span class="small-text">A <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="black-link">{{obj.instance.user.username}}</a> le gusta 
-                {% if obj.instance.instance.user.username = request.user.username %}
-                    <strong>tu comentario</strong>:
-                {% else %}
-                    el comentario de <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="black-link">{{obj.instance.instance.user.username}}</a>:
-                {% endif %}
+                <span class="small-text">
+                    A <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="black-link">{{obj.instance.user.username}}</a>
+                    le gusta el comentario:
                 </span>
                 
                 
         {% endif %}
-                <br><em class="comment">{{obj.instance.instance.msg}}</em><br>
+                <br>
+                <em class="comment">
+                    <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="black-link">
+                        <img src="{% embedded_avatar obj.instance.instance.user.username %}" title="{{obj.instance.instance.user.username}}">
+                    </a>
+                    {{obj.instance.instance.msg}}
+                </em><br>
                 <span class="suggestionPlace">
-                    En la sugerencia: <strong><a href="{% url2 in_facebook view_suggestion obj.instance.instance.instance.slug %}">{{obj.instance.instance.instance.name|truncatewords:10}}</a></strong> <br>
+                    En la sugerencia: <a href="{% url2 in_facebook view_suggestion obj.instance.instance.instance.slug %}" class="link">{{obj.instance.instance.instance.name|truncatewords:10}}</a><br>
                 </span>
 
                 <span class="timestamp">  {{obj.created|naturaltime}}</span>  

@@ -166,7 +166,10 @@ table {
 
 body {
 	background-color: #FFFFFF;
+    font-family:Helvetica Neue,Arial,sans-serif;
+/*
 	font-family: "Crimson Text",Helvetica Neue, Arial, sans-serif;
+*/
     font-size:12px;
 }
 
@@ -687,6 +690,7 @@ body {
     text-align: left;
     width: 354px;
     padding:0 1em;
+    margin-bottom:1em;
 
 }
 #search_bar form{}
@@ -1011,14 +1015,20 @@ ul#chronology li {
 	
 }
 
+em.comment img{
+    float: left;
+    height: 25px;
+    margin-right: 10px;
+    width: 25px
+}
 #right-col hr, hr {
     color: #CCCCCC;
     background-color: #CCCCCC;
 }
 div#left-col hr{
     background-color: #FF9844;
-    border: 0 solid #FF7E12;
-    margin: 2em 0;
+    border: 1px solid #FF7E12;
+    margin: 2em 0 1em;
 }
 
 .follow-button {
@@ -1385,12 +1395,26 @@ ul#chronology li div.timeline-msg {
     width:585;
 }
 
+ul#chronology li.msg-305 div.timeline-msg div.msg{
+    
+}
+ul#chronology li.msg-305 div.timeline-msg div.msg img{
+    height: 25px;
+    margin-right: 10px;
+    width: 25px;
+    float:left;
+}
+
 ul#user-resume li:hover {
 	background: #FFB265;
 }
 
+#public-profile {
+    margin-top: 25px;
+}
+
 #user-info {
-    width: 589px;
+    width: 450px;
 }
 
 form #terms span {
@@ -1466,4 +1490,7 @@ a.hoverlink{
 #add-suggestion{
     font-size: 0.9em;
     margin-top: 1em;
+}
+a.small-link,ul#chronology .suggestionPlace a {
+    font-weight: normal;
 }
