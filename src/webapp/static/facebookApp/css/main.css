@@ -567,6 +567,9 @@ input{
         color: #555555;
         text-decoration:none;
     }
+    a.small-link:hover{
+        text-decoration:underline;
+    }
     
     ul#chronology{
         font-size: 1.1em;
@@ -575,8 +578,10 @@ input{
         padding: 0;
     }
         ul#chronology .suggestionPlace{
-            font-size:0.9em;
+            clear: both;
             color: #555555;
+            display: block;
+            font-size: 0.9em;
         }
         ul#chronology .suggestionPlace a{
             color: #555555;
@@ -3080,3 +3085,13 @@ input{
         width:100%;
         cursor:wait;
     }
+
+
+
+
+.readable{
+    font-size:1.1em !important;
+}
+ul#chronology a.link{
+    color:blue !important;
+}

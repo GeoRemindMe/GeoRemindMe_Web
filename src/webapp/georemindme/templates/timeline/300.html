@@ -22,10 +22,10 @@
         
 
 
-        <br><a class="black-link" href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance}}</a><br>
+        <br><a class="black-link readable link" href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance}}</a><br>
 
         {% if obj.instance.poi.slug %}
-            <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.poi.slug %}">{{obj.instance.poi.name}}</a></span><br>
+            <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.poi.slug %}">{{obj.instance.poi.name}}</a></span>
         {% endif %}
 
 
@@ -42,7 +42,9 @@
                 <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
                     <span class="dislike">
                         <span class="hoverlink">Ya no me gusta</span> 
+<!--
                         <span class="text like-text increase">{{obj.vote_counter}}</span> personas
+-->
                     </span>
                     
                     <span class="like">
