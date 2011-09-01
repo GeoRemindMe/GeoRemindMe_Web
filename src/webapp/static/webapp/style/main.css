@@ -685,15 +685,32 @@ body {
     height: 55px;
     line-height: 55px;
     text-align: left;
-    width: 340px;
+    width: 354px;
+    padding:0 1em;
 
 }
-#search_bar input{
+#search_bar form{}
+
+#search_bar input[type="text"]{
     height: 1.5em;
     line-height: 1.5em;
+    margin-right: 5px;
     padding: 0.5em;
-    width: 295px;
+    width: 290px;
 }
+#search_bar input[type="submit"]{
+    background-color: #F0EBE2;
+    background-image: url("/static/webapp/img/Search-32.png");
+    background-position: 4px 2px;
+    background-repeat: no-repeat;
+    height: 35px;
+    line-height: 20px;
+    margin-top: 7px;
+    padding: 0.5em;
+    text-indent: -999px;
+    width: 39px;
+}
+
 #nav-menu{
 /*
     border-left: 1px solid #FFB85F;
@@ -748,8 +765,8 @@ body {
     
     float: left;
     margin-top: 2px;
-    padding: 1em;
-    width: 352px;
+    padding: 1em 0;
+    width: 374px;
     background: -moz-linear-gradient(left, rgba(255,175,75,0.7) 0%, rgba(255,146,10,0.7) 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,175,75,0.7)), color-stop(100%,rgba(255,146,10,0.7))); /* Chrome,Safari4+ */
     background: -webkit-linear-gradient(left, rgba(255,175,75,0.7) 0%,rgba(255,146,10,0.7) 100%); /* Chrome10+,Safari5.1+ */
@@ -760,6 +777,51 @@ body {
 }
 
 #left-col:after{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+}
+
+div#left-col ul#friends-to-follow {
+    float: left;
+    margin: 0 1em;
+}
+
+div #left-col ul#friends-to-follow li:hover {
+    text-decoration:inherit;
+}
+
+div#left-col ul#friends-to-follow div.user-info{
+    float:left;
+    color: black;
+    line-height: 0.5em;
+}
+div#left-col ul#friends-to-follow div.user-info a{
+    padding: 0;
+}
+div#left-col ul#friends-to-follow li div.avatar a.user-img {
+    border:0;
+}
+div#left-col ul#friends-to-follow .follow-btn{
+    clear: both;
+    display: block;
+    float: none;
+    margin-right: 5px;
+    text-align: right;
+}
+
+div#left-col ul#friends-to-follow li{
+    background-color: #FFAB44;
+    border: 1px solid #FF8C00;
+    display: block;
+    padding-left: 1em;
+    padding-right: 1em;
+    width: 155px;
+    margin-bottom: 10px;
+}
+div#left-col ul#friends-to-follow li:after{
 	clear: both;
 	content: ".";
 	display: block;
@@ -838,7 +900,9 @@ a#add-suggestion-btn,
     
 }
 #left-col ul li{
+/*
 	padding:3px 0;
+*/
 }
 
 #left-col li a{
@@ -953,7 +1017,13 @@ div#left-col hr, #right-col hr, hr {
  */
 
 div#left-col ul {
-    font-size: 1.3em;
+    border-top: 1px solid #F9AA68;
+    font-family: Helvetica Neue,Arial,sans-serif;
+    font-size: 1.1em;
+    margin-top: 0.5em;
+/*
+    margin-bottom: 2em;
+*/
 }
 div#left-col ul#friends-to-follow li div.avatar a.user-img img {
     height: 30px;
@@ -961,6 +1031,7 @@ div#left-col ul#friends-to-follow li div.avatar a.user-img img {
 }
 div#left-col ul#friends-to-follow li a {
     background-position: 6px 7px;
+    border:0;
     font-family: "Crimson Text";
     font-size: 1.2em;
     font-weight: normal;
@@ -969,14 +1040,28 @@ div#left-col ul#friends-to-follow li a {
 }
 
 #left-col p{
+    clear: both;
+    color: black;
+    font-family: Helvetica Neue,Arial,sans-serif;
     font-size: 1.2em;
-    font-weight: bold;
     line-height: 2.2em;
+    margin-top: 1em;
+    padding: 0 1em;
 }
+#left-col p em{
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 #left-col #friends-to-follow {
 	border: 0 none;
     font-size: 1em;
     margin-top: 10px;
+}
+#left-col p.p-follow-friends{
+    clear: none;
+    float: left;
+    margin-top: 0;
 }
 
 #left-col #friends-to-follow li a {
@@ -1130,9 +1215,18 @@ a:visited{
     color:#3896FF;
     cursor:pointer;
 }
+#left-col .hoverlink{
+    color:blue
+}
+#left-col .hoverlink.view-more{
+    display: block;
+    float: right;
+    margin: -5px 5px 6px 0;
+}
 .link:hover{
     text-decoration:underline;
 }
+
 .btn,.load-more {
     border-color:#D9DFEA #873A00 #873A00 #D9DFEA;
     background: #ffa84c; /* Old browsers */
@@ -1145,10 +1239,7 @@ a:visited{
     background: linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* W3C */
 }
 
-div#left-col li a {
-    width: 185px;
-	font-family: Alike;
-}
+
 
 #right-col .section .header, .right-col .section .article .header {
     font-weight: bold;
@@ -1159,16 +1250,21 @@ div#left-col li a {
 }
 
 div#left-col li a {
-
-    line-height: 14px;
+    border-bottom: 1px solid #F9AA68;
+    line-height: 24px;
+    margin: 0;
+    padding: 5px 13px;
+    width: auto;
 
 }
 
 #active-section, div #left-col li#active-section:hover {
     background-color: #FFA244;
+    font-weight:bold;
 }
 div #left-col li:hover{
     background-color: #ffdcc2;
+    text-decoration: underline;
 }
 
 /*
@@ -1210,6 +1306,19 @@ div.waiting{
     background-repeat: no-repeat;
     color: white;
 }
+#close-suggestions,
+#trending-suggestions{
+
+}
+
+
+#close-suggestions li,
+#trending-suggestions li{
+
+}
+
+
+
 /*
  * CHRONOLOGY
  */
@@ -1227,10 +1336,12 @@ ul#chronology div.input-box,
     background-color: #ffe9d3;
 }
 
+/*
 ul#chronology div.input-box textarea{
     width: 640px;
     font-size:1em !important;
 }
+*/
 
 #notifications .unread-item {
     background-color: #FFE9D3;
