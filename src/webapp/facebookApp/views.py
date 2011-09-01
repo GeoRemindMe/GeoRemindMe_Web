@@ -20,6 +20,7 @@ def login_panel(request):
                 return render_to_response('register.html', {"permissions": __web_settings.OAUTH['facebook']['scope'] },
                               context_instance=RequestContext(request)
                               )
+            init_user_session(request, user, remember=True, is_from_facebook=True)
             request.user = user
         if request.user.username is None or request.user.email is None:
             if request.method == 'POST':

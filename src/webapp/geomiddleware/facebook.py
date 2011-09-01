@@ -18,14 +18,12 @@ class FacebookMiddleware(object):
                 request.method = 'GET'
                 from facebookApp.watchers import new_suggestion, new_list, new_comment, new_vote, deleted_post
             except:
-                raise
                 request.csrf_processing_done = False
         else:
             cookie = get_user_from_cookie(request.COOKIES)
             if cookie is not None:
                 request.facebook = cookie
                 request.facebook['client'] = FacebookClient(cookie["access_token"])
-                
                 request.csrf_processing_done = True
                 from facebookApp.watchers import new_suggestion, new_list, new_comment, new_vote, deleted_post
 
