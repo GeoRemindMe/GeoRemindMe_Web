@@ -53,7 +53,7 @@
                 }
             });
 
-            if (typeof resizeIframe != "undefined") resizeIframe();
+            //if (typeof resizeIframe != "undefined") resizeIframe();
             
             /*** placeholding ***/
 			$("[placeholder]").placeholder();
@@ -64,12 +64,12 @@
             $("#add-details").toggle(function(){
                 $('#description').slideDown('slow',function(){
                     $("#add-details").addClass('used');
-                    resizeIframe();
+                    //resizeIframe();
                 });
                 },function(){
                     $('#description').slideUp('slow',function(){
                         $("#add-details").removeClass('used');
-                        resizeIframe();
+                        //resizeIframe();
                 });
             });
             
@@ -77,12 +77,12 @@
             $("#add-tags").toggle(function(){
                 $('#tags').slideDown('slow',function(){
                     $("#add-tags").addClass('used');
-                    resizeIframe();
+                    //resizeIframe();
                 });
                 },function(){
                     $('#tags').slideUp('slow',function(){
                         $("#add-tags").removeClass('used');
-                        resizeIframe();
+                        //resizeIframe();
                     });
             });
             
@@ -90,12 +90,12 @@
             $("#add-date").toggle(function(){
                 $('#date').slideDown('slow',function(){
                     $("#add-date").addClass('used');
-                    resizeIframe();
+                    //resizeIframe();
                 });
             },function(){
                 $('#date').slideUp('slow',function(){
                     $("#add-date").removeClass('used');
-                    resizeIframe();
+                    //resizeIframe();
                 });
             });
             
@@ -103,16 +103,16 @@
             $("#add-to-lists").toggle(function(){
                 $('#lists').slideDown('slow',function(){
                     $("#add-to-lists").addClass('used');
-                    resizeIframe();
+                    //resizeIframe();
                 });
             },function(){
                 $('#lists').slideUp('slow',function(){
                     $("#add-to-lists").removeClass('used');
-                    resizeIframe();
+                    //resizeIframe();
                 });
             });
             
-            if (typeof resizeIframe != "undefined") resizeIframe();
+            //if (typeof resizeIframe != "undefined") resizeIframe();
             
             $('#visibility span').click(function(){
                 var element=$(this).parent().find("span[value='private']");

@@ -92,13 +92,9 @@
             </a>
         </div>
 		
-		<div id="search_bar">
-            <input type="search" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly><br>
-<!--
-            //Ejemplo: tapas en granada, turismo, paisajes, etc.
--->
-        </div>
+		
         <div id="nav-menu">
+            <a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
             {% block nav %}
 				<ul>
                     <li id="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
@@ -143,9 +139,20 @@
 				{% block body %}{% endblock %}
 			</div>
 			<div id="left-col">
-				<a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
+                <div id="search_bar">
+                    <form action="." method="post">
+                        <input type="search" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly>
+                        <input type="submit" value="Buscar">
+                    </form>
+                </div>
+				
 				
                 {% block extraContent %} {% endblock %}
+                
+                <p>Sugerencias cerca tuya:</p>
+                
+                <p>Sugerencias que te podrían gustar:</p>
+                
 			</div>
 		</div>
 	</div>

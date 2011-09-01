@@ -64,7 +64,7 @@ $(document).ready(function() {
         handles: 'n,s',
         alsoResize: "#map_canvas",
         stop: function(event, ui) {
-            if (typeof resizeIframe != "undefined") resizeIframe()     
+            //if (typeof resizeIframe != "undefined") resizeIframe()     
         }
     });
 
@@ -615,7 +615,7 @@ function showSettings(){
     //$('#'+engine+'-settings').fadeToggle('slow')
     
     $('#'+engine+'-settings').toggle('slow',function(){
-        resizeIframe();
+        //resizeIframe();
         }
     );
     
@@ -747,7 +747,7 @@ function resetMapZoom(val){
 
 function showMoreDetails(){
     $('#more-details').toggle('fast',function(){
-            resizeIframe()
+            //resizeIframe()
         }
     )
     
