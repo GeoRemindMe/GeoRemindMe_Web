@@ -162,7 +162,7 @@ class ListSuggestionHelper(ListHelper):
     _klass = ListSuggestion
 
     def get_by_suggestion(self, suggestion, querier):
-        if not isinstance(querier, User):
+        if querier is None:
             raise TypeError()
         lists = self._klass.all().filter('keys =', suggestion.key()).filter('active =', True)
         lists_loaded = []

@@ -38,6 +38,8 @@ urlpatterns = patterns('georemindme.views',
     url(r'^(?i)tasks/notify/timeline/$', 'timelinefollowers_worker'),
     url(r'^(?i)tasks/notify/list/$', 'list_notify_worker'),
     url(r'^(?i)reports/(?P<time>[^/]*)/$', 'report_notify'),
+    url(r'^search/$', 'search_suggestions',{}),
+    url(r'^search/(?P<term>[^/]*)/$', 'search_suggestions',{},'search_suggestions'),
 )
 
 

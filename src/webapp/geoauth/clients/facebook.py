@@ -81,30 +81,24 @@ class FacebookClient(object):
                                                )
             self.user = user
         else:
-            token = memcache.deserialize_instances(memclient.get('%sfbclienttoken_%s' % (memcache.version, 
+            token = memclient.get('%sfbclienttoken_%s' % (memcache.version, 
                                                                   access_token
                                                                   )
-                                               ))
+                                               )
             if token is None:
                 token = OAUTH_Access.get_token(access_token)  # TODO: buscar por proveedor
                 if token is None:
                     raise OAUTHException()
                 user = token.user
-                memclient.set_multi({
-                                     '%sfbclienttoken_%s' % (memcache.version, 
-                                                                  access_token
-                                                                  ): memcache.serialize_instances(token),
-                                     '%sfbclient_%s_user' % (memcache.version, 
-                                                                  access_token
-                                                                  ):
-                                                                    memcache.serialize_instances(token.user)
-                                    }
-                                               )
+                token_cache = {'token': token,
+                               'user': user
+                               }
+                memclient.set('%sfbclienttoken_%s' % (memcache.version, 
+                                                          access_token
+                                                  ), token_cache)
             else:
-                user = memcache.deserialize_instances(memclient.get('%sfbclient_%s_user' % (memcache.version, 
-                                                                  access_token
-                                                                  )
-                                               ))
+                user = token['user']
+                token = token['token']
             self.user = user
         self.consumer = GraphAPI(access_token=token.token_key)
     

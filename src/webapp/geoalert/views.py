@@ -37,6 +37,9 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     user_follower = suggestion.has_follower(request.user)
     top_comments = Comment.objects.get_top_voted(suggestion, request.user)
     lists = ListSuggestion.objects.get_by_suggestion(suggestion, request.user)
+    if not request.user.is_authenticated():
+            pos = template.rfind('.html')
+            template = template[:pos] + '_anonymous' + template[pos:]
     return render_to_response(template, {
                                         'suggestion': suggestion,
                                         'comments': Comment.objects.load_comments_from_async(query_id, comments_async, request.user),
@@ -224,6 +227,9 @@ def view_place(request, slug, template='webapp/view_place.html'):
             if len(suggestions_loaded) > 7:
                 break
         return suggestions_loaded
+    if not request.user.is_authenticated():
+            pos = template.rfind('.html')
+            template = template[:pos] + '_anonymous' + template[pos:]
     slug = slug.lower()
     place = Place.objects.get_by_slug(slug)
     if place is None:
@@ -234,7 +240,7 @@ def view_place(request, slug, template='webapp/view_place.html'):
     else:
         has_voted = False
     query_id, suggestions_async = Suggestion.objects.get_by_place(place, 
-                                                  querier=request.user if request.user.is_authenticated() else None,
+                                                  querier=request.user,
                                                   async = True
                                                   )
     vote_counter = Vote.objects.get_vote_counter(place.key())
@@ -243,6 +249,7 @@ def view_place(request, slug, template='webapp/view_place.html'):
     try:
         search = GPRequest().retrieve_reference(place.google_places_reference)
     except: 
+
         return render_to_response(template, {'place': place,
                                              'has_voted': has_voted,
                                              'vote_counter': vote_counter,
@@ -250,7 +257,6 @@ def view_place(request, slug, template='webapp/view_place.html'):
                                               },
                                   context_instance=RequestContext(request)
                                   )
-    
     place.update(name=search['result']['name'],
                         address=search['result'].get('formatted_address'), 
                         city=_get_city(search['result'].get('address_components')),

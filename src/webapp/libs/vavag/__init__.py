@@ -45,7 +45,7 @@ class VavagRequest(Http):
     URL_get_pack = 'http://vavag.com/api/%(version)s/%(method)s/%(login)s/%(apikey)s/get_pack?packhash='
     URL_set_pack = 'http://vavag.com/api/%(version)s/%(method)s/%(login)s/%(apikey)s/set_pack?packchain='
     
-    def __init__(self, login, api_key, version='v1', method = 'json', **kwargs):
+    def __init__(self, login, api_key, version='v2', method = 'json', **kwargs):
         super(self.__class__, self).__init__(timeout=20, **kwargs)
         self.version = version
         self.api_key = api_key
@@ -53,11 +53,10 @@ class VavagRequest(Http):
         self.method = method
 
     def _encode(self, url):
-        #from urllib import quote
-        #url = quote(url)
+        from urllib import quote
         if not 'http://' in url and not 'https://' in url:
             url = 'http://' + url
-        return url 
+        return quote(url)
         #from base64 import urlsafe_b64encode
         #return urlsafe_b64encode(url)
     
@@ -85,8 +84,6 @@ class VavagRequest(Http):
         """
             Creates a new pack of urls
         """
-        if pack is None:
-            raise TypeError
         request_url = self.URL_set_pack % {
                                        'version': self.version,
                                        'method': self.method,
@@ -96,7 +93,6 @@ class VavagRequest(Http):
         
         if type(pack) != type(list()):
             type_param = 2
-            pack = self._encode(pack)
         else:
             type_param = 1
             pack = '|sep|'.join([self._encode(url) for url in pack])

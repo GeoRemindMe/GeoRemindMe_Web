@@ -134,7 +134,7 @@ def embedded_avatar(username):
             req = Http(cache=mem)
             response, content = req.request(image_url['Location'])
             encoded_image = "data:image;base64,%s" % base64.b64encode(content)
-            memcache.set('%s%s_avatarcache' % (memcache.version, username), encoded_image, 300)
+            memcache.set('%s%s_avatarcache' % (memcache.version, username), encoded_image, 1123)
         except:
             return 'http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png'
     return encoded_image

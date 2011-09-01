@@ -105,7 +105,7 @@ class CommentHelper(object):
         return [p.id, comments]
         
     def load_comments_from_async(self, query_id, comments_async, querier):
-        if querier is not None and not isinstance(querier, User):
+        if querier is None:
             raise TypeError
         comments_loaded = []
         comments_objects = []

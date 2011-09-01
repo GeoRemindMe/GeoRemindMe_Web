@@ -247,7 +247,7 @@ class SuggestionHelper(EventHelper):
         return [p.id, suggestions, p.page_count()]
 
     def get_by_place(self, place, page=1, query_id=None, async=False, querier=None):
-        if not isinstance(querier, User):
+        if querier is None:
             raise TypeError()
         q = self._klass.all().filter('poi =', place.key())
         p = PagedQuery(q, id = query_id)

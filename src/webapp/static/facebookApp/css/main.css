@@ -2190,6 +2190,9 @@ input{
             width:495px;
             cursor:pointer;
         }
+        .suggestionName_editable{
+           width:495px;
+        }
         .collapsed:hover{
             background-color: #EEEEEE;
         }
