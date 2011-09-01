@@ -137,27 +137,8 @@ def profile_settings(request):
 
 @facebook_required
 def edit_settings(request):
-    from geouser.forms import UserSettingsForm
-    if request.method == 'POST':
-        f = UserSettingsForm(request.POST, prefix='user_set_settings')
-        if f.is_valid():
-            f.save(request.user)
-            request.session['LANGUAGE_CODE'] = request.user.settings.language
-            return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
-    else:
-        f = UserSettingsForm(prefix='user_set_settings', initial = { 
-                                                                  'time_notification_suggestion_follower': request.user.settings.time_notification_suggestion_follower,
-                                                                  'time_notification_suggestion_comment': request.user.settings.time_notification_suggestion_comment,
-                                                                  'time_notification_account': request.user.settings.time_notification_account,
-                                                                  'show_public_profile': request.user.settings.show_public_profile,
-                                                                  'language': request.user.settings.language,
-                                                                  }
-                             )
-    return  render_to_response('edit_settings.html',{'profile': request.user.profile,
-                                                    'settings': request.user.settings,
-                                                    'settings_form': f,
-                                                    }, context_instance=RequestContext(request)
-                               )
+    from geouser.views import edit_settings
+    return edit_settings(request, template="edit_settings.html")
 
 
 @facebook_required
