@@ -11,7 +11,7 @@ from django.conf import settings as __web_settings # parche hasta conseguir que 
 
 
 def new_suggestion(sender, **kwargs):
-    fb_client=FacebookClient.load_client(user=sender.user)
+    fb_client=FacebookClient(user=sender.user)
     params= {
                 "name": "Ver detalles de la sugerencia",
                 "link": __web_settings.WEB_APP+"suggestion/"+sender.slug,
@@ -36,7 +36,7 @@ suggestion_new.connect(new_suggestion)
 
 def new_list(sender, **kwargs):
     from geolist.models import ListSuggestion, ListRequested
-    fb_client=FacebookClient.load_client(user=sender.user)
+    fb_client=FacebookClient(user=sender.user)
     params= {
             "name": sender.name,
             "link": __web_settings.WEB_APP+sender.get_absolute_url()
@@ -62,7 +62,7 @@ list_new.connect(new_list)
 
 def new_comment(sender, **kwargs):
     if hasattr(sender.instance, '_vis'):
-        fb_client=FacebookClient.load_client(user=sender.user)
+        fb_client=FacebookClient(user=sender.user)
         from os import environ
         params= {
                     "name": sender.instance.name,
@@ -90,7 +90,7 @@ def new_vote(sender, **kwargs):
     from geoalert.models import Suggestion
     from os import environ
     if hasattr(sender.instance, '_vis'):
-        fb_client=FacebookClient.load_client(user=sender.user)
+        fb_client=FacebookClient(user=sender.user)
         if isinstance(sender.instance, Comment):
             params= {
                         "link": environ['HTTP_HOST'] + sender.instance.instance.get_absolute_url(),
@@ -143,7 +143,7 @@ def deleted_post(sender, **kwargs):
     from models import _FacebookPost
     fb_post = _FacebookPost.all().filter('instance =', str(sender.key())).get()
     if fb_post is not None:
-        fb_client=FacebookClient.load_client(user=sender.user)
+        fb_client=FacebookClient(user=sender.user)
         try:
             fb_client.consumer.delete_object(fb_post.post)
             fb_post.delete()

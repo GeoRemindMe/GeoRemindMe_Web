@@ -480,7 +480,7 @@ def share_on_facebook(request, suggestion_id, msg):
     else:
         from geoauth.clients.facebook import FacebookClient
         try:
-            fb_client = FacebookClient.load_client(user=request.user)
+            fb_client = FacebookClient(user=request.user)
         except:
             return None
     from os import environ
