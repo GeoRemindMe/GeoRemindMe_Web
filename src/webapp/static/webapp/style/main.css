@@ -786,8 +786,9 @@ body {
 
 div#left-col ul#friends-to-follow {
     float: left;
-    margin: 0 1em;
+    margin: 0 1em 1em;
 }
+
 
 div #left-col ul#friends-to-follow li:hover {
     text-decoration:inherit;
@@ -820,16 +821,24 @@ div#left-col ul#friends-to-follow .follow-btn{
     float: none;
     margin-right: 5px;
     text-align: right;
+    line-height: 1em;
+}
+div#left-col ul#friends-to-follow li div.avatar div.removable {
+    margin: 0;
+    position: relative;
+    right: 0;
 }
 
 div#left-col ul#friends-to-follow li{
     background-color: #FFAB44;
     border: 1px solid #FF8C00;
+    clear: none;
     display: block;
+    float: left;
+    margin-bottom: 10px;
     padding-left: 1em;
     padding-right: 1em;
-    width: 155px;
-    margin-bottom: 10px;
+    width: 148px;
 }
 div#left-col ul#friends-to-follow li:after{
 	clear: both;
@@ -1048,6 +1057,10 @@ div#left-col ul#friends-to-follow li a {
     padding: 1px 3px 1px 26px;
     width: auto;
 }
+div#left-col ul#friends-to-follow li a.hoverlink{
+    font-size: 1em;
+    line-height: 1em;
+} 
 div#left-col ul#friends-to-follow li a:hover {
     text-decoration:underline;
 }
