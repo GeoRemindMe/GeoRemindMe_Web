@@ -112,7 +112,7 @@
                         <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                     {% endif %}
                                             
-                    <span class="user"><img src="{% url user_avatar c.username %}" alt="{{c.user.username}} avatar"></span>
+                    <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.user.username}} avatar"></span>
                     <div class="comment-content">
                         <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="black-link">{{c.user.username}}</a>: {{c.msg}}</span>
                         <span class="timestamp">{{c.created|naturaltime}}</span> 
@@ -154,7 +154,7 @@
                     <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
                 {% endif %}
                                         
-                <span class="user"><img src="{% url user_avatar c.username %}" alt="{{c.username}} avatar"></span>
+                <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar"></span>
                 <div class="comment-content">
                     <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
                     <span class="timestamp">{{c.created|naturaltime}}</span> 
@@ -187,7 +187,7 @@
         <li>
 			<div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
             <span class="user">
-				<img class="user-picture" src="{% url user_avatar user.username %}" alt="user avatar">
+				<img class="user-picture" src="{% embedded_avatar user.username %}" alt="user avatar">
 			</span>
 			<div class="comment-content">
 				<span class="msg">

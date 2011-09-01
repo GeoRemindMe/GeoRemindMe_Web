@@ -374,7 +374,7 @@ def edit_settings(request, template="webapp/edit_settings.html"):
                                                     }, context_instance=RequestContext(request)
                                )
 
-def followers_panel(request, username, template='followers.html'):
+def followers_panel(request, username, template='webapp/followers.html'):
     if request.user.is_authenticated() and username == request.user.username:
         followers=request.user.get_followers()
     else:
@@ -387,7 +387,7 @@ def followers_panel(request, username, template='followers.html'):
                                )
 
 
-def followings_panel(request, username, template):
+def followings_panel(request, username, template='webapp/followings.html'):
     if request.user.is_authenticated() and username == request.user.username:
         followings=request.user.get_followings()
     else:
@@ -526,7 +526,7 @@ def get_friends_facebook(request):
     else:
         from geoauth.clients.facebook import FacebookClient
         try:
-            fb_client = FacebookClient.load_client(user=request.user)
+            fb_client = FacebookClient(user=request.user)
         except:
             return None
     return fb_client.get_friends_to_follow()

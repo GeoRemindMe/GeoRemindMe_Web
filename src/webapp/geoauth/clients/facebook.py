@@ -54,58 +54,59 @@ from geouser.models import urlfetch
 from geouser.models_social import FacebookUser
 from georemindme.funcs import make_random_string
 
+
 class FacebookClient(object):
     _fb_id = None
     user = None
+    consumer = None 
         
-    @classmethod
-    def load_client(cls, access_token=None, user=None):
+    def __init__(self, access_token=None, user=None):
         if user is None and access_token is None:
             raise AttributeError
-        fbclient = FacebookClient()
         import memcache
         memclient = memcache.mem.Client()
         if user is not None:
-            client_cache = memclient.gets('%sfbclientuser_%s' % (memcache.version, 
+            token = memcache.deserialize_instances(memclient.get('%sfbclientuser_%s' % (memcache.version, 
                                                                   user.id
                                                                   )
-                                               )
-            if client_cache is None:
-                fbclient.user = user
-                access_token = OAUTH_Access.get_token_user(provider='facebook', user=user)
-                if access_token is None:
+                                               ))
+            if token is None:
+                token = OAUTH_Access.get_token_user(provider='facebook', user=user)
+                if token is None:
                     raise OAUTHException()
-                fbclient.consumer = GraphAPI(access_token=access_token.token_key)
-            else:
-                return client_cache
-
+                memclient.set('%sfbclientuser_%s' % (memcache.version, 
+                                                                  user.id
+                                                                  ),
+                               memcache.serialize_instances(token)
+                                               )
+            self.user = user
         else:
-            client_cache = memclient.gets('%sfbclienttoken_%s' % (memcache.version, 
+            token = memcache.deserialize_instances(memclient.get('%sfbclienttoken_%s' % (memcache.version, 
                                                                   access_token
                                                                   )
-                                               )
-            if client_cache is None:
+                                               ))
+            if token is None:
                 token = OAUTH_Access.get_token(access_token)  # TODO: buscar por proveedor
-                if token is not None:
-                    fbclient.user = token.user
-                fbclient.consumer = GraphAPI(access_token=access_token)
+                if token is None:
+                    raise OAUTHException()
+                user = token.user
+                memclient.set_multi({
+                                     '%sfbclienttoken_%s' % (memcache.version, 
+                                                                  access_token
+                                                                  ): memcache.serialize_instances(token),
+                                     '%sfbclient_%s_user' % (memcache.version, 
+                                                                  access_token
+                                                                  ):
+                                                                    memcache.serialize_instances(token.user)
+                                    }
+                                               )
             else:
-                return client_cache
-        fbclient.api_key = settings.OAUTH['facebook']['app_key']
-        return fbclient
-        import pickle
-        fbclient_pickled = pickle.dumps(fbclient)
-        to_memcache = {"%sfbclientuser_%s" % (memcache.version, 
-                                fbclient.user.id
-                                ) : fbclient,
-               '%sfbclienttoken_%s' % (memcache.version, 
-                                access_token
-                                ) : fbclient,
-               }
-        memclient.set("%sfbclientuser_%s" % (memcache.version, 
-                                fbclient.user.id
-                                ), fbclient_pickled)
-        return fbclient
+                user = memcache.deserialize_instances(memclient.get('%sfbclient_%s_user' % (memcache.version, 
+                                                                  access_token
+                                                                  )
+                                               ))
+            self.user = user
+        self.consumer = GraphAPI(access_token=token.token_key)
     
     def get_user_info(self): 
         """

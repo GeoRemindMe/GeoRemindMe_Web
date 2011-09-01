@@ -12,7 +12,7 @@ class FacebookMiddleware(object):
                 if 'oauth_token' in data:
                     request.facebook = {'uid': data['user_id'],
                                     'access_token': data['oauth_token'],
-                                    'client': FacebookClient.load_client(data['oauth_token'])
+                                    'client': FacebookClient(data['oauth_token'])
                                     }
                 request.csrf_processing_done = True
                 request.method = 'GET'
@@ -24,7 +24,7 @@ class FacebookMiddleware(object):
             cookie = get_user_from_cookie(request.COOKIES)
             if cookie is not None:
                 request.facebook = cookie
-                request.facebook['client'] = FacebookClient.load_client(cookie["access_token"])
+                request.facebook['client'] = FacebookClient(cookie["access_token"])
                 
                 request.csrf_processing_done = True
                 from facebookApp.watchers import new_suggestion, new_list, new_comment, new_vote, deleted_post
