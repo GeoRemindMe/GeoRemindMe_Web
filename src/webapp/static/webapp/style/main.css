@@ -1351,7 +1351,7 @@ div.waiting{
 #trending-suggestions img{
     display: block;
     float: left;
-    margin: 5px 10px 0 5px;
+    margin: 5px 11px 0 11px;
     width: 25px;
 
 }
@@ -1529,4 +1529,8 @@ a.small-link,ul#chronology .suggestionPlace a {
 
 ul#chronology div.comment-box {
 font-size: 0.9em;
+}
+
+#view-list #suggestion-list .msg {
+    font-size: 1.1em;
 }

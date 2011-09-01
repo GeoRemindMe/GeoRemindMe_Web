@@ -46,7 +46,14 @@
                     {{obj.instance.instance.msg}}
                 </em><br>
                 <span class="suggestionPlace">
-                    En la sugerencia: <a href="{% url2 in_facebook view_suggestion obj.instance.instance.instance.slug %}" class="link">{{obj.instance.instance.instance.name|truncatewords:10}}</a><br>
+                    En la 
+                    {% if obj.instance.instance.instance.keys|length %}
+                        lista de sugerencias: <a href="{% url2 in_facebook view_list obj.instance.instance.instance.id %}" class="link">{{obj.instance.instance.instance.name|truncatewords:10}}</a><br>
+                    {% else %}
+                        sugerencia: <a href="{% url2 in_facebook view_suggestion obj.instance.instance.instance.slug %}" class="link">{{obj.instance.instance.instance.name|truncatewords:10}}</a><br>
+                    {% endif %}
+                        
+                    
                 </span>
 
                 <span class="timestamp">  {{obj.created|naturaltime}}</span>  
