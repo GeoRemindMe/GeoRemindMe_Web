@@ -1631,7 +1631,7 @@ input{
     }
     #address-container{
         border: 1px solid #CCCCCC;
-        margin-bottom: 10px;
+        margin: 0 1em 1em;
 /*
         border-bottom:10px solid #ccc;
 */
@@ -1645,18 +1645,13 @@ input{
                 visibility: hidden;
             }
     #address-container input[type="text"]{
-/*
-        margin: 10px 0 0 5px;
-*/
-        border-color: -moz-use-text-color -moz-use-text-color #CCCCCC;
-        border-style: none solid solid none;
-        border-width: 0 0 1px;
+        border: 0;
         font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
         font-size: 1.1em;
         height: 1.7em;
         line-height: 1.5em;
         padding: 5px;
-        width: 538px;
+        width: 535px;
 
     }
     .btnGmaps{
@@ -1692,6 +1687,7 @@ input{
     
     #address-form{
         /*display:none;*/
+        border-bottom: 1px solid #ccc
     }
     #place-form label{
         clear: left;

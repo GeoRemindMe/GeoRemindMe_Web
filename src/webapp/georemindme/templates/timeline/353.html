@@ -15,7 +15,7 @@
             </a>
         </div>
         <div class="timeline-msg">
-            Has guardado en <a href="{% url2 in_facebook user_suggestions%}">tu baúl</a> la lista de sugerencias de <a href="{% url2 in_facebook public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a>:<br>
+            Has guardado en <a href="{% url in_facebook user_suggestions%}">tu baúl</a> la lista de sugerencias de <a href="{% url2 in_facebook public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a>:<br>
             {{obj.instance.name}}<br>
             <span class="timestamp">  {{obj.created|naturaltime}}</span>  
         </div>

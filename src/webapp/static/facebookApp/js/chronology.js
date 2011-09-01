@@ -1,6 +1,6 @@
 $(document).ready(function(){
-    if(typeof(resizeIframe)!="undefined")
-        resizeIframe();
+    //if(typeof(resizeIframe)!="undefined")
+        //if (typeof resizeIframe != "undefined") resizeIframe();
     setTimelineBehaviour();
     
     
@@ -53,8 +53,8 @@ function setCommentsBehaviour(page){
     $(page+'.show-all-comments').click(function(){
         //Después de mostrar los comentarios ocultamos el botón
         $(this).parent().find('.long-list').slideDown('fast', function(){
-            if(typeof(resizeIframe)!="undefined")
-                resizeIframe();
+            //if(typeof(resizeIframe)!="undefined")
+                //if (typeof resizeIframe != "undefined") resizeIframe();
             $(this).parentsUntil('.suggestion-element').parent().find('.show-all-comments').remove();
             
         });
@@ -168,8 +168,8 @@ function sendComment2(textarea,element_id,elemType){
             c.find(".like-dislike").like();
             c.find(".removable").removable();
             //resetInput(textarea);
-            if(typeof(resizeIframe)!="undefined")
-                resizeIframe();
+            //if(typeof(resizeIframe)!="undefined")
+                //if (typeof resizeIframe != "undefined") resizeIframe();
         },
         error:{
         }

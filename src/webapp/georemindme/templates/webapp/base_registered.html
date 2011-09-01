@@ -92,13 +92,9 @@
             </a>
         </div>
 		
-		<div id="search_bar">
-            <input type="search" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly><br>
-<!--
-            //Ejemplo: tapas en granada, turismo, paisajes, etc.
--->
-        </div>
+		
         <div id="nav-menu">
+            <a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
             {% block nav %}
 				<ul>
                     <li id="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
@@ -143,9 +139,31 @@
 				{% block body %}{% endblock %}
 			</div>
 			<div id="left-col">
-				<a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
+                <div id="search_bar">
+                    <form action="." method="post">
+                        <input type="text" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly>
+                        <input type="submit" value="Buscar" class="btn">
+                    </form>
+                </div>
+				
 				
                 {% block extraContent %} {% endblock %}
+                
+                <p><em>Sugerencias cerca tuya</em>: (Granada) <span class="hoverlink">Cambiar</span></p>
+                <ul id="close-suggestions">
+                    <li><a href="">Probar una hamburguesa en el Brasilia</a></li>
+                    <li><a href="">Tomar un heladito de café con turrón en Los Italianos, ¡preferentemente en tarrina!</a></li>
+                    <li><a href="">Ver un atardecer desde el mirador de San Nicolás</a></li>
+                </ul>
+                <p><span class="hoverlink view-more">Ver más</span></p>
+                <p><em>Sugerencias más relevantes</em>:</p>
+                <ul id="trending-suggestions">
+                    <li><a href="">Probar una hamburguesa en el Brasilia</a></li>
+                    <li><a href="">Tomar un heladito de café con turrón en Los Italianos, ¡preferentemente en tarrina!</a></li>
+                    <li><a href="">Ver un atardecer desde el mirador de San Nicolás</a></li>
+                </ul>
+                <p><span class="hoverlink view-more">Ver más</span></p>
+                
 			</div>
 		</div>
 	</div>
