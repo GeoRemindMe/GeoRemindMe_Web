@@ -350,11 +350,33 @@ def profile_settings(request, template='webapp/settings.html'):
                                                 },
                                             context_instance=RequestContext(request)
                                 )
-    
+@login_required    
+def edit_settings(request, template="webapp/edit_settings.html"):
+    from geouser.forms import UserSettingsForm
+    if request.method == 'POST':
+        f = UserSettingsForm(request.POST, prefix='user_set_settings')
+        if f.is_valid():
+            f.save(request.user)
+            request.session['LANGUAGE_CODE'] = request.user.settings.language
+            return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
+    else:
+        f = UserSettingsForm(prefix='user_set_settings', initial = { 
+                                                                  'time_notification_suggestion_follower': request.user.settings.time_notification_suggestion_follower,
+                                                                  'time_notification_suggestion_comment': request.user.settings.time_notification_suggestion_comment,
+                                                                  'time_notification_account': request.user.settings.time_notification_account,
+                                                                  'show_public_profile': request.user.settings.show_public_profile,
+                                                                  'language': request.user.settings.language,
+                                                                  }
+                             )
+    return  render_to_response(template, {'profile': request.user.profile,
+                                                    'settings': request.user.settings,
+                                                    'settings_form': f,
+                                                    }, context_instance=RequestContext(request)
+                               )
 
 def followers_panel(request, username, template='followers.html'):
     if request.user.is_authenticated() and username == request.user.username:
-		followers=request.user.get_followers()
+        followers=request.user.get_followers()
     else:
         from geouser.api import get_followers
         followers = get_followers(request.user, username=username)
@@ -367,7 +389,7 @@ def followers_panel(request, username, template='followers.html'):
 
 def followings_panel(request, username, template):
     if request.user.is_authenticated() and username == request.user.username:
-		followings=request.user.get_followings()
+        followings=request.user.get_followings()
     else:
         from geouser.api import get_followings
         followings = get_followings(request.user, username=username)

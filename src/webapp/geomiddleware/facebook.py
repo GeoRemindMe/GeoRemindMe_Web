@@ -16,7 +16,7 @@ class FacebookMiddleware(object):
                                     }
                 request.csrf_processing_done = True
                 request.method = 'GET'
-                from facebookApp.watchers import *
+                from facebookApp.watchers import new_suggestion, new_list, new_comment, new_vote, deleted_post
             except:
                 request.csrf_processing_done = False
         else:
@@ -25,4 +25,4 @@ class FacebookMiddleware(object):
                 request.facebook = cookie
                 request.facebook['client'] = FacebookClient(cookie["access_token"])
                 request.csrf_processing_done = True
-                from facebookApp.watchers import *
+                from facebookApp.watchers import new_suggestion, new_list, new_comment, new_vote, deleted_post
