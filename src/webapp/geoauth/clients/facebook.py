@@ -57,22 +57,55 @@ from georemindme.funcs import make_random_string
 class FacebookClient(object):
     _fb_id = None
     user = None
-    
-    def __init__(self, access_token=None, user=None):
+        
+    @classmethod
+    def load_client(cls, access_token=None, user=None):
         if user is None and access_token is None:
             raise AttributeError
+        fbclient = FacebookClient()
+        import memcache
+        memclient = memcache.mem.Client()
         if user is not None:
-            self.user = user
-            access_token = OAUTH_Access.get_token_user(provider='facebook', user=user)
-            if access_token is None:
-                raise OAUTHException()
-            self.consumer = GraphAPI(access_token=access_token.token_key)
+            client_cache = memclient.gets('%sfbclientuser_%s' % (memcache.version, 
+                                                                  user.id
+                                                                  )
+                                               )
+            if client_cache is None:
+                fbclient.user = user
+                access_token = OAUTH_Access.get_token_user(provider='facebook', user=user)
+                if access_token is None:
+                    raise OAUTHException()
+                fbclient.consumer = GraphAPI(access_token=access_token.token_key)
+            else:
+                return client_cache
+
         else:
-            token = OAUTH_Access.get_token(access_token)  # TODO: buscar por proveedor
-            if token is not None:
-                self.user = token.user
-            self.consumer = GraphAPI(access_token=access_token)
-        self.api_key = settings.OAUTH['facebook']['app_key']
+            client_cache = memclient.gets('%sfbclienttoken_%s' % (memcache.version, 
+                                                                  access_token
+                                                                  )
+                                               )
+            if client_cache is None:
+                token = OAUTH_Access.get_token(access_token)  # TODO: buscar por proveedor
+                if token is not None:
+                    fbclient.user = token.user
+                fbclient.consumer = GraphAPI(access_token=access_token)
+            else:
+                return client_cache
+        fbclient.api_key = settings.OAUTH['facebook']['app_key']
+        return fbclient
+        import pickle
+        fbclient_pickled = pickle.dumps(fbclient)
+        to_memcache = {"%sfbclientuser_%s" % (memcache.version, 
+                                fbclient.user.id
+                                ) : fbclient,
+               '%sfbclienttoken_%s' % (memcache.version, 
+                                access_token
+                                ) : fbclient,
+               }
+        memclient.set("%sfbclientuser_%s" % (memcache.version, 
+                                fbclient.user.id
+                                ), fbclient_pickled)
+        return fbclient
     
     def get_user_info(self): 
         """
@@ -178,7 +211,7 @@ class FacebookFriendsRPC(object):
         self.user = user
         self.friends = {}
         try:
-            fbclient = FacebookClient(user=user)
+            fbclient = FacebookClient.load_client(user=user)
             self.rpc = fbclient.get_friends_to_follow(rpc=self.rpc)
         except:
             return None

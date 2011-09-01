@@ -396,10 +396,10 @@ class Place(POI):
             para intentar añadirlo luego
         """
         from mapsServices.fusiontable import ftclient, sqlbuilder
-        from django.conf import settings
         try:
             ftclient = ftclient.OAuthFTClient()
-            ftclient.query(sqlbuilder.SQL().insert(settings.FUSIONTABLES['TABLE_PLACES'],
+            from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
+            ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_PLACES'],
                                                     {'bus_id': self.business.id if self.business is not None else -1,
                                                     'location': '%s,%s' % (self.location.lat, self.location.lon),
                                                     'place_id': self.id,

@@ -317,7 +317,7 @@ def delete_following(request):
     """
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
-    deleted = geouser.del_following(request, userid=userid, username=username)
+    deleted = geouser.del_following(request.user, userid=userid, username=username)
     return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
 
 
@@ -630,9 +630,9 @@ def add_suggestion_tags(request):
 def get_short_url(request):
     url = request.POST.get('url', None)
     from libs.vavag import VavagRequest, VavagException
-    from django.conf import settings
     try:
-        client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
+        from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
+        client = VavagRequest(__web_settings.SHORTENER_ACCESS['user'], __web_settings.SHORTENER_ACCESS['key'])
         response =  client.set_pack(url)
         return HttpResponse(simplejson.dumps(response['results']['packUrl']),
                             mimetype='application/json')

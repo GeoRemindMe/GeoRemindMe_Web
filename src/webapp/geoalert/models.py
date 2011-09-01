@@ -449,18 +449,18 @@ class Suggestion(Event, Visibility, Taggable):
             
     def _get_short_url(self):
         from libs.vavag import VavagRequest
-        from django.conf import settings
         from os import environ
         try:
-            client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
+            from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
+            client = VavagRequest(__web_settings.SHORTENER_ACCESS['user'], __web_settings.SHORTENER_ACCESS['key'])
             response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
             self._short_url = response['results']['packUrl']
         except:
             self._short_url = None
             
     def delete(self):
-        from django.conf import settings
-        generico = User.objects.get_by_username(settings.GENERICO, keys_only=True)
+        from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
+        generico = User.objects.get_by_username(__web_settings.GENERICO, keys_only=True)
         viejo = self.user
         if generico is None:
             self.user = None

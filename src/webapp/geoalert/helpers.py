@@ -1,6 +1,5 @@
 # coding=utf-8
 
-from django.conf import settings
 from google.appengine.ext import db
 
 from models import Event, Alert, AlertSuggestion, Suggestion

@@ -453,12 +453,15 @@ def share_on_facebook(request, id, msg):
         return False
     if list.short_url is None:
         list._get_short_url()
-    from geoauth.clients.facebook import FacebookClient
+    if hasattr(request, 'facebook'):
+        fb_client = request.facebook['client']
+    else:
+        from geoauth.clients.facebook import FacebookClient
+        try:
+            fb_client = FacebookClient.load_client(user=request.user)
+        except:
+            return None
     from os import environ
-    try:
-        fb_client=FacebookClient(user=request.user)
-    except:
-        return None
     params= {
                 "name": "Ver detalles de la sugerencia",
                 "link": list.short_url if list.short_url is not None else '%s%s' % (environ['HTTP_HOST'], list.get_absolute_url()),

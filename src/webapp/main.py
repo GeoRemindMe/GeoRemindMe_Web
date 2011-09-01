@@ -47,6 +47,8 @@ import django.core.handlers.wsgi
 import django.dispatch
 from django.core.signals import got_request_exception
 from django.db import _rollback_on_exception
+import cPickle, pickle
+sys.modules['cPickle'] = sys.modules['pickle']
 
 def log_exception(*args, **kwds):
     logging.exception('Exception in request:')
@@ -64,11 +66,15 @@ django.dispatch.Signal.disconnect(
                                   )
 
 def main():
+    from django.conf import settings
+    global __web_settings
+    __web_settings = settings
     # Create a Django application for WSGI.
     application = django.core.handlers.wsgi.WSGIHandler()
-
+    
     # Run the WSGI CGI handler with that application.
     util.run_wsgi_app(application)
+
 
 if __name__ == '__main__':
     main()

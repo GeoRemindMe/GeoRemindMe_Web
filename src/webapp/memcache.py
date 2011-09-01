@@ -26,13 +26,13 @@ except KeyError:
 #===============================================================================
 # About memcache: http://blog.notdot.net/2009/9/Efficient-model-memcaching
 #===============================================================================
-from google.appengine.api import memcache
+from google.appengine.api import memcache as mem
 from google.appengine.ext import db, search 
 from google.appengine.datastore import entity_pb
 
-get = memcache.get
-set = memcache.set
-delete = memcache.delete
+get = mem.get
+set = mem.set
+delete = mem.delete
 
 
 def serialize_instances(instances):

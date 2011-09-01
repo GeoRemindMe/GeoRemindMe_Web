@@ -521,9 +521,15 @@ def get_friends_facebook(request):
     el usuario puede seguir
     
     """
-    from geoauth.clients.facebook import FacebookClient
-    c = FacebookClient(user=request.user)
-    return c.get_friends_to_follow()
+    if hasattr(request, 'facebook'):
+        fb_client = request.facebook['client']
+    else:
+        from geoauth.clients.facebook import FacebookClient
+        try:
+            fb_client = FacebookClient.load_client(user=request.user)
+        except:
+            return None
+    return fb_client.get_friends_to_follow()
 
 
 @login_required
