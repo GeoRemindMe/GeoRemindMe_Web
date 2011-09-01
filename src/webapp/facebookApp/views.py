@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response, Http404
 from django.http import HttpResponse,HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
-
+from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
 
 from geouser.funcs import init_user_session
 from decorators import facebook_required
@@ -17,8 +17,7 @@ def login_panel(request):
         if not request.user.is_authenticated():
             user = request.facebook['client'].authenticate()
             if not user:
-                from django.conf import settings
-                return render_to_response('register.html', {"permissions": settings.OAUTH['facebook']['scope'] },
+                return render_to_response('register.html', {"permissions": __web_settings.OAUTH['facebook']['scope'] },
                               context_instance=RequestContext(request)
                               )
             request.user = user
@@ -49,8 +48,7 @@ def login_panel(request):
             init_user_session(request, request.user, remember=True, is_from_facebook=True)
             return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
-    from django.conf import settings
-    return render_to_response('register.html', {"permissions": settings.OAUTH['facebook']['scope'] },
+    return render_to_response('register.html', {"permissions": __web_settings.OAUTH['facebook']['scope'] },
                               context_instance=RequestContext(request)
                               )
     

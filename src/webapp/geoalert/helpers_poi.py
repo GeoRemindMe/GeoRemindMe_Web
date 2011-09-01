@@ -108,10 +108,10 @@ class PlaceHelper(POIHelper):
         if not isinstance(location, db.GeoPt):
             location = db.GeoPt(location)
         from mapsServices.fusiontable import ftclient, sqlbuilder
-        from django.conf import settings
         
         ftclient = ftclient.OAuthFTClient()
-        query = ftclient.query(sqlbuilder.SQL().select(settings.FUSIONTABLES['TABLE_PLACES'], cols=['place_id'],
+        from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
+        query = ftclient.query(sqlbuilder.SQL().select(__web_settings.FUSIONTABLES['TABLE_PLACES'], cols=['place_id'],
                                                condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s))' % (location, radius)
                                                )
                        )

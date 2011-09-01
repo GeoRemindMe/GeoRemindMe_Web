@@ -229,7 +229,7 @@ def facebook_access_request(request, next=None):
                 'access_token' : params['access_token'][0], 
             }
         from clients.facebook import FacebookClient
-        client = FacebookClient(access_token = token['access_token'])
+        client = FacebookClient.load_client(access_token = token['access_token'])
         if request.user.is_authenticated():#usuario ya esta logeado, guardamos el token de su cuenta
             client.authorize(request.user)
         else:
