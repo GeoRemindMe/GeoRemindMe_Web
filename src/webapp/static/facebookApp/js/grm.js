@@ -361,8 +361,15 @@ GRM.menuList = function(settings) {
                                 
                                 setExpandible('#list_'+data.id);
                                 
+                                
+                                // Activamos el mismo comportamiento que tienen el resto de listas:
+                                // que se puedan editar los campos, que se activen los diálogos para compartir
+                                // y que se puedan mostrar y ocultar las estadísticas
                                 set_editable_fields();
                                 
+                                create_share_links();
+                                
+                                obj.find('.show-more').click(show_and_hide_stats_callback);
                                 
                                 //Aumentamos el contador de las listas
                                 $('#lists-tab-counter').text(parseInt($('#lists-tab-counter').text())+1);
