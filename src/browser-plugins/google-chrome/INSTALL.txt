@@ -1,0 +1,8 @@
+Abre el navegador Google Chrome y escribe en la barra de direcciones:
+chrome://extensions/
+
+Después pulsa arriba a la derecha en "Modo desarrollador" y pulsa en
+"Cargar extension descomprimida..." y selecciona la carpeta donde se
+encuentra el plugin: "src/browser-plugins/google-chrome".
+
+Y voilà! ya está el plugin instalado! :D
