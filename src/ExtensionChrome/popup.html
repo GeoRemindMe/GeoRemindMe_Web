@@ -1,0 +1,51 @@
+<style>
+body {
+  min-width:357px;
+  overflow-x:hidden;	
+}
+
+#title {
+	color:black;
+}
+
+img {
+  margin:5px;
+  border:2px solid black;
+  vertical-align:middle;
+  width:75px;
+  height:75px;
+}
+</style>
+
+<script>
+
+	function hayCookie() {
+		getCookies("http://localhost:8080/dashboard/", "georemindme_session_cookie", function(id) {
+		    show(id);
+		});
+	}
+	
+	function getCookies(domain, name, callback) {
+        chrome.cookies.get({"url": domain, "name": name}, function(cookie) {
+			if (!cookie) { callback("Nothing! ahahahaha!"); }
+			else { callback(cookie.value); }
+		});
+        
+	}
+
+	function show(text) {
+		var div;
+		div = document.getElementById('insert'); 
+	  	div.innerHTML = text;
+	}
+
+</script>
+<body>
+	<h2 id="title">Georemindme</h2>
+	<a href="javascript:hayCookie();">Show me da cookie</a>
+	<div id="box">
+		This is your fucking cookie: <div id="insert"></div>
+	</div>
+</body>
+
+
