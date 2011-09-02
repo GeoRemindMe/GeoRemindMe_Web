@@ -4,5 +4,5 @@
 .pydevproject
 virtualme/*
 .settings
-#src/fixtures/*
+src/fixtures/*
 src/webapp/settings.py
