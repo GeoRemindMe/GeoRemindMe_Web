@@ -79,7 +79,6 @@ class FacebookClient(object):
                                                                   ),
                                memcache.serialize_instances(token)
                                                )
-            self.user = user
         else:
             token = memclient.get('%sfbclienttoken_%s' % (memcache.version, 
                                                                   access_token
@@ -87,19 +86,21 @@ class FacebookClient(object):
                                                )
             if token is None:
                 token = OAUTH_Access.get_token(access_token)  # TODO: buscar por proveedor
-                if token is None:
-                    raise OAUTHException()
-                user = token.user
-                token_cache = {'token': token,
-                               'user': user
-                               }
-                memclient.set('%sfbclienttoken_%s' % (memcache.version, 
+                if token is not None:
+                    user = token.user
+                    token_cache = {'token': token,
+                                   'user': user
+                                   }
+                    memclient.set('%sfbclienttoken_%s' % (memcache.version, 
                                                           access_token
                                                   ), token_cache)
+                else:
+                    self.consumer = GraphAPI(access_token=access_token)
+                    return
             else:
                 user = token['user']
                 token = token['token']
-            self.user = user
+        self.user = user
         self.consumer = GraphAPI(access_token=token.token_key)
     
     def get_user_info(self): 

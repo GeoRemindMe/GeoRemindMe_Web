@@ -606,7 +606,7 @@ def get_near_suggestions(request):
         location: punto donde buscar
         radius: radio para las busquedas, en metros (opcional)
         
-        return 
+        return suggestion list
     """
     
     if not request.user.is_authenticated():
