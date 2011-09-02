@@ -581,7 +581,7 @@ def mod_searchconfig_google(request):
 
 
 @ajax_request
-def get_place_near(request):
+def get_near_places(request):
     """
     Obtiene places cercanos a una localizacion dada
     Parametros POST:
@@ -596,6 +596,32 @@ def get_place_near(request):
     places = Place.objects.get_nearest(location, radius)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(places, cls=JSONEncoder),
+                        mimetype='application/json')
+    
+@ajax_request
+def get_near_suggestions(request):
+    """
+    Obtiene places cercanos a una localizacion dada
+    Parametros POST:
+        location: punto donde buscar
+        radius: radio para las busquedas, en metros (opcional)
+        
+        return 
+    """
+    
+    if not request.user.is_authenticated():
+        return HttpResponseForbidden()
+    location = request.POST.get('location', None)
+    if location is not None:
+        from google.appengine.ext import db
+        request.user.last_location = db.GeoPt(location)
+    else:
+        location = request.user.last_location
+    radius = request.POST.get('radius', 5000)
+    from geoalert.models import Suggestion
+    suggs = Suggestion.objects.get_nearest(location, radius)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(suggs, cls=JSONEncoder),
                         mimetype='application/json')
     
 @ajax_request

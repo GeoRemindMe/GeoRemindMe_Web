@@ -115,8 +115,8 @@ class PlaceHelper(POIHelper):
                                                condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s))' % (location, radius)
                                                )
                        )
-        results = list(query[9:].split()) #  chapuza :)
-        
+        results = query.splitlines()
+        del results[0]  #  quitar la primera linea con el nombre de la columna
         places = [db.Key.from_path(self._klass.kind(), result) for result in results] # construir todas las keys para consultar en bach
         places = db.get(places)
         from georemindme.funcs import prefetch_refprops

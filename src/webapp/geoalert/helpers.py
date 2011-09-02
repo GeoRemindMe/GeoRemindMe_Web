@@ -337,6 +337,25 @@ class SuggestionHelper(EventHelper):
         from georemindme.funcs import fetch_parents
         suggestions = fetch_parents(suggestions)
         return [query_id, suggestions]
+    
+    def get_nearest(self, location, radius = 5000):
+        if not isinstance(location, db.GeoPt):
+            location = db.GeoPt(location)
+        from mapsServices.fusiontable import ftclient, sqlbuilder
+        
+        ftclient = ftclient.OAuthFTClient()
+        from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
+        query = ftclient.query(sqlbuilder.SQL().select(__web_settings.FUSIONTABLES['TABLE_SUGGS'], cols=['sug_id'],
+                                               condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s)) ORDER BY modified' % (location, radius)
+                                               )
+                       )
+        results = query.splitlines()
+        del results[0] #  quitar la primera linea con el nombre de la columna
+        sugs = [db.Key.from_path(self._klass.kind(), int(result)) for result in results] # construir todas las keys para consultar en bach
+        sugs = db.get(sugs)
+        from georemindme.funcs import prefetch_refprops
+        sugs = prefetch_refprops(sugs, self._klass.user)
+        return sugs
 
 
 class AlertSuggestionHelper(AlertHelper):

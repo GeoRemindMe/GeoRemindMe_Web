@@ -518,9 +518,9 @@ class Suggestion(Event, Visibility, Taggable):
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
             ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],
                                                     {
-                                                    'location': '%s,%s' % (self.location.lat, self.location.lon),
+                                                    'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
                                                     'sug_id': self.id,
-                                                    'modified': self.modified.__str__(),
+                                                    'modified': self.created.__str__(),
                                                      }
                                                    )
                            )
