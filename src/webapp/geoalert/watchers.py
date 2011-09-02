@@ -70,20 +70,18 @@ alert_done.connect(done_alert)
 
 def new_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=300)
-    p = db.put_async([timeline])
     timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=300, _vis=sender._get_visibility())
-    timelinePublic.put()
+    p = db.put_async([timeline, timelinePublic])
     sender.user.counters.set_suggested()
+    sender.insert_ft()
     p.get_result()
 suggestion_new.connect(new_suggestion)
 
 
 def modified_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=301)
-    p = db.put_async([timeline])
     timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=301, _vis=sender._get_visibility())
-    timelinePublic.put()
-    p.get_result()
+    db.put([timeline, timelinePublic])
 #suggestion_modified.connect(modified_suggestion)
 
 
@@ -98,8 +96,9 @@ suggestion_deleted.connect(deleted_suggestion)
 
 def new_following_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=303, visible=False)
-    timeline.put()
+    p = timeline.put_async()
     sender.counters.set_followers(+1)
+    p.get_result()
     from google.appengine.ext.deferred import defer
     defer(sender.user.settings.notify_suggestion_follower, sender.key(), kwargs['user'].key())
     if sender.user is not None:
@@ -112,8 +111,9 @@ suggestion_following_new.connect(new_following_suggestion)
 
 def deleted_following_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=304, visible=False)
-    timeline.put()
+    p = timeline.put_async()
     sender.counters.set_followers(-1)
+    p.get_result()
 suggestion_following_deleted.connect(deleted_following_suggestion)
 
 

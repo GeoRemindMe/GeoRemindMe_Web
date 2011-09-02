@@ -117,7 +117,7 @@ class PlaceHelper(POIHelper):
                        )
         results = list(query[9:].split()) #  chapuza :)
         
-        places = [db.Key.from_path(self._klass.kind(), result) for result in results]
+        places = [db.Key.from_path(self._klass.kind(), result) for result in results] # construir todas las keys para consultar en bach
         places = db.get(places)
         from georemindme.funcs import prefetch_refprops
         places = prefetch_refprops(places, self._klass.user)

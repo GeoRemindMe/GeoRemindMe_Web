@@ -422,24 +422,28 @@ class Suggestion(Event, Visibility, Taggable):
     
     def put(self, from_comment=False):
         if from_comment:
+            # no escribir timeline si es de un comentario
             super(Suggestion, self).put()
             return self
         from django.template.defaultfilters import slugify
-        if self.slug is None:
-            name = self.name.lower()[:32]
-            self.slug = unicode(slugify('%s'% (name)))
-        p = Suggestion.all().filter('slug =', self.slug).get()
-        if p is not None:
-            if not self.is_saved() or p.key() != self.key():
-                i = 1
-                while p is not None:
-                    slug = self.slug + '-%s' % i
-                    p = Suggestion.all().filter('slug =', slug).get()
-                self.slug = self.slug + '-%s' % i
+        # buscar slug
+        
         if self.is_saved():
+            # estamos modificando sugerencia
             super(Suggestion, self).put()
             suggestion_modified.send(sender=self)
         else:
+            # nueva sugerencia
+            if self.slug is None:
+                name = self.name.lower()[:32]
+                self.slug = unicode(slugify('%s'% (name)))
+                p = Suggestion.all().filter('slug =', self.slug).get()
+                if p is not None:
+                    i = 1
+                    while p is not None:
+                        slug = self.slug + '-%s' % i
+                        p = Suggestion.all().filter('slug =', slug).get()
+                    self.slug = self.slug + '-%s' % i
             super(Suggestion, self).put()
             counter = SuggestionCounter(parent=self)
             put = db.put_async(counter)
@@ -466,11 +470,7 @@ class Suggestion(Event, Visibility, Taggable):
             self.user = None
         self.user = generico
         self.put()
-#        children = db.query_descendants(self).fetch(10)
-#        for c in children:
-#            c.delete()
         suggestion_deleted.send(sender=self, user=viejo)
-#        super(Suggestion, self).delete()
     
     def has_follower(self, user):
         if not user.is_authenticated():
@@ -504,6 +504,30 @@ class Suggestion(Event, Visibility, Taggable):
     
     def get_absolute_fburl(self):
         return '/fb%s' % self.get_absolute_url()
+    
+    def insert_ft(self):
+        """
+            Añade la sugerencia a la tabla en fusiontables
+            
+            En caso de fallo, se guarda el punto en _Do_later_ft,
+            para intentar añadirlo luego
+        """
+        from mapsServices.fusiontable import ftclient, sqlbuilder
+        try:
+            ftclient = ftclient.OAuthFTClient()
+            from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
+            ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],
+                                                    {
+                                                    'location': '%s,%s' % (self.location.lat, self.location.lon),
+                                                    'sug_id': self.id,
+                                                    'modified': self.modified.__str__(),
+                                                     }
+                                                   )
+                           )
+        except:  # Si falla, se guarda para intentar añadir mas tarde
+            from georemindme.models_utils import _Do_later_ft
+            later = _Do_later_ft(instance_key=self.key())
+            later.put()
     
     def __str__(self):
         return unicode(self.name).encode('utf-8')

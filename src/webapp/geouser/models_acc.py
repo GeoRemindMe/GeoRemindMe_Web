@@ -257,7 +257,7 @@ class UserCounter(db.Model):
         return db.run_in_transaction(self._change_counter, 'notifications', value)
     
     
-class UserTimelineBase(db.polymodel.PolyModel):
+class UserTimelineBase(db.polymodel.PolyModel, HookedModel):
     user = db.ReferenceProperty(User)
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty(auto_now=True)
