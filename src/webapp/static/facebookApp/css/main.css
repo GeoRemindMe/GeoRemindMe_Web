@@ -1872,6 +1872,35 @@ input{
     #suggestions{
         font-size:1.1em;
     }
+    
+    #legend{
+		border: 1px dotted #555555;
+		float: right;
+		font-size: 0.9em;
+		margin-top: 1em;
+		padding: 0.5em;
+    }
+    #legend ul{
+		margin: 5px 0 0;
+		padding: 0;
+    }
+    #legend ul li{
+		display: inline-block;
+		margin-right: 10px;
+    }
+    #legend ul li span{
+		border: 1px solid black;
+		display: block;
+		float: left;
+		height: 15px;
+		margin-right: 5px;
+		width: 30px;
+    }
+    .not-mine{
+		background-color:#F4F4F4;
+    }
+    .mine{
+    }
     .suggestion{
     }
     .maximize-minimize{

@@ -174,7 +174,7 @@ body {
 }
 
 .container {
-	width: 960px;
+	width: 1005px;
 	margin: 0 auto;
 }
 
@@ -853,7 +853,7 @@ div#left-col ul#friends-to-follow li:after{
 }
 
 #right-col {
-	width: 570px;
+	width: 615px;
 	float: left;
 	border-left: 1px solid #ccc;
     padding-left:5px;
