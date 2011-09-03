@@ -615,6 +615,7 @@ def get_near_suggestions(request):
     if location is not None:
         from google.appengine.ext import db
         request.user.last_location = db.GeoPt(location)
+        request.user.put()
     else:
         location = request.user.last_location
     radius = request.POST.get('radius', 5000)
