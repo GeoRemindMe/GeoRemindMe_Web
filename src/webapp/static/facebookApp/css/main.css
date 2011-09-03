@@ -1879,6 +1879,7 @@ input{
 		font-size: 0.9em;
 		margin-top: 1em;
 		padding: 0.5em;
+		color:#777;
     }
     #legend ul{
 		margin: 5px 0 0;
@@ -1889,7 +1890,7 @@ input{
 		margin-right: 10px;
     }
     #legend ul li span{
-		border: 1px solid black;
+		border: 1px solid #777;
 		display: block;
 		float: left;
 		height: 15px;
@@ -1903,16 +1904,18 @@ input{
     }
     .suggestion{
     }
-    .maximize-minimize{
+    div#content .maximize-minimize{
         background: url("/static/facebookApp/img/maximize_minimize.gif") no-repeat scroll 0 0 transparent;
         float: right;
         height: 15px;
         margin-right: 5px;
         margin-top: 10px;
         width: 15px;
+        border:0 none;
     }
-    div.suggestionExpanded{
+    div#content div.suggestionExpanded{
         background-position:0 -17px;
+        border:0 none;
     }
     .maximize-minimize span{
         visibility:hidden;
@@ -2223,7 +2226,9 @@ input{
            width:495px;
         }
         .collapsed:hover{
+/*
             background-color: #EEEEEE;
+*/
         }
         .suggestionInLists{
             width:25%;
