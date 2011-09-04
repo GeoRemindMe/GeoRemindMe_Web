@@ -21,7 +21,7 @@
             )
             
             
-			$('#list-description').html($('#list-description').html().replace(/none/ig, "<em>Sin descripción</em>"))
+			//$('#list-description').html($('#list-description').html().replace(/none/ig, "<em>Sin descripción</em>"))
         });
 	</script>
 {%endblock%}
@@ -36,15 +36,7 @@
     
 	
 	<div id="list-box" class="clear">
-        <p class="clear-left big suggestions-title"><strong>Lista: "{{list}}"</strong>, ({{suggestions|length}} sugerencias)</p>
-        <div id="suggestion-info">
-            <p>Descripción: <span id="list-description">{{list.description}}</span></p>
-            <p id="print-icon">Imprimir</p>
-            <p>Autor: <a href="{% url2 in_facebook public_profile list.user %}">{{list.user}}</a></p>
-<!--
-            <p>Etiquetas: <a href="#">Ocio</a> | <a href="#">Vacaciones</a> | <a href="#">Málaga</a></p>
--->
-        </div>
+        <p class="clear-left big lists-title"><strong>Lista: "{{list}}"</strong>, ({{suggestions|length}} sugerencias)</p>
         <div id="suggestion-aside">
             
             Seguidores:
@@ -57,6 +49,26 @@
             {% endif %}
             
         </div>
+        <div id="suggestion-info">
+            {% if list.description %}
+				<p>Descripción: <span id="list-description">{{list.description}}</span></p>
+            {% endif %}
+            <ul>
+				<li id="suggest_suggestion" class="hoverlink">Proponer sugerencia</li>
+				<li id="owner" class="hoverlink"><img src="{% embedded_avatar list.user.username %}" alt="{{list.user.username}}"> <a href="{% url2 in_facebook public_profile list.user %}" title="{{list.user}}" class="hoverlink">Autor: {{list.user}}</a></li>
+				{% if list.tags %}
+					<li>{{list.tags}}</li>
+				{% endif %}
+				<li id="print-icon" class="hoverlink">Imprimir</li>
+            </ul>
+            
+            
+            
+<!--
+            <p>Etiquetas: <a href="#">Ocio</a> | <a href="#">Vacaciones</a> | <a href="#">Málaga</a></p>
+-->
+        </div>
+        
         
         <ul id="suggestion-list">
             {% for obj in suggestions %}

@@ -181,7 +181,7 @@
 				var elemID=$(this).attr('id');
 				//Le quitamos el "_all"
 				elemID=elemID.substring(0,elemID.length-4)
-				console.log(':regex(id,^('+elemID+'_))')
+//				console.log(':regex(id,^('+elemID+'_))')
                 if($('#'+elemID+'_all').is(':checked'))
                     $(':regex(id,^('+elemID+'_))').attr('checked',true);
                 else
