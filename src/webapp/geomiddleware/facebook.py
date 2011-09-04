@@ -17,8 +17,7 @@ class FacebookMiddleware(object):
                                     'access_token': data['oauth_token'],
                                     'client': FacebookClient(data['oauth_token'])
                                     }
-            except OAUTHException:
-                request.csrf_processing_done = True
+                return
             except:
                 request.csrf_processing_done = False
         else:
@@ -31,10 +30,10 @@ class FacebookMiddleware(object):
                                     }
                     request.csrf_processing_done = True
                     from facebookApp.watchers import new_suggestion, new_list, new_comment, new_vote, deleted_post
-                except OAUTHException:
-                    raise
-                    request.csrf_processing_done = True
+                    return
                 except:
-                    raise
                     request.csrf_processing_done = False
+        from facebookApp.watchers import disconnect_all
+        disconnect_all()
+                    
 
