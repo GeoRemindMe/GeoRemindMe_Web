@@ -1,6 +1,6 @@
 {% load tags %}
 {% load i18n %}
-<div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-add-suggestion"></div>
+<div class="help-icon"><img src="/static/{%if in_facebook %}facebookApp{%else%}webapp{%endif%}/img/help.png" alt="Help" id="help-add-suggestion"></div>
 <form id="add-suggestion-form" action="javascript: return false;" >
 <!--
         name = forms.CharField(required=True)
