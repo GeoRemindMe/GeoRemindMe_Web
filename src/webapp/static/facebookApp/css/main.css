@@ -2522,6 +2522,11 @@ input{
 		margin-top: 1.5em;
 		padding-left: 25px;
 		text-decoration: underline;    }
+		
+	#view-suggestion #add-to-list{
+		background-image:url("/static/common/img/suggestionsx16.png");
+		background-repeat:no-repeat;
+	}
     #view-suggestion .show-more{
 		float: none;
 		color: #3896FF;
@@ -2582,11 +2587,12 @@ input{
     #view-suggestion div.suggestion p,
     #view-list div.suggestion p{
         clear: left;
-		display: inline;
-		float: left;
+		display: block;
+		float: none;
 		font-size: 1.1em;
 		line-height: 1.7em;
 		margin-right: 10px;
+		width: auto;
     }
     #view-suggestion div.suggestion img,
     #view-list div.suggestion img{
@@ -2948,6 +2954,7 @@ input{
 	#suggestion-info ul{
 	margin: 0 1em;
     padding: 0;
+    font-size:1.1em;
 	}
 	#suggestion-info li:after{
 	

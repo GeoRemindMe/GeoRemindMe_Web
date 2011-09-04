@@ -115,26 +115,7 @@
         <div class="suggestion">
             <h1>{{suggestion.name}}</h1>
 			<div>
-				<strong><label>Añadir a:</label></strong>
-
-                
-                <span class="btn dropDownBtn">
-                    <span class="save-at">---------</span>
-                    <ul class="submenu" style="display:none" id="dropdown-list">
-                        {% if lists %}
-                            {% for obj in lists %}
-                                {% if obj.user.username = request.user.username %}
-                                    <!-- Solo se muestran mis listas -->
-                                    <li id="listid-{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                        <li class="new-list-btn">
-                            <span id="text">Nueva lista...</span>
-                            <span class="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">Cancel</div>
-                        </li>
-                    </ul>
-                </span>
+				
                 
                 {% if suggestion.user.username != user.username %}
 				<div class="right" style="clear: right;">
@@ -169,7 +150,7 @@
                 </span>
             </div>
         {% else %}
-            <div class="right" style="clear: right;">
+            <div class="right" style="clear: right;clear: right; margin-left: 15px;">
                 <span class="likeBtn btn">
                     <span class="like-dislike" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
                         Votos:<br>
@@ -188,8 +169,7 @@
             </span>
         </div>
         {% endif %}
-             </div>
-             {% if suggestion.description %}
+        {% if suggestion.description %}
                 <p><strong>Instrucciones/explicación</strong>: {{suggestion.description}} </p>
             {% endif %}
             
@@ -201,6 +181,31 @@
             </p>
             {% endif %}
             <p id="print-icon">Ver formato impresión</p>
+            
+            <p id="add-to-list">Añadir a una lista
+				<span class="btn dropDownBtn" style="display:none">
+                    <span class="save-at">---------</span>
+                    <ul class="submenu" style="display:none" id="dropdown-list">
+                        {% if lists %}
+                            {% for obj in lists %}
+                                {% if obj.user.username = request.user.username %}
+                                    <!-- Solo se muestran mis listas -->
+                                    <li id="listid-{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <li class="new-list-btn">
+                            <span id="text">Nueva lista...</span>
+                            <span class="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">Cancel</div>
+                        </li>
+                    </ul>
+                </span>
+            </p>
+
+                
+                
+             </div>
+             
             <hr>
             
             
