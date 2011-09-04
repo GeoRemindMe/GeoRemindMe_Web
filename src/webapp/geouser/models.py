@@ -202,18 +202,20 @@ class User(polymodel.PolyModel, HookedModel):
                 Carga todos los timelines apuntados por _Notifications
                 de una sola vez
             """
-            fields = [(entity, _Notification.timeline) for entity in entities]
-            ref_keys = [_Notification.timeline.get_value_for_datastore(x) for x, _Notification.timeline in fields]
+            ref_keys = [x['timeline'] for x in entities]
             from geovote.models import Vote, Comment
             from geolist.models import List
             return db.get(set(ref_keys))
+        from google.appengine.api import datastore
         from models_utils import _Notification
-        query = _Notification.all().filter('owner =', self).order('-_created')
+        if query_id is None:
+            query = datastore.Query(kind='_Notification', filters={'owner =': self.key()})
         if query_id is not None:
-            query = query.with_cursor(query_id)
-        timelines = query.fetch(TIMELINE_PAGE_SIZE)
+            query = datastore.Query(kind='_Notification', filters={'owner =': self.key()}, cursor=query_id)
+        query.Order(('_created', datastore.Query.DESCENDING))
+        timelines = query.Get(TIMELINE_PAGE_SIZE)
         timelines = prefetch_timeline(timelines)
-        return [query.cursor(), [{'id': timeline.id, 'created': timeline.created,
+        return [query.GetCursor(), [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username,
                         'msg_id': timeline.msg_id,
