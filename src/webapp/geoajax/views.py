@@ -610,15 +610,17 @@ def get_near_suggestions(request):
     """
     
     location = request.POST.get('location', None)
+    if location is None and not request.user.is_authenticated():
+        return HttpResponseForbidden()
     if location is not None and request.user.is_authenticated():
         from google.appengine.ext import db
         request.user.last_point = db.GeoPt(location)
         request.user.put()
-    elif location is None and not request.user.is_authenticated():
-        return HttpResponseForbidden()
+    else:
+        location = request.user.last_point
     radius = request.POST.get('radius', 5000)
     from geoalert.models import Suggestion
-    suggs = Suggestion.objects.get_nearest(location, radius)
+    suggs = Suggestion.objects.get_nearest(location, radius, querier=request.user)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(suggs, cls=JSONEncoder),
                         mimetype='application/json')

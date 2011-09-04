@@ -272,8 +272,14 @@ GRM.menuList = function(settings) {
                     $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
                 },
                 out: function() {
-                    if($("#dropdown-list").hasClass('visible-display')==false)
+					
+					var inputVisibility=$('#dropdown-list .new-list').css('display');
+                    if($("#dropdown-list").hasClass('visible-display')==false && inputVisibility!="inline-block"){
                         $(this).find('ul:first').slideUp(400);
+                        $("#dropdown-list").removeClass('visible-display');
+                        
+                    }
+                    
                 }
             }
             
@@ -290,7 +296,7 @@ GRM.menuList = function(settings) {
                 $(this).find('.submenu li:not(.dropDownBtn-btn,.new-list-btn)').click(function(){submenuLiBehave(this)})
             
             //Enter behave when adding new list on Suggestions Tab
-            $(".new-list-btn span.new-list").keyup(function(e) {
+            $(this).find(".new-list-btn span.new-list").keyup(function(e) {
                 var suggestionList=[];
                 e.preventDefault();
                 if (e.which == 27){
@@ -397,12 +403,14 @@ GRM.menuList = function(settings) {
             });
             
             //Convierte el texto de nueva lista en un input field
-            $('.new-list-btn span#text').click(function(){                
-                $(".new-list-btn span#text").css('display','none')
-                $(".new-list-btn span.new-list").css('display','inline-block')
-                $(".new-list-btn span.new-list").find('input').focus()
-                $(".new-list-btn div#cancel-link").css('display','block')
-                $("#dropdown-list").addClass('visible-display');
+            $(this).find('.new-list-btn span#text').click(function(){                
+                $(this).css('display','none')
+                $(this).parent().find("span.new-list").css('display','inline-block')
+                $(this).parent().find("span.new-list").find('input').focus()
+                $(this).parent().find("div#cancel-link").css('display','block')
+                var tmp=$('#text').parentsUntil('.dropDownBtn');
+                var dropdown=tmp[tmp.length-1]
+                $(dropdown).addClass('visible-display');
             })
         
     });
@@ -742,6 +750,7 @@ function setRemainingCharCounter(input,counter){
 //Cierra el menu desplegable
 function closeDropdown(){
     $("#dropdown-list").removeClass('visible-display');
+    console.log($("#dropdown-list"));
     $(".new-list-btn span#text").css('display','inline-block');
     $(".new-list-btn span.new-list").css('display','none');
     $(".new-list-btn div#cancel-link").css('display','none');

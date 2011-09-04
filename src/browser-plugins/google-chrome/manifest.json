@@ -1,14 +1,14 @@
 {
-  "name": "GeoRemindMe",
-  "version": "1.0",
-  "description": "Gestiona tus alertas geolocalizadas en tu teléfono Android. Próximamente en tu iPhone, iPad, Blackberry y otros dispositivos móviles.",
-  "icons": { "128": "icon_128.png" },	
-  "browser_action": {
-    "default_icon": "icon.png",
-	"popup":"popup.html"
-  },
-  "options_page": "options.html",
-  "permissions": [
-    "cookies", "tabs", "http://*/*", "https://*/*"
-  ]
+	"name": "GeoRemindMe!",
+	"version": "1.0",
+	"description": "Gestiona tus alertas geolocalizadas en tu teléfono Android. Próximamente en tu iPhone, iPad, Blackberry y otros dispositivos móviles.",
+	"icons": { "128": "icon_128.png" },	
+	"browser_action": {
+		"default_icon": "icon.png",
+		"popup":"popup.html"
+	},
+	"options_page": "options.html",
+	"permissions": [
+	
+	]
 }

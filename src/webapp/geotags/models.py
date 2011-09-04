@@ -90,7 +90,7 @@ class Taggable(db.Model):
     @property
     def tags(self):
         if self.__tags_named is None:
-            self.__tags_named =  [tag['name'] for tag in self._tags]
+            self.__tags_named =  [tag.name().split('_', 1)[1:].pop() for tag in self._tags_list]
         return self.__tags_named
         
     def _tags_setter(self, tags, commit=True):

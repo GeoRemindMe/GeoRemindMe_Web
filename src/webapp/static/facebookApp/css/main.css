@@ -234,6 +234,10 @@ input{
      *  COMMON
      * 
      ***************************/
+	#print-icon{
+		background-image: url("/static/common/img/printer.png");
+		background-repeat:no-repeat;
+	}
     #notification-msg{
         border: 1px dotted #CCCCCC;
         left: 50%;
@@ -2505,8 +2509,19 @@ input{
      *  View suggestion details
      * 
      ***************************/
-    #view-suggestion{
+    #view-suggestion strong{
+		font-weight:bold;
     }
+    
+    #view-suggestion #print-icon{
+		background-position: 2px -32px;
+		color: #3896FF;
+		float: none;
+		height: 16px;
+		line-height: 16px;
+		margin-top: 0.5em;
+		padding-left: 25px;
+		text-decoration: underline;    }
     #view-suggestion .show-more{
 		float: none;
 		color: #3896FF;
@@ -2560,7 +2575,7 @@ input{
         visibility: hidden;
     }
     #view-suggestion div.suggestion h1{
-        line-height: 1em;
+        line-height: 1.5em;
         margin: 0.2em 0 0.5em;
         display:block;
     }
@@ -2573,6 +2588,7 @@ input{
     #view-list div.suggestion img{
         float: right;
         margin-top: 0.7em;
+         clear: right;
 /*
         margin-top: 15px;
 */
@@ -2595,6 +2611,7 @@ input{
     #view-suggestion .suggestion p{
         margin:0;
     }
+    
     #view-suggestion span#save-btn{
         margin-right:1em;
     }
@@ -2786,12 +2803,13 @@ input{
 		background-color: white;
 		border: 1px solid #CCCCCC;
 		color: black;
+		margin-top: 0.5em;
 		padding: 0.5em;
-		margin-top:1.5em;
     }
     #view-suggestion .suggestion hr{
-		border-color: #F9F9F9;
-		margin: 3px;
+		border-bottom: 1px solid white;
+		color: #DDDDDD;
+		margin: 1em 0;
     }
     
     #view-suggestion span.likeBtn span.counter{
@@ -2915,6 +2933,14 @@ input{
 	}
 	#suggestion-info p{
 		margin: 0 1em 0.5em;
+	}
+	#suggestion-info #print-icon{
+		height:32px;
+		line-height:32px;
+		padding-left:40px;
+		margin: 0.7em 0.8em 0.2em;
+		float:right;
+		clear:right;
 	}
 	
 	#suggestion-aside {
@@ -3127,7 +3153,7 @@ input{
 
 
 .readable{
-    font-size:1.1em !important;
+    font-size:1em !important;
 }
 ul#chronology a.link{
     color:blue !important;

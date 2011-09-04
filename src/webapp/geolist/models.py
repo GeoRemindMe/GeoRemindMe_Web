@@ -562,18 +562,6 @@ class _Deleted_List(db.Model):
     # TODO: crear deleted list
     pass
 
-class _List_Suggest(db.Model):
-    """
-       Los usuarios puedos sugerir nuevas sugerencias para añadir a una lista,
-       el dueño de la misma decidira si lo acepta 
-    """
-    list = db.ReferenceProperty(List)
-    list_owner = db.ReferenceProperty(User, collection_name="suggestion_for_lists")
-    suggestion = db.ReferenceProperty(None)
-    sender = db.ReferenceProperty(User)
-    status = db.IntegerProperty(default=0)
-    created = db.DateTimeProperty(auto_now_add=True)
-    modified = db.DateTimeProperty(auto_now=True)
 
 from watchers import *
 from helpers import *

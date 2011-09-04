@@ -56,6 +56,47 @@
 		});
 		
 		$('#panoramio-imgs').append('<div class="panoramio-wapi-tos" style="width: 296px; color: black ! important; background-color: #f9f9f9 ! important;"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span><br>Photos are copyrighted by their owners</span></div>');
+		
+		//Añadimos el comportamiento	
+		function onLiClick(obj){
+            var checkbox=$(obj).find("span.name");
+            if($(checkbox).hasClass("checked"))
+                $(checkbox).removeClass("checked");
+            else
+                $(checkbox).addClass("checked");
+        }
+
+		$('span.btn.dropDownBtn').menuList({
+			onLiClick: function(){
+				//Buscamos el checkbox y lo marcamos/desmarcamos
+				onLiClick(this);
+			},
+			onNewList: function(listname){
+			   
+				$.ajax({
+					type: "POST",
+					url: url["modify_suggestion_list"],
+					data: {
+						name: listname
+					},
+					dataType:'json',
+					success: function(data){
+						//Añadimos la lista al desplegable
+						$("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
+						$('#listid-'+data.id).click(function(){onLiClick(this)});
+						
+						//Añadimos la lista en la pestaña listas
+						
+						//Reordenamos alfabéticamente la lista desplegable
+						$('.submenu li').not('li.new-list-btn').sortElements(function(a, b){
+							return $(a).text().toLowerCase() > $(b).text().toLowerCase() ? 1 : -1;
+						});
+						
+						$("#dropdown-list").removeClass('visible-display');
+					}
+				});
+			}
+		});
     });
     function toggle_showMore(){
         if($('#show-more-text').css('display')!="none")
@@ -73,11 +114,29 @@
         
         <div class="suggestion">
             <h1>{{suggestion.name}}</h1>
+			<div>
+				<strong><label>Añadir a:</label></strong>
 
-            <a title="Más detalles sobre: {{suggestion.poi.name}}" href="{{suggestion.poi.get_absolute_fburl}}"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x150&maptype=roadmap
-&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false"></a>
-            
-            {% if suggestion.user.username != user.username %}
+                
+                <span class="btn dropDownBtn">
+                    <span class="save-at">---------</span>
+                    <ul class="submenu" style="display:none" id="dropdown-list">
+                        {% if lists %}
+                            {% for obj in lists %}
+                                {% if obj.user.username = request.user.username %}
+                                    <!-- Solo se muestran mis listas -->
+                                    <li id="listid-{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <li class="new-list-btn">
+                            <span id="text">Nueva lista...</span>
+                            <span class="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">Cancel</div>
+                        </li>
+                    </ul>
+                </span>
+                
+                {% if suggestion.user.username != user.username %}
 				<div class="right" style="clear: right;">
                     <span class="likeBtn btn">
                         <span class="like-dislike" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
@@ -129,25 +188,41 @@
             </span>
         </div>
         {% endif %}
-            
-            {% if suggestion.description %}
+             </div>
+             {% if suggestion.description %}
                 <p><strong>Instrucciones/explicación</strong>: {{suggestion.description}} </p>
-            {% endif %}    
+            {% endif %}
             
-            <p>
-                 <strong>Lugar</strong>: <a href="{{suggestion.poi.get_absolute_fburl}}">{{suggestion.poi.name}}</a>
-            </p>
-            <p>
-                <strong>Dirección</strong>:<br>
-                <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="black-link" target="_blank">{{suggestion.poi.address}}</a>
-                
-            </p>
             {% if suggestion.date_starts or suggestion.date_ends %}
             <p>
                     <strong>Fecha</strong>: 
                     [25/04/2011 al 30/05/2011]<br>
-                {% endif %}
+                
             </p>
+            {% endif %}
+            <p id="print-icon">Ver formato impresión</p>
+            <hr>
+            
+            
+            <p>
+                 <strong>Lugar</strong>: <a href="{{suggestion.poi.get_absolute_fburl}}">{{suggestion.poi.name}}</a>
+            </p>
+             <div class="clear">
+				<a title="Más detalles sobre: {{suggestion.poi.name}}" href="{{suggestion.poi.get_absolute_fburl}}">
+					<img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x150&maptype=roadmap
+&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false">
+				</a>
+			</div>
+            
+            
+            
+            
+            <p>
+                <strong>Dirección</strong>:
+                <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="black-link" target="_blank">{{suggestion.poi.address}}</a>
+                
+            </p>
+            
 			
 <!--
             <p>Reportar localización errónea</p>
