@@ -515,7 +515,7 @@ input{
         cursor:pointer;
     }
     .hoverlink{
-        color:#3896FF;
+        color:#3896FF !important;
         text-decoration:none;
     }
     .hoverlink:hover{
@@ -629,7 +629,7 @@ input{
             width:50px
         }
         
-        ul#chronology li a.black-link,a.black-link{
+        ul#chronology li a.black-link,a.black-link,a.black-link:visited{
             text-decoration:none;
             color:#333;
         }
@@ -2519,7 +2519,7 @@ input{
 		float: none;
 		height: 16px;
 		line-height: 16px;
-		margin-top: 0.5em;
+		margin-top: 1.5em;
 		padding-left: 25px;
 		text-decoration: underline;    }
     #view-suggestion .show-more{
@@ -2581,8 +2581,12 @@ input{
     }
     #view-suggestion div.suggestion p,
     #view-list div.suggestion p{
-        font-size: 1.1em;
-        line-height: 1.7em;
+        clear: left;
+		display: inline;
+		float: left;
+		font-size: 1.1em;
+		line-height: 1.7em;
+		margin-right: 10px;
     }
     #view-suggestion div.suggestion img,
     #view-list div.suggestion img{
@@ -2604,9 +2608,11 @@ input{
     #view-suggestion .dontLikeSuggestion.likebtn.btn{
     }
     #view-suggestion ul#tag-list{
-        margin:0;padding:0;
-        width: 305px;
-        font-size:1.1em;
+        display: inline;
+		font-size: 1.1em;
+		line-height: 1.7em;
+		margin: 0;
+		padding: 0;
     }
     #view-suggestion .suggestion p{
         margin:0;
@@ -2793,7 +2799,8 @@ input{
     }
 
     #view-suggestion span.btn{
-        
+        font-size: 1em;
+		font-weight: normal;
         
 /*
         border: 1px solid #1111CC;
@@ -2834,6 +2841,7 @@ input{
     }
     
     .suggestions-title,
+    .lists-title,
     #view-suggestion p.popular,
     #view-list p.popular,
     #view-place p.popular{
@@ -2843,6 +2851,11 @@ input{
         margin: 0 1em;
         padding-left: 40px;
     }
+    .lists-title{
+		background-image: url("/static/facebookApp/img/icons/lists.png");
+		background-position: 0 50%;
+    }
+    
     #place-container{
         background-color: #F9F9F9;
 		border: 1px solid #CCCCCC;
@@ -2927,20 +2940,49 @@ input{
      * 
      ***************************/
 	#suggestion-info {
-		width: 435px;
 		float: left;
-		padding-right: 15px;
+		margin: 0;
+		padding: 0;
+		width: 500px;
+	}
+	#suggestion-info ul{
+	margin: 0 1em;
+    padding: 0;
+	}
+	#suggestion-info li:after{
+	
+/*
+		//content:"·";
+*/
+	}
+	#suggestion-info li{
+		display: inline-block;
+		margin: 0.5em 0.8em;
 	}
 	#suggestion-info p{
 		margin: 0 1em 0.5em;
 	}
-	#suggestion-info #print-icon{
-		height:32px;
-		line-height:32px;
-		padding-left:40px;
-		margin: 0.7em 0.8em 0.2em;
-		float:right;
-		clear:right;
+	#view-list #suggest_suggestion{
+		background-image:url("/static/common/img/suggestionsx16.png");
+		background-repeat:no-repeat;
+		padding-left: 20px;
+	}
+	
+	#view-list #owner img{
+		padding-right: 2px;
+		position: relative;
+		top: 4px;
+		width: 16px;
+	}
+	#view-list #print-icon{
+		background-position: 2px -32px;
+		clear: both;
+		float: none;
+		height: 16px;
+		line-height: 16px;
+		padding-left: 25px;
+		text-align: left;
+		width: auto;
 	}
 	
 	#suggestion-aside {

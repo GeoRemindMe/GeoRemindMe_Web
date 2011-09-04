@@ -39,7 +39,7 @@
         <p class="clear-left big suggestions-title"><strong>Lista: "{{list}}"</strong>, ({{suggestions|length}} sugerencias)</p>
         <div id="suggestion-info">
             <p>Descripción: <span id="list-description">{{list.description}}</span></p>
-            
+            <p id="print-icon">Imprimir</p>
             <p>Autor: <a href="{% url2 in_facebook public_profile list.user %}">{{list.user}}</a></p>
 <!--
             <p>Etiquetas: <a href="#">Ocio</a> | <a href="#">Vacaciones</a> | <a href="#">Málaga</a></p>
@@ -57,7 +57,7 @@
             {% endif %}
             
         </div>
-        <p id="print-icon">Imprimir</p>
+        
         <ul id="suggestion-list">
             {% for obj in suggestions %}
             <li>           

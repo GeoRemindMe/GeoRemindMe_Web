@@ -777,6 +777,7 @@
                                 </div>
                                 <div class="expanded" style="display:none">
                                     <dl> 
+                                    
                                         {% if k.user.username != user.username%}
                                             <dt>
                                                 Autor:
@@ -842,12 +843,12 @@
                                                 </em>
                                             
                                         </dd>
-                                        
+                                        <dt>URL:</dt>
+										<dd><input type="text" value="{{ k.short_url }}"> <a href="{{ k.short_url }}">Previsualizar</a></dd>
                                         <dt class="share-row"><strong>Compartir:</strong></dt>
                                         <dd class="share-row">
                                             <ul class="share-suggestion">
-                                                <li class="share" type="link" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="event"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
-<!--
+                                                <!--
                                                 <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
 -->
                                                 <li class="share" type="twitter" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="event"><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
@@ -955,10 +956,11 @@
                                             
                                             <dt>Tags:</dt>
                                             <dd {% if obj.user.username == user.username%}class="editable_list_tags"{%endif%}>{% if obj.tags %}{% for tag in obj.tags %}{{tag}}{%if not forloop.last%}, {%endif%}{%endfor%}{% endif %}</dd>
+                                            <dt>URL:</dt>
+											<dd><input type="text" value="{{ obj.short_url }}"> <a href="{{ obj.short_url }}">Previsualizar</a></dd>
                                             <dt><strong>Compartir:</strong></dt>
                                             <dd>
                                                 <ul class="share-suggestion">
-                                                    <li class="share" type="link" data-href="{{ obj.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
     <!--
                                                     <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
     -->
@@ -1050,12 +1052,16 @@
                         {% endif %}
 
                     </dd>
+                    <dt>URL:</dt>
+					<dd><input type="text" value="${obj.short_url}"> <a href="${obj.short_url}">Previsualizar</a></dd>
                     <dt><strong>Compartir:</strong></dt>
                     <dd>
                         <ul class="share-suggestion">
+<!--
 							<li class="share" type="link" data-href="${obj.short_url}" data-type="list">
 								<a class="share-suggestion link-icon" href="">Enlace</a>
 							</li>
+-->
 							<li class="share" type="twitter" data-href="${obj.short_url}" data-type="list">
 								<a class="share-suggestion twitter-icon" href="">Twitter</a></li>
 							<li class="share" type="wall" data-href="${obj.short_url}" data-type="list">
@@ -1100,10 +1106,6 @@
         
     </div>
     
-    <script id="shareLink" type="text/x-jquery-tmpl">
-		<p>Con este enlace cualquier persona podrá acceder tu recomendación</p>
-		<input type="text" value="${link}" readonly="readonly">
-    </script>
     <script id="shareTwitter" type="text/x-jquery-tmpl">
 		<p>Envía esta sugerencia a tus seguidores en Twitter.</p>
         <textarea id="twitter_msg" data-id="${elem_id}" event-type="${type}">${link}</textarea>
