@@ -21,7 +21,7 @@
         
 
 
-        <br><a class="black-link readable link" href="{% url view_suggestion obj.instance.slug %}">{{obj.instance}}</a><br>
+        <br><a class="black-link readable link" href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance}}</a><br>
 
         {% if obj.instance.poi.slug %}
             <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.poi.slug %}" class="black-link">{{obj.instance.poi.name}}</a></span>

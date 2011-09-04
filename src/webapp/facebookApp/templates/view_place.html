@@ -50,7 +50,7 @@
         panoramio.events.listen(widget, panoramio.events.EventType.PHOTO_CHANGED, function(){
 			$('.panoramio-wapi-empty-img-div').remove()
 		});
-		$('#wapiblock').append('<div class="panoramio-wapi-tos" style="width: 220px; color: black ! important; background-color: #f9f9f9 ! important;"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span><br>Photos are copyrighted by their owners</span></div>');
+		$('#wapiblock').append('<div class="panoramio-wapi-tos" style="width: 240px; color: black ! important; background-color: #f9f9f9 ! important;"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span><br>Photos are copyrighted by their owners</span></div>');
         
         //END: Load Panoramios photos
         //if (typeof resizeIframe != "undefined") resizeIframe();
@@ -66,50 +66,61 @@
             <h1 class="clear">{{place.name}}</h1>
             <div id="place-details">
                 <p><strong>Dirección</strong>: {{place.address}}</p>
-                <a href="http://maps.google.com/maps?q={{place.location}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=14&size=270x200&maptype=satellite
+                <a href="http://maps.google.com/maps?q={{place.location}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=14&size=270x220&maptype=satellite
     &markers=color:red%7C{{place.location}}&sensor=false"></a>
             </div>
             <div id="place-pictures">
                 <p>Fotos de la zona</p>
                 <div id="wapiblock"></div>
             </div>
+            
         </div>
         <div>
 			<div id="list-box" class="clear">
-            <p class="big suggestions-title popular">En este sitio hay {{suggestions.1|length}} sugerencias</p>
-            <ul class="comments">
-
-                {% for s in suggestions.1%}                
-                <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
-                    
-                    
-                    
-                    <span class="user"><img src="{% embedded_avatar s.instance.user.username %}" alt="{{s.instance.user.username}} avatar"></span>
-                    <div class="timeline-msg">
-                        
-                        <a href="{% url2 in_facebook public_profile s.instance.user.username %}" class="black-link">{{s.instance.user.username}}</a> sugiere:<br>
-                        
-                        <span class="msg"><a href="{% url2 in_facebook view_suggestion s.instance.slug %}">{{s.instance.name}}</a></span>
-                        <span class="timestamp">{{s.instance.created|naturaltime}} </span>
-                        <span class="like-dislike" value="{{s.instance.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion" style="display:none">
-                        {% if s.instance.user.username != user.username %}
-                        &nbsp;- 
-                        <span class="dislike">
-                            <span class="hoverlink">Ya no me gusta</span> 
-                            <span class="text like-text {% if not s.has_voted %}increase{% endif %}">{{s.instance.counters.votes}}</span> personas
-                        </span>
-                        
-                        <span class="like">
-                            <span class="hoverlink">Me gusta</span> 
-                        </span>
-                        {% endif %}
-                    </span>
+                <p class="big suggestions-title popular">
+                    En este sitio hay {{suggestions.1|length}} sugerencias
+                </p>
+                {%if user.username %}
+                    <div class="clear" id="action-bar">
+                        <ul>
+                            <li class="suggestion"><a href="{%url2 in_facebook add_suggestion %}?{{place.location}}" class="hoverlink">Nueva sugerencia a este sitio</a></li>
+                            <li id="print-icon" class="hoverlink">Imprimir sugerencias</li>
+                        </ul>
                     </div>
-                </li>
-                {% endfor %}
-                
-                
-            </ul>
+                {%endif%}
+                <ul class="comments">
+
+                    {% for s in suggestions.1%}                
+                    <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
+                        
+                        
+                        
+                        <span class="user"><img src="{% embedded_avatar s.instance.user.username %}" alt="{{s.instance.user.username}} avatar"></span>
+                        <div class="timeline-msg">
+                            
+                            <a href="{% url2 in_facebook public_profile s.instance.user.username %}" class="black-link">{{s.instance.user.username}}</a> sugiere:<br>
+                            
+                            <span class="msg"><a href="{% url2 in_facebook view_suggestion s.instance.slug %}">{{s.instance.name}}</a></span>
+                            <span class="timestamp">{{s.instance.created|naturaltime}} </span>
+                            <span class="like-dislike" value="{{s.instance.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion" style="display:none">
+                            {% if s.instance.user.username != user.username %}
+                            &nbsp;- 
+                            <span class="dislike">
+                                <span class="hoverlink">Ya no me gusta</span> 
+                                <span class="text like-text {% if not s.has_voted %}increase{% endif %}">{{s.instance.counters.votes}}</span> personas
+                            </span>
+                            
+                            <span class="like">
+                                <span class="hoverlink">Me gusta</span> 
+                            </span>
+                            {% endif %}
+                        </span>
+                        </div>
+                    </li>
+                    {% endfor %}
+                    
+                    
+                </ul>
             </div>
         </div>
     </div>
