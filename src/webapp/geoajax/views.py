@@ -616,7 +616,7 @@ def get_near_suggestions(request):
         from google.appengine.ext import db
         request.user.last_point = db.GeoPt(location)
         request.user.put()
-    else:
+    if location is None and request.user.is_authenticated():
         location = request.user.last_point
     radius = request.POST.get('radius', 5000)
     from geoalert.models import Suggestion
