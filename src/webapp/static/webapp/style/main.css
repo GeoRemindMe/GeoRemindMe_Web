@@ -1299,7 +1299,7 @@ ul#chronology a:visited{
     font-weight: bold;
     margin-bottom: 1em;
 }
-#right-col {
+#right-col, #center-col {
     font-size:1.2em;
 }
 
@@ -1548,3 +1548,4 @@ font-size: 0.9em;
 #view-list #suggestion-list .msg {
     font-size: 1.1em;
 }
+
