@@ -52,6 +52,7 @@ class _Notification(db.Model):
             self.owner.counters.set_notifications()
         super(_Notification, self).put()
 
+
 class _Report_Account_follower(db.Model):
     """
         Guarda la lista de nuevos followers para posteriormente ser
