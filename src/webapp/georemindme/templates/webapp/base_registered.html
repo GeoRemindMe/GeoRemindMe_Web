@@ -94,23 +94,17 @@
 		
 		
         <div id="nav-menu">
-            <a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
-            {% block nav %}
-				<ul>
-                    <li id="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
-                    <li id="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
-<!--
-                    <li class="menu-icons main-menu-icons"><a id="suggestions-icon" href="{{user_suggestions}}">Tus sugerencias</a></li>
--->
-                    <li id="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
-<!--
-                    <li class="menu-icons main-menu-icons" id=""><a id="profile-icon" href="{% url public_profile request.user.username %}">Mi perfil</a></li>
--->
-<!--
-                    <li class="menu-icons main-menu-icons" id=""><a id="settings-icon" href="{% url profile_settings %}">Configuración</a></li>
--->
-                </ul>
-            {% endblock %}
+			{% if user.username %}
+				<a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
+				{% block nav %}
+					<ul>
+						<li id="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
+						<li id="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
+						<li id="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
+
+					</ul>
+				{% endblock %}
+            {% endif %}
         </div>
 
 		{% if user.username %}
@@ -138,33 +132,7 @@
 			<div id="right-col">
 				{% block body %}{% endblock %}
 			</div>
-			<div id="left-col">
-                <div id="search_bar">
-                    <form action="." method="post">
-                        <input type="text" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly>
-                        <input type="submit" value="Buscar" class="btn">
-                    </form>
-                </div>
-				<hr>
-                {% block extraContent %} {% endblock %}
-                
-                <p><em>Sugerencias cerca tuya</em>: (Granada) <span class="hoverlink">Cambiar</span></p>
-                <ul id="close-suggestions">
-                    <li><a href="{% url2 in_facebook public_profile request.user.username %}" class="clean"><img src="{% embedded_avatar request.user.username %}" alt=""></a><a href="">Probar una hamburguesa en el Brasilia</a></li>
-                    <li><a href="{% url2 in_facebook public_profile request.user.username %}" class="clean"><img src="{% embedded_avatar request.user.username %}" alt=""></a><a href="">Tomar un heladito de café con turrón en Los Italianos, ¡preferentemente en tarrina!</a></li>
-                    <li><a href="{% url2 in_facebook public_profile request.user.username %}" class="clean"><img src="{% embedded_avatar request.user.username %}" alt=""></a><a href="">Ver un atardecer desde el mirador de San Nicolás</a></li>
-                </ul>
-                <p><span class="hoverlink view-more">Ver más</span></p>
-                <hr>
-                <p><em>Sugerencias más relevantes</em>:</p>
-                <ul id="trending-suggestions">
-                    <li><a href="{% url2 in_facebook public_profile request.user.username %}" class="clean"><img src="{% embedded_avatar request.user.username %}" alt=""></a><a href="">Probar una hamburguesa en el Brasilia</a></li>
-                    <li><a href="{% url2 in_facebook public_profile request.user.username %}" class="clean"><img src="{% embedded_avatar request.user.username %}" alt=""></a><a href="">Tomar un heladito de café con turrón en Los Italianos, ¡preferentemente en tarrina!</a></li>
-                    <li><a href="{% url2 in_facebook public_profile request.user.username %}" class="clean"><img src="{% embedded_avatar request.user.username %}" alt=""></a><a href="">Ver un atardecer desde el mirador de San Nicolás</a></li>
-                </ul>
-                <p><span class="hoverlink view-more">Ver más</span></p>
-                
-			</div>
+			{% include "webapp/suggested_suggestions.html" %}
 		</div>
 	</div>
 	

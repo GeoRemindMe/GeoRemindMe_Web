@@ -858,7 +858,9 @@ div#left-col ul#friends-to-follow li:after{
 #right-col {
 	width: 615px;
 	float: left;
-	border-left: 1px solid #ccc;
+
+	border-left: 0;
+
     padding-left:15px;
     padding-right:20px;
     padding-top:5px;
@@ -978,8 +980,10 @@ a#add-suggestion-btn,
 }
 
 #base {
-	min-height: auto;
+	border-left: 1px solid #CCCCCC;
     border-right: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    padding: 0;
 }
 #base:after{
 	clear: both;
@@ -1362,6 +1366,7 @@ div.waiting{
     float: left;
     margin: 5px 11px 0 11px;
     width: 25px;
+    height: 25px;
 
 }
 #close-suggestions a.clean,
@@ -1440,7 +1445,7 @@ ul#user-resume li:hover {
 }
 
 #user-info {
-    width: 450px;
+    width: 500px;
 }
 
 form #terms span {

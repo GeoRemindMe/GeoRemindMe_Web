@@ -33,20 +33,68 @@
 	<!--[if lt IE 9]>
 	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#left-col").css("height",$(this).height()+'px');
+			$("#right-col").bind("resize",function(){
+                $("#left-col").css("height",$(this).height()+'px');
+            });
+            
+            /*** show georemindme login ***/
+			$('.georemindme').click(function(){
+			   $('#login-bar p').hide();
+			   $('#login-bar ul').hide();
+			   $('#georemindme-form').show();
+			});
+		});
+			
+			
+		function showMenu(){
+            $('#login-bar p').show();
+            $('#login-bar ul').show();
+            $('#georemindme-form').hide();
+        }
+	</script>
+			
+	<style type="text/css">
+		#login-bar {
+			margin:0;
+			width: 750px;
+		}
+		#login-bar p, #login-bar ul, #login-bar ul li{
+		}
+	</style>
 </head>
 <body>
 	<div id="bg-header" class="orange-gradient">
 	<header id="header-top" class="container">
-		<div class="logo-link">
+		<div id="logo-link">
             <a href="/"><img src="/static/webapp/img/logo3.png" alt="" id="logo"></a>
         </div>
-		
-		<div id="search_bar">
-            <input type="search" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly><br>
-<!--
-            //Ejemplo: tapas en granada, turismo, paisajes, etc.
--->
+		<div id="login-bar">
+			<a href="/" id="add-suggestion-btn">Regístrate</a>
+
+            <p>Identifícate usando:</p>
+            <ul>
+                <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para identificarte"><span>Twitter</span></li>
+                <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para identificarte"><span>Facebook</span></li>
+                <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para identificarte"><span>Google</span></li>
+                <li class="georemindme" title="Identifícate usando tus datos de GeoRemindMe"><span>GeoRemindMe</span></li>
+            </ul>
+            <div id="georemindme-form" style="display:none">
+                <form action="." method="post" id="loginForm">
+                    <input type="text" name="email" placeholder="Usuario o email"/>
+                    <input type="password" name="password" id="password" placeholder="Contraseña"/>
+                    <input type="submit" id="login-btn" value="Entrar" />
+                    <div id="login-submenu">
+                        <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> Recordarme</span>
+                        <span><a href="/remind/" class="link">Recuperar contraseña</a></span>
+                        <span class="link" onclick="javascript:showMenu()">Cancelar</span>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+            
         </div>
 		
 		
@@ -55,10 +103,10 @@
 	<div id="background">
 		<div id="base" class="container">
 			
-			<section id="center-col">
+			<div id="right-col">
 				{% block body %}{% endblock %}
-			</section>
-			
+			</div>
+			{% include "webapp/suggested_suggestions.html" %}
 		</div>
 	</div>
 	
