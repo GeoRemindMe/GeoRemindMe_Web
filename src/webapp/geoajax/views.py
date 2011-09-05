@@ -706,3 +706,17 @@ def share_on_twitter(request):
 def suggested_list_suggestion(request):
     timeline_id = request.POST.get('timeline_id', None)
     status = request.POST.get('status', 0)
+    
+    
+@ajax_request
+def get_suggestions(request):
+    # TODO : cambiar a API bajo nivel
+    suggestions = get_suggestion(request, id=None,
+                                wanted_user=request.user,
+                                page = 1, query_id = None
+                                )
+    suggestions_following = get_suggestion_following(request)
+    suggestions[1].extend(suggestions_following[1])
+    suggestions[1].sort(key=lambda x: x.modified, reverse=True)
+    
+    

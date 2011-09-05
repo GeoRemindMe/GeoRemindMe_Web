@@ -750,7 +750,6 @@ function setRemainingCharCounter(input,counter){
 //Cierra el menu desplegable
 function closeDropdown(){
     $("#dropdown-list").removeClass('visible-display');
-    console.log($("#dropdown-list"));
     $(".new-list-btn span#text").css('display','inline-block');
     $(".new-list-btn span.new-list").css('display','none');
     $(".new-list-btn div#cancel-link").css('display','none');

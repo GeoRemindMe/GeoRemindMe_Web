@@ -157,6 +157,10 @@
                     context: $(this),
                     success: function(data){
                         console.log(data)
+                        $('#timeline').empty();
+                        $(data).each(function(i,elem){
+                            $('#msg-300').tmpl(elem).appendTo('#timeline');
+                        });
                     }
                 });
             })
@@ -187,16 +191,14 @@
 			<li id="suggestion">Hacer sugencia</li>
 			<li onclick="javascript:window.open('http://localhost:8080/logout')">Desconectar</li>
 		</ul>
-		<div id="activity_content">
-			Actividad
-<!--
-			<a href="javascript:hayCookie();">Show me da cookie</a>
-			<div id="box">
-				This is your fucking cookie: <div id="insert"></div>
-			</div>
--->
-            
+		
+        
+        <div id="activity_content">
+            <ul id="timeline">
+            </ul>         
 		</div>
+        
+        
 		<div id="bag_content" class="hidden">
 			Mochila
 		</div>
@@ -204,5 +206,11 @@
 			Sugerencias
 		</div>
 	</div>
+
+    <!-- TIMELINE TEMPLATES -->
+    <div id="msg-300"  type="text/x-jquery-tmpl">
+        ${username} 
+    </div>
+
 </body>
 </html>
