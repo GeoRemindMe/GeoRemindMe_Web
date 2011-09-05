@@ -13,7 +13,7 @@ class OAuthware(object):
             from geomiddleware.sessions.store import SessionStore
             session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
             if session is not None:
-                os.environ['user'] = session['user'].id
+                os.environ['user'] = str(session['user'].id)
                 session.put()
                 return self.wrapped_app(environ, start_response)
         elif 'HTTP_AUTHORIZATION' in environ:
@@ -26,7 +26,7 @@ class OAuthware(object):
                 from geoauth.models import OAUTH_Token
                 token = OAUTH_Token.get_token(oauth_request.parameters['oauth_token'])
                 if token.access:
-                    os.environ['user'] = token.user.id
+                    os.environ['user'] = str(token.user.id)
                     return self.wrapped_app(environ, start_response)
         elif 'HTTP_X_CSRFTOKEN' in environ: 
             import Cookie
