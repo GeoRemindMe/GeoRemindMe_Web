@@ -44,7 +44,7 @@ class TimelineService(remote.Service):
                 if isinstance(a['instance'], Comment) or isinstance(a['instance'], Vote): 
                     t.instance_id=a['instance'].instance.id
                     t.instance_name=unicode(a['instance'].instance)
-                    t.url = unicode(a['instance'].instanceget_absolute_url())
+                    t.url = unicode(a['instance'].instance.get_absolute_url())
                 else:
                     t.instance_id=a['instance'].id
                     t.instance_name=unicode(a['instance'])
