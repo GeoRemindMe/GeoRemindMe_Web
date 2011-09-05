@@ -1249,7 +1249,7 @@ and more.
                 if not response.has_key('content-location'):
                     response['content-location'] = absolute_uri
                 _updateCache(headers, response, content, self.cache, cachekey)
-
+        response['status'] = int(response['status'])
         return (response, content)
 
     def _normalize_headers(self, headers):

@@ -132,7 +132,7 @@ class GPRequest(Http):
                 :raises: :class:`GPAPIError`
         """
         response, content = self.request(url, method=method, body=body, headers=self.headers)
-        if int(response['status']) != 200:
+        if response['status'] != 200:
             raise GPAPIError(response['status'], 'ERROR IN REQUEST')
         json = simplejson.loads(content)
         return json
