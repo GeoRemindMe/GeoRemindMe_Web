@@ -36,7 +36,7 @@
     <script type="text/javascript" src="/static/webapp/js/jquery.lavalamp.js"></script>
     <script type="text/javascript" src="/static/webapp/js/jquery.easing.1.1.js"></script>
     
-    <link type="text/css" rel="stylesheet" href="/static/webapp/style/jquery-ui/jquery-ui-1.8.16.custom.css">
+    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/jquery-ui/jquery-ui-1.8.16.custom.css">
 
     {% block extra_js %}{%endblock%}
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
@@ -111,14 +111,14 @@
 	<header id="header-top" class="container">
 		<div id="logo-link">
             <a href="/">
-                <img src="/static/webapp/img/logo3.png" alt="" id="logo">
+                <img src="/static/webapp/img/pollo-blanco.png" alt="" id="logo">
             </a>
         </div>
 		
 		
         <div id="nav-menu">
 			{% if user.username %}
-				<a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
+				<a href="{% url add_suggestion %}" id="add-suggestion-btn"><img src="/static/common/img/add.png">Añadir sugerencia</a>
 				{% block nav %}
 					<ul class="lavaLamp">
 						<li class="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>

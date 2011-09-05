@@ -153,6 +153,7 @@ table {
 	-moz-box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75);
 	-webkit-box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.75);
     margin: 0 auto;
+    position: relative;
 /*
     width: 1100px;
 */
@@ -891,12 +892,12 @@ a#add-suggestion-btn {
 	color: #000000;
 	display: block;
 	font-size: 1em;
-	height: 40px;
-	line-height: 40px;
+	height: 30px;
+	line-height: 30px;
 	text-align: center;
 	text-decoration: none;
     float:left;
-	width: 160px;
+	width: 140px;
 	text-shadow: 0px 1px 1px rgba(255,255,255,.75);
 	-moz-text-shadow: 0px 1px 1px rgba(255,255,255,.75);
 	-webkit-text-shadow: 0px 1px 1px rgba(255,255,255,.75);
@@ -905,19 +906,25 @@ a#add-suggestion-btn {
 	box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
 	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
 	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
-	margin: 7px 70px 7px 30px;
+	margin: 15px 70px 7px;
 }
 a#add-suggestion-btn,
 #right-block a#register-btn, 
 #registerForm input[type="submit"]{
-    background: #ffea64; /* Old browsers */
-    background: -moz-linear-gradient(top, #ffea64 0%, #ffab25 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffea64), color-stop(100%,#ffab25)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #ffea64 0%,#ffab25 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #ffea64 0%,#ffab25 100%); /* Opera11.10+ */
-    background: -ms-linear-gradient(top, #ffea64 0%,#ffab25 100%); /* IE10+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffea64', endColorstr='#ffab25',GradientType=0 ); /* IE6-9 */
-    background: linear-gradient(top, #ffea64 0%,#ffab25 100%); /* W3C */
+background: rgb(255,255,255); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(50%,rgba(241,241,241,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* Opera11.10+ */
+background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* IE10+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 ); /* IE6-9 */
+background: linear-gradient(top, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* W3C */
+}
+a#add-suggestion-btn img{
+    float: left;
+    margin-left: 8px;
+    margin-right: -9px;
+    margin-top: 7px;
 }
 
 #left-col a#add-suggestion-btn{
@@ -1305,15 +1312,14 @@ ul#chronology a:visited{
 }
 
 .btn,.load-more {
-    border-color:#D9DFEA #873A00 #873A00 #D9DFEA;
-    background: #ffa84c; /* Old browsers */
-    background: -moz-linear-gradient(top, #ffa84c 0%, #ff7b0d 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffa84c), color-stop(100%,#ff7b0d)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* Opera11.10+ */
-    background: -ms-linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* IE10+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); /* IE6-9 */
-    background: linear-gradient(top, #ffa84c 0%,#ff7b0d 100%); /* W3C */
+    background: rgb(255,255,255); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(50%,rgba(241,241,241,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* Opera11.10+ */
+background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* IE10+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 ); /* IE6-9 */
+background: linear-gradient(top, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* W3C */
 }
 
 
@@ -1346,7 +1352,7 @@ div#left-col li a {
     font-weight:bold;
 }
 div #left-col li:hover{
-    background-color: #ffdcc2;
+    background-color: inherit;
     text-decoration: underline;
 }
 
@@ -1373,7 +1379,7 @@ div#right-col #profile table{
 /*
     color: #5E2B03;
 */
-    color:white;
+    color:black;
     font-weight: normal;
     line-height: 2em;
     padding: 0 15px 0;
@@ -1637,3 +1643,11 @@ font-size: 0.9em;
         float: left; display: block;
         margin: auto 10px;
     }
+
+ul#chronology li div.avatar {
+    width:40px;
+}
+ul#chronology li div.avatar img {
+    height: 40px;
+    width: 40px;
+}
