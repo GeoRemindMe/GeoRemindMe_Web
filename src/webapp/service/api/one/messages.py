@@ -6,10 +6,12 @@ from protorpc import messages
 
 class Timeline(messages.Message):
     msg = messages.StringField(1)
-    instance_id = messages.IntegerField(2)
-    instance_name = messages.StringField(3)
-    user = messages.StringField(4)
-    created = messages.IntegerField(5)
+    msg_id = messages.IntegerField(2)
+    instance_id = messages.IntegerField(3)
+    instance_name = messages.StringField(4)
+    url = messages.StringField(4)
+    user = messages.StringField(5)
+    created = messages.IntegerField(6)
     
 
 class Timelines(messages.Message):
