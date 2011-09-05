@@ -26,7 +26,7 @@ class OAuthware(object):
                 from geoauth.models import OAUTH_Token
                 token = OAUTH_Token.get_token(oauth_request.parameters['oauth_token'])
                 if token.access:
-                    os.environ['user'] = token.user.id
+                    os.environ['user'] = str(token.user.id)
                     return self.wrapped_app(environ, start_response)
         elif 'HTTP_X_CSRFTOKEN' in environ: 
             import Cookie

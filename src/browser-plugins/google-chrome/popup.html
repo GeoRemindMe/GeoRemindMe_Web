@@ -137,7 +137,7 @@
 				$('#tabMenu li.active').removeClass('active');
 				
 				tab_id=$(this).attr('id')
-				console.log(tab_id)
+				//console.log(tab_id)
 				$('#'+tab_id+'_content').removeClass('hidden');
 				$(this).addClass('active');
 			})
@@ -155,7 +155,7 @@
                     },
                     context: $(this),
                     success: function(data){
-                        //console.log(data)
+                        console.log(data)
                     }
                 });
             })

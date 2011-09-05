@@ -25,9 +25,10 @@ class TimelineService(remote.Service):
     @remote.method(GetActivityRequest, Timelines)
     def get_activity(self, request):
         from os import environ
-        from google.appengine.ext import db
-        raise Exception(int(environ['user']))
-        user = db.Model.get_by_id(int(environ['user']))
+
+        from geouser.models import User
+        user = User.objects.get_by_id(int(environ['user']))
+
         if user is None:
             from protorpc.remote import ApplicationError
             raise ApplicationError("Unknow user")
