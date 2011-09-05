@@ -174,7 +174,7 @@ body {
 }
 
 .container {
-	width: 960px;
+	width: 1005px;
 	margin: 0 auto;
 }
 
@@ -202,7 +202,7 @@ body {
 }
 #logo-link{
     display:inline-block;
-    width:215px;
+    width:175px;
     float:left;
     text-align: center;
 }
@@ -688,7 +688,7 @@ body {
     height: 55px;
     line-height: 55px;
     text-align: left;
-    width: 354px;
+    width: 334px;
     padding:0 1em;
     margin-bottom:1em;
 
@@ -700,7 +700,7 @@ body {
     line-height: 1.5em;
     margin-right: 5px;
     padding: 0.5em;
-    width: 290px;
+    width: 270px;
 }
 #search_bar input[type="submit"]{
     background-color: #F0EBE2;
@@ -709,7 +709,7 @@ body {
     background-repeat: no-repeat;
     height: 35px;
     line-height: 20px;
-    margin-top: 7px;
+    margin-top: 9px;
     padding: 0.5em;
     text-indent: -999px;
     width: 39px;
@@ -723,7 +723,7 @@ body {
     font-size: 1.2em;
     height: 55px;
     line-height: 55px;
-    margin: 0 0 0 2em;
+    margin: 0 0 0 1em;
 
 }
 #nav-menu ul{
@@ -736,6 +736,9 @@ body {
     display: block;
     float: left;
     padding: 0;
+    text-shadow: 0px 1px 1px rgba(255,255,255,.75);
+	-moz-text-shadow: 0px 1px 1px rgba(255,255,255,.75);
+	-webkit-text-shadow: 0px 1px 1px rgba(255,255,255,.75);
 
 }
 #nav-menu li:first-child{
@@ -770,7 +773,7 @@ body {
     float: left;
     margin-top: 2px;
     padding: 1em 0;
-    width: 374px;
+    width: 354px;
     background: -moz-linear-gradient(left, rgba(255,175,75,0.7) 0%, rgba(255,146,10,0.7) 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,175,75,0.7)), color-stop(100%,rgba(255,146,10,0.7))); /* Chrome,Safari4+ */
     background: -webkit-linear-gradient(left, rgba(255,175,75,0.7) 0%,rgba(255,146,10,0.7) 100%); /* Chrome10+,Safari5.1+ */
@@ -853,16 +856,22 @@ div#left-col ul#friends-to-follow li:after{
 }
 
 #right-col {
-	width: 570px;
+	width: 615px;
 	float: left;
-	border-left: 1px solid #ccc;
-    padding-left:5px;
-    padding-right:10px;
+
+	border-left: 0;
+
+    padding-left:15px;
+    padding-right:20px;
+    padding-top:5px;
 }
 
 #right-col h1 {
 	color: #555555;
     font-size:1.3em;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+    -moz-text-shadow: 0px 1px 1px rgba(0,0,0,.15);
+	-webkit-text-shadow: 0px 1px 1px rgba(0,0,0,.15);
 /*
 	text-shadow: 0px 1px 0px #000000;
 */
@@ -875,13 +884,13 @@ a#add-suggestion-btn {
 */
 	color: #000000;
 	display: block;
-	font-size: 14pt;
+	font-size: 1em;
 	height: 40px;
 	line-height: 40px;
 	text-align: center;
 	text-decoration: none;
     float:left;
-	width: 189px;
+	width: 160px;
 	text-shadow: 0px 1px 1px rgba(255,255,255,.75);
 	-moz-text-shadow: 0px 1px 1px rgba(255,255,255,.75);
 	-webkit-text-shadow: 0px 1px 1px rgba(255,255,255,.75);
@@ -890,7 +899,7 @@ a#add-suggestion-btn {
 	box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
 	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
 	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
-	margin: 7px 20px 7px 0;
+	margin: 7px 70px 7px 30px;
 }
 a#add-suggestion-btn,
 #right-block a#register-btn, 
@@ -971,8 +980,10 @@ a#add-suggestion-btn,
 }
 
 #base {
-	min-height: auto;
+	border-left: 1px solid #CCCCCC;
     border-right: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    padding: 0;
 }
 #base:after{
 	clear: both;
@@ -1239,7 +1250,9 @@ div.removable a {
  * BAG
  */
 
-
+#suggestions {
+    font-size: 1em;
+}
 
 /*
  * COMMON
@@ -1353,6 +1366,7 @@ div.waiting{
     float: left;
     margin: 5px 11px 0 11px;
     width: 25px;
+    height: 25px;
 
 }
 #close-suggestions a.clean,
@@ -1431,7 +1445,7 @@ ul#user-resume li:hover {
 }
 
 #user-info {
-    width: 450px;
+    width: 500px;
 }
 
 form #terms span {

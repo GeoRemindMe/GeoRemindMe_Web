@@ -338,7 +338,7 @@ class SuggestionHelper(EventHelper):
         suggestions = fetch_parents(suggestions)
         return [query_id, suggestions]
     
-    def get_nearest(self, location, radius = 5000):
+    def get_nearest(self, location, radius = 5000, querier=None):
         if not isinstance(location, db.GeoPt):
             location = db.GeoPt(location)
         import memcache
@@ -353,15 +353,20 @@ class SuggestionHelper(EventHelper):
             ftclient = ftclient.OAuthFTClient()
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
             query = ftclient.query(sqlbuilder.SQL().select(__web_settings.FUSIONTABLES['TABLE_SUGGS'], cols=['sug_id'],
-                                                   condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s)) ORDER BY modified' % (location, radius)
+                                                   condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s)) ORDER BY modified LIMIT 8' % (location, radius)
                                                    )
                            )
             results = query.splitlines()
             del results[0] #  quitar la primera linea con el nombre de la columna
             sugs = [db.Key.from_path(self._klass.kind(), int(result)) for result in results] # construir todas las keys para consultar en bach
-            sugs = db.get(sugs)
-            from georemindme.funcs import prefetch_refprops
-            sugs = prefetch_refprops(sugs, self._klass.user)
+            from google.appengine.api import datastore
+            sugs = datastore.Get(sugs)
+            from georemindme.funcs import prefetch_refpropsEntity
+            prefetch = prefetch_refpropsEntity(sugs, 'user')
+            sugs = [{'id': sug.key().id(),
+                         'username': prefetch[sug['user']].username,
+                         'name': sug['name'],
+                         'description': sug['description']} for sug in sugs]
             client.set('%ssug_nearest%s,%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon

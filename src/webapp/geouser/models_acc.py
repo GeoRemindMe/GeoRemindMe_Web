@@ -280,7 +280,7 @@ class UserTimelineBase(db.polymodel.PolyModel, HookedModel):
 class UserTimelineSystem(UserTimelineBase):
     msg_id = db.IntegerProperty()
     msg = db.TextProperty(required=False)
-    instance = db.ReferenceProperty(db.Model)
+    instance = db.ReferenceProperty(None)
     visible = db.BooleanProperty(default=True)
     
 #    @property
@@ -513,6 +513,18 @@ class UserTimeline(UserTimelineBase, Visibility):
             from signals import user_timeline_new
             from watchers import *
             user_timeline_new.send(sender=self)
+            
+
+class UserTimelineSuggest(UserTimelineBase):
+    """
+        Almacena una peticion de un usuario para añadir una
+        sugerencia a la lista de otro usuario
+    """
+    msg = db.TextProperty(required=False)
+    msg_id = db.IntegerProperty(required=False, default=-1)
+    instance = db.ReferenceProperty(None, collection_name="usersuggests_to_list") 
+    list_instance = db.ReferenceProperty(None)
+    status = db.IntegerProperty(default=0)
             
 
 class UserTimelineFollowersIndex(db.Model):

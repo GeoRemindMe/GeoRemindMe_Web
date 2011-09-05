@@ -234,6 +234,10 @@ input{
      *  COMMON
      * 
      ***************************/
+	#print-icon{
+		background-image: url("/static/common/img/printer.png");
+		background-repeat:no-repeat;
+	}
     #notification-msg{
         border: 1px dotted #CCCCCC;
         left: 50%;
@@ -511,7 +515,7 @@ input{
         cursor:pointer;
     }
     .hoverlink{
-        color:#3896FF;
+        color:#3896FF !important;
         text-decoration:none;
     }
     .hoverlink:hover{
@@ -585,7 +589,9 @@ input{
         }
         ul#chronology .suggestionPlace a{
             color: #555555;
+/*
             font-weight:bold;
+*/
             text-decoration:none;
         }
         ul#chronology .suggestionPlace a:hover{
@@ -625,9 +631,15 @@ input{
             width:50px
         }
         
-        ul#chronology li a.black-link,a.black-link{
+        ul#chronology li a.black-link,a.black-link,a.black-link:visited{
             text-decoration:none;
             color:#333;
+        }
+        ul#chronology li .timeline-msg img{
+            float: left;
+            height: 25px;
+            margin-right: 10px;
+            width: 25px;
         }
         ul#chronology li a.black-link:hover{
             text-decoration:underline;
@@ -1872,18 +1884,50 @@ input{
     #suggestions{
         font-size:1.1em;
     }
+    
+    #legend{
+		border: 1px dotted #555555;
+		float: right;
+		font-size: 0.9em;
+		margin-top: 1em;
+		padding: 0.5em;
+		color:#777;
+    }
+    #legend ul{
+		margin: 5px 0 0;
+		padding: 0;
+    }
+    #legend ul li{
+		display: inline-block;
+		margin-right: 10px;
+    }
+    #legend ul li span{
+		border: 1px solid #777;
+		display: block;
+		float: left;
+		height: 15px;
+		margin-right: 5px;
+		width: 30px;
+    }
+    .not-mine{
+		background-color:#F4F4F4;
+    }
+    .mine{
+    }
     .suggestion{
     }
-    .maximize-minimize{
+    div#content .maximize-minimize{
         background: url("/static/facebookApp/img/maximize_minimize.gif") no-repeat scroll 0 0 transparent;
         float: right;
         height: 15px;
         margin-right: 5px;
         margin-top: 10px;
         width: 15px;
+        border:0 none;
     }
-    div.suggestionExpanded{
+    div#content div.suggestionExpanded{
         background-position:0 -17px;
+        border:0 none;
     }
     .maximize-minimize span{
         visibility:hidden;
@@ -2194,7 +2238,9 @@ input{
            width:495px;
         }
         .collapsed:hover{
+/*
             background-color: #EEEEEE;
+*/
         }
         .suggestionInLists{
             width:25%;
@@ -2471,8 +2517,27 @@ input{
      *  View suggestion details
      * 
      ***************************/
-    #view-suggestion{
+    #view-suggestion strong{
+		font-weight:bold;
     }
+    
+    #view-suggestion #print-icon{
+		background-position: 2px -32px;
+		
+		float: none;
+		height: 16px;
+		line-height: 16px;
+		margin-top: 1.5em;
+		padding-left: 25px;
+    }
+		
+	#view-suggestion #add-to-list{
+		background-image: url("/static/common/img/suggestionsx16.png");
+        background-position: 2px 50%;
+        background-repeat: no-repeat;
+        margin-top: 5px;
+        padding-left: 25px;
+	}
     #view-suggestion .show-more{
 		float: none;
 		color: #3896FF;
@@ -2526,22 +2591,44 @@ input{
         visibility: hidden;
     }
     #view-suggestion div.suggestion h1{
-        line-height: 1em;
+        line-height: 1.5em;
         margin: 0.2em 0 0.5em;
         display:block;
+        width: 100%;
+        font-size:1.4em;
+        float:left;
+    }
+    #view-suggestion div.suggestion h1 span{
+        float: right; 
+        display: block;
+        margin-top: 3px;
+        margin-left: 10px; 
+        font-size: 0.8em; 
+        border: 1px solid rgb(204, 204, 204); 
+        padding: 0em 0.5em;
+        line-height:1.4em;
     }
     #view-suggestion div.suggestion p,
     #view-list div.suggestion p{
-        font-size: 1.1em;
-        line-height: 1.7em;
+        clear: left;
+		display: block;
+		float: none;
+		font-size: 1.1em;
+		line-height: 1.7em;
+		margin-right: 10px;
+		width: auto;
+    }
+    #view-suggestion div.suggestion h1 img{
+        border: 0 none;
+        float: left;
+        margin: 4px 0.5em 0 0;
     }
     #view-suggestion div.suggestion img,
     #view-list div.suggestion img{
         float: right;
         margin-top: 0.7em;
-/*
-        margin-top: 15px;
-*/
+        clear: right;
+        margin-bottom: 1em;
         border: 1px solid #AAAAAA;
     }
     #view-suggestion div.suggestion .panoramio-wapi-tos img{
@@ -2554,13 +2641,18 @@ input{
     #view-suggestion .dontLikeSuggestion.likebtn.btn{
     }
     #view-suggestion ul#tag-list{
-        margin:0;padding:0;
-        width: 305px;
-        font-size:1.1em;
+        display: inline;
+/*
+		font-size: 1.1em;
+*/
+		line-height: 1.7em;
+		margin: 0;
+		padding: 0;
     }
     #view-suggestion .suggestion p{
         margin:0;
     }
+    
     #view-suggestion span#save-btn{
         margin-right:1em;
     }
@@ -2583,6 +2675,25 @@ input{
         float: right;
         padding: 0;
         text-align: center;
+    }
+    
+    #view-suggestion div.suggestion ul#action-bar {
+    margin: 0;
+    padding: 0;
+    }
+    #view-suggestion div.suggestion ul#action-bar>li{
+        display: block;
+        float: left;
+        line-height: 20px;
+        margin-right: 20px;
+        margin-top: 0;
+    }
+    #view-suggestion div.suggestion ul#action-bar>li p{
+        float: left;
+        font-size: 1em;
+    }
+    #view-suggestion ul#action-bar span.btn {
+        margin:0;
     }
     
     #view-suggestion textarea,
@@ -2742,26 +2853,30 @@ input{
     }
 
     #view-suggestion span.btn{
-        
+        font-size: 1em;
+		font-weight: normal;
         
 /*
         border: 1px solid #1111CC;
 */
     }
     #view-suggestion span.likeBtn{
-		background-color: white;
-		border: 1px solid #CCCCCC;
-		color: black;
-		padding: 0.5em;
-		margin-top:1.5em;
+		background: none repeat scroll 0 0 transparent;
+        border: none;
+        color: black;
+        margin-right: 1em;
+        margin-top: 0;
+        padding: 0 0.5em;
     }
+    
     #view-suggestion .suggestion hr{
-		border-color: #F9F9F9;
-		margin: 3px;
+		border-bottom: 1px solid white;
+		color: #DDDDDD;
+		margin: 1em 0;
     }
     
     #view-suggestion span.likeBtn span.counter{
-		font-size:1.5em
+		font-size:1em
     }
     #view-suggestion span.likeBtn span.hoverlink{
 		color:#3896FF;
@@ -2782,15 +2897,21 @@ input{
     }
     
     .suggestions-title,
+    .lists-title,
     #view-suggestion p.popular,
     #view-list p.popular,
     #view-place p.popular{
         background-image: url("/static/facebookApp/img/icons/suggestions.png");
-        background-position: 0 7px;
+        background-position: 0 22px;
         background-repeat: no-repeat;
         margin: 0 1em;
-        padding-left: 40px;
+        padding-left: 45px;
     }
+    .lists-title{
+		background-image: url("/static/facebookApp/img/icons/lists.png");
+		background-position: 0 50%;
+    }
+    
     #place-container{
         background-color: #F9F9F9;
 		border: 1px solid #CCCCCC;
@@ -2824,8 +2945,29 @@ input{
     }
     #view-place h1{
         line-height: 1em;
-        margin: 0.2em 0;
+        margin: 0.2em 0 0;
         display:block;
+    }
+    #view-place #action-bar{
+    }
+    #view-place #action-bar ul{
+        list-style: none outside none;
+        margin: -1em 5em 0.5em;
+        padding: 0;
+    }
+    #view-place #action-bar li{
+        display: block;
+        float: left;
+        margin-right: 1em;
+    }
+    #view-place #action-bar li#print-icon{
+        background-position: 2px -32px;
+        padding-left: 25px;
+    }
+    #view-place #action-bar li.suggestion{
+        background-image: url("/static/common/img/add.png");
+        background-repeat: no-repeat;
+        padding-left: 20px;
     }
     #view-place div.timeline-msg,
     #view-list div.timeline-msg{
@@ -2875,12 +3017,50 @@ input{
      * 
      ***************************/
 	#suggestion-info {
-		width: 435px;
 		float: left;
-		padding-right: 15px;
+		margin: 0;
+		padding: 0;
+		width: 500px;
+	}
+	#suggestion-info ul{
+	margin: 0 1em;
+    padding: 0;
+    font-size:1.1em;
+	}
+	#suggestion-info li:after{
+	
+/*
+		//content:"·";
+*/
+	}
+	#suggestion-info li{
+		display: inline-block;
+		margin: 0.5em 0.8em;
 	}
 	#suggestion-info p{
 		margin: 0 1em 0.5em;
+	}
+	#view-list #suggest_suggestion{
+		background-image:url("/static/common/img/suggestionsx16.png");
+		background-repeat:no-repeat;
+		padding-left: 20px;
+	}
+	
+	#view-list #owner img{
+		padding-right: 2px;
+		position: relative;
+		top: 4px;
+		width: 16px;
+	}
+	#view-list #print-icon{
+		background-position: 2px -32px;
+		clear: both;
+		float: none;
+		height: 16px;
+		line-height: 16px;
+		padding-left: 25px;
+		text-align: left;
+		width: auto;
 	}
 	
 	#suggestion-aside {
@@ -3093,7 +3273,7 @@ input{
 
 
 .readable{
-    font-size:1.1em !important;
+    font-size:1em !important;
 }
 ul#chronology a.link{
     color:blue !important;

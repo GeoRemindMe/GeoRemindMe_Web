@@ -67,9 +67,9 @@ class GPRequest(Http):
         if language is not None:
             url = url + '&language=%s' % language
         if name is not None:
-            url = url + '&name=%s' % name
+            url = url + '&name=%s' % self._parse_get(name)
         url = url + '&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
-        url = self._search_url + self._parse_get(url)
+        url = self._search_url + url
         return self._do_request(url)
     
     def retrieve_reference(self, reference, language=None, sensor=False):
@@ -113,6 +113,7 @@ class GPRequest(Http):
         if types is not None:
             dict['types'] = types
         url = self._add_url + self._parse_get('&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key))
+        raise Exception(url)
         return self._do_request(url, method='POST', body=dict.__str__())
     
     def delete_place(self, reference, sensor = False):

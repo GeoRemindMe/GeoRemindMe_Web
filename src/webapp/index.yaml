@@ -164,3 +164,9 @@ indexes:
   - name: owner
   - name: _created
     direction: desc
+
+- kind: _Notification
+  properties:
+  - name: user
+  - name: _created
+    direction: desc

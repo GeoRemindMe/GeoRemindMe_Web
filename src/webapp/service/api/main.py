@@ -14,7 +14,7 @@ application = webapp.WSGIApplication(
                                            ('/api/1/MapService', mapservice.MapService,)
                                            ]),
                                           debug=True)
-#application = middleware.OAuthware(application)
+application = middleware.OAuthware(application)
 
 def main():
     util.run_wsgi_app(application)

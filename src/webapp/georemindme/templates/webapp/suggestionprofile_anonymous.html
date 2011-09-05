@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "webapp/base_anonymous.html" %}
 
 {% load i18n %}
 {% load tags %}
@@ -121,7 +121,7 @@
                 <span>
                     Le gusta a {{suggestion.counters.votes}} personas
                 </span>
-            
+                
                 <br>
                 {{suggestion.name}}
             </h1>
@@ -351,15 +351,5 @@
             <div class="load-more">Cargar más</div>
         {% endif %}
     </div>
-    
-    <script id="commentTemplate" type="text/x-jquery-tmpl">
-        <li class="suggestion-element">
-            <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
-            <span class="user"><img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar"></span>
-            <div style="float:left;width:460px">
-                <span class="msg"><a href="{% url2 in_facebook public_profile user.username%}" class="black-link">{{user.username}}</a>: ${msg}</span>
-                <span class="timestamp">0 minutes ago</span>
-            </div>
-        </li>
-    </script>
+
 {% endblock %}
