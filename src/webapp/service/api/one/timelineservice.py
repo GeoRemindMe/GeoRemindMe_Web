@@ -43,10 +43,11 @@ class TimelineService(remote.Service):
                          created=int(mktime(a['modified'].utctimetuple()))
                          )
             if a['instance'] is not None: 
-                if type(a['instance']) == type(Comment) or type(a['instance']) == type(Vote): 
+                if type(a['instance']) == Comment or type(a['instance']) == Vote: 
                     t.instance_id=a['instance'].instance.id
                     t.instance_name=unicode(a['instance'].instance)
-                    t.url = unicode(a['instance'].instance.get_absolute_url())
+                    if hasattr(a['instance'].instance,"get_absolute_url"):
+                        t.url = unicode(a['instance'].instance.get_absolute_url())
                 else:
                     t.instance_id=a['instance'].id
                     t.instance_name=unicode(a['instance'])
