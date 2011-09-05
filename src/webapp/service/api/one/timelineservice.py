@@ -26,7 +26,8 @@ class TimelineService(remote.Service):
     def get_activity(self, request):
         from os import environ
         from google.appengine.ext import db
-        user = db.Model.get_by_id(environ['user'])
+        raise Exception(int(environ['user']))
+        user = db.Model.get_by_id(int(environ['user']))
         if user is None:
             from protorpc.remote import ApplicationError
             raise ApplicationError("Unknow user")
