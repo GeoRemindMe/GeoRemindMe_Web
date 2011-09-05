@@ -29,7 +29,7 @@ class TimelineService(remote.Service):
         user = db.Model.get_by_id(environ['user'])
         if user is None:
             from protorpc.remote import ApplicationError
-            raise ApplicationError("Too many suggestions")
+            raise ApplicationError("Unknow user")
         activity = user.get_activity_timeline()
         timelines = []
         from time import mktime
