@@ -282,12 +282,14 @@ def user_suggestions(request, template='webapp/suggestions.html'):
     from geolist.models import ListSuggestion
     counters = request.user.counters_async()
     lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
+    # TODO : cambiar a busquedas async
     suggestions_following = get_suggestion_following(request)
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     suggestions = get_suggestion(request, id=None,
                                 wanted_user=request.user,
                                 page = 1, query_id = None
                                 )
+    # combinar listas
     suggestions[1].extend(suggestions_following[1])
     suggestions[1].sort(key=lambda x: x.modified, reverse=True)
     suggestions[0] = '%s_%s' % (suggestions[0], suggestions_following[0])
