@@ -107,7 +107,7 @@
 	</style>
 	<script type="text/javascript" src="jquery.min.js"></script>
 	<script type="text/javascript">
-
+        GRMcookie="";
 		function checkIfCookie() {
             
 			getCookies( "http://localhost:8080/dashboard/", 
@@ -116,9 +116,8 @@
 							if(id!=null){
 								$('#login-form').addClass('hidden');
 								$('#logged').removeClass('hidden');
-                                $('#asd').html("id="+id);
-							}else
-                                $('#asd').html("id=nulo");
+                                GRMcookie=id;
+							}
 						});
 		}
 		
@@ -142,12 +141,30 @@
 				$('#'+tab_id+'_content').removeClass('hidden');
 				$(this).addClass('active');
 			})
+            
+            $('#activity').click(function(){
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/api/1/timelineservice.get_activity",
+                    data: {
+                        
+                    },
+                    headers:{
+                        "x-georemindme-session":GRMcookie,
+                        "content-type": "application/json"
+                    },
+                    context: $(this),
+                    success: function(data){
+                        //console.log(data)
+                    }
+                });
+            })
 		});
 	</script>
 	
 </head>
 <body>
-	<div id="login-form">
+	<div id="login-form"  class="hidden">
 		Identifícate usando: 
 		<ul id="social-networks">
 			<li class="twitter" title="Twitter" onclick="javascript:window.open('http://localhost:8080/login/twitter/?cls')"><span>.</span></li>
@@ -162,7 +179,7 @@
         <span id="asd" onclick="javascript:checkIfCookie()">Probar</span>
 	</div>
 	
-	<div id="logged" class="hidden">
+	<div id="logged">
 		<ul id="tabMenu">
 			<li id="activity" class="active">Actividad</li>
 			<li id="bag">Mochila</li>
@@ -177,6 +194,7 @@
 				This is your fucking cookie: <div id="insert"></div>
 			</div>
 -->
+            
 		</div>
 		<div id="bag_content" class="hidden">
 			Mochila

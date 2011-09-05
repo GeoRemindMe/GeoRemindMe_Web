@@ -13,7 +13,7 @@ class OAuthware(object):
             from geomiddleware.sessions.store import SessionStore
             session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
             if session is not None:
-                os.environ['user'] = session.user
+                os.environ['user'] = session['user'].username
                 session.put()
                 return self.wrapped_app(environ, start_response)
         elif 'HTTP_AUTHORIZATION' in environ:
