@@ -9,9 +9,9 @@ class Timeline(messages.Message):
     msg_id = messages.IntegerField(2)
     instance_id = messages.IntegerField(3)
     instance_name = messages.StringField(4)
-    url = messages.StringField(4)
-    user = messages.StringField(5)
-    created = messages.IntegerField(6)
+    url = messages.StringField(5)
+    user = messages.StringField(6)
+    created = messages.IntegerField(7)
     
 
 class Timelines(messages.Message):
