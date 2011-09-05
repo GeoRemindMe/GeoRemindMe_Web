@@ -302,7 +302,9 @@ def add_following(request):
     if username == 'None':
         username=None
     added = geouser.add_following(request.user, userid=userid, username=username)
-    return HttpResponse(simplejson.dumps(added), mimetype="application/json")
+    if not isinstance(added, HttpResponse):
+        return HttpResponse(simplejson.dumps(added), mimetype="application/json")
+    return added
 
     
 @ajax_request
@@ -318,7 +320,9 @@ def delete_following(request):
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     deleted = geouser.del_following(request.user, userid=userid, username=username)
-    return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
+    if not isinstance(deleted, HttpResponse):
+        return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
+    return deleted
 
 
 @ajax_request
@@ -710,13 +714,10 @@ def suggested_list_suggestion(request):
     
 @ajax_request
 def get_suggestions(request):
-    # TODO : cambiar a API bajo nivel
-    suggestions = get_suggestion(request, id=None,
-                                wanted_user=request.user,
-                                page = 1, query_id = None
-                                )
-    suggestions_following = get_suggestion_following(request)
-    suggestions[1].extend(suggestions_following[1])
-    suggestions[1].sort(key=lambda x: x.modified, reverse=True)
-    
-    
+    from geoalert import api
+    suggs = api.get_suggestions_dict(request.user)
+    return HttpResponse(simplejson.dumps([{'id': s.key().id(),
+                                          'name': s['name'],
+                                          'description': s['description'],
+                                          'created': s['created'],
+                                         } for s in suggs]), mimetype='application/json')

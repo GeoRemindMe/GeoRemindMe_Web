@@ -10,6 +10,12 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: AlertSuggestion
+  properties:
+  - name: user
+  - name: created
+    direction: desc
+
 - kind: Comment
   properties:
   - name: deleted
@@ -65,7 +71,26 @@ indexes:
   properties:
   - name: class
   - name: user
+  - name: created
+    direction: desc
+
+- kind: Event
+  properties:
+  - name: class
+  - name: user
   - name: modified
+    direction: desc
+
+- kind: Event
+  properties:
+  - name: user
+  - name: created
+    direction: desc
+
+- kind: Event, AlertSuggestion
+  properties:
+  - name: user
+  - name: created
     direction: desc
 
 - kind: List
@@ -80,6 +105,18 @@ indexes:
   ancestor: yes
   properties:
   - name: count
+
+- kind: Suggestion
+  properties:
+  - name: user
+  - name: created
+    direction: desc
+
+- kind: Suggestion, AlertSuggestion
+  properties:
+  - name: user
+  - name: created
+    direction: desc
 
 - kind: SuggestionFollowersIndex
   ancestor: yes
