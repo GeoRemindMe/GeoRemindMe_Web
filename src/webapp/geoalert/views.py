@@ -283,20 +283,17 @@ def user_suggestions(request, template='webapp/suggestions.html'):
     counters = request.user.counters_async()
     lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
     # TODO : cambiar a busquedas async
-    suggestions_following = get_suggestion_following(request)
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
-    suggestions = get_suggestion(request, id=None,
-                                wanted_user=request.user,
-                                page = 1, query_id = None
-                                )
+    from api import get_suggestions_dict
+    suggestions = get_suggestions_dict(request.user)
+    suggestions = [db.model_from_protobuf(s.ToPb()) for s in suggestions]
+    from georemindme.funcs import prefetch_refprops
+    suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
     # combinar listas
-    suggestions[1].extend(suggestions_following[1])
-    suggestions[1].sort(key=lambda x: x.modified, reverse=True)
-    suggestions[0] = '%s_%s' % (suggestions[0], suggestions_following[0])
     lists = [l.to_dict(resolve=True) for l in lists]
     lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=True))
     return  render_to_response(template, {
-                                          'suggestions': suggestions,
+                                          'suggestions': ['', suggestions],
                                           'counters': counters.next(),
                                           'lists': lists,
                                           }, context_instance=RequestContext(request)

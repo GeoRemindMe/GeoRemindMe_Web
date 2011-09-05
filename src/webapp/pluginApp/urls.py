@@ -19,7 +19,7 @@ from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template, redirect_to
 
 
-urlpatterns = patterns('facebookApp.views',
+urlpatterns = patterns('pluginApp.views',
     url(r'^suggestions/add/$', 'add_suggestion',{},'plugin_add_suggestion'),
     
 )
