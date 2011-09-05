@@ -1548,3 +1548,7 @@ font-size: 0.9em;
 #view-list #suggestion-list .msg {
     font-size: 1.1em;
 }
+
+#address-container input[type="text"] {
+    width: 580px;
+}

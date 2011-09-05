@@ -120,6 +120,10 @@
         clear:both;
         margin:7px 0;
     }
+    iframe{ 
+        border:0 none;
+        margin-right:20px;
+    }
 	
 	</style>
 	<script type="text/javascript" src="jquery.min.js"></script>
@@ -151,26 +155,7 @@
 			
 		}
 
-		$(document).ready(function(){
-			checkIfCookie();
-            //if(GRMcookie!=null)
-                
-                
-			$('#tabMenu li').click(function(){
-				tab_id=$('#tabMenu li.active').attr('id')
-				$('#'+tab_id+'_content').addClass('hidden');
-				$('#tabMenu li.active').removeClass('active');
-				
-				tab_id=$(this).attr('id')
-				//console.log(tab_id)
-				$('#'+tab_id+'_content').removeClass('hidden');
-				$(this).addClass('active');
-			})
-            
-            $('#activity').click(function(){
-                
-            })
-		});
+		
         
         function ISODateString(d) {
             function pad(n){
@@ -203,7 +188,7 @@
                     $(data.timelines).each(function(i,elem){                      
                         var c=$('#msg-'+elem.msg_id).tmpl(elem);
                         var timeago=$(c).find('.timeago');
-                        var iso8601=ISODateString(new Date(parseInt($(timeago).attr('title'))))
+                        var iso8601=ISODateString(new Date(parseInt($(timeago).attr('title'))*1000))
                         
                         $(timeago).attr('title',iso8601)
                         $(timeago).timeago();
@@ -212,6 +197,28 @@
                 }
             });
         }
+        
+        $(document).ready(function(){
+			checkIfCookie();
+            //if(GRMcookie!=null)
+                
+            //refreshTimeline();
+			$('#tabMenu li').click(function(){
+				tab_id=$('#tabMenu li.active').attr('id')
+				$('#'+tab_id+'_content').addClass('hidden');
+				$('#tabMenu li.active').removeClass('active');
+				
+				tab_id=$(this).attr('id')
+				//console.log(tab_id)
+				$('#'+tab_id+'_content').removeClass('hidden');
+				$(this).addClass('active');
+			})
+            
+            $('#suggestion').click(function(){
+                $('body').css('width',"535px")
+                $('body').css('height',$("iframe").height()+"px")
+            })
+		});
 	</script>
 	
 </head>
@@ -233,7 +240,9 @@
 	<div id="logged">
 		<ul id="tabMenu">
 			<li id="activity" class="active">Actividad</li>
+<!--
 			<li id="bag">Mochila</li>
+-->
 			<li id="suggestion">Hacer sugencia</li>
 			<li onclick="javascript:window.open('http://localhost:8080/logout')">Desconectar</li>
 		</ul>
@@ -246,11 +255,13 @@
 		</div>
         
         
+<!--
 		<div id="bag_content" class="hidden">
 			Mochila
 		</div>
+-->
 		<div id="suggestion_content" class="hidden">
-			<iframe src="http://localhost:8080/suggestions/add/"></iframe>
+			<iframe src="http://localhost:8080/plugin/suggestions/add/" width="100%" border="0" height="800px"></iframe>
 		</div>
 	</div>
 
