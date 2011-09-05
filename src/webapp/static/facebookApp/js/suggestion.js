@@ -318,25 +318,31 @@ function prepareAutocomplete() {
       autoFocus: true,
       minLength:3,
       source: function(request, response) {
-        
-        var x,y,term;
+
+        var data = { "X-CSRFToken": function(){return getCookie('csrftoken');} };
         
         // search by marker drag
         if (request.term.indexOf(GRM.common.token) == 0) {
             request.term = request.term.substring(GRM.common.token.length,request.term.length).split(',');
-            x=parseFloat(request.term[0]);
-            y=parseFloat(request.term[1]);
-            term="hotel";
+            data['lat']=parseFloat(request.term[0]);
+            data['lon']=parseFloat(request.term[1]);
         }
         // search by text input
         else {
-            var pos = map.getCenter();
-            x=pos.lat();
-            y=pos.lng();
-            term=request.term;
+            var pos;
+            
+            if (typeof(GRM.marker) != "undefined") {
+                pos = GRM.marker.getPosition();
             }
-          
-        var data = { name: term, lat: x, lon: y, "X-CSRFToken": function(){return getCookie('csrftoken');} };
+            else {
+                pos = map.getCenter();
+                }
+            
+            data['lat']=pos.lat();
+            data['lon']=pos.lng();
+            data['name']=request.term;
+            }
+
         data = JSON.stringify(data);
         $.ajax({
 
@@ -347,10 +353,12 @@ function prepareAutocomplete() {
             data: data,
             success: function(data) {
                 
-                if (typeof data.sites == "undefined" || data.sites.length==0)
-                    return;
+                var sites = (typeof data.sites == "undefined" || data.sites.length==0)?[]:data.sites;
                 
-                response($.map(data.sites, function(item) {
+                sites.push({name:"<span style='color:red;font-weight:bold;'>¿No aparecere el sitio aqui?</span>",lat:0.0,lon:0.0});
+                
+                
+                response($.map(sites, function(item) {
                             return {
                               label:  item.name,
                               value: item.name,
@@ -377,7 +385,13 @@ function prepareAutocomplete() {
             
         map.panTo(location);
         }
-    });
+    })
+    .data( "autocomplete" )._renderItem = function( ul, item ) {
+			return $( "<li></li>" )
+				.data( "item.autocomplete", item )
+				.append( "<a>" + item.label + "</a>" )
+				.appendTo( ul );
+            }; 
 
 }
 

@@ -56,6 +56,6 @@ class MapService(remote.Service):
         results = [Site(name=r['nombre'], 
                        lat=r['lat'], 
                        lon=r['lng'],
-                       ) for r in json['results']
+                       ) for r in json[:7]
                   ]
         return Sites(sites=results)
