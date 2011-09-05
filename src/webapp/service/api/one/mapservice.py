@@ -29,9 +29,16 @@ class MapService(remote.Service):
         import memcache
         mem = memcache.mem.Client()
         r = Http(cache=mem)
-        response, content = r.request('http://andaluciapeople.com/granada/sitios.json/lat/%s/lng/%s/' % (poi.lat, poi.lon),
-                                       method='GET',
-                                       headers={ 'User-Agent' : 'Georemindme:0.1' })
+        if request.name is not None:
+            from urllib import quote_plus
+            name = quote_plus(request.name.strip())
+            url = 'http://andaluciapeople.com/granada/sitios.json/lat/%s/lng/%s/?q=%s' % (poi.lat, poi.lon, name)
+        else:
+            url = 'http://andaluciapeople.com/granada/sitios.json/lat/%s/lng/%s/' % (poi.lat, poi.lon)
+        response, content = r.request(url,
+                                      method='GET',
+                                      headers={ 'User-Agent' : 'Georemindme:0.1' }
+                                     )
 #        from mapsServices.places.GPRequest import GPRequest
 #        google_places = GPRequest()
 #        results = google_places.do_search(pos=poi, name=request.name)
