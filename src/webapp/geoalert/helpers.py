@@ -361,6 +361,7 @@ class SuggestionHelper(EventHelper):
             sugs = [db.Key.from_path(self._klass.kind(), int(result)) for result in results] # construir todas las keys para consultar en bach
             from google.appengine.api import datastore
             sugs = datastore.Get(sugs)
+            sugs = filter(None, sugs)
             from georemindme.funcs import prefetch_refpropsEntity
             prefetch = prefetch_refpropsEntity(sugs, 'user')
             sugs = [{'id': sug.key().id(),

@@ -139,4 +139,4 @@ class GPRequest(Http):
     
     def _parse_get(self, string):
         from urllib import quote_plus
-        return quote_plus(string)
+        return quote_plus(string.strip())
