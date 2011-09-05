@@ -119,9 +119,9 @@ def client_access_request(request, provider, next=None):
     try:
         if not request.session[provider]['request_token']['oauth_token'] == request.GET.get('oauth_token') \
             and request.GET.get('oauth_verifier') :
-            return HttpResponseRedirect(reverse('georemindme.views.home'))
+            return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
     except:
-        return HttpResponseRedirect(reverse('georemindme.views.home'))
+        return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
     #lee el token recibido
     token = oauth2.Token(request.GET.get('oauth_token'), 
                          request.session[provider]['request_token']['oauth_token_secret'])
@@ -177,7 +177,10 @@ def authenticate_request(request, provider, callback_url=None, cls=False):
         callback_url = OAUTH[provider]['callback_url']
         if cls:
             callback_url = callback_url + '?cls'
-    response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
+    try:
+        response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
+    except:
+        return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
     if response['status'] != 200:
         raise Exception("Invalid response from server.")
     params = parse_qs(content, keep_blank_values=False)

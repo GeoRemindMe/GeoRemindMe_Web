@@ -106,5 +106,3 @@ if __name__ == "__main__":
             self.assertNotEqual("/fred?bar=%E2%98%9A#%E2%98%84", iri2uri(u"/fred?bar=\N{BLACK LEFT POINTING INDEX}#\N{COMET}".encode('utf-8')))
 
     unittest.main()
-
-    

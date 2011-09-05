@@ -32,6 +32,6 @@ class MapService(remote.Service):
                        lat=r['geometry']['location']['lat'], 
                        lon=r['geometry']['location']['lng'],
                        address=r.get('formatted_address')
-                       ) for r in results['results']
+                       ) for r in results['results'][0:8]
                   ]
         return Sites(sites=response)

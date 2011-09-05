@@ -1,3 +1,6 @@
+# coding=utf-8
+
+
 from __future__ import generators
 """
 httplib2
@@ -147,6 +150,7 @@ class ServerNotFoundError(HttpLib2Error): pass
 class ProxiesUnavailableError(HttpLib2Error): pass
 class CertificateValidationUnsupported(HttpLib2Error): pass
 class SSLHandshakeError(HttpLib2Error): pass
+class NotSupportedOnThisPlatform(HttpLib2Error): pass
 class CertificateHostnameMismatch(SSLHandshakeError):
   def __init__(self, desc, host, cert):
     HttpLib2Error.__init__(self, desc)
@@ -529,6 +533,8 @@ class DigestAuthentication(Authentication):
                 self.challenge['nc'],
                 self.challenge['cnonce'],
                 )
+        if self.challenge.get('opaque'):
+            headers['authorization'] += ', opaque="%s"' % self.challenge['opaque']
         self.challenge['nc'] += 1
 
     def response(self, response, content):
@@ -816,7 +822,6 @@ class HTTPSConnectionWithTimeout(httplib.HTTPSConnection):
         self.ca_certs = ca_certs
         self.disable_ssl_certificate_validation = \
                 disable_ssl_certificate_validation
-                
 
     # The following two methods were adapted from https_wrapper.py, released
     # with the Google Appengine SDK at
@@ -867,7 +872,7 @@ class HTTPSConnectionWithTimeout(httplib.HTTPSConnection):
             host_re = host.replace('.', '\.').replace('*', '[^.]*')
             if re.search('^%s$' % (host_re,), hostname, re.I):
                 return True
-            return False
+        return False
 
     def connect(self):
         "Connect to a host on a given (SSL) port."
@@ -977,7 +982,8 @@ try:
             deadline=self.timeout,
             validate_certificate=self.validate_certificate)
         self.response = ResponseDict(response.headers)
-        self.response['status'] = response.status_code
+        self.response['status'] = str(response.status_code)
+        self.response.status = response.status_code
         setattr(self.response, 'read', lambda : response.content)
 
       # Make sure the exceptions raised match the exceptions expected.
