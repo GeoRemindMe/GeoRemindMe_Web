@@ -35,10 +35,8 @@
     <script type="text/javascript" src="/static/facebookApp/js/jquery.ba-resize.min.js"></script>
 
     <script type="text/javascript">
-        //URLS
-        url={
-            "modify_suggestion_list": "{% url modify_suggestion_list %}",
-        };
+        {% include "urls.html" %}
+        
         $(document).ready(function(){
             
             resizeIframe();

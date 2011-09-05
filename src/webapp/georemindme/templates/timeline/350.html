@@ -15,7 +15,7 @@
         
         {% if obj.instance.user.username = request.user.username %}
             <div class="removable" value="{{obj.instance.id}}" type="suggestion/list"><a href="#">Remove</a></div>
-            <span class="small-text">has creado una lista con {{obj.instance.keys|length}} sugerencias: </span>
+            <span class="small-text">has creado una lista con {{obj.instance.keys|length}} sugerencia{{obj.instance.keys|length|pluralize:"s"}}: </span>
         {% else %}
             <span class="small-text"><a href="{% url2 in_facebook public_profile obj.username %}" class="black-link">{{obj.username}}</a> ha creado una lista con {{obj.instance.keys|length}} sugerencias: </span>
         {% endif %}

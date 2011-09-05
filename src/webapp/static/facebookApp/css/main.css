@@ -628,7 +628,10 @@ input{
             width: 50px;
         }
         ul#chronology li div.avatar img{
-            width:50px
+            width:50px;
+            height:50px;
+            border-radius: 5px;
+            -moz-border-radius: 5px;
         }
         
         ul#chronology li a.black-link,a.black-link,a.black-link:visited{
@@ -2902,10 +2905,13 @@ input{
     #view-list p.popular,
     #view-place p.popular{
         background-image: url("/static/facebookApp/img/icons/suggestions.png");
-        background-position: 0 22px;
+        background-position: 0 10px;
         background-repeat: no-repeat;
         margin: 0 1em;
         padding-left: 45px;
+    }
+    #view-place p.popular{
+        background-position: 0 22px
     }
     .lists-title{
 		background-image: url("/static/facebookApp/img/icons/lists.png");

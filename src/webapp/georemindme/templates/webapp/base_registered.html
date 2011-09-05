@@ -33,12 +33,35 @@
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
 	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.lavalamp.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.easing.1.1.js"></script>
     
+    <link type="text/css" rel="stylesheet" href="/static/webapp/style/jquery-ui/jquery-ui-1.8.16.custom.css">
 
     {% block extra_js %}{%endblock%}
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
+            
+            {% include "urls.html" %}
+            $(".lavaLamp").lavaLamp({ fx: "backout", speed: 700 })
+            $('.help-txt').dialog({
+            autoOpen:false,
+			resizable: false,
+            buttons: [{
+                    text: "Cerrar",
+                    click: function() { $(this).dialog("close"); }
+                }],
+            draggable: false,
+			width:560,
+            position: ['center', 125]
+    });
+    
+       
+    $('.help-icon img').click(function(){
+        $('#'+$(this).attr('id')+'-text').dialog("open");
+    })
+            
             $("[placeholder]").placeholder();
             
             
@@ -97,10 +120,10 @@
 			{% if user.username %}
 				<a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
 				{% block nav %}
-					<ul>
-						<li id="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
-						<li id="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
-						<li id="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
+					<ul class="lavaLamp">
+						<li class="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
+						<li class="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
+						<li class="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
 
 					</ul>
 				{% endblock %}
