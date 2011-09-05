@@ -11,12 +11,60 @@ def get_suggestions_dict(querier):
     count = q.Count()
     suggs = q.Get(count)
     # separo por tipos
-    suggs_following = filter(lambda x: x['class'] == [u'Event', u'AlertSuggestion'], suggs)
-    suggs = filter(lambda x: x['class'] == [u'Event', u'Suggestion'], suggs)
+    suggs_following = []
+    suggs_cleaned = []
+    for s in suggs:
+        if 'AlertSuggestion' in s['class']:
+            suggs_following.append(s)
+        else:
+            suggs_cleaned.append(s)
     # resolver referencias de AlertSuggestion
     ref_keys = [x['suggestion'] for x in suggs_following]
     suggs_following_resolved = datastore.Get(ref_keys)
     #combinar ambas listas
-    suggs.extend(suggs_following_resolved)
-    return suggs
+    suggs_cleaned.extend(suggs_following_resolved)
+    return suggs_cleaned
+
+
+def send_suggestion_to_list(querier, list_id, event_id):
+    """
+    Un usuario realiza una sugerencia para añadir una sugerencia a una lista
+    """
+    from google.appengine.api import datastore
+    from google.appengine.ext import db
+    from geouser.models_acc import UserTimelineSuggest
+    from geolist.models import List
+    from models import Event
+    keys = [db.Key.from_path('List', int(list_id)), db.Key.from_path('Event', int(event_id))] # construir claves
+    # no repetimos sugerencias
+    q = datastore.Query('UserTimelineBase', {'list =': keys[0], 'instance =': keys[1]})
+    if q.Count() != 0:
+        return False
+    objects = datastore.Get(keys)
+    if None in objects:
+        return None
+    # la sugerencia puede ya estar en la lista
+    if keys[1] in objects[0]:
+        return False
+    # creamos la sugerencia
+    timeline = UserTimelineSuggest(instance=keys[1], list=keys[0], user=querier)
+    timeline.put()
+    return True
     
+    
+def change_suggestion_to_list(querier, timeline_id, status):
+    if not status in (0,1,2):
+        return False  
+    from google.appengine.api import datastore
+    from geouser.models_utils import _Notification
+    from google.appengine.ext import db
+    q = datastore.Query('_Notification', {'owner =': querier.key(), 'timeline =': db.Key.from_path('UserTimelineBase', timeline_id)})
+    notification = q.Get(1)
+    if len(notification) == 0:
+        return None
+    timeline = datastore.Get(notification[0]['timeline'])
+    if timeline is None:
+        return None
+    timeline['status'] = status
+    datastore.Put(timeline)
+    return True
