@@ -6,7 +6,7 @@
 	  min-width:400px;
 	  overflow-x:hidden;	
 	  font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
-	  font-size:11px;
+	  font-size:12px;
 	}
 
 	#title {
@@ -103,12 +103,30 @@
 	.google{
 		background-position: 0 -16px;
 	}
+    
+    ul#timeline{
+        list-style:none;
+        margin:0;
+        padding:0;
+    }
+    ul#timeline img{
+        width:25px;
+        height:25px;
+        float:left;
+        margin-right:10px;
+    }
+    ul#timeline li{
+        display:block;
+        clear:both;
+        margin:7px 0;
+    }
 	
 	</style>
 	<script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="jquery.tmpl.min.js"></script>
+    <script type="text/javascript" src="jquery.timeago.js"></script>
 	<script type="text/javascript">
-        GRMcookie="";
+        GRMcookie=null;
 		function checkIfCookie() {
             
 			getCookies( "http://localhost:8080/dashboard/", 
@@ -118,20 +136,26 @@
 								$('#login-form').addClass('hidden');
 								$('#logged').removeClass('hidden');
                                 GRMcookie=id;
-							}
+                                refreshTimeline();
+							}else
+                                GRMcookie=null
 						});
 		}
 		
 		function getCookies(domain, name, callback) {
-			chrome.cookies.get({"url": domain, "name": name}, function(cookie) {
-				if (!cookie) { callback(null); }
-				else { callback(cookie.value); }
-			});
+			if (typeof(chrome)!="undefined")
+                chrome.cookies.get({"url": domain, "name": name}, function(cookie) {
+                    if (!cookie) { callback(null); }
+                    else { callback(cookie.value); }
+                });
 			
 		}
 
 		$(document).ready(function(){
 			checkIfCookie();
+            //if(GRMcookie!=null)
+                
+                
 			$('#tabMenu li').click(function(){
 				tab_id=$('#tabMenu li.active').attr('id')
 				$('#'+tab_id+'_content').addClass('hidden');
@@ -144,27 +168,50 @@
 			})
             
             $('#activity').click(function(){
-                $.ajax({
-                    type: "POST",
-                    url: "http://localhost:8080/api/1/timelineservice.get_activity",
-                    data: {
-                        
-                    },
-                    headers:{
-                        "x-georemindme-session":GRMcookie,
-                        "content-type": "application/json"
-                    },
-                    context: $(this),
-                    success: function(data){
-                        console.log(data)
-                        $('#timeline').empty();
-                        $(data).each(function(i,elem){
-                            $('#msg-300').tmpl(elem).appendTo('#timeline');
-                        });
-                    }
-                });
+                
             })
 		});
+        
+        function ISODateString(d) {
+            function pad(n){
+                return n<10 ? '0'+n : n
+            }
+            console.log(d)
+            return d.getUTCFullYear()+'-'
+            + pad(d.getUTCMonth()+1)+'-'
+            + pad(d.getUTCDate())+'T'
+            + pad(d.getUTCHours())+':'
+            + pad(d.getUTCMinutes())+':'
+            + pad(d.getUTCSeconds())+'Z'
+        }
+        
+        
+        function refreshTimeline(){
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/api/1/timelineservice.get_activity",
+                data: {
+                    
+                },
+                headers:{
+                    "x-georemindme-session":GRMcookie,
+                    "content-type": "application/json"
+                },
+                context: $(this),
+                success: function(data){
+                    $('#timeline').empty();
+                    $(data.timelines).each(function(i,elem){                      
+                        var c=$('#msg-'+elem.msg_id).tmpl(elem);
+                        var timeago=$(c).find('.timeago');
+                        var iso8601=ISODateString(new Date(parseInt($(timeago).attr('title'))))
+                        
+                        $(timeago).attr('title',iso8601)
+                        $(timeago).timeago();
+                        $(c).appendTo('#timeline');
+                    });
+                }
+            });
+        }
 	</script>
 	
 </head>
@@ -181,7 +228,6 @@
 			<p><label for="password">Password:</label> <input type="password" id="password" placeholder="Password"/></p>
 			<p><input type="submit" value="Entrar" /></p>
 		</form>
-        <span id="asd" onclick="javascript:checkIfCookie()">Probar</span>
 	</div>
 	
 	<div id="logged">
@@ -194,6 +240,7 @@
 		
         
         <div id="activity_content">
+            <a href="#" onclick="javascript:refreshTimeline()">Refrescar</a>
             <ul id="timeline">
             </ul>         
 		</div>
@@ -208,8 +255,64 @@
 	</div>
 
     <!-- TIMELINE TEMPLATES -->
-    <div id="msg-300"  type="text/x-jquery-tmpl">
-        ${username} 
+    <!--
+        created: 1314010285
+        instance_id: 495
+        instance_name: "Maravillas de la naturaleza"
+        msg_id: 350
+        url: "/list/495/"
+        user: "jneight"
+    -->
+    
+    <div id="msg-300"  type="text/x-jquery-tmpl" style="display:none">
+        <li>
+            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">${user} ha sugerido: <br>
+            <a href="http://localhost:8080${url}" target="_blank">${instance_name}</a><br>
+            <abbr class="timeago" title="${created}">${created}</abbr>
+        </li>
+    </div>
+    <div id="msg-350"  type="text/x-jquery-tmpl" style="display:none">
+        <li>
+            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">${user} ha creado la lista de sugerencias: <br>
+            <a href="http://localhost:8080${url}" target="_blank">${instance_name}</a><br>
+            <abbr class="timeago" title="${created}">${created}</abbr>
+        </li>
+    </div>
+    <div id="msg-0"  type="text/x-jquery-tmpl" style="display:none">
+        <li>
+            <p>¡Genial! ya has creado <a href="{% url2 in_facebook public_profile request.user.username %}">tu cuenta</a> en GeoRemindMe, <strong>ya puedes empezar a recibir y enviar sugerencias</strong>.</p>
+            <abbr class="timeago" title="${created}">${created}</abbr>
+        </li>
+    </div>
+    <div id="msg-1"  type="text/x-jquery-tmpl" style="display:none">
+        <li>
+            Now, you can also login using your Google account at <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a><br>
+            <abbr class="timeago" title="${created}">${created}</abbr>
+        </li>
+    </div>
+    <div id="msg-2"  type="text/x-jquery-tmpl" style="display:none">
+        <li>
+            Now, you can log from Facebook and from <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a><br>
+            <abbr class="timeago" title="${created}">${created}</abbr>
+        </li>
+    </div>
+    <div id="msg-3"  type="text/x-jquery-tmpl" style="display:none">
+        <li>
+            Now, you can also login using your Twitter account at www.georemindme.com <br>
+            <abbr class="timeago" title="${created}">${created}</abbr>
+        </li>
+    </div>
+    <div id="msg-125"  type="text/x-jquery-tmpl" style="display:none">
+        <li>
+            A [X] le gusta un comentario | UT
+            <abbr class="timeago" title="${created}">${created}</abbr>
+        </li>
+    </div>
+    <div id="msg-305"  type="text/x-jquery-tmpl" style="display:none">
+        <li>
+            Te gusta una sugerencia
+            <abbr class="timeago" title="${created}">${created}</abbr>
+        </li>
     </div>
 
 </body>
