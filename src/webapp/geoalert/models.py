@@ -421,6 +421,7 @@ class Suggestion(Event, Visibility, Taggable):
         return False
     
     def put(self, from_comment=False):
+        self.name = self.name.strip()
         if from_comment:
             # no escribir timeline si es de un comentario
             super(Suggestion, self).put()
@@ -516,8 +517,10 @@ class Suggestion(Event, Visibility, Taggable):
         try:
             ftclient = ftclient.OAuthFTClient()
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
-            ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],
-                                                    {
+            from urllib import quote_plus
+            name = quote_plus(self.name.strip().encode('utf8'))
+            return ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],
+                                                    {'name': name,
                                                     'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
                                                     'sug_id': self.id,
                                                     'modified': self.created.__str__(),
@@ -525,6 +528,7 @@ class Suggestion(Event, Visibility, Taggable):
                                                    )
                            )
         except:  # Si falla, se guarda para intentar añadir mas tarde
+            raise
             from georemindme.models_utils import _Do_later_ft
             later = _Do_later_ft(instance_key=self.key())
             later.put()

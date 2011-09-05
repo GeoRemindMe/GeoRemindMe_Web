@@ -708,8 +708,33 @@ def share_on_twitter(request):
 
 @ajax_request
 def suggested_list_suggestion(request):
+    """
+        si se envia timeline_id por POST, se modificara ese timeline (se aceptara o rechazara la sugerencia)
+        status puede ser 0: nada 1: aceptada, 2: rechazada
+        si no se envia timeline_id, debe enviarse list_id y event_id para hacer la peticion
+        
+        devuelve True si todo fue correcto, False si ya existe la sugerencia o no se puede enviar, None si la lista o la 
+        sugerencia no existen
+    """
+    if not request.user.is_authenticated():
+        return HttpResponseForbidden()
     timeline_id = request.POST.get('timeline_id', None)
+    if timeline_id is None:
+        list_id = request.POST.get('list_id', None)
+        event_id = request.POST.get('event_id', None)
+        if list_id is not None and event_id is not None:
+            from geoalert.api import send_suggestion_to_list
+            added = send_suggestion_to_list(request.user, list_id, event_id)
+            return HttpResponse(simplejson.dumps(added),
+                            mimetype='application/json') 
+        else:
+            return HttpResponseBadRequest()
     status = request.POST.get('status', 0)
+    from geoalert.api import change_suggestion_to_list
+    changed = change_suggestion_to_list(request.user, timeline_id, status)
+    return HttpResponse(simplejson.dumps(changed),
+                            mimetype='application/json')
+    
     
     
 @ajax_request
