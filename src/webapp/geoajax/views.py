@@ -700,3 +700,9 @@ def share_on_twitter(request):
         return HttpResponse(simplejson.dumps(response),
                             mimetype='application/json')
     return HttpResponseBadRequest()
+
+
+@ajax_request
+def suggested_list_suggestion(request):
+    timeline_id = request.POST.get('timeline_id', None)
+    status = request.POST.get('status', 0)

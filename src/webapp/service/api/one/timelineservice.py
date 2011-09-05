@@ -25,7 +25,12 @@ class TimelineService(remote.Service):
     @remote.method(GetActivityRequest, Timelines)
     def get_activity(self, request):
         from os import environ
-        activity = environ['user'].get_activity_timeline()
+        from google.appengine.ext import db
+        user = db.Model.get_by_id(environ['user'])
+        if user is None:
+            from protorpc.remote import ApplicationError
+            raise ApplicationError("Unknow user")
+        activity = user.get_activity_timeline()
         timelines = []
         from time import mktime
         from geovote.models import Comment, Vote
