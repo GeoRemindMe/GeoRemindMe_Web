@@ -105,17 +105,20 @@
 	}
 	
 	</style>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script type="text/javascript" src="jquery.min.js"></script>
 	<script type="text/javascript">
 
 		function checkIfCookie() {
+            
 			getCookies( "http://localhost:8080/dashboard/", 
 						"georemindme_session_cookie", 
 						function(id) {
 							if(id!=null){
 								$('#login-form').addClass('hidden');
 								$('#logged').removeClass('hidden');
-							}
+                                $('#asd').html("id="+id);
+							}else
+                                $('#asd').html("id=nulo");
 						});
 		}
 		
@@ -156,6 +159,7 @@
 			<p><label for="password">Password:</label> <input type="password" id="password" placeholder="Password"/></p>
 			<p><input type="submit" value="Entrar" /></p>
 		</form>
+        <span id="asd" onclick="javascript:checkIfCookie()">Probar</span>
 	</div>
 	
 	<div id="logged" class="hidden">
