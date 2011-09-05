@@ -3,5 +3,5 @@
    
 def add_suggestion(request):
     from geoalert.views import add_suggestion
-    return add_suggestion(request, template='add_suggestion.html')
+    return add_suggestion(request, template='plugin/add_suggestion.html')
 

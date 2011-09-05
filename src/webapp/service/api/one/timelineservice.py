@@ -45,11 +45,11 @@ class TimelineService(remote.Service):
                     t.instance_id=a['instance'].instance.id
                     t.instance_name=unicode(a['instance'].instance)
                     if hasattr(a['instance'].instance,"get_absolute_url"):
-                        t.url = unicode(a['instance'].instance.get_absolute_url())
+                        t.url = a['instance'].instance.get_absolute_url().encode("utf8")
                 else:
                     t.instance_id=a['instance'].id
                     t.instance_name=unicode(a['instance'])
-                    t.url = unicode(a['instance'].get_absolute_url())
+                    t.url = a['instance'].get_absolute_url().encode("utf8")
             timelines.append(t)
         return Timelines(timelines=timelines)
 
