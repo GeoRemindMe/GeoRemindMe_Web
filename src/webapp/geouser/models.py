@@ -177,7 +177,7 @@ class User(polymodel.PolyModel, HookedModel):
             query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology) # avanzamos la consulta hasta el ultimo chronology añadido
         # generar timeline
         timeline_chrono = fetch_parents(timeline_chrono)
-        timeline = prefetch_refprops(timeline, UserTimelineSystem.user)
+        timeline = prefetch_refprops(timeline, UserTimeline.user)
         timeline_chrono = prefetch_refprops(timeline_chrono, UserTimeline.instance, UserTimeline.user)
         timeline.extend(timeline_chrono)
         timeline = [{
@@ -191,6 +191,8 @@ class User(polymodel.PolyModel, HookedModel):
                     'has_voted':  Vote.objects.user_has_voted(self, activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
                     'vote_counter': Vote.objects.get_vote_counter(activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
                     'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
+                    'list': activity_timeline.list if hasattr(activity_timeline, 'list') else None,
+                    'status': activity_timeline.status if hasattr(activity_timeline, 'status') else None,
                     'is_private': True,
                     } for activity_timeline in timeline]
         from operator import itemgetter
