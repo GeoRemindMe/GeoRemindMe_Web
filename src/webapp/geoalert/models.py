@@ -45,7 +45,7 @@ class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
     
     @property
     def id(self):
-        return self.key().id()
+        return int(self.key().id())
 
     '''
     def put(self):
@@ -689,7 +689,7 @@ class _Deleted_Alert(db.Model):
     
     @property
     def id(self):
-        return self.deleted_id
+        return int(self.deleted_id)
 
 
 from helpers import *

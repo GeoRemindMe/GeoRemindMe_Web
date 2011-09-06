@@ -64,7 +64,7 @@ class User(polymodel.PolyModel, HookedModel):
 
     @property
     def id(self):
-        return self.key().id()
+        return int(self.key().id())
 
     @property
     def google_user(self):
@@ -138,10 +138,17 @@ class User(polymodel.PolyModel, HookedModel):
         return UserTimeline.objects.get_by_id(self.id, querier=querier, query_id=query_id)
 
     def get_activity_timeline(self, query_id=None):
-        from geouser.models_acc import UserTimelineSystem, UserTimeline
-        from georemindme.funcs import single_prefetch_refprops
-        query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
+        from models_acc import UserTimelineSystem, UserTimeline, UserTimelineFollowersIndex
+        from georemindme.funcs import prefetch_refprops, fetch_parents
+        from geovote.models import Comment, Vote
+        from geoalert.models import Event
+        from geolist.models import List
+        from google.appengine.datastore import datastore_query
+        # definir las consultas
+        query_chrono = UserTimelineFollowersIndex.all().filter('followers =', self.key()).order('-created')
+        #query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
+        # recuperar cursores
         if query_id is not None and len(query_id)>=2:
             cursor_chronology = query_id[0]
             query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology)
@@ -150,49 +157,46 @@ class User(polymodel.PolyModel, HookedModel):
         else:
             cursor_activity = None
             cursor_chronology = None
+        # let's go!
         timeline = []
-        from geovote.models import Comment, Vote
-        from geoalert.models import Event
-        from geolist.models import List
-        for activity_timeline in query_activity:
-            for chrono in query_chrono:
-                if len(timeline) >= TIMELINE_PAGE_SIZE:
+        timeline_chrono = []
+        activity_async = query_activity.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
+        for activity_timeline in activity_async:
+            chrono_async = query_chrono.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE-len(timeline)))
+            for chrono in chrono_async:
+                if len(timeline) + len(timeline_chrono) >= TIMELINE_PAGE_SIZE:
                         break
-                chrono_timeline = db.get(chrono.parent())
-                if chrono_timeline is not None and chrono_timeline.created > activity_timeline.modified:
-                    chrono_timeline = single_prefetch_refprops(chrono_timeline, UserTimeline.user, UserTimeline.instance)
-                    timeline.append({
-                                    'id': chrono_timeline.id, 'created': chrono_timeline.created,
-                                    'modified': chrono_timeline.modified,
-                                    'msg': chrono_timeline.msg, 'username': chrono_timeline.user.username,
-                                    'msg_id': chrono_timeline.msg_id,
-                                    'instance': chrono_timeline.instance,
-                                    'has_voted':  Vote.objects.user_has_voted(self, chrono_timeline.instance.key()) if chrono_timeline.instance is not None else None,
-                                    'vote_counter': Vote.objects.get_vote_counter(chrono_timeline.instance.key()) if chrono_timeline.instance is not None else None,
-                                    'comments': Comment.objects.get_by_instance(chrono_timeline.instance, querier=self),
-                                    'user_follower': chrono_timeline.instance.has_follower(self) if hasattr(chrono_timeline.instance, 'has_follower') else None,
-                                    'is_private': False,
-                                    })
+                if chrono is not None and chrono.created > activity_timeline.modified:
+                    timeline_chrono.append(chrono)
                     cursor_chronology = query_chrono.cursor()
                 else:
                     break
-            if len(timeline) >= TIMELINE_PAGE_SIZE:
+            if len(timeline) + len(timeline_chrono) >= TIMELINE_PAGE_SIZE:
                 break
-            activity_timeline = single_prefetch_refprops(activity_timeline, UserTimeline.user, UserTimeline.instance)
-            timeline.append({
-                            'id': activity_timeline.id, 'created': activity_timeline.created,
-                            'modified': activity_timeline.modified,
-                            'msg': activity_timeline.msg, 'username': activity_timeline.user.username,
-                            'msg_id': activity_timeline.msg_id,
-                            'instance': activity_timeline.instance,
-                            'has_voted':  Vote.objects.user_has_voted(self, activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
-                            'vote_counter': Vote.objects.get_vote_counter(activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
-                            'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
-                            'is_private': True,
-                            })
+            timeline.append(activity_timeline)
             query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology) # avanzamos la consulta hasta el ultimo chronology añadido
-            cursor_activity = query_activity.cursor()
-        chronology = [[cursor_chronology, cursor_activity], timeline]
+        # generar timeline
+        timeline_chrono = fetch_parents(timeline_chrono)
+        timeline = prefetch_refprops(timeline, UserTimelineSystem.user)
+        timeline_chrono = prefetch_refprops(timeline_chrono, UserTimeline.instance, UserTimeline.user)
+        timeline.extend(timeline_chrono)
+        
+        timeline = [{
+                    'id': int(activity_timeline.id), 
+                    'created': activity_timeline.created,
+                    'modified': activity_timeline.modified,
+                    'msg': activity_timeline.msg, 
+                    'username': activity_timeline.user.username,
+                    'msg_id': activity_timeline.msg_id,
+                    'instance': activity_timeline.instance,
+                    'has_voted':  Vote.objects.user_has_voted(self, activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
+                    'vote_counter': Vote.objects.get_vote_counter(activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
+                    'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
+                    'is_private': True,
+                    } for activity_timeline in timeline]
+        from operator import itemgetter
+        timeline_sorted = sorted(timeline, key=itemgetter('modified'), reverse=True)
+        chronology = [[cursor_chronology, query_activity.cursor()], timeline_sorted] 
         return chronology
 
     def get_notifications_timeline(self, query_id=None):

@@ -28,7 +28,7 @@ class List(db.polymodel.PolyModel, HookedModel):
 
     @property
     def id(self):
-        return self.key().id()
+        return int(self.key().id())
     
     @property
     def short_url(self):

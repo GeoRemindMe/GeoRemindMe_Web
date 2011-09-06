@@ -45,7 +45,7 @@ class _Notification(db.Model):
     
     @property
     def id(self):
-        return self.timeline.id
+        return int(self.timeline.id)
     
     def put(self):
         if not self.is_saved():
@@ -104,7 +104,7 @@ class _Report_Account_follower(db.Model):
         
     @property
     def id(self):
-        return self.key().name().split('report_account_follower_')[1]
+        return int(self.key().name().split('report_account_follower_')[1])
 
 
 class _Report_Suggestion_changed(db.Model):
@@ -134,7 +134,7 @@ class _Report_Suggestion_changed(db.Model):
     
     @property
     def id(self):
-        return self.key().name().split('report_suggestion_changed_')[1]
+        return int(self.key().name().split('report_suggestion_changed_')[1])
     
     def to_dict(self):
         from geoalert.models import Suggestion
@@ -171,7 +171,7 @@ class _Report_Suggestion_commented(db.Model):
     
     @property
     def id(self):
-        return self.key().name().split('report_suggestion_commented_')[1]
+        return int(self.key().name().split('report_suggestion_commented_')[1])
     
     def to_dict(self):
         from geoalert.models import Suggestion

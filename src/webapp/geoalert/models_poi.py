@@ -68,7 +68,7 @@ class POI(polymodel.PolyModel, search.SearchableModel):
     
     @property
     def id(self):
-        return self.key().id()
+        return int(self.key().id())
     
     
     @classproperty
