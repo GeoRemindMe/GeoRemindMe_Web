@@ -56,9 +56,9 @@
             <ul>
 				<li id="suggest_suggestion" class="hoverlink">Proponer sugerencia</li>
 				<li id="owner" class="hoverlink"><img src="{% embedded_avatar list.user.username %}" alt="{{list.user.username}}"> <a href="{% url2 in_facebook public_profile list.user %}" title="{{list.user}}" class="hoverlink">Autor: {{list.user}}</a></li>
-				{% if list.tags %}
-					<li>{{list.tags}}</li>
-				{% endif %}
+				{% for tag in list.tags %}
+					<li>{{tag}}</li>
+					{% endfor %}
 				<li id="print-icon" class="hoverlink">Imprimir</li>
             </ul>
             
