@@ -205,7 +205,7 @@ class Comment(Visibility):
 
     @property
     def id(self):
-        return self.key().id()
+        return int(self.key().id())
     
     def set_votes(self, count):
         def _tx(count):
@@ -329,7 +329,7 @@ class Vote(db.Model):
     
     @property
     def id(self):
-        return self.key().id()
+        return int(self.key().id())
     
     @classmethod
     def do_vote(cls, user, instance, count=1):
