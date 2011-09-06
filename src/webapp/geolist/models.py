@@ -93,7 +93,7 @@ class List(db.polymodel.PolyModel, HookedModel):
                 else:
                     dict['instances'] = db.get(self.keys)
             else:
-                dict['user'] = self.username
+                dict['user'] = self.user.username
             return dict
 
     def to_json(self):

@@ -44,7 +44,9 @@
         $(document).ready(function(){
             
             {% include "urls.html" %}
-            $(".lavaLamp").lavaLamp({ fx: "backout", speed: 700 })
+            
+            if($('.active-section').length!=0)
+                $(".lavaLamp").lavaLamp({ fx: "backout", speed: 700 })
             $('.help-txt').dialog({
             autoOpen:false,
 			resizable: false,

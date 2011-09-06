@@ -475,10 +475,12 @@ background: linear-gradient(left, rgba(4,72,162,1) 1%,rgba(27,138,228,1) 47%,rgb
     padding: 1em 2em;
     width: 310px;
     color: #AAAAAA;
+    padding:0;
 }
 #left-col #footer .footer-links{
     display:block;
-    float:none
+    float:none;
+    margin:0;
 }
 
 .footer-links {
@@ -486,6 +488,7 @@ background: linear-gradient(left, rgba(4,72,162,1) 1%,rgba(27,138,228,1) 47%,rgb
 	display: inline;
 	margin-top: 20px;
 	float: left;
+    line-height:2em;
 }
 
 .footer-links a {
@@ -1400,7 +1403,7 @@ ul#chronology a:visited{
     margin-bottom: 1em;
 }
 #right-col {
-    font-size:1.2em;
+    font-size:1em;
 /*
     background-color: #FCFCFC;
 */
