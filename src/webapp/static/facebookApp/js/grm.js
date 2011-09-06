@@ -727,6 +727,8 @@ function sendComment(btn,elemType,id) {
 
 function showMessage(txt,msgClass){
     if($('#notification-msg').css("display")=="none"){
+        console.log("Entro con "+txt+" y "+msgClass);
+        $('#notification-msg').attr('class',"")
         $('#notification-msg').html(txt)
         $('#notification-msg').addClass(msgClass)
         $('#notification-msg').css('top',$(window).scrollTop()+'px');

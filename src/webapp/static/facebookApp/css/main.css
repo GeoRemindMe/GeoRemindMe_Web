@@ -247,6 +247,9 @@ input{
         position: absolute;
         width: 400px;
     }
+    .strong{
+        font-weight:bold;
+    }
     .error{
         background-color: #FCC7C7;
         
@@ -3029,9 +3032,10 @@ input{
 		width: 500px;
 	}
 	#suggestion-info ul{
-	margin: 0 1em;
+	margin: 0 0 0 1em;
     padding: 0;
     font-size:1.1em;
+    float:left;
 	}
 	#suggestion-info li:after{
 	
@@ -3043,6 +3047,23 @@ input{
 		display: inline-block;
 		margin: 0.5em 0.8em;
 	}
+    #suggest_suggestion_menu{
+        display:inline;
+    }
+    #suggestion-info .dropDownBtn ul{
+        margin: 0 0 0 -9px;
+    }
+    #suggestion-info .dropDownBtn li{
+        display: block;
+        font-size: 0.8em;
+        margin: 0;
+        width: 500px;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+    #suggestion-info .dropDownBtn li:hover{
+        background-color:white;
+    }
 	#suggestion-info p{
 		margin: 0 1em 0.5em;
 	}

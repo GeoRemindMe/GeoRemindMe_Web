@@ -25,24 +25,31 @@
                     <p><span class="hoverlink view-more">Ver más</span></p>
                 </div>
 				<script type="text/javascript">
-					$.ajax({
-						type: "POST",
-						url: "/ajax/get/near/suggestions/",
-						data: {
-							//location: $(this).find('input').val(),
-							radius: 5000,
-                            csrfmiddlewaretoken:$('#csrfmiddleware input').val()
-							
-						},
-						dataType:'json',
-						success: function(data){
-							//console.log(data);
-                            $('#close-suggestions').empty();
-                            $(data).each(function(i,elem){
-                                $('#close-suggestions').append('<li><a href="/user/'+elem.username+'/" class="clean"><img src="/user/'+elem.username+'/picture/" alt="'+elem.username+'"></a><a href="/suggestion/'+elem.slug+'/">'+elem.name+'</a></li>');
-                            })
-						}
-					});
+                    if($.cookie('near_suggestions')==null){                    
+                        $.ajax({
+                            type: "POST",
+                            url: "/ajax/get/near/suggestions/",
+                            data: {
+                                //location: $(this).find('input').val(),
+                                radius: 5000,
+                                csrfmiddlewaretoken:$('#csrfmiddleware input').val()
+                                
+                            },
+                            dataType:'json',
+                            success: function(data){
+                                //console.log(data);
+                                $('#close-suggestions').empty();
+                                $(data).each(function(i,elem){
+                                    $('#close-suggestions').append('<li><a href="/user/'+elem.username+'/" class="clean"><img src="/user/'+elem.username+'/picture/" alt="'+elem.username+'"></a><a href="/suggestion/'+elem.slug+'/">'+elem.name+'</a></li>');
+                                })
+                                
+                                //Set cookie
+                                $.cookie('near_suggestions',$('#close-suggestions').html());
+                            }
+                        });
+                    }else{
+                        console.log($.cookie('near_suggestions'))
+                    }
 				</script>
 				
 				

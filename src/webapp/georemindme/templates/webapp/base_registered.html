@@ -40,51 +40,52 @@
 
     {% block extra_js %}{%endblock%}
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    <script type="text/javascript" src="/static/common/js/jquery.cookie.js"></script>
     <script type="text/javascript">
-        $(document).ready(function(){
-            
-            {% include "urls.html" %}
+    
+        // Menu desplegable "Listas"
+        // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
+        hiConfig = {
+            sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
+            interval: 0, // number = milliseconds for onMouseOver polling interval
+            timeout: 500, // number = milliseconds delay before onMouseOut
+            over: function() {
+                var tmp=$('#dropdown-list-user').width();
+                tmp=52-tmp;
+                $('#dropdown-list-user').css("margin-left",tmp+'px')
+                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+            },
+            out: function() {
+                if($("#dropdown-list-user").hasClass('visible-display')==false)
+                    $(this).find('ul:first').slideUp(400);
+            }
+        }
+        
+        {% include "urls.html" %}
+    
+        $(document).ready(function(){          
             
             if($('.active-section').length!=0)
                 $(".lavaLamp").lavaLamp({ fx: "backout", speed: 700 })
             $('.help-txt').dialog({
-            autoOpen:false,
-			resizable: false,
-            buttons: [{
-                    text: "Cerrar",
-                    click: function() { $(this).dialog("close"); }
-                }],
-            draggable: false,
-			width:560,
-            position: ['center', 125]
-    });
-    
+                autoOpen:false,
+                resizable: false,
+                buttons: [{
+                        text: "Cerrar",
+                        click: function() { $(this).dialog("close"); }
+                    }],
+                draggable: false,
+                width:560,
+                position: ['center', 125]
+            });
+        
        
-    $('.help-icon img').click(function(){
-        $('#'+$(this).attr('id')+'-text').dialog("open");
-    })
+            $('.help-icon img').click(function(){
+                $('#'+$(this).attr('id')+'-text').dialog("open");
+            })
             
             $("[placeholder]").placeholder();
-            
-            
-            // Menu desplegable "Listas"
-            // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
-            hiConfig = {
-                sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
-                interval: 0, // number = milliseconds for onMouseOver polling interval
-                timeout: 500, // number = milliseconds delay before onMouseOut
-                over: function() {
-					var tmp=$('#dropdown-list-user').width();
-					tmp=52-tmp;
-					$('#dropdown-list-user').css("margin-left",tmp+'px')
-                    $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
-                },
-                out: function() {
-                    if($("#dropdown-list-user").hasClass('visible-display')==false)
-                        $(this).find('ul:first').slideUp(400);
-                }
-            }
-            
+                        
             $(".user-dropDownBtn, .user-submenu ").hoverIntent(hiConfig);
             $(".user-dropDownBtn").click(function(){
 				//Alineamos el menu desplegable desde la esquina sup-izq.

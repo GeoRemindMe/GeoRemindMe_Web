@@ -1262,6 +1262,7 @@ div.removable a {
     left: 50%;
     line-height: 2em;
     margin-left: -200px;
+    margin-top:50px;
     padding: 0.5em 1em;
     position: absolute;
     width: 400px;
