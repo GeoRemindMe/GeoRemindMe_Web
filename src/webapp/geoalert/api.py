@@ -4,7 +4,7 @@ from geouser.decorators import login_forced
 
 
 @login_forced
-def get_suggestions_dict(querier):
+def get_suggestions_dict(querier, list_id=None):
     from google.appengine.api import datastore
     q = datastore.Query('Event', {'user =': querier.key()})
     q.Order(('created', datastore.Query.DESCENDING))
@@ -23,6 +23,12 @@ def get_suggestions_dict(querier):
     suggs_following_resolved = datastore.Get(ref_keys)
     #combinar ambas listas
     suggs_cleaned.extend(suggs_following_resolved)
+    if list_id is not None:
+        from google.appengine.ext import db
+        list_key = db.Key.from_path('List', int(list_id))
+        list = db.get(list_key)
+        if list is not None and len(list.keys):
+            suggs_cleaned = [s for s in suggs_cleaned if not s.key() in list.keys]
     return suggs_cleaned
 
 
@@ -75,3 +81,9 @@ def change_suggestion_to_list(querier, timeline_id, status):
     timeline['status'] = status
     datastore.Put(timeline)
     return True
+
+
+def get_list_from_suggs(s, querier):
+    from google.appengine.api import datastore
+    q = datastore.Query('List', {'user =': querier.key()})
+    q.Order(('created', datastore.Query.DESCENDING))

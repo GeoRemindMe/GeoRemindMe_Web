@@ -740,12 +740,14 @@ def suggested_list_suggestion(request):
 @ajax_request
 def get_suggestions(request):
     from geoalert import api
-    suggs = api.get_suggestions_dict(request.user)
+    list_id = request.POST.get('list_id', None)
+    suggs = api.get_suggestions_dict(request.user, list_id=list_id)
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps([{'id': s.key().id(),
                                           'name': s['name'],
                                           'description': s['description'],
                                           'created': s['created'],
+                                          'lists': api.get_list_from_suggs(s, request.user), 
                                          } for s in suggs],
                                          cls=JSONEncoder
                                          ), mimetype='application/json')
