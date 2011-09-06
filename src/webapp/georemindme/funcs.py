@@ -98,7 +98,7 @@ def prefetch_refprops(entities, *props):
         en una sola consulta al datastore
     """
     fields = [(entity, prop) for entity in entities for prop in props]
-    ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields]
+    ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields if x is not None]
     ref_keys = filter(None, ref_keys)
     ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
     for (entity, prop), ref_key in zip(fields, ref_keys):

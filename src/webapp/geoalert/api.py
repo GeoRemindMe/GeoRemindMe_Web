@@ -28,13 +28,15 @@ def get_suggestions_dict(querier):
 
 def send_suggestion_to_list(querier, list_id, event_id):
     """
-    Un usuario realiza una sugerencia para añadir una sugerencia a una lista
+        Un usuario realiza una sugerencia para añadir una sugerencia a una lista
     """
     from google.appengine.api import datastore
     from google.appengine.ext import db
     from geouser.models_acc import UserTimelineSuggest
     from geolist.models import List
     from models import Event
+    if list_id is None or event_id is None:
+        return None
     keys = [db.Key.from_path('List', int(list_id)), db.Key.from_path('Event', int(event_id))] # construir claves
     # no repetimos sugerencias
     q = datastore.Query('UserTimelineBase', {'list =': keys[0], 'instance =': keys[1]})
@@ -44,7 +46,9 @@ def send_suggestion_to_list(querier, list_id, event_id):
     if None in objects:
         return None
     # la sugerencia puede ya estar en la lista
-    if keys[1] in objects[0]:
+    if objects[0]['user'] == querier.key():
+        return False
+    if keys[1] in objects[0]['keys']:
         return False
     # creamos la sugerencia
     timeline = UserTimelineSuggest(instance=keys[1], list=keys[0], user=querier)
