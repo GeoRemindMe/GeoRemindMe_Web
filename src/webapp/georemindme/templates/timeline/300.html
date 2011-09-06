@@ -16,22 +16,22 @@
             <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
             <span class="small-text">has creado la sugerencia: </span>
         {% else %}
-            <span class="small-text"><a href="{% url2 in_facebook public_profile obj.username %}" class="black-link">{{obj.username}}</a> sugiere: </span>
+            <span class="small-text"><a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> sugiere: </span>
         {% endif %}
         
 
 
-        <br><a class="black-link readable link" href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance}}</a><br>
+        <br><a class="readable link" href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance}}</a><br>
 
         {% if obj.instance.poi.slug %}
-            <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.poi.slug %}" class="black-link">{{obj.instance.poi.name}}</a></span>
+            <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.poi.slug %}" class="dark-link">{{obj.instance.poi.name}}</a></span>
         {% endif %}
 
 
         <span class="timestamp">  {{obj.created|naturaltime}}</span>  
 
         <span class="action-bar">
-            | <span class="focusInput">Comentar</span> | 
+            | <span class="focusInput hoverlink">Comentar</span> | 
             <a href="{% url2 in_facebook view_suggestion obj.instance.slug %}">Detalles</a>  
             
             
@@ -76,7 +76,7 @@
                         <a href="{% url2 in_facebook public_profile c.username %}">
                             <img class="user-picture" src="{% embedded_avatar c.username %}" alt="user avatar">
                         </a>
-                        <a href="{% url2 in_facebook public_profile c.username %}" class="black-link">
+                        <a href="{% url2 in_facebook public_profile c.username %}" class="dark-link">
                             {{c.username}}
                         </a>: {{c.msg}}<br>
                         <span class="timestamp">{{c.created|naturaltime}}</span> 
@@ -88,7 +88,9 @@
                 
                                     <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
                                         <span class="hoverlink">Ya no me gusta</span> 
+<!--
                                         <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+-->
                                     </span>
                                     
                                     <span class="like" {% if c.has_voted %}style="display:none;"{%endif%} >

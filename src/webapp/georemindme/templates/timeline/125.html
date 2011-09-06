@@ -18,11 +18,11 @@
                 </a>
 <!--
                 <br>
-                <a href="{% url2 in_facebook public_profile obj.instance.user.username %}/"  class="black-link">{{obj.instance.user.username}}</a>:
+                <a href="{% url2 in_facebook public_profile obj.instance.user.username %}/"  class="dark-link">{{obj.instance.user.username}}</a>:
 -->
             </div>
             <div class="timeline-msg">
-                <span class="small-text">Te ha gustado el comentario  <a href="{% url2 in_facebook public_profile obj.instance.user.username %}"  class="black-link">{{obj.instance.instance.user.username}}</a>:</span>
+                <span class="small-text">Te ha gustado el comentario  <a href="{% url2 in_facebook public_profile obj.instance.user.username %}"  class="dark-link">{{obj.instance.instance.user.username}}</a>:</span>
             
         {% else %}
             <div class="avatar">
@@ -32,7 +32,7 @@
             </div>
             <div class="timeline-msg">
                 <span class="small-text">
-                    A <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="black-link">{{obj.instance.user.username}}</a>
+                    A <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">{{obj.instance.user.username}}</a>
                     le gusta el comentario:
                 </span>
                 
@@ -40,7 +40,7 @@
         {% endif %}
                 <br>
                 <em class="comment">
-                    <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="black-link">
+                    <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="dark-link">
                         <img src="{% embedded_avatar obj.instance.instance.user.username %}" title="{{obj.instance.instance.user.username}}">
                     </a>
                     {{obj.instance.instance.msg}}

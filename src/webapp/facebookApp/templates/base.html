@@ -33,9 +33,28 @@
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/jquery.ba-resize.min.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
 
     <script type="text/javascript">
         {% include "urls.html" %}
+        
+        // Menu desplegable "Listas"
+        // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
+        hiConfig = {
+            sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
+            interval: 0, // number = milliseconds for onMouseOver polling interval
+            timeout: 500, // number = milliseconds delay before onMouseOut
+            over: function() {
+                var tmp=$('#dropdown-list-user').width();
+                tmp=52-tmp;
+                $('#dropdown-list-user').css("margin-left",tmp+'px')
+                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+            },
+            out: function() {
+                if($("#dropdown-list-user").hasClass('visible-display')==false)
+                    $(this).find('ul:first').slideUp(400);
+            }
+        }
         
         $(document).ready(function(){
             
@@ -50,7 +69,7 @@
     {% block extra_js %}{%endblock%}
    
 </head>
-<body>
+<body id="facebookApp">
     <div id="wait-mask" style="display:none"></div>
     <div id="container">
 
