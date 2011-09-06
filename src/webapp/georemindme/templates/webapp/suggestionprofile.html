@@ -119,7 +119,12 @@
             <h1>
                 <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/><a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> sugiere:
                 <span>
-                    Le gusta a {{suggestion.counters.votes}} personas
+                    {% if suggestion.counters.votes == 0%}
+                        Aún no ha recibido valoraciones
+                    {% else %}
+                        Le gusta a {{suggestion.counters.votes}} persona{{suggestion.counters.votes|pluralize:"s"}}
+                    {% endif %}
+                    
                 </span>
                 
                 <br>
@@ -142,7 +147,7 @@
             
             <hr>
             <p style="float: left;">
-                 <strong>Lugar</strong>: <a href="{% url2 in_facebook view_place suggestion.poi.slug %}">{{suggestion.poi.name}}</a>
+                 <strong>Lugar</strong>: <a href="{% url2 in_facebook view_place suggestion.poi.slug %}" class="hoverlink">{{suggestion.poi.name}}</a>
             </p>
              <div class="right">
 				<a title="Más detalles sobre: {{suggestion.poi.name}}" href="{% url2 in_facebook view_place suggestion.poi.slug %}">
@@ -156,7 +161,7 @@
             
             <p>
                 <strong>Dirección</strong>:
-                <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="black-link" target="_blank">{{suggestion.poi.address}}</a>
+                <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="dark-link" target="_blank">{{suggestion.poi.address}}</a>
                 
             </p>
             
@@ -203,7 +208,7 @@
                         <span class="likeBtn btn">
                             <span class="like-dislike" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
                                 <span class="dislike">
-                                    <span class="text like-text hoverlink">Ya no me gusta</span> 
+                                    <span class="text hoverlink">Ya no me gusta</span> 
                                 </span>
                                 
                                 <span class="like">
@@ -276,7 +281,7 @@
                                                     
                             <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar"></span>
                             <div style="float:left;width:460px;">
-                                <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
+                                <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="dark-link">{{c.username}}</a>: {{c.msg}}</span>
                                 <span class="timestamp">{{c.created|naturaltime}}</span> 
                                 {% if c.username != user.username %}
                                     <span class="action-bar" style="display:none">
@@ -323,7 +328,7 @@
                                             
                     <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar"></span>
                     <div style="float:left;width:460px">
-                        <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
+                        <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="dark-link">{{c.username}}</a>: {{c.msg}}</span>
                         <span class="timestamp">{{c.created|naturaltime}}</span> 
                         {% if c.username != user.username %}
                             <span class="action-bar" style="display:none">
@@ -357,7 +362,7 @@
             <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
             <span class="user"><img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar"></span>
             <div style="float:left;width:460px">
-                <span class="msg"><a href="{% url2 in_facebook public_profile user.username%}" class="black-link">{{user.username}}</a>: ${msg}</span>
+                <span class="msg"><a href="{% url2 in_facebook public_profile user.username%}" class="dark-link">{{user.username}}</a>: ${msg}</span>
                 <span class="timestamp">0 minutes ago</span>
             </div>
         </li>

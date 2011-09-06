@@ -40,7 +40,7 @@
 
     {% block extra_js %}{%endblock%}
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
-    <script type="text/javascript" src="/static/common/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/common/js/jquery.cookies.2.2.0.min.js"></script>
     <script type="text/javascript">
     
         // Menu desplegable "Listas"
@@ -107,7 +107,7 @@
 	<![endif]-->
 	
 </head>
-<body class="logged">
+<body class="logged" id="webapp">
     <div id="wait-mask" style="display:none"></div>
     <div id="notification-msg" style="display:none"></div>
 	<div id="bg-header" class="orange-gradient">
@@ -126,7 +126,7 @@
 					<ul class="lavaLamp">
 						<li class="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
 						<li class="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
-						<li class="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
+						<li class="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">{% if notifications > 0 %}<strong>Notificaciones</strong>{% else %}Notificaciones{%endif%}</a></li>
 
 					</ul>
 				{% endblock %}

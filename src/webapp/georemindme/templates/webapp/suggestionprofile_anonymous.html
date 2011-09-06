@@ -156,7 +156,7 @@
             
             <p>
                 <strong>Dirección</strong>:
-                <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="black-link" target="_blank">{{suggestion.poi.address}}</a>
+                <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="dark-link" target="_blank">{{suggestion.poi.address}}</a>
                 
             </p>
             
@@ -276,7 +276,7 @@
                                                     
                             <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar"></span>
                             <div style="float:left;width:460px;">
-                                <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
+                                <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="dark-link">{{c.username}}</a>: {{c.msg}}</span>
                                 <span class="timestamp">{{c.created|naturaltime}}</span> 
                                 {% if c.username != user.username %}
                                     <span class="action-bar" style="display:none">
@@ -323,7 +323,7 @@
                                             
                     <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar"></span>
                     <div style="float:left;width:460px">
-                        <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
+                        <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="dark-link">{{c.username}}</a>: {{c.msg}}</span>
                         <span class="timestamp">{{c.created|naturaltime}}</span> 
                         {% if c.username != user.username %}
                             <span class="action-bar" style="display:none">

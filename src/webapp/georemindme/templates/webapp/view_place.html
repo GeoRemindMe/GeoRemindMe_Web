@@ -97,9 +97,9 @@
                         <span class="user"><img src="{% embedded_avatar s.instance.user.username %}" alt="{{s.instance.user.username}} avatar"></span>
                         <div class="timeline-msg">
                             
-                            <a href="{% url2 in_facebook public_profile s.instance.user.username %}" class="black-link">{{s.instance.user.username}}</a> sugiere:<br>
+                            <a href="{% url2 in_facebook public_profile s.instance.user.username %}" class="dark-link">{{s.instance.user.username}}</a> sugiere:<br>
                             
-                            <span class="msg"><a href="{% url2 in_facebook view_suggestion s.instance.slug %}">{{s.instance.name}}</a></span>
+                            <span class="msg"><a href="{% url2 in_facebook view_suggestion s.instance.slug %}" class="hoverlink">{{s.instance.name}}</a></span>
                             <span class="timestamp">{{s.instance.created|naturaltime}} </span>
                             <span class="like-dislike" value="{{s.instance.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion" style="display:none">
                             {% if s.instance.user.username != user.username %}

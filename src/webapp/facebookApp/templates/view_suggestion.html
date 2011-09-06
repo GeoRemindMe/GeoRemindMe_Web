@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% load i18n %}
 {% load tags %}
 
@@ -119,9 +118,14 @@
             <h1>
                 <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/><a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> sugiere:
                 <span>
-                    Le gusta a {{suggestion.counters.votes}} personas
+                    {% if suggestion.counters.votes == 0%}
+                        Aún no ha recibido valoraciones
+                    {% else %}
+                        Le gusta a {{suggestion.counters.votes}} persona{{suggestion.counters.votes|pluralize:"s"}}
+                    {% endif %}
+                    
                 </span>
-            
+                
                 <br>
                 {{suggestion.name}}
             </h1>
@@ -276,7 +280,7 @@
                                                     
                             <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar"></span>
                             <div style="float:left;width:460px;">
-                                <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
+                                <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="dark-link">{{c.username}}</a>: {{c.msg}}</span>
                                 <span class="timestamp">{{c.created|naturaltime}}</span> 
                                 {% if c.username != user.username %}
                                     <span class="action-bar" style="display:none">
@@ -323,7 +327,7 @@
                                             
                     <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar"></span>
                     <div style="float:left;width:460px">
-                        <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="black-link">{{c.username}}</a>: {{c.msg}}</span>
+                        <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="dark-link">{{c.username}}</a>: {{c.msg}}</span>
                         <span class="timestamp">{{c.created|naturaltime}}</span> 
                         {% if c.username != user.username %}
                             <span class="action-bar" style="display:none">
@@ -357,7 +361,7 @@
             <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
             <span class="user"><img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar"></span>
             <div style="float:left;width:460px">
-                <span class="msg"><a href="{% url2 in_facebook public_profile user.username%}" class="black-link">{{user.username}}</a>: ${msg}</span>
+                <span class="msg"><a href="{% url2 in_facebook public_profile user.username%}" class="dark-link">{{user.username}}</a>: ${msg}</span>
                 <span class="timestamp">0 minutes ago</span>
             </div>
         </li>
