@@ -114,11 +114,14 @@
         height:25px;
         float:left;
         margin-right:10px;
+		dislay:block;
     }
     ul#timeline li{
         display:block;
         clear:both;
-        margin:7px 0;
+        margin:5px 0;
+		border-bottom:1px solid #CCC;
+		padding-bottom: 6px;
     }
     iframe{ 
         border:0 none;
@@ -249,7 +252,7 @@
 		
         
         <div id="activity_content">
-            <a href="#" onclick="javascript:refreshTimeline()">Refrescar</a>
+            <a href="#" onclick="javascript:refreshTimeline()" style="float:right;margin-bottom: 5px;">Refrescar</a>
             <ul id="timeline">
             </ul>         
 		</div>
@@ -315,7 +318,7 @@
     </div>
     <div id="msg-125"  type="text/x-jquery-tmpl" style="display:none">
         <li>
-            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">A ${user} le gusta un comentario | UT <br>
+            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">A ${user} le gusta un comentario <br>
             <abbr class="timeago" title="${created}">${created}</abbr>
         </li>
     </div>
