@@ -99,6 +99,7 @@ def prefetch_refprops(entities, *props):
     """
     if entities is None:
         return []
+    entities = filter(None, entities)
     fields = [(entity, prop) for entity in entities for prop in props]
     ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields if x is not None]
     ref_keys = filter(None, ref_keys)
