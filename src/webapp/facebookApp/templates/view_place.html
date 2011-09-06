@@ -83,7 +83,7 @@
                 {%if user.username %}
                     <div class="clear" id="action-bar">
                         <ul>
-                            <li class="suggestion"><a href="{%url2 in_facebook add_suggestion %}?{{place.location}}" class="hoverlink">Nueva sugerencia a este sitio</a></li>
+                            <li class="suggestion"><a href="{%url2 in_facebook add_suggestion %}?placelocat={{place.location}}&placename={{place.name}}" class="hoverlink">Nueva sugerencia a este sitio</a></li>
                             <li id="print-icon" class="hoverlink">Imprimir sugerencias</li>
                         </ul>
                     </div>

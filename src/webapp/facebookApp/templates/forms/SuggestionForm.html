@@ -79,7 +79,11 @@
             {%endcomment%}
             <div id="address-container">
                 <div id="address-form">
-                    <input type="text" id="address" name="address"  placeholder="Introduce el sitio, por ej: Mirador de San Nicolás">
+						{% if request.GET.placename %}
+                            <input type="text" id="address" name="address"  value="{{request.GET.placename}}">
+                        {% else %}
+                            <input type="text" id="address" name="address"  placeholder="Introduce el sitio, por ej: Mirador de San Nicolás">
+                        {% endif %}
                 </div>
                 {%comment%}
                 <div id="place-form">

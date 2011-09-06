@@ -19,6 +19,20 @@
         
         $(document).ready(function(){
             
+            // when we are coming from view_place to add a suggestion
+            // in that point, we create a default marker in that point
+            {% if request.GET.placelocat %}
+					
+					string = new String('{{request.GET.placelocat}}');
+					var locat = string.split(',');
+					
+					default_marker_X = parseFloat(locat[0]);
+					default_marker_Y = parseFloat(locat[1]);
+					
+            {% endif %}
+            
+            
+            
            
             //Añadimos el comportamiento
             $('span.btn.dropDownBtn').menuList({
