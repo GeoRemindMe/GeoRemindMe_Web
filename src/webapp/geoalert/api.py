@@ -29,7 +29,9 @@ def get_suggestions_dict(querier, list_id=None):
         list = db.get(list_key)
         if list is not None and len(list.keys):
             suggs_cleaned = [s for s in suggs_cleaned if not s.key() in list.keys]
-        raise Exception(list.usertimelinesuggest_set())
+        from geouser.models_acc import UserTimelineSuggest
+        keys_suggested = [UserTimelineSuggest.instance.get_value_for_datastore(timeline) for timeline in list.usertimelinesuggest_set]
+        suggs_cleaned = [s for s in suggs_cleaned if not s.key() in keys_suggested]
     return suggs_cleaned
 
 
