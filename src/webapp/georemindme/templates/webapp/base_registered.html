@@ -118,7 +118,7 @@
 		
         <div id="nav-menu">
 			{% if user.username %}
-				<a href="{% url add_suggestion %}" id="add-suggestion-btn"><img src="/static/common/img/add.png">Añadir sugerencia</a>
+				<a href="{% url add_suggestion %}" id="add-suggestion-btn"><img src="/static/common/img/plus.png">Añadir sugerencia</a>
 				{% block nav %}
 					<ul class="lavaLamp">
 						<li class="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
@@ -159,17 +159,7 @@
 		</div>
 	</div>
 	
-    <footer id="footer" class="container">
-		<div class="footer-links">
-			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> 
-<!--
-            · <a href="#">Francés</a> · <a href="#">Wookiee</a>
--->
-		</div>
-		<div class="footer-links right-links">
-			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
-		</div>
-	</footer>
+    
     <div id="templates"></div>
 </body>
 </html>

@@ -8,16 +8,19 @@
 				<hr>
 				{% block extraContent %} {% endblock %}
 				
-				<p><em>Sugerencias cerca tuya</em>: (Granada) <span class="hoverlink">Cambiar</span></p>
-				<ul id="close-suggestions">
-<!--
-					<li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Probar una hamburguesa en el Brasilia</a></li>
-					<li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Tomar un heladito de café con turrón en Los Italianos, ¡preferentemente en tarrina!</a></li>
-					<li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Ver un atardecer desde el mirador de San Nicolás</a></li>
--->
-                    <li><img src="/static/webapp/img/loader2.gif" style="width:auto"/></li>
-				</ul>
-				<div id="csrfmiddleware" style="display:none">{%csrf_token%}</div>
+                <div class="black-box">
+                    <p><em>Sugerencias cerca tuya</em>: (Granada) <span class="hoverlink">Cambiar</span></p>
+                    <ul id="close-suggestions">
+    <!--
+                        <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Probar una hamburguesa en el Brasilia</a></li>
+                        <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Tomar un heladito de café con turrón en Los Italianos, ¡preferentemente en tarrina!</a></li>
+                        <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Ver un atardecer desde el mirador de San Nicolás</a></li>
+    -->
+                        <li><img src="/static/webapp/img/loader2.gif" style="width:auto"/></li>
+                    </ul>
+                    <div id="csrfmiddleware" style="display:none">{%csrf_token%}</div>
+                    <p><span class="hoverlink view-more">Ver más</span></p>
+                </div>
 				<script type="text/javascript">
 					$.ajax({
 						type: "POST",
@@ -39,15 +42,28 @@
 					});
 				</script>
 				
-				<p><span class="hoverlink view-more">Ver más</span></p>
-				<hr>
-				<p><em>Sugerencias más relevantes</em>:</p>
-				<ul id="trending-suggestions">
-                    
-					<li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Probar una hamburguesa en el Brasilia</a></li>
-					<li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Tomar un heladito de café con turrón en Los Italianos, ¡preferentemente en tarrina!</a></li>
-					<li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Ver un atardecer desde el mirador de San Nicolás</a></li>
-				</ul>
-				<p><span class="hoverlink view-more">Ver más</span></p>
 				
+				<hr>
+				<div class="black-box">
+                    <p><em>Sugerencias más relevantes</em>:</p>
+                    <ul id="trending-suggestions">
+                        
+                        <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Probar una hamburguesa en el Brasilia</a></li>
+                        <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Tomar un heladito de café con turrón en Los Italianos, ¡preferentemente en tarrina!</a></li>
+                        <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Ver un atardecer desde el mirador de San Nicolás</a></li>
+                    </ul>
+                    <p><span class="hoverlink view-more">Ver más</span></p>
+                </div>
+                <hr>
+                <footer id="footer" class="container">
+                    <div class="footer-links">
+                        Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> 
+            <!--
+                        · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+            -->
+                    </div>
+                    <div class="footer-links">
+                        <a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
+                    </div>
+                </footer>
 			</div>
