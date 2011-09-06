@@ -48,8 +48,11 @@ def send_suggestion_to_list(querier, list_id, event_id):
     # la sugerencia puede ya estar en la lista
     if objects[0]['user'] == querier.key():
         return False
-    if keys[1] in objects[0]['keys']:
-        return False
+    try:
+        if keys[1] in objects[0]['keys']:
+            return False
+    except:
+        pass
     # creamos la sugerencia
     timeline = UserTimelineSuggest(instance=keys[1], list=keys[0], user=querier)
     timeline.put()
