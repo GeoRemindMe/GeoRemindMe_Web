@@ -1465,11 +1465,12 @@ div#right-col #profile table{
 
 }
 div.waiting{
-    background-color: #FF8C26;
-    background-image: url("/static/facebookApp/img/spinning-icons/wait_orange.gif");
-    background-position: 10px 4px;
+    
+    background-color:#E4E4E4;
+    background-image: url("/static/facebookApp/img/spinning-icons/wait_gray.gif");
+    background-position: 10px 2px;
     background-repeat: no-repeat;
-    color: white;
+    color: black;
 }
 #close-suggestions img,
 #trending-suggestions img{
@@ -1649,6 +1650,10 @@ a.small-link,ul#chronology .suggestionPlace a {
 
 #view-suggestion div.suggestion h1 {
     line-height:1.5em;
+    margin: 0;
+    padding: 0;
+    background:inherit;
+    color:black
 }
 
 #view-suggestion span.likeBtn span.hoverlink {

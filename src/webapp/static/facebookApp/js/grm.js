@@ -729,6 +729,7 @@ function showMessage(txt,msgClass){
     if($('#notification-msg').css("display")=="none"){
         $('#notification-msg').html(txt)
         $('#notification-msg').addClass(msgClass)
+        $('#notification-msg').css('top',$(window).scrollTop()+'px');
         $('#notification-msg').fadeIn('slow').delay(3000).fadeOut('slow')
     }
 }
