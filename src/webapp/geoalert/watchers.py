@@ -73,7 +73,8 @@ def new_suggestion(sender, **kwargs):
     timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=300, _vis=sender._get_visibility())
     p = db.put_async([timeline, timelinePublic])
     sender.user.counters.set_suggested()
-    sender.insert_ft()
+    if sender._is_public():
+        sender.insert_ft()
     p.get_result()
 suggestion_new.connect(new_suggestion)
 

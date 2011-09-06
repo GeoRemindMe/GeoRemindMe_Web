@@ -513,25 +513,26 @@ class Suggestion(Event, Visibility, Taggable):
             En caso de fallo, se guarda el punto en _Do_later_ft,
             para intentar añadirlo luego
         """
-        from mapsServices.fusiontable import ftclient, sqlbuilder
-        try:
-            ftclient = ftclient.OAuthFTClient()
-            from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
-            from urllib import quote_plus
-            name = quote_plus(self.name.strip().encode('utf8'))
-            return ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],
-                                                    {'name': name,
-                                                    'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
-                                                    'sug_id': self.id,
-                                                    'modified': self.created.__str__(),
-                                                     }
-                                                   )
-                           )
-        except:  # Si falla, se guarda para intentar añadir mas tarde
-            raise
-            from georemindme.models_utils import _Do_later_ft
-            later = _Do_later_ft(instance_key=self.key())
-            later.put()
+        if self._is_public():
+            from mapsServices.fusiontable import ftclient, sqlbuilder
+            try:
+                ftclient = ftclient.OAuthFTClient()
+                from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
+                from urllib import quote_plus
+                name = quote_plus(self.name.strip().encode('utf8'))
+                return ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],
+                                                        {'name': name,
+                                                        'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
+                                                        'sug_id': self.id,
+                                                        'modified': self.created.__str__(),
+                                                         }
+                                                       )
+                               )
+            except:  # Si falla, se guarda para intentar añadir mas tarde
+                raise
+                from georemindme.models_utils import _Do_later_ft
+                later = _Do_later_ft(instance_key=self.key())
+                later.put()
     
     def __str__(self):
         return unicode(self.name).encode('utf-8')

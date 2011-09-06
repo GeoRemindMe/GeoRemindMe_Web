@@ -94,7 +94,8 @@ class ListHelper(object):
         if async:
             indexes = db.GqlQuery('SELECT __key__ FROM ListFollowersIndex WHERE keys = :1', user.key())
             return indexes.run()
-        indexes = q.Run()
+        c = indexes.Count()
+        indexes = q.Get(c)
         from georemindme.funcs import fetch_parentsKeys
         lists = fetch_parentsKeys(indexes)
         return [list.to_dict(resolve=resolve) for list in lists if list.active]
@@ -102,7 +103,8 @@ class ListHelper(object):
     def load_list_user_following_by_async(self, lists_async, resolve=False):
         from georemindme.funcs import fetch_parentsKeys
         lists = fetch_parentsKeys(lists_async)
-        return [list.to_dict(resolve=resolve) for list in lists if list.active]
+        return filter(lambda x: x.active, lists)
+        # return [list.to_dict(resolve=resolve) for list in lists if list.active]
 
     def get_shared_list(self, user):
         '''
@@ -129,7 +131,7 @@ class ListHelper(object):
             p = PagedQuery(q, id = query_id)
             from georemindme.funcs import prefetch_refprops
             lists = prefetch_refprops(p.fetch_page(page), self._klass.user)
-            return [p.id, lists, p.page_count()]
+            return [p.id, lists]
         else:
             return q.run()
         
