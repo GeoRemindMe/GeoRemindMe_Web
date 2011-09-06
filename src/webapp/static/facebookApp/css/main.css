@@ -39,6 +39,9 @@ input{
 }
 
 #view-suggestion span.likeBtn span.hoverlink{
+    text-decoration:none;
+}
+#view-suggestion span.likeBtn span.hoverlink:hover{
     text-decoration:underline;
 }
 
@@ -2916,8 +2919,12 @@ input{
     
     #view-suggestion .suggestion hr{
 		border-bottom: 1px solid white;
-		color: #DDDDDD;
-		margin: 1em 0;
+        clear: both;
+        color: #DDDDDD;
+        display: block;
+        float: left;
+        margin: 0.5em 0 1em;
+        width: 100%;
     }
     
     #view-suggestion span.likeBtn span.counter{

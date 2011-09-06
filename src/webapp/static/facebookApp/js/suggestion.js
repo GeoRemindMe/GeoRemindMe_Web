@@ -292,6 +292,24 @@ function loadGMaps(defaultX,defaultY,canvas) {
     
     prepareAutocomplete();
     
+    
+    // DEFAULT MARKER
+    
+    if( (typeof default_marker_X != "undefined") && (typeof default_marker_Y != "undefined") ){
+			
+			var location = new google.maps.LatLng(default_marker_X, default_marker_Y);
+			
+			if (typeof(GRM.marker) == "undefined")
+			{
+				GRM['marker'] = createMarker(default_marker_X, default_marker_Y);
+			}
+			else
+				GRM.marker.setPosition(location);
+				
+			map.panTo(location);
+
+		}
+    
 
 }
 

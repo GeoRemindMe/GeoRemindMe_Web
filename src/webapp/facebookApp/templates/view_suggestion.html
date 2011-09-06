@@ -146,7 +146,7 @@
             
             <hr>
             <p style="float: left;">
-                 <strong>Lugar</strong>: <a href="{% url2 in_facebook view_place suggestion.poi.slug %}">{{suggestion.poi.name}}</a>
+                 <strong>Lugar</strong>: <a href="{% url2 in_facebook view_place suggestion.poi.slug %}" class="hoverlink">{{suggestion.poi.name}}</a>
             </p>
              <div class="right">
 				<a title="Más detalles sobre: {{suggestion.poi.name}}" href="{% url2 in_facebook view_place suggestion.poi.slug %}">
@@ -160,7 +160,7 @@
             
             <p>
                 <strong>Dirección</strong>:
-                <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="black-link" target="_blank">{{suggestion.poi.address}}</a>
+                <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="dark-link" target="_blank">{{suggestion.poi.address}}</a>
                 
             </p>
             
@@ -207,7 +207,7 @@
                         <span class="likeBtn btn">
                             <span class="like-dislike" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
                                 <span class="dislike">
-                                    <span class="text like-text hoverlink">Ya no me gusta</span> 
+                                    <span class="text hoverlink">Ya no me gusta</span> 
                                 </span>
                                 
                                 <span class="like">
@@ -288,7 +288,9 @@
                                         <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
                                             <span class="dislike">
                                                 <span class="hoverlink">Ya no me gusta</span> 
+<!--
                                                 <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+-->
                                             </span>
                                             
                                             <span class="like">
@@ -335,7 +337,9 @@
                                 <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
                                     <span class="dislike">
                                         <span class="hoverlink">Ya no me gusta</span> 
+<!--
                                         <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+-->
                                     </span>
                                     
                                     <span class="like">
