@@ -282,16 +282,18 @@ def user_suggestions(request, template='webapp/suggestions.html'):
     from geolist.models import ListSuggestion
     counters = request.user.counters_async()
     lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
-    # TODO : cambiar a busquedas async
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     from api import get_suggestions_dict
     suggestions = get_suggestions_dict(request.user)
     suggestions = [db.model_from_protobuf(s.ToPb()) for s in suggestions]
-    from georemindme.funcs import prefetch_refprops
+    from georemindme.funcs import prefetch_refprops, prefetch_refList
     suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
     # combinar listas
-    lists = [l.to_dict(resolve=True) for l in lists]
+    lists = [l for l in lists]
     lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=True))
+    # construir un diccionario con todas las keys resueltas y usuarios
+    instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
+    lists = [l.to_dict(resolve=True, instances=instances) for l in lists]
     return  render_to_response(template, {
                                           'suggestions': ['', suggestions],
                                           'counters': counters.next(),

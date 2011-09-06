@@ -71,11 +71,10 @@ class List(db.polymodel.PolyModel, HookedModel):
             else:
                 list_modified.send(sender=self)
 
-    def to_dict(self, resolve=False):
+    def to_dict(self, resolve=False, instances=None):
             dict = {'id': self.id,
                     'name': self.name,
                     'description': self.description,
-                    'user': self.user,
                     'modified': self.modified if self.modified is not None else 0,
                     'created': self.created if self.created is not None else 0,
                     'tags': self.tags if hasattr(self, 'tags') else None,
@@ -88,7 +87,13 @@ class List(db.polymodel.PolyModel, HookedModel):
                     'short_url': self.short_url,
                     }
             if resolve:
-                dict['instances'] = db.get(self.keys)
+                if instances is not None:
+                    dict['instances'] = [instances[k] for k in self.keys]
+                    dict['user'] = instances[ListSuggestion.user.get_value_for_datastore(self)]
+                else:
+                    dict['instances'] = db.get(self.keys)
+            else:
+                dict['user'] = self.username
             return dict
 
     def to_json(self):

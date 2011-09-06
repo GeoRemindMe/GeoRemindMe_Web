@@ -118,6 +118,14 @@ def prefetch_refpropsEntity(entities, *props):
     return ref_entities
 
 
+def prefetch_refList(lists, users=[]):
+    instances_keys = [k for l in lists for k in l.keys]
+    instances_keys.extend(users)
+    instances_keys = filter(None, instances_keys)
+    instances = dict((x.key(), x) for x in db.get(set(instances_keys)))
+    return instances
+
+
 def single_prefetch_refprops(entity, *props):
     # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
     """
