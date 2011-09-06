@@ -157,6 +157,12 @@ indexes:
   - name: modified
     direction: desc
 
+- kind: UserTimelineFollowers
+  properties:
+  - name: followers
+  - name: created
+    direction: desc
+
 - kind: UserTimelineFollowersIndex
   properties:
   - name: followers
@@ -183,6 +189,19 @@ indexes:
   ancestor: yes
   properties:
   - name: created
+    direction: desc
+
+- kind: UserTimelineSystem
+  properties:
+  - name: user
+  - name: modified
+    direction: desc
+
+- kind: UserTimelineSystem
+  properties:
+  - name: user
+  - name: visible
+  - name: modified
     direction: desc
 
 - kind: _Deleted_Alert

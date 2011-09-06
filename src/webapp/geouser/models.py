@@ -139,19 +139,23 @@ class User(polymodel.PolyModel, HookedModel):
 
     def get_activity_timeline(self, query_id=None):
         from models_acc import UserTimelineSystem, UserTimeline, UserTimelineFollowersIndex
-        from georemindme.funcs import prefetch_refprops, fetch_parents
+        from georemindme.funcs import prefetch_refprops, fetch_parents, fetch_parentsKeys
         from geovote.models import Comment, Vote
         from geoalert.models import Event
         from geolist.models import List
         from google.appengine.datastore import datastore_query
         # definir las consultas
-        query_chrono = UserTimelineFollowersIndex.all().filter('followers =', self.key()).order('-created')
+        from google.appengine.api import datastore
+        query_chrono = datastore.Query('UserTimelineFollowersIndex', {'followers =': self.key()})
+        query_chrono.Order(('created', datastore.Query.DESCENDING))
+        #query_chrono = UserTimelineFollowersIndex.all().filter('followers =', self.key()).order('-created')
         #query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
         # recuperar cursores
         if query_id is not None and len(query_id)>=2:
             cursor_chronology = query_id[0]
-            query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology)
+            query_chrono.__cursor = cursor_chronology
+            #query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology)
             cursor_activity = query_id[1]
             query_activity = query_activity.with_cursor(start_cursor=cursor_activity)
         else:
@@ -162,25 +166,25 @@ class User(polymodel.PolyModel, HookedModel):
         timeline_chrono = []
         activity_async = query_activity.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
         for activity_timeline in activity_async:
-            chrono_async = query_chrono.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE-len(timeline)))
-            for chrono in chrono_async:
+            chronos = query_chrono.Run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE-(len(timeline)+len(timeline_chrono))))
+            for chrono in chronos:
                 if len(timeline) + len(timeline_chrono) >= TIMELINE_PAGE_SIZE:
                         break
-                if chrono is not None and chrono.created > activity_timeline.modified:
+                if chrono is not None and chrono['created'] > activity_timeline.modified:
                     timeline_chrono.append(chrono)
-                    cursor_chronology = query_chrono.cursor()
+                    cursor_chronology = query_chrono.GetCursor()
                 else:
                     break
             if len(timeline) + len(timeline_chrono) >= TIMELINE_PAGE_SIZE:
                 break
             timeline.append(activity_timeline)
-            query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology) # avanzamos la consulta hasta el ultimo chronology añadido
+            query_chrono.__cursor = cursor_chronology
+            #query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology) # avanzamos la consulta hasta el ultimo chronology añadido
         # generar timeline
-        timeline_chrono = fetch_parents(timeline_chrono)
+        timeline_chrono = fetch_parentsKeys(timeline_chrono)
         timeline = prefetch_refprops(timeline, UserTimelineSystem.user)
         timeline_chrono = prefetch_refprops(timeline_chrono, UserTimeline.instance, UserTimeline.user)
         timeline.extend(timeline_chrono)
-        
         timeline = [{
                     'id': int(activity_timeline.id), 
                     'created': activity_timeline.created,
@@ -196,7 +200,10 @@ class User(polymodel.PolyModel, HookedModel):
                     } for activity_timeline in timeline]
         from operator import itemgetter
         timeline_sorted = sorted(timeline, key=itemgetter('modified'), reverse=True)
-        chronology = [[cursor_chronology, query_activity.cursor()], timeline_sorted] 
+        chronology = [[cursor_chronology.to_websafe_string(), 
+                       query_activity.cursor()
+                       ], 
+                      timeline_sorted] 
         return chronology
 
     def get_notifications_timeline(self, query_id=None):
@@ -212,6 +219,7 @@ class User(polymodel.PolyModel, HookedModel):
             return db.get(set(ref_keys))
         from google.appengine.api import datastore
         from models_utils import _Notification
+        from models_acc import UserTimeline
         if query_id is None:
             query = datastore.Query(kind='_Notification', filters={'owner =': self.key()})
         if query_id is not None:
@@ -219,7 +227,10 @@ class User(polymodel.PolyModel, HookedModel):
         query.Order(('_created', datastore.Query.DESCENDING))
         timelines = query.Get(TIMELINE_PAGE_SIZE)
         timelines = prefetch_timeline(timelines)
-        return [query.GetCursor(), [{'id': timeline.id, 'created': timeline.created,
+        from georemindme.funcs import prefetch_refprops
+        timelines = prefetch_refprops(timelines, UserTimeline.user, UserTimeline.instance)
+        return [query.GetCursor().to_websafe_string(), 
+                        [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username,
                         'msg_id': timeline.msg_id,

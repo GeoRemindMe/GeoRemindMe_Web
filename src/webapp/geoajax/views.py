@@ -741,8 +741,11 @@ def suggested_list_suggestion(request):
 def get_suggestions(request):
     from geoalert import api
     suggs = api.get_suggestions_dict(request.user)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps([{'id': s.key().id(),
                                           'name': s['name'],
                                           'description': s['description'],
                                           'created': s['created'],
-                                         } for s in suggs]), mimetype='application/json')
+                                         } for s in suggs],
+                                         cls=JSONEncoder
+                                         ), mimetype='application/json')
