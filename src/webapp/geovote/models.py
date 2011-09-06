@@ -91,8 +91,9 @@ class CommentHelper(object):
         q.Order(('created', datastore.Query.DESCENDING))
         p = PagedQuery(q, id = query_id, page_size=7)
         if async:
+            from google.appengine.datastore import datastore_query
             q = Comment.all().filter('instance =', instance).filter('deleted =', False).order('-created')
-            return p.id, q.run()
+            return p.id, q.run(config=datastore_query.QueryOptions(limit=7))
         comments = p.fetch_page(page)
         from georemindme.funcs import prefetch_refpropsEntity
         prefetch = prefetch_refpropsEntity(comments, 'user')
@@ -111,8 +112,6 @@ class CommentHelper(object):
         comments_objects = []
         for comment in comments_async:
             comments_objects.append(comment)
-            if len(comments_objects) > 7:
-                    break
         from georemindme.funcs import prefetch_refprops
         comments_objects = prefetch_refprops(comments_objects, Comment.user, Comment.instance)
         for comment in comments_objects:

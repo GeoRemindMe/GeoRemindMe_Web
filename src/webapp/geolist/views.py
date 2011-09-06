@@ -399,6 +399,10 @@ def get_all_shared_list_suggestion(request):
 @login_required
 def view_list(request, id, template='webapp/view_list.html'):
     def load_suggestions_async(suggestions):
+        suggestions = suggestions.get_result()
+        from georemindme.funcs import prefetch_refprops
+        from geoalert.models import Suggestion
+        suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
         suggestions_loaded = []
         for suggestion in suggestions:
             suggestions_loaded.append({
@@ -407,25 +411,26 @@ def view_list(request, id, template='webapp/view_list.html'):
                                     'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
                                    }
                                   )
-            if len(suggestions_loaded) > 7:
-                    break
-        from georemindme.funcs import prefetch_refprops
-        from geoalert.models import Suggestion
-        suggestions = prefetch_refprops(suggestions, Suggestion.user)
         return suggestions_loaded
-    try:
-        list = ListSuggestion.objects.get_by_id_querier(id, request.user)
-    except:
-        raise Http404
+   
+    list = ListSuggestion.objects.get_by_id_querier(id, request.user)
     if list is None:
         raise Http404
     from google.appengine.ext import db
     from geoalert.models import Event
-    suggestions_async = db.get(list.keys)
+    from geovote.models import Vote, Comment
+    suggestions_async = db.get_async(list.keys)
+    if 'print' in request.GET:
+        vote_counter = Vote.objects.get_vote_counter(list.key())
+        return render_to_response('print/view_list.html',
+                                {'list': list,
+                                 'suggestions': load_suggestions_async(suggestions_async),
+                                 'vote_counter': vote_counter,
+                                },
+                                context_instance=RequestContext(request)
+                              )
     from geovote.api import get_comments
     query_id, comments_async = get_comments(request.user, list.id, 'List', async=True)
-    from geovote.models import Vote
-    from geovote.models import Comment
     has_voted = Vote.objects.user_has_voted(request.user, list.key())
     vote_counter = Vote.objects.get_vote_counter(list.key())
     #comments = get_comments_list(request.user, list.id)
