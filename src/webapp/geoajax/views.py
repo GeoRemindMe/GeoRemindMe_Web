@@ -459,8 +459,8 @@ def add_list_suggestion(request):
     list_id = request.POST.get('list_id', None)
     list_name = request.POST.get('name', None)
     list_description = request.POST.get('description', None)
-    list_instances = request.POST.getlist('suggestions[]')
-    list_instances_del = request.POST.getlist('suggestions_del[]')
+    list_instances = request.POST.getlist('suggestions')
+    list_instances_del = request.POST.getlist('suggestions_del')
     list_vis = request.POST.get('visibility', None)
     if not 'tags' in request.POST:
         list_tags = None
