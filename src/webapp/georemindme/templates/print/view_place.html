@@ -1,4 +1,39 @@
-Vista de impresión de las sugerencias en un sitio
-<p>{{place}}</p>
-<p>{{suggestions}}</p>
-<p>{{vote_counter}}</p>
+<!DOCTYPE HTML>
+<html lang="ru-RU">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="/static/webapp/style/print.css" type="text/css">
+	
+	<style type="text/css">
+		.container {
+			width: 960px;
+			margin: 0 auto;
+		}
+		
+		h1 {
+			text-align:center;
+		}
+		
+		header {
+			border-bottom: 2px solid #DDDDDD;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<header>
+			<img src="/static/webapp/img/logo2.png" alt="GeoRemindMe" id="logo">
+			<h1>{{place.name}}</h1>
+		</header>
+		<a href="http://maps.google.com/maps?q={{place.location}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=14&size=270x220&maptype=roadmap
+&markers=color:red%7C{{place.location}}&sensor=false"></a>
+		<p>{{place.address}}</p>
+		<p>{{suggestions}}</p>
+		<p>{{vote_counter}}</p>
+
+		{{place.location}}
+	</div>
+	
+</body>
+</html>
