@@ -25,8 +25,8 @@
         <span class="timestamp">  {{obj.created|naturaltime}}</span>  
 
         <span class="action-bar">
-            | <span class="focusInput hoverlink">Comentar</span> | 
-            <a href="{% url2 in_facebook view_list obj.instance.id %}" class="hoverlink">Ver lista</a>  
+            | <span class="focusInput hoverlink comment">Comentar</span> | 
+            <a href="{% url2 in_facebook view_list obj.instance.id %}" class="hoverlink details">Ver lista</a>  
             
             {% if not obj.is_private  and obj.instance.user.username != request.user.username %}            
                 | 

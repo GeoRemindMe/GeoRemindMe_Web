@@ -181,9 +181,9 @@ table {
     width: 1100px;
 */
     z-index: 2;
-    box-shadow:inset -1px -5px 5px rgba(255, 255, 255, 0.25);
-    -moz-box-shadow:inset -1px -5px 5px rgba(255, 255, 255, 0.25);
-    -webkit-box-shadow:inset -1px -5px 5px rgba(255, 255, 255, 0.25);
+    box-shadow:-5px -5px 5px rgba(10, 92, 181, 0.55) inset;
+    -moz-box-shadow:-5px -5px 5px rgba(10, 92, 181, 0.55) inset;
+    -webkit-box-shadow:-5px -5px 5px rgba(10, 92, 181, 0.55) inset;
 }
 .orange-gradient{
 
@@ -963,6 +963,7 @@ div#left-col ul#friends-to-follow li:after{
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     margin-bottom: 0.5em;
+    min-height:50px;
 }
 #right-col #view-suggestion h1:after{
 	clear: both;
@@ -1797,3 +1798,4 @@ div#content {
     text-align: left;
     width: 510px;
 }
+

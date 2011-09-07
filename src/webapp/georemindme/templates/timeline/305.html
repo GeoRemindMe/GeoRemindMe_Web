@@ -1,4 +1,5 @@
 {% load tags %}
+{% load tags %}
 
 {% comment %} 
     Mensaje nº 305:
@@ -48,7 +49,7 @@
                     <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="dark-link link">{{obj.instance.instance}}</a>
                 </div>
                 <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}" class="dark-link">{{obj.instance.instance.poi.name}}</a></span>
-                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}">Detalles</a></span>
+                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="details">Ver sugerencia</a></span>
             </div>
     {% endif %}
 </li>

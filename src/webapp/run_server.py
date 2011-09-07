@@ -7,7 +7,7 @@ REPO=~/workspace/GeoRemindMe_Web
 
 #Me falla si no tengo la 2.5 instalada
 python2.5 $SERV --datastore_path=$REPO/src/fixtures/dev_appserver.datastore $REPO/src/webapp/
-#python2.6 ~/Apps/google_appengine/dev_appserver.py --datastore_path=~/workspace/GeoRemindMe_Web/src/fixtures/dev_appserver.datastore ~/workspace/GeoRemindMe_Web/src/webapp/
+#python2.6 ~/Apps/google_appengine/dev_appserver.py --datastore_path=/home/hhkaos/workspace/GeoRemindMe_Web/src/fixtures/dev_appserver.datastore ~/workspace/GeoRemindMe_Web/src/webapp/
 
 read
 

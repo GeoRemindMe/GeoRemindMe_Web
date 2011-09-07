@@ -39,7 +39,7 @@
             {% else %}
                 la sugerencia
             {% endif %}
-            : <a href="{% url2 in_facebook view_suggestion obj.instance.instance.id %}" class="small-link link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
+            : <a href="{% url2 in_facebook view_suggestion obj.instance.instance.id %}" class="small-link dark-link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
             
             
             <span class="timestamp">  {{obj.created|naturaltime}}</span>
@@ -59,6 +59,7 @@
                         </span>
                     </span>
                 {% endif %}
+                | <a href="{% url2 in_facebook view_suggestion obj.instance.instance.id %}" class="details">Ver sugerencia</a> 
             </span>
         </div>
 </li>
