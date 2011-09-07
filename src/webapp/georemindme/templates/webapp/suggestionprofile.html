@@ -110,6 +110,8 @@
 		function onLiClick(obj){
             asdasd=$(obj);
             console.log("Enviamos la petición para añadir la sugerencia a la lista "+$(obj).attr('value'));
+            var checkbox=$(obj).find("span.name");
+
             if($(checkbox).hasClass("checked")){
                 $(checkbox).removeClass("checked");
             }
