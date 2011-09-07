@@ -305,8 +305,12 @@ def user_suggestions(request, template='webapp/suggestions.html'):
     lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     from api import get_suggestions_dict
-    suggestions = get_suggestions_dict(request.user)
-    suggestions = [db.model_from_protobuf(s.ToPb()) for s in suggestions]
+    suggestions_entity = get_suggestions_dict(request.user)
+    suggestions = []
+    for s in suggestions_entity: # convertir entidades
+        sug = db.model_from_protobuf(s.ToPb())
+        setattr(sug, 'lists', [])
+        suggestions.append(sug)
     from georemindme.funcs import prefetch_refprops, prefetch_refList
     suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
     # combinar listas
@@ -315,6 +319,8 @@ def user_suggestions(request, template='webapp/suggestions.html'):
     # construir un diccionario con todas las keys resueltas y usuarios
     instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
     lists = [l.to_dict(resolve=True, instances=instances) for l in lists]
+    # añadimos las listas
+    [s.lists.append(l['name']) for l in lists for s in suggestions if s.id in l['keys']]
     return  render_to_response(template, {
                                           'suggestions': ['', suggestions],
                                           'counters': counters.next(),

@@ -64,11 +64,10 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         if list is not None:
             try:
                 list.update(querier=request.user, instances=instances, tags=tags, vis=vis)
-                return list
             except:
-                from django.http import HttpResponseForbidden
-                return HttpResponseForbidden
-    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del, vis=vis)
+                return False
+        else:
+            list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del, vis=vis)
     return list
 
 @login_required

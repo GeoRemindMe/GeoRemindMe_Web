@@ -370,9 +370,9 @@ class Suggestion(Event, Visibility, Taggable):
             index.put()
             return True
         index = db.GqlQuery('SELECT __key__ FROM SuggestionFollowersIndex WHERE ancestor IS :1 AND keys = :2', self.key(), user.key()).get()
-        if index is not None:
+        if index is not None: # ya es seguidor
             a = AlertSuggestion.objects.get_by_sugid_user(self.id, user)
-            if a is None:
+            if a is None: # ¿por algun motivo no la tiene en la mochila?
                 trans = True
             else:
                 return True
@@ -468,7 +468,7 @@ class Suggestion(Event, Visibility, Taggable):
     def has_follower(self, user):
         if not user.is_authenticated():
             return False
-        if SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get() is not None:
+        if db.GqlQuery('SELECT __key__ FROM SuggestionFollowersIndex WHERE ancestor IS :1 AND keys = :2', self.key(), user.key()).get() is not None:
             return True
         return False   
     
