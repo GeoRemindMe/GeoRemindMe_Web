@@ -591,7 +591,7 @@ input{
         background-image: url('/static/facebookApp/img/delete.png');
         float:right;
         cursor:pointer;
-        margin-right: -7px;
+        margin-right: -72px;
 /*
         margin-top:0.5em;
 */
@@ -840,7 +840,7 @@ input{
                 }
                 ul#chronology li div.timeline-msg{
                     float:left;
-                    width:475px;
+                    width:410px;
                     border-bottom:0;
                 }
                 ul#chronology div.comment-box ul li .timestamp,
@@ -1974,7 +1974,6 @@ input{
 		border: 1px dotted #555555;
 		float: right;
 		font-size: 0.9em;
-		margin-top: 1em;
 		padding: 0.5em;
 		color:#777;
     }
@@ -1995,7 +1994,7 @@ input{
 		width: 30px;
     }
     .not-mine{
-		background-color:#F4F4F4;
+		background-color:#EEEEEE;
     }
     .mine{
     }
@@ -2097,9 +2096,9 @@ input{
 			border-bottom: 0;
         }
     div#content{
-        border-bottom:1px dotted #ddd;
-        border-right:1px dotted #ddd;
-        border-left:1px dotted #ddd;
+        border-bottom:1px dotted #999;
+        border-right:1px dotted #999;
+        border-left:1px dotted #999;
         margin-bottom: 1em;
     }
         div#content div.tab-content{
@@ -3139,11 +3138,12 @@ input{
 		width: 100%;
 	}
     #suggestion-info #action-bar{
-        border-top:1px solid #555;
+        border-top: 1px dotted #AAAAAA;
+        margin: 0 1em;
     }
     
 	#suggestion-info ul{
-        margin: 0 0 0 1em;
+        margin: 0 0 0.3em 1em;
         padding: 0;
         font-size:1.1em;
         float:left;

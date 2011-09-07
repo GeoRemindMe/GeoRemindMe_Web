@@ -193,7 +193,7 @@
             <h1>
                 <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/><a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> sugiere:
                 <span>
-                    {% if suggestion.counters.votes == 0%}
+                    {% if suggestion.counters.votes %}
                         Aún no ha recibido valoraciones
                     {% else %}
                         Le gusta a {{suggestion.counters.votes}} persona{{suggestion.counters.votes|pluralize:"s"}}

@@ -5,6 +5,33 @@
     <script type="text/javascript" src="jquery.tmpl.min.js"></script>
     <script type="text/javascript" src="jquery.timeago.js"></script>
     <script type="text/javascript">
+    
+        GRMcookie=null;
+		function checkIfCookie() {
+            
+			getCookies( "http://localhost:8080/dashboard/", 
+						"georemindme_session_cookie", 
+						function(id) {
+							if(id!=null){
+								$('#login-form').addClass('hidden');
+								$('#logged').removeClass('hidden');
+                                window.location="timeline.html"
+                                GRMcookie=id;
+                                refreshTimeline();
+							}else
+                                GRMcookie=null
+						});
+		}
+		
+		function getCookies(domain, name, callback) {
+			if (typeof(chrome)!="undefined")
+                chrome.cookies.get({"url": domain, "name": name}, function(cookie) {
+                    if (!cookie) { callback(null); }
+                    else { callback(cookie.value); }
+                });
+			
+		}
+        
         function ISODateString(d) {
             function pad(n){
                 return n<10 ? '0'+n : n
@@ -20,6 +47,7 @@
         
         
         function refreshTimeline(){
+            checkIfCookie();
             $.ajax({
                 type: "POST",
                 url: "http://localhost:8080/api/1/timelineservice.get_activity",
