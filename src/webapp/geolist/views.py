@@ -46,7 +46,7 @@ def add_list_alert(request, name=None, description=None, instances=None):
 @login_required
 def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[], tags=None, vis=None):
     '''
-    Modifica una lista de usuarios
+    Crea o modifica una lista de usuarios
 
         :param id: identificador de la lista
         :type id: :class:`integer`
@@ -64,12 +64,12 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         if list is not None:
             try:
                 list.update(querier=request.user, instances=instances, tags=tags, vis=vis)
+                return True
             except:
                 return False
-        else:
-            list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del, vis=vis)
-        return list
-    return None
+    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del, vis=vis)
+    return list
+    
 
 @login_required
 def add_suggestion_list_invitation(request, listid, username):
