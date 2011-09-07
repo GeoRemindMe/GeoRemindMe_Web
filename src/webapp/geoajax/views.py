@@ -623,10 +623,14 @@ def get_near_suggestions(request):
     if location is None and request.user.is_authenticated():
         location = request.user.last_point
     radius = request.POST.get('radius', 5000)
+    try:
+        limit = int(request.POST.get('limit', 4))
+    except:
+        return HttpResponseBadRequest()
     from geoalert.models import Suggestion
     suggs = Suggestion.objects.get_nearest(location, radius, querier=request.user)
     from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(suggs, cls=JSONEncoder),
+    return HttpResponse(simplejson.dumps(suggs[:limit], cls=JSONEncoder),
                         mimetype='application/json')
     
 @ajax_request
