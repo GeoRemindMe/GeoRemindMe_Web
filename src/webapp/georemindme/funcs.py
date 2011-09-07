@@ -97,8 +97,6 @@ def prefetch_refprops(entities, *props):
         Carga todas las referencias de un grupo de objetos
         en una sola consulta al datastore
     """
-    if entities is None:
-        return []
     entities = filter(None, entities)
     fields = [(entity, prop) for entity in entities for prop in props]
     ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields if x is not None]
