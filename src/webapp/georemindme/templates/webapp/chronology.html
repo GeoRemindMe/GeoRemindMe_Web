@@ -134,7 +134,7 @@
     <script id="commentTemplate" type="text/x-jquery-tmpl">
         <li>
 			<div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
-            <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="user avatar"><a href="{% url fb_public_profile user.username %}" class="black-link">{{user.username}}</a>: ${msg}<br>
+            <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="user avatar"><a href="{% url fb_public_profile user.username %}" class="dark-link">{{user.username}}</a>: ${msg}<br>
             <span class="timestamp">0 minutes ago</span>
 
         </li>

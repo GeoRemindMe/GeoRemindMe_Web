@@ -16,6 +16,38 @@ input{
 
 /****************************
  *      
+ *  Links
+ * 
+ ***************************/
+#facebookApp .link,
+#facebookApp .hoverlink,
+#facebookApp #view-suggestion span.likeBtn span.hoverlink,
+#facebookApp ul#chronology a.link{
+    color:blue !important;
+}
+
+.link{
+    text-decoration:underline;
+    cursor:pointer;
+}
+.hoverlink{
+    text-decoration:none;
+}
+.hoverlink:hover{
+    text-decoration:underline;
+    cursor:pointer;
+}
+
+#view-suggestion span.likeBtn span.hoverlink{
+    text-decoration:none;
+}
+#view-suggestion span.likeBtn span.hoverlink:hover{
+    text-decoration:underline;
+}
+
+
+/****************************
+ *      
  *  LEFT COLUMN
  * 
  ***************************/
@@ -234,6 +266,18 @@ input{
      *  COMMON
      * 
      ***************************/
+    .suggestionx16{
+        background:url("/static/common/img/suggestionsx16.png") no-repeat;
+        padding-left: 20px;
+    }
+    .like-dislike,.likex16{
+        background:url("/static/common/img/like.png") no-repeat scroll 0 -2px transparent;
+        padding-left: 20px;
+    }
+    .remember-forget,.saved{
+        background: url("/static/common/img/save.png") no-repeat scroll 0 -2px transparent;
+        padding-left: 20px;
+    }
 	#print-icon{
 		background-image: url("/static/common/img/printer.png");
 		background-repeat:no-repeat;
@@ -511,20 +555,7 @@ input{
         visibility:visible !important;
         display:block !important;
     }
-    
-    .link{
-        color:#3896FF;
-        text-decoration:underline;
-        cursor:pointer;
-    }
-    .hoverlink{
-        color:#3896FF !important;
-        text-decoration:none;
-    }
-    .hoverlink:hover{
-        text-decoration:underline;
-        cursor:pointer;
-    }
+
     
     
     #answerMessage{
@@ -639,7 +670,12 @@ input{
         
         ul#chronology li a.black-link,a.black-link,a.black-link:visited{
             text-decoration:none;
-            color:#333;
+            color:#333 !important;
+        }
+        ul#chronology li a.dark-link,a.dark-link{
+            color:#555555 !important;
+            text-decoration:none;
+            
         }
         ul#chronology li .timeline-msg img{
             float: left;
@@ -655,6 +691,26 @@ input{
             padding-left: 0.5em;
             visibility:hidden;
         }
+        ul#chronology li span.action-bar span{
+            
+        }
+        
+        ul#chronology li span.action-bar span.comment{
+            background:url("/static/common/img/comments.png") no-repeat;
+            padding-left:20px;
+            display: inline-block;
+            height: 16px;
+            line-height: 16px;
+        }
+        ul#chronology li span.action-bar .details{
+            background:url("/static/common/img/details.png") no-repeat;
+            padding-left:20px;
+            display: inline-block;
+            height: 16px;
+            line-height: 16px;
+
+        }
+        
             ul#chronology li .comment-box .action-bar{
                 font-size:1em;
             }
@@ -2021,6 +2077,7 @@ input{
         border-bottom:1px dotted #ddd;
         border-right:1px dotted #ddd;
         border-left:1px dotted #ddd;
+        margin-bottom: 1em;
     }
         div#content div.tab-content{
         }
@@ -2604,6 +2661,11 @@ input{
         font-size:1.4em;
         float:left;
     }
+    #view-suggestion div.suggestion h1 a{
+        color:#555555;
+        text-decoration:none;
+    }
+    
     #view-suggestion div.suggestion h1 span{
         float: right; 
         display: block;
@@ -2877,17 +2939,18 @@ input{
     
     #view-suggestion .suggestion hr{
 		border-bottom: 1px solid white;
-		color: #DDDDDD;
-		margin: 1em 0;
+        clear: both;
+        color: #DDDDDD;
+        display: block;
+        float: left;
+        margin: 0.5em 0 1em;
+        width: 100%;
     }
     
     #view-suggestion span.likeBtn span.counter{
 		font-size:1em
     }
-    #view-suggestion span.likeBtn span.hoverlink{
-		color:#3896FF;
-		text-decoration:underline;
-    }
+    
     #view-suggestion #wapiblock{
 		
 		width:310px;
@@ -3029,14 +3092,23 @@ input{
 		float: left;
 		margin: 0;
 		padding: 0;
-		width: 500px;
+		width: 100%;
 	}
+    #suggestion-info #action-bar{
+        border-top:1px solid #555;
+    }
+    
 	#suggestion-info ul{
-	margin: 0 0 0 1em;
-    padding: 0;
-    font-size:1.1em;
-    float:left;
+        margin: 0 0 0 1em;
+        padding: 0;
+        font-size:1.1em;
+        float:left;
 	}
+    
+    #suggestion-info #action-bar ul{
+        margin:0;
+    }
+    
 	#suggestion-info li:after{
 	
 /*
@@ -3065,12 +3137,13 @@ input{
         background-color:white;
     }
 	#suggestion-info p{
-		margin: 0 1em 0.5em;
+		margin: 0 2em 0.5em;
 	}
 	#view-list #suggest_suggestion{
 		background-image:url("/static/common/img/suggestionsx16.png");
 		background-repeat:no-repeat;
 		padding-left: 20px;
+        line-height: 20px;
 	}
 	
 	#view-list #owner img{
@@ -3302,6 +3375,4 @@ input{
 .readable{
     font-size:1em !important;
 }
-ul#chronology a.link{
-    color:blue !important;
-}
+

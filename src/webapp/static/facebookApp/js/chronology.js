@@ -176,3 +176,27 @@ function sendComment2(textarea,element_id,elemType){
     });
 }
 
+function suggestionProposal(action,timeline_id){
+    
+    //si se envia timeline_id por POST, se modificara ese timeline (se aceptara o rechazara la sugerencia)
+    //status puede ser 0: nada 1: aceptada, 2: rechazada
+    var data={};
+    if(action=="accept")
+        data['status']=1;
+    else
+        data['status']=2;
+    data['timeline_id']=timeline_id;
+    
+    GRM.wait();
+    $.ajax({
+        type: "POST",
+        url: url["suggest_suggestion"],
+        dataType:'json',
+        data:data,
+        context:$(this),
+        complete: function() { GRM.nowait();},
+        success: function(data){
+            console.log(data);
+        }
+    })
+}

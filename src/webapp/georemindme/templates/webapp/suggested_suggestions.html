@@ -25,7 +25,8 @@
                     <p><span class="hoverlink view-more">Ver más</span></p>
                 </div>
 				<script type="text/javascript">
-                    if($.cookie('near_suggestions')==null){                    
+                
+                    if($.cookies.get('near_suggestions')==null){                    
                         $.ajax({
                             type: "POST",
                             url: "/ajax/get/near/suggestions/",
@@ -44,11 +45,12 @@
                                 })
                                 
                                 //Set cookie
-                                $.cookie('near_suggestions',$('#close-suggestions').html());
+                                $.cookies.set('near_suggestions',$('#close-suggestions').html());
                             }
                         });
                     }else{
-                        console.log($.cookie('near_suggestions'))
+                        $('#close-suggestions').empty();
+                        $('#close-suggestions').append($.cookies.get('near_suggestions'));
                     }
 				</script>
 				
