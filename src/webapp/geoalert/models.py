@@ -362,7 +362,6 @@ class Suggestion(Event, Visibility, Taggable):
         def _tx(sug_key, user_key, counter_key):
             # TODO : cambiar a contador con sharding
             sug = db.get(sug_key)
-            counter = SuggestionCounter.all().ancestor(self).get_async()
             # indice con personas que siguen la sugerencia
             index = SuggestionFollowersIndex.all().ancestor(sug).filter('count <', 80).get()
             if index is None:
@@ -370,9 +369,7 @@ class Suggestion(Event, Visibility, Taggable):
             index.keys.append(user_key)
             index.count += 1
             db.put_async([index])
-            counter = counter.get_result()
-            counter.set_followers()
-
+            return True
         if SuggestionFollowersIndex.all().ancestor(self).filter('keys =', user.key()).count() != 0:
             a = AlertSuggestion.objects.get_by_sugid_user(self.id, user)
             if a is None:
@@ -405,14 +402,11 @@ class Suggestion(Event, Visibility, Taggable):
         def _tx(sug_key, index_key, user_key):
             sug = db.get_async(sug_key)
             index = db.get_async(index_key)
-            counter = SuggestionCounter.all().ancestor(self).get_async()
             sug = sug.get_result()
             index = index.get_result()
             index.keys.remove(user_key)
             index.count -= 1
             db.put_async([index, sug])
-            counter = counter.get_result()
-            counter.set_followers(-1)
         index = SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get()
         if index is not None:
             db.run_in_transaction(_tx, self.key(), index.key(), user.key())

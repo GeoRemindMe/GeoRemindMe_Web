@@ -458,10 +458,13 @@ def del_suggestion(request, id = None):
     """
     if id is None:
         raise AttributeError()
-    sug = Suggestion.objects.get_by_id_user(id, request.user, request.user)
+    sug = Suggestion.objects.get_by_id_querier(id, request.user)
     if not sug:
         raise AttributeError()
-    sug.delete()    
+    if sug.user.key() == request.user:
+        sug.delete()
+    else:
+        sug.del_follower(request.user)
     return True
 
 @login_required
