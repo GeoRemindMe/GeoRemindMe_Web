@@ -47,6 +47,7 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     user_follower = suggestion.has_follower(request.user)
     top_comments = Comment.objects.get_top_voted(suggestion, request.user)
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
+    lists = [l for l in lists]
     # construir un diccionario con todas las keys resueltas y usuarios
     instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
     lists = [l.to_dict(resolve=True, instances=instances) for l in lists]
