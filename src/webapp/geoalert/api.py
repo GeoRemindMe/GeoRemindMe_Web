@@ -78,11 +78,16 @@ def change_suggestion_to_list(querier, timeline_id, status):
     notification = q.Get(1)
     if len(notification) == 0:
         return None
-    timeline = datastore.Get(notification[0]['timeline'])
+    timeline = datastore.Get(db.Key.from_path('UserTimelineBase', timeline_id))
     if timeline is None:
         return None
+    list = db.get_async(timeline['list'])
     timeline['status'] = status
-    datastore.Put(timeline)
+    list = list.get_result()
+    if list is None:
+        return None
+    list.update(instances=[timeline['instance'].id()])
+    datastore.Put([timeline, list._entity])
     return True
 
 

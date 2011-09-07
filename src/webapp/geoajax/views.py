@@ -734,12 +734,14 @@ def suggested_list_suggestion(request):
         else:
             return HttpResponseBadRequest()
     try:
+        timeline_id = int(timeline_id)
         status = int(request.POST.get('status', 0))
         from geoalert.api import change_suggestion_to_list
         changed = change_suggestion_to_list(request.user, timeline_id, status)
         return HttpResponse(simplejson.dumps(changed),
                                 mimetype='application/json')
     except:
+        raise
         return HttpResponseBadRequest()
     
     
