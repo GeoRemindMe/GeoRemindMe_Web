@@ -117,14 +117,17 @@ class ListHelper(object):
         lists = [inv.list for inv in user.toinvitations_set if inv.status == 1]
         return lists
 
-    def get_by_user(self, user, querier, page = 1, query_id = None, all=False):
+    def get_by_user(self, user, querier, page = 1, query_id = None, all=False, without_key=None):
         """
         Obtiene las listas de un usuario
         """
         if not isinstance(user, User) or (not isinstance(querier, User) and not isinstance(querier, AnonymousUser)):
             raise TypeError()
         if user.id == querier.id:
-            q = self._klass.gql('WHERE user = :1 AND active = True ORDER BY modified DESC', user)
+            if without_key is not None:
+                q = self._klass.gql('WHERE user = :1 AND active = True ORDER BY modified DESC', user)
+            else:
+                q = self._klass.gql('WHERE user = :1 AND active = True ORDER BY modified DESC', user)
         else:
             q = self._klass.gql('WHERE user = :1  AND active = True AND _vis = :2 ORDER BY modified DESC', user, 'public')
         if not all:

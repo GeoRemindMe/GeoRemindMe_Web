@@ -46,11 +46,16 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     vote_counter = Vote.objects.get_vote_counter(suggestion.key())
     user_follower = suggestion.has_follower(request.user)
     top_comments = Comment.objects.get_top_voted(suggestion, request.user)
-    lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
-    lists = [l for l in lists]
+    in_lists = ListSuggestion.objects.get_by_suggestion(suggestion, request.user)
     # construir un diccionario con todas las keys resueltas y usuarios
+    instances = prefetch_refList(in_lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in in_lists])
+    in_lists = [l.to_dict(resolve=True, instances=instances) for l in in_lists]
+    # listas del usuario
+    lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
+    lists = [l for l in lists if not suggestion.key() in l.keys]
     instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
     lists = [l.to_dict(resolve=True, instances=instances) for l in lists]
+    # construir un diccionario con todas las keys resueltas y usuarios
     if not request.user.is_authenticated():
             pos = template.rfind('.html')
             template = template[:pos] + '_anonymous' + template[pos:]
@@ -58,6 +63,7 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
                                         'suggestion': suggestion,
                                         'comments': Comment.objects.load_comments_from_async(query_id, comments_async, request.user),
                                         'has_voted': has_voted,
+                                        'in_lists': in_lists,
                                         'lists': lists,
                                         'vote_counter': vote_counter,
                                         'user_follower': user_follower,
