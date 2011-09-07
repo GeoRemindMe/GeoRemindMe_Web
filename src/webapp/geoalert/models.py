@@ -357,10 +357,9 @@ class Suggestion(Event, Visibility, Taggable):
             
             :returns: :class:`geoalert.models.AlertSuggestion`    
         '''
-        if self.user.key() == self.user.key():
+        if self.user.key() == user.key():
             return False
-        def _tx(sug_key, user_key, counter_key):
-            # TODO : cambiar a contador con sharding
+        def _tx(sug_key, user_key):
             sug = db.get(sug_key)
             # indice con personas que siguen la sugerencia
             index = SuggestionFollowersIndex.all().ancestor(sug).filter('count <', 80).get()
@@ -368,15 +367,16 @@ class Suggestion(Event, Visibility, Taggable):
                 index = SuggestionFollowersIndex(parent=sug)
             index.keys.append(user_key)
             index.count += 1
-            db.put_async([index])
+            index.put()
             return True
-        if SuggestionFollowersIndex.all().ancestor(self).filter('keys =', user.key()).count() != 0:
+        index = db.GqlQuery('SELECT __key__ FROM SuggestionFollowersIndex WHERE ancestor IS :1 AND keys = :2', self.key(), user.key()).get()
+        if index is not None:
             a = AlertSuggestion.objects.get_by_sugid_user(self.id, user)
             if a is None:
-                return True
+                trans = True
             else:
-                return a
-        if self._is_public():
+                return True
+        elif self._is_public():
             trans = db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
         else:
             if self.user_invited(user):
@@ -388,7 +388,7 @@ class Suggestion(Event, Visibility, Taggable):
         if trans:
             alert = AlertSuggestion.update_or_insert(suggestion = self, user = user)
             suggestion_following_new.send(sender=self, user=user)
-            return alert
+            return True
         return None
         
     
@@ -399,18 +399,16 @@ class Suggestion(Event, Visibility, Taggable):
             :param user: Usuario que quiere borrarse a una sugerencia
             :type user: :class:`geouser.models.User`   
         '''
-        def _tx(sug_key, index_key, user_key):
-            sug = db.get_async(sug_key)
+        def _tx(index_key, user_key):
             index = db.get_async(index_key)
-            sug = sug.get_result()
             index = index.get_result()
             index.keys.remove(user_key)
             index.count -= 1
-            db.put_async([index, sug])
-        index = SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get()
+            db.put_async([index])
+        index = db.GqlQuery('SELECT __key__ FROM SuggestionFollowersIndex WHERE ancestor IS :1 AND keys = :2', self.key(), user.key()).get()
+        suggestion_following_deleted.send(sender=self, user=user)
         if index is not None:
-            db.run_in_transaction(_tx, self.key(), index.key(), user.key())
-            suggestion_following_deleted.send(sender=self, user=user)
+            db.run_in_transaction(_tx, index, user.key())      
             return True
         return False
     
@@ -618,10 +616,6 @@ class AlertSuggestion(Event):
         else:
             super(AlertSuggestion, self).put()
             alert_new.send(sender=self)
-            
-    def delete(self):
-        alert_deleted.send(sender=self)
-        super(Alert, self).delete()
         
     def to_dict(self):
             return {'id': self.id,

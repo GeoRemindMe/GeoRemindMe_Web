@@ -432,8 +432,7 @@ def get_suggestion(request, id, wanted_user=None, page = 1, query_id = None):
 def add_suggestion_follower(request, id):
     suggestion = Suggestion.objects.get_by_id_querier(id, request.user)
     if suggestion is not None:
-        suggestion.add_follower(request.user)
-        return True
+        return suggestion.add_follower(request.user)
     return False
 
 
@@ -441,8 +440,7 @@ def add_suggestion_follower(request, id):
 def del_suggestion_follower(request, id):
     suggestion = Suggestion.objects.get_by_id_querier(id, request.user)
     if suggestion is not None:
-        suggestion.del_follower(request.user)
-        return True
+        return suggestion.del_follower(request.user)
     return False
 
 
@@ -460,12 +458,13 @@ def del_suggestion(request, id = None):
         raise AttributeError()
     sug = Suggestion.objects.get_by_id_querier(id, request.user)
     if not sug:
-        raise AttributeError()
-    if sug.user.key() == request.user:
+        return None
+    if sug.user.key() == request.user.key():
         sug.delete()
+        return True
     else:
-        sug.del_follower(request.user)
-    return True
+        return sug.del_follower(request.user)
+    return False
 
 @login_required
 def get_alertsuggestion(request, id, page = 1, query_id = None):
