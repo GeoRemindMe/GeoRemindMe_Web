@@ -210,7 +210,11 @@ class User(polymodel.PolyModel, HookedModel):
             ref_keys = [x['timeline'] for x in entities]
             from geovote.models import Vote, Comment
             from geolist.models import List
-            return db.get(set(ref_keys))
+            from geoalert.models import Event
+            from models_acc import UserTimeline, UserTimelineSuggest
+            timelines = db.get(set(ref_keys))
+            from georemindme.funcs import prefetch_refprops
+            return prefetch_refprops(timelines, UserTimeline.user, UserTimeline.instance)
         from google.appengine.api import datastore
         from models_utils import _Notification
         if query_id is None:
@@ -224,7 +228,8 @@ class User(polymodel.PolyModel, HookedModel):
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username,
                         'msg_id': timeline.msg_id,
-                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'instance': timeline.instance,
+                        'list': timeline.list if hasattr(timeline, 'list') else None,
                         'is_private': False,
                         }
                         for timeline in timelines]]
