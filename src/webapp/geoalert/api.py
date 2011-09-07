@@ -63,7 +63,7 @@ def send_suggestion_to_list(querier, list_id, event_id):
     except:
         pass
     # creamos la sugerencia
-    timeline = UserTimelineSuggest(instance=keys[1], list=keys[0], user=querier)
+    timeline = UserTimelineSuggest(instance=keys[1], list=keys[0], user=querier, visible=False)
     timeline.put()
     return True
     
