@@ -320,7 +320,7 @@ def user_suggestions(request, template='webapp/suggestions.html'):
     instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
     lists = [l.to_dict(resolve=True, instances=instances) for l in lists]
     # añadimos las listas
-    [s.lists.append(l['name']) for l in lists for s in suggestions if s.id in l['keys']]
+    [s.lists.append(l) for l in lists for s in suggestions if s.id in l['keys']]
     return  render_to_response(template, {
                                           'suggestions': ['', suggestions],
                                           'counters': counters.next(),
