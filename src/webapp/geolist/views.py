@@ -68,7 +68,8 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
                 return False
         else:
             list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del, vis=vis)
-    return list
+        return list
+    return None
 
 @login_required
 def add_suggestion_list_invitation(request, listid, username):
