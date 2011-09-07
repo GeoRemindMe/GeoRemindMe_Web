@@ -1,3 +1,4 @@
+{%load tags %}
 <!DOCTYPE HTML>
 <html lang="ru-RU">
 <head>
@@ -6,18 +7,12 @@
 	<link rel="stylesheet" href="/static/webapp/style/print.css" type="text/css">
 	
 	<style type="text/css">
-		.container {
-			width: 960px;
-			margin: 0 auto;
-		}
-		
-		h1 {
-			text-align:center;
-		}
-		
-		header {
-			border-bottom: 2px solid #DDDDDD;
-		}
+		.container {width:960px;margin:0 auto;}
+		h1 {text-align:center;}
+		h3 {text-align:center;}
+		header {border-bottom: 2px solid #CCC;}
+		#map {margin: 0 280px;}
+		#map img {margin-top: 15px;border:1px solid black;}
 	</style>
 </head>
 <body>
@@ -26,13 +21,17 @@
 			<img src="/static/webapp/img/logo2.png" alt="GeoRemindMe" id="logo">
 			<h1>{{place.name}}</h1>
 		</header>
-		<a href="http://maps.google.com/maps?q={{place.location}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=14&size=270x220&maptype=roadmap
-&markers=color:red%7C{{place.location}}&sensor=false"></a>
-		<p>{{place.address}}</p>
-		<p>{{suggestions}}</p>
-		<p>{{vote_counter}}</p>
-
-		{{place.location}}
+		<a id="map" href="http://maps.google.com/maps?q={{place.location}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=15&size=400x400&maptype=roadmap&markers=color:red%7C{{place.location}}&sensor=false"><br><h3>{{place.address}}</h3></a>
+		<br>
+		<h3 style="text-align:left;">Este sitio tiene {{vote_counter}} votos y {{suggestions.1|length}} sugerencia(s):</h3>
+		<ul>
+			{% for s in suggestions.1 %}
+			<li>{{s.instance.name}}<br>Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</li>
+			{% endfor %}
+		</ul>
+		
+		
+	
 	</div>
 	
 </body>
