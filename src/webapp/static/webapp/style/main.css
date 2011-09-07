@@ -836,7 +836,7 @@ margin-top:1em;
 /*
 	-moz-box-shadow: -2px 0 2px rgba(0, 0, 0, 0.75);
 */
-    border-top: 1px solid #555555;
+    border-top: 1px solid #ccc;
     border-left:1px solid #ccc;
     float: left;
     margin-top: -1px;
