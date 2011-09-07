@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% load i18n %}
 {% load tags %}
 
@@ -7,6 +8,9 @@
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl={{user.settings.language}}"></script>
+    <script type="text/javascript" src="http://georemindme.com/media/js/jquery.lightbox-0.5.js"></script> 
+    <link rel="stylesheet" type="text/css" href="http://georemindme.com/media/style/jquery.lightbox-0.5.css" media="screen" /> 
+
     
     <script type="text/javascript">
     $(document).ready(function(){
@@ -15,6 +19,8 @@
             function(){$(this).find('.action-bar').show()},
             function(){$(this).find('.action-bar').hide()}
         );
+        
+        
         
         //Set like & dislike, remember and removable behaviour
         GRM.init()
@@ -36,10 +42,12 @@
         
         var myOptions = {
           'width': 300,
-          'height': 80,
-          'columns': 3,
+          'height': 160,
+          'columns': 1,
           'rows': 1,
+          'delay':2.5,
           'croppedPhotos': true,
+          'attributionStyle':'panoramio.tos.Style.HIDDEN'
         };
         
         var wapiblock = document.getElementById('panoramio-imgs');
@@ -47,22 +55,88 @@
         widget.setPosition(0);
         
         $('.panoramio-wapi-loaded-img-div,.panoramio-wapi-images,').css('background-color','#f9f9f9')
-		$('.panoramio-wapi-tos').remove()
+		//$('.panoramio-wapi-tos').remove()
 		
 		
 		panoramio.events.listen(widget, panoramio.events.EventType.PHOTO_CHANGED, function(){
 			$('.panoramio-wapi-empty-img-div').remove()
 		});
 		
-		$('#panoramio-imgs').append('<div class="panoramio-wapi-tos" style="width: 296px; color: black ! important; background-color: #f9f9f9 ! important;"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span><br>Photos are copyrighted by their owners</span></div>');
-		
+        panoramio.events.listen(widget, panoramio.events.EventType.PHOTO_CLICKED, function(event){
+            
+            //tmp=event.getPhoto()
+            //console.log('Photo "' + event.getPhoto().getPhotoTitle() + '" was clicked')
+            
+            //return false;
+              
+        });
+        
+		//$('#panoramio-imgs').append('<div class="panoramio-wapi-tos" style="width: 296px; color: black ! important; background-color: #f9f9f9 ! important;"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span><br>Photos are copyrighted by their owners</span></div>');
+        
+        function addSuggestionToList(obj){
+            GRM.wait();
+            $.ajax({
+                type: "POST",
+                url: url["modify_suggestion_list"],
+                data: {
+                    list_id: $(obj).attr('value'),
+                    suggestions: $('#add-to-list').attr('value')
+                },
+                dataType:'json',
+                complete: function(){GRM.nowait();},
+                success: function(data){
+                    
+                    $(obj).find("span.name").addClass("checked");
+                    
+                    //Actualizamos el contador de la lista
+                    counterClass='.list-'+data.id+'-counter';
+                    $(counterClass).text(data.keys.length);
+                    
+                    //Añadimos la lista a "Listas en las que aparece"
+                    $('#in-lists').append('<span>, <a href="../list/'+data.id+'" value="'+data.id+'">'+data.name+'</a></span>');
+                    
+                    //Mostrar mensaje de éxito
+                    showMessage("Las sugerencia han sido añadida a la lista","success")
+                }
+            });    
+        }
+        
+        function removeSuggestionToList(obj){
+            GRM.wait();
+            $.ajax({
+                type: "POST",
+                url: url["modify_suggestion_list"],
+                data: {
+                    list_id: $(obj).attr('value'),
+                    suggestions_del: [$('#add-to-list').attr('value')]
+                },
+                dataType:'json',
+                complete: function(){GRM.nowait();},
+                success: function(data){
+                    
+                    $(obj).find("span.name").removeClass("checked");
+                    
+                    //Actualizamos el contador de la lista
+                    counterClass='.list-'+data.id+'-counter';
+                    $(counterClass).text(data.keys.length);
+                    
+                    //Añadimos la lista a "Listas en las que aparece"
+                    $('#in-lists a[value="'+$(obj).attr('value')+'"]').parent().remove();
+                    
+                    //Mostrar mensaje de éxito
+                    showMessage("Las sugerencia ha sido eliminada de la lista","success")
+                }
+            });    
+        }
+        
 		//Añadimos el comportamiento	
 		function onLiClick(obj){
             var checkbox=$(obj).find("span.name");
+
             if($(checkbox).hasClass("checked"))
-                $(checkbox).removeClass("checked");
+                removeSuggestionToList(obj)
             else
-                $(checkbox).addClass("checked");
+                addSuggestionToList(obj)            
         }
 
 		$('span.btn.dropDownBtn').menuList({
@@ -81,10 +155,11 @@
 					dataType:'json',
 					success: function(data){
 						//Añadimos la lista al desplegable
-						$("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
-						$('#listid-'+data.id).click(function(){onLiClick(this)});
+						var c=$("<li value=\""+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
+						c.click(function(){onLiClick(this)});
 						
-						//Añadimos la lista en la pestaña listas
+						//Forzamos el click para que se añada la sugerencia a la lista
+                        c.click();
 						
 						//Reordenamos alfabéticamente la lista desplegable
 						$('.submenu li').not('li.new-list-btn').sortElements(function(a, b){
@@ -149,10 +224,7 @@
                  <strong>Lugar</strong>: <a href="{% url2 in_facebook view_place suggestion.poi.slug %}" class="hoverlink">{{suggestion.poi.name}}</a>
             </p>
              <div class="right">
-				<a title="Más detalles sobre: {{suggestion.poi.name}}" href="{% url2 in_facebook view_place suggestion.poi.slug %}">
-					<img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x150&maptype=roadmap
-&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false">
-				</a>
+				<div id="wapiblock"><strong>Pictures of the area:</strong><div id="panoramio-imgs"></div></div>
 			</div>
             
             
@@ -173,16 +245,51 @@
 			<hr class="clear">
 -->
 			
-			<div id="wapiblock"><strong>Pictures of the area:</strong><div id="panoramio-imgs"></div></div>
-            <hr>
-			
+			<a title="Más detalles sobre: {{suggestion.poi.name}}" href="{% url2 in_facebook view_place suggestion.poi.slug %}">
+					<img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x150&maptype=roadmap
+&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false">
+				</a>
+            
+            {% if in_lists|length > 0 or suggestion.tags|length > 0 %}
+                <hr>
+                
+                {% if in_lists %}
+                    <p id="in-lists"><strong>Listas en las que aparece</strong>:
+                    {% for obj in in_lists %}
+                        {%if obj.visibility == 'public' %}
+                            <span><a href="{%url2 in_facebook view_list obj.id%}" value="{{obj.id}}">{{obj.name}}</a>{%if not forloop.last%}, {%endif%}</span>
+                        {% endif %}
+                    {% endfor %}
+                    </p>
+                {% endif %}
+                
+                {% if suggestion.tags %}
+                    <p id="tag-list-label"><strong>Palabras clave</strong>:</p> 
+                    <ul id="tag-list">
+                    {% for tag in suggestion.tags %}
+                        <li>
+    <!--
+                            <form action="{% url2 in_facebook search_suggestions tag %}" method="post">
+                                <input type="hidden" name="suggestion" value="suggestion">
+                                <input type="submit" value="{{tag}}">
+                            </form>
+    -->
+                            {{tag}}
+                            {%if not forloop.last %}, {%endif%}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                    
+                {% endif %}
+            {% endif %}
+            
+			<hr>
             <ul id="action-bar">
                 <li id="print-icon"><a href="?print" target="_blank" class="hoverlink">Imprimir</a></li>
                 
                 {% if request.user.username %}
-                    <li id="add-to-list">
+                    <li id="add-to-list" value="{{suggestion.id}}">
                         <span class="hoverlink" onclick="javascript:$('#add-to-list .dropDownBtn').show();">Añadir a una lista</span>
-                
                         <span class="btn dropDownBtn" style="display:none">
                             <span class="save-at">---------</span>
                             <ul class="submenu" style="display:none" id="dropdown-list">
@@ -190,7 +297,7 @@
                                     {% for obj in lists %}
                                         {% if obj.user.username = request.user.username %}
                                             <!-- Solo se muestran mis listas -->
-                                            <li id="listid-{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
+                                            <li value="{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
                                         {% endif %}
                                     {% endfor %}
                                 {% endif %}
@@ -204,22 +311,8 @@
                     {%endif%}
                     {% if user.username and suggestion.user.username != user.username %}
                     <li>
-                        <span class="likeBtn btn">
-                            <span class="like-dislike" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
-                                <span class="dislike">
-                                    <span class="text hoverlink">Ya no me gusta</span> 
-                                </span>
-                                
-                                <span class="like">
-                                    <span class="text like-text hoverlink" >Me gusta</span> 
-                                </span> 
-                            </span>
-                        </span>
-                        
-                        
-                        
                         <span class="btn likeBtn" id="save-btn">
-                            <span title="Recibe novedades"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if obj.user_follower%}remember="true"{%endif%}>
+                            <span title="Recibe novedades"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if user_follower%}remember="true"{%endif%}>
                                 <span class="remember hoverlink">
                                     Guardar
                                 </span>
@@ -229,27 +322,20 @@
                             </span>
                         </span>
                     </li>
-                {%endif%}
-                
-                {% if suggestion.tags %}
                     <li>
-                        <p id="tag-list-label"><strong>Palabras clave</strong>:</p> 
-                        <ul id="tag-list">
-                        {% for tag in suggestion.tags %}
-                            <li>
-        <!--
-                                <form action="{% url2 in_facebook search_suggestions tag %}" method="post">
-                                    <input type="hidden" name="suggestion" value="suggestion">
-                                    <input type="submit" value="{{tag}}">
-                                </form>
-        -->
-                                {{tag}}
-                                {%if not forloop.last %}, {%endif%}
-                            </li>
-                        {% endfor %}
-                        </ul>
+                        <span class="likeBtn btn">
+                            <span class="like-dislike" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
+                                <span class="dislike">
+                                    <span class="text hoverlink">Ya no me gusta</span> 
+                                </span>
+                                
+                                <span class="like">
+                                    <span class="text hoverlink" >Me gusta</span> 
+                                </span> 
+                            </span>
+                        </span>
                     </li>
-                {% endif %}
+                {%endif%}
             </ul>
                 
                 
@@ -360,6 +446,8 @@
         {% endif %}
     </div>
     
+    <ul id="lightbox">
+    </ul>
     <script id="commentTemplate" type="text/x-jquery-tmpl">
         <li class="suggestion-element">
             <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>

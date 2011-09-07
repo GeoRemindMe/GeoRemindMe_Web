@@ -734,6 +734,7 @@ input{
                 display: block;
                 font-size: 11px;
                 float: left;
+                line-height:20px;
             }
             ul#chronology li span.action-bar span, span.action-bar a{
                 color:#0011FF;
@@ -2459,6 +2460,10 @@ input{
         list-style: none outside none;
         
     }
+
+    #suggest_suggestion_menu span.dropDownBtn{
+        margin:-2px 0 0 0.5em;
+    }
     .save-at{
         background: url("/static/webapp/img/dropdownmenu.png") no-repeat scroll 96% 4px transparent !important;
         margin-right: -4px;
@@ -2500,6 +2505,8 @@ input{
         padding: 0;
         position: absolute;
         text-align: left;
+        max-height: 150px;
+        overflow: auto;
         width: auto;
         z-index: 2;
     }
@@ -2720,6 +2727,9 @@ input{
         clear: right;
         margin-bottom: 1em;
         border: 1px solid #AAAAAA;
+    }
+    #view-suggestion div.suggestion img{
+        float:none;
     }
     #view-suggestion div.suggestion .panoramio-wapi-tos img{
 		float:none;
@@ -2975,7 +2985,7 @@ input{
     }
     
     #view-suggestion #wapiblock{
-		
+		margin-top:20px;
 		width:310px;
     }
 
@@ -3012,6 +3022,17 @@ input{
 		border: 1px solid #CCCCCC;
         margin: 1em 0;
         padding: 1em;
+    }
+    #right-col #place-container h1{
+        box-shadow: none;
+        -moz-box-shadow: none;
+        -webkit-box-shadow: none;
+        background: none repeat scroll 0 0 transparent;
+        color: black;
+        display: block;
+        line-height: 1em;
+        height: 1.5em;
+        margin-top: 0;
     }
     #place-container:after{           
         clear: both;
@@ -3130,6 +3151,12 @@ input{
     
     #suggestion-info #action-bar ul{
         margin:0;
+        line-height: 20px
+    }
+    #suggestion-info #action-bar ul.submenu{
+        margin-left: -8px;
+        overflow: auto;
+        width: 300px;
     }
     
 	#suggestion-info li:after{
@@ -3152,7 +3179,7 @@ input{
         display: block;
         font-size: 0.8em;
         margin: 0;
-        width: 500px;
+        width: 275px;
         white-space: normal;
         word-wrap: break-word;
     }

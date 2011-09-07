@@ -99,28 +99,28 @@
                     <ul>
                         <li id="print-icon"><a href="?print" target="_blank"  class="hoverlink">Imprimir</a></li>
                         {% if list.user.username != request.user.username %}
+                            <li id="suggest_suggestion"  value="{{list.id}}">
+                                <span class="hoverlink">Proponer sugerencia</span>
+                                <div id="suggest_suggestion_menu" style="display:none" value="{{list.id}}" class="right">
+                                        <span class="btn dropDownBtn">
+                                            <span class="save-at">---------</span>
+                                            <ul class="submenu" style="display:none" id="dropdown-list">
+
+                                            </ul>
+                                        </span>
+                                </div>
+                            </li>
                             <li>
                                 <span class="remember-forget hoverlink" value="{{list.id}}" type="list" {%if user_follower%}remember="true"{%endif%}>
                                     <span class="remember" title="Guardar en favoritos">Guardar</span>
                                     <span class="forget" title="Puedes consultar tus favoritos en 'Tu mochila'">Guardada</span>
                                 </span>
                             </li>
-                        
-                            <li id="suggest_suggestion" class="hoverlink" value="{{list.id}}">
-                                Proponer sugerencia
-                            </li>
                         {% else %}
                             <li><a href="{% url2 in_facebook user_suggestions %}" class="hoverlink">Editar desde la mochila</a></li>
                         {% endif %}
                     </ul>
-                    <div id="suggest_suggestion_menu" style="display:none" value="{{list.id}}">
-                            <span class="btn dropDownBtn">
-                                <span class="save-at">---------</span>
-                                <ul class="submenu" style="display:none" id="dropdown-list">
-
-                                </ul>
-                            </span>
-                    </div>
+                    
                 </div>           
     
             </div>
