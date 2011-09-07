@@ -1,3 +1,70 @@
-Vista de impresión de sugerencia
-<p>{{suggestion}}</p>
-<p>{{vote_counter}}</p>
+{%load tags %}
+<!DOCTYPE HTML>
+<html lang="ru-RU">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="/static/webapp/style/print.css" type="text/css">
+	
+	<style type="text/css">
+		.container {width:960px;margin:0 auto;}
+		h1 {text-align:center;}
+		h3 {text-align:center;}
+		header {border-bottom: 2px solid #CCC;}
+		#map {float:left;}
+		#map img {margin-top: 15px;border:1px solid black;}
+		#right-col {float:right; width:450px;}
+		ul {padding-left:0;}
+		ul li {margin-bottom:5px;font-size:1.1em;}
+		.big {font-size:1.1em;}
+		.aside{font-size:0.9em;font-style:italic;}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<header>
+			<img src="/static/webapp/img/logo2.png" alt="GeoRemindMe" id="logo">
+			<h1>{{suggestion}}</h1>
+		</header>
+		<a id="map" href="http://maps.google.com/maps?q={{suggestion.poi.location}}&hl=en&ie=UTF8&z=16">
+			<img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=15&size=400x400&maptype=roadmap&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false"></a>
+		<div id="right-col">
+			<p class="big"><strong>Autor: </strong>{{suggestion.user.username}}</p>
+			<p class="big"><strong>Lugar: </strong>{{suggestion.poi.name}}</p>
+			<p class="big"><strong>Dirección: </strong>{{suggestion.poi.address}}</p>
+			
+		
+
+			<h3 style="text-align:left;">Esta sugerencia tiene {{vote_counter}} votos.</h3>
+			{% if top_comments %}
+	                <h3 style="text-align:left;">Esta sugerencia tiene {{vote_counter}} votos.</h3>
+	                <ul>
+	                    {% for c in top_comments %}
+							<li>{{c.username}}: {{c.msg}}<br><span class="aside">{{c.created|naturaltime}}</span></li>
+	                    {% endfor %}
+	                </ul>
+	        {% endif %}
+			
+		</div>
+		
+		
+		
+	
+	</div>
+	
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

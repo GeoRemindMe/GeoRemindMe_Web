@@ -13,7 +13,8 @@
 		header {border-bottom: 2px solid #CCC;}
 		#map {float:left;}
 		#map img {margin-top: 15px;border:1px solid black;}
-		ul {float:right; width:450px;}
+		#right-col {float:right; width:450px;}
+		ul {padding-left:0;}
 		ul li {margin-bottom:5px;font-size:1.1em;}
 		.aside{font-size:0.9em;font-style:italic;}
 	</style>
@@ -26,12 +27,15 @@
 		</header>
 		<a id="map" href="http://maps.google.com/maps?q={{place.location}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=15&size=400x400&maptype=roadmap&markers=color:red%7C{{place.location}}&sensor=false"><br><h3>{{place.address}}</h3></a>
 		<br>
-		<h3 style="text-align:left; margin-left:510px;">Este sitio tiene {{vote_counter}} votos y {{suggestions.1|length}} sugerencia(s):</h3>
-		<ul>
-			{% for s in suggestions.1 %}
-			<li>{{s.instance.name}}<br><span class="aside">Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</span></li>
-			{% endfor %}
-		</ul>
+		<div id="right-col">
+			<h3 style="text-align:left;">Este sitio tiene {{vote_counter}} votos y {{suggestions.1|length}} sugerencia(s):</h3>
+			<ul>
+				{% for s in suggestions.1 %}
+				<li>{{s.instance.name}}<br><span class="aside">Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</span></li>
+				{% endfor %}
+			</ul>
+		</div>
+		
 		
 		
 	
