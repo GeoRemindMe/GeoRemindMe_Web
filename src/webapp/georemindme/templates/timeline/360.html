@@ -15,9 +15,9 @@
         <span class="timestamp">
             {{obj.created|naturaltime}}</span> <span class="action-bar">
             | 
-            <span class="hoverlink" onclick="javascript:suggestionProposal('accept',{{obj.id}})">Aceptar</span> 
+            <span class="hoverlink accept-suggestion" onclick="javascript:suggestionProposal('accept',{{obj.id}})">Aceptar</span> 
             | 
-            <span class="hoverlink" onclick="javascript:suggestionProposal('reject',{{obj.id}})">Rechazar</span>
+            <span class="hoverlink reject-suggestion" onclick="javascript:suggestionProposal('reject',{{obj.id}})">Rechazar</span>
         </span>
     </div>
 </li>

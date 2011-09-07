@@ -1,137 +1,9 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<style>
-	body {
-	  min-width:400px;
-	  overflow-x:hidden;	
-	  font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
-	  font-size:12px;
-	}
-
-	#title {
-		color:black;
-	}
-
-	img {
-	  margin:5px;
-	  border:2px solid black;
-	  vertical-align:middle;
-	  width:75px;
-	  height:75px;
-	}
-	.active{
-		color:black;
-	}
-	.hidden{
-		display:none;
-	}
-	ul#tabMenu{
-		margin: 0 0 10px;
-		padding: 0;
-	}
-	ul#tabMenu li{
-
-		-moz-border-radius: 3px 3px 3px 3px;
-		-webkit-border-radius: 3px;
-		border-radius: 3px;
-		background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
-		background: -webkit-gradient(linear,0% 40%,0% 70%,from(#F9F9F9),to(#E3E3E3));
-		background-image: -o-linear-gradient(top, rgb(249, 249, 249) 40%, rgb(227, 227, 227) 70%);
-		border-radius: 3px 3px 3px 3px;
-		border-color: #BBBBBB #BBBBBB #A0A0A0;
-		border-style: solid;
-		border-width: 1px;
-		color: #000000;
-		cursor: pointer;
-		display:inline-block;
-		font-weight: normal;
-		line-height: 1.6em;
-		margin: 6px 5px;
-		outline: medium none;
-		padding: 0 8px;
-		text-align: center;
-		text-decoration: none;
-		vertical-align: middle;
-		white-space: nowrap;
-	}
-	
-	#login-form{
-		text-align:center;
-	}
-		#social-networks{
-			list-style: none outside none;
-			margin:0;
-			padding:0;
-			display: inline-block;
-		}
-		#social-networks li{
-			background-image: url("images/sprite_social_min.png");
-			background-repeat: no-repeat;
-			display: inline-block;
-			cursor:pointer;
-			padding-left: 20px;
-			height: 16px;
-		}
-		#social-networks li span{
-			visibility:hidden;
-			
-		}
-	
-		#login-form form{
-			margin-bottom: 0;
-			margin-left: auto;
-			margin-right: auto;
-			width: 400px;
-		}
-			#login-form form p{
-				display: inline-block;
-			}
-			#login-form form label{
-				display: none;
-				
-			}
-			#login-form form input{
-				font-size: 11px;
-			}
-	
-	.twitter{
-	}
-	.facebook{
-		background-position: 0 -32px;
-	}
-	.google{
-		background-position: 0 -16px;
-	}
-    
-    ul#timeline{
-        list-style:none;
-        margin:0;
-        padding:0;
-    }
-    ul#timeline img{
-        width:25px;
-        height:25px;
-        float:left;
-        margin-right:10px;
-		dislay:block;
-    }
-    ul#timeline li{
-        display:block;
-        clear:both;
-        margin:5px 0;
-		border-bottom:1px solid #CCC;
-		padding-bottom: 6px;
-    }
-    iframe{ 
-        border:0 none;
-        margin-right:20px;
-    }
-	
-	</style>
+	<link type="text/css" rel="stylesheet" href="/css/main.css">
 	<script type="text/javascript" src="jquery.min.js"></script>
-    <script type="text/javascript" src="jquery.tmpl.min.js"></script>
-    <script type="text/javascript" src="jquery.timeago.js"></script>
+    
 	<script type="text/javascript">
         GRMcookie=null;
 		function checkIfCookie() {
@@ -142,6 +14,7 @@
 							if(id!=null){
 								$('#login-form').addClass('hidden');
 								$('#logged').removeClass('hidden');
+                                window.location="timeline.html"
                                 GRMcookie=id;
                                 refreshTimeline();
 							}else
@@ -158,69 +31,9 @@
 			
 		}
 
-		
-        
-        function ISODateString(d) {
-            function pad(n){
-                return n<10 ? '0'+n : n
-            }
-            console.log(d)
-            return d.getUTCFullYear()+'-'
-            + pad(d.getUTCMonth()+1)+'-'
-            + pad(d.getUTCDate())+'T'
-            + pad(d.getUTCHours())+':'
-            + pad(d.getUTCMinutes())+':'
-            + pad(d.getUTCSeconds())+'Z'
-        }
-        
-        
-        function refreshTimeline(){
-            $.ajax({
-                type: "POST",
-                url: "http://localhost:8080/api/1/timelineservice.get_activity",
-                data: {
-                    
-                },
-                headers:{
-                    "x-georemindme-session":GRMcookie,
-                    "content-type": "application/json"
-                },
-                context: $(this),
-                success: function(data){
-                    $('#timeline').empty();
-                    $(data.timelines).each(function(i,elem){                      
-                        var c=$('#msg-'+elem.msg_id).tmpl(elem);
-                        var timeago=$(c).find('.timeago');
-                        var iso8601=ISODateString(new Date(parseInt($(timeago).attr('title'))*1000))
-                        
-                        $(timeago).attr('title',iso8601)
-                        $(timeago).timeago();
-                        $(c).appendTo('#timeline');
-                    });
-                }
-            });
-        }
         
         $(document).ready(function(){
 			checkIfCookie();
-            //if(GRMcookie!=null)
-                
-            //refreshTimeline();
-			$('#tabMenu li').click(function(){
-				tab_id=$('#tabMenu li.active').attr('id')
-				$('#'+tab_id+'_content').addClass('hidden');
-				$('#tabMenu li.active').removeClass('active');
-				
-				tab_id=$(this).attr('id')
-				//console.log(tab_id)
-				$('#'+tab_id+'_content').removeClass('hidden');
-				$(this).addClass('active');
-			})
-            
-            $('#suggestion').click(function(){
-                $('body').css('width',"535px")
-                $('body').css('height',$("iframe").height()+"px")
-            })
 		});
 	</script>
 	
@@ -240,94 +53,7 @@
 		</form>
 	</div>
 	
-	<div id="logged">
-		<ul id="tabMenu">
-			<li id="activity" class="active">Actividad</li>
-<!--
-			<li id="bag">Mochila</li>
--->
-			<li id="suggestion">Hacer sugencia</li>
-			<li onclick="javascript:window.open('http://localhost:8080/logout')">Desconectar</li>
-		</ul>
-		
-        
-        <div id="activity_content">
-            <a href="#" onclick="javascript:refreshTimeline()" style="float:right;margin-bottom: 5px;">Refrescar</a>
-            <ul id="timeline">
-            </ul>         
-		</div>
-        
-        
-<!--
-		<div id="bag_content" class="hidden">
-			Mochila
-		</div>
--->
-		<div id="suggestion_content" class="hidden">
-			<iframe src="http://localhost:8080/plugin/suggestions/add/" width="100%" border="0" height="800px"></iframe>
-		</div>
-	</div>
-
-    <!-- TIMELINE TEMPLATES -->
-    <!--
-        created: 1314010285
-        instance_id: 495
-        instance_name: "Maravillas de la naturaleza"
-        msg_id: 350
-        url: "/list/495/"
-        user: "jneight"
-    -->
-    
-    <div id="msg-300"  type="text/x-jquery-tmpl" style="display:none">
-        <li>
-            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">${user} ha sugerido: <br>
-            <a href="http://localhost:8080${url}" target="_blank">${instance_name}</a><br>
-            <abbr class="timeago" title="${created}">${created}</abbr>
-        </li>
-    </div>
-    <div id="msg-350"  type="text/x-jquery-tmpl" style="display:none">
-        <li>
-            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">${user} ha creado la lista de sugerencias: <br>
-            <a href="http://localhost:8080${url}" target="_blank">${instance_name}</a><br>
-            <abbr class="timeago" title="${created}">${created}</abbr>
-        </li>
-    </div>
-    <div id="msg-0"  type="text/x-jquery-tmpl" style="display:none">
-        <li>
-            <p>¡Genial! ya has creado <a href="{% url2 in_facebook public_profile request.user.username %}">tu cuenta</a> en GeoRemindMe, <strong>ya puedes empezar a recibir y enviar sugerencias</strong>.</p>
-            <abbr class="timeago" title="${created}">${created}</abbr>
-        </li>
-    </div>
-    <div id="msg-1"  type="text/x-jquery-tmpl" style="display:none">
-        <li>
-            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">Now, you can also login using your Google account at <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a><br>
-            <abbr class="timeago" title="${created}">${created}</abbr>
-        </li>
-    </div>
-    <div id="msg-2"  type="text/x-jquery-tmpl" style="display:none">
-        <li>
-            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">Now, you can log from Facebook and from <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a><br>
-            <abbr class="timeago" title="${created}">${created}</abbr>
-        </li>
-    </div>
-    <div id="msg-3"  type="text/x-jquery-tmpl" style="display:none">
-        <li>
-            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">Now, you can also login using your Twitter account at www.georemindme.com <br>
-            <abbr class="timeago" title="${created}">${created}</abbr>
-        </li>
-    </div>
-    <div id="msg-125"  type="text/x-jquery-tmpl" style="display:none">
-        <li>
-            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">A ${user} le gusta un comentario <br>
-            <abbr class="timeago" title="${created}">${created}</abbr>
-        </li>
-    </div>
-    <div id="msg-305"  type="text/x-jquery-tmpl" style="display:none">
-        <li>
-            <img src="http://localhost:8080/user/${user}/picture/" alt="${user}">Te gusta una sugerencia <br>
-            <abbr class="timeago" title="${created}">${created}</abbr>
-        </li>
-    </div>
+	
 
 </body>
 </html>

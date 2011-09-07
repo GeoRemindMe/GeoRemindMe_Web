@@ -1277,7 +1277,7 @@ div#left-col ul#friends-to-follow li a:hover {
 }
 
 div.removable {
-	margin-right: 0;
+	margin-right: -69;
 }
 div.removable a{
     visibility:hidden;
@@ -1580,7 +1580,7 @@ ul#chronology li div.timeline-msg {
 
 
 ul#chronology li div.timeline-msg {
-    width:585;
+    width:420px;
 }
 
 ul#chronology li.msg-305 div.timeline-msg div.msg{

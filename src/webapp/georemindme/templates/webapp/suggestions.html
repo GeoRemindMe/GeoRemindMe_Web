@@ -831,7 +831,7 @@
                                         <dd style="width:390px">
                                                 <ul class="removable-sugestion-list" {% if k.lists|length = 0 %}style="display:none"{% endif %}>
                                                     {% for obj in k.lists %}
-                                                            <li class="list_{{obj.id}} {% if obj.user == user.username%}removable{% endif %}" value="{{obj.id}}">{{obj.name}}</li>
+                                                            <li class="list_{{obj.id}} removable" value="{{obj.id}}">{{obj.name}}</li>
                                                     {% endfor %}
                                                 </ul>
                                             

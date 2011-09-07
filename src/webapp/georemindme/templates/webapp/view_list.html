@@ -24,6 +24,7 @@
                 $.ajax({
                     type: "POST",
                     url: url["get_suggestions"],
+                    data:{ list_id:$('#suggest_suggestion').attr('value')},
                     dataType:'json',
                     context:$(this),
                     complete: function() { GRM.nowait();},
@@ -105,7 +106,7 @@
                                 </span>
                             </li>
                         
-                            <li id="suggest_suggestion" class="hoverlink">
+                            <li id="suggest_suggestion" class="hoverlink" value="{{list.id}}">
                                 Proponer sugerencia
                             </li>
                         {% else %}

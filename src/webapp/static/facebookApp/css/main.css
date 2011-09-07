@@ -271,7 +271,17 @@ input{
         padding-left: 20px;
     }
     .like-dislike,.likex16{
-        background:url("/static/common/img/like.png") no-repeat scroll 0 -2px transparent;
+        background: url("/static/common/img/like.png") no-repeat scroll 0 0 transparent;
+        display: inline-block;
+        line-height: 20px;
+        padding-left: 20px;
+    }
+    .reject-suggestion{
+        background:url("/static/common/img/reject.png") no-repeat scroll 0 -2px transparent;
+        padding-left: 20px;
+    }
+    .accept-suggestion{
+        background:url("/static/common/img/accept.png") no-repeat scroll 0 -2px transparent;
         padding-left: 20px;
     }
     .remember-forget,.saved{
@@ -620,6 +630,11 @@ input{
             color: #555555;
             display: block;
             font-size: 0.9em;
+            
+        }
+        .suggestionPlace{
+            line-height:20px;
+            display:inline-block;
         }
         ul#chronology .suggestionPlace a{
             color: #555555;
@@ -773,6 +788,8 @@ input{
             ul#chronology div.comment-box{
                 padding-left: 50px;
                 border-bottom:0;
+                position: relative;
+                top: 0.5em;
             }
             ul#chronology div.comment-box ul{
                 margin:0;
@@ -928,6 +945,11 @@ input{
         ul#chronology li.msg-355{
             background-image: url("/static/facebookApp/img/timeline/355.png");
             background-position: right 10px;
+            background-repeat: no-repeat;
+        }
+        ul#chronology li.msg-360{
+            background-image: url("/static/facebookApp/img/timeline/110.png");
+            background-position: 99% 10px;
             background-repeat: no-repeat;
         }
     
@@ -2724,8 +2746,9 @@ input{
     #view-suggestion span#save-btn{
         margin-right:1em;
     }
-    #tag-list-label{
+    #view-suggestion div.suggestion p#tag-list-label{
         margin:0;
+        display:inline;
     }
     #view-suggestion ul#tag-list li{
         display:inline-block;
