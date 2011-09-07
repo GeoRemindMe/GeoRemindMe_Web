@@ -30,7 +30,7 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
         raise Http404 
     from geovote.models import Vote, Comment
     from geolist.models import ListSuggestion
-    from georemindme.funcs import single_prefetch_refprops, prefetch_refList
+    from georemindme.funcs import single_prefetch_refprops, prefetch_refList, prefetch_refprops
     suggestion = single_prefetch_refprops(suggestion, Suggestion.user, Suggestion.poi)
     if 'print' in request.GET:
         vote_counter = Vote.objects.get_vote_counter(suggestion.key())
@@ -48,8 +48,8 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     top_comments = Comment.objects.get_top_voted(suggestion, request.user)
     in_lists = ListSuggestion.objects.get_by_suggestion(suggestion, request.user)
     # construir un diccionario con todas las keys resueltas y usuarios
-    instances = prefetch_refList(in_lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in in_lists])
-    in_lists = [l.to_dict(resolve=False, instances=instances) for l in in_lists]
+    in_lists = prefetch_refprops(in_lists, ListSuggestion.user)
+    in_lists = [l.to_dict(resolve=False) for l in in_lists]
     # listas del usuario
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     lists = [l for l in lists if not suggestion.key() in l.keys]
