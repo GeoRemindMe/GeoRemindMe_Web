@@ -49,7 +49,7 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     in_lists = ListSuggestion.objects.get_by_suggestion(suggestion, request.user)
     # construir un diccionario con todas las keys resueltas y usuarios
     instances = prefetch_refList(in_lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in in_lists])
-    in_lists = [l.to_dict(resolve=True, instances=instances) for l in in_lists]
+    in_lists = [l.to_dict(resolve=False, instances=instances) for l in in_lists]
     # listas del usuario
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     lists = [l for l in lists if not suggestion.key() in l.keys]
