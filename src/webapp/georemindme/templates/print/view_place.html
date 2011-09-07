@@ -14,6 +14,8 @@
 		#map {float:left;}
 		#map img {margin-top: 15px;border:1px solid black;}
 		ul {float:right; width:450px;}
+		ul li {margin-bottom:5px;font-size:1.1em;}
+		.aside{font-size:0.9em;font-style:italic;}
 	</style>
 </head>
 <body>
@@ -27,7 +29,7 @@
 		<h3 style="text-align:left; margin-left:510px;">Este sitio tiene {{vote_counter}} votos y {{suggestions.1|length}} sugerencia(s):</h3>
 		<ul>
 			{% for s in suggestions.1 %}
-			<li>{{s.instance.name}}<br>Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</li>
+			<li>{{s.instance.name}}<br><span class="aside">Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</span></li>
 			{% endfor %}
 		</ul>
 		
