@@ -274,7 +274,7 @@
                                 <input type="submit" value="{{tag}}">
                             </form>
     -->
-                            {{tag}}
+                            <a href="{%url2 in_facebook view_tag_suggestions tag%}">{{tag}}</a>
                             {%if not forloop.last %}, {%endif%}
                         </li>
                     {% endfor %}

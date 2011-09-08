@@ -3239,7 +3239,8 @@ input{
 		padding-left: 0;
 	}
 	
-	#suggestion-list li{
+	#suggestion-list li,
+    #suggestion-tag-search ul li{
 		border-top: 1px solid #DDDDDD;
 		padding-top: 5px;
 		margin-bottom: 5px;
@@ -3430,3 +3431,35 @@ input{
     font-size:1em !important;
 }
 
+#suggestion-tag-search{
+    font-size:1.1em;  
+    line-height: 2em;
+}
+#suggestion-tag-search ul li{
+    line-height: auto;
+    padding: 0.7em 0;
+}
+
+#suggestion-tag-search .search-avatar {
+    display: inline;
+    float: left;
+    width: 32px;
+    margin-right: 10px;
+}
+	
+#suggestion-tag-search .search-avatar img {
+    width: 32px;
+}
+	
+#suggestion-tag-search .search-text {
+    display: inline;
+}
+#suggestion-tag-search .sugg-link{
+}
+#suggestion-tag-search .sugg-place {
+    font-weight:normal;
+}
+
+#right-col #suggestion-tag-search h2 {
+    line-height: 3em;
+}
