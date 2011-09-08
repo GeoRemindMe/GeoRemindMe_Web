@@ -138,7 +138,7 @@ class User(polymodel.PolyModel, HookedModel):
         return UserTimeline.objects.get_by_id(self.id, querier=querier, query_id=query_id)
 
     def get_activity_timeline(self, query_id=None):
-        from models_acc import UserTimelineSystem, UserTimeline, UserTimelineFollowersIndex
+        from models_acc import UserTimelineSystem, UserTimeline, UserTimelineFollowersIndex, UserTimelineSuggest
         from georemindme.funcs import prefetch_refprops, fetch_parents, fetch_parentsKeys
         from geovote.models import Comment, Vote
         from geoalert.models import Event
@@ -180,6 +180,8 @@ class User(polymodel.PolyModel, HookedModel):
         timeline = prefetch_refprops(timeline, UserTimeline.user)
         timeline_chrono = prefetch_refprops(timeline_chrono, UserTimeline.instance, UserTimeline.user)
         timeline.extend(timeline_chrono)
+        from helpers_acc import _load_ref_instances
+        instances = _load_ref_instances(timeline)
         timeline = [{
                     'id': int(activity_timeline.id), 
                     'created': activity_timeline.created,
@@ -187,11 +189,12 @@ class User(polymodel.PolyModel, HookedModel):
                     'msg': activity_timeline.msg, 
                     'username': activity_timeline.user.username,
                     'msg_id': activity_timeline.msg_id,
-                    'instance': activity_timeline.instance,
+                    'instance': instances.get(UserTimeline.instance.get_value_for_datastore(activity_timeline), activity_timeline.instance),
                     'has_voted':  Vote.objects.user_has_voted(self, activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
                     'vote_counter': Vote.objects.get_vote_counter(activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
                     'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
-                    'list': activity_timeline.list if hasattr(activity_timeline, 'list') else None,
+                    'list': instances.get(UserTimelineSuggest.list.get_value_for_datastore(activity_timeline), activity_timeline.list) 
+                                    if isinstance(activity_timeline, UserTimelineSuggest) else None,
                     'status': activity_timeline.status if hasattr(activity_timeline, 'status') else None,
                     'is_private': True,
                     } for activity_timeline in timeline]
@@ -201,6 +204,7 @@ class User(polymodel.PolyModel, HookedModel):
         return chronology
 
     def get_notifications_timeline(self, query_id=None):
+        from models_acc import UserTimeline, UserTimelineSuggest
         def prefetch_timeline(entities):
             # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
             """
@@ -209,12 +213,13 @@ class User(polymodel.PolyModel, HookedModel):
             """
             ref_keys = [x['timeline'] for x in entities]
             from geovote.models import Vote, Comment
-            from geolist.models import List
-            from geoalert.models import Event
-            from models_acc import UserTimeline, UserTimelineSuggest
+            from geolist.models import List, ListSuggestion
+            from geoalert.models import Suggestion
             timelines = db.get(set(ref_keys))
             from georemindme.funcs import prefetch_refprops
-            return prefetch_refprops(timelines, UserTimeline.user, UserTimeline.instance)
+            timelines = prefetch_refprops(timelines, UserTimeline.user, UserTimeline.instance)
+            from helpers_acc import _load_ref_instances
+            return timelines, _load_ref_instances(timelines)
         from google.appengine.api import datastore
         from models_utils import _Notification
         if query_id is None:
@@ -223,13 +228,15 @@ class User(polymodel.PolyModel, HookedModel):
             query = datastore.Query(kind='_Notification', filters={'owner =': self.key()}, cursor=query_id)
         query.Order(('_created', datastore.Query.DESCENDING))
         timelines = query.Get(TIMELINE_PAGE_SIZE)
-        timelines = prefetch_timeline(timelines)
+        timelines, instances = prefetch_timeline(timelines)
         return [query.GetCursor(), [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
-                        'msg': timeline.msg, 'username':timeline.user.username,
+                        'msg': timeline.msg, 
+                        'username':timeline.user.username,
                         'msg_id': timeline.msg_id,
-                        'instance': timeline.instance,
-                        'list': timeline.list if hasattr(timeline, 'list') else None,
+                        'instance': instances.get(UserTimeline.instance.get_value_for_datastore(timeline), timeline.instance),
+                        'list': instances.get(UserTimelineSuggest.list.get_value_for_datastore(timeline), timeline.list) 
+                                    if isinstance(timeline, UserTimelineSuggest) else None,
                         'status': timeline.status if hasattr(timeline, 'status') else None,
                         'is_private': False,
                         }

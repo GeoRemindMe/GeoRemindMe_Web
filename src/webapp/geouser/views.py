@@ -252,6 +252,9 @@ def public_profile(request, username, template='webapp/profile.html'):
     :param username: nombre de usuario
     :type username: ni idea
     """
+    from google.appengine.ext import db
+    from georemindme.funcs import prefetch_refprops
+    from geoalert.models import Suggestion
     from geoalert.views import get_suggestion
     if request.user.is_authenticated() \
      and request.user.username is not None \
@@ -261,10 +264,10 @@ def public_profile(request, username, template='webapp/profile.html'):
         counters = request.user.counters_async()
         sociallinks = profile.sociallinks_async()
         timeline = request.user.get_profile_timeline()
-        suggestions = get_suggestion(request, id=None,
-                                     wanted_user=request.user,
-                                     page = 1, query_id = None
-                                     )
+#        from geoalert.api import get_suggestions_dict
+#        suggestions_entity = get_suggestions_dict(request.user)
+#        suggestions = [db.model_from_protobuf(s.ToPb()) for s in suggestions_entity]
+#        suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
         is_following = True
         is_follower = True
         show_followers = True
@@ -280,10 +283,10 @@ def public_profile(request, username, template='webapp/profile.html'):
         settings = profile_user.settings
         profile = profile_user.profile
         sociallinks = profile.sociallinks_async()
-        suggestions = get_suggestion(request, id=None,
-                                     wanted_user=profile_user,
-                                     page = 1, query_id = None
-                                     )
+#        suggestions = get_suggestion(request, id=None,
+#                                     wanted_user=profile_user,
+#                                     page = 1, query_id = None
+#                                     )
         
         if request.user.is_authenticated():
             is_following = profile_user.is_following(request.user)
@@ -295,14 +298,14 @@ def public_profile(request, username, template='webapp/profile.html'):
             timeline = profile_user.get_profile_timeline(querier=request.user)
         show_followers = settings.show_followers,
         show_followings = settings.show_followings
-    if not request.user.is_authenticated():
-        pos = template.rfind('.html')
-        template = template[:pos] + '_anonymous' + template[pos:]
+        if not request.user.is_authenticated():
+            pos = template.rfind('.html')
+            template = template[:pos] + '_anonymous' + template[pos:]
     return render_to_response(template, {'profile': profile, 
                                          'counters': counters.next(),
                                          'sociallinks': sociallinks.next(),
                                          'chronology': timeline, 
-                                         'suggestions': suggestions,
+#                                         'suggestions': suggestions,
                                          'is_following': is_following,
                                          'is_follower': is_follower, 
                                          'show_followers': show_followers,

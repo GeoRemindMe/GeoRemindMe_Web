@@ -57,14 +57,16 @@ class CommentHelper(object):
         p = PagedQuery(q, id = query_id, page_size=7)
         comments = p.fetch_page(page)
         from georemindme.funcs import prefetch_refpropsEntity
-        prefetch = prefetch_refpropsEntity(comments, 'user')
-        [comment.set_unindexed_properties(['id', 'username','has_voted', 'vote_counter']) for comment in comments]
-        [comment.update({'id': comment.key().id(),
-                         'username': prefetch[comment['user']].username,
-                         'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
-                         'vote_counter': comment['votes'],}) 
-                         for comment in comments]
-        return [p.id, comments]
+        prefetch = prefetch_refpropsEntity(comments, 'user', 'instance')
+        return [p.id, [
+          {'id': comment.key().id(),
+           'username': prefetch[comment['user']].username,
+           'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+           'vote_counter': comment['votes'],
+           'instance': prefetch[comment['instance']],
+           'msg': comment['msg'],
+           } for comment in comments]
+                ]
     
     def get_by_instance(self, instance, query_id=None, page=1, querier = None, async=False):
         """
@@ -96,14 +98,16 @@ class CommentHelper(object):
             return p.id, q.run(config=datastore_query.QueryOptions(limit=7))
         comments = p.fetch_page(page)
         from georemindme.funcs import prefetch_refpropsEntity
-        prefetch = prefetch_refpropsEntity(comments, 'user')
-        [comment.set_unindexed_properties(['id', 'username','has_voted', 'vote_counter']) for comment in comments]
-        [comment.update({'id': comment.key().id(),
-                         'username': prefetch[comment['user']].username,
-                         'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
-                         'vote_counter': comment['votes'],}) 
-                         for comment in comments]
-        return [p.id, comments]
+        prefetch = prefetch_refpropsEntity(comments, 'user', 'instance')
+        return [p.id, [
+                      {'id': comment.key().id(),
+                       'username': prefetch[comment['user']].username,
+                       'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                       'vote_counter': comment['votes'],
+                       'instance': prefetch[comment['instance']],
+                       'msg': comment['msg'],
+                       } for comment in comments]
+                ]
         
     def load_comments_from_async(self, query_id, comments_async, querier):
         if querier is None:
@@ -113,20 +117,16 @@ class CommentHelper(object):
         for comment in comments_async:
             comments_objects.append(comment)
         from georemindme.funcs import prefetch_refprops
-        comments_objects = prefetch_refprops(comments_objects, Comment.user, Comment.instance)
-        for comment in comments_objects:
-            comments_loaded.append({'id': comment.id,
+        comments_objects = prefetch_refprops(comments_objects, Comment.user)            
+        return [query_id, [{'id': comment.id,
                                     'created': comment.created,
                                     'modified': comment.modified, 
                                     'msg': comment.msg,
                                     'username': comment.user.username,
-                                    'instance': comment.instance,
                                     'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
                                     'vote_counter': comment.votes,
-                                    }
-                                  )
-            
-        return [query_id, comments_loaded]
+                                    } for comment in comments_objects]
+                ]
     
     def get_by_id_user(self, id, user):
         try:
@@ -180,12 +180,14 @@ class CommentHelper(object):
                 if len(top) > 0:
                     from georemindme.funcs import prefetch_refpropsEntity
                     prefetch = prefetch_refpropsEntity(top, 'user')
-                    [comment.set_unindexed_properties(['id', 'username','has_voted', 'vote_counter']) for comment in top]
-                    [comment.update({'id': comment.key().id(),
-                         'username': prefetch[comment['user']].username,
-                         'has_voted':  Vote.objects.user_has_voted(querier, comment.key()),
-                         'vote_counter': comment['votes'],}) 
-                         for comment in top]
+                    return [
+                                   {'id': comment.key().id(),
+                                    'username': prefetch[comment['user']].username,
+                                    'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
+                                    'vote_counter': comment['votes'],
+                                    'msg': comment['msg'],
+                                    } for comment in top
+                            ]
                     memcache.set('%stopcomments_%s' % (memcache.version, instance.key()), top, 300)
         return top
         
