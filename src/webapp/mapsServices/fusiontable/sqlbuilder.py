@@ -1,3 +1,4 @@
+# coding=utf-8
 #!/usr/bin/python
 #
 # Copyright (C) 2010 Google Inc.
@@ -149,11 +150,8 @@ class SQL:
         stringValues = '%s%d' % (stringValues, value)
       elif type(value).__name__=='float':
         stringValues = '%s%f' % (stringValues, value)
-      elif type(value).__name__=='unicode':
-          continue
       else:
-        stringValues = "%s'%s'" % (stringValues,
-                                   value.encode('string-escape'))
+        stringValues = "%s'%s'" % (stringValues, re.sub(r"(?<!\\)'", "\\'", value))
       if count < len(values): stringValues = "%s," % (stringValues)
       count += 1
 

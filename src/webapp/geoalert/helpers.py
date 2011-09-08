@@ -353,7 +353,7 @@ class SuggestionHelper(EventHelper):
             ftclient = ftclient.OAuthFTClient()
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
             query = ftclient.query(sqlbuilder.SQL().select(__web_settings.FUSIONTABLES['TABLE_SUGGS'], cols=['sug_id'],
-                                                   condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s)) ORDER BY modified LIMIT 50' % (location, radius)
+                                                   condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s)) ORDER BY created DESC LIMIT 50' % (location, radius)
                                                    )
                            )
             results = query.splitlines()

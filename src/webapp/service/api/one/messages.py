@@ -16,6 +16,7 @@ class Timeline(messages.Message):
 
 class Timelines(messages.Message):
     timelines = messages.MessageField(Timeline, 1, repeated=True)
+    query_id = messages.StringField(2)
     
     
 class Suggestion(messages.Message):

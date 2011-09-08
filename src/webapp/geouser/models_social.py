@@ -18,7 +18,7 @@ from models import User
 class SocialUser(polymodel.PolyModel):    
     uid = db.StringProperty(required=False)
     email = db.EmailProperty(required=False)
-    realname = db.TextProperty()
+    realname = db.TextProperty(indexed=False)
     created = db.DateTimeProperty(auto_now_add=True)
     user = None
     
@@ -92,7 +92,7 @@ class FacebookUserHelper():
 class FacebookUser(SocialUser):
     """USERS FROM FACEBOOK"""
     user = db.ReferenceProperty(User)
-    profile_url = db.URLProperty()
+    profile_url = db.URLProperty(indexed=False)
     access_token = db.TextProperty()
     objects = FacebookUserHelper()
     
@@ -139,7 +139,7 @@ class TwitterUser(SocialUser):
     """USER FROM TWITTER"""
     user = db.ReferenceProperty(User)
     username = db.TextProperty()
-    picurl = db.URLProperty()
+    picurl = db.URLProperty(indexed=False)
     objects = TwitterUserHelper()
     
     def is_twitter(self):

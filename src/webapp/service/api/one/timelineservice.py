@@ -8,7 +8,7 @@ from messages import Timelines, Timeline
 
 class GetActivityRequest(messages.Message):
     limit = messages.IntegerField(1, default=10)
-    on_or_before = messages.IntegerField(2)
+    query_id = messages.StringField(2, default=None)
 
     class Order(messages.Enum):
         MODIFIED = 1
@@ -30,7 +30,7 @@ class TimelineService(remote.Service):
         if user is None:
             from protorpc.remote import ApplicationError
             raise ApplicationError("Unknow user")
-        activity = user.get_activity_timeline()
+        activity = user.get_activity_timeline(request.query_id)
         timelines = []
         from time import mktime
         from geovote.models import Comment, Vote
@@ -51,6 +51,6 @@ class TimelineService(remote.Service):
                     t.instance_name=unicode(a['instance'])
                     t.url = a['instance'].get_absolute_url().encode("utf8")
             timelines.append(t)
-        return Timelines(timelines=timelines)
+        return Timelines(timelines=timelines, query_id = activity[0])
 
     
