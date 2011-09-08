@@ -230,6 +230,7 @@ class User(polymodel.PolyModel, HookedModel):
                         'msg_id': timeline.msg_id,
                         'instance': timeline.instance,
                         'list': timeline.list if hasattr(timeline, 'list') else None,
+                        'status': timeline.status if hasattr(timeline, 'status') else None,
                         'is_private': False,
                         }
                         for timeline in timelines]]
