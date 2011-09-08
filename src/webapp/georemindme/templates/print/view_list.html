@@ -1,54 +1,65 @@
 {%load tags %}
 <!DOCTYPE HTML>
-<html lang="ru-RU">
+<html>
 <head>
 	<meta charset="UTF-8">
-	<title></title>
+	<title>Lista de sugerencias: "{{list}}"</title>
 	<link rel="stylesheet" href="/static/webapp/style/print.css" type="text/css">
-	
-	<style type="text/css">
-		.container {width:960px;margin:0 auto;}
-		h1 {text-align:center;}
-		h3 {text-align:center;}
-		header {border-bottom: 2px solid #CCC;}
-		#map {float:left;}
-		#map img {margin-top: 15px;border:1px solid black;}
-		#right-col {float:right; width:450px;}
-		ul {padding-left:0;}
-		ul li {margin-bottom:5px;font-size:1.1em;}
-		.big {font-size:1.1em;}
-		.aside{font-size:0.9em;font-style:italic;}
-	</style>
+    <link rel="stylesheet" href="/static/common/css/print.css" type="text/css" media="print" />
+    <script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
 </head>
 <body>
+    {%include "print/menu.html" %}
 	<div class="container">
-		<header>
-			<img src="/static/webapp/img/logo2.png" alt="GeoRemindMe" id="logo">
+		<div id="header">
+			<div id="logo">
+                <img src="/static/webapp/img/logo2.png" alt="GeoRemindMe"><br>
+                www.georemindme.com
+            </div>
 			<h1>Lista: "{{list}}"</h1>
-		</header>
+            <p class="big"><strong>Autor: </strong>{{list.user.username}} - Más información en {{list.get_short_url}}</p>
+		</div>
 		
-			<p class="big"><strong>Autor: </strong>{{list.user.username}}</p>
+			
 			{% if list.description %}
 				<p class="big"><strong>Descripción: </strong>{{list.description}}</p>
 			{% endif %}
-			<p class="big"><strong>URL: </strong> {{list.get_short_url}}</p>
-			<p class="big">Esta lista tiene <strong>{{vote_counter}} votos</strong>.</p>
 			
-			<h3 style="text-align:left;">Esta lista tiene {{suggestions|length}} sugerencia(s):</h3>
-			{{suggestions.name}}
-			<ul>
 				{% for s in suggestions %}
-				<li><strong>{{s.instance.user.username}}: </strong>{{s.instance.name}}<br><span class="aside">En {{s.instance.poi.name}} el {{s.instance.created|naturaltime}}</span></li>
+				<div class="suggestion {% cycle 'even' 'odd' %}" {% if forloop.counter < 3 %}style="border:0 none"{%endif%}>
+                    <p><strong>{{s.instance.name}}</strong></p>
+                    <p>
+                        En {{s.instance.poi.name}} <br>
+                        <div class="maps">
+                            <div class="zoom">
+                                <span onclick="changeZoom(this,1)" class="zoom-in">Aumentar</span>
+                                <span onclick="changeZoom(this,-1)" class="zoom-out">Disminuir</span>
+                            </div>
+                            <img src="http://maps.googleapis.com/maps/api/staticmap?center={{s.instance.poi.location}}&zoom=14&size=460x220&maptype=satellite
+            &markers=color:red%7C{{s.instance.poi.location}}&sensor=false" value="14">
+                        </div>
+                        <strong>Dirección:</strong> <a href="http://maps.google.com/maps?q={{s.instance.poi.location}}&hl=en&ie=UTF8&z=16">{{s.instance.poi.address}}</a>
+                        <span class="gps-location"><br><strong>GPS</strong>: {{s.instance.poi.location}}</span>
+                    </p>
+                    
+                    <br>
+                        <span class="aside links">Más información en {{s.instance.poi.get_short_url}}<br></span>
+                        <span class="aside autor-date">Autor: {{s.instance.user.username}} - Fecha: {{s.instance.created|naturaltime}} </span>
+                
+                    
+                </div>
 				{% endfor %}
-			</ul>
+			
 			
 			{% if top_comments %}
+                <div class="comments">
 	                <h3 style="text-align:left;">Esta lista tiene {{top_comments|length}} comentario(s) popular(es): </h3>
-	                <ul>
-	                    {% for c in top_comments %}
-							<li><strong>{{c.username}}: </strong> {{c.msg}}<br><span class="aside">{{c.created|naturaltime}}</span></li>
-	                    {% endfor %}
-	                </ul>
+                        <ul>
+                            {% for c in top_comments %}
+                                <li><strong>{{c.username}}: </strong> {{c.msg}}<br><span class="aside">{{c.created|naturaltime}}</span></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 	        {% endif %}
 			
 		

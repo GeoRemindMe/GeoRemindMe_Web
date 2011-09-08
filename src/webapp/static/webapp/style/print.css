@@ -27,3 +27,127 @@ blockquote {margin:1.5em;padding:1em;font-style:italic;font-size:.9em;}
 .hide {display:none;}
 a:link, a:visited {background:transparent;font-weight:700;text-decoration:underline;}
 a:link:after, a:visited:after {font-size:90%;}
+
+#header{
+    border-bottom: 1px solid black;
+    clear: both;
+    height: 90px;
+}
+#logo{
+    float:right;
+    text-align: center;
+}
+#logo img{
+    height: 60px;
+}
+#header h1{
+    float: left;
+    margin: 0.5em 0 0;
+}
+#header p{
+    clear: left;
+    float: left;
+    margin: 5px 0 0;
+}
+
+.container,#print-menu {width:960px;margin:0 auto;}
+h1 {text-align:center;}
+h3 {text-align:center;}
+header {border-bottom: 2px solid #CCC;}
+#map {float:left;}
+#map img {margin-top: 15px;border:1px solid black;}
+#right-col {float:right; width:450px;}
+ul {padding-left:0;
+    list-style: none outside none;
+    margin:0;
+}
+ul li {
+    border-bottom: 1px dotted black;
+    font-size: 1.1em;
+    margin-bottom: 1em;
+}
+.big {font-size:1.1em;}
+.aside{font-size:0.9em;font-style:italic;}
+
+#print-container{
+    background: #EEEEEE;
+}
+#print-menu .hide {
+    display: inherit;
+}
+#print-menu ul li{ 
+    border: 0 none;
+    float: left;
+    margin: 5px 20px 5px 0px;
+}
+#print-menu ul li span:hover{
+    cursor:pointer;
+}
+
+hr{
+clear:both;
+margin:10px 0;
+}
+body{
+    margin:0;
+    padding:0;
+}
+.maps{
+    margin-right:10px 0;
+}
+.maps span:hover{
+    cursor:pointer;
+}
+.zoom{
+float:right;
+clear:both;
+}
+.maps .zoom-in,.maps .zoom-out{
+    background: url("/static/common/img/zoom_sprite.png") no-repeat scroll 0 0 transparent;
+    display: block;
+    float: left;
+    margin: -10px 10px 10px;
+    padding-left: 22px;
+}
+.maps .zoom-out{
+    background-position: 0 -20px;
+}
+.container li{
+    
+}
+.even{
+    
+    float:left;
+    clear:left;
+}
+.odd{
+    
+    float:right;
+    clear:right;
+}
+.even,.odd{
+    border-top:1px solid #ccc;
+    margin:10px;
+    padding-top:10px;
+    width:460px;
+    line-height: 1.5em;
+}
+.show,.hide{
+    background: url("/static/common/img/show_hide_sprite.png") no-repeat scroll 0 1px transparent;
+    display: block;
+    font-size: 1em;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 20px;
+}
+.hide{
+    background-position:0 -22px;
+}
+.suggestion a,.suggestion a:visited{
+    color:black;
+    text-decoration:none;
+    font-weight:normal;
+}
+.suggestion{
+
+}
