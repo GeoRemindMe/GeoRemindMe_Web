@@ -2,22 +2,50 @@
 {% comment %} 
     Mensaje nº 360
     350: Propuesta de sugerencia a una lista
+    obj.status 0 = Pendiente
+    obj.status 1 = Aceptada
+    obj.status 2 = Rechazada
 {% endcomment %} 
 
-<li class="msg-{{obj.msg_id}}">
+<li class="msg-{{obj.msg_id}}{% ifnotequal obj.list.user.username request.user.username %} out{%endifnotequal%}">
     <div class="avatar">
         <a href="{% url2 in_facebook public_profile obj.username %}" title="{{obj.username}}">
             <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
         </a>
     </div>
+    
     <div class="timeline-msg">
-        <p>{{obj.username}} te ha propuesto añadir la sugerencia "<a href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a>" a tu lista "<a href="{% url2 in_facebook view_list obj.list.id %}">{{obj.list.name}}"</a></p>
+        {% ifequal obj.status 0 %}
+            {% ifequal obj.list.user.username request.user.username %}
+                <p><a class="black-link" href="{% url2 in_facebook public_profile obj.username %}">{{obj.username}}</a> te ha propuesto añadir la sugerencia "<a href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a>" a tu lista "<a href="{% url2 in_facebook view_list obj.list.id %}">{{obj.list.name}}"</a></p>
+            {% else %}
+                <p>Tu propuesta de añadir la sugerencia "<a href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a>" a la lista "<a href="{% url2 in_facebook view_list obj.list.id %}">{{obj.list.name}}"</a> ha sido enviada  a <a href="{%url2 in_facebook public_profile obj.instance.user.username %}" class="black-link">{{obj.list.user.username}}</a></p>
+            {% endifequal %}
+        {%else%}{% ifequal obj.status 1 %}
+            {% ifequal obj.list.user.username request.user.username %}
+                <p>Has aceptado la propuesta de <a class="black-link" href="{% url2 in_facebook public_profile obj.username %}">{{obj.username}}</a> de añadir la sugerencia "<a href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a>" a tu lista "<a href="{% url2 in_facebook view_list obj.list.id %}">{{obj.list.name}}"</a></p>
+            {% else %}
+                <p>{{obj.list.user.username}} ha aceptado tu propuesta de añadir la sugerencia "<a href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a>" a la lista "<a href="{% url2 in_facebook view_list obj.list.id %}">{{obj.list.name}}"</a></p>
+            {% endifequal %}
+        {%else%}{% ifequal obj.status 2 %}
+            {% ifequal obj.list.user.username request.user.username %}
+                <p>Has rechazado la propuesta de <a class="black-link" href="{% url2 in_facebook public_profile obj.username %}">{{obj.username}}</a> de añadir la sugerencia "<a href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a>" a tu lista "<a href="{% url2 in_facebook view_list obj.list.id %}">{{obj.list.name}}"</a></p>
+            {% else %}
+                <p>Tu propuesta de añadir la sugerencia "<a href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a>" a la lista "<a href="{% url2 in_facebook view_list obj.list.id %}">{{obj.list.name}}"</a> ha sido enviada  a <a href="{%url2 in_facebook public_profile obj.instance.user.username %}" class="black-link">{{obj.list.user.username}}</a></p>
+            {% endifequal %}
+        {% endifequal %}{% endifequal %}{% endifequal %}
+        
         <span class="timestamp">
             {{obj.created|naturaltime}}</span> <span class="action-bar">
-            | 
-            <span class="hoverlink accept-suggestion" onclick="javascript:suggestionProposal('accept',{{obj.id}})">Aceptar</span> 
-            | 
-            <span class="hoverlink reject-suggestion" onclick="javascript:suggestionProposal('reject',{{obj.id}})">Rechazar</span>
+            {% ifequal obj.status 0 %}
+                {% ifequal obj.list.user.username request.user.username %}
+                    | 
+                    <span class="hoverlink accept-suggestion" onclick="javascript:suggestionProposal(this,'accept',{{obj.id}})">Aceptar</span> 
+                    | 
+                    <span class="hoverlink reject-suggestion" onclick="javascript:suggestionProposal(this,'reject',{{obj.id}})">Rechazar</span>
+                    {% csrf_token %}
+                {% endifequal %}
+            {% endifequal %}
         </span>
     </div>
 </li>

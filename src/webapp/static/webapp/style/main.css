@@ -372,6 +372,9 @@ background: linear-gradient(left, rgba(238,238,238,1) 0%,rgba(254,254,254,1) 50%
 	float: left;
 	width: 500px;
 }
+#loginSec #left-block {
+    width:auto;
+}
 
 #right-block {
 	width: 450px;
@@ -1598,7 +1601,7 @@ ul#chronology div.input-box textarea{
 */
 
 #notifications .unread-item {
-    background-color: #D0DEEE;
+    background-color: #E8E8E8;
     border: 1px dotted #CCC;
 }
 ul#chronology li div.timeline-msg {
