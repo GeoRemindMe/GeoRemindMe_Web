@@ -80,7 +80,7 @@
                 url: url["modify_suggestion_list"],
                 data: {
                     list_id: $(obj).attr('value'),
-                    suggestions: $('#add-to-list').attr('value')
+                    suggestions: [$('#add-to-list').attr('value')]
                 },
                 dataType:'json',
                 complete: function(){GRM.nowait();},

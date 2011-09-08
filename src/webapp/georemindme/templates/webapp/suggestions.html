@@ -417,26 +417,28 @@
 
         //Añade las sugerencias marcadas a la lista correspondiente
         function submenuLiBehave(obj){
+            
+            
+            
             if($(obj).attr('id')=="new-list-btn")
                 return false;
-            var addToList=$(obj).attr('id').substring(7,$(obj).attr('id').length);
-            var suggestions=[]
+            
+            var data={};
+            data['list']=$(obj).attr('id').substring(7,$(obj).attr('id').length);
+            data['suggestions']=new Array();
+            
             var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
             if( checkedSuggestions.length==0){
                 showMessage("No hay ninguna sugerencia seleccionada","error")
             }else{
-                checkedSuggestions.each(function(){
+                checkedSuggestions.each(function(i,elem){
                     //console.log("Añadimos a la lista: "+addToList+", la sugerencia: "+);
-                    suggestions.push($(this).attr('id').substring(9,$(this).attr('id').length))
+                    data['suggestions'][i]=$(elem).attr('id').substring(9,$(this).attr('id').length)
                 });
-                
                 $.ajax({
                     type: "POST",
                     url: url["modify_suggestion_list"],
-                    data: {
-                        list_id: addToList,
-                        suggestions: suggestions
-                    },
+                    data: data,
                     dataType:'json',
                     success: function(data){
                         
