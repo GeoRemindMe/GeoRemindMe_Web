@@ -28,7 +28,7 @@
                         {% if lists %}
                             {% for obj in lists %}
                                 <!-- Solo se muestran mis listas -->
-                                <li id="listid-{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
+                                <li id="listid-{{obj.id}}"><span class="checkbox name" value="{{obj.id}}">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
                             {% endfor %}
                         {% endif %}
                         <li class="new-list-btn">
@@ -77,16 +77,26 @@
             {%endcomment%}
             <div id="address-container">
                 {%comment%}
+<!--
                 <div id="address-form">
 						{% if request.GET.placename %}
-                            <input type="text" id="address" name="address"  value="{{request.GET.placename}}">
+                            <input type="text" id="address" name="address"  value="{{request.GET.placename}}"  placeholder="Introduce el sitio, por ej: Mirador de San Nicolás">
                         {% else %}
                             <input type="text" id="address" name="address"  placeholder="Introduce el sitio, por ej: Mirador de San Nicolás">
                         {% endif %}
                 </div>
+-->
                 {%endcomment%}
                 <div id="place-form">
-                    {#<label for="place">Nombre:</label>#}<input type="text" id="place" name="place" value="{{poi_name}}">
+                    {#<label for="place">Nombre:</label>#}
+                    {% if request.GET.placename %}
+                        <input type="text" id="place" name="place"  value="{{request.GET.placename}}">
+                    {% else %}
+                        <input type="text" id="place" name="place"  placeholder="Introduce el sitio, por ej: Mirador de San Nicolás">
+<!--
+                        <input type="text" id="place" name="place" value="{{poi_name}}">
+-->
+                    {% endif %}
                 </div>
                 
                 
@@ -94,7 +104,7 @@
                 <div id="map_canvas" style="width:100%; height:300px;"></div>
                 
                 <!-- SEARCH ENGINE -->
-                {%comment%}
+                
                 <div id="search-engine-layer">
                     <label for="searchEngine"><strong>Motor de búsqueda:</strong></label>
                     <input type="radio" name="engine" value="foursquare" /> Foursquare
@@ -138,7 +148,7 @@
                     </div>
                 </div>
             
-            {%endcomment%}
+            
             </div>
             
 <!--
@@ -161,16 +171,16 @@
                     Compartir también en 
                     <ul>
                         {% if user.facebook_user %}
-                            <li><span class="facebook-active" title="Enviar sugerencia a mi muro de Facebook">&nbsp;</span></li>
+                            <li data-network="facebook"><span class="facebook-active" title="Enviar sugerencia a mi muro de Facebook">&nbsp;</span></li>
                         {% else %}
-                            <li><span class="facebook-inactive request-access" id="perms-facebook" title="Activar permisos para comunicarse con Facebook">&nbsp;</span></li>
+                            <li data-network="facebook"><span class="facebook-inactive request-access" id="perms-facebook" title="Activar permisos para comunicarse con Facebook">&nbsp;</span></li>
                         {% endif %}
                         
                         {% if user.has_perms_twitter %}
                             <!--Tenemos permiso para enviar la sugerencia a Twitter -->
-                            <li><span class="twitter-active" title="Enviar sugerencia a mi cuenta de Twitter">&nbsp;</span></li>
+                            <li data-network="twitter"><span class="twitter-active" title="Enviar sugerencia a mi cuenta de Twitter">&nbsp;</span></li>
                         {% else %}
-                            <li><span class="twitter-inactive request-access" id="perms-twitter" title="Activar permisos para comunicarse con Twitter">&nbsp;</span></li>
+                            <li data-network="twitter" class="inactive"><span class="twitter-inactive request-access" id="perms-twitter" title="Activar permisos para comunicarse con Twitter">&nbsp;</span></li>
                         {% endif %}
                     </ul>
                 </span>

@@ -90,4 +90,3 @@ jQuery.fn.placeholder = function()
 		}
 	});
 }
-

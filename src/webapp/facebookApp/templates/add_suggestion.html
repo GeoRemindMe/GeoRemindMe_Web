@@ -6,6 +6,7 @@
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/main.js"></script>
     
     <script type="text/javascript">
         
@@ -51,7 +52,7 @@
                         dataType:'json',
                         success: function(data){
                             //Añadimos la lista al desplegable
-                            $("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
+                            $("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\" value=\""+data.name+"\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
                             $('#listid-'+data.id).click(function(){onLiClick(this)});
                             
                             //Añadimos la lista en la pestaña listas
@@ -202,9 +203,10 @@
         
         
     </script>
-    <script src="/static/facebookApp/js/suggestion.js"></script>
+    
     <!--<script src="/static/webapp/js/dashboard.js"></script>-->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=es&region=ES"></script>
+    <script src="/static/facebookApp/js/suggestion.js"></script>
     <script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.core.js"></script>
     <script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.mouse.js"></script>
