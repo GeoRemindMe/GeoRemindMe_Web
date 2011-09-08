@@ -43,10 +43,10 @@
 			</ul>
 			
 			{% if top_comments %}
-	                <h3 style="text-align:left;">Esta lista tiene {{top_comments.length}} comentarios populares: </h3>
+	                <h3 style="text-align:left;">Esta lista tiene {{top_comments|length}} comentario(s) popular(es): </h3>
 	                <ul>
 	                    {% for c in top_comments %}
-							<li>{{c.username}}: {{c.msg}}<br><span class="aside">{{c.created|naturaltime}}</span></li>
+							<li><strong>{{c.username}}: </strong> {{c.msg}}<br><span class="aside">{{c.created|naturaltime}}</span></li>
 	                    {% endfor %}
 	                </ul>
 	        {% endif %}
