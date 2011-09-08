@@ -511,8 +511,8 @@ class Suggestion(Event, Visibility, Taggable):
             try:
                 ftclient = ftclient.OAuthFTClient()
                 from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
-                from urllib import quote_plus
-                name = quote_plus(self.name.strip().encode('utf8'))
+                import unicodedata
+                name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
                 return ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],
                                                         {'name': name,
                                                         'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),

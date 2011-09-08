@@ -65,4 +65,6 @@ class OAuthFTClient(FTClient):
         resp, content = client.request(uri=self.scope,
                                        method="POST",
                                        body=query)
+        if resp['status'] != 200:
+            raise Exception(resp['status'])
         return content

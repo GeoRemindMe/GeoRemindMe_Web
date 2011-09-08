@@ -400,9 +400,9 @@ class Place(POI):
         try:
             ftclient = ftclient.OAuthFTClient()
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
-            from urllib import quote_plus
-            name = quote_plus(self.name.strip().encode('utf8'))
-            ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_PLACES'],
+            import unicodedata
+            name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
+            return ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_PLACES'],
                                                     {'name': name,
                                                      'bus_id': self.business.id if self.business is not None else -1,
                                                      'location': '%s,%s' % (self.location.lat, self.location.lon),
