@@ -32,12 +32,12 @@
 			<p class="big"><strong>Autor: </strong>{{suggestion.user.username}}</p>
 			<p class="big"><strong>Lugar: </strong>{{suggestion.poi.name}}</p>
 			<p class="big"><strong>Dirección: </strong>{{suggestion.poi.address}}</p>
-			
+			<p class="big"><strong>URL: </strong> {{suggestion.get_short_url}}</p>
 		
 
 			<h3 style="text-align:left;">Esta sugerencia tiene {{vote_counter}} votos.</h3>
 			{% if top_comments %}
-	                <h3 style="text-align:left;">Esta sugerencia tiene {{vote_counter}} votos.</h3>
+	                <h3 style="text-align:left;">Esta sugerencia tiene {{top_comments.length}} comentarios populares: </h3>
 	                <ul>
 	                    {% for c in top_comments %}
 							<li>{{c.username}}: {{c.msg}}<br><span class="aside">{{c.created|naturaltime}}</span></li>
