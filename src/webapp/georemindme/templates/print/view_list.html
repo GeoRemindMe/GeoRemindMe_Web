@@ -1,4 +1,62 @@
-Vista de impresión de una lista
-<p>{{list}}</p>
-<p>{{suggestions}}</p>
-<p>{{vote_counter}}</p>
+{%load tags %}
+<!DOCTYPE HTML>
+<html lang="ru-RU">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="/static/webapp/style/print.css" type="text/css">
+	
+	<style type="text/css">
+		.container {width:960px;margin:0 auto;}
+		h1 {text-align:center;}
+		h3 {text-align:center;}
+		header {border-bottom: 2px solid #CCC;}
+		#map {float:left;}
+		#map img {margin-top: 15px;border:1px solid black;}
+		#right-col {float:right; width:450px;}
+		ul {padding-left:0;}
+		ul li {margin-bottom:5px;font-size:1.1em;}
+		.big {font-size:1.1em;}
+		.aside{font-size:0.9em;font-style:italic;}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<header>
+			<img src="/static/webapp/img/logo2.png" alt="GeoRemindMe" id="logo">
+			<h1>Lista: "{{list}}"</h1>
+		</header>
+		
+			<p class="big"><strong>Autor: </strong>{{list.user.username}}</p>
+			{% if list.description %}
+				<p class="big"><strong>Descripción: </strong>{{list.description}}</p>
+			{% endif %}
+			<p class="big"><strong>URL: </strong> {{list.get_short_url}}</p>
+			<p class="big">Esta lista tiene <strong>{{vote_counter}} votos</strong>.</p>
+			
+			<h3 style="text-align:left;">Esta lista tiene {{suggestions|length}} sugerencia(s):</h3>
+			{{suggestions.name}}
+			<ul>
+				{% for s in suggestions %}
+				<li><strong>{{s.instance.user.username}}: </strong>{{s.instance.name}}<br><span class="aside">En {{s.instance.poi.name}} el {{s.instance.created|naturaltime}}</span></li>
+				{% endfor %}
+			</ul>
+			
+			{% if top_comments %}
+	                <h3 style="text-align:left;">Esta lista tiene {{top_comments.length}} comentarios populares: </h3>
+	                <ul>
+	                    {% for c in top_comments %}
+							<li>{{c.username}}: {{c.msg}}<br><span class="aside">{{c.created|naturaltime}}</span></li>
+	                    {% endfor %}
+	                </ul>
+	        {% endif %}
+			
+		
+		
+		
+		
+	
+	</div>
+	
+</body>
+</html>
