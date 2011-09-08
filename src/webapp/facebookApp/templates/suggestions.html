@@ -366,7 +366,7 @@
                 type: "POST",
                 url: url["modify_suggestion_list"],
                 data: {
-                    list_id: listID,
+                    list_id: [listID],
                     suggestions_del: [suggestionID]
                 },
                 dataType:'json',
@@ -434,7 +434,7 @@
                     type: "POST",
                     url: url["modify_suggestion_list"],
                     data: {
-                        list_id: addToList,
+                        list_id: [addToList],
                         suggestions: suggestions
                     },
                     dataType:'json',

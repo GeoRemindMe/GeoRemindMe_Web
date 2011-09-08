@@ -79,7 +79,7 @@
                 type: "POST",
                 url: url["modify_suggestion_list"],
                 data: {
-                    list_id: $(obj).attr('value'),
+                    list_id: [$(obj).attr('value')],
                     suggestions: [$('#add-to-list').attr('value')]
                 },
                 dataType:'json',
@@ -107,7 +107,7 @@
                 type: "POST",
                 url: url["modify_suggestion_list"],
                 data: {
-                    list_id: $(obj).attr('value'),
+                    list_id: [$(obj).attr('value')],
                     suggestions_del: [$('#add-to-list').attr('value')]
                 },
                 dataType:'json',
@@ -150,7 +150,7 @@
 					type: "POST",
 					url: url["modify_suggestion_list"],
 					data: {
-						name: listname
+						name: [listname]
 					},
 					dataType:'json',
 					success: function(data){

@@ -366,7 +366,7 @@
                 type: "POST",
                 url: url["modify_suggestion_list"],
                 data: {
-                    list_id: listID,
+                    list_id: [listID],
                     suggestions_del: [suggestionID]
                 },
                 dataType:'json',
@@ -424,7 +424,7 @@
                 return false;
             
             var data={};
-            data['list']=$(obj).attr('id').substring(7,$(obj).attr('id').length);
+            data['list']=[$(obj).attr('id').substring(7,$(obj).attr('id').length)];
             data['suggestions']=new Array();
             
             var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
