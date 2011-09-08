@@ -55,7 +55,21 @@ $(document).ready(function() {
     
      //~ key: 'AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710', // add your key here    
     //Google Maps - Direction Input Autocomplete address
-
+    $('#address').geo_autocomplete(new google.maps.Geocoder, {
+		mapkey: 'ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw', 
+		selectFirst: false,
+		minChars: 3,
+		cacheLength: 50,
+		width: 530,
+        mapwidth:0,
+        mapheight:0,
+		scroll: true,
+		scrollHeight: 150,
+        geocoder_region:'Spain',
+        geocoder_types: 'locality,street_address,sublocality,neighborhood,country',
+	}).result(function(_event, _data) {
+		if (_data) map.fitBounds(_data.geometry.viewport);
+	});
     
     //Set resizable canvas
     $('#address-container').resizable({
@@ -64,7 +78,7 @@ $(document).ready(function() {
         handles: 'n,s',
         alsoResize: "#map_canvas",
         stop: function(event, ui) {
-            //if (typeof resizeIframe != "undefined") resizeIframe()     
+            resizeIframe()     
         }
     });
 
@@ -79,7 +93,7 @@ $(document).ready(function() {
         
     var lat = parseFloat(latlngStr[0]);
     var lng = parseFloat(latlngStr[1]);
-    loadGMaps(lat,lng,"map_canvas");
+    loadGMaps(lat,lng,"map_canvas").ready();
     
     
     
@@ -290,151 +304,9 @@ function loadGMaps(defaultX,defaultY,canvas) {
     
     insertToolbar(map)
     
-    prepareAutocomplete();
-    
-    
-    // DEFAULT MARKER
-    
-    if( (typeof default_marker_X != "undefined") && (typeof default_marker_Y != "undefined") ){
-			
-			var location = new google.maps.LatLng(default_marker_X, default_marker_Y);
-			
-			if (typeof(GRM.marker) == "undefined")
-			{
-				GRM['marker'] = createMarker(default_marker_X, default_marker_Y);
-			}
-			else
-				GRM.marker.setPosition(location);
-				
-			map.panTo(location);
-
-		}
+    placesAutocomplete();
     
 
-}
-
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie != '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-function prepareAutocomplete() {
-
-    $("#address").autocomplete({
-     //This bit uses the geocoder to fetch address values
-      autoFocus: true,
-      minLength:3,
-      source: function(request, response) {
-
-        var data = { "X-CSRFToken": function(){return getCookie('csrftoken');} };
-        
-        // search by marker drag
-        if (request.term.indexOf(GRM.common.token) == 0) {
-            request.term = request.term.substring(GRM.common.token.length,request.term.length).split(',');
-            data['lat']=parseFloat(request.term[0]);
-            data['lon']=parseFloat(request.term[1]);
-        }
-        // search by text input
-        else {
-            var pos;
-            
-            if (typeof(GRM.marker) != "undefined") {
-                pos = GRM.marker.getPosition();
-            }
-            else {
-                pos = map.getCenter();
-                }
-            
-            data['lat']=pos.lat();
-            data['lon']=pos.lng();
-            data['name']=request.term;
-            }
-
-        data = JSON.stringify(data);
-        $.ajax({
-
-            url: "/api/1/MapService.get",
-            contentType:"application/json",
-            dataType:"json",
-            type:"POST",
-            data: data,
-            success: function(data) {
-                
-                var sites = (typeof data.sites == "undefined" || data.sites.length==0)?[]:data.sites;
-                
-                sites.push({name:"<span style='color:red;font-weight:bold;'>¿No aparecere el sitio aqui?</span>",lat:0.0,lon:0.0});
-                
-                
-                response($.map(sites, function(item) {
-                            return {
-                              label:  item.name,
-                              value: item.name,
-                              latitude: item.lat,
-                              longitude: item.lon
-                            }
-                          }));
-
-                }
-            
-            });
-      },
-      //This bit is executed upon selection of an address
-      select: function(event, ui) {
-          
-        var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
-        
-        if (typeof(GRM.marker) == "undefined")
-        {
-            GRM['marker'] = createMarker(location.lat(),location.lng());
-        }
-        else
-            GRM.marker.setPosition(location);
-            
-        map.panTo(location);
-        }
-    })
-    .data( "autocomplete" )._renderItem = function( ul, item ) {
-			return $( "<li></li>" )
-				.data( "item.autocomplete", item )
-				.append( "<a>" + item.label + "</a>" )
-				.appendTo( ul );
-            }; 
-
-}
-
-function createMarker(x,y)
-{
-    var icon = new google.maps.MarkerImage("/static/webapp/img/marcador02.png"); // or /static/webapp/img/marcador03.png
-    var myLatlng = new google.maps.LatLng(x,y);
-    
-    var marker = new google.maps.Marker({
-        map: map,
-        draggable: false,
-        position: myLatlng,
-        icon: icon
-    });
-
-    marker.setVisible(true);
-    marker.setDraggable(true);
-    marker.setAnimation(google.maps.Animation.DROP);
-
-    // set marker events
-    //google.maps.event.addListener(marker, 'click', function(){highlightTask(this.task,false);});
-    //google.maps.event.addListener(marker, 'dblclick', function(){editTask(this.task);});
-    google.maps.event.addListener(marker, 'dragend', function(){updateAddressByMarker(this);});
-    
-    return marker;
 }
 
 function codeLatLng(input) {
@@ -529,16 +401,29 @@ function insertToolbar(map){
     
     //Asignamos el comportamiento
     google.maps.event.addDomListener(btnPollo, 'click', function() {   
-        var location = map.getCenter();
+        var pos = map.getCenter();   
+        var myLatlng = new google.maps.LatLng(pos.lat(),pos.lng());
         
-        if (typeof(GRM.marker) == "undefined")
-        {
-            GRM['marker'] = createMarker(location.lat(),location.lng());
+        if(marker==undefined){
+            //En caso de que no se haya inicializado nunca creamos un
+            //nuevo marcador
+            marker = new google.maps.Marker({
+                map: map,
+                draggable: false,
+                position: myLatlng,
+                icon: new google.maps.MarkerImage("/static/webapp/img/marcador02.png")
+            });
+            google.maps.event.addListener(marker, 'dragend', function(){updateAddressByMarker(this);});
+        }else{
+            //Sino tan solo actualizamos la posición
+            marker.setPosition(myLatlng);
         }
-        else
-            GRM.marker.setPosition(location);
             
-        map.panTo(location);
+        //Centramos el marcador
+        marker.setIcon(new google.maps.MarkerImage("/static/webapp/img/marcador03.png"));
+        marker.setAnimation(google.maps.Animation.DROP);
+        marker.setDraggable(true);
+        marker.setFlat(false);
     });
     
 
@@ -553,8 +438,13 @@ function insertToolbar(map){
 }
 
 function updateAddressByMarker(marker){
-    var pos = GRM.marker.getPosition();
-    $('#address').autocomplete("search",GRM.common.token+pos.lat()+","+pos.lng());
+    geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            if (results && results[0]) {
+                $('#address').val(results[0].formatted_address);
+            }
+        }
+    });
 }
 
 function activateTab(tab){
@@ -594,15 +484,26 @@ function saveSuggestion(){
             name: $('#id_name').val(), 
             place_reference: placeReference, 
             description: $('#id_description').val(),
-            starts_month: $('#id_starts_month').val(),
-            starts_day: $('#id_starts_day').val(),
-            starts_year: $('#id_starts_year').val(),
-            ends_month: $('#id_ends_month').val(),
-            ends_day: $('#id_ends_day').val(),
-            ends_year: $('#id_ends_year').val(),
             visibility: $('#id_visibility').val(),
             tags: $('#id_tags').val()
         };
+        if($('#start-date').val()!="mm/dd/aa"){
+            splittedDate=$('#start-date').val().split("/")
+            params['starts_month']=splittedDate[0]
+            params['starts_day']=splittedDate[1]
+            params['starts_year']=splittedDate[2]
+        }
+        if($('#end-date').val()!="mm/dd/aa"){
+            splittedDate=$('#start-date').val().split("/")
+            params['ends_month']=splittedDate[0]
+            params['ends_day']=splittedDate[1]
+            params['ends_year']=splittedDate[2]
+        }
+        if($('#visibility span[value="public"]').css('display')!="none")
+            params['visibility']= "public";
+        else
+            params['visibility']= "private";
+        
         
         //Si estamos editando una sugerencia añadimos el ID.
         if(typeof eventID != 'undefined')
@@ -647,7 +548,7 @@ function showSettings(){
     //$('#'+engine+'-settings').fadeToggle('slow')
     
     $('#'+engine+'-settings').toggle('slow',function(){
-        //resizeIframe();
+        resizeIframe();
         }
     );
     
@@ -779,7 +680,7 @@ function resetMapZoom(val){
 
 function showMoreDetails(){
     $('#more-details').toggle('fast',function(){
-            //resizeIframe()
+            resizeIframe()
         }
     )
     

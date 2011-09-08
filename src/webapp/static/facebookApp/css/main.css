@@ -953,9 +953,6 @@ input{
             background-position: 99% 10px;
             background-repeat: no-repeat;
         }
-        ul#chronology li.msg-360.out{
-            background-image: url("/static/facebookApp/img/timeline/360.png");
-        }
     
     .load-more{
         background-color: #3B5998;
@@ -1756,7 +1753,7 @@ input{
         height: 1.7em;
         line-height: 1.5em;
         padding: 5px;
-        width: 535px;
+        width: 515px;
 
     }
     .btnGmaps{
@@ -1791,12 +1788,15 @@ input{
     }
     
     #address-form{
-        /*display:none;*/
+        display:none;
         border-bottom: 1px solid #ccc
+    }
+    #place-form{
+        border-bottom:1px solid #ccc
     }
     #place-form label{
         clear: left;
-        display: inline-block;
+        display: none;
         margin: 10px;    
         font-weight: bold;
     }
