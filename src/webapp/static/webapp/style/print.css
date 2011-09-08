@@ -29,9 +29,19 @@ a:link, a:visited {background:transparent;font-weight:700;text-decoration:underl
 a:link:after, a:visited:after {font-size:90%;}
 
 #header{
+/*
     border-bottom: 1px solid black;
+*/
     clear: both;
+/*
     height: 90px;
+*/
+}
+.invisible{
+    margin: 0!important;
+    padding: 0!important;
+    visibility: hidden !important;
+    clear:both;
 }
 #logo{
     float:right;
@@ -54,9 +64,12 @@ a:link:after, a:visited:after {font-size:90%;}
 h1 {text-align:center;}
 h3 {text-align:center;}
 header {border-bottom: 2px solid #CCC;}
-#map {float:left;}
+#map {float:left;clear:left;}
 #map img {margin-top: 15px;border:1px solid black;}
-#right-col {float:right; width:450px;}
+#right-col {
+    
+    margin-left: 20px;
+}
 ul {padding-left:0;
     list-style: none outside none;
     margin:0;
@@ -150,4 +163,67 @@ clear:both;
 }
 .suggestion{
 
+}
+.textarea{
+    color:blue;
+    cursor:pointer;
+    float:left;
+}
+.title{
+    display: block;
+    color:blue;
+    cursor:pointer;
+}
+.add-notes strong{
+    color: black;
+    cursor: default;
+}
+.add-notes .textAreaElement{
+    width:400px;
+    border:1px solid #ccc;
+    height:100px;
+}
+
+/* PRINT SUGGESTION VIEW*/
+#print-suggestion .zoom{
+    float: none;
+    margin-top: 1em;
+}
+#print-suggestion .maps{
+    float: left;
+    margin-right: 20px;
+}
+#print-suggestion h1{
+    float: none;
+    font-size: 1.5em;
+    font-weight: inherit;
+    text-align: left;
+}
+#print-suggestion .maps .zoom-in,
+#print-suggestion .maps .zoom-out {
+    margin: -10px 10px 0 0;
+}
+
+
+#print-suggestion hr{
+    margin:1em 0;
+}
+
+#print-suggestion{
+}
+#print-suggestion {
+    float:none;
+    clear:none;
+}
+
+#print-suggestion #logo {
+    clear:both;
+    text-align: right;
+    float:none;
+}
+
+/* PRINT SUGGESTION VIEW*/
+
+#print-place{
+    
 }

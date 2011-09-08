@@ -1,27 +1,70 @@
+{% extends "print/base.html" %}
+
 {%load tags %}
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title></title>
-	<link rel="stylesheet" href="/static/webapp/style/print.css" type="text/css">
-</head>
-<body>
-	<div class="container">
+
+{% block menu_items %}
+    <li>Mostrar/Ocultar:</li>
+    <li id="printer"><span onclick="window.print()">Imprimir</span></li>
+    <li id="maps"><span class="hide">Mapa</span></li>
+    <li id="gps-location"><span class="hide">Localización GPS</span></li>
+    <li id="links"><span class="hide">Enlaces</span></li>
+    <li id="autor-date"><span class="hide">Fecha y autor</span></li>
+    {% if top_comments %}
+        <li id="comments"><span class="hide">Comentarios</span></li>
+    {% endif %}
+{% endblock %}
+	
+{% block body %}
+    
+	<div class="container" id="print-suggestion">
 		<div id="header">
-			<img src="/static/webapp/img/logo2.png" alt="GeoRemindMe" id="logo">
-			<h1>{{suggestion}}</h1>
+			<h1><strong>Sugerencia: </strong>{{suggestion.name}}</h1>
 		</div>
-		<a id="map" href="http://maps.google.com/maps?q={{suggestion.poi.location}}&hl=en&ie=UTF8&z=16">
-			<img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=15&size=400x400&maptype=roadmap&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false"></a>
+        <hr>
+        <div class="maps">
+            <div class="zoom">
+                <span onclick="changeZoom(this,1)" class="zoom-in">Aumentar</span>
+                <span onclick="changeZoom(this,-1)" class="zoom-out">Disminuir</span>
+            </div>
+<!--
+            <a id="map" href="http://maps.google.com/maps?q={{suggestion.poi.location}}&hl=en&ie=UTF8&z=16">
+-->
+                <img class="resizableMap" src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=15&size=400x400&maptype=roadmap&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false" value="15">
+<!--
+            </a>
+-->
+        </div>
 		<div id="right-col">
-			<p class="big"><strong>Autor: </strong>{{suggestion.user.username}}</p>
+            
+            {% if suggestion.description %}
+                <p class="big"><strong>Detalles: </strong>{{suggestion.description}}</p>
+            {% endif %}
+            {%if suggestion.date_starts or suggestion.date_ends%}
+                <p class="big"><strong>Fecha:</strong>
+                {% if suggestion.date_starts != None or suggestion.date_ends != None%}
+                        {% if suggestion.date_starts != None %}
+                            {{suggestion.date_starts}}
+                        {% endif %}
+                        {% if suggestion.date_ends != None %}
+                            {{suggestion.date_ends}}
+                        {% endif %}    
+                {% endif %}
+                </p>
+            {% endif %}
+			<p class="big autor-date"><strong>Autor: </strong>{{suggestion.user.username}}</p>
 			<p class="big"><strong>Lugar: </strong>{{suggestion.poi.name}}</p>
 			<p class="big"><strong>Dirección: </strong>{{suggestion.poi.address}}</p>
-			<p class="big"><strong>URL: </strong> {{suggestion.get_short_url}}</p>
+            <p class="big gps-location"><strong>Localización GPS: </strong>{{suggestion.poi.location}}</p>
+			<p class="big links"><strong>Más información: </strong> {{suggestion.get_short_url}}</p>
+            <span class="add-notes">
+                <span class="title">Click aquí si quieres añadir notas adicionales</span>
+                <div class="textarea" style="display:none">
+                    <strong>Notas:</strong> <span class="closeTextarea">(cancelar)</span><br>
+                    <textarea class="textAreaElement"></textarea>
+                </div>
+            </span>
 		
 
-			<h3 style="text-align:left;">Esta sugerencia tiene {{vote_counter}} votos.</h3>
 			{% if top_comments %}
 	                <h3 style="text-align:left;">Esta sugerencia tiene {{top_comments|length}} comentario(s) popular(es): </h3>
 	                <ul>
@@ -32,16 +75,15 @@
 	        {% endif %}
 			
 		</div>
-		
+		<div id="logo">
+            <img src="/static/webapp/img/logo2.png" alt="GeoRemindMe"><br>
+            www.georemindme.com
+        </div>
 		
 		
 	
 	</div>
-	
-</body>
-</html>
-
-
+{% endblock%}
 
 
 

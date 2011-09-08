@@ -1,32 +1,50 @@
+{% extends "print/base.html" %}
+
 {%load tags %}
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" href="/static/webapp/style/print.css" type="text/css">
-    <title>GeoRemindMe! - Sugerencias propuestas en "{{place.name}}"</title>
-</head>
-<body>
-	<div class="container">
+
+{% block title %}GeoRemindMe! - Sugerencias propuestas en "{{place.name}}"{%endblock%}
+	
+{% block body %}
+	<div class="container" id="print-place">
 		<div id="header">
-			<img src="/static/webapp/img/logo2.png" alt="GeoRemindMe" id="logo">
-			<h1>{{place.name}}</h1>
+			<div id="logo">
+                <img src="/static/webapp/img/logo2.png" alt="GeoRemindMe"><br>
+                www.georemindme.com
+            </div>
+			<h1>Sugerencias en: {{place.name}}</h1>
 		</div>
-		<a id="map" href="http://maps.google.com/maps?q={{place.location}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=15&size=400x400&maptype=roadmap&markers=color:red%7C{{place.location}}&sensor=false"><br><h3>{{place.address}}</h3></a>
+        <hr>
+		<div class="maps">
+            <div class="zoom">
+                <span onclick="changeZoom(this,1)" class="zoom-in">Aumentar</span>
+                <span onclick="changeZoom(this,-1)" class="zoom-out">Disminuir</span>
+            </div>
+<!--
+            <a id="map" href="http://maps.google.com/maps?q={{place.location}}&hl=en&ie=UTF8&z=16">
+-->
+                <img class="resizableMap" src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=15&size=400x400&maptype=roadmap&markers=color:blue%7Clabel:S%7C{{place.location}}&sensor=false" value="15">
+<!--
+            </a>
+-->
+        </div>
 		<br>
 		<div id="right-col">
-			<h3 style="text-align:left;">Este sitio tiene {{vote_counter}} votos y {{suggestions.1|length}} sugerencia(s):</h3>
 			<ul>
 				{% for s in suggestions.1 %}
-				<li>{{s.instance.name}}<br><span class="aside">Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</span></li>
+				<li>
+                    {{s.instance.name}}<br>
+                    <span class="aside">Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</span>
+                </li>
 				{% endfor %}
 			</ul>
+            <span class="add-notes">
+                <span class="title">Click aquí si quieres añadir notas adicionales</span>
+                <div class="textarea" style="display:none">
+                    <strong>Notas:</strong> <span class="closeTextarea">(cancelar)</span><br>
+                    <textarea class="textAreaElement"></textarea>
+                </div>
+            </span>
 		</div>
-		
-		
-		
-	
 	</div>
-	
-</body>
-</html>
+{% endblock %}
+

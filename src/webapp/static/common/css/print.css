@@ -1,3 +1,7 @@
-#print-container,.zoom{
+#print-container,.zoom,.add-notes span,.closeTextarea{
     display:none;
+}
+
+.add-notes textarea{
+    border:0 none;
 }
