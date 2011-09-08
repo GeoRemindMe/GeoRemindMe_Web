@@ -98,6 +98,8 @@ def prefetch_refprops(entities, *props):
         en una sola consulta al datastore
     """
     entities = filter(None, entities)
+    if len(entities) == 0:
+        return []
     fields = [(entity, prop) for entity in entities for prop in props]
     ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields if x is not None]
     ref_keys = filter(None, ref_keys)
@@ -113,6 +115,8 @@ def prefetch_refpropsEntity(entities, *props):
         Carga todas las referencias de un grupo de objetos
         en una sola consulta al datastore
     """
+    if len(entities) == 0:
+        return []
     fields = [(entity, prop) for entity in entities for prop in props]
     ref_keys = [x[prop] for x, prop in fields]
     ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
@@ -120,6 +124,8 @@ def prefetch_refpropsEntity(entities, *props):
 
 
 def prefetch_refList(lists, users=[]):
+    if len(lists) == 0:
+        return []
     instances_keys = [k for l in lists for k in l.keys]
     instances_keys.extend(users)
     instances_keys = filter(None, instances_keys)
@@ -148,7 +154,8 @@ def fetch_parents(entities):
         Carga y devuelve la lista de parents
         directamente en una sola consulta al datastore
     """
-    
+    if len(entities) == 0:
+        return []
     ref_keys = [x.parent_key() for x in entities if x.parent_key() is not None]
     return db.get(set(ref_keys))
 
@@ -158,6 +165,7 @@ def fetch_parentsKeys(entities):
         Carga y devuelve la lista de parents
         directamente en una sola consulta al datastore
     """
-    
+    if len(entities) == 0:
+        return []
     ref_keys = [x.parent() for x in entities]
     return db.get(set(ref_keys))

@@ -456,11 +456,11 @@ def add_list_suggestion(request):
         description: descripcion (opcional)
         suggestions: lista de ids de sugerencias    
     """
-    list_id = request.POST.getlist('list_id')
+    list_id = request.POST.getlist('list_id[]')
     list_name = request.POST.get('name', None)
     list_description = request.POST.get('description', None)
-    list_instances = request.POST.getlist('suggestions')
-    list_instances_del = request.POST.getlist('suggestions_del')
+    list_instances = request.POST.getlist('suggestions[]')
+    list_instances_del = request.POST.getlist('suggestions_del[]')
     list_vis = request.POST.get('visibility', None)
     if not 'tags' in request.POST:
         list_tags = None

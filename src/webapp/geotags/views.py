@@ -20,6 +20,7 @@ def view_tag_suggestions(request, slug, template='webapp/view_tag.html'):
     return render_to_response(template, {
                                         'suggestions': suggestions,
                                         'user_suggestions': user_suggestions,
+                                        'tag': tag,
                                         },
                                context_instance=RequestContext(request))
 
