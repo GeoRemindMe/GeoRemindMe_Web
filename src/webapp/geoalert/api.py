@@ -63,7 +63,7 @@ def send_suggestion_to_list(querier, list_id, event_id):
     except:
         pass
     # creamos la sugerencia
-    timeline = UserTimelineSuggest(instance=keys[1], list=keys[0], user=querier, visible=False)
+    timeline = UserTimelineSuggest(instance=keys[1], list=keys[0], user=querier, visible=True)
     timeline.put()
     return True
     
@@ -74,7 +74,7 @@ def change_suggestion_to_list(querier, timeline_id, status):
     from google.appengine.api import datastore
     from geouser.models_utils import _Notification
     from google.appengine.ext import db
-    q = datastore.Query('_Notification', {'owner =': querier.key(), 'timeline =': db.Key.from_path('UserTimelineBase', timeline_id)})
+    q = datastore.Query('_Notification', {'owner =': querier.key(), 'timeline =': db.Key.from_path('UserTimelineBase', timeline_id)}, keys_only=True)
     notification = q.Get(1)
     if len(notification) == 0:
         return None
@@ -92,6 +92,7 @@ def change_suggestion_to_list(querier, timeline_id, status):
         p.get_result()
     else:
         timeline['status'] = status
+        p = datastore.Put(timeline)
     return True
 
 
