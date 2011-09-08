@@ -226,6 +226,7 @@ input{
     border-left: 1px solid #B3B3B3;
     float: left;
     padding-left: 15px;
+    padding-bottom: 15px;
     width: 550px;
     min-height:500px;
     font-size: 1em;

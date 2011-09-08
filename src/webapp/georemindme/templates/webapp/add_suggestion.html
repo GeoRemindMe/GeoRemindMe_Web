@@ -4,7 +4,9 @@
 {% block extra_js %}
     <link rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css"> 
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/main.js"></script>
     
     <script type="text/javascript">
         
@@ -17,6 +19,20 @@
         }
         
         $(document).ready(function(){
+            
+            // when we are coming from view_place to add a suggestion
+            // in that point, we create a default marker in that point
+            {% if request.GET.placelocat %}
+					
+					string = new String('{{request.GET.placelocat}}');
+					var locat = string.split(',');
+					
+					default_marker_X = parseFloat(locat[0]);
+					default_marker_Y = parseFloat(locat[1]);
+					
+            {% endif %}
+            
+            
             
            
             //Añadimos el comportamiento
@@ -36,7 +52,7 @@
                         dataType:'json',
                         success: function(data){
                             //Añadimos la lista al desplegable
-                            $("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
+                            $("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\" value=\""+data.name+"\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
                             $('#listid-'+data.id).click(function(){onLiClick(this)});
                             
                             //Añadimos la lista en la pestaña listas
@@ -52,7 +68,7 @@
                 }
             });
 
-            //if (typeof(resizeIframe) != "undefined") resizeIframe();
+            //if (typeof resizeIframe != "undefined") resizeIframe();
             
             /*** placeholding ***/
 			$("[placeholder]").placeholder();
@@ -63,12 +79,12 @@
             $("#add-details").toggle(function(){
                 $('#description').slideDown('slow',function(){
                     $("#add-details").addClass('used');
-                    //if (typeof(resizeIframe) != "undefined") resizeIframe();
+                    //resizeIframe();
                 });
                 },function(){
                     $('#description').slideUp('slow',function(){
                         $("#add-details").removeClass('used');
-                        //if (typeof(resizeIframe) != "undefined") resizeIframe();
+                        //resizeIframe();
                 });
             });
             
@@ -76,12 +92,12 @@
             $("#add-tags").toggle(function(){
                 $('#tags').slideDown('slow',function(){
                     $("#add-tags").addClass('used');
-                    //if (typeof(resizeIframe) != "undefined") resizeIframe();
+                    //resizeIframe();
                 });
                 },function(){
                     $('#tags').slideUp('slow',function(){
                         $("#add-tags").removeClass('used');
-                        //if (typeof(resizeIframe) != "undefined") resizeIframe();
+                        //resizeIframe();
                     });
             });
             
@@ -89,12 +105,12 @@
             $("#add-date").toggle(function(){
                 $('#date').slideDown('slow',function(){
                     $("#add-date").addClass('used');
-                    //if (typeof(resizeIframe) != "undefined") resizeIframe();
+                    //resizeIframe();
                 });
             },function(){
                 $('#date').slideUp('slow',function(){
                     $("#add-date").removeClass('used');
-                    //if (typeof(resizeIframe) != "undefined") resizeIframe();
+                    //resizeIframe();
                 });
             });
             
@@ -102,12 +118,12 @@
             $("#add-to-lists").toggle(function(){
                 $('#lists').slideDown('slow',function(){
                     $("#add-to-lists").addClass('used');
-                    //if (typeof(resizeIframe) != "undefined") resizeIframe();
+                    //resizeIframe();
                 });
             },function(){
                 $('#lists').slideUp('slow',function(){
                     $("#add-to-lists").removeClass('used');
-                    //if (typeof(resizeIframe) != "undefined") resizeIframe();
+                    //resizeIframe();
                 });
             });
             
@@ -187,9 +203,10 @@
         
         
     </script>
-    <script src="/static/facebookApp/js/suggestion.js"></script>
+    
     <!--<script src="/static/webapp/js/dashboard.js"></script>-->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=es&region=ES"></script>
+    <script src="/static/facebookApp/js/suggestion.js"></script>
     <script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.core.js"></script>
     <script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.mouse.js"></script>
