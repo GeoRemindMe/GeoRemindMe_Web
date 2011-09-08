@@ -34,9 +34,11 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     suggestion = single_prefetch_refprops(suggestion, Suggestion.user, Suggestion.poi)
     if 'print' in request.GET:
         vote_counter = Vote.objects.get_vote_counter(suggestion.key())
+        top_comments = Comment.objects.get_top_voted(suggestion, request.user)
         return render_to_response('print/suggestionprofile.html',
                         {'suggestion': suggestion,
                          'vote_counter': vote_counter,
+                         'top_comments': top_comments,
                         },
                         context_instance=RequestContext(request)
                       )

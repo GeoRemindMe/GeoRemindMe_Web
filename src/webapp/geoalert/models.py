@@ -271,6 +271,7 @@ class Suggestion(Event, Visibility, Taggable):
     _short_url = db.TextProperty()
     
     _counters = None
+    _relevance = None
     
     @classmethod
     def SearchableProperties(cls):
@@ -516,7 +517,9 @@ class Suggestion(Event, Visibility, Taggable):
                                                         {'name': name,
                                                         'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
                                                         'sug_id': self.id,
-                                                        'modified': self.created.__str__(),
+                                                        'modified': self.modified.isoformat(),
+                                                        'created': self.created.isoformat(),
+                                                        'relevance': self._calc_relevance(),
                                                          }
                                                        )
                                )
@@ -531,6 +534,15 @@ class Suggestion(Event, Visibility, Taggable):
 
     def __unicode__(self):
         return self.name
+    
+    def _calc_relevance(self):
+        if self._relevance is None:
+            from geovote.models import Vote
+            votes = Vote.objects.get_vote_counter(self.key())
+            from datetime import datetime
+            time = datetime.now() - self.modified
+            self._relevance = (self.counters.followers*8 + votes*2) * 15/(time.days+1)
+        return self._relevance
         
 
 class AlertSuggestion(Event):

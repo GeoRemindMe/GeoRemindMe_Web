@@ -456,7 +456,7 @@ def add_list_suggestion(request):
         description: descripcion (opcional)
         suggestions: lista de ids de sugerencias    
     """
-    list_id = request.POST.get('list_id', None)
+    list_id = request.POST.getlist('list_id')
     list_name = request.POST.get('name', None)
     list_description = request.POST.get('description', None)
     list_instances = request.POST.getlist('suggestions')
@@ -466,18 +466,15 @@ def add_list_suggestion(request):
         list_tags = None
     else:
         list_tags = request.POST.getlist('tags')
-    list = geolist.add_list_suggestion(request, id=list_id, name = list_name,
+
+    lists = geolist.add_list_suggestion(request, lists_id=list_id, name = list_name,
                                  description = list_description,
                                  instances = list_instances,
                                  instances_del = list_instances_del,
                                  tags=list_tags,
                                  vis=list_vis
                                  )
-    if list is False:
-        return HttpResponseForbidden()
-    if list is not None:
-        return HttpResponse(list.to_json(), mimetype="application/json")
-    return HttpResponse(list, mimetype="application/json")
+    return HttpResponse([list.to_json() if hasattr(list, 'to_json') else None for list in lists], mimetype="application/json")
 
 
 @ajax_request

@@ -20,7 +20,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     created = db.DateTimeProperty(auto_now_add = True)
     modified = db.DateTimeProperty(auto_now=True)
     active = db.BooleanProperty(default=True)
-    _short_url = db.URLProperty()
+    _short_url = db.URLProperty(indexed=False)
     count = db.IntegerProperty(default=0)  # numero de sugerencias en la lista
 
     _counters = None
@@ -201,7 +201,6 @@ class ListSuggestion(List, Visibility, Taggable):
                             )
                 return list
             return False
-        # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
         keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
         list = ListSuggestion(name=name, 
                               user=user, 

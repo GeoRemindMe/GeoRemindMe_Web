@@ -44,7 +44,7 @@ def add_list_alert(request, name=None, description=None, instances=None):
     return list.id
 
 @login_required
-def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[], tags=None, vis=None):
+def add_list_suggestion(request, lists_id=[], name=None, description=None, instances=[], instances_del=[], tags=None, vis=None):
     '''
     Crea o modifica una lista de usuarios
 
@@ -58,17 +58,37 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         :type instances: :class:`list`
         :returns: id de la lista modificada
     '''
-    if id is not None:
+    if len(lists_id) == 1:
         from models import ListRequested
-        list = ListRequested.objects.get_by_id_querier(id, request.user)
+        list = ListRequested.objects.get_by_id_querier(lists_id[0], request.user)
         if list is not None:
             try:
                 list.update(querier=request.user, instances=instances, tags=tags, vis=vis)
                 return True
             except:
-                return False
-    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del, vis=vis)
-    return list
+                return False    
+    elif len(lists_id) > 0:
+        results = []
+        for l in lists_id:
+            results.append(ListSuggestion.insert_list(user=request.user, 
+                                                      id=l.id, 
+                                                      instances=instances
+                                                      ) 
+                           )
+        return [result for result in results if isinstance(result, ListSuggestion)]
+    elif len(lists_id) == 0:
+      lists_id.append(None)  
+    
+    l = ListSuggestion.insert_list(user=request.user, 
+                                  id=lists_id[0], 
+                                  name=name, 
+                                  description=description, 
+                                  instances=instances, 
+                                  tags=tags, 
+                                  instances_del=instances_del, 
+                                  vis=vis
+                                  )
+    return [l]
     
 
 @login_required
@@ -421,11 +441,13 @@ def view_list(request, id, template='webapp/view_list.html'):
     from geovote.models import Vote, Comment
     suggestions_async = db.get_async(list.keys)
     if 'print' in request.GET:
+        top_comments = Comment.objects.get_top_voted(list, request.user)
         vote_counter = Vote.objects.get_vote_counter(list.key())
         return render_to_response('print/view_list.html',
                                 {'list': list,
                                  'suggestions': load_suggestions_async(suggestions_async),
                                  'vote_counter': vote_counter,
+                                 'top_comments': top_comments,
                                 },
                                 context_instance=RequestContext(request)
                               )
