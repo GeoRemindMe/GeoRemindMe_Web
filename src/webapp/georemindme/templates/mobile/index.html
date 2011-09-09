@@ -1,307 +1,35 @@
-<!doctype html>
-<html>
-    <head>
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>Page Title</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 
-	<link rel="shortcut icon" href="../static/images/favicon.png" >
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js"></script>
+</head> 
 
-        <title>GeoRemindMe Mobile Web</title>
-        <style type="text/css" media="screen">@import "../static/js/mobile/jqtouch/jqtouch.css";</style>
-        <style type="text/css" media="screen">@import "../static/css/mobile.css";</style>
-        <script src="../static/js/mobile/jqtouch/jquery-1.4.2.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../static/js/mobile/jqtouch/jqtouch.js" type="application/x-javascript" charset="utf-8"></script>
-	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> 
-	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> 
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>	
-	<link href="http://code.google.com/apis/maps/documentation/javascript/examples/default.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="http://code.google.com/apis/gears/gears_init.js"></script>
-        <script type="text/javascript" charset="utf-8">
-		var jQT = new $.jQTouch({
-                icon: '../static/images/jqtouch.png',
-                icon4: '../static/images/jqtouch4.png',
-                addGlossToIcon: false,
-                startupScreen: '../static/images/jqt_startup.png',
-                statusBar: 'black',
-                preloadImages: [
-                    '../static/images/activeButton.png',
-                    '../static/images/back_button.png',
-                    '../static/images/back_button_clicked.png',
-                    '../static/images/blueButton.png',
-                    '../static/images/button.png',
-                    '../static/images/button_clicked.png',
-                    '../static/images/grayButton.png',
-                    '../static/images/greenButton.png',
-                    '../static/images/redButton.png',
-                    '../static/images/whiteButton.png',
-                    '../static/images/loading.gif'
-                    ]
-            });
-            // Some sample Javascript functions:
-            $(function(){
-                // Show a swipe event on swipe test
-                $('#swipeme').swipe(function(evt, data) {
-                    $(this).html('You swiped <strong>' + data.direction + '/' + data.deltaX +':' + data.deltaY + '</strong>!');
-                    $(this).parent().after('<li>swiped!</li>')
+<body> 
+	<div data-role="page" id="login"> 
+		<div data-role="header" data-theme="b">
+			<h1>Bienvenido a GeoRemindMe!</h1>
+		</div><!-- /header -->
 
-                });
-                $('#tapme').tap(function(){
-                    $(this).parent().after('<li>tapped!</li>')
-                })
-                $('a[target="_blank"]').click(function() {
-                    if (confirm('Este link se abrirá en una nueva ventana.')) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-                // Page animation callback events
-                $('#pageevents').
-                    bind('pageAnimationStart', function(e, info){ 
-                        $(this).find('.info').append('Started animating ' + info.direction + '&hellip; ');
-                    }).
-                    bind('pageAnimationEnd', function(e, info){
-                        $(this).find('.info').append(' finished animating ' + info.direction + '.<br /><br />');
-                    });
-                // Page animations end with AJAX callback event, example 1 (load remote HTML only first time)
-                $('#callback').bind('pageAnimationEnd', function(e, info){
-                    // Make sure the data hasn't already been loaded (we'll set 'loaded' to true a couple lines further down)
-                    if (!$(this).data('loaded')) {
-                        // Append a placeholder in case the remote HTML takes its sweet time making it back
-                        // Then, overwrite the "Loading" placeholder text with the remote HTML
-                        $(this).append($('<div>Loading</div>').load('ajax.html .info', function() {        
-                            // Set the 'loaded' var to true so we know not to reload
-                            // the HTML next time the #callback div animation ends
-                            $(this).parent().data('loaded', true);  
-                        }));
-                    }
-                });
-                // Orientation callback event
-                $('#jqt').bind('turn', function(e, data){
-                    $('#orient').html('Orientation: ' + data.orientation);
-                });
-            });
-        </script> 
-	<script type="text/javascript"> //AJAX
-	function obtTareas(){
-		$.ajax({
-		  url: "/ajax/get/reminder/",
-		  data: { 'done' : 'false' },
-		  method: "POST",
-		  dataType: 'json',
-		  success: function(data) {
-		    $("ul#noHechas").html("<li class=\"arrow\">"+data+"</li></ul>");
-		  },
-		  error: function(data) {
-		    $("ul#noHechas").html("<li class=\"arrow\">"+data+"</li></ul>");
-		  } 
-		});
-		$.ajax({
-		  url: "/ajax/get/reminder/",
-		  data: { 'done' : 'true' },
-		  method: "POST",
-		  dataType: 'json',
-		  success: function(data) {
-		    $("ul#hechas").html("<li class=\"arrow\">"+data+"</li></ul>");
-		  },
-		  error: function(data) {
-		    $("ul#hechas").html("<li class=\"arrow\">"+data+"</li></ul>");
-		  } 
-		});
-	}
-	function anadirTarea(){
-        // Falta poner el address:        cadena
-		var nombre = $("div#anadir input#name").val();
-		var anoFin = $("div#anadir input#anoFin").val();
-		var mesFin = $("div#anadir input#mesFin").val();
-		var diaFin = $("div#anadir input#diaFin").val();
-		var anoInicio = $("div#anadir input#anoInicio").val();
-		var mesInicio = $("div#anadir input#mesInicio").val();
-		var diaInicio = $("div#anadir input#diaInicio").val();
-		var descripcion = $("div#anadir textarea#descripcion").val();
-		var distancia = $("div#anadir input#distancia").val();
-		$.ajax({
-		  //pasar los datos necesarios.
-		  url: "/ajax/add/reminder/",
-		  data: { 'name' : nombre, "ends_month" : mesFin, "ends_day" : diaFin, "ends_year" : anoFin, "starts_month" : mesInicio, "starts_day" : diaInicio, "starts_year" : anoInicio, "description" : descripcion, "distance" : distancia, "active" : "true", "done" : "false"  },
-		  method: "POST",
-		  dataType: 'json',
-		  success: function(data) {
-		    alert(data);
-		  },
-		  error: function(data) {
-		    alert(data);
-		  } 
-		});
-		obtTareas();
-	}
-
-	</script>
-	<script type="text/javascript">
- 
-	var initialLocation;
-	var espana = new google.maps.LatLng(40.413496, -3.691406);
-	var browserSupportFlag =  new Boolean();
-	var abierto = new Boolean();
-	abierto = true;
-	var map;
-	var infowindow = new google.maps.InfoWindow();
-	  
-	function initialize() {
-	  if(abierto){
-	  var myOptions = {
-	    scaleControl: true,
-	    zoom: 15,
-	    navigationControl: true,
-	    navigationControlOptions: {
-	      style: google.maps.NavigationControlStyle.SMALL
-  	    },
-	    mapTypeControl: true,
-	    mapTypeControlOptions: {position: google.maps.ControlPosition.BOTTOM},
-	    mapTypeId: google.maps.MapTypeId.ROADMAP
-	  };
-	  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-	  
-	  // Try W3C Geolocation method (Preferred)
-	  if(navigator.geolocation) {
-	    browserSupportFlag = true;
-	    navigator.geolocation.getCurrentPosition(function(position) {
-	      initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-	      contentString = "Localización encontrada usando el estandar W3C";
-	      map.setCenter(initialLocation);
-	      infowindow.setContent(contentString);
-	      infowindow.setPosition(initialLocation);
-	      infowindow.open(map);
-	    }, function() {
-	      handleNoGeolocation(browserSupportFlag);
-	    });
-	  } else if (google.gears) {
-	    // Try Google Gears Geolocation
-	    browserSupportFlag = true;
-	    var geo = google.gears.factory.create('beta.geolocation');
-	    geo.getCurrentPosition(function(position) {
-	      initialLocation = new google.maps.LatLng(position.latitude,position.longitude);
-	      contentString = "Localización encontrada usando Google Gears";
-	      map.setCenter(initialLocation);
-	      infowindow.setContent(contentString);
-	      infowindow.setPosition(initialLocation);
-	      infowindow.open(map);
-	    }, function() {
-	      handleNoGeolocation(browserSupportFlag);
-	    });
-	  } else {
-	    // Browser doesn't support Geolocation
-	    browserSupportFlag = false;
-	    handleNoGeolocation(browserSupportFlag);
-	  }
-	  abierto = false;
-	}
-	}
-	 
-	function handleNoGeolocation(errorFlag) {
-	  if (errorFlag == true) {
-	    initialLocation = espana;
-	    contentString = "Error: El servicio de Geolocalización ha fallado.";
-	      map.setCenter(initialLocation);
-	      infowindow.setContent(contentString);
-	      infowindow.setPosition(initialLocation);
-	      infowindow.open(map);
-	  } else {
-	    initialLocation = espana;
-	    contentString = "Error: Tu navegador no soporta la Geolocalización.";
-	      map.setCenter(initialLocation);
-	      infowindow.setContent(contentString);
-	      infowindow.setPosition(initialLocation);
-	      infowindow.open(map);
-	  }
-	}
-
-	function pintaMapa(){
-		var alto = $(window).height();
-		$("div#map_canvas").css("height", (alto-45)+"px");
-		
-	}
-
-
-
-	</script>
-    </head>
-    <body onload="pintaMapa()">
-        <div id="jqt">
-            <div id="about" class="selectable">
-                    <p><img src="../static/images/logo100x60.png" /></p>
-                    <p><strong>GeoRemindMe</strong><br />Version 1.0<br /></p>
-                    <p><em>Anytime, right place.</em></p>
-                    <p>
-                        <a target="_blank" href="http://twitter.com/GeoRemindMe">@GeoRemindMe en Twitter</a>
-                    </p>
-                    <p><br /><a href="#" class="grayButton goback">Close</a></p>
-            </div>
-            <div id="anadir" class="selectable">
-		<div id="forms">
-                <div class="toolbar">
-                    <h1>Nueva tarea</h1>
-                    <a href="#" class="back">Atrás</a>
-                </div>
-                <form>
-                  <ul class="edit rounded">
-                    <li><input type="text" name="nombre" id="name" placeholder="Nombre de la tarea" /></li>
-		    <li class="arrow"><a href="#mapa" onClick="initialize()" >Posición</a></li>
-		  </ul>
-		  <ul class="edit rounded">
-		    <h2>Fecha de inicio</h2>
-                    <li>Día:<input class="fecha" type="text" name="dia" placeholder="00" size="1" maxlength="2" id="diaInicio" />  Mes:<input class="fecha" type="text" name="mes" placeholder="00" size="1" maxlength="2" id="mesInicio" />  Año:<input class="fecha" type="text" name="ano" placeholder="2011" size="3" maxlength="4" id="anoInicio" /></li>
-		  </ul>
-		  <ul class="edit rounded">
-		    <h2>Fecha de fin</h2>
-                    <li>Día:<input class="fecha" id="diaFin" type="text" name="dia" placeholder="00" size="1" maxlength="2" />  Mes:<input class="fecha" id="mesFin" type="text" name="mes" placeholder="00" size="1" maxlength="2" />  Año:<input class="fecha" id="anoFin" type="text" name="ano" placeholder="2011" size="3" maxlength="4" /></li>
-		  </ul>
-		  <ul class="edit rounded">
-                    <li><input id="distancia" type="text" name="distancia" placeholder="Distancia de alcance en metros" /></li>
-                    <li><textarea id="descripcion" type="text-area" name="descripcion" placeholder="Descripcion de la tarea">Descripción de la tarea</textarea></li>
-		  </ul>
-                </form>
-              </div>
-              <p><br /><a href="#" class="grayButton goback" onClick="anadirTarea()">Aceptar</a></p>
-            </div>
-	    <div id="mapa">
-	      <div class="toolbar">
-	        <h1>Mapa de tareas</h1>
-		<a class="back" href="#home">Atrás</a>
-	      </div>
-	      <div id="map_canvas" style="height: 400px"></div>
-	    </div>
-            <div id="tareas" onload="pedirTareas()">
-	      <div class="toolbar">
-	        <h1>Tareas</h1>
-		<a class="back" href="#home">Atrás</a>
-	      </div>
-	      <h2>Tareas pendientes</h2>
-                <ul id="noHechas" class="rounded">
-                    <li class="arrow"><a href="#">Tarea1</a></li>
-                </ul>
-                <h2>Tareas realizadas</h2>
-                <ul id="hechas" class="rounded">
-                    <li class="arrow"><a href="#">Tarea1</a></li>
-                </ul>
-	      <a class="button slideup" id="infoButton" href="#anadir">Añadir</a>
-	    </div>
-            <div id="config">
-	      <div class="toolbar">
-	        <h1>Configuración</h1>
-		<a class="back" href="#home">Atrás</a>
-	      </div>
-	    </div>
-            <div id="home" class="current">
-                <div class="toolbar">
-                    <h1>GeoRemindMe</h1>
-                    <a class="button slideup" id="infoButton" href="#about">About</a>
-                </div>
-                <ul class="rounded">
-                    <li class="arrow"><a onClick="obtTareas()" href="#tareas">Tareas</a></li>
-                    <li class="arrow"><a onClick="initialize()" href="#mapa">Ver Mapa</a></li>
-                    <li class="arrow"><a href="#config">Configuración</a></li>
-                    <li><a href="">Salir</a></li>
-                </ul>
-            </div>
-        </div>
-    </body>
+		<div data-role="content">	
+			<form action="form.php" method="post"> 
+		 		<div data-role="fieldcontain">
+				    <label for="name">Username:</label>
+				    <input type="text" name="name" id="name" value=""  />
+				</div>
+				<div data-role="fieldcontain">
+				    <label for="password">Password:</label>
+				    <input type="password" name="password" id="password" value="" />
+				</div>
+				<input type="submit" name="Enviar" value="Enviar" data-theme="b"/>
+			</form>
+					
+		</div><!-- /content -->
+	</div>
+</body>
 </html>
