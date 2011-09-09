@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from geouser.models import User
+from geouser.models import User, AnonymousUser
 from models import *
 from models_indexes import ListFollowersIndex
 
