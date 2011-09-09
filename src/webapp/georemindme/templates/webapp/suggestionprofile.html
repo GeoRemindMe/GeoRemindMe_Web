@@ -311,7 +311,7 @@
                     {% if user.username and suggestion.user.username != user.username %}
                     <li>
                         <span class="btn likeBtn" id="save-btn">
-                            <span title="Recibe novedades"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if user_follower%}remember="true"{%endif%}>
+                            <span title="Guardar en favoritos"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if user_follower%}remember="true"{%endif%}>
                                 <span class="remember hoverlink">
                                     Guardar
                                 </span>
