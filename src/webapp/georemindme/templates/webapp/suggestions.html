@@ -289,6 +289,27 @@
             
 
 			create_share_links();
+            
+            
+            /*Set date picket behaviour*/
+            $( ".date-type" ).datepicker();
+            $('.datepicker .date-type,.datepicker .hour-type').change(function(){
+                if($(this).val()=="mm/dd/aa" || $(this).val()=="hh:mm" || $(this).val()==""){
+                    console.log("No desmarcamos porque val="+$(this).val());
+                }else{
+                    $(this).parent().find('.anytime [type="checkbox"]').attr('checked',false);
+                    console.log("Desmarcamos porque val="+$(this).val());
+                }
+                tmp=$(this)
+            })
+            $('.anytime [type="checkbox"]').click(function(){
+                $(this).parent().parent().find(".start-date,.end-date").val("mm/dd/aa");
+                $(this).parent().parent().find(".start-hour,.end-our").val("").blur();
+            })
+            
+            $('.datepicker').find('span').click(function(){$(this).parent().find('[type="checkbox"]').click()})
+            /*End set date picket behaviour*/
+            
 			
         });//END $(document).ready
 
@@ -800,7 +821,9 @@
                                         <dt>Lugar:</dt>
                                         <dd style="width:390px">
                                             <a class="placeName" href="{% url2 in_facebook view_place k.poi.slug%}">{{k.poi.name}}</a> ({{k.poi.address}}) 
+<!--
                                              {% if k.user.username == user.username%}<a href="{% url2 in_facebook edit_suggestions k.id %}">Editar</a>{% endif %}
+-->
                                         </dd>
                                         
                                         {% if k.user.username != user.username and k.tags|length = 0 %}
@@ -809,24 +832,49 @@
                                             <dd style="width:390px" {% if k.user.username == user.username%}class="editable_tags"{%endif%} type="tags" value="{{k.id}}">{% for tag in k.tags %}{{tag}}{% if not forloop.last %}, {%endif%}{% endfor %}</dd>
                                         {% endif %}
                                             
-<!--
-                                        {%if k.date_starts or k.date_ends or k.user.username == user.username %}
-                                            <dt>Fecha:</dt>
-                                            {% if k.date_starts != None or k.date_ends != None%}
-                                                <dd class="{% if k.user.username == user.username%}editable{% endif %}">
-                                                    {% if k.date_starts != None %}
-                                                        {{k.date_starts}}
+
+                                        
+                                        <dt>Fecha:</dt>
+                                        <dd class="{% if k.user.username == user.username%}editable{% endif %} datepicker">
+                                            <span class="datetime">
+                                                <span class="black-link">
+                                                {% if k.date_starts or k.date_ends or k.hour_starts or k.hour_ends %}
+                                                    [
+                                                    {% if k.hour_starts %}
+                                                        {{k.hour_starts}}
                                                     {% endif %}
-                                                    {% if k.date_ends != None %}
-                                                        {{k.date_ends}}
-                                                    {% endif %}    
-                                                </dd>
-                                            {% endif %}
-                                            <dd class="{% if k.user.username == user.username%}editable{% endif %}">
-                                                <em>Sin fecha</em>
-                                            </dd>
-                                        {% endif %}
+                                                    {% if k.date_starts  %}
+                                                        {{k.date_starts|naturaltime}}
+                                                    {% else %}
+                                                        {{k.created|naturaltime}}
+                                                    {% endif %}
+                                                     -
+                                                    {% if k.hour_ends %}
+                                                        {{k.hour_ends}}
+                                                    {% endif %}
+                                                    {% if k.date_ends %}
+                                                        {{k.date_ends|naturaltime}}
+                                                    {% else %}
+                                                        Sin fecha de fin
+                                                    {% endif %}
+                                                    ]
+                                                {% else %}
+                                                    Se puede hacer en cualquier momento
+                                                {% endif %}
+                                                </span> 
+<!--
+                                                <span class="hoverlink" onclick="javascript:$(this).parent().siblings('.datetime-edition').show();$(this).parent().hide()">Editar</span>
 -->
+                                            </span>
+                                            <div class="datetime-edition" style="display:none">
+                                                De <input title="Fecha de inicio" size="9" class="date-type start-date" autocomplete="off" {% if k.date_starts != None %}value="{{k.date_starts}}"{%else%}{% endif %} placeholder="mm/dd/aa" {% if obj.user.username = request.user.username %}readonly{%endif%}>
+                                                <input title="Hora de inicio" size="9" class="hour-type start-hour" autocomplete="off"  placeholder="hh:mm" {% if obj.user.username = request.user.username %}readonly{%endif%}>
+                                                a
+                                                <input title="Fecha de fin" size="9" class="date-type end-date" autocomplete="off" {% if k.date_ends != None %}value="{{k.date_ends}}"{%else%}{% endif %} placeholder="mm/dd/aa" {% if obj.user.username = request.user.username %}readonly{%endif%}>
+                                                <input title="Hora de fin" size="9" class="hour-type end-hour" autocomplete="off" placeholder="hh:mm" {% if obj.user.username = request.user.username %}readonly{%endif%}>
+                                                <span class="anytime"><input type="checkbox" checked> <span>Se puede hacer en cualquier momento</span></span><span class="btn">Guardar</span><span onclick="javascript:$(this).parent().siblings('.datetime').show();$(this).parent().hide()" class="hoverlink">Cancelar</span>
+                                            </div>
+                                        </dd>
                                         
                                         
                                         <dt>Mis listas:</dt>
@@ -846,7 +894,7 @@
                                             
                                         </dd>
                                         <dt>URL:</dt>
-										<dd><input type="text" value="{{ k.short_url }}"> <a href="{{ k.short_url }}">Previsualizar</a></dd>
+										<dd><input type="text" value="{{ k.short_url }}" class="short_url" readonly>  <a href="{{ k.short_url }}">Vista previa</a></dd>
                                         <dt class="share-row"><strong>Compartir:</strong></dt>
                                         <dd class="share-row">
                                             <ul class="share-suggestion">

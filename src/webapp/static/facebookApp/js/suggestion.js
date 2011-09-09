@@ -432,47 +432,47 @@ function insertToolbar(map){
     
     //Creamos el boton del pollo
     //------------------------------------------------------------------
-    var btnPollo = document.createElement('DIV');
-    $(btnPollo).addClass("btnGmaps")
-    $(btnPollo).attr('title','Get the marker');
-    $(btnPollo).html('<img src="/static/webapp/img/marcador03.png">');
+    //~ var btnPollo = document.createElement('DIV');
+    //~ $(btnPollo).addClass("btnGmaps")
+    //~ $(btnPollo).attr('title','Get the marker');
+    //~ $(btnPollo).html('<img src="/static/webapp/img/marcador03.png">');
     
     //Creamos el contenedor del marcador
-    var marker;
+    //~ var marker;
     
     //Asignamos el comportamiento
-    google.maps.event.addDomListener(btnPollo, 'click', function() {   
-        var pos = map.getCenter();   
-        var myLatlng = new google.maps.LatLng(pos.lat(),pos.lng());
-        
-        if(marker==undefined){
-            //En caso de que no se haya inicializado nunca creamos un
-            //nuevo marcador
-            marker = new google.maps.Marker({
-                map: map,
-                draggable: false,
-                position: myLatlng,
-                icon: new google.maps.MarkerImage("/static/webapp/img/marcador02.png")
-            });
-            google.maps.event.addListener(marker, 'dragend', function(){updateAddressByMarker(this);});
-        }else{
-            //Sino tan solo actualizamos la posición
-            marker.setPosition(myLatlng);
-        }
+    //~ google.maps.event.addDomListener(btnPollo, 'click', function() {   
+        //~ var pos = map.getCenter();   
+        //~ var myLatlng = new google.maps.LatLng(pos.lat(),pos.lng());
+        //~ 
+        //~ if(marker==undefined){
+            //~ //En caso de que no se haya inicializado nunca creamos un
+            //~ //nuevo marcador
+            //~ marker = new google.maps.Marker({
+                //~ map: map,
+                //~ draggable: false,
+                //~ position: myLatlng,
+                //~ icon: new google.maps.MarkerImage("/static/webapp/img/marcador02.png")
+            //~ });
+            //~ google.maps.event.addListener(marker, 'dragend', function(){updateAddressByMarker(this);});
+        //~ }else{
+            //~ //Sino tan solo actualizamos la posición
+            //~ marker.setPosition(myLatlng);
+        //~ }
             
         //Centramos el marcador
-        marker.setIcon(new google.maps.MarkerImage("/static/webapp/img/marcador03.png"));
-        marker.setAnimation(google.maps.Animation.DROP);
-        marker.setDraggable(true);
-        marker.setFlat(false);
-    });
+        //~ marker.setIcon(new google.maps.MarkerImage("/static/webapp/img/marcador03.png"));
+        //~ marker.setAnimation(google.maps.Animation.DROP);
+        //~ marker.setDraggable(true);
+        //~ marker.setFlat(false);
+    //~ });
     
 
     //Creamos el contenedor del toolbar
     var toolbar = document.createElement('DIV');
     $(toolbar).css('padding', '5px');
     //Le añadimos los botones
-    $(toolbar).append(btnPollo);
+    //$(toolbar).append(btnPollo);
     $(toolbar).append(mirilla);
     //Los metemos en el mapa
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(toolbar);

@@ -37,7 +37,9 @@ input{
     text-decoration:underline;
     cursor:pointer;
 }
-
+.black-link{
+    color:black !important;
+}
 #view-suggestion span.likeBtn span.hoverlink{
     text-decoration:none;
 }
@@ -2192,12 +2194,31 @@ input{
 */
                 min-width: 85px;
             }
+            
             div#content div.expanded dd{
                 display: inline-block;
                 margin-top: 5px;
                 float: left;
                 margin: 0;
             }
+            
+            div#content div.expanded dt,
+            div#content div.expanded dd{
+                line-height:2.5em;
+            }
+            
+            div#suggestions div.datetime-edition input{
+                padding: 0 2px;
+                text-align: center;
+                width: 80px;
+                border: 1px solid #CCCCCC;
+            }
+            div#content div.expanded dl dd input.short_url{
+                border: 1px solid #CCCCCC;
+                font-size: 1.1em;
+                width: 120px;
+            }
+            
                 div#content div.expanded dt.share-row,
                 div#content div.expanded dd.share-row{
                     margin-top:5px;
@@ -3009,7 +3030,11 @@ input{
     
     #view-suggestion #wapiblock{
 		margin-top:20px;
+/*
 		width:310px;
+*/
+        padding:0 0.5em;
+        text-align: center;
     }
 
     /****************************
@@ -3482,4 +3507,18 @@ input{
 
 #right-col #suggestion-tag-search h2 {
     line-height: 3em;
+}
+
+/* DROPDOWN MENU */
+
+#webapp ul#dropdown-list.submenu,
+#facebookApp #add-suggestion ul#dropdown-list.submenu{
+    min-height: 250px;
+    min-width: 330px;
+}
+#webapp #suggestion-info .dropDownBtn li {
+    width: 300px;
+}
+#facebookApp ul#dropdown-list.submenu{
+    min-height:170px;
 }

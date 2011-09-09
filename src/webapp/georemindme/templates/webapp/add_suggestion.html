@@ -68,6 +68,13 @@
                 }
             });
 
+            
+            
+            /*** placeholding ***/
+			$("[placeholder]").placeholder();
+            
+            /*Set date picket behaviour*/
+            $( ".date-type" ).datepicker();
             $('#date input:not([type="checkbox"])').change(function(){
                 if($(this).val()=="mm/dd/aa" || $(this).val()=="hh:mm" || $(this).val()==""){
                     //console.log("No desmarcamos porque val="+$(this).val());
@@ -81,12 +88,7 @@
                 $("#start-hour,#end-our").val("").blur();
             })
             $('#date [type="checkbox"]').parent().find('span').click(function(){$('#date [type="checkbox"]').click()})
-            
-            /*** placeholding ***/
-			$("[placeholder]").placeholder();
-            
-
-            $( ".date-type" ).datepicker();
+            /*End set date picket behaviour*/
             
             $("#add-details").toggle(function(){
                 $('#description').slideDown('slow',function(){

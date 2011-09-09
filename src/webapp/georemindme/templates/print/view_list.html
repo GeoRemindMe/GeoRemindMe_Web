@@ -20,24 +20,29 @@
                 <hr class="invisible">
 				{% for s in suggestions %}
 				<div class="suggestion {% cycle 'even' 'odd' %}" >
-                    <p><strong>{{s.instance.name}}</strong></p>
-                    <p>
-                        En {{s.instance.poi.name}} <br>
-                        <div class="maps">
-                            <div class="zoom">
-                                <span onclick="changeZoom(this,1)" class="zoom-in">Aumentar</span>
-                                <span onclick="changeZoom(this,-1)" class="zoom-out">Disminuir</span>
-                            </div>
+                    <strong>{{s.instance.name}}</strong><br>
+                    {% if s.instance.description %} 
+                        <strong>Descripción: </strong>{{s.instance.name}}<br>
+                    {% endif %}
+                    
+                    <strong>Lugar: </strong><a href="/place/{{s.instance.poi.slug}}/?print">{{s.instance.poi.name}}</a><br>
+                    <div class="maps">
+                        <div class="zoom">
+                            <span onclick="changeZoom(this,1)" class="zoom-in">Aumentar</span>
+                            <span onclick="changeZoom(this,-1)" class="zoom-out">Disminuir</span>
+                        </div>
+                        <a id="map" href="http://maps.google.com/maps?q={{s.instance.poi.location}}&hl=en&ie=UTF8&z=16">
                             <img src="http://maps.googleapis.com/maps/api/staticmap?center={{s.instance.poi.location}}&zoom=14&size=460x220&maptype=satellite
             &markers=color:red%7C{{s.instance.poi.location}}&sensor=false" value="14">
-                        </div>
-                        <strong>Dirección:</strong> <a href="http://maps.google.com/maps?q={{s.instance.poi.location}}&hl=en&ie=UTF8&z=16">{{s.instance.poi.address}}</a>
-                        <span class="gps-location"><br><strong>GPS</strong>: {{s.instance.poi.location}}</span>
-                    </p>
+                        </a>
+                    </div>
+                    <strong>Dirección:</strong> <a href="http://maps.google.com/maps?q={{s.instance.poi.location}}&hl=en&ie=UTF8&z=16">{{s.instance.poi.address}}</a>
+                    <span class="gps-location"><br><strong>GPS</strong>: {{s.instance.poi.location}}</span>
+                    <span class="votes"><br><strong>Valoraciones</strong>: {{s.instance.counters.votes}}</span>
                     
-                    <br>
-                    <span class="aside links">Más información en {{s.instance.poi.get_short_url}}<br></span>
-                    <span class="aside autor-date">Autor: {{s.instance.user.username}} - Fecha: {{s.instance.created|naturaltime}} </span>
+                    
+                    <span class="links"><br><strong>Más información</strong>: <a href="{{ s.instance.short_url }}?print" class="black-link">{{ s.instance.short_url }}</a></span>
+                    <span class="aside autor-date"><br>Autor: {{s.instance.user.username}} - Fecha: {{s.instance.created|naturaltime}} </span>
                     
                     <span class="add-notes">
                         <span class="title">Click aquí si quieres añadir notas adicionales</span>

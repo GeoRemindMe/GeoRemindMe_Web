@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% load i18n %}
 {% load tags %}
 
@@ -47,7 +46,7 @@
           'rows': 1,
           'delay':2.5,
           'croppedPhotos': true,
-          'attributionStyle':'panoramio.tos.Style.HIDDEN'
+          //'attributionStyle':panoramio.tos.Style.HIDDEN
         };
         
         var wapiblock = document.getElementById('panoramio-imgs');
@@ -55,7 +54,7 @@
         widget.setPosition(0);
         
         $('.panoramio-wapi-loaded-img-div,.panoramio-wapi-images,').css('background-color','#f9f9f9')
-		//$('.panoramio-wapi-tos').remove()
+		$('.panoramio-wapi-tos').remove()
 		
 		
 		panoramio.events.listen(widget, panoramio.events.EventType.PHOTO_CHANGED, function(){
@@ -71,7 +70,7 @@
               
         });
         
-		//$('#panoramio-imgs').append('<div class="panoramio-wapi-tos" style="width: 296px; color: black ! important; background-color: #f9f9f9 ! important;"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span><br>Photos are copyrighted by their owners</span></div>');
+		$('#panoramio-imgs').append('<div class="panoramio-wapi-tos" style="width: 296px; color: black ! important; background-color: #f9f9f9 ! important;"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span><br>Photos are copyrighted by their owners</span></div>');
         
         function addSuggestionToList(obj){
             GRM.wait();
@@ -193,7 +192,7 @@
             <h1>
                 <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/><a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> sugiere:
                 <span>
-                    {% if suggestion.counters.votes %}
+                    {% if suggestion.counters.votes == 0%}
                         Aún no ha recibido valoraciones
                     {% else %}
                         Le gusta a {{suggestion.counters.votes}} persona{{suggestion.counters.votes|pluralize:"s"}}
@@ -274,7 +273,7 @@
                                 <input type="submit" value="{{tag}}">
                             </form>
     -->
-                            {{tag}}
+                            <a href="{%url2 in_facebook view_tag_suggestions tag%}">{{tag}}</a>
                             {%if not forloop.last %}, {%endif%}
                         </li>
                     {% endfor %}
@@ -284,21 +283,20 @@
             {% endif %}
             
 			<hr>
+            
             <ul id="action-bar">
                 <li id="print-icon"><a href="?print" target="_blank" class="hoverlink">Imprimir</a></li>
-                
                 {% if request.user.username %}
                     <li id="add-to-list" value="{{suggestion.id}}">
-                        <span class="hoverlink" onclick="javascript:$('#add-to-list .dropDownBtn').show();">Añadir a una lista</span>
+                        <span class="hoverlink" onclick="javascript:$('#add-to-list .dropDownBtn').show();">Añadir a una lista </span>
                         <span class="btn dropDownBtn" style="display:none">
                             <span class="save-at">---------</span>
                             <ul class="submenu" style="display:none" id="dropdown-list">
                                 {% if lists %}
                                     {% for obj in lists %}
-                                        {% if obj.user.username = request.user.username %}
                                             <!-- Solo se muestran mis listas -->
                                             <li value="{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
-                                        {% endif %}
+
                                     {% endfor %}
                                 {% endif %}
                                 <li class="new-list-btn">

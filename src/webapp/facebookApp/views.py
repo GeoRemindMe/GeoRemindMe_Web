@@ -125,7 +125,7 @@ def view_place(request, place_id):
 @facebook_required
 def view_tag_suggestions(request, slug):
     from geotags.views import view_tag_suggestions
-    return view_place(request, slug, template='view_tag.html')
+    return view_tag_suggestions(request, slug, template='view_tag.html')
 
 
 @facebook_required

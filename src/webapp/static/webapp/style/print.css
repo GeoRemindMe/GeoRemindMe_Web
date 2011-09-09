@@ -61,6 +61,9 @@ a:link:after, a:visited:after {font-size:90%;}
 }
 
 .container,#print-menu {width:960px;margin:0 auto;}
+.container{
+    padding-top: 40px;
+}
 h1 {text-align:center;}
 h3 {text-align:center;}
 header {border-bottom: 2px solid #CCC;}
@@ -83,7 +86,11 @@ ul li {
 .aside{font-size:0.9em;font-style:italic;}
 
 #print-container{
-    background: #EEEEEE;
+    background: none repeat scroll 0 0 #EEEEEE;
+    border-bottom: 1px solid #CCCCCC;
+    height: 30px;
+    position: fixed;
+    width: 100%;
 }
 #print-menu .hide {
     display: inherit;
