@@ -177,6 +177,6 @@ class SuggestionForm(forms.Form):
             for id in ids:
                 ListSuggestion.insert_list(user=kwargs['user'],
                                             id=id, 
-                                            instances=[suggestion]
+                                            instances=[suggestion.id]
                                             )
         return suggestion  
