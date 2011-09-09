@@ -416,7 +416,7 @@ def get_all_shared_list_suggestion(request):
     return lists
 
 
-@login_required
+
 def view_list(request, id, template='webapp/view_list.html'):
     def load_suggestions_async(suggestions):
         suggestions = suggestions.get_result()
@@ -458,6 +458,9 @@ def view_list(request, id, template='webapp/view_list.html'):
     #comments = get_comments_list(request.user, list.id)
     top_comments = Comment.objects.get_top_voted(list, request.user)
     user_follower = list.has_follower(request.user)
+    if not request.user.is_authenticated():
+        pos = template.rfind('.html')
+        template = template[:pos] + '_anonymous' + template[pos:]
     return render_to_response(template,
                                 {'list': list,
                                  'has_voted': has_voted,
