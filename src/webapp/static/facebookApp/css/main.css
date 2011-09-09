@@ -565,6 +565,9 @@ input{
         padding: 1px 15px 2px;
         text-align: center;
     }
+    div#add-suggestion div span#submit-button.btn{
+        margin-right:1em;
+    }
     .hidden{
         visibility:hidden;
         display:none;
@@ -1584,14 +1587,14 @@ input{
      * 
      ***************************/
     #add-suggestion span.waiting{
-        background: url("/static/facebookApp/img/spinning-icons/wait16trans.gif") no-repeat scroll 5px 4px #EEEEEE;
+        background: url("/static/facebookApp/img/spinning-icons/wait16trans.gif") no-repeat scroll 5px 6px #EEEEEE;
         border: 1px solid #CCCCCC;
         color: black;
         display: block;
         font-weight: bold;
         line-height: 2em;
         margin-top: -5px;
-        padding: 2px 10px 2px 25px;
+        padding: 0px 10px 0px 25px;
     }
     
     #add-suggestion form{
@@ -3467,6 +3470,7 @@ input{
         height:100%;
         width:100%;
         cursor:wait;
+        z-index:1000;
     }
 
 

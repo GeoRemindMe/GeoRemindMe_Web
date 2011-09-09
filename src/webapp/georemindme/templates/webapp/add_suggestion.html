@@ -74,20 +74,77 @@
 			$("[placeholder]").placeholder();
             
             /*Set date picket behaviour*/
-            $( ".date-type" ).datepicker();
-            $('#date input:not([type="checkbox"])').change(function(){
-                if($(this).val()=="mm/dd/aa" || $(this).val()=="hh:mm" || $(this).val()==""){
-                    //console.log("No desmarcamos porque val="+$(this).val());
-                }else{
-                    $('#date [type="checkbox"]').attr('checked',false);
-                }
-                tmp=$(this)
-            })
-            $('#date [type="checkbox"]').click(function(){
-                $("#start-date,#end-date").val("mm/dd/aa");
-                $("#start-hour,#end-our").val("").blur();
-            })
-            $('#date [type="checkbox"]').parent().find('span').click(function(){$('#date [type="checkbox"]').click()})
+                
+                //Set initial values
+                var currentTime = new Date()
+                var month = FormatNumberLength(currentTime.getMonth() + 1,2)
+                var day = FormatNumberLength(currentTime.getDate(),2)
+                var year = currentTime.getFullYear()
+                var today = month+"/"+day+"/"+year;
+                $("#start-date,#end-date").val(today);
+                
+                var minutes=FormatNumberLength(currentTime.getMinutes(),2);
+                var hours= FormatNumberLength(currentTime.getHours(),2);
+                var now = hours+":"+minutes;
+                var tmp=FormatNumberLength(currentTime.getHours()+1,2);
+                var nextHour = tmp+":"+minutes;
+                $("#start-hour").val(now);
+                $("#end-hour").val(nextHour);
+                
+                $('#date [type="checkbox"]').attr('checked',true)
+                
+                
+                //Change disabled style
+                $('input[disabled="true"]').css('background-color','#ddd')
+            
+                $( ".date-type" ).datepicker();
+                
+                //This code avoid to have inverted dates
+                $("#start-date,#end-date").change(function(){
+                    var startDate=$('#start-date').val();
+                    var endDate=$('#end-date').val();
+                    if(!validateDates(startDate,endDate)){
+                        if($(this).attr('id')=="start-date")
+                            $('#end-date').val(startDate);
+                        else
+                            $('#start-date').val(endDate);
+                    }
+                })
+                
+                //This code avoid to have inverted dates
+                $("#start-hour,end-hour").change(function(){
+                    var startHour=$('#start-hour').val();
+                    var endHour=$('#end-hour').val();
+                    if(!validateTimes(startHour,endHour)){
+                        if($(this).attr('id')=="start-hour")
+                            $('#end-hour').val(startHour);
+                        else
+                            $('#start-hour').val(endHour);
+                    }
+                })
+                
+                
+                //Enable/disable "All day suggestion"
+                $('#date [type="checkbox"]').click(function(){
+                    //$("#start-date,#end-date").val(today);
+                    //$("#start-hour,#end-hour").val(now)
+                    
+                    if($('#date [type="checkbox"]').is(':checked')==false){
+                        $('#date input:not([type="checkbox"])').attr('disabled',false);
+                        $('#date input:not([type="checkbox"])').css('background-color','#FFFFFF');
+                    }else{
+                        $('#date input:not([type="checkbox"])').attr('disabled',true);
+                        $('#date input:not([type="checkbox"])').css('background-color','#DDDDDD');
+                        console.log("No se hace");
+                    }
+                });
+                
+                $('#date [type="checkbox"]').parent().find('span').click(function(){
+                    $('#date [type="checkbox"]').click();
+                });
+                
+                
+
             /*End set date picket behaviour*/
             
             $("#add-details").toggle(function(){
@@ -178,6 +235,7 @@
                 }
             })
             
+            
             //Show perms
             $('.request-access').each(function(i,elem){
                 if($(elem).hasClass("twitter-inactive"))
@@ -190,7 +248,11 @@
                     });
             });
             
-            
+            //Check perms when comming back
+            $(window).bind('focus', function() {
+               //$('body').append('focused<br>');
+               alert("Hemos vuelto");
+            });​
         });
         
         I18N = {}

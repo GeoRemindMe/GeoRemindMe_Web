@@ -730,7 +730,9 @@ function showMessage(txt,msgClass){
         $('#notification-msg').attr('class',"")
         $('#notification-msg').html(txt)
         $('#notification-msg').addClass(msgClass)
-        $('#notification-msg').css('top',$(window).scrollTop()+'px');
+        var posTop=$(window).scrollTop();
+        if(posTop<60)posTop=60;
+        $('#notification-msg').css('top',posTop+'px');
         $('#notification-msg').fadeIn('slow').delay(3000).fadeOut('slow')
     }
 }
@@ -756,6 +758,39 @@ function closeDropdown(){
     $(".new-list-btn span.new-list").css('display','none');
     $(".new-list-btn div#cancel-link").css('display','none');
     $(".new-list-btn span.new-list").find('input').val("");
+}
+
+function FormatNumberLength(num, length) {
+    var r = "" + num;
+    while (r.length < length) {
+        r = "0" + r;
+    }
+    return r;
+}
+
+function validateDates(start,end){
+    //Date format mm/dd/aaaa
+    var start = start.split("/");
+    var end = end.split("/");
+    
+    start = new Date(start[0], start[1] -1, start[2]);
+    end = new Date(end[0], end[1] -1, end[2]);
+
+    if (start > end) 
+        return false;
+    else
+        return true;
+}
+function validateTimes(start,end){
+    //Time format hh:mm
+    var start = start.split(":");
+    var end = end.split(":");
+    
+    if(start[0]>end[0])
+        return false;
+    else if(start[0]==end[0] && start[1]>end[1])
+        return false;
+    return true;
 }
 
 
@@ -824,3 +859,4 @@ jQuery.fn.sortElements = (function(){
     };
  
 })();  
+
