@@ -172,6 +172,7 @@ class SuggestionForm(forms.Form):
                          )
         if self.cleaned_data['list_id'] != '':
             ids = self.cleaned_data['list_id'].split(',')
+            ids = filter(lambda x: x!='', ids)
             from geolist.models import ListSuggestion
             for id in ids:
                 ListSuggestion.insert_list(user=kwargs['user'],
