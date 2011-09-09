@@ -197,6 +197,9 @@ class User(polymodel.PolyModel, HookedModel):
                                     if isinstance(activity_timeline, UserTimelineSuggest) else None,
                     'status': activity_timeline.status if hasattr(activity_timeline, 'status') else None,
                     'is_private': True,
+                    'user_follower': instances.get(UserTimeline.instance.get_value_for_datastore(activity_timeline), activity_timeline.instance).has_follower(self)
+                        if hasattr(instances.get(UserTimeline.instance.get_value_for_datastore(activity_timeline), activity_timeline.instance), 'has_follower') 
+                        else None,
                     } for activity_timeline in timeline]
         from operator import itemgetter
         timeline_sorted = sorted(timeline, key=itemgetter('modified'), reverse=True)
