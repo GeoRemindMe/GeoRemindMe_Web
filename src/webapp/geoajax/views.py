@@ -153,7 +153,7 @@ def delete_reminder(request):
 #===============================================================================
 def add_suggestion(request):
     """
-        Añade o edita una alerta
+        Añade o edita una sugerencia
         Parametros en POST:
             eventid: el id del evento a editar (opcional)
     """

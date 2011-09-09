@@ -11,7 +11,10 @@ from django.conf import settings as __web_settings # parche hasta conseguir que 
 
 
 def new_suggestion(sender, **kwargs):
-    fb_client=FacebookClient(user=sender.user)
+    try:
+        fb_client=FacebookClient(user=sender.user)
+    except:
+        return
     params= {
                 "name": "Ver detalles de la sugerencia",
                 "link": __web_settings.WEB_APP+"suggestion/"+sender.slug,
@@ -31,12 +34,15 @@ def new_suggestion(sender, **kwargs):
     from models import _FacebookPost
     fb_post = _FacebookPost(instance=str(sender.key()), post=post_id['id'])
     fb_post.put()
-suggestion_new.connect(new_suggestion)
+#suggestion_new.connect(new_suggestion)
 
 
 def new_list(sender, **kwargs):
     from geolist.models import ListSuggestion, ListRequested
-    fb_client=FacebookClient(user=sender.user)
+    try:
+        fb_client=FacebookClient(user=sender.user)
+    except:
+        return
     params= {
             "name": sender.name,
             "link": __web_settings.WEB_APP+sender.get_absolute_url()
@@ -62,7 +68,10 @@ list_new.connect(new_list)
 
 def new_comment(sender, **kwargs):
     if hasattr(sender.instance, '_vis'):
-        fb_client=FacebookClient(user=sender.user)
+        try:
+            fb_client=FacebookClient(user=sender.user)
+        except:
+            return
         from os import environ
         params= {
                     "name": sender.instance.name,
@@ -90,7 +99,10 @@ def new_vote(sender, **kwargs):
     from geoalert.models import Suggestion
     from os import environ
     if hasattr(sender.instance, '_vis'):
-        fb_client=FacebookClient(user=sender.user)
+        try:
+            fb_client=FacebookClient(user=sender.user)
+        except:
+            return
         if isinstance(sender.instance, Comment):
             params= {
                         "link": environ['HTTP_HOST'] + sender.instance.instance.get_absolute_url(),

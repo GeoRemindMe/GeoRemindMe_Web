@@ -71,7 +71,7 @@ def add_list_suggestion(request, lists_id=[], name=None, description=None, insta
         results = []
         for l in lists_id:
             results.append(ListSuggestion.insert_list(user=request.user, 
-                                                      id=l.id, 
+                                                      id=l, 
                                                       instances=instances
                                                       ) 
                            )

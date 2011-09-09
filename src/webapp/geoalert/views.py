@@ -333,7 +333,7 @@ def user_suggestions(request, template='webapp/suggestions.html'):
 
 @login_required
 def add_suggestion(request, template='webapp/add_suggestion.html'):
-    """ Añade una sugerencia
+    """ Vista para añadir una sugerencia
         
             :param form: formulario con los datos
             :type form: :class:`geoalert.forms.RemindForm`
@@ -344,6 +344,7 @@ def add_suggestion(request, template='webapp/add_suggestion.html'):
     """
     from forms import SuggestionForm
     f = SuggestionForm();
+    # tambien devolvemos las listas posibles
     from geolist.models import ListSuggestion
     lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)

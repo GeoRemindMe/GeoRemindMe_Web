@@ -11,7 +11,7 @@ class FacebookMiddleware(object):
                 data = parse_signed_request(request.REQUEST['signed_request'])
                 request.method = 'GET'
                 request.csrf_processing_done = True
-                from facebookApp.watchers import new_suggestion, new_list, new_comment, new_vote, deleted_post
+                from facebookApp.watchers import new_comment, new_vote, deleted_post
                 if 'oauth_token' in data:
                     request.facebook = {'uid': data['user_id'],
                                     'access_token': data['oauth_token'],
@@ -29,7 +29,7 @@ class FacebookMiddleware(object):
                                         'client': FacebookClient(cookie['access_token'])
                                     }
                     request.csrf_processing_done = True
-                    from facebookApp.watchers import new_suggestion, new_list, new_comment, new_vote, deleted_post
+                    from facebookApp.watchers import new_comment, new_vote, deleted_post
                     return
                 except:
                     request.csrf_processing_done = False

@@ -309,7 +309,7 @@ class Suggestion(Event, Visibility, Taggable):
     def update_or_insert(cls, id = None, name = None, description = None,
                          date_starts = None, date_ends = None, poi = None,
                          user = None, done = False, active = True, tags = None, 
-                         vis = 'public', commit=True):
+                         vis = 'public', commit=True, to_facebook=False, to_twitter=False):
         '''
             Crea una sugerencia nueva, si recibe un id, la busca y actualiza.
             
@@ -347,6 +347,20 @@ class Suggestion(Event, Visibility, Taggable):
                 sugg._tags_setter(tags, commit=commit)
             elif commit:
                 sugg.put()
+                if to_facebook:
+                    from facebookApp.watchers import new_suggestion
+                    new_suggestion(self)
+                if to_twitter:
+                    if sugg._is_public():
+                        if sugg.short_url is None:
+                            sugg._get_short_url()
+                        msg = _("#grm %s") % sugg.short_url
+                        from geoauth.clients.twitter import TwitterClient
+                        try:
+                            tw_client=TwitterClient(user=sugg.user)
+                            tw_client.send_tweet(msg, sugg.poi.location)
+                        except:                 
+                            pass
             return sugg
         
     def add_follower(self, user):

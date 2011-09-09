@@ -109,6 +109,9 @@ class SuggestionForm(forms.Form):
     tags = forms.CharField(required=False)    
     done = forms.BooleanField(required=False)
     visibility = forms.ChoiceField(required=False, choices=VISIBILITY_CHOICES)
+    list_id = forms.CharField(required=False)
+    to_facebook = forms.BooleanField(required=False)
+    to_twitter = forms.BooleanField(required=False)
     
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
@@ -164,5 +167,15 @@ class SuggestionForm(forms.Form):
                          user = kwargs['user'], done = self.cleaned_data.get('done', False),
                          tags = self.cleaned_data.get('tags', None),
                          vis = self.cleaned_data['visibility'],
+                         to_facebook = self.cleaned_data['to_facebook'],
+                         to_twitter = self.cleaned_data['to_twitter'],
                          )
+        if self.cleaned_data['list_id'] != '':
+            ids = self.cleaned_data['list_id'].split(',')
+            from geolist.models import ListSuggestion
+            for id in ids:
+                ListSuggestion.insert_list(user=kwargs['user'],
+                                            id=id, 
+                                            instances=[suggestion]
+                                            )
         return suggestion  
