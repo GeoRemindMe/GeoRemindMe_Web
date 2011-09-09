@@ -345,6 +345,10 @@ input{
     .error-msg{
          display: none;
     }
+    
+    #edit-profile .error-msg{
+         display: block;
+    }
     .error-msg ul{
     }
     .error-msg ul li{
