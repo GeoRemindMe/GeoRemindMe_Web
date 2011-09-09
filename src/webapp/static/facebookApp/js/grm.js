@@ -319,7 +319,7 @@ GRM.menuList = function(settings) {
                             type: "POST",
                             url: url["modify_suggestion_list"],
                             data: {
-                                name: [$(this).find('input').val()],
+                                name: $(this).find('input').val(),
                                 suggestions: suggestionList
                             },
                             dataType:'json',

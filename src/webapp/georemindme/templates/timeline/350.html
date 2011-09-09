@@ -27,10 +27,9 @@
         <span class="action-bar">
             | <span class="focusInput hoverlink comment">Comentar</span> | 
             <a href="{% url2 in_facebook view_list obj.instance.id %}" class="hoverlink details">Ver lista</a>  
-            
-            {% if not obj.is_private  and obj.instance.user.username != request.user.username %}            
-                | 
-                <span title="Recibe novedades"  class="remember-forget" value="{{obj.instance.id}}" type="list" {%if obj.user_follower%}remember="true"{%endif%}>
+            {% if obj.instance.user.username != request.user.username %}            
+                | {{obj.has_follower}},
+                <span title="Guardar en favoritos"  class="remember-forget" value="{{obj.instance.id}}" type="list" {%if obj.user_follower%}remember="true"{%endif%}>
                     <span class="remember">Guardar</span>
                     <span class="forget">Guardada</span>
                 </span>

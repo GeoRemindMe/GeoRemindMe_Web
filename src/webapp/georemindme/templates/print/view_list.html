@@ -52,8 +52,8 @@
 			
 			
 			{% if top_comments %}
-                <div class="comments">
-	                <h3 style="text-align:left;">Esta lista tiene {{top_comments|length}} comentario(s) popular(es): </h3>
+                <div class="comments" style="display: block;clear:both;position:relative;top:2em;">
+	                <h3 style="text-align:left;border-bottom:1px solid black">Esta lista tiene {{top_comments|length}} comentario(s) popular(es): </h3>
                         <ul>
                             {% for c in top_comments %}
                                 <li><strong>{{c.username}}: </strong> {{c.msg}}<br><span class="aside">{{c.created|naturaltime}}</span></li>
