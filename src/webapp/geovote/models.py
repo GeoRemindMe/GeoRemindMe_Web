@@ -65,6 +65,7 @@ class CommentHelper(object):
            'vote_counter': comment['votes'],
            'instance': prefetch[comment['instance']],
            'msg': comment['msg'],
+           'created': comment['created'],
            } for comment in comments]
                 ]
     
@@ -106,6 +107,7 @@ class CommentHelper(object):
                        'vote_counter': comment['votes'],
                        'instance': prefetch[comment['instance']],
                        'msg': comment['msg'],
+                       'created': comment['created'],
                        } for comment in comments]
                 ]
         
@@ -186,6 +188,7 @@ class CommentHelper(object):
                                     'has_voted':  Vote.objects.user_has_voted(querier, comment.key()) if querier is not None else None,
                                     'vote_counter': comment['votes'],
                                     'msg': comment['msg'],
+                                    'created': comment['created'],
                                     } for comment in top
                             ]
                     memcache.set('%stopcomments_%s' % (memcache.version, instance.key()), top, 300)
