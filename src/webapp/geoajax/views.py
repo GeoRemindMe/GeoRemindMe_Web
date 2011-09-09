@@ -466,14 +466,16 @@ def add_list_suggestion(request):
         list_tags = None
     else:
         list_tags = request.POST.getlist('tags')
-
-    lists = geolist.add_list_suggestion(request, lists_id=list_id, name = list_name,
-                                 description = list_description,
-                                 instances = list_instances,
-                                 instances_del = list_instances_del,
-                                 tags=list_tags,
-                                 vis=list_vis
-                                 )
+    try:
+        lists = geolist.add_list_suggestion(request, lists_id=list_id, name = list_name,
+                                     description = list_description,
+                                     instances = list_instances,
+                                     instances_del = list_instances_del,
+                                     tags=list_tags,
+                                     vis=list_vis
+                                     )
+    except:
+        return HttpResponseBadRequest()
     return HttpResponse([list.to_json() if hasattr(list, 'to_json') else None for list in lists], mimetype="application/json")
 
 
