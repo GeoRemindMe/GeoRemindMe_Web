@@ -91,6 +91,7 @@ class User(polymodel.PolyModel, HookedModel):
     def profile(self):
         if self._profile is None:
             import memcache
+            from models_acc import UserProfile
             self._profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, self.id)))
             if self._profile is None:
                 from models_acc import UserProfile
@@ -493,7 +494,7 @@ class User(polymodel.PolyModel, HookedModel):
             self.profile.username = self.username
         if 'password' in kwargs:
             if 'old_password' in kwargs:
-                if kwargs['old_password'] == backpassword:
+                if self.check_password(kwargs['old_password']):
                     self.password = kwargs['password']
                 else:
                     raise TypeError()

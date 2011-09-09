@@ -326,7 +326,7 @@ def edit_profile (request, template='webapp/edit_profile.html'):
         if f.is_valid():
             modified = f.save(user=request.user)
             if modified:
-                if request.in_facebook:
+                if '/fb/' in template:
                     return HttpResponseRedirect('/fb/user/%s/' % request.user.username)
                 else:
                     return HttpResponseRedirect('/user/%s/' % request.user.username)

@@ -224,13 +224,14 @@ class UserProfileForm(forms.Form):
                             sync_avatar_with = self.cleaned_data['sync_avatar_with'])
             return True
         except User.UniqueEmailConstraint:  # email already in use
-                msg = _("Email already in use")
-                self._errors['email'] = self.error_class([msg])
+                fail = _("Email already in use")
+                self._errors['email'] = self.error_class([fail])
                 return None
         except User.UniqueUsernameConstraint, e:
             fail = _('Username already in use')
             self._errors['username'] = self.error_class([fail])
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
+            raise
             fail = _(e.message)
             self._errors['email'] = self.error_class([fail])
 
