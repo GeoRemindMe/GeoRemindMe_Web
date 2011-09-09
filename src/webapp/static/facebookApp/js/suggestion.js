@@ -552,16 +552,15 @@ function saveSuggestion(){
             params['visibility']= "private";
         
         if( $('#lists span.checked').length > 0 ){
-            params['lists']=[];
+            params['list_id']="";
             $('#lists span.checked').each(function(i,elem){
-                params['lists'].push($(elem).attr('value'));
+                params['list_id']=$(elem).attr('value')+','+params['list_id'];
             });
         }
         var shareThrough=$('#social-share ul li:not(.inactive)');
         if(shareThrough.length > 0){
-            params['shareThrough']=[];
             $(shareThrough).each(function(i,elem){
-                params['shareThrough'].push($(elem).attr("data-network"));
+                params['to_'+$(elem).attr("data-network")]=true;
             });
         }
         

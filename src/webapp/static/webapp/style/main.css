@@ -707,6 +707,7 @@ margin-top:1em;
 	display: inline;
     float: right;
     font-size: 1.1em;
+    width:56px;
 /*
     margin-right: 10px;
 */
@@ -1721,7 +1722,7 @@ a.hoverlink{
 }
 
 #add-suggestion{
-    font-size: 0.9em;
+    font-size: 1em;
     margin-top: 1em;
 }
 a.small-link,ul#chronology .suggestionPlace a {

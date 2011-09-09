@@ -47,14 +47,14 @@
                         type: "POST",
                         url: url["modify_suggestion_list"],
                         data: {
-                            name: [listname]
+                            name: listname
                         },
                         dataType:'json',
                         success: function(data){
                             //Añadimos la lista al desplegable
-                            $("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\" value=\""+data.name+"\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
+                            $("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\" value=\""+data.id+"\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
                             $('#listid-'+data.id).click(function(){onLiClick(this)});
-                            
+                            $('#listid-'+data.id).click();
                             //Añadimos la lista en la pestaña listas
                             
                             //Reordenamos alfabéticamente la lista desplegable
@@ -68,7 +68,19 @@
                 }
             });
 
-            //if (typeof resizeIframe != "undefined") resizeIframe();
+            $('#date input:not([type="checkbox"])').change(function(){
+                if($(this).val()=="mm/dd/aa" || $(this).val()=="hh:mm" || $(this).val()==""){
+                    //console.log("No desmarcamos porque val="+$(this).val());
+                }else{
+                    $('#date [type="checkbox"]').attr('checked',false);
+                }
+                tmp=$(this)
+            })
+            $('#date [type="checkbox"]').click(function(){
+                $("#start-date,#end-date").val("mm/dd/aa");
+                $("#start-hour,#end-our").val("").blur();
+            })
+            $('#date [type="checkbox"]').parent().find('span').click(function(){$('#date [type="checkbox"]').click()})
             
             /*** placeholding ***/
 			$("[placeholder]").placeholder();

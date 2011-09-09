@@ -1,7 +1,8 @@
 Config = null;
 
 $(document).ready(function() {
-    $('.help-txt').dialog({
+    
+    var dialogSettings={
             autoOpen:false,
 			resizable: false,
             buttons: [{
@@ -10,8 +11,14 @@ $(document).ready(function() {
                 }],
             draggable: false,
 			width:560,
-            position: ['right', 45]
-    });
+            
+    }
+    if(typeof($('#webapp'))=="undefined")
+        dialogSettings['position'] = ['right', 45];
+    else
+        dialogSettings['position'] = ['top', 65];
+        
+    $('.help-txt').dialog(dialogSettings);
     
        
     $('.help-icon img').click(function(){

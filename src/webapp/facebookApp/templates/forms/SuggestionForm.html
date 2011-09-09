@@ -55,7 +55,7 @@
                     a
                     <input title="Fecha de fin" size="9" id="end-date" class="date-type" autocomplete="off" placeholder="mm/dd/aa">
                     <input title="Hora de fin" size="9" id="end-hour" class="hour-type" autocomplete="off" placeholder="hh:mm">
-                    <div><input type="checkbox" checked> Se puede hacer en cualquier momento</div>
+                    <div><input type="checkbox" checked> <span>Se puede hacer en cualquier momento</span></div>
                 </p>
             </div>
         </div>
@@ -105,32 +105,20 @@
                 
                 <!-- SEARCH ENGINE -->
                 
+<!--
                 <div id="search-engine-layer">
                     <label for="searchEngine"><strong>Motor de búsqueda:</strong></label>
                     <input type="radio" name="engine" value="foursquare" /> Foursquare
                     <input type="radio" name="engine" value="google-places" checked /> Google Places
                     <span onclick="javascript:showSettings()" id="engineSettings">Configuración del motor</span>
                     
-                    <!--Google Places Settings-->
-                    <div id="google-places-settings">
-                        
-                        
-                        
+                    
+                    <div id="google-places-settings">                       
                         <label for="">Tipo de resultados:</label>
                         <input type="radio" name="place-type" value="establishment" checked /> Establecimientos
                         <input type="radio" name="place-type" value="geocode" /> Calles
                         <input type="radio" name="place-type" value="all" /> Ambos
-                        
                         <p class="clear">Priorizar resultados de:</p>
-<!--
-                        <label for="">País:</label>
-                        <select id="google-region">
--->
-<!--
-                        <input type="text" id="google-region" value="">
--->
-                        
-                        
                         </select>
                         <label for="">Ciudad:</label>
                         <input type="text" id="google-city" value="">
@@ -142,11 +130,12 @@
                         </p>
                     </div>
                     
-                    <!--Foursquare Settings-->
+                    
                     <div id="foursquare-settings">
                         <p>Foursquare settings</p>
                     </div>
                 </div>
+-->
             
             
             </div>
@@ -206,7 +195,7 @@
         
     </div>
 {% if not user.facebook_user %}
-    <div class="help-txt" style="display:none" id="perms-facebook-text" title="Información">
+    <div class="help-txt" style="display:none" id="perms-facebook-text" title="Configurar la cuenta de Facebook">
         <p>Para poder enviar tus sugerencias a Facebook necesitas instalarte la aplicación de Facebook.</p>
         <p><a href="http://apps.facebook.com/georemindme">Instalar la aplicación de GeoRemindMe para Facebook</a></p>
         <p>Recuerda que en cualquier momento puedes revocar el permiso desde la <a href="{% url2 in_facebook profile_settings %}">configuración de tu cuenta</a>.</p>
@@ -214,10 +203,21 @@
 {% endif %}
 
 {% if not user.has_perms_twitter %}
-    <div class="help-txt" style="display:none" id="perms-twitter-text" title="Información">
-        <p>Para poder enviar tus sugerencias a Twitter necesitamos que personalmente nos des permiso para hacerlo.</p>
-        <p><a href="/ext/twitter/perms" target="_blank">Conceder permiso a GeoRemindMe para publicar en Twitter</a></p>
+    <div class="help-txt" style="display:none" id="perms-twitter-text" title="Configurar la cuenta de Twitter">
+        <p>Configura tu cuenta de Twitter y obtén las siguientes ventajas:</p>
+        <ul>
+            <li><strong>Comparte</strong> con tus followers las sugerencias que crees.</li>
+            <li><strong>Averigua</strong> que usuarios de los que sigues en Twitter están en GeoRemindMe!</li>
+            <li><strong>Identifícate sin formularios</strong> en GeoRemindMe!.</li>
+            <li>Próximamente: <strong>reserva una URL</strong> con tu nombre de usuario de Twitter</li>
+        </ul>
+        <p style="text-align:center;font-weight:1.1em;">
+            <a href="/ext/twitter/perms" target="_blank">Configurar ahora mi cuenta de Twitter</a>
+        </p>
         <p>Una vez concedidos los permisos por favor refresca la página (pulsando F5).</p>
-        <p>Recuerda que en cualquier momento puedes revocar el permiso desde la <a href="{% url2 in_facebook profile_settings %}">configuración de tu cuenta</a>.</p>
+        <p>
+            <strong>Recuerda:</strong> <br>
+            En cualquier momento puedes deshacer los cambios desde la <a href="{% url2 in_facebook profile_settings %}">configuración de tu cuenta</a>.
+        </p>
     </div>
 {% endif %}

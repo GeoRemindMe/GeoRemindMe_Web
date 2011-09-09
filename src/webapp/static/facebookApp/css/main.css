@@ -45,6 +45,10 @@ input{
     text-decoration:underline;
 }
 
+#details-form span.used{
+    color: #555555 !important;
+    cursor: pointer;
+}
 
 /****************************
  *      
@@ -1614,6 +1618,9 @@ input{
         font-weight: bold;
         width: 155px;
     }
+    #add-suggestion form#add-suggestion-form div#date div span{
+        cursor:pointer;
+    }
     #add-suggestion #id_description{
         clear: both;
         display: block;
@@ -1871,10 +1878,7 @@ input{
             font-weight:bold;
             margin: 0 0.5em;
         }
-        #details-form span.used{
-            color: #555555;
-            cursor: pointer;
-        }
+
         
         #add-suggestion div.help-icon{
         }
@@ -2577,6 +2581,18 @@ input{
         margin: 0.5em 0;
         padding: 0.3em;
         cursor:pointer;
+    }
+    .help-txt{
+        line-height:2em;
+    }
+    .help-txt ul{
+        list-style: square outside none;
+        margin-left: 2em;
+    }
+    .help-txt ul li{
+    }
+    .help-txt strong{
+        font-weight:bold;
     }
     
     div.ui-dialog div#share-text.help-txt input{
