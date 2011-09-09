@@ -48,12 +48,11 @@
             
             <span class="timestamp">  {{obj.created|naturaltime}}</span>
             <span class="action-bar">
-                {% if not obj.is_private %}
+                {% if obj.instance.instance.user.username != request.user.username %}
                     | 
                     <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="comment">
                         <span class="dislike">
                             <span class="hoverlink">Ya no me gusta</span> 
-                            <span class="text like-text {% if not obj.has_voted %}increase{% endif %}">{{obj.vote_counter}}</span> personas
                         </span>
                         
                         <span class="like">
@@ -61,6 +60,7 @@
                         </span>
                     </span>
                 {% endif %}
+                | <a href="{% url2 in_facebook view_list obj.instance.instance.id  %}" class="details">Ver lista</a>  
             </span>
         </div>
 </li>
