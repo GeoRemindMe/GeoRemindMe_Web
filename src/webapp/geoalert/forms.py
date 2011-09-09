@@ -105,17 +105,17 @@ class SuggestionForm(forms.Form):
     place_reference = forms.CharField(required=False)
     starts = forms.DateTimeField(required=False, widget=SelectDateWidget())
     ends = forms.DateTimeField(required=False, widget=SelectDateWidget())
+    hour_starts = forms.DateTimeField(required=False)
+    hour_ends = forms.DateTimeField(required=False)
     description = forms.CharField(required=False,widget=forms.Textarea())
     tags = forms.CharField(required=False)    
     done = forms.BooleanField(required=False)
     visibility = forms.ChoiceField(required=False, choices=VISIBILITY_CHOICES)
-    list_id = forms.CharField(required=False)
     to_facebook = forms.BooleanField(required=False)
     to_twitter = forms.BooleanField(required=False)
     
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
-
         if 'initial' in kwargs:
             if 'done' in kwargs['initial']:#only shows done field when
                 self.fields['done'] = forms.BooleanField() 
@@ -136,9 +136,9 @@ class SuggestionForm(forms.Form):
         return cleaned_data
     
     # only save if it is valid
-    def save(self, **kwargs):
+    def save(self, list_id='', **kwargs):
+        
         from geoalert.models import Suggestion
-
         if 'poi_id' in self.cleaned_data and self.cleaned_data['poi_id'] is not None:
             poi = Place.objects.get_by_id(self.cleaned_data['poi_id'])
         elif 'place_reference' in self.cleaned_data and self.cleaned_data['place_reference'] is not None:
@@ -146,37 +146,31 @@ class SuggestionForm(forms.Form):
                                                 google_places_reference=self.cleaned_data['place_reference']
                                                 )
         id = kwargs.get('id', None)
-        if id is not None:
-            suggestion = Suggestion.update_or_insert(
-                                 id = kwargs.get('id', None), name = self.cleaned_data['name'],
-                                 description = self.cleaned_data['description'], 
-                                 date_starts = self.cleaned_data['starts'],
-                                 date_ends = self.cleaned_data['ends'], poi = poi,
-                                 user = kwargs['user'], done = self.cleaned_data.get('done', False),
-                                 tags = self.cleaned_data.get('tags', None),
-                                 vis = self.cleaned_data['visibility'],
-                                 )
-        else:
-            if poi is None:
-                raise AttributeError
-            suggestion = Suggestion.update_or_insert(
-                         id = kwargs.get('id', None), name = self.cleaned_data['name'],
-                         description = self.cleaned_data['description'], 
-                         date_starts = self.cleaned_data['starts'],
-                         date_ends = self.cleaned_data['ends'], poi = poi,
-                         user = kwargs['user'], done = self.cleaned_data.get('done', False),
-                         tags = self.cleaned_data.get('tags', None),
-                         vis = self.cleaned_data['visibility'],
-                         to_facebook = self.cleaned_data['to_facebook'],
-                         to_twitter = self.cleaned_data['to_twitter'],
-                         )
-        if self.cleaned_data['list_id'] != '':
-            ids = self.cleaned_data['list_id'].split(',')
-            ids = filter(lambda x: x!='', ids)
-            from geolist.models import ListSuggestion
-            for id in ids:
-                ListSuggestion.insert_list(user=kwargs['user'],
-                                            id=id, 
-                                            instances=[suggestion.id]
-                                            )
+        if poi is None:
+            raise AttributeError
+        suggestion = Suggestion.update_or_insert(
+                     id = kwargs.get('id', None), name = self.cleaned_data['name'],
+                     description = self.cleaned_data['description'], 
+                     date_starts = self.cleaned_data['starts'],
+                     date_ends = self.cleaned_data['ends'],
+                     hour_starts = self.cleaned_data['hour_starts'],
+                     hour_ends = self.cleaned_data['hour_ends'],
+                     poi = poi,
+                     user = kwargs['user'], done = self.cleaned_data.get('done', False),
+                     tags = self.cleaned_data.get('tags', None),
+                     vis = self.cleaned_data['visibility'],
+                     to_facebook = self.cleaned_data['to_facebook'],
+                     to_twitter = self.cleaned_data['to_twitter'],
+                     )
+        if suggestion is not None:
+            list_id = list_id
+            if list_id != '':
+                ids = list_id.split(',')
+                ids = filter(lambda x: x!='', ids)
+                from geolist.models import ListSuggestion
+                for list in ids:
+                    ListSuggestion.insert_list(user=kwargs['user'],
+                                                id=list, 
+                                                instances=[suggestion.id]
+                                                )
         return suggestion  

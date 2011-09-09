@@ -55,8 +55,8 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     # listas del usuario
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     lists = [l for l in lists if not suggestion.key() in l.keys]
-    instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
-    lists = [l.to_dict(resolve=True, instances=instances) for l in lists]
+    lists = prefetch_refprops(lists, ListSuggestion.user)
+    lists = [l.to_dict(resolve=False) for l in lists]
     # construir un diccionario con todas las keys resueltas y usuarios
     if not request.user.is_authenticated():
             pos = template.rfind('.html')
@@ -346,10 +346,10 @@ def add_suggestion(request, template='webapp/add_suggestion.html'):
     f = SuggestionForm();
     # tambien devolvemos las listas posibles
     from geolist.models import ListSuggestion
-    lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
+    from georemindme.funcs import prefetch_refprops
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
+    lists = prefetch_refprops(lists, ListSuggestion.user)
     lists = [l.to_dict(resolve=False) for l in lists]
-    lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=False))
     return  render_to_response(template, {'f': f,
                                           'lists': lists,
                                           },
@@ -365,7 +365,7 @@ def save_suggestion(request, form, id=None):
     :type: :class:`string`
     :returns: :class:`geoalert.models.Suggestion`
     """
-    sug = form.save(user = request.user, id=id)
+    sug = form.save(user = request.user, id=id, list_id=request.POST.get('list_id', ''))
     return sug
 
 

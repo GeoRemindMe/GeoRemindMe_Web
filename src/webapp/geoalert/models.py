@@ -264,6 +264,8 @@ class Suggestion(Event, Visibility, Taggable):
     created = db.DateTimeProperty(auto_now_add=True)
     date_starts = db.DateTimeProperty()
     date_ends = db.DateTimeProperty()
+    hour_starts = db.DateTimeProperty(default=None)
+    hour_ends = db.DateTimeProperty(default=None)
     poi = db.ReferenceProperty(POI, required=True)
     modified = db.DateTimeProperty(auto_now=True)
     user = db.ReferenceProperty(User, collection_name='suggestions')
@@ -307,9 +309,10 @@ class Suggestion(Event, Visibility, Taggable):
     
     @classmethod
     def update_or_insert(cls, id = None, name = None, description = None,
-                         date_starts = None, date_ends = None, poi = None,
-                         user = None, done = False, active = True, tags = None, 
-                         vis = 'public', commit=True, to_facebook=False, to_twitter=False):
+                         date_starts = None, date_ends = None, hour_starts = None,
+                         hour_ends = None, poi = None, user = None, done = False, 
+                         active = True, tags = None, vis = 'public', commit=True, 
+                         to_facebook=False, to_twitter=False):
         '''
             Crea una sugerencia nueva, si recibe un id, la busca y actualiza.
             
@@ -318,14 +321,16 @@ class Suggestion(Event, Visibility, Taggable):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        if id is not None:  # como se ha pasado un id, queremos modificar una alerta existente
+        if id is not None:  
+            # como se ha pasado un id, queremos modificar una alerta existente
             sugg = cls.objects.get_by_id_user(id, user, querier=user)
             if sugg is None:
                 return None
             #sugg.name = name if name is not None else sugg.name
-            sugg.description = description if description is not None else sugg.description
-            sugg.date_starts = date_starts if date_starts is not None else sugg.date_starts
-            sugg.date_ends = date_ends if date_ends is not None else sugg.date_ends
+            sugg.description = description
+            sugg.date_starts = date_starts
+            sugg.date_ends = date_ends 
+            sugg.hour_ends = hour_ends 
             sugg.poi = poi if poi is not None else sugg.poi
             if vis != '':
                 sugg._vis = vis
@@ -335,21 +340,21 @@ class Suggestion(Event, Visibility, Taggable):
                 sugg._tags_setter(tags, commit=commit)
             elif commit:
                 sugg.put()
-            return sugg
         else:
             if poi is None:
                 raise TypeError()
             sugg = Suggestion(name = name, description = description, date_starts = date_starts,
-                          date_ends = date_ends, poi = poi, user = user, _vis=vis)
+                          date_ends = date_ends, hour_starts = hour_starts, hour_ends = hour_ends, 
+                          poi = poi, user = user, _vis=vis)
             if not active:
                 sugg.toggle_active()
             if tags != '':
                 sugg._tags_setter(tags, commit=commit)
-            elif commit:
+            if commit:
                 sugg.put()
                 if to_facebook:
                     from facebookApp.watchers import new_suggestion
-                    new_suggestion(self)
+                    new_suggestion(sugg)
                 if to_twitter:
                     if sugg._is_public():
                         if sugg.short_url is None:
@@ -361,7 +366,7 @@ class Suggestion(Event, Visibility, Taggable):
                             tw_client.send_tweet(msg, sugg.poi.location)
                         except:                 
                             pass
-            return sugg
+        return sugg
         
     def add_follower(self, user):
         '''
