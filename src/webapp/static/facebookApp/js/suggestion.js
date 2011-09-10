@@ -673,11 +673,12 @@ function placesAutocomplete(){
     
     //Cargamos nuestras opciones de búsqueda
     var options = {
-        region: searchconfig_google['region_code'],
+        region: searchconfig_google['region_code'] 
     }
     
     if(searchconfig_google['type']!='all')
-      options['types']=searchconfig_google['type']
+      options['types']=[ searchconfig_google['type'] ];
+
     //Fin cargamos opciones
     autocomplete = new google.maps.places.Autocomplete(input,options);
     autocomplete.bindTo('bounds', map);
