@@ -351,7 +351,7 @@ def get_list_suggestion(request, list_id=None, user_id=None, query_id=None, page
             lists = ListSuggestion.objects.get_by_user(user, query_id=query_id, page=page, querier=request.user)
             return lists
         else:
-            lists = ListSuggestion.objects.get_by_user(query_id=query_id, page=page, querier=request.user)
+            lists = ListSuggestion.objects.get_by_user(query_id=query_id, page=page, querier=request.user, user=request.user)
             return lists
     else:
         list = ListSuggestion.objects.get_by_id_querier(list_id, querier=request.user)

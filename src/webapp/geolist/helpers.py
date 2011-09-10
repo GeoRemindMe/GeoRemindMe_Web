@@ -121,7 +121,7 @@ class ListHelper(object):
         """
         Obtiene las listas de un usuario
         """
-        if not isinstance(user, User) or (not isinstance(querier, User) and not isinstance(querier, AnonymousUser)):
+        if user is None or querier is None:
             raise TypeError()
         if user.id == querier.id:
             if without_key is not None:
