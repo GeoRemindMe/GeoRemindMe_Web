@@ -267,7 +267,26 @@
             //   alert("Hemos vuelto");
             //});​
             
-            
+            {% if not user.facebook_user or not user.has_perms_twitter %}
+                function onFocus(){
+                    //Si 
+                    if($('#perms-facebook-text').length!=0)
+                        if($('#perms-facebook-text').parent().css('display')!="none"){
+                            console.log("Comprobamos si se tienen permisos de Facebook")
+                        }
+                    //Si 
+                    if($('#perms-twitter-text').length!=0)
+                        if($('#perms-twitter-text').parent().css('display')!="none"){
+                            console.log("Comprobamos si se tienen permisos de Twitter")
+                        }
+                };
+                 
+                if (/*@cc_on!@*/false) { // check for Internet Explorer
+                    document.onfocusin = onFocus;
+                } else {
+                    window.onfocus = onFocus;
+                }
+            {% endif %}
             
         });
         

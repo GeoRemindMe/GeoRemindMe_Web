@@ -639,6 +639,10 @@
             return hash;
         }
 
+        function nl2br (str, is_xhtml) {   
+            var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
+            return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
+        }
         //Establece los campos editables de las sugerencias de las que se es autor
         function set_editable_fields(objID){
             var eventidValue;
@@ -646,6 +650,11 @@
             
             var base_settings={ 
                  cancel    : 'Cancel',
+                 data: function(value, settings) {
+                    /* Convert <br> to newline. */
+                    var retval = value.replace(/<br[\s\/]?>/gi, '\n');
+                    return retval;
+                },
                  submit    : 'Guardar',
                  indicator : 'Saving...',
                  tooltip   : 'Click to edit...',
@@ -653,10 +662,11 @@
                  onblur    : 'ignore',
                  callback  : function(value, settings){
                             //Establecemos el valor guardado
-                            $(this).html(tmp)
+                            $(this).html(nl2br(tmp))
                             if( $(this).hasClass("suggestionName_editable") ){
-								this.previousElementSibling.innerHTML = tmp;
+								this.previousElementSibling.innerHTML = nl2br(tmp);
 							}
+                            
                  },
                  onerror    : function(settings, original, xhr){
                                 
@@ -824,7 +834,7 @@
                                         
                                         {%if k.description or not k.user.username != user.username %}
                                         <dt>Descripción:</dt>
-                                        <dd class=" {% if k.user.username == user.username%}editable_description{% endif %}" type="textarea" value="{{k.id}}">{%if k.description %}{{k.description}}{% else %}{% endif %}</dd>
+                                        <dd class=" {% if k.user.username == user.username%}editable_description{% endif %}" type="textarea" value="{{k.id}}">{%if k.description %}{{k.description|linebreaksbr}}{% else %}{% endif %}</dd>
                                         {%endif%}
                                         
                                         <dt>Lugar:</dt>

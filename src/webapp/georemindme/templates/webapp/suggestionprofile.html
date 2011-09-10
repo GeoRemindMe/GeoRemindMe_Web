@@ -224,7 +224,7 @@
                 {{suggestion.name}}
             </h1>
             {% if suggestion.description %}
-                <p class="more-info"><strong>Instrucciones/explicación</strong>: {{suggestion.description}} </p>
+                <p class="more-info"><strong>Instrucciones/explicación</strong>: <br>{{suggestion.description|linebreaksbr|urlize}} </p>
             {% endif %}
             
             {% if suggestion.date_starts or suggestion.date_ends %}
