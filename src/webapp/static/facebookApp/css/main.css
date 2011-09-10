@@ -2742,10 +2742,10 @@ input{
         text-decoration:none;
     }
     
-    #view-suggestion div.suggestion h1 span{
+    #view-suggestion div.suggestion h1 > span{
         float: right; 
         display: block;
-        margin-top: 3px;
+        margin-top: 0; /*Le pongo top=0 para webapp.suggestionprofile*/
         margin-left: 10px; 
         font-size: 0.8em; 
         border: 1px solid rgb(204, 204, 204); 
@@ -3026,13 +3026,17 @@ input{
         margin: 0.5em 0 1em;
         width: 100%;
     }
+    #view-suggestion .suggestion div.address{
+    }
     
     #view-suggestion span.likeBtn span.counter{
 		font-size:1em
     }
     
     #view-suggestion #wapiblock{
+/*
 		margin-top:20px;
+*/
 /*
 		width:310px;
 */

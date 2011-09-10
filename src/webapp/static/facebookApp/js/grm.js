@@ -34,7 +34,8 @@ GRM.like = function(settings) {
     settings = jQuery.extend({
         like_class: null,
         dislike_class: null,
-        progress_class: null        
+        progress_class: null,
+        callback: null           
     }, settings);
        
     return this.each(function(){
@@ -81,7 +82,7 @@ GRM.like = function(settings) {
                     success: function(data){
                         
                         // disliking
-                        if (typeof $(this).attr('like') != "undefined" ) {
+                        if (typeof $(this).attr('like') != "undefined" && data!=null) {
                             // send vote -1
                             $(this).find('.dislike').hide();
                             $(this).find('.like').show();
@@ -96,7 +97,7 @@ GRM.like = function(settings) {
                         }
                         
                         // liking
-                        else {
+                        else if(data!=null) {
                             // send vote +1
                             $(this).find('.like').hide();
                             $(this).find('.dislike').show();
@@ -107,9 +108,15 @@ GRM.like = function(settings) {
                             
                             if (settings.dislike_class)
                                 $(this).addClass(settings.dislike_class);
-                            }
-                            
+                        }
+                        
+                        if(data!=null)
                             $(this).find('.increase').text(data.votes);
+                        else
+                            showMessage("Pio! Perdona se ha producido un error<br>Estamos trabajando en solucionarlo","error");
+                        
+                        if (settings.callback)
+                            settings.callback();
                         
                     },
                     complete: function()
@@ -215,7 +222,7 @@ GRM.remember = function(settings) {
                             }
                         
                         if (settings.callback)
-                            callback();
+                            settings.callback();
                     },
                     complete: function()
                     {

@@ -12,7 +12,18 @@
 			
 			
             //Set like & dislike, remember and removable behaviour
-            GRM.init()
+            $(".like-dislike").like();
+            $(".remember-forget").remember();
+            $(".remember-forget-list").remember({callback:function(){
+                //Incrementamos o decrementamos el contador
+                var value=$('#followers-counter').text();
+                if($(".remember-forget-list").attr('remember')=="true"){
+                    $('#followers-counter').text(parseInt(value)+1);
+                }else{
+                    $('#followers-counter').text(parseInt(value)-1);
+                }
+            }});
+            $(".removable").removable();
             
             //Set like&dislike style
             $('#suggestion-list li,#comment-list li, #popular-box li').hover(
@@ -90,7 +101,7 @@
                 <ul>
                     <li id="owner"><img src="{% embedded_avatar list.user.username %}" alt="{{list.user.username}}"> <a href="{% url2 in_facebook public_profile list.user %}" title="{{list.user}}" class="black-link">Autor: {{list.user}}</a></li>
                     <li class="suggestionx16">Sugerencias: {{suggestions|length}}</li>
-                    <li class="saved">Veces guardada: <span id="counter">{{list.counters.followers}}</span></li>
+                    <li class="saved">Veces guardada: <span id="followers-counter">{{list.counters.followers}}</span></li>
                     {% if list.tags %}
                         <li>Etiquetas: {{list.tags}}</li>
                     {% endif %}
@@ -111,7 +122,7 @@
                                 </div>
                             </li>
                             <li>
-                                <span class="remember-forget hoverlink" value="{{list.id}}" type="list" {%if user_follower%}remember="true"{%endif%}>
+                                <span class="remember-forget-list hoverlink saved" value="{{list.id}}" type="list" {%if user_follower%}remember="true"{%endif%}>
                                     <span class="remember" title="Guardar en favoritos">Guardar</span>
                                     <span class="forget" title="Puedes consultar tus favoritos en 'Tu mochila'">Guardada</span>
                                 </span>

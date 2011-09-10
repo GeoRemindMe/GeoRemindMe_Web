@@ -657,7 +657,16 @@
                             if( $(this).hasClass("suggestionName_editable") ){
 								this.previousElementSibling.innerHTML = tmp;
 							}
-                 }
+                 },
+                 onerror    : function(settings, original, xhr){
+                                
+                                //console.log(original);
+                                //console.log(settings);
+                                //console.log(xhr);
+                                //if(xhr.status==500){
+                                    showMessage("Ouch! Se ha producido un error; perdón!, lo solucionaremos lo antes posible!","error");
+                                //}
+                            }
              }
             
         

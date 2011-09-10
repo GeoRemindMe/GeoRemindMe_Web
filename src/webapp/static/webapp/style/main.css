@@ -990,6 +990,15 @@ div#left-col ul#friends-to-follow li:after{
     -webkit-box-shadow: none;
     margin-bottom: 0.5em;
     min-height:50px;
+    height:auto; /*Soluciona problema con los titulos de las sugerencias*/
+}
+#view-suggestion p.more-info{
+    border-top: 1px dotted #CCCCCC;
+    display: block;
+    float: left;
+    margin-left: 56px;
+    margin-top: 0;
+    padding-top: 0.5em;
 }
 #right-col #view-suggestion h1:after{
 	clear: both;
