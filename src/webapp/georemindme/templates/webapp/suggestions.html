@@ -652,7 +652,7 @@
                  cancel    : 'Cancel',
                  data: function(value, settings) {
                     /* Convert <br> to newline. */
-                    var retval = value.replace(/<br[\s\/]?>/gi, '\n');
+                    var retval = value.replace("\n", '').replace(/<br[\s\/]?>/gi, '\n');
                     return retval;
                 },
                  submit    : 'Guardar',
@@ -901,7 +901,7 @@
                                                 <ul class="removable-sugestion-list" {% if k.lists|length = 0 %}style="display:none"{% endif %}>
                                                     {% for obj in k.lists %}
                                                         {% if obj.user.username = request.user.username %}
-                                                            <li class="list_{{obj.id}} removable" value="{{obj.id}}">{{obj.name}}</li>
+                                                            <li class="list_{{obj.id}} removable" value="{{k.id}}">{{obj.name}}</li>
                                                         {% endif %}
                                                     {% endfor %}
                                                 </ul>

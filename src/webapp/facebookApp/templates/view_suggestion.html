@@ -109,6 +109,9 @@
                 complete: function(){GRM.nowait();},
                 success: function(data){
                     
+                    if($('.no-lists').is(':visible'))
+                        $('.no-lists').hide();
+                    
                     $(obj).find("span.name").addClass("checked");
                     
                     //Actualizamos el contador de la lista
@@ -116,7 +119,12 @@
                     $(counterClass).text(data.keys.length);
                     
                     //Añadimos la lista a "Listas en las que aparece"
-                    $('#in-lists').append('<span>, <a href="../list/'+data.id+'" value="'+data.id+'">'+data.name+'</a></span>');
+                    var htmlCode='<a href="../list/'+data.id+'" value="'+data.id+'">'+data.name+'</a>';
+                    if($('#list-lists').children().length==0)
+                        htmlCode="<span>"+htmlCode+"</span>";
+                    else
+                        htmlCode="<span>, "+htmlCode+"</span>";
+                    $('#list-lists').append(htmlCode);
                     
                     //Mostrar mensaje de éxito
                     showMessage("Las sugerencia han sido añadida a la lista","success")
@@ -137,15 +145,20 @@
                 complete: function(){GRM.nowait();},
                 success: function(data){
                     
+                    
+                    
                     $(obj).find("span.name").removeClass("checked");
                     
                     //Actualizamos el contador de la lista
                     counterClass='.list-'+data.id+'-counter';
                     $(counterClass).text(data.keys.length);
                     
-                    //Añadimos la lista a "Listas en las que aparece"
+                    //Eliminamos la lista de "Listas en las que aparece"
                     $('#in-lists a[value="'+$(obj).attr('value')+'"]').parent().remove();
                     
+                    if($('#list-lists').children().length==0)
+                        $('.no-lists').show();
+                        
                     //Mostrar mensaje de éxito
                     showMessage("Las sugerencia ha sido eliminada de la lista","success")
                 }
@@ -224,7 +237,7 @@
                 {{suggestion.name}}
             </h1>
             {% if suggestion.description %}
-                <p class="more-info"><strong>Instrucciones/explicación</strong>: <br>{{suggestion.description|linebreaksbr}} </p>
+                <p class="more-info"><strong>Instrucciones/explicación</strong>: <br>{{suggestion.description|linebreaksbr|urlize}} </p>
             {% endif %}
             
             {% if suggestion.date_starts or suggestion.date_ends %}
@@ -235,7 +248,45 @@
             </p>
             {% endif %}
             
-                    
+            
+                
+            
+            <p id="in-lists" class="more-info">
+                <strong>Listas en las que aparece</strong>:
+                
+                
+                <span class="no-lists" {% if in_lists %}style="display:none"{% endif %}> esta sugerencia aún no se encuentra en ninguna lista.</span>
+                
+                <span id="list-lists">
+                {% for obj in in_lists %}
+                    {%if obj.visibility == 'public' %}
+                        <a href="{%url2 in_facebook view_list obj.id%}" value="{{obj.id}}">{{obj.name}}</a>{%if not forloop.last%}, {%endif%}
+                    {% endif %}
+                {% endfor %}
+                </span>
+                
+            </p>
+            
+            
+            {% if suggestion.tags %}
+                <p id="tag-list-label"><strong>Palabras clave</strong>:</p> 
+                <ul id="tag-list">
+                {% for tag in suggestion.tags %}
+                    <li>
+<!--
+                        <form action="{% url2 in_facebook search_suggestions tag %}" method="post">
+                            <input type="hidden" name="suggestion" value="suggestion">
+                            <input type="submit" value="{{tag}}">
+                        </form>
+-->
+                        <a href="{%url2 in_facebook view_tag_suggestions tag%}">{{tag}}</a>
+                        {%if not forloop.last %}, {%endif%}
+                    </li>
+                {% endfor %}
+                </ul>
+                
+            {% endif %}
+            
                 
             
             <hr>
@@ -267,39 +318,6 @@
             </a>
             
             <div><strong>Pictures of the area from :</strong><span id="panoramio-tos"></span></div>
-            
-            {% if in_lists|length > 0 or suggestion.tags|length > 0 %}
-                <hr>
-                
-                {% if in_lists %}
-                    <p id="in-lists"><strong>Listas en las que aparece</strong>:
-                    {% for obj in in_lists %}
-                        {%if obj.visibility == 'public' %}
-                            <span><a href="{%url2 in_facebook view_list obj.id%}" value="{{obj.id}}">{{obj.name}}</a>{%if not forloop.last%}, {%endif%}</span>
-                        {% endif %}
-                    {% endfor %}
-                    </p>
-                {% endif %}
-                
-                {% if suggestion.tags %}
-                    <p id="tag-list-label"><strong>Palabras clave</strong>:</p> 
-                    <ul id="tag-list">
-                    {% for tag in suggestion.tags %}
-                        <li>
-    <!--
-                            <form action="{% url2 in_facebook search_suggestions tag %}" method="post">
-                                <input type="hidden" name="suggestion" value="suggestion">
-                                <input type="submit" value="{{tag}}">
-                            </form>
-    -->
-                            <a href="{%url2 in_facebook view_tag_suggestions tag%}">{{tag}}</a>
-                            {%if not forloop.last %}, {%endif%}
-                        </li>
-                    {% endfor %}
-                    </ul>
-                    
-                {% endif %}
-            {% endif %}
             
 			<hr>
             
