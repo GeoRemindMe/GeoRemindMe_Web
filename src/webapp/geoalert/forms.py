@@ -141,10 +141,16 @@ class SuggestionForm(forms.Form):
         from geoalert.models import Suggestion
         if 'poi_id' in self.cleaned_data and self.cleaned_data['poi_id'] is not None:
             poi = Place.objects.get_by_id(self.cleaned_data['poi_id'])
-        elif 'place_reference' in self.cleaned_data and self.cleaned_data['place_reference'] is not None:
+            if poi is None:
+                return None
+        elif 'place_reference' in self.cleaned_data and self.cleaned_data['place_reference'] != '':
             poi = Place.insert_or_update_google(user=kwargs['user'],
                                                 google_places_reference=self.cleaned_data['place_reference']
                                                 )
+            if poi is None:
+                return None
+        else:
+            poi = None
         id = kwargs.get('id', None)
         try:
             suggestion = Suggestion.update_or_insert(

@@ -6,7 +6,7 @@
     :synopsis: Views for GeoAlert
 """
 
-from django.http import Http404, HttpResponseServerError
+from django.http import Http404, HttpResponseServerError, HttpResponseNotFound, HttpResponseBadRequest
 from django.shortcuts import render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -366,6 +366,8 @@ def save_suggestion(request, form, id=None):
     :returns: :class:`geoalert.models.Suggestion`
     """
     sug = form.save(user = request.user, id=id, list_id=request.POST.get('list_id', ''))
+    if sug is None:
+        return HttpResponseBadRequest()
     return sug
 
 
@@ -382,10 +384,10 @@ def add_suggestion_invitation(request, eventid, username):
     """
     user_to = User.objects.get_by_username(username)
     if user_to is None:
-        raise Http404
+        return HttpResponseNotFound
     event = Suggestion.objects.get_by_id_querier(eventid, request.user)
     if event is None:
-        raise Http404
+        return HttpResponseNotFound
     
     return event.send_invitation(request.user, user_to)
 
@@ -442,7 +444,7 @@ def add_suggestion_follower(request, id):
     suggestion = Suggestion.objects.get_by_id_querier(id, request.user)
     if suggestion is not None:
         return suggestion.add_follower(request.user)
-    return False
+    return HttpResponseNotFound
 
 
 @login_required
@@ -450,7 +452,7 @@ def del_suggestion_follower(request, id):
     suggestion = Suggestion.objects.get_by_id_querier(id, request.user)
     if suggestion is not None:
         return suggestion.del_follower(request.user)
-    return False
+    return HttpResponseNotFound
 
 
 @login_required    
@@ -464,36 +466,16 @@ def del_suggestion(request, id = None):
             :raises: AttributeError
     """
     if id is None:
-        raise AttributeError()
+        return HttpResponseBadRequest
     sug = Suggestion.objects.get_by_id_querier(id, request.user)
-    if not sug:
-        return None
-    if sug.user.key() == request.user.key():
-        sug.delete()
-        return True
-    else:
-        return sug.del_follower(request.user)
-    return False
+    if sug is not None:
+        if sug.user.key() == request.user.key():
+            sug.delete()
+            return True
+        else:
+            return sug.del_follower(request.user)
+    return HttpResponseNotFound
 
-@login_required
-def get_alertsuggestion(request, id, page = 1, query_id = None):
-    """ Obtiene sugerencias
-        
-            :param id: identificador de la sugerencia
-            :type id: :class:`integer`
-            :param done: devolver solo las realizadas
-            :type done: boolean
-            :param page: pagina a devolver
-            :type page: :class:`ìnteger`
-            :param query_id: identificador de la busqueda
-            :type query_id: :class:`integer`
-            
-            :returns: :class:`geoalert.models.Suggestion`
-    """
-    if id:
-        return [AlertSuggestion.objects.get_by_id_user(id, request.user, request.user)]
-    else:
-        return AlertSuggestion.objects.get_by_user(request.user, page, query_id)
     
 @login_required
 def get_suggestion_following(request, page=1, query_id=None, async=False):
