@@ -137,7 +137,8 @@ GRM.remember = function(settings) {
     settings = jQuery.extend({
         remember_class: null,
         forget_class: null,
-        progress_class: null        
+        progress_class: null,
+        callback: null    
     }, settings);
        
     return this.each(function(){
@@ -213,6 +214,8 @@ GRM.remember = function(settings) {
                                 $(this).addClass(settings.forget_class);
                             }
                         
+                        if (settings.callback)
+                            callback();
                     },
                     complete: function()
                     {
