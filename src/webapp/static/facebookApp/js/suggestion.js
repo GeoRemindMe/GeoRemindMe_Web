@@ -104,7 +104,7 @@ $(document).ready(function() {
         source: time
     });
     
-    $( "#start-hour,#end-hour" ).focus(function(){ $( "#start-hour,#end-hour" ).autocomplete("search"); });
+    $( "#start-hour,#end-hour" ).focus(function(){ $(this).autocomplete("search"); });
 	
 });
 
