@@ -2842,6 +2842,7 @@ input{
     }
     #view-suggestion ul#action-bar span.btn {
         margin:0;
+        height:20px;
     }
     
     #view-suggestion textarea,

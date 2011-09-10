@@ -216,8 +216,8 @@
             <h1>
                 <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/><a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> sugiere:
                 <span id="suggestion-vote-counter">
-                        <span class="none" {% if suggestion.counters.votes != 0%}style="display:none"{%endif%}>Aún no ha recibido valoraciones</span>
-                        <span class="votes-msg" {% if suggestion.counters.votes == 0%}style="display:none"{%endif%}>Valoraciones recibidas: <span id="vote-counter">{{suggestion.counters.votes}}</span></span>
+                        <span class="none" {% if suggestion.counters.votes > 0%}style="display:none"{%endif%}>Aún no ha recibido valoraciones</span>
+                        <span class="votes-msg" {% if suggestion.counters.votes = 0%}style="display:none"{%endif%}>Valoraciones recibidas: <span id="vote-counter">{{suggestion.counters.votes}}</span></span>
                 </span>
                 
                 <br>
