@@ -100,8 +100,11 @@ $(document).ready(function() {
     }
     
     $( "#start-hour,#end-hour" ).autocomplete({
+        minLength:0,
         source: time
     });
+    
+    $( "#start-hour,#end-hour" ).focus(function(){ $( "#start-hour,#end-hour" ).autocomplete("search"); });
 	
 });
 
@@ -727,6 +730,7 @@ function placesAutocomplete(){
 
     // Sets a listener on a radio button to change the filter type on Places
     // Autocomplete.
+    /*
     function setupClickListener(id, types) {
         var radioButton = document.getElementById(id);
         google.maps.event.addDomListener(radioButton, 'click', function() {
@@ -736,7 +740,7 @@ function placesAutocomplete(){
 
     setupClickListener('changetype-all', []);
     setupClickListener('changetype-establishment', ['establishment']);
-    setupClickListener('changetype-geocode', ['geocode']);
+    setupClickListener('changetype-geocode', ['geocode']);*/
 }
 
 function getEventPlace(){
