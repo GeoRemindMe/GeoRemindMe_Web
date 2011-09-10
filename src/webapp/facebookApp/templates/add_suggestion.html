@@ -2,9 +2,7 @@
 {% load i18n %}
 
 {% block extra_js %}
-    <!-- Se usa para el autocomplete -->
     <link rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css"> 
-    
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
@@ -49,14 +47,14 @@
                         type: "POST",
                         url: url["modify_suggestion_list"],
                         data: {
-                            name: [listname]
+                            name: listname
                         },
                         dataType:'json',
                         success: function(data){
                             //Añadimos la lista al desplegable
-                            $("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\" value=\""+data.name+"\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
+                            $("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\" value=\""+data.id+"\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
                             $('#listid-'+data.id).click(function(){onLiClick(this)});
-                            
+                            $('#listid-'+data.id).click();
                             //Añadimos la lista en la pestaña listas
                             
                             //Reordenamos alfabéticamente la lista desplegable
@@ -70,13 +68,94 @@
                 }
             });
 
-            //if (typeof resizeIframe != "undefined") resizeIframe();
+            
             
             /*** placeholding ***/
 			$("[placeholder]").placeholder();
             
+            /*Set date picket behaviour*/
+                
+                //Set initial values
+                var currentTime = new Date()
+                var month = FormatNumberLength(currentTime.getMonth() + 1,2)
+                var day = FormatNumberLength(currentTime.getDate(),2)
+                var year = currentTime.getFullYear()
+                var today = month+"/"+day+"/"+year;
+                $("#start-date,#end-date").val(today);
+                
+                //Setting interval from now to next hour (rounded to 0/30min)
+                var minutes=currentTime.getMinutes();
+                var hours= currentTime.getHours();
+                var hoursInt= hours;
+                if(minutes>30){
+                    minutes="00";
+                    hours=FormatNumberLength(hours+1,2);
+                    hoursInt=hoursInt+1;
+                }else if(minutes<30){
+                    minutes="30";
+                }
+                var now = hours+":"+minutes;
+                var tmp=FormatNumberLength(hoursInt+1,2);
+                var nextHour = tmp+":"+minutes;
 
-            $( ".date-type" ).datepicker();
+                $("#start-hour").val(now);
+                $("#end-hour").val(nextHour);
+                //End setting interval
+                
+                $('#date [type="checkbox"]').attr('checked',true)
+                
+                
+                //Change disabled style
+                $('input[disabled="true"]').css('background-color','#ddd')
+            
+                $( ".date-type" ).datepicker();
+                
+                //This code avoid to have inverted dates
+                $("#start-date,#end-date").change(function(){
+                    var startDate=$('#start-date').val();
+                    var endDate=$('#end-date').val();
+                    if(!validateDates(startDate,endDate)){
+                        if($(this).attr('id')=="start-date")
+                            $('#end-date').val(startDate);
+                        else
+                            $('#start-date').val(endDate);
+                    }
+                })
+                
+                //This code avoid to have inverted dates
+                $("#start-hour,end-hour").change(function(){
+                    var startHour=$('#start-hour').val();
+                    var endHour=$('#end-hour').val();
+                    if(!validateTimes(startHour,endHour)){
+                        if($(this).attr('id')=="start-hour")
+                            $('#end-hour').val(startHour);
+                        else
+                            $('#start-hour').val(endHour);
+                    }
+                })
+                
+                
+                //Enable/disable "All day suggestion"
+                $('#date [type="checkbox"]').change(function(){
+                    //$("#start-date,#end-date").val(today);
+                    //$("#start-hour,#end-hour").val(now)
+                    
+                    if($('#date [type="checkbox"]').is(':checked')==false){
+                        $('#date input:not([type="checkbox"])').attr('disabled',false);
+                        $('#date input:not([type="checkbox"])').css('background-color','#FFFFFF');
+                    }else{
+                        $('#date input:not([type="checkbox"])').attr('disabled',true);
+                        $('#date input:not([type="checkbox"])').css('background-color','#DDDDDD');
+                    }
+                });
+                
+                $('#date [type="checkbox"]').parent().find('span').click(function(){
+                    $('#date [type="checkbox"]').click();
+                });
+                
+                
+
+            /*End set date picket behaviour*/
             
             $("#add-details").toggle(function(){
                 $('#description').slideDown('slow',function(){
@@ -166,6 +245,7 @@
                 }
             })
             
+            
             //Show perms
             $('.request-access').each(function(i,elem){
                 if($(elem).hasClass("twitter-inactive"))
@@ -177,6 +257,13 @@
                         $('#'+$(this).attr('id')+'-text').dialog("open");
                     });
             });
+            
+            //Check perms when comming back
+            //$(window).bind('focus', function() {
+               //$('body').append('focused<br>');
+            //   alert("Hemos vuelto");
+            //});​
+            
             
             
         });
@@ -222,15 +309,6 @@
     <script type="text/javascript" src="/static/facebookApp/js/geo-autocomplete/geo_autocomplete.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/facebookApp/js/geo-autocomplete/lib/jquery.autocomplete.css" />
     
-    <!--
-    Autocomplete para la hora
-    -->
-<!--
-    <script src="http://jqueryui.com/ui/jquery.ui.core.js"></script>
-    <script src="http://jqueryui.com/ui/jquery.ui.widget.js"></script>
-	<script src="http://jqueryui.com/ui/jquery.ui.position.js"></script>
-	<script src="http://jqueryui.com/ui/jquery.ui.autocomplete.js"></script>
--->
     
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <!--

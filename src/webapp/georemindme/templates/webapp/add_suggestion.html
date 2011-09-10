@@ -83,13 +83,24 @@
                 var today = month+"/"+day+"/"+year;
                 $("#start-date,#end-date").val(today);
                 
-                var minutes=FormatNumberLength(currentTime.getMinutes(),2);
-                var hours= FormatNumberLength(currentTime.getHours(),2);
+                //Setting interval from now to next hour (rounded to 0/30min)
+                var minutes=currentTime.getMinutes();
+                var hours= currentTime.getHours();
+                var hoursInt= hours;
+                if(minutes>30){
+                    minutes="00";
+                    hours=FormatNumberLength(hours+1,2);
+                    hoursInt=hoursInt+1;
+                }else if(minutes<30){
+                    minutes="30";
+                }
                 var now = hours+":"+minutes;
-                var tmp=FormatNumberLength(currentTime.getHours()+1,2);
+                var tmp=FormatNumberLength(hoursInt+1,2);
                 var nextHour = tmp+":"+minutes;
+
                 $("#start-hour").val(now);
                 $("#end-hour").val(nextHour);
+                //End setting interval
                 
                 $('#date [type="checkbox"]').attr('checked',true)
                 
@@ -125,7 +136,7 @@
                 
                 
                 //Enable/disable "All day suggestion"
-                $('#date [type="checkbox"]').click(function(){
+                $('#date [type="checkbox"]').change(function(){
                     //$("#start-date,#end-date").val(today);
                     //$("#start-hour,#end-hour").val(now)
                     
@@ -135,7 +146,6 @@
                     }else{
                         $('#date input:not([type="checkbox"])').attr('disabled',true);
                         $('#date input:not([type="checkbox"])').css('background-color','#DDDDDD');
-                        console.log("No se hace");
                     }
                 });
                 
