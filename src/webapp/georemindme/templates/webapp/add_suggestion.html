@@ -70,8 +70,7 @@
 
             
             
-            /*** placeholding ***/
-			$("[placeholder]").placeholder();
+            
             
             /*Set date picket behaviour*/
                 
@@ -81,7 +80,7 @@
                 var day = FormatNumberLength(currentTime.getDate(),2)
                 var year = currentTime.getFullYear()
                 var today = month+"/"+day+"/"+year;
-                $("#start-date,#end-date").val(today);
+                $("#start-date,#end-date").attr('placeholder',today);
                 
                 //Setting interval from now to next hour (rounded to 0/30min)
                 var minutes=currentTime.getMinutes();
@@ -98,8 +97,8 @@
                 var tmp=FormatNumberLength(hoursInt+1,2);
                 var nextHour = tmp+":"+minutes;
 
-                $("#start-hour").val(now);
-                $("#end-hour").val(nextHour);
+                $("#start-hour").attr('placeholder',now);
+                $("#end-hour").attr('placeholder',nextHour);
                 //End setting interval
                 
                 $('#date [type="checkbox"]').attr('checked',true)
@@ -123,16 +122,16 @@
                 })
                 
                 //This code avoid to have inverted dates
-                $("#start-hour,end-hour").change(function(){
-                    var startHour=$('#start-hour').val();
-                    var endHour=$('#end-hour').val();
-                    if(!validateTimes(startHour,endHour)){
-                        if($(this).attr('id')=="start-hour")
-                            $('#end-hour').val(startHour);
-                        else
-                            $('#start-hour').val(endHour);
-                    }
-                })
+                //$("#start-hour,end-hour").change(function(){
+                //    var startHour=$('#start-hour').val();
+                //    var endHour=$('#end-hour').val();
+                //    if(!validateTimes(startHour,endHour)){
+                //        if($(this).attr('id')=="start-hour")
+                //            $('#end-hour').val(startHour);
+                //        else
+                //            $('#start-hour').val(endHour);
+                //    }
+                //})
                 
                 
                 //Enable/disable "All day suggestion"
@@ -151,11 +150,15 @@
                 
                 $('#date [type="checkbox"]').parent().find('span').click(function(){
                     $('#date [type="checkbox"]').click();
+                    $('#date [type="checkbox"]').change();
                 });
                 
                 
 
             /*End set date picket behaviour*/
+            
+            /*** placeholding ***/
+			$("[placeholder]").placeholder();
             
             $("#add-details").toggle(function(){
                 $('#description').slideDown('slow',function(){
