@@ -151,7 +151,7 @@ def delete_reminder(request):
 #===============================================================================
 # FUNCIONES AJAX PARA OBTENER, MODIFICAR, BORRAR SUGERE
 #===============================================================================
-def add_suggestion(request):
+def save_suggestion(request):
     """
         Añade o edita una sugerencia
         Parametros en POST:
@@ -160,11 +160,10 @@ def add_suggestion(request):
     form = SuggestionForm(request.POST)
     if form.is_valid():
         eventid = request.POST.get('eventid', None)
-        try:
-            sug = geoalert.save_suggestion(request, form, id=eventid)
-            return HttpResponse(simplejson.dumps(dict(id=sug.id)), mimetype="application/json")
-        except:
-            pass   
+        sug = geoalert.save_suggestion(request, form, id=eventid)
+        if isinstance(sug, HttpResponse):
+            return sug
+        return HttpResponse(simplejson.dumps(dict(id=sug.id)), mimetype="application/json")
     return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
 
@@ -178,18 +177,24 @@ def add_suggestion_invitation(request):
     username = request.POST.get('username')
     eventid = request.POST.get('eventid')
     invitation = geoalert.add_suggestion_invitation(request, eventid, username)
+    if isinstance(invitation, HttpResponse):
+        return invitation
     return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
 
 
 def add_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.add_suggestion_follower(request, eventid)
+    if isinstance(result, HttpResponse):
+        return result
     return HttpResponse(simplejson.dumps(result), mimetype="application/json")
 
 
 def delete_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.del_suggestion_follower(request, eventid)
+    if isinstance(result, HttpResponse):
+        return result
     return HttpResponse(simplejson.dumps(result), mimetype="application/json")
 
 
@@ -207,19 +212,8 @@ def get_suggestion(request):
     eventid = request.POST.get('eventid', None)
     wanted_user = request.POST.get('wanteduser', request.user)
     if eventid is None:
-        query_id = request.POST.get('query_id', None)
-        if query_id is not None:
-            query_id = query_id.split('_')
-            sug_id = query_id[0]
-            foll_id = query_id[1]
-        else:
-            sug_id = None
-            foll_id = None
-        page = int(request.POST.get('page', 1))
-        suggestions = geoalert.get_suggestion(request, id=eventid, wanted_user=wanted_user, page=page, query_id=sug_id)
-        suggestions_following = geoalert.get_suggestion_following(request, page=page, query_id=foll_id)
-        suggestions[1].extend(suggestions_following[1]).sort(key=lambda x: x.modified, reverse=True)
-        suggestions[1].sort(key=lambda x: x.modified, reverse=True)
+        from geoalert.api import get_suggestions_dict
+        suggestions = get_suggestions_dict(wanted_user) # FIXME: devolver solo publicas
     else:
         suggestions = geoalert.get_suggestion(request, id=eventid, wanted_user=wanted_user)    
     from funcs import getAlertsJSON
@@ -244,6 +238,8 @@ def delete_suggestion(request):
     """
     eventid = request.POST.get('eventid', None)
     deleted = geoalert.del_suggestion(request, eventid)
+    if isinstance(deleted, HttpResponse):
+        return deleted
     return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
 
 
@@ -764,3 +760,27 @@ def get_suggestions(request):
                                          } for s in suggs],
                                          cls=JSONEncoder
                                          ), mimetype='application/json')
+    
+@ajax_request
+def get_perms(request):
+    if not request.user.is_authenticated():
+        return HttpResponseForbidden
+    from google.appengine.ext import db
+    perms = {'facebook': False,
+             'twitter': False,
+             'google': False,
+             }
+    from geouser.models_social import SocialUser
+    facebook = db.GqlQuery("SELECT __key__ FROM SocialUser WHERE user = :1 AND class='FacebookUser'", request.user.key()).get()
+    twitter = db.GqlQuery("SELECT __key__ FROM SocialUser WHERE user = :1 AND class='TwitterUser'", request.user.key()).get()
+    google = db.GqlQuery("SELECT __key__ FROM SocialUser WHERE user = :1 AND class='GoogleUser'", request.user.key()).get()
+    
+    if facebook:
+        perms['facebook'] = True
+    if twitter:
+        perms['twitter'] = True
+    if google:
+        perms['google'] = True
+    return HttpResponse(simplejson.dumps(perms), mimetype='application/json')
+    
+    
