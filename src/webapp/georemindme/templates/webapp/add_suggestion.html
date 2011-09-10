@@ -269,17 +269,37 @@
             
             {% if not user.facebook_user or not user.has_perms_twitter %}
                 function onFocus(){
-                    //Si 
-                    if($('#perms-facebook-text').length!=0)
-                        if($('#perms-facebook-text').parent().css('display')!="none"){
-                            console.log("Comprobamos si se tienen permisos de Facebook")
-                        }
-                    //Si 
-                    if($('#perms-twitter-text').length!=0)
-                        if($('#perms-twitter-text').parent().css('display')!="none"){
-                            console.log("Comprobamos si se tienen permisos de Twitter")
-                        }
-                };
+                    var networks=["twitter","facebook"];
+                    for (i=0; i<networks.length ; i++){
+                        //Si los permisos de una red han cambiado activamos los botones y cerramos el dialogo
+                        if($('#perms-'+networks[i]+'-text').length!=0)
+                            if($('#perms-'+networks[i]+'-text').parent().css('display')!="none"){
+                                GRM.wait();
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/ajax/get/perms/",
+                                    data:{
+                                        csrfmiddlewaretoken:getCookie('csrftoken')
+                                    },
+                                    context: $(this),
+                                    success: function(data){
+                                        console.log(data);
+                                        if(data[networks[i]]){
+                                            console.log(networks[i]);
+                                            showMessage("¡Genial! ya puedes empezar a disfrutar de todas las ventajas","success");
+                                            $('li[data-network='+networks[i]+']').removeClass('inactive')
+                                            $('li[data-network='+networks[i]+'] span').removeClass(''+networks[i]+'-inactive').addClass(''+networks[i]+'-active')
+                                            $('li[data-network='+networks[i]+']').removeClass('inactive')
+                                            $('li[data-network='+networks[i]+'] span').removeClass(''+networks[i]+'-inactive').addClass(''+networks[i]+'-active')
+                                            if($('#perms-'+networks[i]+'-'+networks[i]+'').dialog("isOpen"))
+                                                $('#perms-'+networks[i]+'-text').dialog("close")
+                                        }
+                                    },
+                                    complete: function(){GRM.nowait();}
+                                });
+                            }
+                        };
+                    }
                  
                 if (/*@cc_on!@*/false) { // check for Internet Explorer
                     document.onfocusin = onFocus;
