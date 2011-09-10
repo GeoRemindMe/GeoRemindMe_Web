@@ -160,10 +160,12 @@ def add_suggestion(request):
     form = SuggestionForm(request.POST)
     if form.is_valid():
         eventid = request.POST.get('eventid', None)
-        sug = geoalert.save_suggestion(request, form, id=eventid)
-        return HttpResponse(simplejson.dumps(dict(id=sug.id)), mimetype="application/json")
-    else:
-        return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
+        try:
+            sug = geoalert.save_suggestion(request, form, id=eventid)
+            return HttpResponse(simplejson.dumps(dict(id=sug.id)), mimetype="application/json")
+        except:
+            pass   
+    return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
 
 def add_suggestion_invitation(request):
@@ -566,6 +568,9 @@ def do_vote(request, **kwargs):
     puntuation = request.POST.get('puntuation', 1)
     
     vote = geovote.do_vote(request.user, kwargs['kind'], instance_id, puntuation)
+    if vote is None:
+        from django.shortcuts import Http404
+        raise Http404
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
                         mimetype="application/json")

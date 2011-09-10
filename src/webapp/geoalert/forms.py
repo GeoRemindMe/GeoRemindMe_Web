@@ -146,9 +146,8 @@ class SuggestionForm(forms.Form):
                                                 google_places_reference=self.cleaned_data['place_reference']
                                                 )
         id = kwargs.get('id', None)
-        if poi is None:
-            raise AttributeError
-        suggestion = Suggestion.update_or_insert(
+        try:
+            suggestion = Suggestion.update_or_insert(
                      id = kwargs.get('id', None), name = self.cleaned_data['name'],
                      description = self.cleaned_data['description'], 
                      date_starts = self.cleaned_data['starts'],
@@ -162,6 +161,8 @@ class SuggestionForm(forms.Form):
                      to_facebook = self.cleaned_data['to_facebook'],
                      to_twitter = self.cleaned_data['to_twitter'],
                      )
+        except:
+            return None
         if suggestion is not None:
             list_id = list_id
             if list_id != '':
