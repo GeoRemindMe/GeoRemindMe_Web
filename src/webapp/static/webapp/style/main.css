@@ -428,7 +428,7 @@ background: linear-gradient(left, rgba(238,238,238,1) 0%,rgba(254,254,254,1) 50%
     cursor:pointer;
 }
 #register-menu li.active{
-    background-color: #FFE270 !important;
+    background-color: white !important;
  }
 #register-menu li#twitter{
     background: url("/static/webapp/img/social_big.png") no-repeat scroll 0 0 transparent;
@@ -1362,7 +1362,7 @@ div.removable a {
 #notification-msg{
     border-radius: 15px 15px 15px 15px;
     -moz-border-radius: 15px 15px 15px 15px;
-    
+    z-index: 1001;
     font-size: 1.1em;
     font-weight: bold;
     left: 50%;

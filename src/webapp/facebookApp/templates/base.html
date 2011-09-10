@@ -104,9 +104,11 @@
             <p><strong>Facebook</strong>:</p>
             <ul>
                 <li class="menu-icons fb-icons"><a id="fb-grm" href="http://www.facebook.com/GeoRemindMe" onclick="parent.location.href='http://www.facebook.com/GeoRemindMe'">Página de fans</a></li>
-                <li class="menu-icons fb-icons"><a id="fb-last-news" href="http://www.facebook.com/?sk=nf" onclick="parent.location.href='http://www.facebook.com/?sk=nf'">Últimas noticias</a></li>
-                <li class="menu-icons fb-icons"><a id="fb-wall" href="http://www.facebook.com/profile.php?id=100002576624564&sk=wall" onclick="parent.location.href='http://www.facebook.com/profile.php?id={{user.facebook_user.uid}}&sk=wall'">Muro</a></li>
-                <li class="menu-icons fb-icons"><a id="fb-events" href="http://www.facebook.com/?sk=events&ap=1" onclick="parent.location.href='http://www.facebook.com/?sk=events&ap=1'">Eventos</a></li>
+                {% if user.is_authenticated %}
+                    <li class="menu-icons fb-icons"><a id="fb-last-news" href="http://www.facebook.com/?sk=nf" onclick="parent.location.href='http://www.facebook.com/?sk=nf'">Últimas noticias</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="{{user.facebook_user.profile_url}}&sk=wall" onclick="parent.location.href='{{user.facebook_user.profile_url}}&sk=wall'">Muro</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-events" href="http://www.facebook.com/?sk=events&ap=1" onclick="parent.location.href='http://www.facebook.com/?sk=events&ap=1'">Eventos</a></li>
+                {% endif %}
             </ul>
         </div>
         <div id="notification-msg" style="display:none">Mensaje con lo que sea</div>

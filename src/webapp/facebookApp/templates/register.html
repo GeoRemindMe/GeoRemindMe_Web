@@ -1,27 +1,127 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 {% block title %}Welcome{% endblock %}
 {% block nav %} 
     {% include "register_menu.html" %}
 {% endblock %}
 
+
+{%block extra_js%}
+    <style type="text/css">
+        #description {
+            clear: both;
+            float: left;
+            font-weight: bold;
+            
+            text-align: left;
+            width: 500px;
+        }
+        
+        #description h2, #description p {
+            font-size: 1.4em;
+            font-weight: normal;
+        }
+        #description h2 {
+            text-align: center;
+            line-height:1.5em;
+        }
+
+        ul#benefits {
+            height: 130px;
+            margin-bottom: 10px;
+            margin-top: 25px;
+            width:545px;
+            margin-right: 0;
+        }
+        ul {
+            clear: both;
+            margin: 0;
+            padding: 0;
+        }
+        ul {
+            list-style-type: disc;
+        }
+        ul, ol {
+            margin: 0 1.5em 1.5em 0;
+            padding-left: 1.5em;
+        }
+
+        ul#benefits li {
+            float: left;
+            list-style: none outside none;
+            margin: 0;
+            padding: 80px 8px 0;
+            text-align: center;
+            width: 150px;
+        }
+        #description ul li, #description-list ul li {
+            display: list-item;
+            font-weight: normal;
+            list-style: none;
+            margin-right: 10px;
+        }
+        
+        #description-list ul li {
+            list-style: square outside none;
+            line-height:2em;
+        }
+        #whatsup-icon {
+            background: url("http://www.georemindme.com/media/img/whatsup.png") no-repeat scroll 50px 0 transparent;
+        }
+        #explore-icon {
+            background: url("http://www.georemindme.com/media/img/explore.png") no-repeat scroll 50px 0 transparent;
+        }
+        #reminder-icon {
+            background: url("http://www.georemindme.com/media/img/reminder.png") no-repeat scroll 50px 0 transparent;
+        }
+        strong, dfn {
+            font-weight: bold;
+        }
+
+    </style>
+{%endblock%}
+
+
 {% block mainButton %} 
-                <a href="#" onclick="ConnectLogin.login(null, 'email,offline_access,user_likes,user_interests,user_location, read_friendlists,user_checkins,user_hometown,publish_stream,publish_checkins'); return false;"  id="btn-add-suggestion">Instalar App</a>
 {% endblock %}
 
 {% block goBack %}{%endblock%}
 {% block body %}
-    <div id="register-panel">
-        <h1>Aplicación GeoRemindMe</h1>
-        <h2>Crea, recibe y gestiona recomendaciones con tus amigos</h2>
-        <p>Y sincronízalas con tu teléfono móvil</p>
-        <div id="video">
-            <iframe width="399" height="257" src="http://www.youtube.com/embed/Sc42jveY8PI" frameborder="0" allowfullscreen></iframe>
+    <div id="register-panel" style="font-size: 1.1em;">
+        <div id="description">
+            <h2>{% trans "GeoRemindMe allows you to manage, rate and share geolocated suggestions on <em>your favorite social networks</em>." %}</h2>
+         
+            <ul id="benefits">
+                <li id="whatsup-icon">{% trans "<strong>Find</strong> cool stuff to do" %}.</li>
+                <li id="explore-icon">{% trans "<strong>Discover</strong> and explore new places" %}.</li>
+                <li id="reminder-icon">{% trans "<strong>Don't forget</strong> anything you wanted to do" %}.</li>
+            </ul>
+
+
+            <span id="description-list">
+                
+                <p>{% trans "GeoRemindme allows you to:" %}:</p>
+                <div id="slider-container">
+                    <div id="slider">
+                        <ul>
+                            <li><span class="slide-icon">{% trans "<strong>Share and receive suggestions</strong> from your friends, institutions, local shops, etc..." %}</span></li>
+                            <li><span class="slide-icon">{% trans "Get <strong>personalized suggestions</strong> depending on what you like and were you are" %}</span></li>
+                            <li><span class="slide-icon">{% trans "<strong>Search and filter</strong> suggestions from other people" %}.</span></li>
+                            <li><span class="slide-icon">{% trans "<strong>Follow</strong> the users and the shops you are interested in" %}.</span></li>
+                            <li><span class="slide-icon">{% trans "<strong>Download or print</strong> touristic routes and get around in the city" %}.</span></li>
+                            <li><span class="slide-icon">{% trans "<strong>Rate and comment</strong> the suggestions" %}.</span></li>
+                            <li><span class="slide-icon">{% trans "And in the future...we want you to get <strong>promos and vouchers</strong> to enjoy wherever you are" %}.</span></li>
+                        </ul>
+                    </div>
+                </div>
+                
+            </span>
         </div>
+        
+        <p class="left" style="clear:both;display:block;width:100%;text-align:left">
+            <strong>Regístrate haciendo clic en el siguiente botón:</strong>
+        </p>
         <div class="left">
-            <a href="#">Más información</a>
-        </div>
-        <div class="right">
             <fb:login-button perms="{{permissions}}" show-faces="true"></fb:login-button>
         </div>
     </div>
