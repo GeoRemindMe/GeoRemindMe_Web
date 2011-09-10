@@ -308,7 +308,7 @@ GRM.menuList = function(settings) {
                     }else{
                         //On press enter
                         //Comprobamos si hay sugerencias seleccionadas para añadirlas
-                        var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
+                        var checkedSuggestions=$('.suggestion input[name=suggestions]').filter(':checked');
                         if( checkedSuggestions.length>0){
                             checkedSuggestions.each(function(){
                                 suggestionList.push($(this).attr('id').substring(9,$(this).attr('id').length))

@@ -955,17 +955,19 @@
                 <span id="suggestions_lists_content" class="tab-content hidden">
                     <div id="header">
                         <span class="selectCheckBox"><input type="checkbox" id="checkBoxList_all" /></span>
+<!--
                         <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="loadSuggestionsPage('next')">Siguiente</span>
                         <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
+-->
                         
                         <span class="btn removeBtn" onclick="removeLists()">Eliminar</span>
-<!--
-                        <span class="btn addNewList">
-                            Nueva lista
+
+                        <span class="btn addNewList" onclick="javascript:$('#your_suggestions').click();$('#your_suggestions_content .dropDownBtn').click();$('.new-list-btn span').click()">
+                            Nueva lista 
                         </span>
--->
-                        <span class="btn removeBtn filter"><input type="text" id="filter-lists" placeholder="Filtrar por nombre"></span>
                         <span class="btn removeBtn" id="filterMyLists">Mis listas</span>                    
+                        <span class="btn removeBtn filter"><input type="text" id="filter-lists" placeholder="Filtrar por nombre"></span>
+                        
                     </div>
 
                     
@@ -1077,7 +1079,7 @@
             <div class="expanded" style="display:none">
                 <dl>
                     <dt>Descripción:</dt>
-                    <dd class="editable_list_description"></dd>
+                    <dd class="editable_list_description">Esta lista aún no tiene descripción</dd>
                     
                     <dt>Sugerencias</dt>
                     <dd class="suggestions">
@@ -1097,9 +1099,7 @@
                     <dt>Tags:</dt>
                     <dd class="editable_list_tags">
 
-                        {% if obj.tags %}
-                            {% templatetag openvariable %}obj.tags{% templatetag closevariable %}
-                        {% endif %}
+                        <dd class="editable_list_tags" title="Click to edit..." style="">Esta lista de sugerencias no tiene tags</dd>
 
                     </dd>
                     <dt>URL:</dt>
@@ -1121,13 +1121,8 @@
                     </dd>
                     
 					<dt>Visibilidad:</dt>
-					<dd class="editable_list_visibility" value="${obj.visibility}">
-						{% if obj.visibility == "public" %}
+					<dd class="editable_list_visibility" value="public">
                             Pública
-                        {% else %}
-                            Privada
-                        {% endif %}
-						
 					</dd>
                     
                 </dl>
