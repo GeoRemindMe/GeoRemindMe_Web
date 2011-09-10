@@ -101,7 +101,7 @@ $(document).ready(function() {
     
     $( "#start-hour,#end-hour" ).autocomplete({
         minLength:0,
-        source: time
+        source: function(req, add){ req.term = ''; add(time); }
     });
     
     $( "#start-hour,#end-hour" ).focus(function(){ $(this).autocomplete("search"); });
