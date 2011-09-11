@@ -76,7 +76,23 @@ span.action-bar a{
 #suggestions .share-suggestion a{
     color:black
 }
+a.hoverlink{
+    text-shadow: none;
+}
+.link{
+    cursor:pointer;
+}
+a.hoverlink,
+.link,
+a:visited,
+ul#chronology a:visited,
+#left-col .hoverlink{
+    color:#0063CE;
+}
 
+div#left-col li a {
+    color: #333333;
+}
 
 /*------- HOME STYLE ---------*/
 #loginSec #header-top form{
@@ -1490,21 +1506,6 @@ div.removable a {
 /*
  * COMMON
  */
-a:visited{
-    color:#0063CE;
-}
-
-ul#chronology a:visited{
-    color:blue;
-}
-
-.link{
-    color:#0063CE;
-    cursor:pointer;
-}
-#left-col .hoverlink{
-    color:blue
-}
 #left-col .hoverlink.view-more{
     display: block;
     text-align: right;
@@ -1542,7 +1543,6 @@ ul#chronology a:visited{
 
 div#left-col li a {
     clear: right;
-    color: #B0AEB2;
     display: block;
     float: left;
     line-height: 25px;
@@ -1770,11 +1770,6 @@ div#agreement #textTermsCheckbox{
 
 #registerForm input[type="submit"]{
     margin-top:10px
-}
-
-a.hoverlink{
-    color:blue;
-    text-shadow: none;
 }
 
 #add-suggestion{

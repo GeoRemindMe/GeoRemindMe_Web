@@ -3,11 +3,14 @@
 {% load i18n %}
 {% load tags %}
 
-{% block title %}Ver sugerencia{% endblock %}
+{% block title %}{{suggestion.name}}{% endblock %}
 {% block extra_js %}
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/grm.js"></script>
     <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl={{user.settings.language}}"></script>
+    <script type="text/javascript" src="http://georemindme.com/media/js/jquery.lightbox-0.5.js"></script> 
+    <link rel="stylesheet" type="text/css" href="http://georemindme.com/media/style/jquery.lightbox-0.5.css" media="screen" /> 
+
     
     <script type="text/javascript">
     $(document).ready(function(){
@@ -17,8 +20,33 @@
             function(){$(this).find('.action-bar').hide()}
         );
         
+        
+        
         //Set like & dislike, remember and removable behaviour
-        GRM.init()
+        $(".like-dislike").like();
+        $(".like-dislike-suggestion").like({
+            callback: function() {
+                if($(".like-dislike-suggestion").attr('like')=="true"){
+                    var value = parseInt($('#vote-counter').text())+1;
+                    $('#vote-counter').text(value);
+                    
+                    if(value>0){
+                        $('#suggestion-vote-counter .none').hide();
+                        $('#suggestion-vote-counter .votes-msg').show();
+                    }
+                }else{
+                    var value = parseInt($('#vote-counter').text())-1;
+                    $('#vote-counter').text(value);
+                    
+                    if(value==0){
+                        $('#suggestion-vote-counter .none').show();
+                        $('#suggestion-vote-counter .votes-msg').hide();
+                    }
+                }
+            }
+        });
+        $(".remember-forget").remember();
+        $(".removable").removable();
         
         //Load Panoramios photos
         var latlngStr = "{{suggestion.poi.location}}".split(",",2);
@@ -36,11 +64,13 @@
         });
         
         var myOptions = {
-          'width': 300,
-          'height': 80,
-          'columns': 3,
+          'width': 270,
+          'height': 180,
+          'columns': 1,
           'rows': 1,
-          'croppedPhotos': true,
+          'delay':2.5,
+          'croppedPhotos': false,
+          //'attributionStyle':panoramio.tos.Style.HIDDEN
         };
         
         var wapiblock = document.getElementById('panoramio-imgs');
@@ -55,15 +85,94 @@
 			$('.panoramio-wapi-empty-img-div').remove()
 		});
 		
-		$('#panoramio-imgs').append('<div class="panoramio-wapi-tos" style="width: 296px; color: black ! important; background-color: #f9f9f9 ! important;"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span><br>Photos are copyrighted by their owners</span></div>');
-		
+        panoramio.events.listen(widget, panoramio.events.EventType.PHOTO_CLICKED, function(event){
+            
+            //tmp=event.getPhoto()
+            //console.log('Photo "' + event.getPhoto().getPhotoTitle() + '" was clicked')
+            
+            //return false;
+              
+        });
+        
+		$('#panoramio-tos').append('<div class="panoramio-wapi-tos" style="color: black ! important; background-color: #f9f9f9 ! important;font-family:"lucida grande",tahoma,verdana,arial,sans-serif; font-size:10.8px;line-height:16.2px"><a target="_top" href="http://www.panoramio.com"><img width="67" height="14" src="http://www.panoramio.com/img/logo-tos.png"></a><span>, photos are copyrighted by their owners</span></div>');
+        
+        function addSuggestionToList(obj){
+            GRM.wait();
+            $.ajax({
+                type: "POST",
+                url: url["modify_suggestion_list"],
+                data: {
+                    list_id: [$(obj).attr('value')],
+                    suggestions: [$('#add-to-list').attr('value')]
+                },
+                dataType:'json',
+                complete: function(){GRM.nowait();},
+                success: function(data){
+                    
+                    if($('.no-lists').is(':visible'))
+                        $('.no-lists').hide();
+                    
+                    $(obj).find("span.name").addClass("checked");
+                    
+                    //Actualizamos el contador de la lista
+                    counterClass='.list-'+data.id+'-counter';
+                    $(counterClass).text(data.keys.length);
+                    
+                    //Añadimos la lista a "Listas en las que aparece"
+                    var htmlCode='<a href="../list/'+data.id+'" value="'+data.id+'">'+data.name+'</a>';
+                    if($('#list-lists').children().length==0)
+                        htmlCode="<span>"+htmlCode+"</span>";
+                    else
+                        htmlCode="<span>, "+htmlCode+"</span>";
+                    $('#list-lists').append(htmlCode);
+                    
+                    //Mostrar mensaje de éxito
+                    showMessage("Las sugerencia han sido añadida a la lista","success")
+                }
+            });    
+        }
+        
+        function removeSuggestionToList(obj){
+            GRM.wait();
+            $.ajax({
+                type: "POST",
+                url: url["modify_suggestion_list"],
+                data: {
+                    list_id: [$(obj).attr('value')],
+                    suggestions_del: [$('#add-to-list').attr('value')]
+                },
+                dataType:'json',
+                complete: function(){GRM.nowait();},
+                success: function(data){
+                    
+                    
+                    
+                    $(obj).find("span.name").removeClass("checked");
+                    
+                    //Actualizamos el contador de la lista
+                    counterClass='.list-'+data.id+'-counter';
+                    $(counterClass).text(data.keys.length);
+                    
+                    //Eliminamos la lista de "Listas en las que aparece"
+                    $('#in-lists a[value="'+$(obj).attr('value')+'"]').parent().remove();
+                    
+                    if($('#list-lists').children().length==0)
+                        $('.no-lists').show();
+                        
+                    //Mostrar mensaje de éxito
+                    showMessage("Las sugerencia ha sido eliminada de la lista","success")
+                }
+            });    
+        }
+        
 		//Añadimos el comportamiento	
 		function onLiClick(obj){
             var checkbox=$(obj).find("span.name");
+
             if($(checkbox).hasClass("checked"))
-                $(checkbox).removeClass("checked");
+                removeSuggestionToList(obj)
             else
-                $(checkbox).addClass("checked");
+                addSuggestionToList(obj)            
         }
 
 		$('span.btn.dropDownBtn').menuList({
@@ -82,10 +191,11 @@
 					dataType:'json',
 					success: function(data){
 						//Añadimos la lista al desplegable
-						$("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
-						$('#listid-'+data.id).click(function(){onLiClick(this)});
+						var c=$("<li value=\""+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
+						c.click(function(){onLiClick(this)});
 						
-						//Añadimos la lista en la pestaña listas
+						//Forzamos el click para que se añada la sugerencia a la lista
+                        c.click();
 						
 						//Reordenamos alfabéticamente la lista desplegable
 						$('.submenu li').not('li.new-list-btn').sortElements(function(a, b){
@@ -118,47 +228,80 @@
                 
             <h1>
                 <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/><a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> sugiere:
-                <span>
-                    Le gusta a {{suggestion.counters.votes}} personas
+                <span id="suggestion-vote-counter">
+                        <span class="none" {% if suggestion.counters.votes > 0%}style="display:none"{%endif%}>Aún no ha recibido valoraciones</span>
+                        <span class="votes-msg" {% if suggestion.counters.votes = 0%}style="display:none"{%endif%}>Valoraciones recibidas: <span id="vote-counter">{{suggestion.counters.votes}}</span></span>
                 </span>
                 
                 <br>
                 {{suggestion.name}}
             </h1>
             {% if suggestion.description %}
-                <p><strong>Instrucciones/explicación</strong>: {{suggestion.description}} </p>
+                <p class="more-info"><strong>Instrucciones/explicación</strong>: <br>{{suggestion.description|linebreaksbr|urlize}} </p>
             {% endif %}
             
             {% if suggestion.date_starts or suggestion.date_ends %}
-            <p>
+            <p class="more-info">
                     <strong>Fecha</strong>: 
                     [25/04/2011 al 30/05/2011]<br>
                 
             </p>
             {% endif %}
             
-                    
+            
+                
+            
+            <p id="in-lists" class="more-info">
+                <strong>Listas en las que aparece</strong>:
+                
+                
+                <span class="no-lists" {% if in_lists %}style="display:none"{% endif %}> esta sugerencia aún no se encuentra en ninguna lista.</span>
+                
+                <span id="list-lists">
+                {% for obj in in_lists %}
+                    {%if obj.visibility == 'public' %}
+                        <a href="{%url2 in_facebook view_list obj.id%}" value="{{obj.id}}">{{obj.name}}</a>{%if not forloop.last%}, {%endif%}
+                    {% endif %}
+                {% endfor %}
+                </span>
+                
+            </p>
+            
+            
+            {% if suggestion.tags %}
+                <p id="tag-list-label"><strong>Palabras clave</strong>:</p> 
+                <ul id="tag-list">
+                {% for tag in suggestion.tags %}
+                    <li>
+<!--
+                        <form action="{% url2 in_facebook search_suggestions tag %}" method="post">
+                            <input type="hidden" name="suggestion" value="suggestion">
+                            <input type="submit" value="{{tag}}">
+                        </form>
+-->
+                        <a href="{%url2 in_facebook view_tag_suggestions tag%}">{{tag}}</a>
+                        {%if not forloop.last %}, {%endif%}
+                    </li>
+                {% endfor %}
+                </ul>
+                
+            {% endif %}
+            
                 
             
             <hr>
-            <p style="float: left;">
-                 <strong>Lugar</strong>: <a href="{% url2 in_facebook view_place suggestion.poi.slug %}">{{suggestion.poi.name}}</a>
-            </p>
+            <div class="address">
+                <p>
+                    <strong>Lugar</strong>: <a href="{% url2 in_facebook view_place suggestion.poi.slug %}" class="hoverlink">{{suggestion.poi.name}}</a>
+                    -
+                    <strong>Dirección</strong>:
+                    <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="dark-link" target="_blank">{{suggestion.poi.address}}</a>
+                    
+                </p>
+            </div>
              <div class="right">
-				<a title="Más detalles sobre: {{suggestion.poi.name}}" href="{% url2 in_facebook view_place suggestion.poi.slug %}">
-					<img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x150&maptype=roadmap
-&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false">
-				</a>
+				<div id="wapiblock"><div id="panoramio-imgs"></div></div>
 			</div>
-            
-            
-            
-            
-            <p>
-                <strong>Dirección</strong>:
-                <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="dark-link" target="_blank">{{suggestion.poi.address}}</a>
-                
-            </p>
             
 			
 <!--
@@ -169,25 +312,28 @@
 			<hr class="clear">
 -->
 			
-			<div id="wapiblock"><strong>Pictures of the area:</strong><div id="panoramio-imgs"></div></div>
-            <hr>
-			
+			<a title="Más detalles sobre: {{suggestion.poi.name}}" href="{% url2 in_facebook view_place suggestion.poi.slug %}">
+					<img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x150&maptype=roadmap
+&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false">
+            </a>
+            
+            <div><strong>Pictures of the area from :</strong><span id="panoramio-tos"></span></div>
+            
+			<hr>
+            
             <ul id="action-bar">
                 <li id="print-icon"><a href="?print" target="_blank" class="hoverlink">Imprimir</a></li>
-                
                 {% if request.user.username %}
-                    <li id="add-to-list">
-                        <span class="hoverlink" onclick="javascript:$('#add-to-list .dropDownBtn').show();">Añadir a una lista</span>
-                
+                    <li id="add-to-list" value="{{suggestion.id}}">
+                        <span class="hoverlink" onclick="javascript:$('#add-to-list .dropDownBtn').show();">Añadir a una lista </span>
                         <span class="btn dropDownBtn" style="display:none">
                             <span class="save-at">---------</span>
                             <ul class="submenu" style="display:none" id="dropdown-list">
                                 {% if lists %}
                                     {% for obj in lists %}
-                                        {% if obj.user.username = request.user.username %}
                                             <!-- Solo se muestran mis listas -->
-                                            <li id="listid-{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
-                                        {% endif %}
+                                            <li value="{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
+
                                     {% endfor %}
                                 {% endif %}
                                 <li class="new-list-btn">
@@ -200,22 +346,8 @@
                     {%endif%}
                     {% if user.username and suggestion.user.username != user.username %}
                     <li>
-                        <span class="likeBtn btn">
-                            <span class="like-dislike" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
-                                <span class="dislike">
-                                    <span class="text like-text hoverlink">Ya no me gusta</span> 
-                                </span>
-                                
-                                <span class="like">
-                                    <span class="text like-text hoverlink" >Me gusta</span> 
-                                </span> 
-                            </span>
-                        </span>
-                        
-                        
-                        
                         <span class="btn likeBtn" id="save-btn">
-                            <span title="Guardar en favoritos"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if obj.user_follower%}remember="true"{%endif%}>
+                            <span title="Guardar en favoritos"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if user_follower%}remember="true"{%endif%}>
                                 <span class="remember hoverlink">
                                     Guardar
                                 </span>
@@ -225,27 +357,20 @@
                             </span>
                         </span>
                     </li>
-                {%endif%}
-                
-                {% if suggestion.tags %}
                     <li>
-                        <p id="tag-list-label"><strong>Palabras clave</strong>:</p> 
-                        <ul id="tag-list">
-                        {% for tag in suggestion.tags %}
-                            <li>
-        <!--
-                                <form action="{% url2 in_facebook search_suggestions tag %}" method="post">
-                                    <input type="hidden" name="suggestion" value="suggestion">
-                                    <input type="submit" value="{{tag}}">
-                                </form>
-        -->
-                                {{tag}}
-                                {%if not forloop.last %}, {%endif%}
-                            </li>
-                        {% endfor %}
-                        </ul>
+                        <span class="likeBtn btn">
+                            <span class="like-dislike-suggestion likex16" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
+                                <span class="dislike">
+                                    <span class="text hoverlink">Ya no me gusta</span> 
+                                </span>
+                                
+                                <span class="like">
+                                    <span class="text hoverlink" >Me gusta</span> 
+                                </span> 
+                            </span>
+                        </span>
                     </li>
-                {% endif %}
+                {%endif%}
             </ul>
                 
                 
@@ -284,7 +409,9 @@
                                         <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
                                             <span class="dislike">
                                                 <span class="hoverlink">Ya no me gusta</span> 
+<!--
                                                 <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+-->
                                             </span>
                                             
                                             <span class="like">
@@ -331,7 +458,9 @@
                                 <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
                                     <span class="dislike">
                                         <span class="hoverlink">Ya no me gusta</span> 
+<!--
                                         <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
+-->
                                     </span>
                                     
                                     <span class="like">
@@ -351,5 +480,19 @@
             <div class="load-more">Cargar más</div>
         {% endif %}
     </div>
-
+    
+    <ul id="lightbox">
+    </ul>
+    {% if request.user.is_authenticated %}
+        <script id="commentTemplate" type="text/x-jquery-tmpl">
+            <li class="suggestion-element">
+                <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
+                <span class="user"><img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar"></span>
+                <div style="float:left;width:460px">
+                    <span class="msg"><a href="{% url2 in_facebook public_profile user.username%}" class="dark-link">{{user.username}}</a>: ${msg}</span>
+                    <span class="timestamp">0 minutes ago</span>
+                </div>
+            </li>
+        </script>
+    {% endif %}
 {% endblock %}

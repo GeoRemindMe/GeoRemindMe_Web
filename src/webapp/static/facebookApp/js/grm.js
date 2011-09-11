@@ -803,6 +803,114 @@ function validateTimes(start,end){
     return true;
 }
 
+function checkEmail() {
+    var email = $('#registerEmail').val();
+    var item = $('#registerEmail').next('div');
+    var st = $('#emailStatus');
+    item.text('');
+    st.hide();
+
+    if (email=='Email') {
+        item.text('Necesitamos que rellenes el email');
+        //$(email).addClass('error');
+        item.show();
+        st.removeClass("ok").addClass("no-ok");
+        st.show();
+        return false;
+    }
+    
+    if (!GRM.common.checkemail(email)) {
+        item.text('E-mail inválido');
+        item.show();
+        st.removeClass("ok").addClass("no-ok");
+        st.show();
+        return false;
+    }
+    else {
+        $.ajax({
+            url:"/ajax/exists/",
+            type:'post',
+            dataType:'json',
+            data: {
+                email: email,
+                "csrfmiddlewaretoken": $('#registerFormForm input[type="hidden"]').val() 
+            },
+            async:true,
+            success: function(data){ 
+        
+                if(data.result){
+                    item.text("Esta cuenta ya está siendo usada");
+                    item.show();
+                    st.removeClass("ok").addClass("no-ok");
+                    st.show();
+                }
+                else
+                {
+                    //item.text("Esta cuenta ya está siendo usada");
+                    st.removeClass("no-ok").addClass("ok");
+                    st.show();
+                    item.hide();
+                }
+            }
+        });
+    }
+    
+    return true;
+}
+
+function checkTerms() {
+    if (!$('#termsCheckbox').is(":checked")) {
+       showMessage("Para poder crear una cuenta primero necesitas leer y aceptar las condiciones de uso.","error");
+       return false;
+    }
+    return true;
+}
+
+function checkPasswords(emptymessage) {
+    
+    var pwd1 = $('#userRegisterPass1').val(), pwd2 = $('#userRegisterPass2').val();
+    var item = $('#passwordStatus');
+    
+    if (pwd1.length==0 || pwd2.length==0) {
+
+        if (emptymessage) {
+            item.text("Debes rellenar los dos campos de las contraseñas");
+            item.show();
+        }
+
+        return false;
+        }
+    
+    if (pwd1!=pwd2){
+
+        item.text("Las contraseñas no coinciden, por favor vuelva a introducirlas");
+        item.show();
+
+        return false;
+        }
+    
+    if (pwd1.length<6){
+        item.text("La contraseña tiene que tener al menos 6 caracteres");
+        item.show();
+        return false;
+        }
+    
+    return true;
+}
+
+function showMenu(){
+    $('#login-bar p').show();
+    $('#login-bar ul').show();
+    $('#georemindme-form').hide();
+}
+
+function checkUncheck(obj){
+    var checkbox=$(obj).find('input');
+    if($(checkbox).attr('checked')==true)
+        $(checkbox).attr('checked',false);
+    else
+        $(checkbox).attr('checked',true)
+}
 
 /**
  * jQuery.fn.sortElements
@@ -869,4 +977,43 @@ jQuery.fn.sortElements = (function(){
     };
  
 })();  
+
+
+(function($){  
+$.extend(  
+{  
+    jsonp: {  
+        script: null,  
+        options: {},  
+        call: function(url, options) {  
+            var default_options = {  
+                callback: function(){},  
+                callbackParamName: "callback",  
+                params: []  
+            };  
+            this.options = $.extend(default_options, options);  
+            //Determina si se debe añadir el parámetro separado por ? o por &  
+            var separator = url.indexOf("?") > -1? "&" : "?";  
+            var head = $("head")[0];  
+            /*Serializa el objeto en una cadena de texto con formato URL*/  
+            var params = [];  
+            for(var prop in this.options.params){  
+                params.push(prop + "=" + encodeURIComponent(options.params[prop]));  
+            }  
+            var stringParams = params.join("&");  
+            //Crea el script o borra el usado anteriormente  
+            if(this.script){  
+                head.removeChild(script);  
+            }  
+            script = document.createElement("script");  
+            script.type = "text/javascript";  
+            //Añade y carga el script, indicandole que llame al metodo process  
+            script.src = url + separator + stringParams + (stringParams?"&":"") + this.options.callbackParamName +"=jQuery.jsonp.process";  
+            head.appendChild(script);  
+        },  
+        process: function(data) { this.options.callback(data); }  
+    }  
+});  
+})(jQuery)  
+
 

@@ -27,6 +27,8 @@
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
 	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+    <script type="text/javascript" src="/static/common/js/jquery.cookies.2.2.0.min.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.reversegeocode.min.js"></script>
 
     {% block extra_js %}{%endblock%}
 
@@ -35,10 +37,33 @@
 	<![endif]-->
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$("#left-col").css("height",$(this).height()+'px');
-			$("#right-col").bind("resize",function(){
-                $("#left-col").css("height",$(this).height()+'px');
-            });
+            
+            /*** login function ***/
+			$('#loginForm').submit(function(e){
+				e.preventDefault();
+				GRM.wait();
+				$.ajax({
+					type: "POST",
+					url: "/ajax/login/",
+					dataType:'json',
+					data: {
+						"user_login-email":$(this).find('[name="email"]').val(),
+						"user_login-password":$(this).find('[name="password"]').val(),
+						"csrfmiddlewaretoken":$(this).find('[name="csrfmiddlewaretoken"]').val()
+					},
+					error: function() { GRM.nowait(); },
+					success: function(msg){
+						if(msg.error!="") {
+							showMessage(msg.error,"error");
+							GRM.nowait();
+						}
+						else {
+							setTimeout(function(){window.location=msg._redirect;},3000);
+						}
+					}
+				});
+			});
+        
             
             /*** show georemindme login ***/
 			$('.georemindme').click(function(){
@@ -46,6 +71,12 @@
 			   $('#login-bar ul').hide();
 			   $('#georemindme-form').show();
 			});
+            
+            /*** Resize right column ***/
+            $("#left-col").css("height",$(this).height()+'px');
+			$("#right-col").bind("resize",function(){
+                $("#left-col").css("height",$(this).height()+'px');
+            });
 		});
 			
 			
@@ -73,8 +104,8 @@
         #loginSec #header-top form {
             margin-top: -13px;
         }
-        #loginSec a.hoverlink,
-        #loginSec span.hoverlink{
+        #loginSec #login-bar a.hoverlink,
+        #loginSec #login-bar span.hoverlink{
             color:#68B1FF;
         }
 	</style>

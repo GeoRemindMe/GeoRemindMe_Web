@@ -77,16 +77,16 @@
         <div>
 			<div id="list-box" class="clear">
                 <p class="big suggestions-title popular">
-                    En este sitio hay {{suggestions.1|length}} sugerencias
+                    Sugerencias de usuarios en "{{place.name}}"
                 </p>
-                {%if user.username %}
-                    <div class="clear" id="action-bar">
-                        <ul>
-                            <li class="suggestion"><a href="{%url2 in_facebook add_suggestion %}?placelocat={{place.location}}&placename={{place.name}}" class="hoverlink">Nueva sugerencia a este sitio</a></li>
-                            <li id="print-icon"><a href="?print" target="_blank" class="hoverlink">Imprimir sugerencias</a></li>
-                        </ul>
+                <div class="clear" id="action-bar">
+                    <ul>
+                        <li id="print-icon"><a href="?print" target="_blank" class="hoverlink">Imprimir sugerencias</a></li>
+                        {%if user.username %}
+                            <li class="suggestion"><a href="{%url2 in_facebook add_suggestion %}?{{place.location}}" class="hoverlink">Nueva sugerencia a este sitio</a></li>
+                        {%endif%}
                     </div>
-                {%endif%}
+                
                 <ul class="comments">
 
                     {% for s in suggestions.1%}                
@@ -102,7 +102,7 @@
                             <span class="msg"><a href="{% url2 in_facebook view_suggestion s.instance.slug %}" class="hoverlink">{{s.instance.name}}</a></span>
                             <span class="timestamp">{{s.instance.created|naturaltime}} </span>
                             <span class="like-dislike" value="{{s.instance.id}}" {% if s.has_voted %}like="true"{%endif%} type="suggestion" style="display:none">
-                            {% if s.instance.user.username != user.username %}
+                            {% if s.instance.user.username != user.username and request.user.is_authenticated %}
                             &nbsp;- 
                             <span class="dislike">
                                 <span class="hoverlink">Ya no me gusta</span> 

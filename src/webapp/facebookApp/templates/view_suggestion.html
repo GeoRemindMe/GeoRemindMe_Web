@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% load i18n %}
 {% load tags %}
 
@@ -483,14 +484,16 @@
     
     <ul id="lightbox">
     </ul>
-    <script id="commentTemplate" type="text/x-jquery-tmpl">
-        <li class="suggestion-element">
-            <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
-            <span class="user"><img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar"></span>
-            <div style="float:left;width:460px">
-                <span class="msg"><a href="{% url2 in_facebook public_profile user.username%}" class="dark-link">{{user.username}}</a>: ${msg}</span>
-                <span class="timestamp">0 minutes ago</span>
-            </div>
-        </li>
-    </script>
+    {% if request.user.is_authenticated %}
+        <script id="commentTemplate" type="text/x-jquery-tmpl">
+            <li class="suggestion-element">
+                <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
+                <span class="user"><img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar"></span>
+                <div style="float:left;width:460px">
+                    <span class="msg"><a href="{% url2 in_facebook public_profile user.username%}" class="dark-link">{{user.username}}</a>: ${msg}</span>
+                    <span class="timestamp">0 minutes ago</span>
+                </div>
+            </li>
+        </script>
+    {% endif %}
 {% endblock %}
