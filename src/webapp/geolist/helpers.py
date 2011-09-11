@@ -89,6 +89,8 @@ class ListHelper(object):
             :param user: usuario del que buscar las listas
             :type user: :class:`geouser.models.User`
         '''
+        if not user.is_authenticated():
+            return []
         from google.appengine.api import datastore
         q = datastore.Query('ListFollowersIndex', {'keys =': user.key()}, keys_only=True)
         if async:
@@ -121,6 +123,8 @@ class ListHelper(object):
         """
         Obtiene las listas de un usuario
         """
+        if not user.is_authenticated():
+            return []
         if user is None or querier is None:
             raise TypeError()
         if user.id == querier.id:
