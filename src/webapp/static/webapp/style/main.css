@@ -85,7 +85,7 @@ span.action-bar a{
 }
 #login-submenu{
     font-size: 0.8em;
-    
+    padding-left: 12px;
     margin-top: 5px;
 }
 
@@ -456,7 +456,8 @@ background: linear-gradient(left, rgba(238,238,238,1) 0%,rgba(254,254,254,1) 50%
     background-color: #FFEC72;
 }
 #right-block a#register-btn, 
-#registerForm input[type="submit"]{
+#registerForm input[type="submit"],
+a#register-btn{
 /*
 	background: url('/static/webapp/img/register-bg.png') repeat-x;
 */
@@ -487,6 +488,17 @@ background: linear-gradient(left, rgba(238,238,238,1) 0%,rgba(254,254,254,1) 50%
 	box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
 	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
 	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75), inset 0px 1px 1px rgba(255,255,255,.75);
+}
+a#register-btn.anonymous{
+    display: inline-block;
+    font-size: 1em;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+    margin-left: 100px;
+    margin-top: 0;
+    padding: 0 15px;
+    width: auto;
 }
 #registerForm input[type="submit"]{
     border: 0 none;
