@@ -2761,6 +2761,7 @@ input{
 		font-size: 1.1em;
 		line-height: 1.7em;
 		margin-right: 10px;
+        margin-bottom:10px;
 		width: auto;
     }
     #view-suggestion div.suggestion h1 img{
@@ -2810,6 +2811,7 @@ input{
     }
     #view-suggestion ul#tag-list li{
         display:inline-block;
+        font-size:1.1em;
     }
     
     #view-suggestion ul#tag-list form{

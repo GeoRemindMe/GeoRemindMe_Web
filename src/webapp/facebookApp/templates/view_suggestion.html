@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-
 {% load i18n %}
 {% load tags %}
 
@@ -228,7 +227,10 @@
             
                 
             <h1>
-                <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/><a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> sugiere:
+<!--
+                <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/>
+-->
+                <a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> sugiere:
                 <span id="suggestion-vote-counter">
                         <span class="none" {% if suggestion.counters.votes > 0%}style="display:none"{%endif%}>Aún no ha recibido valoraciones</span>
                         <span class="votes-msg" {% if suggestion.counters.votes = 0%}style="display:none"{%endif%}>Valoraciones recibidas: <span id="vote-counter">{{suggestion.counters.votes}}</span></span>
@@ -261,7 +263,7 @@
                 <span id="list-lists">
                 {% for obj in in_lists %}
                     {%if obj.visibility == 'public' %}
-                        <a href="{%url2 in_facebook view_list obj.id%}" value="{{obj.id}}">{{obj.name}}</a>{%if not forloop.last%}, {%endif%}
+                        <a href="{%url2 in_facebook view_list obj.id%}" value="{{obj.id}}" class="hoverlink">{{obj.name}}</a>{%if not forloop.last%}, {%endif%}
                     {% endif %}
                 {% endfor %}
                 </span>
@@ -280,7 +282,7 @@
                             <input type="submit" value="{{tag}}">
                         </form>
 -->
-                        <a href="{%url2 in_facebook view_tag_suggestions tag%}">{{tag}}</a>
+                        <a href="{%url2 in_facebook view_tag_suggestions tag%}" class="hoverlink">{{tag}}</a>
                         {%if not forloop.last %}, {%endif%}
                     </li>
                 {% endfor %}
