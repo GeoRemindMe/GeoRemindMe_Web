@@ -1,8 +1,9 @@
 			<div id="left-col">
 				<div id="search_bar">
-					<form action="." method="post">
-						<input type="text" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc." readonly>
+					<form action="/search/" method="post" id="search-form">
+						<input type="text" placeholder="Ejemplo: tapas en granada, turismo, paisajes, etc.">
 						<input type="submit" value="Buscar" class="btn">
+                        {% csrf_token %}
 					</form>
 				</div>
 				<hr>
@@ -32,8 +33,14 @@
 <!--
                     <div id="address_output"></div>
 -->
+                    <hr>
                 </div>
-                <script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw"></script>
+                
+                {%if not request.COOKIES.near_suggestions %}
+                    <script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw"></script>
+                {%endif%}
+
+
 				<script type="text/javascript">
             
                     //jQuery.getScript('http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw');
@@ -56,13 +63,25 @@
                             dataType:'json',
                             success: function(data){
                                 //console.log(data);
-                                $('#close-suggestions').empty();
-                                $(data).each(function(i,elem){
-                                    $('#close-suggestions').append('<li><a href="/user/'+elem.username+'/" class="clean"><img src="/user/'+elem.username+'/picture/" alt="'+elem.username+'"></a><a href="/suggestion/'+elem.slug+'/">'+elem.name+'</a></li>');
-                                })
-                                
-                                //Set cookie
-                                $.cookies.set('near_suggestions',$('#close-suggestions').html());
+                                if(data.length){
+                                    $('#close-suggestions').empty();
+                                    $(data).each(function(i,elem){
+                                        $('#close-suggestions').append('<li><a href="/user/'+elem.username+'/" class="clean"><img src="/user/'+elem.username+'/picture/" alt="'+elem.username+'"></a><a href="/suggestion/'+elem.slug+'/">'+elem.name+'</a></li>');
+                                    })
+                                    
+                                    
+                                    //Set cookie
+                                    $.cookies.set('near_suggestions',$('#close-suggestions').html());
+                                    
+                                    //Recuperamos las sugerencias y las metemos en la caja
+                                    //loadSuggestions(lat,lng);
+                                    $('#close-suggestions').empty();
+                                    $('#close-suggestions').append($.cookies.get('near_suggestions'));
+                                    
+                                    //Ponemos de donde están cerca
+                                    $('#my_location').text(address);
+                                    $('#close-suggestions-box').show();
+                                }
                             }
                         });
                     }
@@ -102,15 +121,15 @@
                         var latitud=$.cookies.get('lat')
                         var longitud=$.cookies.get('lng')
                         var address=$.cookies.get('address')
+                        if($.cookies.get('near_suggestions')=="")
+                            loadSuggestions(latitud,longitud);
+                        else{
+                            $('#my_location').text($.cookies.get('address'))
+                            $('#close-suggestions').empty();
+                            $('#close-suggestions').append($.cookies.get('near_suggestions'));
+                            $('#close-suggestions-box').show();                        
+                        }
                         
-                        //Recuperamos las sugerencias y las metemos en la caja
-                        //loadSuggestions(lat,lng);
-                        $('#close-suggestions').empty();
-                        $('#close-suggestions').append($.cookies.get('near_suggestions'));
-                        
-                        //Ponemos de donde están cerca
-                        $('#my_location').text(address);
-                        $('#close-suggestions-box').show();
                         
                         
                     }
@@ -172,7 +191,7 @@
 				</script>
 				
 				
-				<hr>
+				
 <!--
 				<div class="black-box">
                     <p><em>Sugerencias más relevantes</em>:</p>

@@ -822,7 +822,9 @@ margin-top:1em;
     line-height: 1em;
     margin-right: 5px;
     padding: 0.3em;
+    height:15px;
     width: 254px;
+    color:#555555 !important;
 }
 #search_bar input[type="submit"]{
     
@@ -834,7 +836,7 @@ margin-top:1em;
     background-repeat: no-repeat;
     height: 28px;
     line-height: 20px;
-    margin-top: 13px;
+    margin-top: 12px;
     padding: 0.5em;
     text-indent: -999px;
     width: 29px;

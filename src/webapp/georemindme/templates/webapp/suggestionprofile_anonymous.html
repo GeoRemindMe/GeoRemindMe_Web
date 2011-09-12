@@ -427,8 +427,10 @@
             </div>
         {% endif %}
         
-        <p class="clear big">¿Tienes algo que añadir a esta sugerencia?</p>
-        <textarea id="msg"></textarea>
+        {% if request.user.is_authenticated %}
+            <p class="clear big">¿Tienes algo que añadir a esta sugerencia?</p>
+            <textarea id="msg"></textarea>
+        
 <!--
         <ul id="feeling">
             <li>Happy</li>
@@ -436,7 +438,8 @@
             <li>Sad</li>
         </ul>
 -->
-        <span class="btn" onclick="sendComment(this,'event',{{suggestion.id}});">Comentar</span>
+            <span class="btn" onclick="sendComment(this,'event',{{suggestion.id}});">Comentar</span>
+        {% endif %}
         
         {% if comments %}
         <ul class="comments" id="comment-list">

@@ -156,6 +156,7 @@
     <!--
                         <span class="timestamp">{{obj.instance.created|naturaltime}} </span> 
     -->
+                        {% if reques.user.is_authenticated %}
                         <span class="action-bar" style="display:none">
 
                             {% if obj.instance.user.username != request.user.username %}
@@ -176,6 +177,7 @@
                                 | <span title="Guardar en favoritos"  class="remember-forget hoverlink" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">Guardar</span><span class="forget">Guardada</span></span>
                             {% endif %}
                         </span>
+                        {% endif %}
                             
                     </div>
                 
@@ -221,10 +223,12 @@
             </ul>
         </div>
     {% endif %}
-	
-	<h2>¿Tienes algún comentario?</h2>
-    <textarea id="msg"></textarea>
-    <span class="btn" onclick="sendComment(this,'list',{{list.id}});">Comentar</span>
+
+    {% if request.user.is_authenticated %}
+        <h2>¿Tienes algún comentario?</h2>
+        <textarea id="msg"></textarea>
+        <span class="btn" onclick="sendComment(this,'list',{{list.id}});">Comentar</span>
+    {% endif %}
 	
     {% if comments.1 %}
 		<h2>Comentarios</h2>
@@ -241,7 +245,7 @@
                 <div class="comment-content">
                     <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="dark-link">{{c.username}}</a>: {{c.msg}}</span>
                     <span class="timestamp">{{c.created|naturaltime}}</span> 
-                    {% if c.username != user.username %} 
+                    {% if c.username != user.username and request.user.is_authenticated %} 
 						<span class="action-bar" style="display:none">
 							&nbsp;- 
 							<span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">

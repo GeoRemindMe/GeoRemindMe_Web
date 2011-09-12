@@ -100,6 +100,13 @@
             $("#right-col").bind("resize",function(){
                 $("#left-col").css("height",$(this).height()+'px');
             });
+            
+            $('#search-form').bind('submit', function(e){
+                e.preventDefault;
+                console.log("entro");
+                window.location="/search/"+$(this).find("input[type='text']").val();
+                return false;
+            });
         });
     </script>
 	<!--[if lt IE 9]>
