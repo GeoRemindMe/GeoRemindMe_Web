@@ -17,6 +17,9 @@ def view_tag_suggestions(request, slug, template='webapp/view_tag.html'):
         raise Http404
     from geoalert.models import Suggestion
     suggestions = Suggestion.objects.get_by_tag_querier(tag, request.user)
+    if not request.user.is_authenticated():
+            pos = template.rfind('.html')
+            template = template[:pos] + '_anonymous' + template[pos:]
     return render_to_response(template, {
                                         'suggestions': suggestions,
                                         'tag': tag,
