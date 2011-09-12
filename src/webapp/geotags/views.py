@@ -1,13 +1,14 @@
 # coding=utf-8
 
 
+from django.http import HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.shortcuts import Http404
 from django.template import RequestContext
     
 from geouser.decorators import login_required
 
-@login_required
+
 def view_tag_suggestions(request, slug, template='webapp/view_tag.html'):
     slug = slug.lower()
     from models import Tag
@@ -15,21 +16,21 @@ def view_tag_suggestions(request, slug, template='webapp/view_tag.html'):
     if tag is None:
         raise Http404
     from geoalert.models import Suggestion
-    user_suggestions = Suggestion.objects.get_by_tag_owner(tag, request.user)
     suggestions = Suggestion.objects.get_by_tag_querier(tag, request.user)
     return render_to_response(template, {
                                         'suggestions': suggestions,
-                                        'user_suggestions': user_suggestions,
                                         'tag': tag,
                                         },
                                context_instance=RequestContext(request))
 
+
 def search_tag_suggestion(request, tag):
     from models import Tag
     from geoalert.models import Suggestion
-    from geolist.models import List
-    tags_instance = Tag.objects.get_by_name(tag)
-    suggestions = Suggestion.objects.get_by_tag_querier(tags_instance, request.user)
+    tag_instance = Tag.objects.get_by_name(tag)
+    if tag_instance is None:
+        return HttpResponseNotFound
+    suggestions = Suggestion.objects.get_by_tag_querier(tag_instance, request.user)
     return suggestions
 
 @login_required

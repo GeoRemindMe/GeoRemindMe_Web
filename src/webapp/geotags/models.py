@@ -14,7 +14,7 @@ from google.appengine.ext import db
 SEPARATOR = ','
 class TagHelper(object):
     def get_by_name(self, name):
-        return Tag.get_by_key_name('tag_%s' % name.lower())
+        return Tag.get_by_key_name('tag_%s' % name.lower().strip())
     
     def order_by_frequency(self):
         list = Tag.gql('WHERE count > 0 ORDER BY count DESC')

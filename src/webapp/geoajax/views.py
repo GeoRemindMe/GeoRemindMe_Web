@@ -644,8 +644,11 @@ def search_tag_suggestion(request):
     from geotags.views import search_tag_suggestion
     response = search_tag_suggestion(request, tag, page=page, query_id=query_id)
     from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(response, cls=JSONEncoder),
-                        mimetype='application/json')
+    try:
+        return HttpResponse(simplejson.dumps(response, cls=JSONEncoder),
+                            mimetype='application/json')
+    except:
+        return response
     
 @ajax_request
 def add_suggestion_tags(request):
