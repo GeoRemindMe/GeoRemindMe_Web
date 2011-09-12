@@ -112,6 +112,7 @@ class OAUTH_Access(db.Model):
     @classmethod
     def get_token(cls, key_name):
         """Obtener un objeto de la clase token conociendo el token de acceso"""
+        key_name = key_name.lower()
         return OAUTH_Access.get_by_key_name('atoken_%s' % key_name) 
     
     @classmethod

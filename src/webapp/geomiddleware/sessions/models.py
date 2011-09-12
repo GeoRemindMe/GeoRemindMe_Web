@@ -129,6 +129,16 @@ class _Session_Data(_Session_Dict, db.Model):
         self.expires = datetime.fromtimestamp(t)
         self.encode()
         super(_Session_Data, self).put()
+        import memcache
+        session = {
+                   'session': self,
+                   'user': self._user
+                   }
+        memcache.set("%ssession%s" % (memcache.version,
+                                     session['session'].id),
+                                     session,
+                                     time = session['session'].get_expiry_age()
+                        )
 
 
     @classmethod
