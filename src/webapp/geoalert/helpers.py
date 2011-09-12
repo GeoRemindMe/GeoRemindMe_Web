@@ -106,7 +106,7 @@ class EventHelper(object):
         return None
 
     def get_by_tag_querier(self, tagInstance, querier, page=1, query_id=None):
-        if not isinstance(querier, User):
+        if querier is None:
             raise TypeError()
         from geotags.models import Tag
         if not isinstance(tagInstance, Tag):
