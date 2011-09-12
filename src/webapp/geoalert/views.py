@@ -25,14 +25,15 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
             :param id: identificador de la sugerencia
             :type id: :class:`ìnteger`
     """
+    
     suggestion = Suggestion.objects.get_by_slug_querier(slug, querier=request.user)
     if suggestion is None:
         raise Http404 
     from geovote.models import Vote, Comment
     from geolist.models import ListSuggestion
     from georemindme.funcs import single_prefetch_refprops, prefetch_refList, prefetch_refprops
-    suggestion = single_prefetch_refprops(suggestion, Suggestion.user, Suggestion.poi)
     if 'print' in request.GET:
+        suggestion = single_prefetch_refprops(suggestion, Suggestion.user, Suggestion.poi)
         vote_counter = Vote.objects.get_vote_counter(suggestion.key())
         top_comments = Comment.objects.get_top_voted(suggestion, request.user)
         return render_to_response('print/suggestionprofile.html',
@@ -42,8 +43,11 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
                         },
                         context_instance=RequestContext(request)
                       )
+            
     from geovote.api import get_comments
+    lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     query_id, comments_async = get_comments(request.user, suggestion.id, 'Event', async=True)
+    suggestion = single_prefetch_refprops(suggestion, Suggestion.user, Suggestion.poi)
     has_voted = Vote.objects.user_has_voted(request.user, suggestion.key())
     vote_counter = Vote.objects.get_vote_counter(suggestion.key())
     user_follower = suggestion.has_follower(request.user)
@@ -53,7 +57,7 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     in_lists = prefetch_refprops(in_lists, ListSuggestion.user)
     in_lists = [l.to_dict(resolve=False) for l in in_lists]
     # listas del usuario
-    lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
+    
     lists = [l for l in lists if not suggestion.key() in l.keys]
     lists = prefetch_refprops(lists, ListSuggestion.user)
     lists = [l.to_dict(resolve=False) for l in lists]

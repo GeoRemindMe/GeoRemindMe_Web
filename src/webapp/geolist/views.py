@@ -77,7 +77,7 @@ def add_list_suggestion(request, lists_id=[], name=None, description=None, insta
                            )
         return [result for result in results if isinstance(result, ListSuggestion)]
     elif len(lists_id) == 0:
-      lists_id.append(None)  
+        lists_id.append(None)  
     
     l = ListSuggestion.insert_list(user=request.user, 
                                   id=lists_id[0], 
@@ -522,7 +522,6 @@ def share_on_twitter(request, id, msg):
     if list.short_url is None:
         list._get_short_url()
     from geoauth.clients.twitter import TwitterClient
-    from os import environ
     try:
         tw_client=TwitterClient(user=request.user)
         tw_client.send_tweet(msg)
