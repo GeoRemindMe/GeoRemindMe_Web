@@ -476,13 +476,24 @@ class Suggestion(Event, Visibility, Taggable):
             self._short_url = None
             
     def delete(self):
+        from geolist.models import List
+        added = db.GqlQuery("SELECT __key__ FROM Event WHERE suggestion = :1", self.key()).get()
+        added_list = db.GqlQuery("SELECT __key__ FROM List WHERE keys = :1", self.key()).get()
+        if added is None and added_list is None:
+            # nadie la añadió
+            suggestion_deleted.send(sender=self, user=self.user)
+            return super(Suggestion, self).delete()
         from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
         generico = User.objects.get_by_username(__web_settings.GENERICO, keys_only=True)
+        if generico == Suggestion.user.get_value_for_datastore(self): 
+            # es del usuario georemindme, la borramos
+            suggestion_deleted.send(sender=self, user=generico)
+            return super(Suggestion, self).delete()
+        # otro usuario, se la asignamos a georemindme
         viejo = self.user
-        if generico is None:
-            self.user = None
         self.user = generico
         self.put()
+        self.user.counters.set_suggested()
         suggestion_deleted.send(sender=self, user=viejo)
     
     def has_follower(self, user):

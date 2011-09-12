@@ -343,7 +343,14 @@ class SuggestionHelper(EventHelper):
             location = db.GeoPt(location)
         import memcache
         client = memcache.mem.Client()
-        sugs = client.gets('%ssug_nearest%s,%s' % (memcache.version,
+        if querier.is_authenticated():
+            sugs = client.gets('%ssug_nearest%s,%s_%s' % (memcache.version,
+                                                   location.lat,
+                                                   location.lon,
+                                                   querier.username,
+                                                   ))
+        else:
+            sugs = client.gets('%ssug_nearest%s,%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon
                                                    ))
@@ -362,6 +369,8 @@ class SuggestionHelper(EventHelper):
             from google.appengine.api import datastore
             sugs = datastore.Get(sugs)
             sugs = filter(None, sugs)
+            if querier.is_authenticated():
+                sugs = filter(lambda x: x['user'] != querier.key(), sugs)
             from georemindme.funcs import prefetch_refpropsEntity
             prefetch = prefetch_refpropsEntity(sugs, 'user')
             sugs = [{'id': sug.key().id(),
@@ -369,7 +378,14 @@ class SuggestionHelper(EventHelper):
                      'username': prefetch[sug['user']].username,
                      'name': sug['name'],
                      'description': sug['description']} for sug in sugs]
-            client.set('%ssug_nearest%s,%s' % (memcache.version,
+            if querier.is_authenticated():
+                client.set('%ssug_nearest%s,%s_%s' % (memcache.version,
+                                                   location.lat,
+                                                   location.lon,
+                                                   querier.username,
+                                                   ), sugs, 1123)
+            else:
+                client.set('%ssug_nearest%s,%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon
                                                    ), sugs, 1123)

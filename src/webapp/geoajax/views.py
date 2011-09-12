@@ -1,7 +1,7 @@
 # coding=utf-8
 
 
-from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden
+from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden, HttpResponseNotFound
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
@@ -238,9 +238,10 @@ def delete_suggestion(request):
     """
     eventid = request.POST.get('eventid', None)
     deleted = geoalert.del_suggestion(request, eventid)
-    if isinstance(deleted, HttpResponse):
-        return deleted
-    return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
+    try:
+        return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
+    except:
+        return HttpResponseNotFound()
 
 
 #===============================================================================
