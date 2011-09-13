@@ -26,13 +26,22 @@ class geosession(object):
                     request.user = request.facebook['client'].user
                     return
                 # sesion iniciada en web y facebook
-#                else:
-#                    if request.session['user'].id == request.facebook['client'].user.id:
+                else:
+                    if request.session['user'].id == request.facebook['client'].user.id:
 #                        from facebookApp import watchers
 #                        request.session.delete()
 #                        request.session = SessionStore.init_session(user=request.facebook['client'].user)
 #                        request.user = request.session['user']
 #                        return
+                        from django.shortcuts import render_to_response
+                        from django.template import RequestContext
+                        request.user = request.session['user']
+                        return render_to_response('login_problem.html', 
+                                              {'user_logged': request.user,
+                                               'user_fb': request.facebook['client'].user,
+                                               },
+                                              context_instance=RequestContext(request)
+                                              )
             else:
                 if request.path.find('/fb/') == 0 and 'user' in request.session:
                     request.user = request.session['user']
