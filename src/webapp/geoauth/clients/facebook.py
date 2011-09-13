@@ -150,10 +150,10 @@ class FacebookClient(object):
     def authorize(self, user):
         """guarda el token de autorizacion"""
         if user is not None:#el usuario ya esta conectado, pero pide permisos
-            token = OAUTH_Access.get_token(self.consumer.access_token,)
+            token = OAUTH_Access.get_token(self.consumer.access_token)
             if token is None:
                 OAUTH_Access.remove_token(user, 'facebook')
-                self.token = OAUTH_Access.add_token(
+                token = OAUTH_Access.add_token(
                                                 token_key=self.consumer.access_token,
                                                 token_secret='',
                                                 provider='facebook',
@@ -171,6 +171,7 @@ class FacebookClient(object):
                              profile_url=facebookInfo["link"]
                             )
             self.user = user
+            self.token  = token
             import memcache
             memclient = memcache.mem.Client()
             token_cache = {'token': token,
