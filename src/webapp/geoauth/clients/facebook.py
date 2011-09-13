@@ -175,14 +175,15 @@ class FacebookClient(object):
             import memcache
             memclient = memcache.mem.Client()
             token_cache = {'token': token,
-                                   'user': self.user
-                                   }
+                           'user': self.user
+                           }
             memclient.set('%sfbclienttoken_%s' % (memcache.version, 
                                                   self.consumer.access_token
-                                                  ), token_cache)
+                                                  ), 
+                              token_cache)
             memclient.set('%sfbclientuser_%s' % (memcache.version, 
-                                                                  user.id
-                                                                  ),
+                                                  user.id
+                                                  ),
                                memcache.serialize_instances(token)
                                                )
             return True
