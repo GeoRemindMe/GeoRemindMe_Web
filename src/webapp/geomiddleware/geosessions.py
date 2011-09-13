@@ -18,47 +18,23 @@ class geosession(object):
                                              )
         else:
             request.session = SessionStore.load(session_id=session_id)
-        
+
         if hasattr(request, 'facebook'):
-            if request.facebook['client'].user is not None:                
+            if request.facebook['client'].user is not None:
                 if not 'user' in request.session:
-                    from facebookApp import watchers   
+                    from facebookApp import watchers
                     request.session.delete()
                     request.session.init_session(user=request.facebook['client'].user, is_from_facebook=True)
-                    request.user = request.session['user']
-                    return
-                # sesion iniciada en web y facebook
+                # sesion iniciada en web y conocemos el usuario de facebook
                 else:
-                    if request.session['user'].is_authenticated():
-                        if request.session['user'].id != request.facebook['client'].user.id:
-    #                        from facebookApp import watchers
-    #                        request.session.delete()
-    #                        request.session = SessionStore.init_session(user=request.facebook['client'].user)
-    #                        request.user = request.session['user']
-    #                        return
-                            from django.shortcuts import render_to_response
-                            from django.template import RequestContext
-                            user_logged = request.session['user']
-                            request.session.delete()
-                            request.user = AnonymousUser()
-                            return render_to_response('login_problem.html', 
-                                                  {'user_logged': user_logged,
-                                                   'user_fb': request.facebook['client'].user,
-                                                   },
-                                                  context_instance=RequestContext(request)
-                                                  )
-                    else:
-                        request.session.delete()
+                    if request.session['user'].id == request.facebook['client'].user.id:
+                        from facebookApp import watchers
                         request.session.init_session(user=request.facebook['client'].user, is_from_facebook=True)
-                        request.user = request.session['user']
-                        return
         else:
             if request.session.is_from_facebook:
                 request.session.delete()
-                request.user = AnonymousUser()
                 from facebookApp.watchers import disconnect_all
                 disconnect_all()
-                return
         if 'user' in request.session:
             request.user = request.session['user']
         else:
@@ -66,9 +42,9 @@ class geosession(object):
 
     def process_response(self, request, response):
         """
-        If request.session was modified, or if the configuration is to save the
-        session every time, save the changes and set a session cookie.
-        """
+If request.session was modified, or if the configuration is to save the
+session every time, save the changes and set a session cookie.
+"""
         if hasattr(request, 'session'):
             try:
                 accessed = request.session._accessed
@@ -103,11 +79,10 @@ class geosession(object):
                             expires = request.session.get_expires()
                         request.session.put()
                         response.set_cookie(settings.COOKIE_NAME,
-		                                 request.session.session_id, max_age=max_age,
+request.session.session_id, max_age=max_age,
                                          expires=expires, domain=settings.SESSION_COOKIE_DOMAIN,
                                          path=settings.SESSION_COOKIE_PATH,
                                          secure=settings.SESSION_COOKIE_SECURE,
                                          #httponly=settings.COOKIE_SESSION_HTTPONLY or None
                                          )
         return response
-

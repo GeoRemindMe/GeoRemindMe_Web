@@ -22,6 +22,18 @@ def login_panel(request):
                               )
             init_user_session(request, user, remember=True, is_from_facebook=True)
             request.user = user
+        elif request.facebook['client'].user is None:
+            from geouser.models import AnonymousUser
+            user_logged = request.user
+            request.session.delete()
+            request.user = AnonymousUser()
+            return render_to_response('USUARIO CON SESION EN LA WEB PERO NO USUARIO DE FACEBOOK.html', 
+                                          {
+                                           'user_logged': user_logged,
+                                           'user_fb': request.facebook['client'].user,
+                                           },
+                                          context_instance=RequestContext(request)
+                                          )
         if request.user.username is None or request.user.email is None:
             if request.method == 'POST':
                 f = SocialUserForm(request.POST, 

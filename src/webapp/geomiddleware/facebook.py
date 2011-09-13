@@ -15,10 +15,11 @@ class FacebookMiddleware(object):
                 if 'oauth_token' in data:
                     request.facebook = {'uid': data['user_id'],
                                     'access_token': data['oauth_token'],
-                                    'client': FacebookClient(data['oauth_token'])
+                                    'client': FacebookClient(access_token=data['oauth_token'])
                                     }
                 return
             except:
+                raise
                 request.csrf_processing_done = False
         else:
             cookie = get_user_from_cookie(request.COOKIES)
