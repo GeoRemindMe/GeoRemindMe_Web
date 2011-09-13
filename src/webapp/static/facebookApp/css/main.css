@@ -3549,3 +3549,25 @@ ul.ui-autocomplete{
 ul.ui-autocomplete li.ui-menu-item:nth-child(even){
     background-color:#EEEEEE;
 }
+
+
+/*
+ *
+ * VIEW TAG SEARCH
+ *  
+ */
+#tag-search-form input[type="text"]{
+    border: 1px solid #CCCCCC;
+    padding: 0.3em;
+    width: 250px;
+}
+#tag-search-form input[type="submit"]{
+    background-color: #C5C5C5;
+    border: 1px solid white;
+    color: black;
+    display: inline-block;
+    float: none;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 1em 0.2em;
+}

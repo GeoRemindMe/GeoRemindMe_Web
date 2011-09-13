@@ -1,0 +1,60 @@
+{% extends "webapp/base_anonymous.html" %}
+{% load i18n %}
+{% load tags %}
+
+
+{% block extra_js %}
+		<script type="text/javascript">
+        $(document).ready(function(){
+			
+            $('#suggestion-list li').hover(
+                function(){$(this).find('div.save-suggestion,div.like-suggestion,div.map-suggestion').css({'display': 'inline'});},
+                function(){$(this).find('div.save-suggestion,div.like-suggestion,div.map-suggestion').css({'display': 'none'});}
+            )
+        });
+	</script>
+{%endblock%}
+
+{% block title %}Search{% endblock %}
+
+{% block goBack %}{%endblock%}   
+ 
+{% block body %}
+	
+	<div id="search">
+		
+		<h2>Resultados de la búsqueda:</h2>
+        
+        <!--Begin of the content-->
+        <!--Description section-->
+        <div id="cse" style="width: 100%;"></div>
+        <script src="http://www.google.com/jsapi" type="text/javascript"></script>
+        <script type="text/javascript">
+            google.load('search', '1', {language : 'en'});
+            google.setOnLoadCallback(function() {
+            var customSearchControl = new google.search.CustomSearchControl('011889005247941996496:rjhup_4pal0');
+            customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
+            customSearchControl.draw('cse');
+
+            var textSearch="{{request.get_full_path}}";
+            var l=textSearch.length;
+            if(textSearch.substring(l-1,l) == '/')
+                textSearch=textSearch.substring(8, textSearch.length-1);
+            else
+                textSearch=textSearch.substring(8, textSearch.length);
+            $("input[type=text]").focus().val(textSearch);
+            $("#cse form input[type=text]").submit()
+            $('#cse form').remove()
+            }, true);
+        </script>
+        <link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" /> 
+        <style type="text/css">
+            .cse .gsc-control-cse div, .gsc-control-cse div {
+                text-align: left;
+            }
+        </style>
+        
+	</div>
+	
+    
+{%endblock%}
