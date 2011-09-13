@@ -40,7 +40,6 @@ class geosession(object):
                         user_logged = request.session['user']
                         request.session.delete()
                         request.user = AnonymousUser()
-                        
                         return render_to_response('login_problem.html', 
                                               {'user_logged': user_logged,
                                                'user_fb': request.facebook['client'].user,
