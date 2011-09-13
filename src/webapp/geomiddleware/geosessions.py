@@ -29,23 +29,29 @@ class geosession(object):
                     return
                 # sesion iniciada en web y facebook
                 else:
-                    if request.session['user'].id != request.facebook['client'].user.id:
-#                        from facebookApp import watchers
-#                        request.session.delete()
-#                        request.session = SessionStore.init_session(user=request.facebook['client'].user)
-#                        request.user = request.session['user']
-#                        return
-                        from django.shortcuts import render_to_response
-                        from django.template import RequestContext
-                        user_logged = request.session['user']
+                    if request.session['user'].is_authenticated():
+                        if request.session['user'].id != request.facebook['client'].user.id:
+    #                        from facebookApp import watchers
+    #                        request.session.delete()
+    #                        request.session = SessionStore.init_session(user=request.facebook['client'].user)
+    #                        request.user = request.session['user']
+    #                        return
+                            from django.shortcuts import render_to_response
+                            from django.template import RequestContext
+                            user_logged = request.session['user']
+                            request.session.delete()
+                            request.user = AnonymousUser()
+                            return render_to_response('login_problem.html', 
+                                                  {'user_logged': user_logged,
+                                                   'user_fb': request.facebook['client'].user,
+                                                   },
+                                                  context_instance=RequestContext(request)
+                                                  )
+                    else:
                         request.session.delete()
-                        request.user = AnonymousUser()
-                        return render_to_response('login_problem.html', 
-                                              {'user_logged': user_logged,
-                                               'user_fb': request.facebook['client'].user,
-                                               },
-                                              context_instance=RequestContext(request)
-                                              )
+                        request.session.init_session(user=request.facebook['client'].user, is_from_facebook=True)
+                        request.user = request.session['user']
+                        return
         else:
             if request.session.is_from_facebook:
                 request.session.delete()
