@@ -57,6 +57,8 @@ def set_language(request):
 def search_suggestions(request, term=None, template='webapp/search.html'):
     #from geoalert.forms import SuggestionForm
     #s = Suggestion.objects.get_by_id(suggestion_id)
+    if not request.user.is_authenticated():
+            pos = template.rfind('.html')
+            template = template[:pos] + '_anonymous' + template[pos:]
     return  render_to_response(template, {'term': term,
-                                          'post': request.POST,
                                           }, context_instance=RequestContext(request))
