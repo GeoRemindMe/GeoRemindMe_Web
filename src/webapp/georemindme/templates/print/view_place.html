@@ -59,13 +59,17 @@
 				<li>
                     {{s.instance.name}}
                     {% if s.instance.description %} <br><strong>Detalles</strong>: {{s.instance.description}} {% endif %}                
-                    <span class="votes"><br/><strong>Valoraciones</strong>: {{s.instance.counters.votes}}</span>
+                    {% if s.instance.counters.votes > 0 %}
+                        <span class="votes"><br/><strong>Le gusta a</strong>: {{s.instance.counters.votes}} persona{{s.instance.counters.votes|pluralize:"s"}}<br></span>
+                    {% else %}
+                        <span class="votes"><br>Esta sugerencia no ha recibido valoraciones</span>
+                    {% endif %}
                     <div class="comments">
                         <strong>Comentarios</strong>:
                     
                     </div>
-                    <span class="links"><strong>Más información</strong>: {{s.instance.short_url}}</span>
-                    <span class="aside autor-date"><br>Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</span>
+                    <span class="links"><strong>Más información</strong>: {{s.instance.short_url}}<br></span>
+                    <span class="aside autor-date">Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</span>
                 </li>
 				{% endfor %}
 			</ul>
