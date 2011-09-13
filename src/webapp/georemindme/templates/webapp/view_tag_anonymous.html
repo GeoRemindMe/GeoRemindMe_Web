@@ -11,6 +11,12 @@
                 function(){$(this).find('div.save-suggestion,div.like-suggestion,div.map-suggestion').css({'display': 'inline'});},
                 function(){$(this).find('div.save-suggestion,div.like-suggestion,div.map-suggestion').css({'display': 'none'});}
             )
+            
+            $('#tag-search-form').submit(function(e){
+                e.preventDefault();
+                var tag=$(this).find('input[type="text"]').val();
+                window.location="/tag/"+tag+"/suggestions";
+            })
         });
 	</script>
 {%endblock%}
@@ -24,7 +30,7 @@
 	<div id="suggestion-tag-search">
         
     
-		<h2 class="clear">Se ha{{suggestions.1|length|pluralize:"n"}} encontrado {{suggestions.1|length}} sugerencia{{suggestions.1|length|pluralize:"s"}} que contiene{{suggestions.1|length|pluralize:"n"}} la palabra clave "?tag?":</h2>
+		<h2 class="clear">Se ha{{suggestions.1|length|pluralize:"n"}} encontrado {{suggestions.1|length}} sugerencia{{suggestions.1|length|pluralize:"s"}} que contiene{{suggestions.1|length|pluralize:"n"}} la palabra clave "<strong>{{tag}}</strong>":</h2>
         
 		<ul>
             {% for obj in suggestions.1 %}
@@ -40,9 +46,9 @@
 			{% endfor %}
 		</ul>
 		<hr>
-        <form action="">
+        <form action="." method="post" id="tag-search-form">
             Buscar sugerencias que tenga la palabra clave: <br>
-            <input type="text" placeholder="palabra clave"/>
+            <input type="text" placeholder="{{tag}}"/>
             <input type="submit" value="Buscar" onclick="search(this)">
         </form>
 	</div>
