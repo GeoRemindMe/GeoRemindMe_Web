@@ -30,7 +30,6 @@ def login_panel(request):
             return render_to_response('USUARIO CON SESION EN LA WEB PERO NO USUARIO DE FACEBOOK.html', 
                                           {
                                            'user_logged': user_logged,
-                                           'user_fb': request.facebook['client'].user,
                                            },
                                           context_instance=RequestContext(request)
                                           )
