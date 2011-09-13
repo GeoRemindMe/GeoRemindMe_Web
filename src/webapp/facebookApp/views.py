@@ -22,7 +22,11 @@ def login_panel(request):
                               )
             init_user_session(request, user, remember=True, is_from_facebook=True)
             request.user = user
-        else:
+        elif request.facebook['client'].user is None:
+            return render_to_response('USUARIO IDENTIFICADO EN LA WEB', 
+                                              {"permissions": __web_settings.OAUTH['facebook']['scope'] },
+                                              context_instance=RequestContext(request)
+                                              )
             request.facebook['client'].authorize(request.user)
         if request.user.username is None or request.user.email is None:
             if request.method == 'POST':

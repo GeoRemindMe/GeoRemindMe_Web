@@ -18,14 +18,13 @@ class geosession(object):
                                              )
         else:
             request.session = SessionStore.load(session_id=session_id)
-
+        
         if hasattr(request, 'facebook'):
-            if request.facebook['client'].user is not None:
-                
+            if request.facebook['client'].user is not None:                
                 if not 'user' in request.session:
                     from facebookApp import watchers   
                     request.session.delete()
-                    request.session = SessionStore.init_session(user=request.facebook['client'].user)
+                    request.session.init_session(user=request.facebook['client'].user, is_from_facebook=True)
                     request.user = request.session['user']
                     return
                 # sesion iniciada en web y facebook
@@ -38,28 +37,23 @@ class geosession(object):
 #                        return
                         from django.shortcuts import render_to_response
                         from django.template import RequestContext
-                        request.user = request.session['user']
+                        user_logged = request.session['user']
+                        request.session.delete()
+                        request.user = AnonymousUser()
+                        
                         return render_to_response('login_problem.html', 
-                                              {'user_logged': request.user,
+                                              {'user_logged': user_logged,
                                                'user_fb': request.facebook['client'].user,
                                                },
-                                              context_instance=RequestContext(request)
-                                              )
-            else:
-                if request.path.find('/fb/') == 0 and 'user' in request.session:
-                    request.user = request.session['user']
-                    from django.shortcuts import render_to_response
-                    from django.template import RequestContext
-                    from django.conf import settings as __web_settings
-                    return render_to_response('USUARIO DESDE FACEBOOK PERO NO REGISTRADO.html', 
-                                              {"permissions": __web_settings.OAUTH['facebook']['scope'] },
                                               context_instance=RequestContext(request)
                                               )
         else:
             if request.session.is_from_facebook:
                 request.session.delete()
+                request.user = AnonymousUser()
                 from facebookApp.watchers import disconnect_all
                 disconnect_all()
+                return
         if 'user' in request.session:
             request.user = request.session['user']
         else:
