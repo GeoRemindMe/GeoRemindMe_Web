@@ -326,6 +326,10 @@ class Suggestion(Event, Visibility, Taggable):
             sugg = cls.objects.get_by_id_user(id, user, querier=user)
             if sugg is None:
                 return None
+            if name is not None and name != '':
+                from datetime import timedelta
+                if sugg.created+timedelta(hours=2) > datetime.now():
+                    sugg.name = name
             #sugg.name = name if name is not None else sugg.name
             sugg.description = description
             sugg.date_starts = date_starts

@@ -126,8 +126,8 @@ class EventHelper(object):
                 elif event._is_shared() and event.user_invited(querier):
                     events_lists.append(event)
         if len(events_lists) != 0:
-            return [p.id, events_lists]
-        return None
+            return [p.id, events_lists], p.page_count()
+        return None, 0
 
     def get_by_tag_owner(self, tagInstance, owner, page=1, query_id=None):
         if not isinstance(owner, User):
