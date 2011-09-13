@@ -14,9 +14,11 @@
 	<link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
     
+<!--
     <link href='http://fonts.googleapis.com/css?family=Alike|Crimson+Text:400,600,700|Goudy+Bookletter+1911|Unna' rel='stylesheet' type='text/css'>
+-->
     
-    <meta name="description" content="Track and share your runs with friends.">
+    <meta name="description" content="Un mundo entero de sugerencias por descubrir">
     
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>    
     
@@ -29,8 +31,11 @@
 -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
+    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+<!--
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+-->
 	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript" src="/static/webapp/js/jquery.lavalamp.js"></script>
     
@@ -40,6 +45,7 @@
 
     {% block extra_js %}{%endblock%}
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    
     <script type="text/javascript" src="/static/common/js/jquery.cookies.2.2.0.min.js"></script>
     <script type="text/javascript">
     
@@ -171,5 +177,6 @@
 	
     
     <div id="templates"></div>
+    {% include "browser_msgs.html" %}
 </body>
 </html>

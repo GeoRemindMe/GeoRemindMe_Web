@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Welcome{% endblock %}
+{% block nav %} 
+    {% include "register_menu.html" %}
+{% endblock %}
+
+
+{%block extra_js%}
+    <style type="text/css">
+        #description {
+            clear: both;
+            float: left;
+            font-weight: bold;
+            
+            text-align: left;
+            width: 500px;
+        }
+        
+        #description h2, #description p {
+            font-size: 1.4em;
+            font-weight: normal;
+        }
+        #description h2 {
+            text-align: center;
+            line-height:1.5em;
+        }
+
+        ul#benefits {
+            height: 130px;
+            margin-bottom: 10px;
+            margin-top: 25px;
+            width:545px;
+            margin-right: 0;
+        }
+        ul {
+            clear: both;
+            margin: 0;
+            padding: 0;
+        }
+        ul {
+            list-style-type: disc;
+        }
+        ul, ol {
+            margin: 0 1.5em 1.5em 0;
+            padding-left: 1.5em;
+        }
+
+        ul#benefits li {
+            float: left;
+            list-style: none outside none;
+            margin: 0;
+            padding: 80px 8px 0;
+            text-align: center;
+            width: 150px;
+        }
+        #description ul li, #description-list ul li {
+            display: list-item;
+            font-weight: normal;
+            list-style: none;
+            margin-right: 10px;
+        }
+        
+        #description-list ul li {
+            list-style: square outside none;
+            line-height:2em;
+        }
+        #whatsup-icon {
+            background: url("http://www.georemindme.com/media/img/whatsup.png") no-repeat scroll 50px 0 transparent;
+        }
+        #explore-icon {
+            background: url("http://www.georemindme.com/media/img/explore.png") no-repeat scroll 50px 0 transparent;
+        }
+        #reminder-icon {
+            background: url("http://www.georemindme.com/media/img/reminder.png") no-repeat scroll 50px 0 transparent;
+        }
+        strong, dfn {
+            font-weight: bold;
+        }
+
+    </style>
+    <script type="text/javascript">
+
+    </script>
+{%endblock%}
+
+
+{% block mainButton %} 
+{% endblock %}
+
+{% block goBack %}{%endblock%}
+{% block body %}
+    <div id="register-panel" style="font-size: 1.1em;">
+        <h1>Importante</h1>
+        <p>Hemos detectado que existen dos sesiones de usuario conectadas simultaneamente, por motivos de seguridad hemos cerrado ambas:</p>
+        <p>
+            {% embedded_avatar user_logged.username %} {{user_logged}} (<a href="{{user_logged.get_absolute_url}}">{{user_logged.get_absolute_url}}</a>){% if user_logged.facebook_user %}, <fb:name uid="{{user_logged.facebook_user.uid}}" /> {% endif %}<br>
+            {% embedded_avatar user_fb.username %} (<a href="{{user_fb.get_absolute_url}}">{{user_fb}}</a>), <fb:name uid="{{user_fb.facebook_user.uid}}" />
+        </p>
+        
+        <p>
+            Si te pertenecen las dos cuentas y quieres unificarlas en un solo usuario por favor escríbenos a info@georemindme.com
+        </p>
+        <p>
+            Sino por favor identifícate de nuevo:<br>
+            <fb:login-button perms="{{permissions}}" show-faces="true"></fb:login-button>
+        </p>
+        
+    </div>
+    
+{% endblock %}

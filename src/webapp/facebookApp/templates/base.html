@@ -135,6 +135,8 @@
 				cookie : true, // enable cookies to allow the server to access the session
 				xfbml  : true,  // parse XFBML
 				canvasName  : '{{app_settings.canvasName}}',
+                
+                {%if request.user.facebook_user.uid %} userIdOnServer  : {{request.user.facebook_user.uid}} {%endif%}
             });
             
         });

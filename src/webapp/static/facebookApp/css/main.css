@@ -3571,3 +3571,44 @@ ul.ui-autocomplete li.ui-menu-item:nth-child(even){
     line-height: 26px;
     padding: 0 1em 0.2em;
 }
+
+
+/*
+ *
+ * Browser error
+ *  
+ */
+
+#base.browser-error,
+#main.browser-error{
+    font-size: 1.3em;
+    line-height: 2em;
+    padding: 0.7em;
+}
+#base.browser-error h1,
+#main.browser-error h1{
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: 1.5em;
+}
+#base.browser-error p,
+#main.browser-error p{
+    margin: 0.5em 0;
+}
+#base.browser-error strong,
+#main.browser-error strong{
+    font-weight: bold;
+}
+#base.browser-error ul,
+#base.browser-error ol,
+#main.browser-error ul,
+#main.browser-error ol{
+    list-style: square outside none;
+    margin-bottom: 1em;
+    margin-left: 2em;
+}
+#base.browser-error ol,
+#main.browser-error ol{
+    list-style: decimal outside none;
+}
+

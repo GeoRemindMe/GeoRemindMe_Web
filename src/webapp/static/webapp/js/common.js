@@ -35,3 +35,41 @@ $(document).ajaxSend(function(event, xhr, settings) {
         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
     }
 });
+
+
+
+$(document).ready(function(){
+    var userAgent = navigator.userAgent.toLowerCase();
+    jQuery.browser = {
+        version: (userAgent.match( /.+(?:rv|it|ra|ie|me)[\/: ]([\d.]+)/ ) || [])[1],
+        chrome: /chrome/.test( userAgent ),
+        safari: /webkit/.test( userAgent ) && !/chrome/.test( userAgent ),
+        opera: /opera/.test( userAgent ),
+        msie: /msie/.test( userAgent ) && !/opera/.test( userAgent ),
+        mozilla: /mozilla/.test( userAgent ) && !/(compatible|webkit)/.test( userAgent )
+    };
+    
+    var container
+    if($('#loginSec').length>0){
+        container="#main.container";
+    }else{
+        container="#base.container";
+    }
+    
+    if($.browser.msie && $.browser.version.split(".")[0]<8){
+        $(container).empty()
+        $(container).addClass("browser-error");
+        $("#browser-ie").tmpl({version:$.browser.version}).appendTo(container);
+    }else if($.browser.mozilla && $.browser.version.split(".")[0]<3){
+        $(container).empty()
+        $(container).addClass("browser-error");
+        $("#browser-mozilla").tmpl({version:$.browser.version}).appendTo(container);
+    }else if($.browser.chrome && $.browser.version.split(".")[0]<11){
+        $(container).empty()
+        $(container).addClass("browser-error");
+        $("#browser-chrome").tmpl({version:$.browser.version}).appendTo(container);
+    }else if($.browser.safari){
+    }else if($.browser.opera){
+    }
+    
+});
