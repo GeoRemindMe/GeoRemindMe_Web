@@ -173,7 +173,7 @@ class FacebookClient(object):
             self.user = user
             import memcache
             memclient = memcache.mem.Client()
-            token_cache = {'token': self.token,
+            token_cache = {'token': token,
                                    'user': self.user
                                    }
             memclient.set('%sfbclienttoken_%s' % (memcache.version, 
