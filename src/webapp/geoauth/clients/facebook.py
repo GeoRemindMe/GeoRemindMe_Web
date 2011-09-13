@@ -90,7 +90,7 @@ class FacebookClient(object):
                 if token is not None:
                     self.user = token.user
                     token_cache = {'token': token,
-                                   'user': user
+                                   'user': token.user
                                    }
                     memclient.set('%sfbclienttoken_%s' % (memcache.version, 
                                                           access_token
@@ -159,7 +159,11 @@ class FacebookClient(object):
                                                 provider='facebook',
                                                 user=user,
                                                 )
+            else:
+                token.user = user
+                token.put()
             facebookInfo = self.get_user_info()
+            
             if user.facebook_user is None:
                 fbuser = FacebookUser.register(user=user, uid=facebookInfo['id'], 
                                                email=facebookInfo['email'], realname=facebookInfo["name"],
@@ -204,7 +208,8 @@ class FacebookClient(object):
                 self.user = User.register(email=facebookInfo['email'], password=password if password is not None else make_random_string(length=6))
                 self.user.profile.sync_avatar_with = 'facebook' #  por defecto, si el usuario es nuevo sincronizamos con facebook
                 self.user.profile.put()
-        self.authorize(self.user)
+        if not self.authorize(self.user):
+            raise OAUTHException()
         return self.user
     
     def token_is_valid(self):

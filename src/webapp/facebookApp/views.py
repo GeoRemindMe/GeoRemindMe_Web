@@ -20,6 +20,7 @@ def login_panel(request):
                 return render_to_response('register.html', {"permissions": __web_settings.OAUTH['facebook']['scope'] },
                               context_instance=RequestContext(request)
                               )
+            # ya conociamos al usuario
             init_user_session(request, user, remember=True, is_from_facebook=True)
             request.user = user
         elif request.facebook['client'].user is None:
@@ -33,6 +34,7 @@ def login_panel(request):
                                            },
                                           context_instance=RequestContext(request)
                                           )
+        
         if request.user.username is None or request.user.email is None:
             if request.method == 'POST':
                 f = SocialUserForm(request.POST, 
@@ -52,12 +54,11 @@ def login_panel(request):
                                                'username': request.user.username,
                                               }
                                    )
+            
             return render_to_response('create_social_profile.html', {'form': f}, 
                                        context_instance=RequestContext(request)
                                       )
-
         else:
-            init_user_session(request, request.user, remember=True, is_from_facebook=True)
             return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
     return render_to_response('register.html', {"permissions": __web_settings.OAUTH['facebook']['scope'] },
