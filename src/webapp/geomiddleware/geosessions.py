@@ -26,16 +26,23 @@ class geosession(object):
                     request.user = request.facebook['client'].user
                     return
                 # sesion iniciada en web y facebook
-                else:
-                    if request.session['user'].id == request.facebook['client'].user.id:
-                        from facebookApp import watchers    
-                        request.user = request.session['user']
-                        return
-            request.session.delete()  
-            request.user = AnonymousUser()
-            from facebookApp.watchers import disconnect_all
-            disconnect_all()
-            return
+#                else:
+#                    if request.session['user'].id == request.facebook['client'].user.id:
+#                        from facebookApp import watchers
+#                        request.session.delete()
+#                        request.session = SessionStore.init_session(user=request.facebook['client'].user)
+#                        request.user = request.session['user']
+#                        return
+            else:
+                if request.path.find('/fb/') == 0 and 'user' in request.session:
+                    request.user = request.session['user']
+                    from django.shortcuts import render_to_response
+                    from django.template import RequestContext
+                    from django.conf import settings as __web_settings
+                    return render_to_response('register.html', 
+                                              {"permissions": __web_settings.OAUTH['facebook']['scope'] },
+                                              context_instance=RequestContext(request)
+                                              )
         else:
             if request.session.is_from_facebook:
                 request.session.delete()
