@@ -91,6 +91,7 @@ ul li {
     height: 30px;
     position: fixed;
     width: 100%;
+    z-index: 1000;
 }
 #print-menu .hide {
     display: inherit;
@@ -153,15 +154,23 @@ clear:both;
     line-height: 1.5em;
 }
 .show,.hide{
+/*
     background: url("/static/common/img/show_hide_sprite.png") no-repeat scroll 0 1px transparent;
+*/
     display: block;
     font-size: 1em;
     height: 20px;
     line-height: 20px;
-    padding-left: 20px;
+    padding-left: 25px;
 }
 .hide{
+/*
     background-position:0 -22px;
+*/
+    
+}
+.show{
+    text-decoration: line-through;
 }
 .suggestion a,.suggestion a:visited{
     color:black;
@@ -194,11 +203,19 @@ clear:both;
 /* PRINT SUGGESTION VIEW*/
 #print-suggestion .zoom{
     float: none;
-    margin-top: 1em;
+    height: 20px;
+    margin-top: 5px;
+}
+#print-suggestion #right-col{
+    font-size: 0.9em;
 }
 #print-suggestion .maps{
     float: left;
     margin-right: 20px;
+    margin-bottom:1em;
+}
+#print-suggestion .maps img{
+    border: 1px solid #777777;
 }
 #print-suggestion h1{
     float: none;
@@ -213,7 +230,8 @@ clear:both;
 
 
 #print-suggestion hr{
-    margin:1em 0;
+    height: 1px;
+    margin: 0.5em 0 1em;
 }
 
 #print-suggestion{
@@ -227,10 +245,91 @@ clear:both;
     clear:both;
     text-align: right;
     float:none;
+    border-top: 1px dotted #777777;
+    padding: 10px 20px 0 0
 }
 
-/* PRINT SUGGESTION VIEW*/
+/* PRINT PLACE SUGGESTIONS*/
 
-#print-place{
+#print-place .maps{
+    float:left;
+    margin-right: 20px;
+    margin-bottom: 1em;
+}
+#print-place .zoom{
+    float:none;
+    margin-top: 5px;
+}
+#print-place #right-col{
+    margin-left:0;
+}
+#print-place hr{
+    height:1px;
+}
+#print-place h1{
+    margin: 0 0 5px;
+}
+#print-place h2{
+    display: block;
+    margin: 0.5em 0;
+}
+#print-place #logo {
+    clear:both;
+    text-align: right;
+    float:none;
+    border-top: 1px dotted #777777;
+    padding: 10px 20px 0 0
+}
+#print-place #address-box{
+    background-color: #F5F5F5;
+    border: 1px solid #CCCCCC;
+    clear: right;
+    display: inline-block;
+    padding: 0.5em;
+    width: 520px;
+}
+#print-place ul{
+    clear: right;
+    display: inline-block;
+    font-size: 0.9em;
+    max-width:520px;
+}
+#print-place .add-notes{
+    display: block;
     
 }
+
+/* PRINT MENU*/
+
+#print-menu #maps,
+#print-menu #gps-location,
+#print-menu #links,
+#print-menu #autor-date,
+#print-menu #votes,
+#print-menu #comments{
+    background: url("/static/common/img/print_icons.png") no-repeat;
+}
+#print-menu #gps-location{
+    background-position: 0 -20px;
+}
+#print-menu #links{
+    background-position: 0 -40px;
+}
+#print-menu #autor-date{
+    background-position: 0 -60px;
+}
+#print-menu #votes{
+    background-position: 0 -80px;
+}
+#print-menu #comments{
+    background-position: 0 -100px;
+}
+#print-menu #printer{
+    background: url("/static/common/img/printer.png") no-repeat scroll 0 -48px transparent;
+    border-right: 1px solid #AAAAAA;
+    padding-left: 25px;
+    padding-right: 20px;
+}
+
+
+

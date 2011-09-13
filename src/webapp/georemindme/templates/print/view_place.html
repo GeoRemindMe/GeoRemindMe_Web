@@ -3,15 +3,34 @@
 {%load tags %}
 
 {% block title %}GeoRemindMe! - Sugerencias propuestas en "{{place.name}}"{%endblock%}
+
+{% block menu_items %}
+    <li id="printer"><span onclick="window.print()">Imprimir</span></li>
+    <li id="maps"><span class="hide">Mapas</span></li>
+    <li id="gps-location"><span class="hide">Localización GPS</span></li>
+    <li id="votes"><span class="hide">Valoraciones</span></li>
+    <li id="links"><span class="hide">Enlaces</span></li>
+    <li id="autor-date"><span class="hide">Fecha y autor</span></li>
+    <li id="comments"><span class="hide">Comentarios</span></li>
+{% endblock %}
+{% block extra_js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#maps").toggle(function(){
+                $("#print-place ul,#address-box").css('max-width','none');
+                $("#print-place ul,#address-box").css('width','100%');
+            },function(){
+                $("#print-place ul,#address-box").css('max-width','520px');
+                $("#print-place ul,#address-box").css('width','auto');
+            });
+        });
+    </script>
+{% endblock %}
 	
 {% block body %}
 	<div class="container" id="print-place">
 		<div id="header">
-			<div id="logo">
-                <img src="/static/webapp/img/logo2.png" alt="GeoRemindMe"><br>
-                www.georemindme.com
-            </div>
-			<h1>Sugerencias en: {{place.name}}</h1>
+			<h1>{{place.name}}</h1>
 		</div>
         <hr>
 		<div class="maps">
@@ -29,11 +48,24 @@
         </div>
 		<br>
 		<div id="right-col">
+            <div id="address-box">
+                <strong>Dirección</strong>: {{place.address}} 
+                <span class="gps-location"><br><strong>Localización GPS</strong>: {{place.location}}</span>
+                <span class="links"><br><strong>Enlace</strong>: {{place.short_url}}</span>
+            </div>
+            <h2>Sugerencias</h2>
 			<ul>
 				{% for s in suggestions.1 %}
 				<li>
-                    {{s.instance.name}}<br>
-                    <span class="aside">Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</span>
+                    {{s.instance.name}}
+                    {% if s.instance.description %} <br><strong>Detalles</strong>: {{s.instance.description}} {% endif %}                
+                    <span class="votes"><br/><strong>Valoraciones</strong>: {{s.instance.counters.votes}}</span>
+                    <div class="comments">
+                        <strong>Comentarios</strong>:
+                    
+                    </div>
+                    <span class="links"><strong>Más información</strong>: {{s.instance.short_url}}</span>
+                    <span class="aside autor-date"><br>Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</span>
                 </li>
 				{% endfor %}
 			</ul>
@@ -45,6 +77,11 @@
                 </div>
             </span>
 		</div>
+        <div id="logo">
+            <img src="/static/webapp/img/logo2.png" alt="GeoRemindMe"><br>
+            www.georemindme.com
+        </div>
+        
 	</div>
 {% endblock %}
 

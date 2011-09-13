@@ -48,26 +48,29 @@ $(document).ready(function(){
         msie: /msie/.test( userAgent ) && !/opera/.test( userAgent ),
         mozilla: /mozilla/.test( userAgent ) && !/(compatible|webkit)/.test( userAgent )
     };
-    
-    var container
-    if($('#loginSec').length>0){
-        container="#main.container";
-    }else{
-        container="#base.container";
-    }
+
     
     if($.browser.msie && $.browser.version.split(".")[0]<8){
-        $(container).empty()
-        $(container).addClass("browser-error");
-        $("#browser-ie").tmpl({version:$.browser.version}).appendTo(container);
+        $("body").children(":not('div#browser-error-msg,script#browser-error')").remove()
+        $("#browser-error").tmpl({
+            version:$.browser.version,
+            browser: "Internet Explorer",
+            download_url: "http://windows.microsoft.com/en-US/internet-explorer/products/ie/home"
+        }).appendTo("body");
     }else if($.browser.mozilla && $.browser.version.split(".")[0]<3){
-        $(container).empty()
-        $(container).addClass("browser-error");
-        $("#browser-mozilla").tmpl({version:$.browser.version}).appendTo(container);
+        $("body").children(":not('div#browser-error-msg,script#browser-error')").remove()
+        $("#browser-error").tmpl({
+            version:$.browser.version,
+            browser: "Mozilla",
+            download_url: "http://www.mozilla.org/es-ES/firefox/"
+        }).appendTo("body");
     }else if($.browser.chrome && $.browser.version.split(".")[0]<11){
-        $(container).empty()
-        $(container).addClass("browser-error");
-        $("#browser-chrome").tmpl({version:$.browser.version}).appendTo(container);
+        $("body").children(":not('div#browser-error-msg,script#browser-error')").remove()
+        $("#browser-error").tmpl({
+            version:$.browser.version,
+            browser: "Google Chrome",
+            download_url: "http://www.google.es/chrome"
+        }).appendTo("body");
     }else if($.browser.safari){
     }else if($.browser.opera){
     }

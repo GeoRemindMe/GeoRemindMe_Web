@@ -70,6 +70,7 @@
         
         
     </script>
+    {% block extra_js %}{% endblock %}
 </head>
 <body>
     
@@ -78,8 +79,8 @@
          
             <ul>
                 {% block menu_items %}
-                    <li>Mostrar/Ocultar:</li>
                     <li id="printer"><span onclick="window.print()">Imprimir</span></li>
+                    <li><strong>Mostrar/Ocultar:</strong></li>
                     <li id="maps"><span class="hide">Mapas</span></li>
                     <li id="gps-location"><span class="hide">Localización GPS</span></li>
                     <li id="votes"><span class="hide">Valoraciones</span></li>
