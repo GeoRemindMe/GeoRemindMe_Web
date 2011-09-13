@@ -21,6 +21,7 @@ class geosession(object):
 
         if hasattr(request, 'facebook'):
             if request.facebook['client'].user is not None:
+                
                 if not 'user' in request.session:
                     from facebookApp import watchers   
                     request.session.delete()
