@@ -22,6 +22,8 @@ def login_panel(request):
                               )
             init_user_session(request, user, remember=True, is_from_facebook=True)
             request.user = user
+        else:
+            request.facebook['client'].authorize(request.user)
         if request.user.username is None or request.user.email is None:
             if request.method == 'POST':
                 f = SocialUserForm(request.POST, 

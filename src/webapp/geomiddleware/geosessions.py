@@ -22,12 +22,14 @@ class geosession(object):
         if hasattr(request, 'facebook'):
             if request.facebook['client'].user is not None:
                 if not 'user' in request.session:
-                    from facebookApp import watchers    
-                    request.user = request.facebook['client'].user
+                    from facebookApp import watchers   
+                    request.session.delete()
+                    request.session = SessionStore.init_session(user=request.facebook['client'].user)
+                    request.user = request.session['user']
                     return
                 # sesion iniciada en web y facebook
                 else:
-                    if request.session['user'].id == request.facebook['client'].user.id:
+                    if request.session['user'].id != request.facebook['client'].user.id:
 #                        from facebookApp import watchers
 #                        request.session.delete()
 #                        request.session = SessionStore.init_session(user=request.facebook['client'].user)
@@ -48,7 +50,7 @@ class geosession(object):
                     from django.shortcuts import render_to_response
                     from django.template import RequestContext
                     from django.conf import settings as __web_settings
-                    return render_to_response('register.html', 
+                    return render_to_response('USUARIO DESDE FACEBOOK PERO NO REGISTRADO.html', 
                                               {"permissions": __web_settings.OAUTH['facebook']['scope'] },
                                               context_instance=RequestContext(request)
                                               )

@@ -152,7 +152,7 @@ class FacebookClient(object):
         if user is not None:#el usuario ya esta conectado, pero pide permisos
             if OAUTH_Access.get_token(self.consumer.access_token,) is None: 
                 OAUTH_Access.remove_token(user, 'facebook')
-                access = OAUTH_Access.add_token(
+                self.token = OAUTH_Access.add_token(
                                                 token_key=self.consumer.access_token,
                                                 token_secret='',
                                                 provider='facebook',
@@ -170,6 +170,14 @@ class FacebookClient(object):
                              profile_url=facebookInfo["link"]
                             )
             self.user = user
+            import memcache
+            memclient = memcache.mem.Client()
+            token_cache = {'token': self.token,
+                                   'user': self.user
+                                   }
+            memclient.set('%sfbclienttoken_%s' % (memcache.version, 
+                                                  self.consumer.access_token
+                                                  ), token_cache)
             return True
         return False
     
