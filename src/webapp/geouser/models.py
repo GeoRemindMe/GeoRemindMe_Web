@@ -64,7 +64,7 @@ class User(polymodel.PolyModel, HookedModel):
 
     @property
     def id(self):
-        return self.key().id()
+        return int(self.key().id())
 
     @property
     def google_user(self):
@@ -91,6 +91,7 @@ class User(polymodel.PolyModel, HookedModel):
     def profile(self):
         if self._profile is None:
             import memcache
+            from models_acc import UserProfile
             self._profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, self.id)))
             if self._profile is None:
                 from models_acc import UserProfile
@@ -138,10 +139,17 @@ class User(polymodel.PolyModel, HookedModel):
         return UserTimeline.objects.get_by_id(self.id, querier=querier, query_id=query_id)
 
     def get_activity_timeline(self, query_id=None):
-        from geouser.models_acc import UserTimelineSystem, UserTimeline
-        from georemindme.funcs import single_prefetch_refprops
-        query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
+        from models_acc import UserTimelineSystem, UserTimeline, UserTimelineFollowersIndex, UserTimelineSuggest
+        from georemindme.funcs import prefetch_refprops, fetch_parents, fetch_parentsKeys
+        from geovote.models import Comment, Vote
+        from geoalert.models import Event
+        from geolist.models import List
+        from google.appengine.datastore import datastore_query
+        # definir las consultas
+        query_chrono = UserTimelineFollowersIndex.all().filter('followers =', self.key()).order('-created')
+        #query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
+        # recuperar cursores
         if query_id is not None and len(query_id)>=2:
             cursor_chronology = query_id[0]
             query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology)
@@ -150,52 +158,57 @@ class User(polymodel.PolyModel, HookedModel):
         else:
             cursor_activity = None
             cursor_chronology = None
+        # let's go!
         timeline = []
-        from geovote.models import Comment, Vote
-        from geoalert.models import Event
-        from geolist.models import List
-        for activity_timeline in query_activity:
-            for chrono in query_chrono:
-                if len(timeline) >= TIMELINE_PAGE_SIZE:
+        timeline_chrono = []
+        activity_async = query_activity.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
+        for activity_timeline in activity_async:
+            chrono_async = query_chrono.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE-(len(timeline)+len(timeline_chrono))))
+            for chrono in chrono_async:
+                if len(timeline) + len(timeline_chrono) >= TIMELINE_PAGE_SIZE:
                         break
-                chrono_timeline = db.get(chrono.parent())
-                if chrono_timeline is not None and chrono_timeline.created > activity_timeline.modified:
-                    chrono_timeline = single_prefetch_refprops(chrono_timeline, UserTimeline.user, UserTimeline.instance)
-                    timeline.append({
-                                    'id': chrono_timeline.id, 'created': chrono_timeline.created,
-                                    'modified': chrono_timeline.modified,
-                                    'msg': chrono_timeline.msg, 'username': chrono_timeline.user.username,
-                                    'msg_id': chrono_timeline.msg_id,
-                                    'instance': chrono_timeline.instance,
-                                    'has_voted':  Vote.objects.user_has_voted(self, chrono_timeline.instance.key()) if chrono_timeline.instance is not None else None,
-                                    'vote_counter': Vote.objects.get_vote_counter(chrono_timeline.instance.key()) if chrono_timeline.instance is not None else None,
-                                    'comments': Comment.objects.get_by_instance(chrono_timeline.instance, querier=self),
-                                    'user_follower': chrono_timeline.instance.has_follower(self) if hasattr(chrono_timeline.instance, 'has_follower') else None,
-                                    'is_private': False,
-                                    })
+                if chrono is not None and chrono.created > activity_timeline.modified:
+                    timeline_chrono.append(chrono)
                     cursor_chronology = query_chrono.cursor()
                 else:
                     break
-            if len(timeline) >= TIMELINE_PAGE_SIZE:
+            timeline.append(activity_timeline)
+            if len(timeline) + len(timeline_chrono) >= TIMELINE_PAGE_SIZE:
                 break
-            activity_timeline = single_prefetch_refprops(activity_timeline, UserTimeline.user, UserTimeline.instance)
-            timeline.append({
-                            'id': activity_timeline.id, 'created': activity_timeline.created,
-                            'modified': activity_timeline.modified,
-                            'msg': activity_timeline.msg, 'username': activity_timeline.user.username,
-                            'msg_id': activity_timeline.msg_id,
-                            'instance': activity_timeline.instance,
-                            'has_voted':  Vote.objects.user_has_voted(self, activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
-                            'vote_counter': Vote.objects.get_vote_counter(activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
-                            'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
-                            'is_private': True,
-                            })
             query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology) # avanzamos la consulta hasta el ultimo chronology añadido
-            cursor_activity = query_activity.cursor()
-        chronology = [[cursor_chronology, cursor_activity], timeline]
+        # generar timeline
+        timeline_chrono = fetch_parents(timeline_chrono)
+        timeline = prefetch_refprops(timeline, UserTimeline.user)
+        timeline_chrono = prefetch_refprops(timeline_chrono, UserTimeline.instance, UserTimeline.user)
+        timeline.extend(timeline_chrono)
+        from helpers_acc import _load_ref_instances
+        instances = _load_ref_instances(timeline)
+        timeline = [{
+                    'id': int(activity_timeline.id), 
+                    'created': activity_timeline.created,
+                    'modified': activity_timeline.modified,
+                    'msg': activity_timeline.msg, 
+                    'username': activity_timeline.user.username,
+                    'msg_id': activity_timeline.msg_id,
+                    'instance': instances.get(UserTimeline.instance.get_value_for_datastore(activity_timeline), activity_timeline.instance),
+                    'has_voted':  Vote.objects.user_has_voted(self, activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
+                    'vote_counter': Vote.objects.get_vote_counter(activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
+                    'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
+                    'list': instances.get(UserTimelineSuggest.list.get_value_for_datastore(activity_timeline), activity_timeline.list) 
+                                    if isinstance(activity_timeline, UserTimelineSuggest) else None,
+                    'status': activity_timeline.status if hasattr(activity_timeline, 'status') else None,
+                    'is_private': True,
+                    'user_follower': instances.get(UserTimeline.instance.get_value_for_datastore(activity_timeline), activity_timeline.instance).has_follower(self)
+                        if hasattr(instances.get(UserTimeline.instance.get_value_for_datastore(activity_timeline), activity_timeline.instance), 'has_follower') 
+                        else None,
+                    } for activity_timeline in timeline]
+        from operator import itemgetter
+        timeline_sorted = sorted(timeline, key=itemgetter('modified'), reverse=True)
+        chronology = [[cursor_chronology, query_activity.cursor()], timeline_sorted] 
         return chronology
 
     def get_notifications_timeline(self, query_id=None):
+        from models_acc import UserTimeline, UserTimelineSuggest
         def prefetch_timeline(entities):
             # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
             """
@@ -204,8 +217,13 @@ class User(polymodel.PolyModel, HookedModel):
             """
             ref_keys = [x['timeline'] for x in entities]
             from geovote.models import Vote, Comment
-            from geolist.models import List
-            return db.get(set(ref_keys))
+            from geolist.models import List, ListSuggestion
+            from geoalert.models import Suggestion
+            timelines = db.get(set(ref_keys))
+            from georemindme.funcs import prefetch_refprops
+            timelines = prefetch_refprops(timelines, UserTimeline.user, UserTimeline.instance)
+            from helpers_acc import _load_ref_instances
+            return timelines, _load_ref_instances(timelines)
         from google.appengine.api import datastore
         from models_utils import _Notification
         if query_id is None:
@@ -214,12 +232,16 @@ class User(polymodel.PolyModel, HookedModel):
             query = datastore.Query(kind='_Notification', filters={'owner =': self.key()}, cursor=query_id)
         query.Order(('_created', datastore.Query.DESCENDING))
         timelines = query.Get(TIMELINE_PAGE_SIZE)
-        timelines = prefetch_timeline(timelines)
+        timelines, instances = prefetch_timeline(timelines)
         return [query.GetCursor(), [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
-                        'msg': timeline.msg, 'username':timeline.user.username,
+                        'msg': timeline.msg, 
+                        'username':timeline.user.username,
                         'msg_id': timeline.msg_id,
-                        'instance': timeline.instance if timeline.instance is not None else None,
+                        'instance': instances.get(UserTimeline.instance.get_value_for_datastore(timeline), timeline.instance),
+                        'list': instances.get(UserTimelineSuggest.list.get_value_for_datastore(timeline), timeline.list) 
+                                    if isinstance(timeline, UserTimelineSuggest) else None,
+                        'status': timeline.status if hasattr(timeline, 'status') else None,
                         'is_private': False,
                         }
                         for timeline in timelines]]
@@ -449,6 +471,7 @@ class User(polymodel.PolyModel, HookedModel):
             save = db.put_async([sociallinks, scgoogleplaces])
             from google.appengine.ext.deferred import defer
             from signals import user_new
+            from watchers import new_user_registered
             user_new.send(sender=user, status=trans)
             save.get_result()
             return user
@@ -472,17 +495,16 @@ class User(polymodel.PolyModel, HookedModel):
             self.profile.username = self.username
         if 'password' in kwargs:
             if 'old_password' in kwargs:
-                if kwargs['old_password'] == backpassword:
+                if self.check_password(kwargs['old_password']):
                     self.password = kwargs['password']
-                else:
-                    raise TypeError()
+            else:
+                self.password = kwargs['password']
         if 'description' in kwargs:
             self.profile.description = kwargs['description']
         if 'sync_avatar_with' in kwargs:
             self.profile.sync_avatar_with = kwargs['sync_avatar_with']
         try:
-            put = db.put_async([self, self.profile])
-            put.get_result()
+            db.put([self, self.profile])
         except:
             self.email = backemail
             self.username = backusername

@@ -114,7 +114,7 @@
         
         
         
-        <label for="id_username">Username: <sup>(1)</sup></label>
+        <label for="id_username">Nombre de usuario: <sup>(1)</sup></label>
         <input id="id_{{form.prefix}}-username" type="text" value="{% if form.initial.username %}{{form.initial.username}}{% endif %}" name="{{form.prefix}}-username">
         <div class="error-msg" id="username-error"  style="{% if form.errors.username %}display:block {%endif%}">
             {{form.errors.username}}
@@ -135,7 +135,7 @@
 -->
         </div>
         
-        <label for="id_password2">Repita:</label>
+        <label for="id_password2">Repitala "please":</label>
         <input id="id_{{form.prefix}}-password2" type="password" value="{% if form.initial.password2 %}{{form.initial.password2}}{% endif %}" name="{{form.prefix}}-password2">
         <div class="error-msg" id="password2-error">
             {{form.errors.password2}}

@@ -2,7 +2,7 @@
 {% load tags %}
 {% load filters %}
 
-{% block title %}Tu mochila de sugerencias{% endblock %}
+{% block title %}Mochila con tus sugerencias y listas favoritas{% endblock %}
 
 {% block extra_js %}
     <script type="text/javascript" src="/static/webapp/js/jquery.tmpl.min.js"></script>
@@ -181,7 +181,7 @@
 				var elemID=$(this).attr('id');
 				//Le quitamos el "_all"
 				elemID=elemID.substring(0,elemID.length-4)
-				console.log(':regex(id,^('+elemID+'_))')
+//				console.log(':regex(id,^('+elemID+'_))')
                 if($('#'+elemID+'_all').is(':checked'))
                     $(':regex(id,^('+elemID+'_))').attr('checked',true);
                 else
@@ -289,6 +289,27 @@
             
 
 			create_share_links();
+            
+            
+            /*Set date picket behaviour*/
+            $( ".date-type" ).datepicker();
+            $('.datepicker .date-type,.datepicker .hour-type').change(function(){
+                if($(this).val()=="mm/dd/aa" || $(this).val()=="hh:mm" || $(this).val()==""){
+                    console.log("No desmarcamos porque val="+$(this).val());
+                }else{
+                    $(this).parent().find('.anytime [type="checkbox"]').attr('checked',false);
+                    console.log("Desmarcamos porque val="+$(this).val());
+                }
+                tmp=$(this)
+            })
+            $('.anytime [type="checkbox"]').click(function(){
+                $(this).parent().parent().find(".start-date,.end-date").val("mm/dd/aa");
+                $(this).parent().parent().find(".start-hour,.end-our").val("").blur();
+            })
+            
+            $('.datepicker').find('span').click(function(){$(this).parent().find('[type="checkbox"]').click()})
+            /*End set date picket behaviour*/
+            
 			
         });//END $(document).ready
 
@@ -366,7 +387,7 @@
                 type: "POST",
                 url: url["modify_suggestion_list"],
                 data: {
-                    list_id: listID,
+                    list_id: [listID],
                     suggestions_del: [suggestionID]
                 },
                 dataType:'json',
@@ -417,26 +438,28 @@
 
         //Añade las sugerencias marcadas a la lista correspondiente
         function submenuLiBehave(obj){
+            
+            
+            
             if($(obj).attr('id')=="new-list-btn")
                 return false;
-            var addToList=$(obj).attr('id').substring(7,$(obj).attr('id').length);
-            var suggestions=[]
+            
+            var data={};
+            data['list_id']=[$(obj).attr('id').substring(7,$(obj).attr('id').length)];
+            data['suggestions']=new Array();
+            
             var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
             if( checkedSuggestions.length==0){
                 showMessage("No hay ninguna sugerencia seleccionada","error")
             }else{
-                checkedSuggestions.each(function(){
+                checkedSuggestions.each(function(i,elem){
                     //console.log("Añadimos a la lista: "+addToList+", la sugerencia: "+);
-                    suggestions.push($(this).attr('id').substring(9,$(this).attr('id').length))
+                    data['suggestions'][i]=$(elem).attr('id').substring(9,$(this).attr('id').length)
                 });
-                
                 $.ajax({
                     type: "POST",
                     url: url["modify_suggestion_list"],
-                    data: {
-                        list_id: addToList,
-                        suggestions: suggestions
-                    },
+                    data: data,
                     dataType:'json',
                     success: function(data){
                         
@@ -616,6 +639,10 @@
             return hash;
         }
 
+        function nl2br (str, is_xhtml) {   
+            var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
+            return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
+        }
         //Establece los campos editables de las sugerencias de las que se es autor
         function set_editable_fields(objID){
             var eventidValue;
@@ -623,6 +650,11 @@
             
             var base_settings={ 
                  cancel    : 'Cancel',
+                 data: function(value, settings) {
+                    /* Convert <br> to newline. */
+                    var retval = value.replace("\n", '').replace(/<br[\s\/]?>/gi, '\n');
+                    return retval;
+                },
                  submit    : 'Guardar',
                  indicator : 'Saving...',
                  tooltip   : 'Click to edit...',
@@ -630,11 +662,21 @@
                  onblur    : 'ignore',
                  callback  : function(value, settings){
                             //Establecemos el valor guardado
-                            $(this).html(tmp)
+                            $(this).html(nl2br(tmp))
                             if( $(this).hasClass("suggestionName_editable") ){
-								this.previousElementSibling.innerHTML = tmp;
+								this.previousElementSibling.innerHTML = nl2br(tmp);
 							}
-                 }
+                            
+                 },
+                 onerror    : function(settings, original, xhr){
+                                
+                                //console.log(original);
+                                //console.log(settings);
+                                //console.log(xhr);
+                                //if(xhr.status==500){
+                                    showMessage("Ouch! Se ha producido un error; perdón!, lo solucionaremos lo antes posible!","error");
+                                //}
+                            }
              }
             
         
@@ -647,7 +689,7 @@
                  settings['submitdata']=get_suggestion_id(this);
                  //Guardamos el valor modificado en una var. temporal
                  tmp=$(this).find("input").val();
-                 //console.log(tmp)
+                 console.log(tmp)
                  asd=this
             }
             $('.editable_list_name').editable('/ajax/suggestion/list/modify/', name_field);
@@ -777,6 +819,7 @@
                                 </div>
                                 <div class="expanded" style="display:none">
                                     <dl> 
+                                    
                                         {% if k.user.username != user.username%}
                                             <dt>
                                                 Autor:
@@ -791,13 +834,15 @@
                                         
                                         {%if k.description or not k.user.username != user.username %}
                                         <dt>Descripción:</dt>
-                                        <dd class=" {% if k.user.username == user.username%}editable_description{% endif %}" type="textarea" value="{{k.id}}">{%if k.description %}{{k.description}}{% else %}{% endif %}</dd>
+                                        <dd class=" {% if k.user.username == user.username%}editable_description{% endif %}" type="textarea" value="{{k.id}}">{%if k.description %}{{k.description|linebreaksbr}}{% else %}{% endif %}</dd>
                                         {%endif%}
                                         
                                         <dt>Lugar:</dt>
                                         <dd style="width:390px">
                                             <a class="placeName" href="{% url2 in_facebook view_place k.poi.slug%}">{{k.poi.name}}</a> ({{k.poi.address}}) 
+<!--
                                              {% if k.user.username == user.username%}<a href="{% url2 in_facebook edit_suggestions k.id %}">Editar</a>{% endif %}
+-->
                                         </dd>
                                         
                                         {% if k.user.username != user.username and k.tags|length = 0 %}
@@ -806,24 +851,49 @@
                                             <dd style="width:390px" {% if k.user.username == user.username%}class="editable_tags"{%endif%} type="tags" value="{{k.id}}">{% for tag in k.tags %}{{tag}}{% if not forloop.last %}, {%endif%}{% endfor %}</dd>
                                         {% endif %}
                                             
-<!--
-                                        {%if k.date_starts or k.date_ends or k.user.username == user.username %}
-                                            <dt>Fecha:</dt>
-                                            {% if k.date_starts != None or k.date_ends != None%}
-                                                <dd class="{% if k.user.username == user.username%}editable{% endif %}">
-                                                    {% if k.date_starts != None %}
-                                                        {{k.date_starts}}
+
+                                        
+                                        <dt>Fecha:</dt>
+                                        <dd class="{% if k.user.username == user.username%}editable{% endif %} datepicker">
+                                            <span class="datetime">
+                                                <span class="black-link">
+                                                {% if k.date_starts or k.date_ends or k.hour_starts or k.hour_ends %}
+                                                    [
+                                                    {% if k.hour_starts %}
+                                                        {{k.hour_starts}}
                                                     {% endif %}
-                                                    {% if k.date_ends != None %}
-                                                        {{k.date_ends}}
-                                                    {% endif %}    
-                                                </dd>
-                                            {% endif %}
-                                            <dd class="{% if k.user.username == user.username%}editable{% endif %}">
-                                                <em>Sin fecha</em>
-                                            </dd>
-                                        {% endif %}
+                                                    {% if k.date_starts  %}
+                                                        {{k.date_starts|naturaltime}}
+                                                    {% else %}
+                                                        {{k.created|naturaltime}}
+                                                    {% endif %}
+                                                     -
+                                                    {% if k.hour_ends %}
+                                                        {{k.hour_ends}}
+                                                    {% endif %}
+                                                    {% if k.date_ends %}
+                                                        {{k.date_ends|naturaltime}}
+                                                    {% else %}
+                                                        Sin fecha de fin
+                                                    {% endif %}
+                                                    ]
+                                                {% else %}
+                                                    Se puede hacer en cualquier momento
+                                                {% endif %}
+                                                </span> 
+<!--
+                                                <span class="hoverlink" onclick="javascript:$(this).parent().siblings('.datetime-edition').show();$(this).parent().hide()">Editar</span>
 -->
+                                            </span>
+                                            <div class="datetime-edition" style="display:none">
+                                                De <input title="Fecha de inicio" size="9" class="date-type start-date" autocomplete="off" {% if k.date_starts != None %}value="{{k.date_starts}}"{%else%}{% endif %} placeholder="mm/dd/aa" {% if obj.user.username = request.user.username %}readonly{%endif%}>
+                                                <input title="Hora de inicio" size="9" class="hour-type start-hour" autocomplete="off"  placeholder="hh:mm" {% if obj.user.username = request.user.username %}readonly{%endif%}>
+                                                a
+                                                <input title="Fecha de fin" size="9" class="date-type end-date" autocomplete="off" {% if k.date_ends != None %}value="{{k.date_ends}}"{%else%}{% endif %} placeholder="mm/dd/aa" {% if obj.user.username = request.user.username %}readonly{%endif%}>
+                                                <input title="Hora de fin" size="9" class="hour-type end-hour" autocomplete="off" placeholder="hh:mm" {% if obj.user.username = request.user.username %}readonly{%endif%}>
+                                                <span class="anytime"><input type="checkbox" checked> <span>Se puede hacer en cualquier momento</span></span><span class="btn">Guardar</span><span onclick="javascript:$(this).parent().siblings('.datetime').show();$(this).parent().hide()" class="hoverlink">Cancelar</span>
+                                            </div>
+                                        </dd>
                                         
                                         
                                         <dt>Mis listas:</dt>
@@ -831,7 +901,7 @@
                                                 <ul class="removable-sugestion-list" {% if k.lists|length = 0 %}style="display:none"{% endif %}>
                                                     {% for obj in k.lists %}
                                                         {% if obj.user.username = request.user.username %}
-                                                            <li class="list_{{obj.id}} {% if k.user.username == user.username%}removable{% endif %}" value="{{k.id}}">{{obj.name}}</li>
+                                                            <li class="list_{{obj.id}} removable" value="{{k.id}}">{{obj.name}}</li>
                                                         {% endif %}
                                                     {% endfor %}
                                                 </ul>
@@ -842,12 +912,12 @@
                                                 </em>
                                             
                                         </dd>
-                                        
+                                        <dt>URL:</dt>
+										<dd><input type="text" value="{{ k.short_url }}" class="short_url" readonly>  <a href="{{ k.short_url }}">Vista previa</a></dd>
                                         <dt class="share-row"><strong>Compartir:</strong></dt>
                                         <dd class="share-row">
                                             <ul class="share-suggestion">
-                                                <li class="share" type="link" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="event"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
-<!--
+                                                <!--
                                                 <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
 -->
                                                 <li class="share" type="twitter" data-href="{{ k.short_url }}" value="{{k.id}}" data-type="event"><a class="share-suggestion twitter-icon" href="">Twitter</a></li>
@@ -904,17 +974,19 @@
                 <span id="suggestions_lists_content" class="tab-content hidden">
                     <div id="header">
                         <span class="selectCheckBox"><input type="checkbox" id="checkBoxList_all" /></span>
+<!--
                         <span class="btn right nextBtn {% if user.counters.suggested < 11 %} hidden {% endif %}" id="next-page" onclick="loadSuggestionsPage('next')">Siguiente</span>
                         <span class="btn right prevBtn hidden" id="prev-page" onclick="javascript:loadSuggestionsPage('prev')">Anterior</span>
+-->
                         
                         <span class="btn removeBtn" onclick="removeLists()">Eliminar</span>
-<!--
-                        <span class="btn addNewList">
-                            Nueva lista
+
+                        <span class="btn addNewList" onclick="javascript:$('#your_suggestions').click();$('#your_suggestions_content .dropDownBtn').click();$('.new-list-btn span').click()">
+                            Nueva lista 
                         </span>
--->
-                        <span class="btn removeBtn filter"><input type="text" id="filter-lists" placeholder="Filtrar por nombre"></span>
                         <span class="btn removeBtn" id="filterMyLists">Mis listas</span>                    
+                        <span class="btn removeBtn filter"><input type="text" id="filter-lists" placeholder="Filtrar por nombre"></span>
+                        
                     </div>
 
                     
@@ -955,10 +1027,11 @@
                                             
                                             <dt>Tags:</dt>
                                             <dd {% if obj.user.username == user.username%}class="editable_list_tags"{%endif%}>{% if obj.tags %}{% for tag in obj.tags %}{{tag}}{%if not forloop.last%}, {%endif%}{%endfor%}{% endif %}</dd>
+                                            <dt>URL:</dt>
+											<dd><input type="text" value="{{ obj.short_url }}"> <a href="{{ obj.short_url }}">Previsualizar</a></dd>
                                             <dt><strong>Compartir:</strong></dt>
                                             <dd>
                                                 <ul class="share-suggestion">
-                                                    <li class="share" type="link" data-href="{{ obj.short_url }}" value="{{k.id}}" data-type="list"><a class="share-suggestion link-icon" href="{{ k.get_absolute_fburl }}">Enlace</a></li>
     <!--
                                                     <li><a class="share-suggestion georemindme-icon" href="">Sugerir a amigos</a></li>
     -->
@@ -1025,7 +1098,7 @@
             <div class="expanded" style="display:none">
                 <dl>
                     <dt>Descripción:</dt>
-                    <dd class="editable_list_description"></dd>
+                    <dd class="editable_list_description">Esta lista aún no tiene descripción</dd>
                     
                     <dt>Sugerencias</dt>
                     <dd class="suggestions">
@@ -1045,17 +1118,19 @@
                     <dt>Tags:</dt>
                     <dd class="editable_list_tags">
 
-                        {% if obj.tags %}
-                            {% templatetag openvariable %}obj.tags{% templatetag closevariable %}
-                        {% endif %}
+                        <dd class="editable_list_tags" title="Click to edit..." style="">Esta lista de sugerencias no tiene tags</dd>
 
                     </dd>
+                    <dt>URL:</dt>
+					<dd><input type="text" value="${obj.short_url}"> <a href="${obj.short_url}">Previsualizar</a></dd>
                     <dt><strong>Compartir:</strong></dt>
                     <dd>
                         <ul class="share-suggestion">
+<!--
 							<li class="share" type="link" data-href="${obj.short_url}" data-type="list">
 								<a class="share-suggestion link-icon" href="">Enlace</a>
 							</li>
+-->
 							<li class="share" type="twitter" data-href="${obj.short_url}" data-type="list">
 								<a class="share-suggestion twitter-icon" href="">Twitter</a></li>
 							<li class="share" type="wall" data-href="${obj.short_url}" data-type="list">
@@ -1065,13 +1140,8 @@
                     </dd>
                     
 					<dt>Visibilidad:</dt>
-					<dd class="editable_list_visibility" value="${obj.visibility}">
-						{% if obj.visibility == "public" %}
+					<dd class="editable_list_visibility" value="public">
                             Pública
-                        {% else %}
-                            Privada
-                        {% endif %}
-						
 					</dd>
                     
                 </dl>
@@ -1100,10 +1170,6 @@
         
     </div>
     
-    <script id="shareLink" type="text/x-jquery-tmpl">
-		<p>Con este enlace cualquier persona podrá acceder tu recomendación</p>
-		<input type="text" value="${link}" readonly="readonly">
-    </script>
     <script id="shareTwitter" type="text/x-jquery-tmpl">
 		<p>Envía esta sugerencia a tus seguidores en Twitter.</p>
         <textarea id="twitter_msg" data-id="${elem_id}" event-type="${type}">${link}</textarea>

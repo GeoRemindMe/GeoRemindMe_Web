@@ -14,12 +14,13 @@
 	<link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
     
+<!--
     <link href='http://fonts.googleapis.com/css?family=Alike|Crimson+Text:400,600,700|Goudy+Bookletter+1911|Unna' rel='stylesheet' type='text/css'>
+-->
     
-    <meta name="description" content="Track and share your runs with friends.">
+    <meta name="description" content="Un mundo entero de sugerencias por descubrir">
     
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>    
     
     <script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
 <!--
@@ -30,36 +31,67 @@
 -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
+    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+<!--
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+-->
 	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.lavalamp.js"></script>
     
+    <script type="text/javascript" src="/static/webapp/js/jquery.reversegeocode.min.js"></script>
+    
+    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/jquery-ui/jquery-ui-1.8.16.custom.css">
 
     {% block extra_js %}{%endblock%}
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    
+    <script type="text/javascript" src="/static/common/js/jquery.cookies.2.2.0.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function(){
-            $("[placeholder]").placeholder();
-            
-            
-            // Menu desplegable "Listas"
-            // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
-            hiConfig = {
-                sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
-                interval: 0, // number = milliseconds for onMouseOver polling interval
-                timeout: 500, // number = milliseconds delay before onMouseOut
-                over: function() {
-					var tmp=$('#dropdown-list-user').width();
-					tmp=52-tmp;
-					$('#dropdown-list-user').css("margin-left",tmp+'px')
-                    $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
-                },
-                out: function() {
-                    if($("#dropdown-list-user").hasClass('visible-display')==false)
-                        $(this).find('ul:first').slideUp(400);
-                }
+    
+        // Menu desplegable "Listas"
+        // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
+        hiConfig = {
+            sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
+            interval: 0, // number = milliseconds for onMouseOver polling interval
+            timeout: 500, // number = milliseconds delay before onMouseOut
+            over: function() {
+                var tmp=$('#dropdown-list-user').width();
+                tmp=52-tmp;
+                $('#dropdown-list-user').css("margin-left",tmp+'px')
+                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+            },
+            out: function() {
+                if($("#dropdown-list-user").hasClass('visible-display')==false)
+                    $(this).find('ul:first').slideUp(400);
             }
+        }
+        
+        {% include "urls.html" %}
+    
+        $(document).ready(function(){          
             
+            if($('.active-section').length!=0)
+                $(".lavaLamp").lavaLamp({ fx: "backout", speed: 700 })
+            $('.help-txt').dialog({
+                autoOpen:false,
+                resizable: false,
+                buttons: [{
+                        text: "Cerrar",
+                        click: function() { $(this).dialog("close"); }
+                    }],
+                draggable: false,
+                width:560,
+                position: ['center', 125]
+            });
+        
+       
+            $('.help-icon img').click(function(){
+                $('#'+$(this).attr('id')+'-text').dialog("open");
+            })
+            
+            $("[placeholder]").placeholder();
+                        
             $(".user-dropDownBtn, .user-submenu ").hoverIntent(hiConfig);
             $(".user-dropDownBtn").click(function(){
 				//Alineamos el menu desplegable desde la esquina sup-izq.
@@ -74,6 +106,13 @@
             $("#right-col").bind("resize",function(){
                 $("#left-col").css("height",$(this).height()+'px');
             });
+            
+            $('#search-form').bind('submit', function(e){
+                e.preventDefault;
+                console.log("entro");
+                window.location="/search/"+$(this).find("input[type='text']").val();
+                return false;
+            });
         });
     </script>
 	<!--[if lt IE 9]>
@@ -81,32 +120,32 @@
 	<![endif]-->
 	
 </head>
-<body class="logged">
+<body class="logged" id="webapp">
     <div id="wait-mask" style="display:none"></div>
     <div id="notification-msg" style="display:none"></div>
 	<div id="bg-header" class="orange-gradient">
 	<header id="header-top" class="container">
 		<div id="logo-link">
             <a href="/">
-                <img src="/static/webapp/img/logo3.png" alt="" id="logo">
+                <img src="/static/webapp/img/logo-webapp8.png" alt="" id="logo">
             </a>
         </div>
 		
 		
         <div id="nav-menu">
 			{% if user.username %}
-				<a href="{% url add_suggestion %}" id="add-suggestion-btn">Añadir sugerencia</a>
+				<a href="{% url add_suggestion %}" id="add-suggestion-btn"><img src="/static/common/img/plus.png">Añadir sugerencia</a>
 				{% block nav %}
-					<ul>
-						<li id="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
-						<li id="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
-						<li id="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">Notificaciones</a></li>
+					<ul class="lavaLamp">
+						<li class="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
+						<li class="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
+						<li class="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">{% if notifications > 0 %}<strong>Notificaciones</strong>{% else %}Notificaciones{%endif%}</a></li>
 
 					</ul>
 				{% endblock %}
             {% endif %}
         </div>
-
+        
 		{% if user.username %}
             <div id="account-info">
                 <div id="user-menu" class="user-dropDownBtn">
@@ -121,7 +160,7 @@
             </div>
         {% else %}
 			<div id="account-info">
-				<a href="/logout/">Desconectar</a>
+				<a href="/logout/" id="create-profile-out" class="btn">Desconectar</a>
 			</div>
         {% endif %}
 	</header>
@@ -136,17 +175,8 @@
 		</div>
 	</div>
 	
-    <footer id="footer" class="container">
-		<div class="footer-links">
-			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> 
-<!--
-            · <a href="#">Francés</a> · <a href="#">Wookiee</a>
--->
-		</div>
-		<div class="footer-links right-links">
-			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
-		</div>
-	</footer>
+    
     <div id="templates"></div>
+    {% include "browser_msgs.html" %}
 </body>
 </html>

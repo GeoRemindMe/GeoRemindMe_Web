@@ -73,7 +73,8 @@ def new_suggestion(sender, **kwargs):
     timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=300, _vis=sender._get_visibility())
     p = db.put_async([timeline, timelinePublic])
     sender.user.counters.set_suggested()
-    sender.insert_ft()
+    if sender._is_public():
+        sender.insert_ft()
     p.get_result()
 suggestion_new.connect(new_suggestion)
 
@@ -110,8 +111,12 @@ suggestion_following_new.connect(new_following_suggestion)
 
 
 def deleted_following_suggestion(sender, **kwargs):
+    from models import AlertSuggestion
     timeline = UserTimelineSystem(user = kwargs['user'], instance = sender, msg_id=304, visible=False)
     p = timeline.put_async()
+    alertsuggestion = AlertSuggestion.objects.get_by_sugid_user(sender.id, kwargs['user'])
+    if alertsuggestion is not None:
+        alertsuggestion.delete()
     sender.counters.set_followers(-1)
     p.get_result()
 suggestion_following_deleted.connect(deleted_following_suggestion)

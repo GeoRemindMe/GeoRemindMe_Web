@@ -45,7 +45,7 @@ class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
     
     @property
     def id(self):
-        return self.key().id()
+        return int(self.key().id())
 
     '''
     def put(self):
@@ -264,6 +264,8 @@ class Suggestion(Event, Visibility, Taggable):
     created = db.DateTimeProperty(auto_now_add=True)
     date_starts = db.DateTimeProperty()
     date_ends = db.DateTimeProperty()
+    hour_starts = db.DateTimeProperty(default=None)
+    hour_ends = db.DateTimeProperty(default=None)
     poi = db.ReferenceProperty(POI, required=True)
     modified = db.DateTimeProperty(auto_now=True)
     user = db.ReferenceProperty(User, collection_name='suggestions')
@@ -271,6 +273,7 @@ class Suggestion(Event, Visibility, Taggable):
     _short_url = db.TextProperty()
     
     _counters = None
+    _relevance = None
     
     @classmethod
     def SearchableProperties(cls):
@@ -306,9 +309,10 @@ class Suggestion(Event, Visibility, Taggable):
     
     @classmethod
     def update_or_insert(cls, id = None, name = None, description = None,
-                         date_starts = None, date_ends = None, poi = None,
-                         user = None, done = False, active = True, tags = None, 
-                         vis = 'public', commit=True):
+                         date_starts = None, date_ends = None, hour_starts = None,
+                         hour_ends = None, poi = None, user = None, done = False, 
+                         active = True, tags = None, vis = 'public', commit=True, 
+                         to_facebook=False, to_twitter=False):
         '''
             Crea una sugerencia nueva, si recibe un id, la busca y actualiza.
             
@@ -317,14 +321,20 @@ class Suggestion(Event, Visibility, Taggable):
         '''
         if not isinstance(user, User):
             raise TypeError()
-        if id is not None:  # como se ha pasado un id, queremos modificar una alerta existente
+        if id is not None:  
+            # como se ha pasado un id, queremos modificar una alerta existente
             sugg = cls.objects.get_by_id_user(id, user, querier=user)
             if sugg is None:
                 return None
+            if name is not None and name != '':
+                from datetime import timedelta
+                if sugg.created+timedelta(hours=2) > datetime.now():
+                    sugg.name = name
             #sugg.name = name if name is not None else sugg.name
-            sugg.description = description if description is not None else sugg.description
-            sugg.date_starts = date_starts if date_starts is not None else sugg.date_starts
-            sugg.date_ends = date_ends if date_ends is not None else sugg.date_ends
+            sugg.description = description
+            sugg.date_starts = date_starts
+            sugg.date_ends = date_ends 
+            sugg.hour_ends = hour_ends 
             sugg.poi = poi if poi is not None else sugg.poi
             if vis != '':
                 sugg._vis = vis
@@ -334,19 +344,33 @@ class Suggestion(Event, Visibility, Taggable):
                 sugg._tags_setter(tags, commit=commit)
             elif commit:
                 sugg.put()
-            return sugg
         else:
             if poi is None:
                 raise TypeError()
             sugg = Suggestion(name = name, description = description, date_starts = date_starts,
-                          date_ends = date_ends, poi = poi, user = user, _vis=vis)
+                          date_ends = date_ends, hour_starts = hour_starts, hour_ends = hour_ends, 
+                          poi = poi, user = user, _vis=vis)
             if not active:
                 sugg.toggle_active()
             if tags != '':
                 sugg._tags_setter(tags, commit=commit)
-            elif commit:
+            if commit:
                 sugg.put()
-            return sugg
+                if to_facebook:
+                    from facebookApp.watchers import new_suggestion
+                    new_suggestion(sugg)
+                if to_twitter:
+                    if sugg._is_public():
+                        if sugg.short_url is None:
+                            sugg._get_short_url()
+                        msg = _("#grm %s") % sugg.short_url
+                        from geoauth.clients.twitter import TwitterClient
+                        try:
+                            tw_client=TwitterClient(user=sugg.user)
+                            tw_client.send_tweet(msg, sugg.poi.location)
+                        except:                 
+                            pass
+        return sugg
         
     def add_follower(self, user):
         '''
@@ -357,29 +381,26 @@ class Suggestion(Event, Visibility, Taggable):
             
             :returns: :class:`geoalert.models.AlertSuggestion`    
         '''
-        if self.user.key() == self.user.key():
+        if self.user.key() == user.key():
             return False
-        def _tx(sug_key, user_key, counter_key):
-            # TODO : cambiar a contador con sharding
+        def _tx(sug_key, user_key):
             sug = db.get(sug_key)
-            counter = SuggestionCounter.all().ancestor(self).get_async()
             # indice con personas que siguen la sugerencia
             index = SuggestionFollowersIndex.all().ancestor(sug).filter('count <', 80).get()
             if index is None:
                 index = SuggestionFollowersIndex(parent=sug)
             index.keys.append(user_key)
             index.count += 1
-            db.put_async([index])
-            counter = counter.get_result()
-            counter.set_followers()
-
-        if SuggestionFollowersIndex.all().ancestor(self).filter('keys =', user.key()).count() != 0:
+            index.put()
+            return True
+        index = db.GqlQuery('SELECT __key__ FROM SuggestionFollowersIndex WHERE ancestor IS :1 AND keys = :2', self.key(), user.key()).get()
+        if index is not None: # ya es seguidor
             a = AlertSuggestion.objects.get_by_sugid_user(self.id, user)
-            if a is None:
-                return True
+            if a is None: # ¿por algun motivo no la tiene en la mochila?
+                trans = True
             else:
-                return a
-        if self._is_public():
+                return True
+        elif self._is_public():
             trans = db.run_in_transaction(_tx, sug_key = self.key(), user_key = user.key())
         else:
             if self.user_invited(user):
@@ -391,7 +412,7 @@ class Suggestion(Event, Visibility, Taggable):
         if trans:
             alert = AlertSuggestion.update_or_insert(suggestion = self, user = user)
             suggestion_following_new.send(sender=self, user=user)
-            return alert
+            return True
         return None
         
     
@@ -402,25 +423,21 @@ class Suggestion(Event, Visibility, Taggable):
             :param user: Usuario que quiere borrarse a una sugerencia
             :type user: :class:`geouser.models.User`   
         '''
-        def _tx(sug_key, index_key, user_key):
-            sug = db.get_async(sug_key)
+        def _tx(index_key, user_key):
             index = db.get_async(index_key)
-            counter = SuggestionCounter.all().ancestor(self).get_async()
-            sug = sug.get_result()
             index = index.get_result()
             index.keys.remove(user_key)
             index.count -= 1
-            db.put_async([index, sug])
-            counter = counter.get_result()
-            counter.set_followers(-1)
-        index = SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get()
+            db.put_async([index])
+        index = db.GqlQuery('SELECT __key__ FROM SuggestionFollowersIndex WHERE ancestor IS :1 AND keys = :2', self.key(), user.key()).get()
+        suggestion_following_deleted.send(sender=self, user=user)
         if index is not None:
-            db.run_in_transaction(_tx, self.key(), index.key(), user.key())
-            suggestion_following_deleted.send(sender=self, user=user)
+            db.run_in_transaction(_tx, index, user.key())      
             return True
         return False
     
     def put(self, from_comment=False):
+        self.name = self.name.strip()
         if from_comment:
             # no escribir timeline si es de un comentario
             super(Suggestion, self).put()
@@ -463,19 +480,41 @@ class Suggestion(Event, Visibility, Taggable):
             self._short_url = None
             
     def delete(self):
+        from geolist.models import List
+        added = db.GqlQuery("SELECT __key__ FROM Event WHERE suggestion = :1", self.key()).get()
+        added_list = db.GqlQuery("SELECT __key__ FROM List WHERE keys = :1", self.key()).get()
+        if added is None and added_list is None:
+            # nadie la añadió
+            suggestion_deleted.send(sender=self, user=self.user)
+            return super(Suggestion, self).delete()
         from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
         generico = User.objects.get_by_username(__web_settings.GENERICO, keys_only=True)
+        if generico == Suggestion.user.get_value_for_datastore(self):
+            from geolist.models import ListSuggestion 
+            # es del usuario georemindme, la borramos
+            alerts = AlertSuggestion.all().filter('suggestion =', self.key()).run()
+            lists = ListSuggestion.all().filter('keys =', self.key()).run()
+            to_save = []
+            for l in lists:
+                l.keys.remove(self.key())
+                to_save.append(l)
+            p = db.put_async(to_save)
+            for a in alerts:
+                a.delete()
+            suggestion_deleted.send(sender=self, user=generico)
+            p.get_result()
+            return super(Suggestion, self).delete()
+        # otro usuario, se la asignamos a georemindme
         viejo = self.user
-        if generico is None:
-            self.user = None
         self.user = generico
         self.put()
+        self.user.counters.set_suggested()
         suggestion_deleted.send(sender=self, user=viejo)
     
     def has_follower(self, user):
         if not user.is_authenticated():
             return False
-        if SuggestionFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).get() is not None:
+        if db.GqlQuery('SELECT __key__ FROM SuggestionFollowersIndex WHERE ancestor IS :1 AND keys = :2', self.key(), user.key()).get() is not None:
             return True
         return False   
     
@@ -512,28 +551,43 @@ class Suggestion(Event, Visibility, Taggable):
             En caso de fallo, se guarda el punto en _Do_later_ft,
             para intentar añadirlo luego
         """
-        from mapsServices.fusiontable import ftclient, sqlbuilder
-        try:
-            ftclient = ftclient.OAuthFTClient()
-            from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
-            ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],
-                                                    {
-                                                    'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
-                                                    'sug_id': self.id,
-                                                    'modified': self.created.__str__(),
-                                                     }
-                                                   )
-                           )
-        except:  # Si falla, se guarda para intentar añadir mas tarde
-            from georemindme.models_utils import _Do_later_ft
-            later = _Do_later_ft(instance_key=self.key())
-            later.put()
+        if self._is_public():
+            from mapsServices.fusiontable import ftclient, sqlbuilder
+            try:
+                ftclient = ftclient.OAuthFTClient()
+                from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
+                import unicodedata
+                name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
+                return ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],
+                                                        {'name': name,
+                                                        'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
+                                                        'sug_id': self.id,
+                                                        'modified': self.modified.isoformat(),
+                                                        'created': self.created.isoformat(),
+                                                        'relevance': self._calc_relevance(),
+                                                         }
+                                                       )
+                               )
+            except:  # Si falla, se guarda para intentar añadir mas tarde
+                raise
+                from georemindme.models_utils import _Do_later_ft
+                later = _Do_later_ft(instance_key=self.key())
+                later.put()
     
     def __str__(self):
         return unicode(self.name).encode('utf-8')
 
     def __unicode__(self):
         return self.name
+    
+    def _calc_relevance(self):
+        if self._relevance is None:
+            from geovote.models import Vote
+            votes = Vote.objects.get_vote_counter(self.key())
+            from datetime import datetime
+            time = datetime.now() - self.modified
+            self._relevance = (self.counters.followers*8 + votes*2) * 15/(time.days+1)
+        return self._relevance
         
 
 class AlertSuggestion(Event):
@@ -619,10 +673,6 @@ class AlertSuggestion(Event):
         else:
             super(AlertSuggestion, self).put()
             alert_new.send(sender=self)
-            
-    def delete(self):
-        alert_deleted.send(sender=self)
-        super(Alert, self).delete()
         
     def to_dict(self):
             return {'id': self.id,
@@ -684,7 +734,7 @@ class _Deleted_Alert(db.Model):
     
     @property
     def id(self):
-        return self.deleted_id
+        return int(self.deleted_id)
 
 
 from helpers import *

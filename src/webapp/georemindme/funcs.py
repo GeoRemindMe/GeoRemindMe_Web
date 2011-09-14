@@ -97,10 +97,12 @@ def prefetch_refprops(entities, *props):
         Carga todas las referencias de un grupo de objetos
         en una sola consulta al datastore
     """
+    entities = filter(None, entities)
     fields = [(entity, prop) for entity in entities for prop in props]
-    ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields]
+    ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields if x is not None]
     ref_keys = filter(None, ref_keys)
-    ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
+    if len(ref_keys) > 0:
+        ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
     for (entity, prop), ref_key in zip(fields, ref_keys):
         prop.__set__(entity, ref_entities[ref_key])
     return entities
@@ -114,8 +116,20 @@ def prefetch_refpropsEntity(entities, *props):
     """
     fields = [(entity, prop) for entity in entities for prop in props]
     ref_keys = [x[prop] for x, prop in fields]
+    if len(ref_keys) > 0:
+        ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
     ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
     return ref_entities
+
+
+def prefetch_refList(lists, users=[]):
+    if len(lists) == 0:
+        return []
+    instances_keys = [k for l in lists for k in l.keys]
+    instances_keys.extend(users)
+    instances_keys = filter(None, instances_keys)
+    instances = dict((x.key(), x) for x in db.get(set(instances_keys)))
+    return instances
 
 
 def single_prefetch_refprops(entity, *props):
@@ -139,9 +153,8 @@ def fetch_parents(entities):
         Carga y devuelve la lista de parents
         directamente en una sola consulta al datastore
     """
-    
     ref_keys = [x.parent_key() for x in entities if x.parent_key() is not None]
-    return [x for x in db.get(set(ref_keys))]
+    return db.get(set(ref_keys))
 
 def fetch_parentsKeys(entities):
     # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
@@ -149,6 +162,5 @@ def fetch_parentsKeys(entities):
         Carga y devuelve la lista de parents
         directamente en una sola consulta al datastore
     """
-    
     ref_keys = [x.parent() for x in entities]
-    return [x for x in db.get(set(ref_keys))]
+    return db.get(set(ref_keys))

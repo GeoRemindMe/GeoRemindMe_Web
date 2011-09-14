@@ -106,7 +106,7 @@ class EventHelper(object):
         return None
 
     def get_by_tag_querier(self, tagInstance, querier, page=1, query_id=None):
-        if not isinstance(querier, User):
+        if querier is None:
             raise TypeError()
         from geotags.models import Tag
         if not isinstance(tagInstance, Tag):
@@ -126,8 +126,8 @@ class EventHelper(object):
                 elif event._is_shared() and event.user_invited(querier):
                     events_lists.append(event)
         if len(events_lists) != 0:
-            return [p.id, events_lists]
-        return None
+            return [p.id, events_lists], p.page_count()
+        return None, 0
 
     def get_by_tag_owner(self, tagInstance, owner, page=1, query_id=None):
         if not isinstance(owner, User):
@@ -209,7 +209,10 @@ class SuggestionHelper(EventHelper):
         if suggestion is None:
             suggestion = self._klass.all().filter('slug =', slug).get()
             if suggestion is None:
-                suggestion = self.get_by_id(slug)
+                try:
+                    suggestion = self.get_by_id(slug)
+                except:
+                    return None
             if suggestion is not None:
                 if suggestion._is_private():
                     if not querier.is_authenticated():
@@ -343,7 +346,14 @@ class SuggestionHelper(EventHelper):
             location = db.GeoPt(location)
         import memcache
         client = memcache.mem.Client()
-        sugs = client.gets('%ssug_nearest%s,%s' % (memcache.version,
+        if querier.is_authenticated():
+            sugs = client.gets('%ssug_nearest%s,%s_%s' % (memcache.version,
+                                                   location.lat,
+                                                   location.lon,
+                                                   querier.username,
+                                                   ))
+        else:
+            sugs = client.gets('%ssug_nearest%s,%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon
                                                    ))
@@ -353,7 +363,7 @@ class SuggestionHelper(EventHelper):
             ftclient = ftclient.OAuthFTClient()
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
             query = ftclient.query(sqlbuilder.SQL().select(__web_settings.FUSIONTABLES['TABLE_SUGGS'], cols=['sug_id'],
-                                                   condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s)) ORDER BY modified LIMIT 8' % (location, radius)
+                                                   condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s)) ORDER BY created DESC LIMIT 50' % (location, radius)
                                                    )
                            )
             results = query.splitlines()
@@ -361,13 +371,24 @@ class SuggestionHelper(EventHelper):
             sugs = [db.Key.from_path(self._klass.kind(), int(result)) for result in results] # construir todas las keys para consultar en bach
             from google.appengine.api import datastore
             sugs = datastore.Get(sugs)
+            sugs = filter(None, sugs)
+            if querier.is_authenticated():
+                sugs = filter(lambda x: x['user'] != querier.key(), sugs)
             from georemindme.funcs import prefetch_refpropsEntity
             prefetch = prefetch_refpropsEntity(sugs, 'user')
             sugs = [{'id': sug.key().id(),
-                         'username': prefetch[sug['user']].username,
-                         'name': sug['name'],
-                         'description': sug['description']} for sug in sugs]
-            client.set('%ssug_nearest%s,%s' % (memcache.version,
+                     'slug': sug['slug'],
+                     'username': prefetch[sug['user']].username,
+                     'name': sug['name'],
+                     'description': sug['description']} for sug in sugs]
+            if querier.is_authenticated():
+                client.set('%ssug_nearest%s,%s_%s' % (memcache.version,
+                                                   location.lat,
+                                                   location.lon,
+                                                   querier.username,
+                                                   ), sugs, 1123)
+            else:
+                client.set('%ssug_nearest%s,%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon
                                                    ), sugs, 1123)

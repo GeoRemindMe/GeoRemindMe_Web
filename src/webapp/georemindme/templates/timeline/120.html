@@ -25,7 +25,7 @@
             </a>
         </div>
         <div class="timeline-msg">
-            <span class="small-text"><a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="black-link">{{obj.instance.user.username}}</a> ha comentado:</span><br>
+            <span class="small-text"><a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">{{obj.instance.user.username}}</a> ha comentado:</span><br>
     {% endif %}
             
 
@@ -39,12 +39,12 @@
             {% else %}
                 la sugerencia
             {% endif %}
-            : <a href="{% url2 in_facebook view_suggestion obj.instance.instance.id %}" class="small-link link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
+            : <a href="{% url2 in_facebook view_suggestion obj.instance.instance.id %}" class="small-link dark-link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
             
             
             <span class="timestamp">  {{obj.created|naturaltime}}</span>
             <span class="action-bar">
-                {% if not obj.is_private  and obj.instance.user.username != request.user.username %}
+                {% if obj.instance.user.username != request.user.username %}
                     | 
                     <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="comment">
                         <span class="dislike">
@@ -59,6 +59,7 @@
                         </span>
                     </span>
                 {% endif %}
+                | <a href="{% url2 in_facebook view_suggestion obj.instance.instance.id %}" class="details">Ver sugerencia</a> 
             </span>
         </div>
 </li>

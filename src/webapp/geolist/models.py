@@ -20,7 +20,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     created = db.DateTimeProperty(auto_now_add = True)
     modified = db.DateTimeProperty(auto_now=True)
     active = db.BooleanProperty(default=True)
-    _short_url = db.URLProperty()
+    _short_url = db.URLProperty(indexed=False)
     count = db.IntegerProperty(default=0)  # numero de sugerencias en la lista
 
     _counters = None
@@ -28,7 +28,7 @@ class List(db.polymodel.PolyModel, HookedModel):
 
     @property
     def id(self):
-        return self.key().id()
+        return int(self.key().id())
     
     @property
     def short_url(self):
@@ -71,11 +71,10 @@ class List(db.polymodel.PolyModel, HookedModel):
             else:
                 list_modified.send(sender=self)
 
-    def to_dict(self, resolve=False):
+    def to_dict(self, resolve=False, instances=None):
             dict = {'id': self.id,
                     'name': self.name,
                     'description': self.description,
-                    'user': self.user,
                     'modified': self.modified if self.modified is not None else 0,
                     'created': self.created if self.created is not None else 0,
                     'tags': self.tags if hasattr(self, 'tags') else None,
@@ -88,7 +87,13 @@ class List(db.polymodel.PolyModel, HookedModel):
                     'short_url': self.short_url,
                     }
             if resolve:
-                dict['instances'] = db.get(self.keys)
+                if instances is not None:
+                    dict['instances'] = [instances[k] for k in self.keys]
+                    dict['user'] = instances[ListSuggestion.user.get_value_for_datastore(self)]
+                else:
+                    dict['instances'] = db.get(self.keys)
+            else:
+                dict['user'] = self.user.username
             return dict
 
     def to_json(self):
@@ -196,7 +201,6 @@ class ListSuggestion(List, Visibility, Taggable):
                             )
                 return list
             return False
-        # TODO: debe haber una forma mejor de quitar repetidos, estamos atados a python2.5 :(, los Sets
         keys= set([db.Key.from_path('Event', int(instance)) for instance in instances])
         list = ListSuggestion(name=name, 
                               user=user, 

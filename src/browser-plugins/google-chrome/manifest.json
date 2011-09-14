@@ -9,6 +9,9 @@
 	},
 	"options_page": "options.html",
 	"permissions": [
-	
-	]
+        "cookies", 
+        "tabs", 
+        "http://*/*", 
+        "https://*/*"
+    ]
 }

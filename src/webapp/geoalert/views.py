@@ -6,7 +6,7 @@
     :synopsis: Views for GeoAlert
 """
 
-from django.http import Http404, HttpResponseServerError
+from django.http import Http404, HttpResponseServerError, HttpResponseNotFound, HttpResponseBadRequest
 from django.shortcuts import render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -25,18 +25,43 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
             :param id: identificador de la sugerencia
             :type id: :class:`ìnteger`
     """
+    
     suggestion = Suggestion.objects.get_by_slug_querier(slug, querier=request.user)
     if suggestion is None:
         raise Http404 
-    from geovote.api import get_comments
-    query_id, comments_async = get_comments(request.user, suggestion.id, 'Event', async=True)
     from geovote.models import Vote, Comment
     from geolist.models import ListSuggestion
+    from georemindme.funcs import single_prefetch_refprops, prefetch_refList, prefetch_refprops
+    if 'print' in request.GET:
+        suggestion = single_prefetch_refprops(suggestion, Suggestion.user, Suggestion.poi)
+        vote_counter = Vote.objects.get_vote_counter(suggestion.key())
+        top_comments = Comment.objects.get_top_voted(suggestion, request.user)
+        return render_to_response('print/suggestionprofile.html',
+                        {'suggestion': suggestion,
+                         'vote_counter': vote_counter,
+                         'top_comments': top_comments,
+                        },
+                        context_instance=RequestContext(request)
+                      )
+            
+    from geovote.api import get_comments
+    lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
+    query_id, comments_async = get_comments(request.user, suggestion.id, 'Event', async=True)
+    suggestion = single_prefetch_refprops(suggestion, Suggestion.user, Suggestion.poi)
     has_voted = Vote.objects.user_has_voted(request.user, suggestion.key())
     vote_counter = Vote.objects.get_vote_counter(suggestion.key())
     user_follower = suggestion.has_follower(request.user)
     top_comments = Comment.objects.get_top_voted(suggestion, request.user)
-    lists = ListSuggestion.objects.get_by_suggestion(suggestion, request.user)
+    in_lists = ListSuggestion.objects.get_by_suggestion(suggestion, request.user)
+    # construir un diccionario con todas las keys resueltas y usuarios
+    in_lists = prefetch_refprops(in_lists, ListSuggestion.user)
+    in_lists = [l.to_dict(resolve=False) for l in in_lists]
+    # listas del usuario
+    
+    lists = [l for l in lists if not suggestion.key() in l.keys]
+    lists = prefetch_refprops(lists, ListSuggestion.user)
+    lists = [l.to_dict(resolve=False) for l in lists]
+    # construir un diccionario con todas las keys resueltas y usuarios
     if not request.user.is_authenticated():
             pos = template.rfind('.html')
             template = template[:pos] + '_anonymous' + template[pos:]
@@ -44,6 +69,7 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
                                         'suggestion': suggestion,
                                         'comments': Comment.objects.load_comments_from_async(query_id, comments_async, request.user),
                                         'has_voted': has_voted,
+                                        'in_lists': in_lists,
                                         'lists': lists,
                                         'vote_counter': vote_counter,
                                         'user_follower': user_follower,
@@ -224,8 +250,8 @@ def view_place(request, slug, template='webapp/view_place.html'):
                                     'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
                                    }
                                   )
-            if len(suggestions_loaded) > 7:
-                break
+        from georemindme.funcs import prefetch_refprops
+        suggestions = prefetch_refprops([s['instance'] for s in suggestions_loaded], Suggestion.user, Suggestion.poi)
         return suggestions_loaded
     if not request.user.is_authenticated():
             pos = template.rfind('.html')
@@ -234,38 +260,39 @@ def view_place(request, slug, template='webapp/view_place.html'):
     place = Place.objects.get_by_slug(slug)
     if place is None:
         raise Http404
+    query_id, suggestions_async = Suggestion.objects.get_by_place(place, 
+                                              querier=request.user,
+                                              async = True
+                                              )
     from geovote.models import Vote
     if request.user.is_authenticated():
         has_voted = Vote.objects.user_has_voted(request.user, place.key())
     else:
         has_voted = False
-    query_id, suggestions_async = Suggestion.objects.get_by_place(place, 
-                                                  querier=request.user,
-                                                  async = True
-                                                  )
     vote_counter = Vote.objects.get_vote_counter(place.key())
-    
-    from mapsServices.places.GPRequest import GPRequest
-    try:
-        search = GPRequest().retrieve_reference(place.google_places_reference)
-    except: 
-
-        return render_to_response(template, {'place': place,
-                                             'has_voted': has_voted,
-                                             'vote_counter': vote_counter,
-                                             'suggestions': [query_id, load_suggestions_async(suggestions_async)],
-                                              },
-                                  context_instance=RequestContext(request)
-                                  )
-    place.update(name=search['result']['name'],
+    # es un lugar cargado desde google places
+    if place.google_places_reference is not None:
+        from mapsServices.places.GPRequest import GPRequest
+        try:    
+            search = GPRequest().retrieve_reference(place.google_places_reference)
+            place.update(name=search['result']['name'],
                         address=search['result'].get('formatted_address'), 
                         city=_get_city(search['result'].get('address_components')),
                         location=db.GeoPt(search['result']['geometry']['location']['lat'], search['result']['geometry']['location']['lng']),
                         google_places_reference=search['result']['reference'],
                         google_places_id=search['result']['id']
                         )
+        except: 
+            pass
+    if 'print' in request.GET:
+        return render_to_response('print/view_place.html', 
+                                        {'place': place, 
+                                         'vote_counter': vote_counter,
+                                         'suggestions': [query_id, load_suggestions_async(suggestions_async)],
+                                         },
+                              context_instance=RequestContext(request)
+                              )
     return render_to_response(template, {'place': place, 
-                                         'google': search['result'],
                                          'has_voted': has_voted,
                                          'vote_counter': vote_counter,
                                          'suggestions': [query_id, load_suggestions_async(suggestions_async)],
@@ -282,19 +309,26 @@ def user_suggestions(request, template='webapp/suggestions.html'):
     from geolist.models import ListSuggestion
     counters = request.user.counters_async()
     lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
-    suggestions_following = get_suggestion_following(request)
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
-    suggestions = get_suggestion(request, id=None,
-                                wanted_user=request.user,
-                                page = 1, query_id = None
-                                )
-    suggestions[1].extend(suggestions_following[1])
-    suggestions[1].sort(key=lambda x: x.modified, reverse=True)
-    suggestions[0] = '%s_%s' % (suggestions[0], suggestions_following[0])
-    lists = [l.to_dict(resolve=True) for l in lists]
+    from api import get_suggestions_dict
+    suggestions_entity = get_suggestions_dict(request.user)
+    suggestions = []
+    for s in suggestions_entity: # convertir entidades
+        sug = db.model_from_protobuf(s.ToPb())
+        setattr(sug, 'lists', [])
+        suggestions.append(sug)
+    from georemindme.funcs import prefetch_refprops, prefetch_refList
+    suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
+    # combinar listas
+    lists = [l for l in lists]
     lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=True))
+    # construir un diccionario con todas las keys resueltas y usuarios
+    instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
+    lists = [l.to_dict(resolve=True, instances=instances) for l in lists]
+    # añadimos las listas
+    [s.lists.append(l) for l in lists for s in suggestions if s.id in l['keys']]
     return  render_to_response(template, {
-                                          'suggestions': suggestions,
+                                          'suggestions': ['', suggestions],
                                           'counters': counters.next(),
                                           'lists': lists,
                                           }, context_instance=RequestContext(request)
@@ -303,7 +337,7 @@ def user_suggestions(request, template='webapp/suggestions.html'):
 
 @login_required
 def add_suggestion(request, template='webapp/add_suggestion.html'):
-    """ Añade una sugerencia
+    """ Vista para añadir una sugerencia
         
             :param form: formulario con los datos
             :type form: :class:`geoalert.forms.RemindForm`
@@ -314,11 +348,12 @@ def add_suggestion(request, template='webapp/add_suggestion.html'):
     """
     from forms import SuggestionForm
     f = SuggestionForm();
+    # tambien devolvemos las listas posibles
     from geolist.models import ListSuggestion
-    lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
+    from georemindme.funcs import prefetch_refprops
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
+    lists = prefetch_refprops(lists, ListSuggestion.user)
     lists = [l.to_dict(resolve=False) for l in lists]
-    lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=False))
     return  render_to_response(template, {'f': f,
                                           'lists': lists,
                                           },
@@ -334,7 +369,9 @@ def save_suggestion(request, form, id=None):
     :type: :class:`string`
     :returns: :class:`geoalert.models.Suggestion`
     """
-    sug = form.save(user = request.user, id=id)
+    sug = form.save(user = request.user, id=id, list_id=request.POST.get('list_id', ''))
+    if sug is None:
+        return HttpResponseBadRequest()
     return sug
 
 
@@ -351,10 +388,10 @@ def add_suggestion_invitation(request, eventid, username):
     """
     user_to = User.objects.get_by_username(username)
     if user_to is None:
-        raise Http404
+        return HttpResponseNotFound
     event = Suggestion.objects.get_by_id_querier(eventid, request.user)
     if event is None:
-        raise Http404
+        return HttpResponseNotFound
     
     return event.send_invitation(request.user, user_to)
 
@@ -410,18 +447,16 @@ def get_suggestion(request, id, wanted_user=None, page = 1, query_id = None):
 def add_suggestion_follower(request, id):
     suggestion = Suggestion.objects.get_by_id_querier(id, request.user)
     if suggestion is not None:
-        suggestion.add_follower(request.user)
-        return True
-    return False
+        return suggestion.add_follower(request.user)
+    return HttpResponseNotFound
 
 
 @login_required
 def del_suggestion_follower(request, id):
     suggestion = Suggestion.objects.get_by_id_querier(id, request.user)
     if suggestion is not None:
-        suggestion.del_follower(request.user)
-        return True
-    return False
+        return suggestion.del_follower(request.user)
+    return HttpResponseNotFound
 
 
 @login_required    
@@ -435,32 +470,16 @@ def del_suggestion(request, id = None):
             :raises: AttributeError
     """
     if id is None:
-        raise AttributeError()
-    sug = Suggestion.objects.get_by_id_user(id, request.user, request.user)
-    if not sug:
-        raise AttributeError()
-    sug.delete()    
-    return True
+        return HttpResponseBadRequest
+    sug = Suggestion.objects.get_by_id_querier(id, request.user)
+    if sug is not None:
+        if sug.user.key() == request.user.key():
+            sug.delete()
+            return True
+        else:
+            return sug.del_follower(request.user)
+    return HttpResponseNotFound
 
-@login_required
-def get_alertsuggestion(request, id, page = 1, query_id = None):
-    """ Obtiene sugerencias
-        
-            :param id: identificador de la sugerencia
-            :type id: :class:`integer`
-            :param done: devolver solo las realizadas
-            :type done: boolean
-            :param page: pagina a devolver
-            :type page: :class:`ìnteger`
-            :param query_id: identificador de la busqueda
-            :type query_id: :class:`integer`
-            
-            :returns: :class:`geoalert.models.Suggestion`
-    """
-    if id:
-        return [AlertSuggestion.objects.get_by_id_user(id, request.user, request.user)]
-    else:
-        return AlertSuggestion.objects.get_by_user(request.user, page, query_id)
     
 @login_required
 def get_suggestion_following(request, page=1, query_id=None, async=False):

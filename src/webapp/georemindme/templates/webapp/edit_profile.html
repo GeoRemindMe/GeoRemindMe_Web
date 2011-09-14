@@ -24,28 +24,27 @@
         
         
         <h1>Editar perfil</h1>
-        
         <div class="section">
             <form method="post" action="." id="editForm">
-            <div id="avatar">
-                <span>
-                    <img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar">
-<!--
-                    <br>
-                    Cambiar foto
--->
-                </span> 
-                <div>
-                    Usar el avatar de: <br>
-                    <select id="id_user_set_profile-sync_avatar_with" name="user_set_profile-sync_avatar_with">
-                        <option value="facebook">Facebook</option>
-                        {% if profile.sociallinks.twitter %}
-                            <option value="twitter">Twitter</option>
-                        {% endif %}
-                        <option selected="selected" value="gravatar">Gravatar</option>
-                    </select>    
-                </div>
-            </div>          
+                <div id="avatar">
+                    <span>
+                        <img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar">
+    <!--
+                        <br>
+                        Cambiar foto
+    -->
+                    </span> 
+                    <div>
+                        Usar el avatar de: <br>
+                        <select id="id_user_set_profile-sync_avatar_with" name="user_set_profile-sync_avatar_with">
+                            <option value="facebook">Facebook</option>
+                            {% if profile.sociallinks.twitter %}
+                                <option value="twitter">Twitter</option>
+                            {% endif %}
+                            <option selected="selected" value="gravatar">Gravatar</option>
+                        </select>    
+                    </div>
+                </div>          
             
 				{% csrf_token %}
 				<dl>
@@ -66,15 +65,18 @@
 					
 				</dl>
                 <hr>
-				<div id="save-button"><input type="submit" value="{% trans "Guardar" %}" title="{% trans 'Guardar los cambios' %}"></div>
+				<div id="save-button">
+                    <input type="submit" value="{% trans 'Guardar' %}" title="{% trans 'Guardar los cambios' %}">
+                </div>
 			</form>
         </div>
+    </div>
 
 <script id="passForm" type="text/x-jquery-tmpl">
 <div id="passForm2">
     <input type="password" name="user_set_profile-old_password" id="old_pass" placeholder="Antigua contraseña"/>
     {{form.errors.old_password}}
-    <input type="password" name="user_set_profile-password1" id="pass1" placeholder="Nueva contraseña"/>
+    <input type="password" name="user_set_profile-password" id="pass1" placeholder="Nueva contraseña"/>
     {{form.errors.password1}}
     <input type="password" name="user_set_profile-password2" id="pass2" placeholder="Repite la contraseña"/>
     {{form.errors.password2}}

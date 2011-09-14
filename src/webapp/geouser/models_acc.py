@@ -515,16 +515,24 @@ class UserTimeline(UserTimelineBase, Visibility):
             user_timeline_new.send(sender=self)
             
 
-class UserTimelineSuggest(UserTimelineBase):
+class UserTimelineSuggest(UserTimelineSystem):
     """
         Almacena una peticion de un usuario para añadir una
         sugerencia a la lista de otro usuario
     """
-    msg = db.TextProperty(required=False)
-    msg_id = db.IntegerProperty(required=False, default=-1)
-    instance = db.ReferenceProperty(None, collection_name="usersuggests_to_list") 
-    list_instance = db.ReferenceProperty(None)
+    list = db.ReferenceProperty(None)
     status = db.IntegerProperty(default=0)
+    
+    def put(self):
+        if self.is_saved(): # si ya estaba guardada, no hay que volver a notificar
+            super(self.__class__, self).put()
+        else:
+            self.msg_id = 360  
+            super(self.__class__, self).put()
+            from models_utils import _Notification
+            notification = _Notification(owner=self.list.user, 
+                                         timeline=self.key())
+            notification.put()
             
 
 class UserTimelineFollowersIndex(db.Model):

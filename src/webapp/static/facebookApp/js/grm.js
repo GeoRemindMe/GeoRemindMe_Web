@@ -34,7 +34,8 @@ GRM.like = function(settings) {
     settings = jQuery.extend({
         like_class: null,
         dislike_class: null,
-        progress_class: null        
+        progress_class: null,
+        callback: null           
     }, settings);
        
     return this.each(function(){
@@ -81,7 +82,7 @@ GRM.like = function(settings) {
                     success: function(data){
                         
                         // disliking
-                        if (typeof $(this).attr('like') != "undefined" ) {
+                        if (typeof $(this).attr('like') != "undefined" && data!=null) {
                             // send vote -1
                             $(this).find('.dislike').hide();
                             $(this).find('.like').show();
@@ -96,7 +97,7 @@ GRM.like = function(settings) {
                         }
                         
                         // liking
-                        else {
+                        else if(data!=null) {
                             // send vote +1
                             $(this).find('.like').hide();
                             $(this).find('.dislike').show();
@@ -107,9 +108,15 @@ GRM.like = function(settings) {
                             
                             if (settings.dislike_class)
                                 $(this).addClass(settings.dislike_class);
-                            }
-                            
+                        }
+                        
+                        if(data!=null)
                             $(this).find('.increase').text(data.votes);
+                        else
+                            showMessage("Pio! Perdona se ha producido un error<br>Estamos trabajando en solucionarlo","error");
+                        
+                        if (settings.callback)
+                            settings.callback();
                         
                     },
                     complete: function()
@@ -137,7 +144,8 @@ GRM.remember = function(settings) {
     settings = jQuery.extend({
         remember_class: null,
         forget_class: null,
-        progress_class: null        
+        progress_class: null,
+        callback: null    
     }, settings);
        
     return this.each(function(){
@@ -213,6 +221,8 @@ GRM.remember = function(settings) {
                                 $(this).addClass(settings.forget_class);
                             }
                         
+                        if (settings.callback)
+                            settings.callback();
                     },
                     complete: function()
                     {
@@ -308,7 +318,7 @@ GRM.menuList = function(settings) {
                     }else{
                         //On press enter
                         //Comprobamos si hay sugerencias seleccionadas para añadirlas
-                        var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
+                        var checkedSuggestions=$('.suggestion input[name=suggestions]').filter(':checked');
                         if( checkedSuggestions.length>0){
                             checkedSuggestions.each(function(){
                                 suggestionList.push($(this).attr('id').substring(9,$(this).attr('id').length))
@@ -727,8 +737,12 @@ function sendComment(btn,elemType,id) {
 
 function showMessage(txt,msgClass){
     if($('#notification-msg').css("display")=="none"){
+        $('#notification-msg').attr('class',"")
         $('#notification-msg').html(txt)
         $('#notification-msg').addClass(msgClass)
+        var posTop=$(window).scrollTop();
+        if(posTop<60)posTop=60;
+        $('#notification-msg').css('top',posTop+'px');
         $('#notification-msg').fadeIn('slow').delay(3000).fadeOut('slow')
     }
 }
@@ -750,13 +764,153 @@ function setRemainingCharCounter(input,counter){
 //Cierra el menu desplegable
 function closeDropdown(){
     $("#dropdown-list").removeClass('visible-display');
-    console.log($("#dropdown-list"));
     $(".new-list-btn span#text").css('display','inline-block');
     $(".new-list-btn span.new-list").css('display','none');
     $(".new-list-btn div#cancel-link").css('display','none');
     $(".new-list-btn span.new-list").find('input').val("");
 }
 
+function FormatNumberLength(num, length) {
+    var r = "" + num;
+    while (r.length < length) {
+        r = "0" + r;
+    }
+    return r;
+}
+
+function validateDates(start,end){
+    //Date format mm/dd/aaaa
+    var start = start.split("/");
+    var end = end.split("/");
+    
+    start = new Date(start[0], start[1] -1, start[2]);
+    end = new Date(end[0], end[1] -1, end[2]);
+
+    if (start > end) 
+        return false;
+    else
+        return true;
+}
+function validateTimes(start,end){
+    //Time format hh:mm
+    var start = start.split(":");
+    var end = end.split(":");
+    
+    if(start[0]>end[0])
+        return false;
+    else if(start[0]==end[0] && start[1]>end[1])
+        return false;
+    return true;
+}
+
+function checkEmail() {
+    var email = $('#registerEmail').val();
+    var item = $('#registerEmail').next('div');
+    var st = $('#emailStatus');
+    item.text('');
+    st.hide();
+
+    if (email=='Email') {
+        item.text('Necesitamos que rellenes el email');
+        //$(email).addClass('error');
+        item.show();
+        st.removeClass("ok").addClass("no-ok");
+        st.show();
+        return false;
+    }
+    
+    if (!GRM.common.checkemail(email)) {
+        item.text('E-mail inválido');
+        item.show();
+        st.removeClass("ok").addClass("no-ok");
+        st.show();
+        return false;
+    }
+    else {
+        $.ajax({
+            url:"/ajax/exists/",
+            type:'post',
+            dataType:'json',
+            data: {
+                email: email,
+                "csrfmiddlewaretoken": $('#registerFormForm input[type="hidden"]').val() 
+            },
+            async:true,
+            success: function(data){ 
+        
+                if(data.result){
+                    item.text("Esta cuenta ya está siendo usada");
+                    item.show();
+                    st.removeClass("ok").addClass("no-ok");
+                    st.show();
+                }
+                else
+                {
+                    //item.text("Esta cuenta ya está siendo usada");
+                    st.removeClass("no-ok").addClass("ok");
+                    st.show();
+                    item.hide();
+                }
+            }
+        });
+    }
+    
+    return true;
+}
+
+function checkTerms() {
+    if (!$('#termsCheckbox').is(":checked")) {
+       showMessage("Para poder crear una cuenta primero necesitas leer y aceptar las condiciones de uso.","error");
+       return false;
+    }
+    return true;
+}
+
+function checkPasswords(emptymessage) {
+    
+    var pwd1 = $('#userRegisterPass1').val(), pwd2 = $('#userRegisterPass2').val();
+    var item = $('#passwordStatus');
+    
+    if (pwd1.length==0 || pwd2.length==0) {
+
+        if (emptymessage) {
+            item.text("Debes rellenar los dos campos de las contraseñas");
+            item.show();
+        }
+
+        return false;
+        }
+    
+    if (pwd1!=pwd2){
+
+        item.text("Las contraseñas no coinciden, por favor vuelva a introducirlas");
+        item.show();
+
+        return false;
+        }
+    
+    if (pwd1.length<6){
+        item.text("La contraseña tiene que tener al menos 6 caracteres");
+        item.show();
+        return false;
+        }
+    
+    return true;
+}
+
+function showMenu(){
+    $('#login-bar p').show();
+    $('#login-bar ul').show();
+    $('#georemindme-form').hide();
+}
+
+function checkUncheck(obj){
+    var checkbox=$(obj).find('input');
+    if($(checkbox).attr('checked')==true)
+        $(checkbox).attr('checked',false);
+    else
+        $(checkbox).attr('checked',true)
+}
 
 /**
  * jQuery.fn.sortElements
@@ -823,3 +977,43 @@ jQuery.fn.sortElements = (function(){
     };
  
 })();  
+
+
+(function($){  
+$.extend(  
+{  
+    jsonp: {  
+        script: null,  
+        options: {},  
+        call: function(url, options) {  
+            var default_options = {  
+                callback: function(){},  
+                callbackParamName: "callback",  
+                params: []  
+            };  
+            this.options = $.extend(default_options, options);  
+            //Determina si se debe añadir el parámetro separado por ? o por &  
+            var separator = url.indexOf("?") > -1? "&" : "?";  
+            var head = $("head")[0];  
+            /*Serializa el objeto en una cadena de texto con formato URL*/  
+            var params = [];  
+            for(var prop in this.options.params){  
+                params.push(prop + "=" + encodeURIComponent(options.params[prop]));  
+            }  
+            var stringParams = params.join("&");  
+            //Crea el script o borra el usado anteriormente  
+            if(this.script){  
+                head.removeChild(script);  
+            }  
+            script = document.createElement("script");  
+            script.type = "text/javascript";  
+            //Añade y carga el script, indicandole que llame al metodo process  
+            script.src = url + separator + stringParams + (stringParams?"&":"") + this.options.callbackParamName +"=jQuery.jsonp.process";  
+            head.appendChild(script);  
+        },  
+        process: function(data) { this.options.callback(data); }  
+    }  
+});  
+})(jQuery)  
+
+

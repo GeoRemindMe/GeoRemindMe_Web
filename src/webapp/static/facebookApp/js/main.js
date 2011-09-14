@@ -1,7 +1,8 @@
 Config = null;
 
 $(document).ready(function() {
-    $('.help-txt').dialog({
+    
+    var dialogSettings={
             autoOpen:false,
 			resizable: false,
             buttons: [{
@@ -10,8 +11,14 @@ $(document).ready(function() {
                 }],
             draggable: false,
 			width:560,
-            position: ['right', 45]
-    });
+            
+    }
+    if(typeof($('#webapp'))=="undefined")
+        dialogSettings['position'] = ['right', 45];
+    else
+        dialogSettings['position'] = ['top', 65];
+        
+    $('.help-txt').dialog(dialogSettings);
     
        
     $('.help-icon img').click(function(){
@@ -22,11 +29,7 @@ $(document).ready(function() {
 function facebookInit(config) {
   Config = config;
 
-  FB.init({
-    appId: Config.appId,
-    xfbml: true,
-    cookie : true, // enable cookies to allow the server to access the session
-  });
+  FB.init(config);
   FB.Event.subscribe('auth.sessionChange', handleSessionChange);
 
   //FB.Canvas.setAutoResize();
@@ -38,12 +41,17 @@ function facebookInit(config) {
 }
 
 function handleSessionChange(response) {
+    tmp=response;
+    console.log(tmp)
+    console.log(Config.userIdOnServer);
+    console.log(tmp.session);
+    console.log(tmp.session.uid);
     //This checks if the user have changed the session and if it
     //is incoherent or there ir no session we move to home
     if ((Config.userIdOnServer && !response.session) ||
         Config.userIdOnServer != response.session.uid) 
     {
-        goHome();
+        //goHome();
     }
 }
 

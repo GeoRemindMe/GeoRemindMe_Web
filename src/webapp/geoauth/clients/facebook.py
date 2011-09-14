@@ -66,6 +66,7 @@ class FacebookClient(object):
         import memcache
         memclient = memcache.mem.Client()
         if user is not None:
+            self.user = user
             token = memcache.deserialize_instances(memclient.get('%sfbclientuser_%s' % (memcache.version, 
                                                                   user.id
                                                                   )
@@ -87,9 +88,9 @@ class FacebookClient(object):
             if token is None:
                 token = OAUTH_Access.get_token(access_token)  # TODO: buscar por proveedor
                 if token is not None:
-                    user = token.user
+                    self.user = token.user
                     token_cache = {'token': token,
-                                   'user': user
+                                   'user': token.user
                                    }
                     memclient.set('%sfbclienttoken_%s' % (memcache.version, 
                                                           access_token
@@ -98,9 +99,8 @@ class FacebookClient(object):
                     self.consumer = GraphAPI(access_token=access_token)
                     return
             else:
-                user = token['user']
+                self.user = token['user']
                 token = token['token']
-        self.user = user
         self.consumer = GraphAPI(access_token=token.token_key)
     
     def get_user_info(self): 
@@ -150,15 +150,20 @@ class FacebookClient(object):
     def authorize(self, user):
         """guarda el token de autorizacion"""
         if user is not None:#el usuario ya esta conectado, pero pide permisos
-            if OAUTH_Access.get_token(self.consumer.access_token,) is None: 
+            token = OAUTH_Access.get_token(self.consumer.access_token)
+            if token is None:
                 OAUTH_Access.remove_token(user, 'facebook')
-                access = OAUTH_Access.add_token(
+                token = OAUTH_Access.add_token(
                                                 token_key=self.consumer.access_token,
                                                 token_secret='',
                                                 provider='facebook',
                                                 user=user,
                                                 )
+            else:
+                token.user = user
+                token.put()
             facebookInfo = self.get_user_info()
+            
             if user.facebook_user is None:
                 fbuser = FacebookUser.register(user=user, uid=facebookInfo['id'], 
                                                email=facebookInfo['email'], realname=facebookInfo["name"],
@@ -170,6 +175,21 @@ class FacebookClient(object):
                              profile_url=facebookInfo["link"]
                             )
             self.user = user
+            self.token  = token
+            import memcache
+            memclient = memcache.mem.Client()
+            token_cache = {'token': token,
+                           'user': self.user
+                           }
+            memclient.set('%sfbclienttoken_%s' % (memcache.version, 
+                                                  self.consumer.access_token
+                                                  ), 
+                              token_cache)
+            memclient.set('%sfbclientuser_%s' % (memcache.version, 
+                                                  user.id
+                                                  ),
+                               memcache.serialize_instances(token)
+                                               )
             return True
         return False
     
@@ -188,7 +208,8 @@ class FacebookClient(object):
                 self.user = User.register(email=facebookInfo['email'], password=password if password is not None else make_random_string(length=6))
                 self.user.profile.sync_avatar_with = 'facebook' #  por defecto, si el usuario es nuevo sincronizamos con facebook
                 self.user.profile.put()
-        self.authorize(self.user)
+        if not self.authorize(self.user):
+            raise OAUTHException()
         return self.user
     
     def token_is_valid(self):
@@ -207,9 +228,10 @@ class FacebookFriendsRPC(object):
         self.user = user
         self.friends = {}
         try:
-            fbclient = FacebookClient.load_client(user=user)
+            fbclient = FacebookClient(user=user)
             self.rpc = fbclient.get_friends_to_follow(rpc=self.rpc)
         except:
+            raise
             return None
         return self.rpc
     

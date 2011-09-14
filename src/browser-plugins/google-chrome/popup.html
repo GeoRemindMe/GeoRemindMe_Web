@@ -1,150 +1,45 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<style>
-	body {
-	  min-width:400px;
-	  overflow-x:hidden;	
-	  font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
-	  font-size:11px;
-	}
-
-	#title {
-		color:black;
-	}
-
-	img {
-	  margin:5px;
-	  border:2px solid black;
-	  vertical-align:middle;
-	  width:75px;
-	  height:75px;
-	}
-	.active{
-		color:black;
-	}
-	.hidden{
-		display:none;
-	}
-	ul#tabMenu{
-		margin: 0 0 10px;
-		padding: 0;
-	}
-	ul#tabMenu li{
-
-		-moz-border-radius: 3px 3px 3px 3px;
-		-webkit-border-radius: 3px;
-		border-radius: 3px;
-		background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
-		background: -webkit-gradient(linear,0% 40%,0% 70%,from(#F9F9F9),to(#E3E3E3));
-		background-image: -o-linear-gradient(top, rgb(249, 249, 249) 40%, rgb(227, 227, 227) 70%);
-		border-radius: 3px 3px 3px 3px;
-		border-color: #BBBBBB #BBBBBB #A0A0A0;
-		border-style: solid;
-		border-width: 1px;
-		color: #000000;
-		cursor: pointer;
-		display:inline-block;
-		font-weight: normal;
-		line-height: 1.6em;
-		margin: 6px 5px;
-		outline: medium none;
-		padding: 0 8px;
-		text-align: center;
-		text-decoration: none;
-		vertical-align: middle;
-		white-space: nowrap;
-	}
-	
-	#login-form{
-		text-align:center;
-	}
-		#social-networks{
-			list-style: none outside none;
-			margin:0;
-			padding:0;
-			display: inline-block;
-		}
-		#social-networks li{
-			background-image: url("images/sprite_social_min.png");
-			background-repeat: no-repeat;
-			display: inline-block;
-			cursor:pointer;
-			padding-left: 20px;
-			height: 16px;
-		}
-		#social-networks li span{
-			visibility:hidden;
-			
-		}
-	
-		#login-form form{
-			margin-bottom: 0;
-			margin-left: auto;
-			margin-right: auto;
-			width: 400px;
-		}
-			#login-form form p{
-				display: inline-block;
-			}
-			#login-form form label{
-				display: none;
-				
-			}
-			#login-form form input{
-				font-size: 11px;
-			}
-	
-	.twitter{
-	}
-	.facebook{
-		background-position: 0 -32px;
-	}
-	.google{
-		background-position: 0 -16px;
-	}
-	
-	</style>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="/css/main.css">
+	<script type="text/javascript" src="jquery.min.js"></script>
+    
 	<script type="text/javascript">
-
+        GRMcookie=null;
 		function checkIfCookie() {
+            
 			getCookies( "http://localhost:8080/dashboard/", 
 						"georemindme_session_cookie", 
 						function(id) {
 							if(id!=null){
 								$('#login-form').addClass('hidden');
 								$('#logged').removeClass('hidden');
-							}
+                                window.location="timeline.html"
+                                GRMcookie=id;
+                                refreshTimeline();
+							}else
+                                GRMcookie=null
 						});
 		}
 		
 		function getCookies(domain, name, callback) {
-			chrome.cookies.get({"url": domain, "name": name}, function(cookie) {
-				if (!cookie) { callback(null); }
-				else { callback(cookie.value); }
-			});
+			if (typeof(chrome)!="undefined")
+                chrome.cookies.get({"url": domain, "name": name}, function(cookie) {
+                    if (!cookie) { callback(null); }
+                    else { callback(cookie.value); }
+                });
 			
 		}
 
-		$(document).ready(function(){
+        
+        $(document).ready(function(){
 			checkIfCookie();
-			$('#tabMenu li').click(function(){
-				tab_id=$('#tabMenu li.active').attr('id')
-				$('#'+tab_id+'_content').addClass('hidden');
-				$('#tabMenu li.active').removeClass('active');
-				
-				tab_id=$(this).attr('id')
-				console.log(tab_id)
-				$('#'+tab_id+'_content').removeClass('hidden');
-				$(this).addClass('active');
-			})
 		});
 	</script>
 	
 </head>
 <body>
-	<div id="login-form">
+	<div id="login-form"  class="hidden">
 		Identifícate usando: 
 		<ul id="social-networks">
 			<li class="twitter" title="Twitter" onclick="javascript:window.open('http://localhost:8080/login/twitter/?cls')"><span>.</span></li>
@@ -158,28 +53,7 @@
 		</form>
 	</div>
 	
-	<div id="logged" class="hidden">
-		<ul id="tabMenu">
-			<li id="activity" class="active">Actividad</li>
-			<li id="bag">Mochila</li>
-			<li id="suggestion">Hacer sugencia</li>
-			<li onclick="javascript:window.open('http://localhost:8080/logout')">Desconectar</li>
-		</ul>
-		<div id="activity_content">
-			Actividad
-<!--
-			<a href="javascript:hayCookie();">Show me da cookie</a>
-			<div id="box">
-				This is your fucking cookie: <div id="insert"></div>
-			</div>
--->
-		</div>
-		<div id="bag_content" class="hidden">
-			Mochila
-		</div>
-		<div id="suggestion_content" class="hidden">
-			Sugerencias
-		</div>
-	</div>
+	
+
 </body>
 </html>

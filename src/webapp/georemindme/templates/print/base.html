@@ -1,0 +1,113 @@
+{%load tags %}
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="/static/webapp/style/print.css" type="text/css">
+    <link rel="stylesheet" href="/static/common/css/print.css" type="text/css" media="print" />
+    <script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    
+    
+    <title>{% block title %}GeoRemindMe!, un mundo entero por descubrir{% endblock %}</title>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#print-menu li:not(#printer)').each(function(i,elem){
+                $(elem).toggle(function(){
+                        $(this).find('span').addClass('show');
+                        $(this).find('span').removeClass('hide');
+                        $('.'+$(this).attr('id')).hide();
+                    },function(){
+                        
+                        $(this).find('span').addClass('hide');
+                        $(this).find('span').removeClass('show');
+                        $('.'+$(this).attr('id')).show();
+                });
+                
+                
+                $('.textarea .textAreaElement').resizable({
+                    handles: "se"
+                }).ready(function(){
+                    var elemResizer=$(this).find('.ui-resizable-se');
+                    $(elemResizer).css('position','absolute')
+                    $(elemResizer).css('bottom','16px')
+                    $(elemResizer).css('right','0')
+                });
+                
+                
+                $( ".resizableMap" ).resizable({
+                    stop: function(event, ui) { 
+                        var originalSize=ui.originalSize.width+"x"+ui.originalSize.height;
+                        var newSize=$(this).width()+"x"+$(this).height()
+                        var newSrc=$(this).find('img').attr('src').replace('size='+originalSize,'size='+newSize);
+                        $(this).find('img').attr('src',newSrc)
+                    }
+                });
+            });
+            
+            $('.add-notes span.title').click(function(){
+                $(this).parent().find('.textarea').show();
+                $(this).hide();
+            });
+            $('.closeTextarea').click(function(){
+                $(this).parent().parent().find('.title').show();
+                $(this).parent().hide();
+            });
+            
+        });
+
+        function changeZoom(obj,diff){
+            var elem=$(obj).parent().parent().find('img');
+            var actualZoom=parseInt($(elem).attr('value'))
+            var newZoom=actualZoom+diff;
+            var imageSrc=$(elem).attr('src');
+            
+            var newSrc=imageSrc.replace('zoom='+actualZoom,'zoom='+newZoom);
+            $(elem).attr('src',newSrc)
+            $(elem).attr('value',newZoom)
+        }
+        
+        
+    </script>
+    {% block extra_js %}{% endblock %}
+</head>
+<body>
+    
+    <div id="print-container">
+        <div id="print-menu">
+         
+            <ul>
+                {% block menu_items %}
+                    <li id="printer"><span onclick="window.print()">Imprimir</span></li>
+                    <li><strong>Mostrar/Ocultar:</strong></li>
+                    <li id="maps"><span class="hide">Mapas</span></li>
+                    <li id="gps-location"><span class="hide">Localización GPS</span></li>
+                    <li id="votes"><span class="hide">Valoraciones</span></li>
+                    <li id="links"><span class="hide">Enlaces</span></li>
+                    <li id="autor-date"><span class="hide">Fecha y autor</span></li>
+                    <li id="comments"><span class="hide">Comentarios</span></li>
+                {% endblock %}
+            </ul>
+        </div>
+        
+    </div>
+    
+    {% block body %}
+    {% endblock %}
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -24,9 +24,15 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
+    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
+<!--
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+-->
 	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+    <script type="text/javascript" src="/static/common/js/jquery.cookies.2.2.0.min.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.reversegeocode.min.js"></script>
 
     {% block extra_js %}{%endblock%}
 
@@ -35,10 +41,33 @@
 	<![endif]-->
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$("#left-col").css("height",$(this).height()+'px');
-			$("#right-col").bind("resize",function(){
-                $("#left-col").css("height",$(this).height()+'px');
-            });
+            
+            /*** login function ***/
+			$('#loginForm').submit(function(e){
+				e.preventDefault();
+				GRM.wait();
+				$.ajax({
+					type: "POST",
+					url: "/ajax/login/",
+					dataType:'json',
+					data: {
+						"user_login-email":$(this).find('[name="email"]').val(),
+						"user_login-password":$(this).find('[name="password"]').val(),
+						"csrfmiddlewaretoken":$(this).find('[name="csrfmiddlewaretoken"]').val()
+					},
+					error: function() { GRM.nowait(); },
+					success: function(msg){
+						if(msg.error!="") {
+							showMessage(msg.error,"error");
+							GRM.nowait();
+						}
+						else {
+							setTimeout(function(){window.location=msg._redirect;},3000);
+						}
+					}
+				});
+			});
+        
             
             /*** show georemindme login ***/
 			$('.georemindme').click(function(){
@@ -46,6 +75,20 @@
 			   $('#login-bar ul').hide();
 			   $('#georemindme-form').show();
 			});
+            
+            /*** Resize right column ***/
+            $("#left-col").css("height",$(this).height()+'px');
+			$("#right-col").bind("resize",function(){
+                $("#left-col").css("height",$(this).height()+'px');
+            });
+            
+            
+            $('#search-form').bind('submit', function(e){
+                e.preventDefault;
+                console.log("entro");
+                window.location="/search/"+$(this).find("input[type='text']").val();
+                return false;
+            });
 		});
 			
 			
@@ -58,43 +101,61 @@
 			
 	<style type="text/css">
 		#login-bar {
-			margin:0;
-			width: 750px;
+			margin-top:15px;
+			width: 700px;
 		}
-		#login-bar p, #login-bar ul, #login-bar ul li{
+		a#add-suggestion-btn, #right-block a#register-btn, #registerForm input[type="submit"] {
+            margin:0;
 		}
+        #loginSec #header-top {
+            height:60px;
+        }
+        #login-bar p,#login-submenu span {
+            color:#eeeeee;
+        }
+        #loginSec #header-top form {
+            margin-top: -13px;
+        }
+        #loginSec #login-bar a.hoverlink,
+        #loginSec #login-bar span.hoverlink{
+            color:#68B1FF;
+        }
 	</style>
 </head>
-<body>
+<body id="loginSec">
 	<div id="bg-header" class="orange-gradient">
 	<header id="header-top" class="container">
 		<div id="logo-link">
-            <a href="/"><img src="/static/webapp/img/logo3.png" alt="" id="logo"></a>
+            <a href="/">
+                <img src="/static/webapp/img/logo-webapp8.png" alt="" id="logo">
+            </a>
         </div>
 		<div id="login-bar">
-			<a href="/" id="add-suggestion-btn">Regístrate</a>
-
-            <p>Identifícate usando:</p>
-            <ul>
-                <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para identificarte"><span>Twitter</span></li>
-                <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para identificarte"><span>Facebook</span></li>
-                <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para identificarte"><span>Google</span></li>
-                <li class="georemindme" title="Identifícate usando tus datos de GeoRemindMe"><span>GeoRemindMe</span></li>
-            </ul>
-            <div id="georemindme-form" style="display:none">
-                <form action="." method="post" id="loginForm">
-                    <input type="text" name="email" placeholder="Usuario o email"/>
-                    <input type="password" name="password" id="password" placeholder="Contraseña"/>
-                    <input type="submit" id="login-btn" value="Entrar" />
-                    <div id="login-submenu">
-                        <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> Recordarme</span>
-                        <span><a href="/remind/" class="link">Recuperar contraseña</a></span>
-                        <span class="link" onclick="javascript:showMenu()">Cancelar</span>
-                    </div>
-                    {% csrf_token %}
-                </form>
-            </div>
             
+            
+            <a href="/" id="register-btn" class="anonymous">Create una cuenta</a>
+            <div style="float:right">
+                <p>Identifícate usando:</p>
+                <ul>
+                    <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para identificarte"><span>Twitter</span></li>
+                    <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para identificarte"><span>Facebook</span></li>
+                    <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para identificarte"><span>Google</span></li>
+                    <li class="georemindme" title="Identifícate usando tus datos de GeoRemindMe"><span>GeoRemindMe</span></li>
+                </ul>
+                <div id="georemindme-form" style="display:none">
+                    <form action="." method="post" id="loginForm">
+                        <input type="text" name="email" placeholder="Usuario o email"/>
+                        <input type="password" name="password" id="password" placeholder="Contraseña"/>
+                        <input type="submit" id="login-btn" value="Entrar" />
+                        <div id="login-submenu">
+                            <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> Recordarme</span>
+                            <span><a href="/remind/" class="hoverlink">Recuperar contraseña</a></span>
+                            <span class="hoverlink" onclick="javascript:showMenu()">Cancelar</span>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>            
         </div>
 		
 		
@@ -121,5 +182,6 @@
 			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
 		</div>
 	</footer>
+    {% include "browser_msgs.html" %}
 </body>
 </html>

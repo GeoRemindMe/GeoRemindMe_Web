@@ -20,34 +20,48 @@ def login_panel(request):
                 return render_to_response('register.html', {"permissions": __web_settings.OAUTH['facebook']['scope'] },
                               context_instance=RequestContext(request)
                               )
+            # ya conociamos al usuario
             init_user_session(request, user, remember=True, is_from_facebook=True)
             request.user = user
-        if request.user.username is None or request.user.email is None:
-            if request.method == 'POST':
-                f = SocialUserForm(request.POST, 
-                                   prefix='user_set_username', 
-                                   initial = { 'email': request.user.email,
-                                               'username': request.user.username,
-                                             }
-                                   )
-                if f.is_valid():
-                    user = f.save(request.user)
-                    if user:
-                        init_user_session(request, user, remember=True, is_from_facebook=True)
-                        return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+        if request.user.is_authenticated():
+            if request.user.username is None or request.user.email is None:
+                if request.method == 'POST':
+                    
+                    f = SocialUserForm(request.POST, 
+                                       prefix='user_set_username', 
+                                       initial = { 'email': request.user.email,
+                                                   'username': request.user.username,
+                                                 }
+                                       )
+                    if f.is_valid():
+                        user = f.save(request.user)
+                        if user:
+                            init_user_session(request, user, remember=True, is_from_facebook=True)
+                            return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+                else:
+                    
+                    f = SocialUserForm(prefix='user_set_username', 
+                                       initial = { 'email': request.user.email,
+                                                   'username': request.user.username,
+                                                  }
+                                       )
+                
+                return render_to_response('create_social_profile.html', {'form': f}, 
+                                           context_instance=RequestContext(request)
+                                          )
             else:
-                f = SocialUserForm(prefix='user_set_username', 
-                                   initial = { 'email': request.user.email,
-                                               'username': request.user.username,
-                                              }
-                                   )
-            return render_to_response('create_social_profile.html', {'form': f}, 
-                                       context_instance=RequestContext(request)
-                                      )
-
-        else:
-            init_user_session(request, request.user, remember=True, is_from_facebook=True)
-            return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
+#                if request.facebook['client'].user is None:
+#                    from geouser.models import AnonymousUser
+#                    user_logged = request.user
+#                    request.session.delete()
+#                    request.user = AnonymousUser()
+#                    return render_to_response('USUARIO CON SESION EN LA WEB PERO NO USUARIO DE FACEBOOK.html', 
+#                                                  {
+#                                                   'user_logged': user_logged,
+#                                                   },
+#                                                  context_instance=RequestContext(request)
+#                                                  )
+                return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
     return render_to_response('register.html', {"permissions": __web_settings.OAUTH['facebook']['scope'] },
                               context_instance=RequestContext(request)
@@ -125,7 +139,7 @@ def view_place(request, place_id):
 @facebook_required
 def view_tag_suggestions(request, slug):
     from geotags.views import view_tag_suggestions
-    return view_place(request, slug, template='view_tag.html')
+    return view_tag_suggestions(request, slug, template='view_tag.html')
 
 
 @facebook_required

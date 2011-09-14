@@ -34,22 +34,32 @@
         
         <hr>
         <div id="step-one">
-            <h2>Paso 1: Conéctate con tus amigos</h2>
+            <h2>Paso 1 de 2: Recibe más y mejores sugerencias</h2>
             <p>
-                Si quieres, te diremos cuales de tus conocidos ya están en GeoRemindMe.<br>
-                <strong>Danos permiso para</strong>:
+                Para recibir sugerencias de mejor calidad, lo más importante es que te conectes con usuarios que compartan gustos contigo.<br>
+            </p>
+            <p>
+                <strong>Comprueba ahora<sup>(1)</sup> cuales de tus amigos ya están en GeoRemindMe!</strong>:
             </p>
             <ul id="link-social-accounts">
-                <li><a id="google" href="/ext/google/contacts/" target="_blank"><strong>Buscar</strong> entre mis contactos de Gmail</a></li>
-                <li><a id="twitter" href="/ext/twitter/contacts/" target="_blank"><strong>Buscar</strong> entre las personas que sigo en Twitter</a></li>
+                <li><a id="google" href="/ext/google/contacts/" target="_blank"><strong>Buscar ahora</strong> entre mis contactos de Gmail</a></li>
+                <li><a id="twitter" href="/ext/twitter/contacts/" target="_blank"><strong>Buscar ahora</strong> entre las personas que sigo en Twitter</a></li>
             </ul>
-            <span class="btn" id="last-step">Último paso</span>
+            <span class="btn" id="last-step">Paso 2</span>
             <div class="note clear">
-                <strong class="show-more" onclick="javascript:toggle_showMore()">[Ver más]</strong><strong>Nota</strong>: En ningún momento enviaremos mensajes a tus contacto <p id="show-more-text"> patapin, patapan</p>
+                <strong class="show-more" onclick="javascript:toggle_showMore()">[Ver más]</strong><strong>(1)</strong>: 
+                En ningún momento enviaremos ningún correo electrónico... <div id="show-more-text"> a tus contactos sin tu permiso. 
+                Nosotros también hemos pasado por página que envían correos a nuestros usuarios sin nuestro permiso pero nosotros
+                no somos de esta clase. 
+                <br><br><strong>Tan solo queremos ofrecerte una herramienta con todas las comodidades.</strong><br><br>
+                
+                    Un saludo y gracias por confiar en <a href="http://georemindme.com/team" target="_blank">nosotros</a>.
+                
+                </div>
             </div>
         </div>
         <div id="step-two" style="display:none">
-            <h2>Paso 2:Completa tu perfil</h2>
+            <h2>Paso 2 de 2:Completa tu perfil</h2>
             <p>
                 Por último, y para poder terminar de configurar tu cuenta,
                 necesitamos que nos confirmes cual quieres que sea tu nombre
@@ -58,7 +68,8 @@
             {% include "forms/SocialUserForm.html" %}
             <hr>
             <p class="footer-notes">
-                (1) El nombre de usuario será usado para....
+                (1) Actualmente el nombre de usuario puede ser cambiado en cualquier momento salvo que esté reservado por otro usuario.<br>
+                Una vez elegido el nombre de usuario, este se utilizará para crear tu perfil público .
             </p>
         </div>
     </div>

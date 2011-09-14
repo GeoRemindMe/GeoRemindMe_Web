@@ -16,6 +16,44 @@ input{
 
 /****************************
  *      
+ *  Links
+ * 
+ ***************************/
+#facebookApp .link,
+#facebookApp .hoverlink,
+#facebookApp #view-suggestion span.likeBtn span.hoverlink,
+#facebookApp ul#chronology a.link{
+    color:blue !important;
+}
+
+.link{
+    text-decoration:underline;
+    cursor:pointer;
+}
+.hoverlink{
+    text-decoration:none;
+}
+.hoverlink:hover{
+    text-decoration:underline;
+    cursor:pointer;
+}
+.black-link{
+    color:black !important;
+}
+#view-suggestion span.likeBtn span.hoverlink{
+    text-decoration:none;
+}
+#view-suggestion span.likeBtn span.hoverlink:hover{
+    text-decoration:underline;
+}
+
+#details-form span.used{
+    color: #555555 !important;
+    cursor: pointer;
+}
+
+/****************************
+ *      
  *  LEFT COLUMN
  * 
  ***************************/
@@ -194,6 +232,7 @@ input{
     border-left: 1px solid #B3B3B3;
     float: left;
     padding-left: 15px;
+    padding-bottom: 15px;
     width: 550px;
     min-height:500px;
     font-size: 1em;
@@ -234,6 +273,28 @@ input{
      *  COMMON
      * 
      ***************************/
+    .suggestionx16{
+        background:url("/static/common/img/suggestionsx16.png") no-repeat;
+        padding-left: 20px;
+    }
+    .like-dislike,.likex16{
+        background: url("/static/common/img/like.png") no-repeat scroll 0 0 transparent;
+        display: inline-block;
+        line-height: 20px;
+        padding-left: 20px;
+    }
+    .reject-suggestion{
+        background:url("/static/common/img/reject.png") no-repeat scroll 0 -2px transparent;
+        padding-left: 20px;
+    }
+    .accept-suggestion{
+        background:url("/static/common/img/accept.png") no-repeat scroll 0 -2px transparent;
+        padding-left: 20px;
+    }
+    .remember-forget,.saved{
+        background: url("/static/common/img/save.png") no-repeat scroll 0 -2px transparent;
+        padding-left: 20px;
+    }
 	#print-icon{
 		background-image: url("/static/common/img/printer.png");
 		background-repeat:no-repeat;
@@ -246,6 +307,9 @@ input{
         padding: 0.5em 1em;
         position: absolute;
         width: 400px;
+    }
+    .strong{
+        font-weight:bold;
     }
     .error{
         background-color: #FCC7C7;
@@ -286,6 +350,10 @@ input{
     }
     .error-msg{
          display: none;
+    }
+    
+    #edit-profile .error-msg{
+         display: block;
     }
     .error-msg ul{
     }
@@ -478,6 +546,9 @@ input{
         display:none;
         
     }
+    #social-profile #show-more-text{
+        line-height:2em;
+    }
     
     a:visited, a:active{
         color:#01F;
@@ -497,6 +568,9 @@ input{
         padding: 1px 15px 2px;
         text-align: center;
     }
+    div#add-suggestion div span#submit-button.btn{
+        margin-right:1em;
+    }
     .hidden{
         visibility:hidden;
         display:none;
@@ -508,20 +582,7 @@ input{
         visibility:visible !important;
         display:block !important;
     }
-    
-    .link{
-        color:#3896FF;
-        text-decoration:underline;
-        cursor:pointer;
-    }
-    .hoverlink{
-        color:#3896FF;
-        text-decoration:none;
-    }
-    .hoverlink:hover{
-        text-decoration:underline;
-        cursor:pointer;
-    }
+
     
     
     #answerMessage{
@@ -547,7 +608,7 @@ input{
         background-image: url('/static/facebookApp/img/delete.png');
         float:right;
         cursor:pointer;
-        margin-right: -7px;
+        margin-right: -72px;
 /*
         margin-top:0.5em;
 */
@@ -586,10 +647,17 @@ input{
             color: #555555;
             display: block;
             font-size: 0.9em;
+            
+        }
+        .suggestionPlace{
+            line-height:20px;
+            display:inline-block;
         }
         ul#chronology .suggestionPlace a{
             color: #555555;
+/*
             font-weight:bold;
+*/
             text-decoration:none;
         }
         ul#chronology .suggestionPlace a:hover{
@@ -626,12 +694,26 @@ input{
             width: 50px;
         }
         ul#chronology li div.avatar img{
-            width:50px
+            width:50px;
+            height:50px;
+            border-radius: 5px;
+            -moz-border-radius: 5px;
         }
         
-        ul#chronology li a.black-link,a.black-link{
+        ul#chronology li a.black-link,a.black-link,a.black-link:visited{
             text-decoration:none;
-            color:#333;
+            color:#333 !important;
+        }
+        ul#chronology li a.dark-link,a.dark-link{
+            color:#555555 !important;
+            text-decoration:none;
+            
+        }
+        ul#chronology li .timeline-msg img{
+            float: left;
+            height: 25px;
+            margin-right: 10px;
+            width: 25px;
         }
         ul#chronology li a.black-link:hover{
             text-decoration:underline;
@@ -641,6 +723,26 @@ input{
             padding-left: 0.5em;
             visibility:hidden;
         }
+        ul#chronology li span.action-bar span{
+            
+        }
+        
+        ul#chronology li span.action-bar span.comment{
+            background:url("/static/common/img/comments.png") no-repeat;
+            padding-left:20px;
+            display: inline-block;
+            height: 16px;
+            line-height: 16px;
+        }
+        ul#chronology li span.action-bar .details{
+            background:url("/static/common/img/details.png") no-repeat;
+            padding-left:20px;
+            display: inline-block;
+            height: 16px;
+            line-height: 16px;
+
+        }
+        
             ul#chronology li .comment-box .action-bar{
                 font-size:1em;
             }
@@ -649,6 +751,7 @@ input{
                 display: block;
                 font-size: 11px;
                 float: left;
+                line-height:20px;
             }
             ul#chronology li span.action-bar span, span.action-bar a{
                 color:#0011FF;
@@ -703,6 +806,8 @@ input{
             ul#chronology div.comment-box{
                 padding-left: 50px;
                 border-bottom:0;
+                position: relative;
+                top: 0.5em;
             }
             ul#chronology div.comment-box ul{
                 margin:0;
@@ -752,7 +857,7 @@ input{
                 }
                 ul#chronology li div.timeline-msg{
                     float:left;
-                    width:475px;
+                    width:410px;
                     border-bottom:0;
                 }
                 ul#chronology div.comment-box ul li .timestamp,
@@ -860,6 +965,11 @@ input{
             background-position: right 10px;
             background-repeat: no-repeat;
         }
+        ul#chronology li.msg-360{
+            background-image: url("/static/facebookApp/img/timeline/110.png");
+            background-position: 99% 10px;
+            background-repeat: no-repeat;
+        }
     
     .load-more{
         background-color: #3B5998;
@@ -891,7 +1001,7 @@ input{
         float: left;
         font-size: 1 em;
         line-height: 1.8em;
-        width: 90px;
+        width: 160px;
         font-weight: bold;
         margin: 9px 0;
     }
@@ -1480,14 +1590,14 @@ input{
      * 
      ***************************/
     #add-suggestion span.waiting{
-        background: url("/static/facebookApp/img/spinning-icons/wait16trans.gif") no-repeat scroll 5px 4px #EEEEEE;
+        background: url("/static/facebookApp/img/spinning-icons/wait16trans.gif") no-repeat scroll 5px 6px #EEEEEE;
         border: 1px solid #CCCCCC;
         color: black;
         display: block;
         font-weight: bold;
         line-height: 2em;
         margin-top: -5px;
-        padding: 2px 10px 2px 25px;
+        padding: 0px 10px 0px 25px;
     }
     
     #add-suggestion form{
@@ -1516,6 +1626,9 @@ input{
         font-weight: bold;
         width: 155px;
     }
+    #add-suggestion form#add-suggestion-form div#date div span{
+        cursor:pointer;
+    }
     #add-suggestion #id_description{
         clear: both;
         display: block;
@@ -1543,7 +1656,8 @@ input{
     
     #date input{
         border: 1px solid #CCCCCC;
-        color: #3A3935;
+        color: #999999 !important;
+        font-style: italic !important;
         height: 15px;
         line-height: 15px;
         margin: 0 3px;
@@ -1660,7 +1774,7 @@ input{
         height: 1.7em;
         line-height: 1.5em;
         padding: 5px;
-        width: 535px;
+        width: 515px;
 
     }
     .btnGmaps{
@@ -1695,12 +1809,15 @@ input{
     }
     
     #address-form{
-        /*display:none;*/
+        display:none;
         border-bottom: 1px solid #ccc
+    }
+    #place-form{
+        border-bottom:1px solid #ccc
     }
     #place-form label{
         clear: left;
-        display: inline-block;
+        display: none;
         margin: 10px;    
         font-weight: bold;
     }
@@ -1770,10 +1887,7 @@ input{
             font-weight:bold;
             margin: 0 0.5em;
         }
-        #details-form span.used{
-            color: #555555;
-            cursor: pointer;
-        }
+
         
         #add-suggestion div.help-icon{
         }
@@ -1881,7 +1995,6 @@ input{
 		border: 1px dotted #555555;
 		float: right;
 		font-size: 0.9em;
-		margin-top: 1em;
 		padding: 0.5em;
 		color:#777;
     }
@@ -1902,7 +2015,7 @@ input{
 		width: 30px;
     }
     .not-mine{
-		background-color:#F4F4F4;
+		background-color:#EEEEEE;
     }
     .mine{
     }
@@ -2004,9 +2117,10 @@ input{
 			border-bottom: 0;
         }
     div#content{
-        border-bottom:1px dotted #ddd;
-        border-right:1px dotted #ddd;
-        border-left:1px dotted #ddd;
+        border-bottom:1px dotted #999;
+        border-right:1px dotted #999;
+        border-left:1px dotted #999;
+        margin-bottom: 1em;
     }
         div#content div.tab-content{
         }
@@ -2087,12 +2201,31 @@ input{
 */
                 min-width: 85px;
             }
+            
             div#content div.expanded dd{
                 display: inline-block;
                 margin-top: 5px;
                 float: left;
                 margin: 0;
             }
+            
+            div#content div.expanded dt,
+            div#content div.expanded dd{
+                line-height:2.5em;
+            }
+            
+            div#suggestions div.datetime-edition input{
+                padding: 0 2px;
+                text-align: center;
+                width: 80px;
+                border: 1px solid #CCCCCC;
+            }
+            div#content div.expanded dl dd input.short_url{
+                border: 1px solid #CCCCCC;
+                font-size: 1.1em;
+                width: 120px;
+            }
+            
                 div#content div.expanded dt.share-row,
                 div#content div.expanded dd.share-row{
                     margin-top:5px;
@@ -2366,6 +2499,10 @@ input{
         list-style: none outside none;
         
     }
+
+    #suggest_suggestion_menu span.dropDownBtn{
+        margin:-2px 0 0 0.5em;
+    }
     .save-at{
         background: url("/static/webapp/img/dropdownmenu.png") no-repeat scroll 96% 4px transparent !important;
         margin-right: -4px;
@@ -2407,6 +2544,8 @@ input{
         padding: 0;
         position: absolute;
         text-align: left;
+        max-height: 150px;
+        overflow: auto;
         width: auto;
         z-index: 2;
     }
@@ -2471,6 +2610,18 @@ input{
         padding: 0.3em;
         cursor:pointer;
     }
+    .help-txt{
+        line-height:2em;
+    }
+    .help-txt ul{
+        list-style: square outside none;
+        margin-left: 2em;
+    }
+    .help-txt ul li{
+    }
+    .help-txt strong{
+        font-weight:bold;
+    }
     
     div.ui-dialog div#share-text.help-txt input{
 		display: block;
@@ -2515,13 +2666,21 @@ input{
     
     #view-suggestion #print-icon{
 		background-position: 2px -32px;
-		color: #3896FF;
+		
 		float: none;
 		height: 16px;
 		line-height: 16px;
-		margin-top: 0.5em;
+		margin-top: 1.5em;
 		padding-left: 25px;
-		text-decoration: underline;    }
+    }
+		
+	#view-suggestion #add-to-list{
+		background-image: url("/static/common/img/suggestionsx16.png");
+        background-position: 2px 50%;
+        background-repeat: no-repeat;
+        margin-top: 5px;
+        padding-left: 25px;
+	}
     #view-suggestion .show-more{
 		float: none;
 		color: #3896FF;
@@ -2578,21 +2737,51 @@ input{
         line-height: 1.5em;
         margin: 0.2em 0 0.5em;
         display:block;
+        width: 100%;
+        font-size:1.4em;
+        float:left;
+    }
+    #view-suggestion div.suggestion h1 a{
+        color:#555555;
+        text-decoration:none;
+    }
+    
+    #view-suggestion div.suggestion h1 > span{
+        float: right; 
+        display: block;
+        margin-top: 0; /*Le pongo top=0 para webapp.suggestionprofile*/
+        margin-left: 10px; 
+        font-size: 0.8em; 
+        border: 1px solid rgb(204, 204, 204); 
+        padding: 0em 0.5em;
+        line-height:1.4em;
     }
     #view-suggestion div.suggestion p,
     #view-list div.suggestion p{
-        font-size: 1.1em;
-        line-height: 1.7em;
+        clear: left;
+		display: block;
+		float: none;
+		font-size: 1.1em;
+		line-height: 1.7em;
+		margin-right: 10px;
+        margin-bottom:10px;
+		width: auto;
+    }
+    #view-suggestion div.suggestion h1 img{
+        border: 0 none;
+        float: left;
+        margin: 4px 0.5em 0 0;
     }
     #view-suggestion div.suggestion img,
     #view-list div.suggestion img{
         float: right;
         margin-top: 0.7em;
-         clear: right;
-/*
-        margin-top: 15px;
-*/
+        clear: right;
+        margin-bottom: 1em;
         border: 1px solid #AAAAAA;
+    }
+    #view-suggestion div.suggestion img{
+        float:none;
     }
     #view-suggestion div.suggestion .panoramio-wapi-tos img{
 		float:none;
@@ -2604,9 +2793,13 @@ input{
     #view-suggestion .dontLikeSuggestion.likebtn.btn{
     }
     #view-suggestion ul#tag-list{
-        margin:0;padding:0;
-        width: 305px;
-        font-size:1.1em;
+        display: inline;
+/*
+		font-size: 1.1em;
+*/
+		line-height: 1.7em;
+		margin: 0;
+		padding: 0;
     }
     #view-suggestion .suggestion p{
         margin:0;
@@ -2615,11 +2808,13 @@ input{
     #view-suggestion span#save-btn{
         margin-right:1em;
     }
-    #tag-list-label{
+    #view-suggestion div.suggestion p#tag-list-label{
         margin:0;
+        display:inline;
     }
     #view-suggestion ul#tag-list li{
         display:inline-block;
+        font-size:1.1em;
     }
     
     #view-suggestion ul#tag-list form{
@@ -2634,6 +2829,26 @@ input{
         float: right;
         padding: 0;
         text-align: center;
+    }
+    
+    #view-suggestion div.suggestion ul#action-bar {
+    margin: 0;
+    padding: 0;
+    }
+    #view-suggestion div.suggestion ul#action-bar>li{
+        display: block;
+        float: left;
+        line-height: 20px;
+        margin-right: 20px;
+        margin-top: 0;
+    }
+    #view-suggestion div.suggestion ul#action-bar>li p{
+        float: left;
+        font-size: 1em;
+    }
+    #view-suggestion ul#action-bar span.btn {
+        margin:0;
+        height:20px;
     }
     
     #view-suggestion textarea,
@@ -2793,35 +3008,47 @@ input{
     }
 
     #view-suggestion span.btn{
-        
+        font-size: 1em;
+		font-weight: normal;
         
 /*
         border: 1px solid #1111CC;
 */
     }
     #view-suggestion span.likeBtn{
-		background-color: white;
-		border: 1px solid #CCCCCC;
-		color: black;
-		margin-top: 0.5em;
-		padding: 0.5em;
+		background: none repeat scroll 0 0 transparent;
+        border: none;
+        color: black;
+        margin-right: 1em;
+        margin-top: 0;
+        padding: 0 0.5em;
     }
+    
     #view-suggestion .suggestion hr{
 		border-bottom: 1px solid white;
-		color: #DDDDDD;
-		margin: 1em 0;
+        clear: both;
+        color: #DDDDDD;
+        display: block;
+        float: left;
+        margin: 0.5em 0 1em;
+        width: 100%;
+    }
+    #view-suggestion .suggestion div.address{
     }
     
     #view-suggestion span.likeBtn span.counter{
-		font-size:1.5em
+		font-size:1em
     }
-    #view-suggestion span.likeBtn span.hoverlink{
-		color:#3896FF;
-		text-decoration:underline;
-    }
+    
     #view-suggestion #wapiblock{
-		
+/*
+		margin-top:20px;
+*/
+/*
 		width:310px;
+*/
+        padding:0 0.5em;
+        text-align: center;
     }
 
     /****************************
@@ -2834,20 +3061,40 @@ input{
     }
     
     .suggestions-title,
+    .lists-title,
     #view-suggestion p.popular,
     #view-list p.popular,
     #view-place p.popular{
         background-image: url("/static/facebookApp/img/icons/suggestions.png");
-        background-position: 0 7px;
+        background-position: 0 10px;
         background-repeat: no-repeat;
         margin: 0 1em;
-        padding-left: 40px;
+        padding-left: 45px;
     }
+    #view-place p.popular{
+        background-position: 0 22px
+    }
+    .lists-title{
+		background-image: url("/static/facebookApp/img/icons/lists.png");
+		background-position: 0 50%;
+    }
+    
     #place-container{
         background-color: #F9F9F9;
 		border: 1px solid #CCCCCC;
         margin: 1em 0;
         padding: 1em;
+    }
+    #right-col #place-container h1{
+        box-shadow: none;
+        -moz-box-shadow: none;
+        -webkit-box-shadow: none;
+        background: none repeat scroll 0 0 transparent;
+        color: black;
+        display: block;
+        line-height: 1em;
+        height: 1.5em;
+        margin-top: 0;
     }
     #place-container:after{           
         clear: both;
@@ -2876,8 +3123,29 @@ input{
     }
     #view-place h1{
         line-height: 1em;
-        margin: 0.2em 0;
+        margin: 0.2em 0 0;
         display:block;
+    }
+    #view-place #action-bar{
+    }
+    #view-place #action-bar ul{
+        list-style: none outside none;
+        margin: -1em 5em 0.5em;
+        padding: 0;
+    }
+    #view-place #action-bar li{
+        display: block;
+        float: left;
+        margin-right: 1em;
+    }
+    #view-place #action-bar li#print-icon{
+        background-position: 2px -32px;
+        padding-left: 25px;
+    }
+    #view-place #action-bar li.suggestion{
+        background-image: url("/static/common/img/add.png");
+        background-repeat: no-repeat;
+        padding-left: 20px;
     }
     #view-place div.timeline-msg,
     #view-list div.timeline-msg{
@@ -2927,20 +3195,85 @@ input{
      * 
      ***************************/
 	#suggestion-info {
-		width: 435px;
 		float: left;
-		padding-right: 15px;
+		margin: 0;
+		padding: 0;
+		width: 100%;
 	}
+    #suggestion-info #action-bar{
+        border-top: 1px dotted #AAAAAA;
+        margin: 0 1em;
+    }
+    
+	#suggestion-info ul{
+        margin: 0 0 0.3em 1em;
+        padding: 0;
+        font-size:1.1em;
+        float:left;
+	}
+    
+    #suggestion-info #action-bar ul{
+        margin:0;
+        line-height: 20px
+    }
+    #suggestion-info #action-bar ul.submenu{
+        margin-left: -8px;
+        overflow: auto;
+        width: 300px;
+    }
+    
+	#suggestion-info li:after{
+	
+/*
+		//content:"·";
+*/
+	}
+	#suggestion-info li{
+		display: inline-block;
+		margin: 0.5em 0.8em;
+	}
+    #suggest_suggestion_menu{
+        display:inline;
+    }
+    #suggestion-info .dropDownBtn ul{
+        margin: 0 0 0 -9px;
+    }
+    #suggestion-info .dropDownBtn li{
+        display: block;
+        font-size: 0.8em;
+        margin: 0;
+        width: 275px;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+    #suggestion-info .dropDownBtn li:hover{
+        background-color:white;
+    }
 	#suggestion-info p{
-		margin: 0 1em 0.5em;
+		margin: 0 2em 0.5em;
 	}
-	#suggestion-info #print-icon{
-		height:32px;
-		line-height:32px;
-		padding-left:40px;
-		margin: 0.7em 0.8em 0.2em;
-		float:right;
-		clear:right;
+	#view-list #suggest_suggestion{
+		background-image:url("/static/common/img/suggestionsx16.png");
+		background-repeat:no-repeat;
+		padding-left: 20px;
+        line-height: 20px;
+	}
+	
+	#view-list #owner img{
+		padding-right: 2px;
+		position: relative;
+		top: 4px;
+		width: 16px;
+	}
+	#view-list #print-icon{
+		background-position: 2px -32px;
+		clear: both;
+		float: none;
+		height: 16px;
+		line-height: 16px;
+		padding-left: 25px;
+		text-align: left;
+		width: auto;
 	}
 	
 	#suggestion-aside {
@@ -2965,7 +3298,8 @@ input{
 		padding-left: 0;
 	}
 	
-	#suggestion-list li{
+	#suggestion-list li,
+    #suggestion-tag-search ul li{
 		border-top: 1px solid #DDDDDD;
 		padding-top: 5px;
 		margin-bottom: 5px;
@@ -3147,6 +3481,7 @@ input{
         height:100%;
         width:100%;
         cursor:wait;
+        z-index:1000;
     }
 
 
@@ -3155,6 +3490,146 @@ input{
 .readable{
     font-size:1em !important;
 }
-ul#chronology a.link{
-    color:blue !important;
+
+#suggestion-tag-search{
+    font-size:1.1em;  
+    line-height: 2em;
+}
+#suggestion-tag-search ul li{
+    line-height: auto;
+    padding: 0.7em 0;
+}
+
+#suggestion-tag-search .search-avatar {
+    display: inline;
+    float: left;
+    width: 32px;
+    margin-right: 10px;
+}
+	
+#suggestion-tag-search .search-avatar img {
+    width: 32px;
+}
+	
+#suggestion-tag-search .search-text {
+    display: inline;
+}
+#suggestion-tag-search .sugg-link{
+}
+#suggestion-tag-search .sugg-place {
+    font-weight:normal;
+}
+
+#right-col #suggestion-tag-search h2 {
+    line-height: 3em;
+}
+
+/* DROPDOWN MENU */
+
+#webapp ul#dropdown-list.submenu,
+#facebookApp #add-suggestion ul#dropdown-list.submenu{
+    min-height: 250px;
+    min-width: 330px;
+}
+#webapp #suggestion-info .dropDownBtn li {
+    width: 300px;
+}
+#facebookApp ul#dropdown-list.submenu{
+    min-height:170px;
+}
+
+ul.ui-autocomplete{
+    height: 300px !important;
+    overflow-x: hidden;
+    overflow-y: auto !important;
+    padding: 0 !important;
+}
+.ui-menu-item {
+    text-align:center;
+    color:#999999;
+}
+
+ul.ui-autocomplete li.ui-menu-item:nth-child(even){
+    background-color:#EEEEEE;
+}
+
+
+/*
+ *
+ * VIEW TAG SEARCH
+ *  
+ */
+#tag-search-form input[type="text"]{
+    border: 1px solid #CCCCCC;
+    padding: 0.3em;
+    width: 250px;
+}
+#tag-search-form input[type="submit"]{
+    background-color: #C5C5C5;
+    border: 1px solid white;
+    color: black;
+    display: inline-block;
+    float: none;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 1em 0.2em;
+}
+
+
+/*
+ *
+ * Browser error
+ *  
+ */
+
+#browser-error-msg{
+    background: url("/static/webapp/img/colored_chickens.png") repeat-x scroll 4px 98% transparent;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 6px 5px rgba(0, 0, 0, 0.35);
+    font-size: 1.1em;
+    line-height: 2em;
+    margin: 2em auto;
+    padding: 1em 1em 3em;
+    width: 890px;
+}
+#browser-error-msg h1{
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: 1.5em;
+    border-bottom: 1px solid #CCCCCC;
+    color: #333333;
+}
+#browser-error-msg p{
+    margin: 0.5em 0;
+}
+#browser-error-msg strong{
+    font-weight: bold;
+}
+#browser-error-msg ul,
+#browser-error-msg ol{
+    list-style: square outside none;
+    margin-bottom: 1em;
+    margin-left: 2em;
+}
+#browser-error-msg ol{
+    list-style: decimal outside none;
+}
+
+#browser-error-msg .bad-news{
+    background: -moz-linear-gradient(center top , #FFE0ED 0%, #FFD1E4 100%) repeat scroll 0 0 transparent;
+    display: inline-block;
+    font-size: 1em;
+    padding: 0 0.3em;
+}
+#browser-error-msg .good-news{
+    background:-moz-linear-gradient(center top , #CDEB8B 0%, #E0EAC9 100%) repeat scroll 0 0 transparent;
+    display: inline-block;
+    font-size: 1em;
+    padding: 0 0.3em;
+}
+#browser-error-msg a img{
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.55);
+    margin-left: 10px;
+    margin-top: 5px;
 }

@@ -1,0 +1,91 @@
+{% extends "print/base.html" %}
+
+{%load tags %}
+
+{% block title %}GeoRemindMe! - Sugerencias propuestas en "{{place.name}}"{%endblock%}
+
+{% block menu_items %}
+    <li id="printer"><span onclick="window.print()">Imprimir</span></li>
+    <li id="maps"><span class="hide">Mapas</span></li>
+    <li id="gps-location"><span class="hide">Localización GPS</span></li>
+    <li id="votes"><span class="hide">Valoraciones</span></li>
+    <li id="links"><span class="hide">Enlaces</span></li>
+    <li id="autor-date"><span class="hide">Fecha y autor</span></li>
+    <li id="comments"><span class="hide">Comentarios</span></li>
+{% endblock %}
+{% block extra_js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#maps").toggle(function(){
+                $("#print-place ul,#address-box").css('max-width','none');
+                $("#print-place ul,#address-box").css('width','100%');
+            },function(){
+                $("#print-place ul,#address-box").css('max-width','520px');
+                $("#print-place ul,#address-box").css('width','auto');
+            });
+        });
+    </script>
+{% endblock %}
+	
+{% block body %}
+	<div class="container" id="print-place">
+		<div id="header">
+			<h1>{{place.name}}</h1>
+		</div>
+        <hr>
+		<div class="maps">
+            <div class="zoom">
+                <span onclick="changeZoom(this,1)" class="zoom-in">Aumentar</span>
+                <span onclick="changeZoom(this,-1)" class="zoom-out">Disminuir</span>
+            </div>
+<!--
+            <a id="map" href="http://maps.google.com/maps?q={{place.location}}&hl=en&ie=UTF8&z=16">
+-->
+                <img class="resizableMap" src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=15&size=400x400&maptype=roadmap&markers=color:blue%7Clabel:S%7C{{place.location}}&sensor=false" value="15">
+<!--
+            </a>
+-->
+        </div>
+		<br>
+		<div id="right-col">
+            <div id="address-box">
+                <strong>Dirección</strong>: {{place.address}} 
+                <span class="gps-location"><br><strong>Localización GPS</strong>: {{place.location}}</span>
+                <span class="links"><br><strong>Enlace</strong>: {{place.short_url}}</span>
+            </div>
+            <h2>Sugerencias</h2>
+			<ul>
+				{% for s in suggestions.1 %}
+				<li>
+                    {{s.instance.name}}
+                    {% if s.instance.description %} <br><strong>Detalles</strong>: {{s.instance.description}} {% endif %}                
+                    {% if s.instance.counters.votes > 0 %}
+                        <span class="votes"><br/><strong>Le gusta a</strong>: {{s.instance.counters.votes}} persona{{s.instance.counters.votes|pluralize:"s"}}<br></span>
+                    {% else %}
+                        <span class="votes"><br>Esta sugerencia no ha recibido valoraciones</span>
+                    {% endif %}
+                    <div class="comments">
+                        <strong>Comentarios</strong>:
+                    
+                    </div>
+                    <span class="links"><strong>Más información</strong>: {{s.instance.short_url}}<br></span>
+                    <span class="aside autor-date">Por {{s.instance.user.username}} el {{s.instance.created|naturaltime}}</span>
+                </li>
+				{% endfor %}
+			</ul>
+            <span class="add-notes">
+                <span class="title">Click aquí si quieres añadir notas adicionales</span>
+                <div class="textarea" style="display:none">
+                    <strong>Notas:</strong> <span class="closeTextarea">(cancelar)</span><br>
+                    <textarea class="textAreaElement"></textarea>
+                </div>
+            </span>
+		</div>
+        <div id="logo">
+            <img src="/static/webapp/img/logo2.png" alt="GeoRemindMe"><br>
+            www.georemindme.com
+        </div>
+        
+	</div>
+{% endblock %}
+

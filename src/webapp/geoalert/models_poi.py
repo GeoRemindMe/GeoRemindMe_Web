@@ -68,7 +68,7 @@ class POI(polymodel.PolyModel, search.SearchableModel):
     
     @property
     def id(self):
-        return self.key().id()
+        return int(self.key().id())
     
     
     @classproperty
@@ -275,6 +275,7 @@ class Place(POI):
         """
             Comprueba que el slug es unico
         """
+        self.name = self.name.strip()
         if from_comment:
             super(Place, self).put()
             return self
@@ -399,11 +400,14 @@ class Place(POI):
         try:
             ftclient = ftclient.OAuthFTClient()
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
-            ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_PLACES'],
-                                                    {'bus_id': self.business.id if self.business is not None else -1,
-                                                    'location': '%s,%s' % (self.location.lat, self.location.lon),
-                                                    'place_id': self.id,
-                                                    'modified': self.modified.__str__(),
+            import unicodedata
+            name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
+            return ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_PLACES'],
+                                                    {'name': name,
+                                                     'bus_id': self.business.id if self.business is not None else -1,
+                                                     'location': '%s,%s' % (self.location.lat, self.location.lon),
+                                                     'place_id': self.id,
+                                                     'modified': self.modified.__str__(),
                                                      }
                                                    )
                            )

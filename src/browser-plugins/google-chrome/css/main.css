@@ -1,0 +1,125 @@
+body {
+  min-width:400px;
+  overflow-x:hidden;	
+  font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+  font-size:12px;
+}
+
+#title {
+    color:black;
+}
+
+img {
+  margin:5px;
+  border:2px solid black;
+  vertical-align:middle;
+  width:75px;
+  height:75px;
+}
+.active{
+    color:black;
+}
+.hidden{
+    display:none;
+}
+ul#tabMenu{
+    margin: 0 0 10px;
+    padding: 0;
+}
+ul#tabMenu li{
+
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
+    background: -webkit-gradient(linear,0% 40%,0% 70%,from(#F9F9F9),to(#E3E3E3));
+    background-image: -o-linear-gradient(top, rgb(249, 249, 249) 40%, rgb(227, 227, 227) 70%);
+    border-radius: 3px 3px 3px 3px;
+    border-color: #BBBBBB #BBBBBB #A0A0A0;
+    border-style: solid;
+    border-width: 1px;
+    color: #000000;
+    cursor: pointer;
+    display:inline-block;
+    font-weight: normal;
+    line-height: 1.6em;
+    margin: 6px 5px;
+    outline: medium none;
+    padding: 0 8px;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+#login-form{
+    text-align:center;
+}
+    #social-networks{
+        list-style: none outside none;
+        margin:0;
+        padding:0;
+        display: inline-block;
+    }
+    #social-networks li{
+        background-image: url("images/sprite_social_min.png");
+        background-repeat: no-repeat;
+        display: inline-block;
+        cursor:pointer;
+        padding-left: 20px;
+        height: 16px;
+    }
+    #social-networks li span{
+        visibility:hidden;
+        
+    }
+
+    #login-form form{
+        margin-bottom: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 400px;
+    }
+        #login-form form p{
+            display: inline-block;
+        }
+        #login-form form label{
+            display: none;
+            
+        }
+        #login-form form input{
+            font-size: 11px;
+        }
+
+.twitter{
+}
+.facebook{
+    background-position: 0 -32px;
+}
+.google{
+    background-position: 0 -16px;
+}
+
+ul#timeline{
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+ul#timeline img{
+    width:25px;
+    height:25px;
+    float:left;
+    margin-right:10px;
+    dislay:block;
+}
+ul#timeline li{
+    display:block;
+    clear:both;
+    margin:5px 0;
+    border-bottom:1px solid #CCC;
+    padding-bottom: 6px;
+}
+iframe{ 
+    border:0 none;
+    margin-right:20px;
+}

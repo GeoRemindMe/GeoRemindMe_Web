@@ -1,7 +1,7 @@
 # coding=utf-8
 
 
-from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden
+from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden, HttpResponseNotFound
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
@@ -151,9 +151,9 @@ def delete_reminder(request):
 #===============================================================================
 # FUNCIONES AJAX PARA OBTENER, MODIFICAR, BORRAR SUGERE
 #===============================================================================
-def add_suggestion(request):
+def save_suggestion(request):
     """
-        Añade o edita una alerta
+        Añade o edita una sugerencia
         Parametros en POST:
             eventid: el id del evento a editar (opcional)
     """
@@ -161,9 +161,10 @@ def add_suggestion(request):
     if form.is_valid():
         eventid = request.POST.get('eventid', None)
         sug = geoalert.save_suggestion(request, form, id=eventid)
+        if isinstance(sug, HttpResponse):
+            return sug
         return HttpResponse(simplejson.dumps(dict(id=sug.id)), mimetype="application/json")
-    else:
-        return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
+    return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
 
 def add_suggestion_invitation(request):
@@ -176,18 +177,24 @@ def add_suggestion_invitation(request):
     username = request.POST.get('username')
     eventid = request.POST.get('eventid')
     invitation = geoalert.add_suggestion_invitation(request, eventid, username)
+    if isinstance(invitation, HttpResponse):
+        return invitation
     return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
 
 
 def add_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.add_suggestion_follower(request, eventid)
+    if isinstance(result, HttpResponse):
+        return result
     return HttpResponse(simplejson.dumps(result), mimetype="application/json")
 
 
 def delete_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.del_suggestion_follower(request, eventid)
+    if isinstance(result, HttpResponse):
+        return result
     return HttpResponse(simplejson.dumps(result), mimetype="application/json")
 
 
@@ -205,19 +212,8 @@ def get_suggestion(request):
     eventid = request.POST.get('eventid', None)
     wanted_user = request.POST.get('wanteduser', request.user)
     if eventid is None:
-        query_id = request.POST.get('query_id', None)
-        if query_id is not None:
-            query_id = query_id.split('_')
-            sug_id = query_id[0]
-            foll_id = query_id[1]
-        else:
-            sug_id = None
-            foll_id = None
-        page = int(request.POST.get('page', 1))
-        suggestions = geoalert.get_suggestion(request, id=eventid, wanted_user=wanted_user, page=page, query_id=sug_id)
-        suggestions_following = geoalert.get_suggestion_following(request, page=page, query_id=foll_id)
-        suggestions[1].extend(suggestions_following[1]).sort(key=lambda x: x.modified, reverse=True)
-        suggestions[1].sort(key=lambda x: x.modified, reverse=True)
+        from geoalert.api import get_suggestions_dict
+        suggestions = get_suggestions_dict(wanted_user) # FIXME: devolver solo publicas
     else:
         suggestions = geoalert.get_suggestion(request, id=eventid, wanted_user=wanted_user)    
     from funcs import getAlertsJSON
@@ -242,7 +238,10 @@ def delete_suggestion(request):
     """
     eventid = request.POST.get('eventid', None)
     deleted = geoalert.del_suggestion(request, eventid)
-    return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
+    try:
+        return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
+    except:
+        return HttpResponseNotFound()
 
 
 #===============================================================================
@@ -302,7 +301,9 @@ def add_following(request):
     if username == 'None':
         username=None
     added = geouser.add_following(request.user, userid=userid, username=username)
-    return HttpResponse(simplejson.dumps(added), mimetype="application/json")
+    if not isinstance(added, HttpResponse):
+        return HttpResponse(simplejson.dumps(added), mimetype="application/json")
+    return added
 
     
 @ajax_request
@@ -318,7 +319,9 @@ def delete_following(request):
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     deleted = geouser.del_following(request.user, userid=userid, username=username)
-    return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
+    if not isinstance(deleted, HttpResponse):
+        return HttpResponse(simplejson.dumps(deleted), mimetype="application/json")
+    return deleted
 
 
 @ajax_request
@@ -452,7 +455,7 @@ def add_list_suggestion(request):
         description: descripcion (opcional)
         suggestions: lista de ids de sugerencias    
     """
-    list_id = request.POST.get('list_id', None)
+    list_id = request.POST.getlist('list_id[]')
     list_name = request.POST.get('name', None)
     list_description = request.POST.get('description', None)
     list_instances = request.POST.getlist('suggestions[]')
@@ -462,18 +465,17 @@ def add_list_suggestion(request):
         list_tags = None
     else:
         list_tags = request.POST.getlist('tags')
-    list = geolist.add_list_suggestion(request, id=list_id, name = list_name,
-                                 description = list_description,
-                                 instances = list_instances,
-                                 instances_del = list_instances_del,
-                                 tags=list_tags,
-                                 vis=list_vis
-                                 )
-    if list is False:
-        return HttpResponseForbidden()
-    if list is not None:
-        return HttpResponse(list.to_json(), mimetype="application/json")
-    return HttpResponse(list, mimetype="application/json")
+    try:
+        lists = geolist.add_list_suggestion(request, lists_id=list_id, name = list_name,
+                                     description = list_description,
+                                     instances = list_instances,
+                                     instances_del = list_instances_del,
+                                     tags=list_tags,
+                                     vis=list_vis
+                                     )
+    except:
+        return HttpResponseBadRequest()
+    return HttpResponse([list.to_json() if hasattr(list, 'to_json') else None for list in lists], mimetype="application/json")
 
 
 @ajax_request
@@ -563,6 +565,9 @@ def do_vote(request, **kwargs):
     puntuation = request.POST.get('puntuation', 1)
     
     vote = geovote.do_vote(request.user, kwargs['kind'], instance_id, puntuation)
+    if vote is None:
+        from django.shortcuts import Http404
+        raise Http404
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(vote, cls=JSONEncoder),
                         mimetype="application/json")
@@ -616,13 +621,17 @@ def get_near_suggestions(request):
         from google.appengine.ext import db
         request.user.last_point = db.GeoPt(location)
         request.user.put()
-    else:
+    if location is None and request.user.is_authenticated():
         location = request.user.last_point
     radius = request.POST.get('radius', 5000)
+    try:
+        limit = int(request.POST.get('limit', 4))
+    except:
+        return HttpResponseBadRequest()
     from geoalert.models import Suggestion
     suggs = Suggestion.objects.get_nearest(location, radius, querier=request.user)
     from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(suggs, cls=JSONEncoder),
+    return HttpResponse(simplejson.dumps(suggs[:limit], cls=JSONEncoder),
                         mimetype='application/json')
     
 @ajax_request
@@ -635,8 +644,11 @@ def search_tag_suggestion(request):
     from geotags.views import search_tag_suggestion
     response = search_tag_suggestion(request, tag, page=page, query_id=query_id)
     from libs.jsonrpc.jsonencoder import JSONEncoder
-    return HttpResponse(simplejson.dumps(response, cls=JSONEncoder),
-                        mimetype='application/json')
+    try:
+        return HttpResponse(simplejson.dumps(response, cls=JSONEncoder),
+                            mimetype='application/json')
+    except:
+        return response
     
 @ajax_request
 def add_suggestion_tags(request):
@@ -700,3 +712,79 @@ def share_on_twitter(request):
         return HttpResponse(simplejson.dumps(response),
                             mimetype='application/json')
     return HttpResponseBadRequest()
+
+
+@ajax_request
+def suggested_list_suggestion(request):
+    """
+        si se envia timeline_id por POST, se modificara ese timeline (se aceptara o rechazara la sugerencia)
+        status puede ser 0: nada 1: aceptada, 2: rechazada
+        si no se envia timeline_id, debe enviarse list_id y event_id para hacer la peticion
+        
+        devuelve True si todo fue correcto, False si ya existe la sugerencia o no se puede enviar, None si la lista o la 
+        sugerencia no existen
+    """
+    if not request.user.is_authenticated():
+        return HttpResponseForbidden()
+    timeline_id = request.POST.get('timeline_id', None)
+    if timeline_id is None:
+        list_id = request.POST.get('list_id', None)
+        event_id = request.POST.get('event_id', None)
+        if list_id is not None and event_id is not None:
+            from geoalert.api import send_suggestion_to_list
+            added = send_suggestion_to_list(request.user, list_id, event_id)
+            return HttpResponse(simplejson.dumps(added),
+                            mimetype='application/json') 
+        else:
+            return HttpResponseBadRequest()
+    try:
+        timeline_id = int(timeline_id)
+        status = int(request.POST.get('status', 0))
+        from geoalert.api import change_suggestion_to_list
+        changed = change_suggestion_to_list(request.user, timeline_id, status)
+        return HttpResponse(simplejson.dumps(changed),
+                                mimetype='application/json')
+    except:
+        raise
+        return HttpResponseBadRequest()
+    
+    
+    
+@ajax_request
+def get_suggestions(request):
+    from geoalert import api
+    list_id = request.POST.get('list_id', None)
+    suggs = api.get_suggestions_dict(request.user, list_id=list_id)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps([{'id': s.key().id(),
+                                          'name': s['name'],
+                                          'description': s['description'],
+                                          'created': s['created'],
+                                          'lists': api.get_list_from_suggs(s, request.user), 
+                                         } for s in suggs],
+                                         cls=JSONEncoder
+                                         ), mimetype='application/json')
+    
+@ajax_request
+def get_perms(request):
+    if not request.user.is_authenticated():
+        return HttpResponseForbidden
+    from google.appengine.ext import db
+    perms = {'facebook': False,
+             'twitter': False,
+             'google': False,
+             }
+    from geouser.models_social import SocialUser
+    facebook = db.GqlQuery("SELECT __key__ FROM SocialUser WHERE user = :1 AND class='FacebookUser'", request.user.key()).get()
+    twitter = db.GqlQuery("SELECT __key__ FROM SocialUser WHERE user = :1 AND class='TwitterUser'", request.user.key()).get()
+    google = db.GqlQuery("SELECT __key__ FROM SocialUser WHERE user = :1 AND class='GoogleUser'", request.user.key()).get()
+    
+    if facebook:
+        perms['facebook'] = True
+    if twitter:
+        perms['twitter'] = True
+    if google:
+        perms['google'] = True
+    return HttpResponse(simplejson.dumps(perms), mimetype='application/json')
+    
+    

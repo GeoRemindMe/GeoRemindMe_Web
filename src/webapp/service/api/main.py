@@ -9,12 +9,12 @@ from service.api import middleware
 # Register mapping with application.
 application = webapp.WSGIApplication(
                                      service_handlers.service_mapping(
-                                          [('/api/1/TimelineService', timelineservice.TimelineService),
-                                           ('/api/1/SuggestionService', suggestionservice.SuggestionService),
-                                           ('/api/1/MapService', mapservice.MapService,)
+                                          [('(?i)/api/1/TimelineService', timelineservice.TimelineService),
+                                           ('(?i)/api/1/SuggestionService', suggestionservice.SuggestionService),
+                                           ('(?i)/api/1/MapService', mapservice.MapService,)
                                            ]),
                                           debug=True)
-#application = middleware.OAuthware(application)
+application = middleware.OAuthware(application)
 
 def main():
     util.run_wsgi_app(application)

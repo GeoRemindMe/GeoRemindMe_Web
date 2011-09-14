@@ -33,12 +33,29 @@
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/jquery.ba-resize.min.js"></script>
+    <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
 
     <script type="text/javascript">
-        //URLS
-        url={
-            "modify_suggestion_list": "{% url modify_suggestion_list %}",
-        };
+        {% include "urls.html" %}
+        
+        // Menu desplegable "Listas"
+        // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
+        hiConfig = {
+            sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
+            interval: 0, // number = milliseconds for onMouseOver polling interval
+            timeout: 500, // number = milliseconds delay before onMouseOut
+            over: function() {
+                var tmp=$('#dropdown-list-user').width();
+                tmp=52-tmp;
+                $('#dropdown-list-user').css("margin-left",tmp+'px')
+                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+            },
+            out: function() {
+                if($("#dropdown-list-user").hasClass('visible-display')==false)
+                    $(this).find('ul:first').slideUp(400);
+            }
+        }
+        
         $(document).ready(function(){
             
             resizeIframe();
@@ -52,7 +69,7 @@
     {% block extra_js %}{%endblock%}
    
 </head>
-<body>
+<body id="facebookApp">
     <div id="wait-mask" style="display:none"></div>
     <div id="container">
 
@@ -65,6 +82,7 @@
             {% endblock %}
             
             <hr>
+            
         
             {% block nav %} 
                 <ul>
@@ -74,8 +92,10 @@
                     <li class="menu-icons main-menu-icons"><a id="suggestions-icon" href="{{user_suggestions}}">Tus sugerencias</a></li>
 -->
                     <li class="menu-icons main-menu-icons" id="{% active request notifications_section %}"><a id="notifications-icon" href="{{notifications_section}}">{% if notifications > 0 %}<strong>Notificaciones</strong>{% else %} Notificaciones {% endif %}</a></li>
+<!--
                     <li class="menu-icons main-menu-icons"><a id="places-icon" href="#">Sitios</a></li>
-                    <li class="menu-icons main-menu-icons" id="{% active request public_profile %}"><a id="profile-icon" href="{{public_profile}}">Mi perfil</a></li>
+-->
+                    <li class="menu-icons main-menu-icons" id="{% active request public_profile %}"><a id="profile-icon" href="{{public_profile}}">Mi perfil ({{user.username}})</a></li>
                     <li class="menu-icons main-menu-icons" id="{% active request profile_settings %}"><a id="settings-icon" href="{{profile_settings}}">Configuración</a></li>
                 </ul>
             {% block extraContent %} {% endblock %}
@@ -84,9 +104,11 @@
             <p><strong>Facebook</strong>:</p>
             <ul>
                 <li class="menu-icons fb-icons"><a id="fb-grm" href="http://www.facebook.com/GeoRemindMe" onclick="parent.location.href='http://www.facebook.com/GeoRemindMe'">Página de fans</a></li>
-                <li class="menu-icons fb-icons"><a id="fb-last-news" href="http://www.facebook.com/?sk=nf" onclick="parent.location.href='http://www.facebook.com/?sk=nf'">Últimas noticias</a></li>
-                <li class="menu-icons fb-icons"><a id="fb-wall" href="http://www.facebook.com/profile.php?id=100002576624564&sk=wall" onclick="parent.location.href='http://www.facebook.com/profile.php?id={{user.facebook_user.uid}}&sk=wall'">Muro</a></li>
-                <li class="menu-icons fb-icons"><a id="fb-events" href="http://www.facebook.com/?sk=events&ap=1" onclick="parent.location.href='http://www.facebook.com/?sk=events&ap=1'">Eventos</a></li>
+                {% if user.is_authenticated %}
+                    <li class="menu-icons fb-icons"><a id="fb-last-news" href="http://www.facebook.com/?sk=nf" onclick="parent.location.href='http://www.facebook.com/?sk=nf'">Últimas noticias</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-wall" href="{{user.facebook_user.profile_url}}&sk=wall" onclick="parent.location.href='{{user.facebook_user.profile_url}}&sk=wall'">Muro</a></li>
+                    <li class="menu-icons fb-icons"><a id="fb-events" href="http://www.facebook.com/?sk=events&ap=1" onclick="parent.location.href='http://www.facebook.com/?sk=events&ap=1'">Eventos</a></li>
+                {% endif %}
             </ul>
         </div>
         <div id="notification-msg" style="display:none">Mensaje con lo que sea</div>
@@ -113,6 +135,8 @@
 				cookie : true, // enable cookies to allow the server to access the session
 				xfbml  : true,  // parse XFBML
 				canvasName  : '{{app_settings.canvasName}}',
+                
+                {%if request.user.facebook_user.uid %} userIdOnServer  : {{request.user.facebook_user.uid}} {%endif%}
             });
             
         });

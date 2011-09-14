@@ -116,17 +116,16 @@ def do_vote(querier, kind, instance_id, vote=1):
     """
     if not kind in ['Event', 'List', 'Comment']:
         return None
-    try:
-        instance_id = int(instance_id)
-    except:
-        return None
     vote = int(vote)
     if vote > 1 or vote < -1:
         return False
     from geoalert.models import Event
     from geolist.models import List
     from geovote.models import Comment
-    obj = eval(kind).get_by_id(instance_id)
+    try:
+        obj = eval(kind).objects.get_by_id(instance_id)
+    except:
+        return None
     if obj is None:
         return None
     if obj.user.key() != querier.key():
@@ -138,7 +137,6 @@ def do_vote(querier, kind, instance_id, vote=1):
         else:
             return None
     vote = Vote.do_vote(user=querier, instance=obj, count=vote)
-    
     return {'vote': vote, 'votes': _get_vote(obj.key())}
 
 

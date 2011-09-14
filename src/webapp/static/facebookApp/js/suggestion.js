@@ -48,6 +48,9 @@ function getCountryName(code){
     return countryName;
 }
 
+
+
+
 $(document).ready(function() {
     
     //Set characters counter OnKeyUp
@@ -55,7 +58,21 @@ $(document).ready(function() {
     
      //~ key: 'AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710', // add your key here    
     //Google Maps - Direction Input Autocomplete address
-
+    $('#address').geo_autocomplete(new google.maps.Geocoder, {
+		mapkey: 'ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw', 
+		selectFirst: false,
+		minChars: 3,
+		cacheLength: 50,
+		width: 530,
+        mapwidth:0,
+        mapheight:0,
+		scroll: true,
+		scrollHeight: 150,
+        geocoder_region:'Spain',
+        geocoder_types: 'locality,street_address,sublocality,neighborhood,country',
+	}).result(function(_event, _data) {
+		if (_data) map.fitBounds(_data.geometry.viewport);
+	});
     
     //Set resizable canvas
     $('#address-container').resizable({
@@ -64,7 +81,7 @@ $(document).ready(function() {
         handles: 'n,s',
         alsoResize: "#map_canvas",
         stop: function(event, ui) {
-            //if (typeof resizeIframe != "undefined") resizeIframe()     
+            resizeIframe()     
         }
     });
 
@@ -72,18 +89,41 @@ $(document).ready(function() {
     //FORM
     //~ setFormBehaviour();
     
-    if(typeof eventID == 'undefined')
+    //~ 
+    instanceMap();
+    
+    
+    var time=[];
+    for(hours=0; hours<24; hours++){
+        for(minutes=0; minutes<60; minutes=minutes+30)
+            time.push(FormatNumberLength(hours,2)+":"+FormatNumberLength(minutes,2))
+    }
+    
+    $( "#start-hour,#end-hour" ).autocomplete({
+        minLength:0,
+        source: function(req, add){ req.term = ''; add(time); }
+    });
+    
+    $( "#start-hour,#end-hour" ).focus(function(){ $(this).autocomplete("search"); });
+	
+});
+
+function instanceMap(){
+    //Esta función crea un mapa nuevo
+    if((typeof(default_marker_X) != "undefined") && (typeof(default_marker_Y) != "undefined"))
+        var latlngStr=[default_marker_X,default_marker_Y]
+    else if(typeof eventID == 'undefined' && typeof (searchconfig_google['location']) != undefined){
         var latlngStr = searchconfig_google['location'].split(",",2);
+    }
     else
         var latlngStr = eventLocation.split(",",2);
         
     var lat = parseFloat(latlngStr[0]);
     var lng = parseFloat(latlngStr[1]);
+    
     loadGMaps(lat,lng,"map_canvas");
-    
-    
-    
-});
+}
+
 function loadCityField(region){
     $('#google-city').geo_autocomplete(new google.maps.Geocoder, {
         mapkey: 'ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw', 
@@ -253,10 +293,17 @@ function centerMap(address,region) {
 
 function loadGMaps(defaultX,defaultY,canvas) {
     
-    if(defaultX==null || defaultX==0)
-        defaultX=37.176
-    if(defaultY==null || defaultY==0)
-        defaultY=-3.597
+    if( (typeof(default_marker_X) != "undefined") && (typeof(default_marker_Y) != "undefined") ){
+        //Se ha entrado desde añadir una sugerencia a un sitio (vista sitio)
+        defaultX=default_marker_X
+        defaultY=default_marker_Y
+    }else{
+    
+        if(defaultX==null || defaultX==0)
+            defaultX=37.176
+        if(defaultY==null || defaultY==0)
+            defaultY=-3.597
+    }    
     
     var meters=searchconfig_google['radius']
     var zoom=11;
@@ -266,7 +313,6 @@ function loadGMaps(defaultX,defaultY,canvas) {
             return false;
         }
     });
-        
     //~ if(canvas==null)
         //~ canvas="map_canvas"
     
@@ -287,98 +333,21 @@ function loadGMaps(defaultX,defaultY,canvas) {
     }
     map = new google.maps.Map(document.getElementById(canvas), myOptions);
     geocoder = new google.maps.Geocoder();
-    
     insertToolbar(map)
     
-    prepareAutocomplete();
-    
+    // DEFAULT MARKER
+    if( (typeof(default_marker_X) != "undefined") && (typeof(default_marker_Y) != "undefined") ){
+        var spaceLocation = new google.maps.LatLng(default_marker_X, default_marker_Y);
 
-}
-
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie != '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
+        if (typeof(GRM.marker) == "undefined"){
+            GRM['marker'] = createMarker(default_marker_X, default_marker_Y);
         }
-        return cookieValue;
+        else{
+            GRM.marker.setPosition(spaceLocation);
+        }
     }
-
-function prepareAutocomplete() {
-
-    $("#address").autocomplete({
-     //This bit uses the geocoder to fetch address values
-      autoFocus: true,
-      minLength:3,
-      source: function(request, response) {
-        
-        var x,y,term;
-        
-        // search by marker drag
-        if (request.term.indexOf(GRM.common.token) == 0) {
-            request.term = request.term.substring(GRM.common.token.length,request.term.length).split(',');
-            x=parseFloat(request.term[0]);
-            y=parseFloat(request.term[1]);
-            term="hotel";
-        }
-        // search by text input
-        else {
-            var pos = map.getCenter();
-            x=pos.lat();
-            y=pos.lng();
-            term=request.term;
-            }
-          
-        var data = { name: term, lat: x, lon: y, "X-CSRFToken": function(){return getCookie('csrftoken');} };
-        data = JSON.stringify(data);
-        $.ajax({
-
-            url: "/api/1/MapService.get",
-            contentType:"application/json",
-            dataType:"json",
-            type:"POST",
-            data: data,
-            success: function(data) {
-                
-                if (typeof data.sites == "undefined" || data.sites.length==0)
-                    return;
-                
-                response($.map(data.sites, function(item) {
-                            return {
-                              label:  item.name,
-                              value: item.name,
-                              latitude: item.lat,
-                              longitude: item.lon
-                            }
-                          }));
-
-                }
-            
-            });
-      },
-      //This bit is executed upon selection of an address
-      select: function(event, ui) {
-          
-        var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
-        
-        if (typeof(GRM.marker) == "undefined")
-        {
-            GRM['marker'] = createMarker(location.lat(),location.lng());
-        }
-        else
-            GRM.marker.setPosition(location);
-            
-        map.panTo(location);
-        }
-    });
-
+    
+    placesAutocomplete();
 }
 
 function createMarker(x,y)
@@ -392,14 +361,10 @@ function createMarker(x,y)
         position: myLatlng,
         icon: icon
     });
-
     marker.setVisible(true);
     marker.setDraggable(true);
     marker.setAnimation(google.maps.Animation.DROP);
-
     // set marker events
-    //google.maps.event.addListener(marker, 'click', function(){highlightTask(this.task,false);});
-    //google.maps.event.addListener(marker, 'dblclick', function(){editTask(this.task);});
     google.maps.event.addListener(marker, 'dragend', function(){updateAddressByMarker(this);});
     
     return marker;
@@ -487,42 +452,60 @@ function insertToolbar(map){
     
     //Creamos el boton del pollo
     //------------------------------------------------------------------
-    var btnPollo = document.createElement('DIV');
-    $(btnPollo).addClass("btnGmaps")
-    $(btnPollo).attr('title','Get the marker');
-    $(btnPollo).html('<img src="/static/webapp/img/marcador03.png">');
+    //~ var btnPollo = document.createElement('DIV');
+    //~ $(btnPollo).addClass("btnGmaps")
+    //~ $(btnPollo).attr('title','Get the marker');
+    //~ $(btnPollo).html('<img src="/static/webapp/img/marcador03.png">');
     
     //Creamos el contenedor del marcador
-    var marker;
+    //~ var marker;
     
     //Asignamos el comportamiento
-    google.maps.event.addDomListener(btnPollo, 'click', function() {   
-        var location = map.getCenter();
-        
-        if (typeof(GRM.marker) == "undefined")
-        {
-            GRM['marker'] = createMarker(location.lat(),location.lng());
-        }
-        else
-            GRM.marker.setPosition(location);
+    //~ google.maps.event.addDomListener(btnPollo, 'click', function() {   
+        //~ var pos = map.getCenter();   
+        //~ var myLatlng = new google.maps.LatLng(pos.lat(),pos.lng());
+        //~ 
+        //~ if(marker==undefined){
+            //~ //En caso de que no se haya inicializado nunca creamos un
+            //~ //nuevo marcador
+            //~ marker = new google.maps.Marker({
+                //~ map: map,
+                //~ draggable: false,
+                //~ position: myLatlng,
+                //~ icon: new google.maps.MarkerImage("/static/webapp/img/marcador02.png")
+            //~ });
+            //~ google.maps.event.addListener(marker, 'dragend', function(){updateAddressByMarker(this);});
+        //~ }else{
+            //~ //Sino tan solo actualizamos la posición
+            //~ marker.setPosition(myLatlng);
+        //~ }
             
-        map.panTo(location);
-    });
+        //Centramos el marcador
+        //~ marker.setIcon(new google.maps.MarkerImage("/static/webapp/img/marcador03.png"));
+        //~ marker.setAnimation(google.maps.Animation.DROP);
+        //~ marker.setDraggable(true);
+        //~ marker.setFlat(false);
+    //~ });
     
 
     //Creamos el contenedor del toolbar
     var toolbar = document.createElement('DIV');
     $(toolbar).css('padding', '5px');
     //Le añadimos los botones
-    $(toolbar).append(btnPollo);
+    //$(toolbar).append(btnPollo);
     $(toolbar).append(mirilla);
     //Los metemos en el mapa
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(toolbar);
 }
 
 function updateAddressByMarker(marker){
-    var pos = GRM.marker.getPosition();
-    $('#address').autocomplete("search",GRM.common.token+pos.lat()+","+pos.lng());
+    geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            if (results && results[0]) {
+                $('#address').val(results[0].formatted_address);
+            }
+        }
+    });
 }
 
 function activateTab(tab){
@@ -542,35 +525,84 @@ function activateTab(tab){
 function saveSuggestion(){
     
     
-        
-        
-        if(placeReference==null){
-            $('#error-msg').text("Por favor selecciona un sitio antes")
-            $('#error-msg').fadeIn('slow').delay(2000).fadeOut('slow')
-            
-            $('#answerMessage').text("Por favor indique el sitio")
-            $('#answerMessage').addClass('error')
-            $('#answerMessage').fadeIn('slow').delay(2000).fadeOut('slow')
+        if($('#suggestion-item textarea').val()==$('#suggestion-item textarea').attr('placeholder')){
+            showMessage('Por favor introduce primero la sugerencia',"error");
+            $('#suggestion-item textarea').focus()
             return false;
         }
         
+        if(placeReference==null){
+            showMessage('Por favor indique el campo "¿Donde?" para continuar',"error");
+            $('#place').focus()
+            return false;
+        }
         
-        $('#submit-button').val("Enviando...")
+        if($('#start-date').val()!="mm/dd/aa" && $('#end-date').val()!="mm/dd/aa"){
+            //Hacemos las comparaciones cuando están la fecha de inicio y la de fin
+            var startDate = new($('#start-date').val());
+            var endDate = new($('#end-date').val());
+            
+            if (startDate > endDate){
+                //Comprobamos que inicio < fin
+                showMessage('Por favor revise que la fecha de inicio sea anterior a la de fin',"error");
+                return false;
+            }else if(startDate == endDate && $('#start-hour').val() !="hh:mm" && $('#end-hour').val() !="hh:mm"){
+                //Comprobamos que si inicio < fin -> hora inicio < hora fin
+                var startHour=$('#start-hour').val().split(":");
+                var endHour=$('#end-hour').val().split(":");
+                if(startHour[0]>endHour[0]){
+                    showMessage('Por favor revise que la hora de inicio sea anterior a la de fin',"error");
+                    return false;
+                }else if(startHour[0]==endHour[0]){
+                    if(startHour[1]>endHour[1]){
+                        showMessage('Por favor revise que la hora de inicio sea anterior a la de fin',"error");
+                        return false;
+                    }
+                }
+            }
+        }
+        
+        
+        $('#submit-button').text("Enviando...")
         $('#submit-button').addClass("waiting")
+        GRM.wait();
         
         var params = { 
             name: $('#id_name').val(), 
             place_reference: placeReference, 
             description: $('#id_description').val(),
-            starts_month: $('#id_starts_month').val(),
-            starts_day: $('#id_starts_day').val(),
-            starts_year: $('#id_starts_year').val(),
-            ends_month: $('#id_ends_month').val(),
-            ends_day: $('#id_ends_day').val(),
-            ends_year: $('#id_ends_year').val(),
             visibility: $('#id_visibility').val(),
             tags: $('#id_tags').val()
         };
+        if($('#date [type="checkbox"]').is(':checked')){
+            splittedDate=$('#start-date').val().split("/")
+            params['starts_month']=splittedDate[0]
+            params['starts_day']=splittedDate[1]
+            params['starts_year']=splittedDate[2]
+            params['start-hour']=$('#start-hour').val()
+            splittedDate=$('#start-date').val().split("/")
+            params['ends_month']=splittedDate[0]
+            params['ends_day']=splittedDate[1]
+            params['ends_year']=splittedDate[2]
+            params['end-hour']=$('#end-hour').val()
+        }
+        if($('#visibility span[value="public"]').css('display')!="none")
+            params['visibility']= "public";
+        else
+            params['visibility']= "private";
+        
+        if( $('#lists span.checked').length > 0 ){
+            params['list_id']="";
+            $('#lists span.checked').each(function(i,elem){
+                params['list_id']=$(elem).attr('value')+','+params['list_id'];
+            });
+        }
+        var shareThrough=$('#social-share ul li:not(.inactive)');
+        if(shareThrough.length > 0){
+            $(shareThrough).each(function(i,elem){
+                params['to_'+$(elem).attr("data-network")]=true;
+            });
+        }
         
         //Si estamos editando una sugerencia añadimos el ID.
         if(typeof eventID != 'undefined')
@@ -581,17 +613,30 @@ function saveSuggestion(){
             url: "/ajax/add/suggestion/",
             data: jQuery.param(params),
             complete: function(msg){
+                GRM.nowait();
                 if (msg.status !=200){
                     showMessage("Error "+msg.status,"error")
                 }else{
                     showMessage("La sugerencia ha sido añadida con éxito","success")
+
                     
-                    //Vaciamos los campos
-                    $('#id_name').val("");
+                    //Restablecemos los campos
+                    $('#id_name').val("").blur();
                     $('#id_description').val("");
-                    $('#place').val("");
+                    $('#id_tags').val("");
+                    $('#place').val("").blur();
+                    $('#start-date').val("mm/dd/aa");
+                    $('#start-hour').val("").blur();
+                    $('#end-date').val("mm/dd/aa");
+                    $('#end-hour').val("").blur();
+                    $('#lists span.checked').each(function(i,elem){
+                        $(elem).removeClass('checked');
+                    })
+                    
+                    //Reseteamos el mapa
+                    instanceMap();
                 }
-                $('#submit-button').val("Enviar")
+                $('#submit-button').text("Enviar")
                 $('#submit-button').removeClass("waiting")
             }
         });
@@ -615,7 +660,7 @@ function showSettings(){
     //$('#'+engine+'-settings').fadeToggle('slow')
     
     $('#'+engine+'-settings').toggle('slow',function(){
-        //resizeIframe();
+        resizeIframe();
         }
     );
     
@@ -628,22 +673,20 @@ function placesAutocomplete(){
     
     //Cargamos nuestras opciones de búsqueda
     var options = {
-        region: searchconfig_google['region_code'],
+        region: searchconfig_google['region_code'] 
     }
     
     if(searchconfig_google['type']!='all')
-      options['types']=searchconfig_google['type']
+      options['types']=[ searchconfig_google['type'] ];
+
     //Fin cargamos opciones
-
-    var autocomplete = new google.maps.places.Autocomplete(input,options);
-
+    autocomplete = new google.maps.places.Autocomplete(input,options);
     autocomplete.bindTo('bounds', map);
 
     var infowindow = new google.maps.InfoWindow();
     var marker = new google.maps.Marker({
         map: map
     });
-
     //Añadimos un listener al campo
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
         infowindow.close();
@@ -677,7 +720,6 @@ function placesAutocomplete(){
             ].join(' ');
         }
         
-        
         marker.setIcon(image);
         marker.setPosition(place.geometry.location);
         
@@ -689,6 +731,7 @@ function placesAutocomplete(){
 
     // Sets a listener on a radio button to change the filter type on Places
     // Autocomplete.
+    /*
     function setupClickListener(id, types) {
         var radioButton = document.getElementById(id);
         google.maps.event.addDomListener(radioButton, 'click', function() {
@@ -698,7 +741,7 @@ function placesAutocomplete(){
 
     setupClickListener('changetype-all', []);
     setupClickListener('changetype-establishment', ['establishment']);
-    setupClickListener('changetype-geocode', ['geocode']);
+    setupClickListener('changetype-geocode', ['geocode']);*/
 }
 
 function getEventPlace(){
@@ -747,7 +790,7 @@ function resetMapZoom(val){
 
 function showMoreDetails(){
     $('#more-details').toggle('fast',function(){
-            //resizeIframe()
+            resizeIframe()
         }
     )
     

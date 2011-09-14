@@ -1,0 +1,76 @@
+{% extends "print/base.html" %}
+
+{%load tags %}
+	
+{% block body %}
+	<div class="container">
+		<div id="header">
+			<div id="logo">
+                <img src="/static/webapp/img/logo2.png" alt="GeoRemindMe"><br>
+                www.georemindme.com
+            </div>
+			<h1>Lista: "{{list}}"</h1>
+            <p class="big"><strong>Autor: </strong>{{list.user.username}} - <strong>Más info: </strong> {{list.short_url}}</p>
+		</div>
+		
+			
+			{% if list.description %}
+				<p class="big"><strong>Descripción: </strong>{{list.description}}</p>
+			{% endif %}
+                <hr class="invisible">
+				{% for s in suggestions %}
+				<div class="suggestion {% cycle 'even' 'odd' %}" >
+                    <strong>{{s.instance.name}}</strong><br>
+                    {% if s.instance.description %} 
+                        <strong>Descripción: </strong>{{s.instance.name}}<br>
+                    {% endif %}
+                    
+                    <strong>Lugar: </strong><a href="/place/{{s.instance.poi.slug}}/?print">{{s.instance.poi.name}}</a><br>
+                    <div class="maps">
+                        <div class="zoom">
+                            <span onclick="changeZoom(this,1)" class="zoom-in">Aumentar</span>
+                            <span onclick="changeZoom(this,-1)" class="zoom-out">Disminuir</span>
+                        </div>
+                        <a id="map" href="http://maps.google.com/maps?q={{s.instance.poi.location}}&hl=en&ie=UTF8&z=16">
+                            <img src="http://maps.googleapis.com/maps/api/staticmap?center={{s.instance.poi.location}}&zoom=14&size=460x220&maptype=satellite
+            &markers=color:red%7C{{s.instance.poi.location}}&sensor=false" value="14">
+                        </a>
+                    </div>
+                    <strong>Dirección:</strong> <a href="http://maps.google.com/maps?q={{s.instance.poi.location}}&hl=en&ie=UTF8&z=16">{{s.instance.poi.address}}</a>
+                    <span class="gps-location"><br><strong>GPS</strong>: {{s.instance.poi.location}}</span>
+                    <span class="votes"><br><strong>Valoraciones</strong>: {{s.instance.counters.votes}}</span>
+                    
+                    
+                    <span class="links"><br><strong>Más información</strong>: <a href="{{ s.instance.short_url }}?print" class="black-link">{{ s.instance.short_url }}</a></span>
+                    <span class="aside autor-date"><br>Autor: {{s.instance.user.username}} - Fecha: {{s.instance.created|naturaltime}} </span>
+                    
+                    <span class="add-notes">
+                        <span class="title">Click aquí si quieres añadir notas adicionales</span>
+                        <div class="textarea" style="display:none">
+                            <strong>Notas:</strong> <span class="closeTextarea">(cancelar)</span><br>
+                            <textarea class="textAreaElement"></textarea>
+                        </div>
+                    </span>
+                    
+                </div>
+				{% endfor %}
+			
+			
+			{% if top_comments %}
+                <div class="comments" style="display: block;clear:both;position:relative;top:2em;">
+	                <h3 style="text-align:left;border-bottom:1px solid black">Esta lista tiene {{top_comments|length}} comentario(s) popular(es): </h3>
+                        <ul>
+                            {% for c in top_comments %}
+                                <li><strong>{{c.username}}: </strong> {{c.msg}}<br><span class="aside">{{c.created|naturaltime}}</span></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+	        {% endif %}
+			
+		
+		
+		
+		
+	
+	</div>
+{%endblock%}

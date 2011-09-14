@@ -1,4 +1,5 @@
 {% load tags %}
+{% load tags %}
 
 {% comment %} 
     Mensaje nº 305:
@@ -20,7 +21,7 @@
                 </a>
             </div>
             <div class="timeline-msg">
-                <span class="small-text">Te gusta la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="black-link">{{obj.instance.instance.user}}</a>:</span>
+                <span class="small-text">Te gusta la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="dark-link">{{obj.instance.instance.user}}</a>:</span>
         {% else %}
             <div class="avatar">
                 <a href="{% url2 in_facebook public_profile obj.username %}" title="Ver perfil en GeoRemindMe">
@@ -29,7 +30,7 @@
             </div>
             <div class="timeline-msg">
                 <span class="small-text">
-                    A <a href="{% url2 in_facebook public_profile obj.username %}" class="black-link">{{obj.username}}</a> le gusta la sugerencia:
+                    A <a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> le gusta la sugerencia:
 <!--
                     {% if obj.instance.instance.user.username = request.user.username %}
                         <strong>tu sugerencia</strong>:
@@ -42,13 +43,13 @@
                 
                 
                 <div class="msg">
-                    <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="black-link link">
+                    <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="dark-link link">
                         <img src="{% embedded_avatar obj.instance.instance.user.username %}" title="{{obj.instance.instance.user.username}}">
                     </a>
-                    <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="black-link link">{{obj.instance.instance}}</a>
+                    <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="dark-link link">{{obj.instance.instance}}</a>
                 </div>
-                <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}">{{obj.instance.instance.poi.name}}</a></span>
-                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}">Detalles</a></span>
+                <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}" class="dark-link">{{obj.instance.instance.poi.name}}</a></span>
+                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="details">Ver sugerencia</a></span>
             </div>
     {% endif %}
 </li>

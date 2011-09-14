@@ -176,3 +176,36 @@ function sendComment2(textarea,element_id,elemType){
     });
 }
 
+function suggestionProposal(elem,action,timeline_id){
+    
+    //si se envia timeline_id por POST, se modificara ese timeline (se aceptara o rechazara la sugerencia)
+    //status puede ser 0: nada 1: aceptada, 2: rechazada
+    var data={};
+    if(action=="accept")
+        data['status']=1;
+    else
+        data['status']=2;
+    data['timeline_id']=timeline_id;
+    asd=elem;
+    data["csrfmiddlewaretoken"]=$(elem).parent().find('input').val();
+    
+    GRM.wait();
+    $.ajax({
+        type: "POST",
+        url: url["suggest_suggestion"],
+        dataType:'json',
+        data:data,
+        context:$(this),
+        complete: function() { GRM.nowait();},
+        success: function(data){
+            if(data==true){
+                if(action=="accept")
+                    $(elem).parent().empty().html("La propuesta ha sido aceptada");
+                else
+                    $(elem).parent().empty().html("La propuesta ha sido rechazada");
+            }
+            //~ $(elem).parent()
+            //~ console.log(data);
+        }
+    })
+}

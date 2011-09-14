@@ -6,14 +6,17 @@ from protorpc import messages
 
 class Timeline(messages.Message):
     msg = messages.StringField(1)
-    instance_id = messages.IntegerField(2)
-    instance_name = messages.StringField(3)
-    user = messages.StringField(4)
-    created = messages.IntegerField(5)
+    msg_id = messages.IntegerField(2)
+    instance_id = messages.IntegerField(3)
+    instance_name = messages.StringField(4)
+    url = messages.StringField(5)
+    user = messages.StringField(6)
+    created = messages.IntegerField(7)
     
 
 class Timelines(messages.Message):
     timelines = messages.MessageField(Timeline, 1, repeated=True)
+    query_id = messages.StringField(2)
     
     
 class Suggestion(messages.Message):

@@ -8,39 +8,25 @@ from geouser.models import AnonymousUser
 class geosession(object):
     def process_request(self, request):
         session_id = request.COOKIES.get(settings.COOKIE_NAME, None)
-        if session_id is None:
+        if session_id is not None:
+            request.session = SessionStore.load(session_id=session_id)
+        elif session_id is None:
             session_id = request.META.get('HTTP_X_GEOREMINDME_SESSION', None)
-            request.session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
-        if session_id is None:
+            if session_id is not None:
+                request.session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
+        
+        if session_id is None: # sesion temporal
             request.session = SessionStore.load(session_data=request.COOKIES.get(
                                              settings.COOKIE_DATA_NAME, None),
                                              from_cookie=False
                                              )
-        else:
-            request.session = SessionStore.load(session_id=session_id)
 
-        if hasattr(request, 'facebook'):
-            if request.facebook['client'].user is not None:
-                if not 'user' in request.session:
-                    from facebookApp import watchers    
-                    request.user = request.facebook['client'].user
-                    return
-                # sesion iniciada en web y facebook
-                else:
-                    if request.session['user'].id == request.facebook['client'].user.id:
-                        from facebookApp import watchers    
-                        request.user = request.session['user']
-                        return
-            request.session.delete()  
-            request.user = AnonymousUser()
-            from facebookApp.watchers import disconnect_all
-            disconnect_all()
-            return
-        else:
-            if request.session.is_from_facebook:
-                request.session.delete()
-                from facebookApp.watchers import disconnect_all
-                disconnect_all()
+#        if request.session.is_from_facebook:
+#            if not (request.path.find('/fb/') == 0) and not (request.is_ajax() and request.META['HTTP_REFERER'].find('/fb/') != -1):
+#                request.session.delete()
+#                from facebookApp.watchers import disconnect_all
+#                disconnect_all()
+                
         if 'user' in request.session:
             request.user = request.session['user']
         else:
@@ -59,6 +45,7 @@ class geosession(object):
                 cookieless = request.session._cookieless
                 deleted = request.session._deleted
             except AttributeError:
+                raise
                 pass
             else:
                 if deleted:
@@ -85,11 +72,10 @@ class geosession(object):
                             expires = request.session.get_expires()
                         request.session.put()
                         response.set_cookie(settings.COOKIE_NAME,
-		                                 request.session.session_id, max_age=max_age,
-                                         expires=expires, domain=settings.SESSION_COOKIE_DOMAIN,
-                                         path=settings.SESSION_COOKIE_PATH,
-                                         secure=settings.SESSION_COOKIE_SECURE,
-                                         #httponly=settings.COOKIE_SESSION_HTTPONLY or None
+                                        request.session.session_id, max_age=max_age,
+                                        expires=expires, domain=settings.SESSION_COOKIE_DOMAIN,
+                                        path=settings.SESSION_COOKIE_PATH,
+                                        secure=settings.SESSION_COOKIE_SECURE,
+                                        #httponly=settings.COOKIE_SESSION_HTTPONLY or None
                                          )
         return response
-

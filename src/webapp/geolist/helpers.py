@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from geouser.models import User
+from geouser.models import User, AnonymousUser
 from models import *
 from models_indexes import ListFollowersIndex
 
@@ -50,7 +50,7 @@ class ListHelper(object):
             :type id: :class:`Integer`
             :returns: None o :class:`geolist.models.List`
         '''
-        if not isinstance(querier, User):
+        if not isinstance(querier, User) and not isinstance(querier, AnonymousUser):
             raise TypeError()
         list = self.get_by_id(id)
         if list is None:
@@ -89,12 +89,16 @@ class ListHelper(object):
             :param user: usuario del que buscar las listas
             :type user: :class:`geouser.models.User`
         '''
+        if not user.is_authenticated():
+            return []
         from google.appengine.api import datastore
         q = datastore.Query('ListFollowersIndex', {'keys =': user.key()}, keys_only=True)
         if async:
+            from google.appengine.ext import db
             indexes = db.GqlQuery('SELECT __key__ FROM ListFollowersIndex WHERE keys = :1', user.key())
             return indexes.run()
-        indexes = q.Run()
+        c = indexes.Count()
+        indexes = q.Get(c)
         from georemindme.funcs import fetch_parentsKeys
         lists = fetch_parentsKeys(indexes)
         return [list.to_dict(resolve=resolve) for list in lists if list.active]
@@ -102,7 +106,8 @@ class ListHelper(object):
     def load_list_user_following_by_async(self, lists_async, resolve=False):
         from georemindme.funcs import fetch_parentsKeys
         lists = fetch_parentsKeys(lists_async)
-        return [list.to_dict(resolve=resolve) for list in lists if list.active]
+        return filter(lambda x: x.active, lists)
+        # return [list.to_dict(resolve=resolve) for list in lists if list.active]
 
     def get_shared_list(self, user):
         '''
@@ -114,14 +119,19 @@ class ListHelper(object):
         lists = [inv.list for inv in user.toinvitations_set if inv.status == 1]
         return lists
 
-    def get_by_user(self, user, querier, page = 1, query_id = None, all=False):
+    def get_by_user(self, user, querier, page = 1, query_id = None, all=False, without_key=None):
         """
         Obtiene las listas de un usuario
         """
-        if not isinstance(user, User) or not isinstance(querier, User):
+        if not user.is_authenticated():
+            return []
+        if user is None or querier is None:
             raise TypeError()
         if user.id == querier.id:
-            q = self._klass.gql('WHERE user = :1 AND active = True ORDER BY modified DESC', user)
+            if without_key is not None:
+                q = self._klass.gql('WHERE user = :1 AND active = True ORDER BY modified DESC', user)
+            else:
+                q = self._klass.gql('WHERE user = :1 AND active = True ORDER BY modified DESC', user)
         else:
             q = self._klass.gql('WHERE user = :1  AND active = True AND _vis = :2 ORDER BY modified DESC', user, 'public')
         if not all:
@@ -129,13 +139,13 @@ class ListHelper(object):
             p = PagedQuery(q, id = query_id)
             from georemindme.funcs import prefetch_refprops
             lists = prefetch_refprops(p.fetch_page(page), self._klass.user)
-            return [p.id, lists, p.page_count()]
+            return [p.id, lists]
         else:
             return q.run()
         
     def get_by_tag_querier(self, tagInstance, querier, page=1, query_id=None):
         from georemindme.paging import PagedQuery
-        if not isinstance(querier, User):
+        if not isinstance(querier, User) and not isinstance(querier, AnonymousUser):
             raise TypeError()
         from geotags.models import Tag
         if not isinstance(tagInstance, Tag):
@@ -162,7 +172,7 @@ class ListSuggestionHelper(ListHelper):
     _klass = ListSuggestion
 
     def get_by_suggestion(self, suggestion, querier):
-        if querier is None:
+        if not isinstance(querier, User) and not isinstance(querier, AnonymousUser):
             raise TypeError()
         lists = self._klass.all().filter('keys =', suggestion.key()).filter('active =', True)
         lists_loaded = []
@@ -192,7 +202,7 @@ class ListRequestedHelper(ListSuggestionHelper):
             :type id: :class:`Integer`
             :returns: None o :class:`geolist.models.List`
         '''
-        if not isinstance(querier, User):
+        if querier is None:
             raise TypeError()
         list = self.get_by_id(id)
         if list is None or not isinstance(list, ListRequested):

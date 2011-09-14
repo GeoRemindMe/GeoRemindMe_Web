@@ -1,0 +1,7 @@
+#print-container,.zoom,.add-notes span,.closeTextarea,.ui-resizable-handle{
+    display:none;
+}
+
+.add-notes textarea,.add-notes .textAreaElement {
+    border:0 none;
+}

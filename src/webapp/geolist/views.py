@@ -44,9 +44,9 @@ def add_list_alert(request, name=None, description=None, instances=None):
     return list.id
 
 @login_required
-def add_list_suggestion(request, id = None, name=None, description=None, instances=[], instances_del=[], tags=None, vis=None):
+def add_list_suggestion(request, lists_id=[], name=None, description=None, instances=[], instances_del=[], tags=None, vis=None):
     '''
-    Modifica una lista de usuarios
+    Crea o modifica una lista de usuarios
 
         :param id: identificador de la lista
         :type id: :class:`integer`
@@ -58,18 +58,38 @@ def add_list_suggestion(request, id = None, name=None, description=None, instanc
         :type instances: :class:`list`
         :returns: id de la lista modificada
     '''
-    if id is not None:
+    if len(lists_id) == 1:
         from models import ListRequested
-        list = ListRequested.objects.get_by_id_querier(id, request.user)
+        list = ListRequested.objects.get_by_id_querier(lists_id[0], request.user)
         if list is not None:
             try:
                 list.update(querier=request.user, instances=instances, tags=tags, vis=vis)
-                return list
+                return True
             except:
-                from django.http import HttpResponseForbidden
-                return HttpResponseForbidden
-    list = ListSuggestion.insert_list(user=request.user, id=id, name=name, description=description, instances=instances, tags=tags, instances_del=instances_del, vis=vis)
-    return list
+                return False    
+    elif len(lists_id) > 0:
+        results = []
+        for l in lists_id:
+            results.append(ListSuggestion.insert_list(user=request.user, 
+                                                      id=l, 
+                                                      instances=instances
+                                                      ) 
+                           )
+        return [result for result in results if isinstance(result, ListSuggestion)]
+    elif len(lists_id) == 0:
+        lists_id.append(None)  
+    
+    l = ListSuggestion.insert_list(user=request.user, 
+                                  id=lists_id[0], 
+                                  name=name, 
+                                  description=description, 
+                                  instances=instances, 
+                                  tags=tags, 
+                                  instances_del=instances_del, 
+                                  vis=vis
+                                  )
+    return [l]
+    
 
 @login_required
 def add_suggestion_list_invitation(request, listid, username):
@@ -331,7 +351,7 @@ def get_list_suggestion(request, list_id=None, user_id=None, query_id=None, page
             lists = ListSuggestion.objects.get_by_user(user, query_id=query_id, page=page, querier=request.user)
             return lists
         else:
-            lists = ListSuggestion.objects.get_by_user(query_id=query_id, page=page, querier=request.user)
+            lists = ListSuggestion.objects.get_by_user(query_id=query_id, page=page, querier=request.user, user=request.user)
             return lists
     else:
         list = ListSuggestion.objects.get_by_id_querier(list_id, querier=request.user)
@@ -396,9 +416,13 @@ def get_all_shared_list_suggestion(request):
     return lists
 
 
-@login_required
+
 def view_list(request, id, template='webapp/view_list.html'):
     def load_suggestions_async(suggestions):
+        suggestions = suggestions.get_result()
+        from georemindme.funcs import prefetch_refprops
+        from geoalert.models import Suggestion
+        suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
         suggestions_loaded = []
         for suggestion in suggestions:
             suggestions_loaded.append({
@@ -407,30 +431,36 @@ def view_list(request, id, template='webapp/view_list.html'):
                                     'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
                                    }
                                   )
-            if len(suggestions_loaded) > 7:
-                    break
-        from georemindme.funcs import prefetch_refprops
-        from geoalert.models import Suggestion
-        suggestions = prefetch_refprops(suggestions, Suggestion.user)
         return suggestions_loaded
-    try:
-        list = ListSuggestion.objects.get_by_id_querier(id, request.user)
-    except:
-        raise Http404
+   
+    list = ListSuggestion.objects.get_by_id_querier(id, request.user)
     if list is None:
         raise Http404
     from google.appengine.ext import db
     from geoalert.models import Event
-    suggestions_async = db.get(list.keys)
+    from geovote.models import Vote, Comment
+    suggestions_async = db.get_async(list.keys)
+    if 'print' in request.GET:
+        top_comments = Comment.objects.get_top_voted(list, request.user)
+        vote_counter = Vote.objects.get_vote_counter(list.key())
+        return render_to_response('print/view_list.html',
+                                {'list': list,
+                                 'suggestions': load_suggestions_async(suggestions_async),
+                                 'vote_counter': vote_counter,
+                                 'top_comments': top_comments,
+                                },
+                                context_instance=RequestContext(request)
+                              )
     from geovote.api import get_comments
     query_id, comments_async = get_comments(request.user, list.id, 'List', async=True)
-    from geovote.models import Vote
-    from geovote.models import Comment
     has_voted = Vote.objects.user_has_voted(request.user, list.key())
     vote_counter = Vote.objects.get_vote_counter(list.key())
     #comments = get_comments_list(request.user, list.id)
     top_comments = Comment.objects.get_top_voted(list, request.user)
     user_follower = list.has_follower(request.user)
+    if not request.user.is_authenticated():
+        pos = template.rfind('.html')
+        template = template[:pos] + '_anonymous' + template[pos:]
     return render_to_response(template,
                                 {'list': list,
                                  'has_voted': has_voted,
@@ -492,7 +522,6 @@ def share_on_twitter(request, id, msg):
     if list.short_url is None:
         list._get_short_url()
     from geoauth.clients.twitter import TwitterClient
-    from os import environ
     try:
         tw_client=TwitterClient(user=request.user)
         tw_client.send_tweet(msg)
