@@ -228,9 +228,10 @@ class FacebookFriendsRPC(object):
         self.user = user
         self.friends = {}
         try:
-            fbclient = FacebookClient.load_client(user=user)
+            fbclient = FacebookClient(user=user)
             self.rpc = fbclient.get_friends_to_follow(rpc=self.rpc)
         except:
+            raise
             return None
         return self.rpc
     

@@ -50,17 +50,17 @@ def login_panel(request):
                                            context_instance=RequestContext(request)
                                           )
             else:
-                if request.facebook['client'].user is None:
-                    from geouser.models import AnonymousUser
-                    user_logged = request.user
-                    request.session.delete()
-                    request.user = AnonymousUser()
-                    return render_to_response('USUARIO CON SESION EN LA WEB PERO NO USUARIO DE FACEBOOK.html', 
-                                                  {
-                                                   'user_logged': user_logged,
-                                                   },
-                                                  context_instance=RequestContext(request)
-                                                  )
+#                if request.facebook['client'].user is None:
+#                    from geouser.models import AnonymousUser
+#                    user_logged = request.user
+#                    request.session.delete()
+#                    request.user = AnonymousUser()
+#                    return render_to_response('USUARIO CON SESION EN LA WEB PERO NO USUARIO DE FACEBOOK.html', 
+#                                                  {
+#                                                   'user_logged': user_logged,
+#                                                   },
+#                                                  context_instance=RequestContext(request)
+#                                                  )
                 return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
     return render_to_response('register.html', {"permissions": __web_settings.OAUTH['facebook']['scope'] },
