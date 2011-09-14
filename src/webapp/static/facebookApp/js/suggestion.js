@@ -537,26 +537,28 @@ function saveSuggestion(){
             return false;
         }
         
-        if($('#start-date').val()!="mm/dd/aa" && $('#end-date').val()!="mm/dd/aa"){
-            //Hacemos las comparaciones cuando están la fecha de inicio y la de fin
-            var startDate = new($('#start-date').val());
-            var endDate = new($('#end-date').val());
-            
-            if (startDate > endDate){
-                //Comprobamos que inicio < fin
-                showMessage('Por favor revise que la fecha de inicio sea anterior a la de fin',"error");
-                return false;
-            }else if(startDate == endDate && $('#start-hour').val() !="hh:mm" && $('#end-hour').val() !="hh:mm"){
-                //Comprobamos que si inicio < fin -> hora inicio < hora fin
-                var startHour=$('#start-hour').val().split(":");
-                var endHour=$('#end-hour').val().split(":");
-                if(startHour[0]>endHour[0]){
-                    showMessage('Por favor revise que la hora de inicio sea anterior a la de fin',"error");
+        if($('#date [type="checkbox"]').is(':checked')==false){
+            if($('#start-date').val()!="mm/dd/aa" && $('#end-date').val()!="mm/dd/aa"){
+                //Hacemos las comparaciones cuando están la fecha de inicio y la de fin
+                var startDate = new Date($('#start-date').val());
+                var endDate = new Date($('#end-date').val());
+                
+                if (startDate > endDate){
+                    //Comprobamos que inicio < fin
+                    showMessage('Por favor revise que la fecha de inicio sea anterior a la de fin',"error");
                     return false;
-                }else if(startHour[0]==endHour[0]){
-                    if(startHour[1]>endHour[1]){
+                }else if(startDate == endDate && $('#start-hour').val() !="hh:mm" && $('#end-hour').val() !="hh:mm"){
+                    //Comprobamos que si inicio < fin -> hora inicio < hora fin
+                    var startHour=$('#start-hour').val().split(":");
+                    var endHour=$('#end-hour').val().split(":");
+                    if(startHour[0]>endHour[0]){
                         showMessage('Por favor revise que la hora de inicio sea anterior a la de fin',"error");
                         return false;
+                    }else if(startHour[0]==endHour[0]){
+                        if(startHour[1]>endHour[1]){
+                            showMessage('Por favor revise que la hora de inicio sea anterior a la de fin',"error");
+                            return false;
+                        }
                     }
                 }
             }
