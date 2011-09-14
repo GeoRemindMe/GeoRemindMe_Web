@@ -117,12 +117,6 @@
                 
             </span>
         </div>
-        request.COOKIES<br>
-        request.COOKIES.session.uid={{request.COOKIES.session.uid}}<br>
-        request.user.facebook_user.uid={{request.user}}<br>
-        {% ifnotequal request.user.facebook_user.uid request.COOKIES.session.uid %}
-            Se ha encontrado una incoherencia
-        {% endifnotequal %}
         
         <p class="left" style="clear:both;display:block;width:100%;text-align:left">
             <strong>Regístrate haciendo clic en el siguiente botón:</strong>
