@@ -23,6 +23,10 @@
             $('#step-one').slideUp(400);
             $('#step-two').slideDown(400);
         })
+        $('#first-step').click(function(){
+            $('#step-two').slideUp(400);
+            $('#step-one').slideDown(400);
+        })
     });
 </script>
 {% endblock %}
@@ -42,8 +46,15 @@
                 <strong>Comprueba ahora<sup>(1)</sup> cuales de tus amigos ya están en GeoRemindMe!</strong>:
             </p>
             <ul id="link-social-accounts">
-                <li><a id="google" href="/ext/google/contacts/" target="_blank"><strong>Buscar ahora</strong> entre mis contactos de Gmail</a></li>
+            {% if not user.has_perms_twitter %}
                 <li><a id="twitter" href="/ext/twitter/contacts/" target="_blank"><strong>Buscar ahora</strong> entre las personas que sigo en Twitter</a></li>
+            {% endif %}
+            {% if not user.facebook_user %}
+                <li><a id="facebook" href="/ext/facebook/contacts/" target="_blank"><strong>Buscar ahora</strong> entre mis amigos de Facebook</a></li>
+            {% endif %}
+            {% if not user.google_user %}
+                <li><a id="google" href="/ext/google/contacts/" target="_blank"><strong>Buscar ahora</strong> entre mis contactos de Gmail</a></li>
+            {% endif %}
             </ul>
             <span class="btn" id="last-step">Paso 2</span>
             <div class="note clear">

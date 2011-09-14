@@ -55,8 +55,16 @@
                 </tr>
                 <tr>
                     <td><span id="facebook-icon">Facebook</span></td>
-                    <td>Permitido</td>
-                    <td>Permitido</td>
+                    {% if not user.facebook_user %}
+                        <td>
+                            <a href="/login/facebook/?cls" target="_blank">Autorizar</a> 
+                        </td>
+                    {% else %}
+                        <td>
+                            <a href="/oauth/revocate/facebook" target="_blank">Revocar</a>
+                        </td>
+                    {% endif %}
+                    <td>----</td>
                 </tr>
                 <tr>
                     <td><span id="twitter-icon">Twitter</span> </td>
