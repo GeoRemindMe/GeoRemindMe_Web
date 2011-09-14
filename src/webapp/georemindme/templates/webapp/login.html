@@ -224,10 +224,42 @@
 		<div id="main" class="container">
 			<section id="left-block">
 				
-                <div id="left-arrow">
+                <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+                <script>
+                    new TWTR.Widget({
+                        version: 2,
+                        type: 'search',
+                        search: '#geo-suggestion',
+                        interval: 30000,
+                        title: 'Sugerencias de los usuarios',
+                        subject: 'GeoRemindMe! en Twitter',
+                        width: 420,
+                        height: 222,
+                        theme: {
+                            shell: {
+                                background: '#606060',
+                                color: '#FFFFFF'
+                            },
+                            tweets: {
+                                background: '#ffffff',
+                                color: '#444444',
+                                links: '#1985b5'
+                            }
+                        },
+                        features: {
+                            scrollbar: true,
+                            loop: true,
+                            live: true,
+                            hashtags: true,
+                            timestamp: true,
+                            avatars: true,
+                            toptweets: true,
+                            behavior: 'default'
+                        }
+                    }).render().start();
+                </script>
 <!--
-                    <img src="/static/webapp/img/left-arrow.png" alt="">
--->
+                <div id="left-arrow">
                     <span>&nbsp;</span>
                 </div>
 				<div id="rollover">
@@ -247,10 +279,8 @@
 				</div>
 				<div id="right-arrow">
                     <span>&nbsp;</span>
-<!--
-                    <img src="/static/webapp/img/right-arrow.png" alt="">
--->
                 </div>
+-->
 				
 <!--
 				<p class="bottom-p">Ya somos XXX personas compartiendo YYY sugerencias.</p>
