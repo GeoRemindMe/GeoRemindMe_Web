@@ -582,7 +582,7 @@ function saveSuggestion(){
             params['starts_day']=splittedDate[1]
             params['starts_year']=splittedDate[2]
             params['starts_hour']=$('#start-hour').val()
-            splittedDate=$('#start-date').val().split("/")
+            splittedDate=$('#end-date').val().split("/")
             params['ends_month']=splittedDate[0]
             params['ends_day']=splittedDate[1]
             params['ends_year']=splittedDate[2]
