@@ -24,6 +24,7 @@ def view_tag_suggestions(request, slug, page=1, query_id=None, template='webapp/
                                         'suggestions': suggestions,
                                         'tag': tag,
                                         'total': total,
+                                        'page': page,
                                         },
                                context_instance=RequestContext(request))
 
