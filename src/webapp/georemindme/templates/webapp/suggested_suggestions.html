@@ -42,189 +42,198 @@
             {% endif %}
 				{% block extraContent %} {% endblock %}
 				
-                <div class="black-box" id="close-suggestions-box" style="display:none">
-                    <p>
-                        <em>Sugerencias cerca tuya</em>: 
-                        (<span id="my_location">Cargando...</span>) 
-<!--
-                        <span class="hoverlink">Cambiar</span>
--->
-                    </p>
-                    <ul id="close-suggestions">
+                {% if request.get_full_path != "/suggestions/add/"%}
+                    <div class="black-box" id="close-suggestions-box" style="display:none">
+                        <p>
+                            <em>Sugerencias cerca tuya</em>: 
+                            (<span id="my_location">Cargando...</span>) 
     <!--
-                        <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Probar una hamburguesa en el Brasilia</a></li>
-                        <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Tomar un heladito de café con turrón en Los Italianos, ¡preferentemente en tarrina!</a></li>
-                        <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Ver un atardecer desde el mirador de San Nicolás</a></li>
+                            <span class="hoverlink">Cambiar</span>
     -->
-                        <li style="text-align: center; line-height: 16px; color: rgb(204, 204, 204);">
-                            <p style="background-color:inherit;">Cargando</p>
-                            <img src="/static/webapp/img/loader3.gif" style="width: 16px; height: 16px; float: none; display: inline; margin: 0pt 0pt 0pt 5px;"/>
-                        </li>
-                    </ul>
-                    <div id="csrfmiddleware" style="display:none">{%csrf_token%}</div>
-                    <p><span class="hoverlink view-more">Ver más</span></p>
-<!--
-                    <div id="address_output"></div>
--->
-                    <hr>
-                </div>
+                        </p>
+                        <ul id="close-suggestions">
+        <!--
+                            <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Probar una hamburguesa en el Brasilia</a></li>
+                            <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Tomar un heladito de café con turrón en Los Italianos, ¡preferentemente en tarrina!</a></li>
+                            <li><a href="" class="clean"><img src="/static/webapp/img/kaos.png" alt=""></a><a href="">Ver un atardecer desde el mirador de San Nicolás</a></li>
+        -->
+                            <li style="text-align: center; line-height: 16px; color: rgb(204, 204, 204);">
+                                <p style="background-color:inherit;">Cargando</p>
+                                <img src="/static/webapp/img/loader3.gif" style="width: 16px; height: 16px; float: none; display: inline; margin: 0pt 0pt 0pt 5px;"/>
+                            </li>
+                        </ul>
+                        <div id="csrfmiddleware" style="display:none">{%csrf_token%}</div>
+    <!--
+                        <p><span class="hoverlink view-more">Ver más</span></p>
+    -->
+    <!--
+                        <div id="address_output"></div>
+    -->
+                        <hr>
+                    </div>
                 
-                {%if not request.COOKIES.near_suggestions %}
-                    <script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw"></script>
-                {%endif%}
+                
+                    {%if not request.COOKIES.near_suggestions %}
+                        <script type="text/javascript" src="https://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw"></script>
+                    {%endif%}
 
 
-				<script type="text/javascript">
-            
-                    //jQuery.getScript('http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw');
-                    
-                    function loadSuggestions(lat,lng){
-                        //Recupera las sugerencias para una lat,lng (por defecto la última guardada)
-                        //y las pinta al terminar
-                        var data={
-                            radius: 5000,
-                            csrfmiddlewaretoken:$('#csrfmiddleware input').val()
-                        }
-                        if(lat && lng){
-                            data['location']=lat+","+lng;
-                        }
+                    <script type="text/javascript">
+                
+                        //jQuery.getScript('http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw');
                         
-                        $.ajax({
-                            type: "POST",
-                            url: "/ajax/get/near/suggestions/",
-                            data: data,
-                            dataType:'json',
-                            success: function(data){
-                                //console.log(data);
-                                if(data.length){
-                                    $('#close-suggestions').empty();
-                                    $(data).each(function(i,elem){
-                                        $('#close-suggestions').append('<li><a href="/user/'+elem.username+'/" class="clean"><img src="/user/'+elem.username+'/picture/" alt="'+elem.username+'"></a><a href="/suggestion/'+elem.slug+'/">'+elem.name+'</a></li>');
-                                    })
-                                    
-                                    
-                                    //Set cookie
-                                    $.cookies.set('near_suggestions',$('#close-suggestions').html());
-                                    
-                                    //Recuperamos las sugerencias y las metemos en la caja
-                                    //loadSuggestions(lat,lng);
-                                    $('#close-suggestions').empty();
-                                    $('#close-suggestions').append($.cookies.get('near_suggestions'));
-                                    
-                                    //Ponemos de donde están cerca
-                                    if(address)
-                                        $('#my_location').text(address);
-                                    $('#close-suggestions-box').show();
-                                }
+                        function loadSuggestions(lat,lng){
+                            //Recupera las sugerencias para una lat,lng (por defecto la última guardada)
+                            //y las pinta al terminar
+                            var data={
+                                radius: 5000,
+                                csrfmiddlewaretoken:$('#csrfmiddleware input').val()
                             }
-                        });
-                    }
-                    
-                    function loadHTML5Location(){
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(function(position) {
-                                var latitud=position.coords.latitude;
-                                var longitud=position.coords.longitude;
-                                
-                                //Guardamos la latitud y longitud detectadas
-                                $.cookies.set('lat',latitud);
-                                $.cookies.set('lng',longitud);
-                                
-                                //Recuperamos las sugerencias y las metemos en la caja
-                                loadSuggestions(latitud,longitud);
-                                
-                                //Ponemos de donde están cerca
-                                $('#my_location').reversegeocode({
-                                    lat: latitud,
-                                    lng: longitud,
-                                    callback:function(address){
-                                        $.cookies.set('address',address);    
+                            if(lat && lng){
+                                data['location']=lat+","+lng;
+                            }
+                            
+                            $.ajax({
+                                type: "POST",
+                                url: "/ajax/get/near/suggestions/",
+                                data: data,
+                                dataType:'json',
+                                success: function(data){
+                                    //console.log(data);
+                                    if(data.length){
+                                        //Recuperamos las sugerencias y las metemos en la caja
+                                        $('#close-suggestions').empty();
+                                                                                
+                                        if(data.length==0){
+                                            $('#close-suggestions').html("Lo sentimos, aún no hay sugerencias a menos de 5km de su posición.")
+                                        }
+                                        else{
+                                            $(data).each(function(i,elem){
+                                                $('#close-suggestions').append('<li><a href="/user/'+elem.username+'/" class="clean"><img src="/user/'+elem.username+'/picture/" alt="'+elem.username+'"></a><a href="/suggestion/'+elem.slug+'/">'+elem.name+'</a></li>');
+                                            })
+                                            
+                                            
+                                            //Set cookie
+                                            $.cookies.set('near_suggestions',$('#close-suggestions').html());
+                                        }
+                                        
+                                        
+                                        //$('#close-suggestions').append($.cookies.get('near_suggestions'));
+                                        
+                                        //Ponemos de donde están cerca
+                                        if(address!="")
+                                            $('#my_location').text(address);
+                                        $('#close-suggestions-box').show();
                                     }
-                                });
-                                
-                                $('#close-suggestions-box').show();
-                                
-                            }, function(e){
-                                tmp=e;
-                                console.log("No se ha compartido localización");
+                                }
                             });
                         }
-                    }
-                    function loadCookieLocation(){
-                        //Cargamos la latitud y longitud
-                        var latitud=$.cookies.get('lat')
-                        var longitud=$.cookies.get('lng')
-                        var address=$.cookies.get('address')
-                        if($.cookies.get('near_suggestions')=="")
-                            loadSuggestions(latitud,longitud);
-                        else{
-                            $('#my_location').text($.cookies.get('address'))
-                            $('#close-suggestions').empty();
-                            $('#close-suggestions').append($.cookies.get('near_suggestions'));
-                            $('#close-suggestions-box').show();                        
-                        }
                         
-                        
-                        
-                    }
-
-                    if($.cookies.get('georemindme_session_cookie')==null){
-                        //Si no estamos identificados 
-                        if($.cookies.get('lat')==null || $.cookies.get('lng')==null){
-                            //Si no tenemos una latitud y longitud guardadas la pedimos por HTML5
-                            loadHTML5Location();
-                            
-                        }else{
-                            //Si tenemos ya cookie
-                            loadCookieLocation();
-                        }
-                    }else{
-                        //Si estamos identificados
-                        {% if request.user.is_authenticated %}
-                            if($.cookies.get('lat')==null || $.cookies.get('lng')==null){
-                                
-                                var latlng="{{request.user.last_point}}";
-                                latlng=latlng.split(",");
-                                $.cookies.set('lat',latlng[0]);
-                                $.cookies.set('lng',latlng[1]);
-                                //Si no tenemos una latitud y longitud ponemos la última recordada
-                                loadSuggestions();
-                                
-                                //Ponemos de donde están cerca
-                                var latitud=latlng[0];
-                                var longitud=latlng[1];
-                                $('#my_location').reversegeocode({
-                                    lat: latitud,
-                                    lng: longitud,
-                                    callback:function(address){
-                                        $.cookies.set('address',address);    
-                                        $('#my_location').text(address);
-                                    }
+                        function loadHTML5Location(){
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(function(position) {
+                                    var latitud=position.coords.latitude;
+                                    var longitud=position.coords.longitude;
+                                    
+                                    //Guardamos la latitud y longitud detectadas
+                                    $.cookies.set('lat',latitud);
+                                    $.cookies.set('lng',longitud);
+                                    
+                                    //Recuperamos las sugerencias y las metemos en la caja
+                                    loadSuggestions(latitud,longitud);
+                                    
+                                    //Ponemos de donde están cerca
+                                    $('#my_location').reversegeocode({
+                                        lat: latitud,
+                                        lng: longitud,
+                                        callback:function(address){
+                                            $.cookies.set('address',address);    
+                                        }
+                                    });
+                                    
+                                    $('#close-suggestions-box').show();
+                                    
+                                }, function(e){
+                                    tmp=e;
+                                    console.log("No se ha compartido localización");
                                 });
+                            }
+                        }
+                        function loadCookieLocation(){
+                            //Cargamos la latitud y longitud
+                            var latitud=$.cookies.get('lat')
+                            var longitud=$.cookies.get('lng')
+                            var address=$.cookies.get('address')
+                            if($.cookies.get('near_suggestions')=="")
+                                loadSuggestions(latitud,longitud);
+                            else{
+                                $('#my_location').text($.cookies.get('address'))
+                                $('#close-suggestions').empty();
+                                $('#close-suggestions').append($.cookies.get('near_suggestions'));
+                                $('#close-suggestions-box').show();                        
+                            }
+                            
+                            
+                            
+                        }
+
+                        if($.cookies.get('georemindme_session_cookie')==null){
+                            //Si no estamos identificados 
+                            if($.cookies.get('lat')==null || $.cookies.get('lng')==null){
+                                //Si no tenemos una latitud y longitud guardadas la pedimos por HTML5
+                                loadHTML5Location();
                                 
-                                
-                                $('#close-suggestions-box').show();
                             }else{
                                 //Si tenemos ya cookie
                                 loadCookieLocation();
                             }
-                        {% endif %}
-                    }
-                    
-                    
-                    
-                    
+                        }else{
+                            //Si estamos identificados
+                            {% if request.user.is_authenticated %}
+                                if($.cookies.get('lat')==null || $.cookies.get('lng')==null || $.cookies.get('near_suggestions')){
+                                    
+                                    var latlng="{{request.user.last_point}}";
+                                    latlng=latlng.split(",");
+                                    $.cookies.set('lat',latlng[0]);
+                                    $.cookies.set('lng',latlng[1]);
+                                    //Si no tenemos una latitud y longitud ponemos la última recordada
+                                    loadSuggestions();
+                                    
+                                    //Ponemos de donde están cerca
+                                    var latitud=latlng[0];
+                                    var longitud=latlng[1];
+                                    $('#my_location').reversegeocode({
+                                        lat: latitud,
+                                        lng: longitud,
+                                        callback:function(address){
+                                            $.cookies.set('address',address);    
+                                            $('#my_location').text(address);
+                                        }
+                                    });
+                                    
+                                    
+                                    $('#close-suggestions-box').show();
+                                }else{
+                                    //Si tenemos ya cookie
+                                    loadCookieLocation();
+                                }
+                            {% endif %}
+                        }
                         
-                    
-                    //if($.cookies.get('near_suggestions')==null){                    
-                        //loadSuggestions();
-                    //}else{
-                    //    $('#close-suggestions').empty();
-                     //   $('#close-suggestions').append($.cookies.get('near_suggestions'));
-                    //}
-				</script>
+                        
+                        
+                        
+                            
+                        
+                        //if($.cookies.get('near_suggestions')==null){                    
+                            //loadSuggestions();
+                        //}else{
+                        //    $('#close-suggestions').empty();
+                         //   $('#close-suggestions').append($.cookies.get('near_suggestions'));
+                        //}
+                    </script>
 				
-				
+				{%endif%}
 				
 <!--
 				<div class="black-box">

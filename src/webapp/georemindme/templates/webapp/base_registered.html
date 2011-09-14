@@ -13,29 +13,21 @@
     </title>
 	<link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
-    
-<!--
-    <link href='http://fonts.googleapis.com/css?family=Alike|Crimson+Text:400,600,700|Goudy+Bookletter+1911|Unna' rel='stylesheet' type='text/css'>
--->
-    
+       
     <meta name="description" content="Un mundo entero de sugerencias por descubrir">
     
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>    
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>    
     
+<!--
     <script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
-<!--
+-->
+
     <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
--->
-<!--
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
--->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
-    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script type="text/javascript" src="/static/webapp/js/common.js"></script>
-<!--
-    <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
--->
 	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript" src="/static/webapp/js/jquery.lavalamp.js"></script>
     
@@ -102,14 +94,13 @@
                 $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
             })
             
-            $("#left-col").css("height",$(this).height()+'px');
+            $("#left-col").css("height",$("#right-col").height()+'px');
             $("#right-col").bind("resize",function(){
                 $("#left-col").css("height",$(this).height()+'px');
             });
             
             $('#search-form').bind('submit', function(e){
                 e.preventDefault;
-                console.log("entro");
                 window.location="/search/"+$(this).find("input[type='text']").val();
                 return false;
             });

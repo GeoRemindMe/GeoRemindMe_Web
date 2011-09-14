@@ -26,9 +26,9 @@ function follow(action,userid,username) {
     if(username!=null)
         data["username"]=username;
     if(action=='follow')
-        var url = 'http://localhost:8080/ajax/add/following/'
+        var url = '/ajax/add/following/'
     else
-        var url = 'http://localhost:8080/ajax/delete/following/'
+        var url = '/ajax/delete/following/'
     
     $("#following_state_"+userid).children().text("Enviado...")
     $('#following_state_'+userid).removeClass('following-state');

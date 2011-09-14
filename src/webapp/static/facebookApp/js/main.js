@@ -37,7 +37,7 @@ function facebookInit(config) {
   // ensure we're always running on apps.facebook.com
   // if we are opening http://localhost:8080/fb/ or
   // georemindme.appspot.com/fb we will be redirected
-  //~ if (window == top) { goHome(); }
+  if (window == top) { goHome(); }
 }
 
 function handleSessionChange(response) {

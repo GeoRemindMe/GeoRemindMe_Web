@@ -537,26 +537,28 @@ function saveSuggestion(){
             return false;
         }
         
-        if($('#start-date').val()!="mm/dd/aa" && $('#end-date').val()!="mm/dd/aa"){
-            //Hacemos las comparaciones cuando están la fecha de inicio y la de fin
-            var startDate = new($('#start-date').val());
-            var endDate = new($('#end-date').val());
-            
-            if (startDate > endDate){
-                //Comprobamos que inicio < fin
-                showMessage('Por favor revise que la fecha de inicio sea anterior a la de fin',"error");
-                return false;
-            }else if(startDate == endDate && $('#start-hour').val() !="hh:mm" && $('#end-hour').val() !="hh:mm"){
-                //Comprobamos que si inicio < fin -> hora inicio < hora fin
-                var startHour=$('#start-hour').val().split(":");
-                var endHour=$('#end-hour').val().split(":");
-                if(startHour[0]>endHour[0]){
-                    showMessage('Por favor revise que la hora de inicio sea anterior a la de fin',"error");
+        if($('#date [type="checkbox"]').is(':checked')==false){
+            if($('#start-date').val()!="mm/dd/aa" && $('#end-date').val()!="mm/dd/aa"){
+                //Hacemos las comparaciones cuando están la fecha de inicio y la de fin
+                var startDate = new Date($('#start-date').val());
+                var endDate = new Date($('#end-date').val());
+                
+                if (startDate > endDate){
+                    //Comprobamos que inicio < fin
+                    showMessage('Por favor revise que la fecha de inicio sea anterior a la de fin',"error");
                     return false;
-                }else if(startHour[0]==endHour[0]){
-                    if(startHour[1]>endHour[1]){
+                }else if(startDate == endDate && $('#start-hour').val() !="hh:mm" && $('#end-hour').val() !="hh:mm"){
+                    //Comprobamos que si inicio < fin -> hora inicio < hora fin
+                    var startHour=$('#start-hour').val().split(":");
+                    var endHour=$('#end-hour').val().split(":");
+                    if(startHour[0]>endHour[0]){
                         showMessage('Por favor revise que la hora de inicio sea anterior a la de fin',"error");
                         return false;
+                    }else if(startHour[0]==endHour[0]){
+                        if(startHour[1]>endHour[1]){
+                            showMessage('Por favor revise que la hora de inicio sea anterior a la de fin',"error");
+                            return false;
+                        }
                     }
                 }
             }
@@ -574,17 +576,19 @@ function saveSuggestion(){
             visibility: $('#id_visibility').val(),
             tags: $('#id_tags').val()
         };
-        if($('#date [type="checkbox"]').is(':checked')){
+        if($('#date [type="checkbox"]').is(':checked')==false){
+            console.log("Entro por el checkbox no marcado");
+            tmp=$('#date [type="checkbox"]');
             splittedDate=$('#start-date').val().split("/")
             params['starts_month']=splittedDate[0]
             params['starts_day']=splittedDate[1]
             params['starts_year']=splittedDate[2]
-            params['start-hour']=$('#start-hour').val()
-            splittedDate=$('#start-date').val().split("/")
+            params['starts_hour']=$('#start-hour').val()
+            splittedDate=$('#end-date').val().split("/")
             params['ends_month']=splittedDate[0]
             params['ends_day']=splittedDate[1]
             params['ends_year']=splittedDate[2]
-            params['end-hour']=$('#end-hour').val()
+            params['ends_hour']=$('#end-hour').val()
         }
         if($('#visibility span[value="public"]').css('display')!="none")
             params['visibility']= "public";
@@ -625,10 +629,10 @@ function saveSuggestion(){
                     $('#id_description').val("");
                     $('#id_tags').val("");
                     $('#place').val("").blur();
-                    $('#start-date').val("mm/dd/aa");
-                    $('#start-hour').val("").blur();
-                    $('#end-date').val("mm/dd/aa");
-                    $('#end-hour').val("").blur();
+                    //~ $('#start-date').val("mm/dd/aa");
+                    //~ $('#start-hour').val("").blur();
+                    //~ $('#end-date').val("mm/dd/aa");
+                    //~ $('#end-hour').val("").blur();
                     $('#lists span.checked').each(function(i,elem){
                         $(elem).removeClass('checked');
                     })
