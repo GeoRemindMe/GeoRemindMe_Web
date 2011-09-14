@@ -33,7 +33,7 @@
         <p>Antes de empezar solo necesitamos comentarte 2 cositas.</p>
         
         <hr>
-        <div id="step-one">
+        <div id="step-one" {%if form.errors %}style="display:none"{%endif%}> 
             <h2>Paso 1 de 2: Recibe más y mejores sugerencias</h2>
             <p>
                 Para recibir sugerencias de mejor calidad, lo más importante es que te conectes con usuarios que compartan gustos contigo.<br>
@@ -58,8 +58,8 @@
                 </div>
             </div>
         </div>
-        <div id="step-two" style="display:none">
-            <h2>Paso 2 de 2:Completa tu perfil</h2>
+        <div id="step-two"  {%if not form.errors %}style="display:none"{%endif%}>
+            <h2>Paso 2 de 2: Completa tu perfil</h2>
             <p>
                 Por último, y para poder terminar de configurar tu cuenta,
                 necesitamos que nos confirmes cual quieres que sea tu nombre
