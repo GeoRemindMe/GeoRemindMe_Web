@@ -46,7 +46,7 @@ class FacebookMiddleware(object):
         else:
             if request.user.is_authenticated():
                 if request.facebook['client'].user is not None:
-                    if request.facebook['client'].user.id != request.user.id:
+                    if request.facebook['client'].user.id != request.user.id or request.facebook['uid'] != request.user.facebook_user.uid:
                         # son usuarios distintos, cerramos la sesion del viejo usuario conectado
                         request.session.delete()
                         request.session.init_session(user=request.facebook['client'].user, is_from_facebook=True)
