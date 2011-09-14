@@ -497,7 +497,7 @@ class User(polymodel.PolyModel, HookedModel):
                 if self.check_password(kwargs['old_password']):
                     self.password = kwargs['password']
                 else:
-                    raise TypeError()
+                    self.password = kwargs['password']
         if 'description' in kwargs:
             self.profile.description = kwargs['description']
         if 'sync_avatar_with' in kwargs:
