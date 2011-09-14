@@ -119,7 +119,7 @@
         </div>
         request.COOKIES<br>
         request.COOKIES.session.uid={{request.COOKIES.session.uid}}<br>
-        request.user.facebook_user.uid={{request.user}}<br>
+        request.user.facebook_user.uid={{request.user.email}}<br>
         {% ifnotequal request.user.facebook_user.uid request.COOKIES.session.uid %}
             Se ha encontrado una incoherencia
         {% endifnotequal %}
