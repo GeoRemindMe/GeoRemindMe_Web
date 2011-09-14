@@ -208,7 +208,6 @@ def dashboard(request, template='webapp/dashboard.html'):
                                    context_instance=RequestContext(request)
                                   )
             else:
-                raise
                 return render_to_response('webapp/create_social_profile.html', {'form': f}, 
                                        context_instance=RequestContext(request)
                                       )
