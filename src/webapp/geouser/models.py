@@ -508,6 +508,7 @@ class User(polymodel.PolyModel, HookedModel):
             self.email = backemail
             self.username = backusername
             self.password = backpassword
+            raise
         return self
 
     def _pre_put(self):

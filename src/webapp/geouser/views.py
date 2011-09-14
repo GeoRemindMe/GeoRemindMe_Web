@@ -191,6 +191,7 @@ def dashboard(request, template='webapp/dashboard.html'):
         :return: Solo devuelve errores si el proceso falla.
     """
     from forms import SocialUserForm
+    
     if request.user.username is None:
         if request.method == 'POST':
             f = SocialUserForm(request.POST, 
@@ -199,13 +200,15 @@ def dashboard(request, template='webapp/dashboard.html'):
                                            'username': request.user.username,
                                          }
                                )
+            
             if f.is_valid():
-                    user = f.save(request.user)
-                    if not user:
-                        return render_to_response('webapp/create_social_profile.html', {'form': f}, 
-                                       context_instance=RequestContext(request)
-                                      )
+                user = f.save(request.user)
+                if not user:
+                    return render_to_response('webapp/create_social_profile.html', {'form': f}, 
+                                   context_instance=RequestContext(request)
+                                  )
             else:
+                raise
                 return render_to_response('webapp/create_social_profile.html', {'form': f}, 
                                        context_instance=RequestContext(request)
                                       )

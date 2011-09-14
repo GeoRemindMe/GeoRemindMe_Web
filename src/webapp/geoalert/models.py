@@ -489,9 +489,20 @@ class Suggestion(Event, Visibility, Taggable):
             return super(Suggestion, self).delete()
         from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
         generico = User.objects.get_by_username(__web_settings.GENERICO, keys_only=True)
-        if generico == Suggestion.user.get_value_for_datastore(self): 
+        if generico == Suggestion.user.get_value_for_datastore(self):
+            from geolist.models import ListSuggestion 
             # es del usuario georemindme, la borramos
+            alerts = AlertSuggestion.all().filter('suggestion =', self.key()).run()
+            lists = ListSuggestion.all().filter('keys =', self.key()).run()
+            to_save = []
+            for l in lists:
+                l.keys.remove(self.key())
+                to_save.append(l)
+            p = db.put_async(to_save)
+            for a in alerts:
+                a.delete()
             suggestion_deleted.send(sender=self, user=generico)
+            p.get_result()
             return super(Suggestion, self).delete()
         # otro usuario, se la asignamos a georemindme
         viejo = self.user
