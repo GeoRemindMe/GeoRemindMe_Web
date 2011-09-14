@@ -471,6 +471,7 @@ class User(polymodel.PolyModel, HookedModel):
             save = db.put_async([sociallinks, scgoogleplaces])
             from google.appengine.ext.deferred import defer
             from signals import user_new
+            from watchers import new_user_registered
             user_new.send(sender=user, status=trans)
             save.get_result()
             return user
@@ -496,8 +497,8 @@ class User(polymodel.PolyModel, HookedModel):
             if 'old_password' in kwargs:
                 if self.check_password(kwargs['old_password']):
                     self.password = kwargs['password']
-                else:
-                    self.password = kwargs['password']
+            else:
+                self.password = kwargs['password']
         if 'description' in kwargs:
             self.profile.description = kwargs['description']
         if 'sync_avatar_with' in kwargs:
