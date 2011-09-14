@@ -67,7 +67,7 @@ def send_confirm_mail(to=None, confirm_code=None, language='en'):
         que ha pasado.
         </p>
         <p>
-        Muchas gracias,
+        Muchas gracias,<br>
         El equipo de GeoRemindMe!
         </p>
         </body></html>
@@ -127,7 +127,7 @@ def send_remind_pass_mail(to=None, remind_code=None, language='en'):
         <p>
         Si has recibido este correo por error por favor escríbenos a info@georemindme.com para que podamos comprobar
         que ha pasado.<br>
-        Muchas gracias,
+        Muchas gracias,<br>
         El equipo de GeoRemindMe!
         </p>
         </body></html>
