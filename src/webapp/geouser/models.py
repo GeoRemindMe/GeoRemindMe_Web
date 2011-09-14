@@ -503,13 +503,11 @@ class User(polymodel.PolyModel, HookedModel):
         if 'sync_avatar_with' in kwargs:
             self.profile.sync_avatar_with = kwargs['sync_avatar_with']
         try:
-            put = db.put_async([self, self.profile])
-            put.get_result()
+            db.put([self, self.profile])
         except:
             self.email = backemail
             self.username = backusername
             self.password = backpassword
-            raise
         return self
 
     def _pre_put(self):

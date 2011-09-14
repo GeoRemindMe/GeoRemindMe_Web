@@ -19,11 +19,12 @@ class geosession(object):
         else:
             request.session = SessionStore.load(session_id=session_id)
 
-        if request.session.is_from_facebook:
-            if not (request.path.find('/fb/') == 0) and not (request.is_ajax() and request.META['HTTP_REFERER'].find('/fb/') != -1):
-                request.session.delete()
-                from facebookApp.watchers import disconnect_all
-                disconnect_all()
+#        if request.session.is_from_facebook:
+#            if not (request.path.find('/fb/') == 0) and not (request.is_ajax() and request.META['HTTP_REFERER'].find('/fb/') != -1):
+#                request.session.delete()
+#                from facebookApp.watchers import disconnect_all
+#                disconnect_all()
+                
         if 'user' in request.session:
             request.user = request.session['user']
         else:
@@ -31,9 +32,9 @@ class geosession(object):
 
     def process_response(self, request, response):
         """
-If request.session was modified, or if the configuration is to save the
-session every time, save the changes and set a session cookie.
-"""
+        If request.session was modified, or if the configuration is to save the
+        session every time, save the changes and set a session cookie.
+        """
         if hasattr(request, 'session'):
             try:
                 accessed = request.session._accessed
