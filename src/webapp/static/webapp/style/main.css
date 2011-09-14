@@ -1549,11 +1549,16 @@ div.removable a {
     font-weight: bold;
     margin-bottom: 1em;
 }
+<<<<<<< HEAD
+#right-col, #center-col {
+    font-size:1.2em;
+=======
 #right-col {
     font-size:1em;
 /*
     background-color: #FCFCFC;
 */
+>>>>>>> dev
 }
 
 div#left-col li a {
@@ -1829,6 +1834,8 @@ ul#chronology a.link,ul#chronology a.link:visited,ul#chronology a:visited {
     font-size: 1.1em;
 }
 
+<<<<<<< HEAD
+=======
 #address-container input[type="text"] {
     width: 520px;
 }
@@ -2026,3 +2033,4 @@ div#content {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 ); /* IE6-9 */
     background: linear-gradient(top, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%); /* W3C */
 }
+>>>>>>> dev
