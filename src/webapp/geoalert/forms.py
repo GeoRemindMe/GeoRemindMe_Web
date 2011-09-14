@@ -128,55 +128,57 @@ class SuggestionForm(forms.Form):
                 self.fields['done'] = forms.BooleanField()
             
     def clean(self):
-        from datetime import datetime
+        import datetime
         cleaned_data = self.cleaned_data
         try:
-            starts = datetime(year=cleaned_data.get('starts_year'),
-                              month=cleaned_data.get('starts_month'),
-                              day=cleaned_data.get('starts_day'),
-                             )
-            ends = datetime(year=cleaned_data.get('ends_year'),
-                              month=cleaned_data.get('ends_month'),
-                              day=cleaned_data.get('ends_day'),
-                             )
-            
-            if all([starts, ends]):
-                if (starts > ends):
-                    msg = _("Wrong dates")
-                    self._errors['starts'] = self.error_class([msg])
+            starts = datetime.date(cleaned_data.get('starts_year', 1),
+                                  cleaned_data.get('starts_month', 1),
+                                  cleaned_data.get('starts_day', 1)
+                                  )
+            if starts != datetime.date(1,1,1):
+                ends = datetime.date(cleaned_data.get('ends_year', 1),
+                                  cleaned_data.get('ends_month', 1),
+                                  cleaned_data.get('ends_day', 1)
+                                 )
+                if all([starts, ends]):
+                    if (starts > ends):
+                        msg = _("Wrong dates")
+                        self._errors['starts'] = self.error_class([msg])
         except:
             pass
-        import time
-        time_format = "%H:%M"
-        if time.strptime(self.cleaned_data['starts_hour'], time_format) > time.strptime(self.cleaned_data['ends_hour'], time_format):
-            msg = _("Wrong hours")
-            self._errors['starts'] = self.error_class([msg])
-                
         return cleaned_data
     
     # only save if it is valid
     def save(self, list_id='', **kwargs):
+        import datetime
         try:
-            from datetime import datetime
-            cleaned_data = self.cleaned_data
-            starts = datetime(year=cleaned_data.get('starts_year'),
-                              month=cleaned_data.get('starts_month'),
-                              day=cleaned_data.get('starts_day'),
-                             )
-            ends = datetime(year=cleaned_data.get('ends_year'),
-                              month=cleaned_data.get('ends_month'),
-                              day=cleaned_data.get('ends_day'),
-                             )
-            import time
-            time_format = "%H:%M"
-            #starts_hour = datetime.hour(time.strptime(self.cleaned_data['starts_hour'], time_format)) 
-            #ends_hour = datetime.hour(time.strptime(self.cleaned_data['ends_hour'], time_format))
+            starts = datetime.date(self.cleaned_data.get('starts_year', 1),
+                                   self.cleaned_data.get('starts_month', 1),
+                                   self.cleaned_data.get('starts_day', 1)
+                                   )
         except:
-            raise
             starts = None
+        try:
+            ends = datetime.date(self.cleaned_data.get('ends_year', 1),
+                              self.cleaned_data.get('ends_month', 1),
+                              self.cleaned_data.get('ends_day', 1)
+                             )
+        except:
             ends = None
-        starts_hour = None
-        ends_hour = None
+            
+        import time
+        time_format = "%H:%M"
+        try:
+            sh = time.strptime(self.cleaned_data['starts_hour'], time_format)
+            starts_hour = datetime.time(sh[3], sh[4])
+        except:
+            starts_hour = None
+        try:
+            eh = time.strptime(self.cleaned_data['ends_hour'], time_format)
+            ends_hour = datetime.time(eh[3], eh[4])
+        except:
+            ends_hour = None
+        
         from geoalert.models import Suggestion
         if 'poi_id' in self.cleaned_data and self.cleaned_data['poi_id'] is not None:
             poi = Place.objects.get_by_id(self.cleaned_data['poi_id'])
