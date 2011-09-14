@@ -581,12 +581,12 @@ function saveSuggestion(){
             params['starts_month']=splittedDate[0]
             params['starts_day']=splittedDate[1]
             params['starts_year']=splittedDate[2]
-            params['start-hour']=$('#start-hour').val()
+            params['starts_hour']=$('#start-hour').val()
             splittedDate=$('#start-date').val().split("/")
             params['ends_month']=splittedDate[0]
             params['ends_day']=splittedDate[1]
             params['ends_year']=splittedDate[2]
-            params['end-hour']=$('#end-hour').val()
+            params['ends_hour']=$('#end-hour').val()
         }
         if($('#visibility span[value="public"]').css('display')!="none")
             params['visibility']= "public";
