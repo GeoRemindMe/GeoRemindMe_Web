@@ -576,7 +576,7 @@ function saveSuggestion(){
             visibility: $('#id_visibility').val(),
             tags: $('#id_tags').val()
         };
-        if($('#date [type="checkbox"]').is(':checked')){
+        if($('#date [type="checkbox"]').is(':checked')==false){
             splittedDate=$('#start-date').val().split("/")
             params['starts_month']=splittedDate[0]
             params['starts_day']=splittedDate[1]
