@@ -46,16 +46,15 @@ class FacebookMiddleware(object):
         else:
             if request.user.is_authenticated():
                 if request.facebook['client'].user is not None:
-                    if request.facebook['client'].user.id != request.user.id or request.facebook['uid'] != request.user.facebook_user.uid:
+                    if request.facebook['client'].user.id != request.user.id:
                         # son usuarios distintos, cerramos la sesion del viejo usuario conectado
-                        request.session.delete()
-                        request.session.init_session(user=request.facebook['client'].user, is_from_facebook=True)
-                        request.user = request.facebook['client'].user
+                        #request.session.delete()
+                        from geouser.funcs import init_user_session
+                        init_user_session(request, request.facebook['client'].user, remember=True, is_from_facebook=True)
                         from facebookApp.watchers import new_comment, new_vote, deleted_post
             else:
                 if request.facebook['client'].user is not None:
                     # login desde facebook de un usuario conocido
-                    request.session.delete()
-                    request.session.init_session(user=request.facebook['client'].user, is_from_facebook=True)
-                    request.user = request.facebook['client'].user
+                    from geouser.funcs import init_user_session
+                    init_user_session(request, request.facebook['client'].user, remember=True, is_from_facebook=True)
                     from facebookApp.watchers import new_comment, new_vote, deleted_post

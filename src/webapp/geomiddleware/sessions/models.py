@@ -191,3 +191,9 @@ class _Session_Data(_Session_Dict, db.Model):
             self._language_code = value
         else:
             self._decoded[key] = value
+            
+    def delete(self):
+        import memcache
+        session = memcache.delete("%ssession%s" % (memcache.version,
+                                               self.id))
+        
