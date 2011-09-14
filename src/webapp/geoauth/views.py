@@ -226,7 +226,7 @@ def facebook_access_request(request, next=None):
                                                                             )
         response, content = oauth2.httplib2.Http().request(url)
         if response['status'] != 200:
-            raise Exception("Invalid response from server.")
+            raise Exception(content)
         params = parse_qs(content, keep_blank_values=False)
         token = {   
                 'access_token' : params['access_token'][0], 

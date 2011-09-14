@@ -103,10 +103,14 @@ class SuggestionForm(forms.Form):
     name = forms.CharField(required=True)
     poi_id = forms.IntegerField(required=False)
     place_reference = forms.CharField(required=False)
-    starts = forms.DateTimeField(required=False, widget=SelectDateWidget())
-    ends = forms.DateTimeField(required=False, widget=SelectDateWidget())
-    hour_starts = forms.DateTimeField(required=False)
-    hour_ends = forms.DateTimeField(required=False)
+    starts_year = forms.IntegerField(required=False)
+    starts_month = forms.IntegerField(required=False)
+    starts_day = forms.IntegerField(required=False)
+    ends_year = forms.IntegerField(required=False)
+    ends_month = forms.IntegerField(required=False)
+    ends_day = forms.IntegerField(required=False)
+    starts_hour = forms.CharField(required=False)
+    ends_hour = forms.CharField(required=False)
     description = forms.CharField(required=False,widget=forms.Textarea())
     tags = forms.CharField(required=False)    
     done = forms.BooleanField(required=False)
@@ -124,20 +128,55 @@ class SuggestionForm(forms.Form):
                 self.fields['done'] = forms.BooleanField()
             
     def clean(self):
+        from datetime import datetime
         cleaned_data = self.cleaned_data
-        starts = cleaned_data.get('starts')
-        ends = cleaned_data.get('ends')
-        
-        if all([starts, ends]):
-            if (starts > ends):
-                msg = _("Wrong dates")
-                self._errors['starts'] = self.error_class([msg])
-        
+        try:
+            starts = datetime(year=cleaned_data.get('starts_year'),
+                              month=cleaned_data.get('starts_month'),
+                              day=cleaned_data.get('starts_day'),
+                             )
+            ends = datetime(year=cleaned_data.get('ends_year'),
+                              month=cleaned_data.get('ends_month'),
+                              day=cleaned_data.get('ends_day'),
+                             )
+            
+            if all([starts, ends]):
+                if (starts > ends):
+                    msg = _("Wrong dates")
+                    self._errors['starts'] = self.error_class([msg])
+        except:
+            pass
+        import time
+        time_format = "%H:%M"
+        if time.strptime(self.cleaned_data['starts_hour'], time_format) > time.strptime(self.cleaned_data['ends_hour'], time_format):
+            msg = _("Wrong hours")
+            self._errors['starts'] = self.error_class([msg])
+                
         return cleaned_data
     
     # only save if it is valid
     def save(self, list_id='', **kwargs):
-        
+        try:
+            from datetime import datetime
+            cleaned_data = self.cleaned_data
+            starts = datetime(year=cleaned_data.get('starts_year'),
+                              month=cleaned_data.get('starts_month'),
+                              day=cleaned_data.get('starts_day'),
+                             )
+            ends = datetime(year=cleaned_data.get('ends_year'),
+                              month=cleaned_data.get('ends_month'),
+                              day=cleaned_data.get('ends_day'),
+                             )
+            import time
+            time_format = "%H:%M"
+            #starts_hour = datetime.hour(time.strptime(self.cleaned_data['starts_hour'], time_format)) 
+            #ends_hour = datetime.hour(time.strptime(self.cleaned_data['ends_hour'], time_format))
+        except:
+            raise
+            starts = None
+            ends = None
+        starts_hour = None
+        ends_hour = None
         from geoalert.models import Suggestion
         if 'poi_id' in self.cleaned_data and self.cleaned_data['poi_id'] is not None:
             poi = Place.objects.get_by_id(self.cleaned_data['poi_id'])
@@ -156,10 +195,10 @@ class SuggestionForm(forms.Form):
             suggestion = Suggestion.update_or_insert(
                      id = kwargs.get('id', None), name = self.cleaned_data['name'],
                      description = self.cleaned_data['description'], 
-                     date_starts = self.cleaned_data['starts'],
-                     date_ends = self.cleaned_data['ends'],
-                     hour_starts = self.cleaned_data['hour_starts'],
-                     hour_ends = self.cleaned_data['hour_ends'],
+                     date_starts = starts,
+                     date_ends = ends,
+                     hour_starts = starts_hour,
+                     hour_ends = ends_hour,
                      poi = poi,
                      user = kwargs['user'], done = self.cleaned_data.get('done', False),
                      tags = self.cleaned_data.get('tags', None),
@@ -168,6 +207,7 @@ class SuggestionForm(forms.Form):
                      to_twitter = self.cleaned_data['to_twitter'],
                      )
         except:
+            raise
             return None
         if suggestion is not None:
             list_id = list_id
