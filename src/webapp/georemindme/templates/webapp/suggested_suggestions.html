@@ -1,3 +1,4 @@
+{%load tags%}
 			<div id="left-col">
 				<div id="search_bar">
 					<form action="/search/" method="post" id="search-form">
@@ -7,6 +8,38 @@
 					</form>
 				</div>
 				<hr>
+                {% if friends_to_follow|length %}        
+                <p style="float:left;font-weight:bold;margin-left:20px">
+                    <strong>Personas sugeridas:</strong>
+                </p>
+                <div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-friends-to-follow"></div>
+                
+                
+                <ul id="friends-to-follow" class="clear">
+                    {% for id, f in friends_to_follow.items %}
+                        
+                        <li> <!--style="{% cycle 'clear:left' ''%}">-->
+                            <div class="avatar">
+                                
+                                <a href="{% url2 in_facebook public_profile f.username%}" title="{{ f.username }}" class="user-img">
+                                    <img class="user-picture" src="{% embedded_avatar f.username%}" alt="{{f.username}} avatar"/>
+                                </a>
+                                
+                                <div id="following_state_{{ id }}" class="follow-button">
+                                    <span  onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                                </div>
+                                <div style="float: left; clear: left; padding: 0pt;">
+                                    <a href="/user/{{f.username}}" style="padding: 0pt; line-height: 1.5em;" class="hoverlink">
+                                    {{f.username}}</a>
+                                </div>
+                                <div class="removable" value="{{f.id}}" type="person"><a href="#">Remove</a></div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                    
+                </ul>
+                <hr>
+            {% endif %}
 				{% block extraContent %} {% endblock %}
 				
                 <div class="black-box" id="close-suggestions-box" style="display:none">

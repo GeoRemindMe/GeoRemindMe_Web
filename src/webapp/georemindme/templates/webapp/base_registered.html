@@ -145,7 +145,7 @@
 				{% endblock %}
             {% endif %}
         </div>
-
+        
 		{% if user.username %}
             <div id="account-info">
                 <div id="user-menu" class="user-dropDownBtn">
@@ -160,7 +160,7 @@
             </div>
         {% else %}
 			<div id="account-info">
-				<a href="/logout/">Desconectar</a>
+				<a href="/logout/" id="create-profile-out" class="btn">Desconectar</a>
 			</div>
         {% endif %}
 	</header>

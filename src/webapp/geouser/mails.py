@@ -37,7 +37,7 @@ def send_confirm_mail(to=None, confirm_code=None, language='en'):
     translation.activate(language)
     message = GeoMail()    
     message.to = to
-    message.subject = _("Correo de confirmación de GeoRemindMe")
+    message.subject = _(u"Correo de confirmación de GeoRemindMe")
     message.body = _("""
         Muchas gracias por darte de alta en GeoRemindMe!, para terminar de activar tu cuenta solo tiene que
         haz clic en el siguiente enlace para que podamos verificar que esta cuenta de correo es tuya:\n

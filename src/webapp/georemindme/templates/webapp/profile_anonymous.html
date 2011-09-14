@@ -73,7 +73,9 @@
         <div id="col-right-right">
 -->
             <ul id="user-resume">
-                <li><a href=""><span id="counter">{{counters.influenced}}</span> impactos</a></li>
+<!--
+                <li id="impacts"><a href=""><span id="counter">{{counters.influenced}}</span> impactos</a></li>
+-->
                 <li><a href="{% url2 in_facebook followers_panel profile.parent.username %}"><span id="counter">{{counters.followers}}</span> seguidores</a></li>
                 <li><a href="{% url2 in_facebook followings_panel profile.parent.username %}"><span id="counter">{{counters.followings}}</span> siguiendo</a></li>
             </ul>

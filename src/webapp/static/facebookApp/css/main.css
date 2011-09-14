@@ -546,6 +546,9 @@ input{
         display:none;
         
     }
+    #social-profile #show-more-text{
+        line-height:2em;
+    }
     
     a:visited, a:active{
         color:#01F;
@@ -998,7 +1001,7 @@ input{
         float: left;
         font-size: 1 em;
         line-height: 1.8em;
-        width: 90px;
+        width: 160px;
         font-weight: bold;
         margin: 9px 0;
     }

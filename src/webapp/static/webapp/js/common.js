@@ -50,7 +50,7 @@ $(document).ready(function(){
     };
 
     
-    if($.browser.msie && $.browser.version.split(".")[0]<8){
+    if($.browser.msie && $.browser.version.split(".")[0]!=9){
         $("body").children(":not('div#browser-error-msg,script#browser-error')").remove()
         $("#browser-error").tmpl({
             version:$.browser.version,
