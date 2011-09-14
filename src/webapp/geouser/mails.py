@@ -18,7 +18,7 @@ from georemindme.geomail import GeoMail
 
 def send_confirm_mail(to=None, confirm_code=None, language='en'):
     def generate_confirm_link(to, confirm_code):
-        url = _('<a href="%s">Enlace de confirmación</a>') % generate_confirm_url(to, confirm_code)
+        url = _(u'<a href="%s">Enlace de confirmación</a>') % generate_confirm_url(to, confirm_code)
         return url
 
     def generate_confirm_url(to, confirm_code):
@@ -38,7 +38,7 @@ def send_confirm_mail(to=None, confirm_code=None, language='en'):
     message = GeoMail()    
     message.to = to
     message.subject = _(u"Correo de confirmación de GeoRemindMe")
-    message.body = _("""
+    message.body = _(u"""
         Muchas gracias por darte de alta en GeoRemindMe!, para terminar de activar tu cuenta solo tiene que
         haz clic en el siguiente enlace para que podamos verificar que esta cuenta de correo es tuya:\n
         %(url)s\n
@@ -51,7 +51,7 @@ def send_confirm_mail(to=None, confirm_code=None, language='en'):
         """) % {
                     'url': generate_confirm_url(to, confirm_code)
                 }
-    message.html = _("""
+    message.html = _(u"""
         <html><head></head><body>
         <p>
         Muchas gracias por darte de alta en GeoRemindMe!, para terminar de activar tu cuenta solo tiene que

@@ -13,7 +13,7 @@ from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from decorators import login_required
+from decorators import login_required, admin_required
 
 
 #===============================================================================
@@ -207,6 +207,9 @@ def dashboard(request, template='webapp/dashboard.html'):
                     return render_to_response('webapp/create_social_profile.html', {'form': f}, 
                                    context_instance=RequestContext(request)
                                   )
+                request.session['user'] = user
+                request.session.put()
+                return HttpResponseRedirect(reverse('geouser.views.dashboard'))
             else:
                 return render_to_response('webapp/create_social_profile.html', {'form': f}, 
                                        context_instance=RequestContext(request)
@@ -606,7 +609,7 @@ def get_avatar(request, username):
 def close_window(request):
     return render_to_response('webapp/close_window.html', {}, context_instance=RequestContext(request))
 
-
+@admin_required
 def update(request):
     from google.appengine.ext.deferred import defer
     defer(__update_users)  # mandar email de notificacion
@@ -615,6 +618,7 @@ def update(request):
 
 def __update_users():
     from models import User
+    from models_acc import UserSocialLinks
     users = User.all()
     for user in users:
         profile = user.profile
@@ -622,7 +626,10 @@ def __update_users():
         counters = user.counters
         from models_acc import SearchConfigGooglePlaces
         from google.appengine.ext import db
+        sociallinks = profile.sociallinks
+        if sociallinks is None:
+            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
         sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
         if sc is None:
             sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
-        db.put([profile, settings, sc, counters])
+        db.put([profile, settings, sc, counters, sociallinks])
