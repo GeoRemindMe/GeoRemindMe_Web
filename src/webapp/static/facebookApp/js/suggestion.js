@@ -577,6 +577,8 @@ function saveSuggestion(){
             tags: $('#id_tags').val()
         };
         if($('#date [type="checkbox"]').is(':checked')==false){
+            console.log("Entro por el checkbox no marcado");
+            tmp=$('#date [type="checkbox"]');
             splittedDate=$('#start-date').val().split("/")
             params['starts_month']=splittedDate[0]
             params['starts_day']=splittedDate[1]
@@ -627,10 +629,10 @@ function saveSuggestion(){
                     $('#id_description').val("");
                     $('#id_tags').val("");
                     $('#place').val("").blur();
-                    $('#start-date').val("mm/dd/aa");
-                    $('#start-hour').val("").blur();
-                    $('#end-date').val("mm/dd/aa");
-                    $('#end-hour').val("").blur();
+                    //~ $('#start-date').val("mm/dd/aa");
+                    //~ $('#start-hour').val("").blur();
+                    //~ $('#end-date').val("mm/dd/aa");
+                    //~ $('#end-hour').val("").blur();
                     $('#lists span.checked').each(function(i,elem){
                         $(elem).removeClass('checked');
                     })
