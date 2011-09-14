@@ -61,6 +61,7 @@ def login_panel(request):
 #                                                   },
 #                                                  context_instance=RequestContext(request)
 #                                                  )
+                init_user_session(request, request.user, remember=True, is_from_facebook=True)
                 return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
     return render_to_response('register.html', {'permissions': __web_settings.OAUTH['facebook']['scope'] },
