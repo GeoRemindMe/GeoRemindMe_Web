@@ -50,7 +50,8 @@ def login_panel(request):
                                            context_instance=RequestContext(request)
                                           )
             else:
-#                if request.facebook['client'].user is None:
+                if request.facebook['client'].user is None:
+                    request.facebook['client'].authorize(request.user)
 #                    from geouser.models import AnonymousUser
 #                    user_logged = request.user
 #                    request.session.delete()
