@@ -474,8 +474,8 @@ class Suggestion(Event, Visibility, Taggable):
         try:
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
             client = VavagRequest(__web_settings.SHORTENER_ACCESS['user'], __web_settings.SHORTENER_ACCESS['key'])
-            response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
-            self._short_url = response['results']['packUrl']
+            response =  client.set_pack('http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
+            self._short_url = response['packUrl']
         except:
             self._short_url = None
             

@@ -39,7 +39,7 @@ handlers:
   
 - url: /.*
   script: main.py
-  secure: optional
+  secure: always
 
 builtins:
 - appstats: on

@@ -43,7 +43,7 @@ class VavagRequest(Http):
     headers = { 'User-Agent' : 'Vavag python: %s' % __version__ }
     URL_get_info_url = 'http://vavag.com/api/%(version)s/%(method)s/%(login)s/%(apikey)s/get_info_url?url='
     URL_get_pack = 'http://vavag.com/api/%(version)s/%(method)s/%(login)s/%(apikey)s/get_pack?packhash='
-    URL_set_pack = 'http://vavag.com/api/%(version)s/%(method)s/%(login)s/%(apikey)s/set_pack?packchain='
+    URL_set_pack = 'http://vavag.com/api/%(version)s/%(method)s/%(login)s/%(apikey)s/set_pack?'
     
     def __init__(self, login, api_key, version='v2', method = 'json', **kwargs):
         super(self.__class__, self).__init__(timeout=20, **kwargs)
@@ -85,18 +85,21 @@ class VavagRequest(Http):
             Creates a new pack of urls
         """
         request_url = self.URL_set_pack % {
-                                       'version': self.version,
-                                       'method': self.method,
-                                       'login': self.login,
-                                       'apikey': self.api_key
-                                       }
+                                           'version': self.version,
+                                           'method': self.method,
+                                           'login': self.login,
+                                           'apikey': self.api_key
+                                           }
         
         if type(pack) != type(list()):
             type_param = 2
         else:
             type_param = 1
             pack = '|sep|'.join([self._encode(url) for url in pack])
-        request_url = request_url + pack + '&type=%s' % type_param
+        import urllib
+        request_url = request_url+ urllib.urlencode({'packchain': pack,
+                                                     'type': type_param
+                                                     })
         return self._do_request(request_url)
     
     def _do_request(self, url, method='GET', body=None):
