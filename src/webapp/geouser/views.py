@@ -217,17 +217,23 @@ def dashboard(request, template='webapp/dashboard.html'):
     from django.utils import simplejson
     chronology[0] = simplejson.dumps(chronology[0])
     if friends is None:
-        for rpc in list_rpc:
-            rpc.wait()
-        friends = {} # diccionario con todos los amigos
-        #los unimos en uno
-        [friends.update(rpc.friends) for rpc in handlers_rpcs]
-        if len(friends) > 0:
-            if len(request.user.settings.blocked_friends_sug)>0:
-                for k in friends.keys():
-                    if k in request.user.settings.blocked_friends_sug:
-                        del friends[k]
-            memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 11235)
+        from google.appengine.runtime import apiproxy_errors
+        try:
+            for rpc in list_rpc:
+                rpc.wait()
+            friends = {} # diccionario con todos los amigos
+            #los unimos en uno
+            [friends.update(rpc.friends) for rpc in handlers_rpcs]
+            if len(friends) > 0:
+                if len(request.user.settings.blocked_friends_sug)>0:
+                    for k in friends.keys():
+                        if k in request.user.settings.blocked_friends_sug:
+                            del friends[k]
+                memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 11235)
+        except:
+        #except apiproxy_errors.DeadlineExceededError:
+            import logging
+            logging.error('Handling DeadlineExceededError for user friends: %s' % request.user.id)
     return  render_to_response(template, {
                                           'friends_to_follow': friends,
                                           'chronology': chronology,

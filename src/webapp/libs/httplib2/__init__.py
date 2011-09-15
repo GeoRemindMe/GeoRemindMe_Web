@@ -1093,7 +1093,7 @@ and more.
 
         self.ignore_etag = False
 
-        self.force_exception_to_status_code = False
+        self.force_exception_to_status_code = True
 
         self.timeout = timeout
 
@@ -1303,7 +1303,7 @@ a string that contains the response entity body.
                 conn = self.connections[conn_key]
             else:
                 if not connection_type:
-                  connection_type = SCHEME_TO_CONNECTION[scheme]
+                    connection_type = SCHEME_TO_CONNECTION[scheme]
                 certs = list(self.certificates.iter(authority))
                 if issubclass(connection_type, HTTPSConnectionWithTimeout):
                     if certs:
@@ -1378,7 +1378,7 @@ a string that contains the response entity body.
                 if info.has_key('-x-permanent-redirect-url'):
                     # Should cached permanent redirects be counted in our redirection count? For now, yes.
                     if redirections <= 0:
-                      raise RedirectLimit("Redirected more times than rediection_limit allows.", {}, "")
+                        raise RedirectLimit("Redirected more times than rediection_limit allows.", {}, "")
                     (response, new_content) = self.request(info['-x-permanent-redirect-url'], "GET", headers = headers, redirections = redirections - 1)
                     response.previous = Response(info)
                     response.previous.fromcache = True
