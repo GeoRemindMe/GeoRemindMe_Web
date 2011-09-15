@@ -200,12 +200,16 @@ def facebook_authenticate_request(request,get="redirect", callback_url=None):
     OAUTH = settings.OAUTH
     if callback_url is None:
         callback_url = OAUTH['facebook']['callback_url']
-    url = "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&scope=%s" % (
-                                                        OAUTH['facebook']['app_key'], 
-                                                        callback_url,
-                                                        OAUTH['facebook']['scope']
-                                                        )
-    
+    from clients.facebook import auth_url
+    url = auth_url(OAUTH['facebook']['app_key'],
+                   callback_url,
+                   perms = OAUTH['facebook']['scope'].split(','))
+#    url = "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&scope=%s" % (
+#                                                        OAUTH['facebook']['app_key'], 
+#                                                        callback_url,
+#                                                        OAUTH['facebook']['scope']
+#                                                        )
+#    
     if get=="url":
         return url
     else:
@@ -215,22 +219,28 @@ def facebook_authenticate_request(request,get="redirect", callback_url=None):
 def facebook_access_request(request, next=None):
     code = request.GET.get('code', None)
     if code is not None:
+        from clients.facebook import get_access_token
         OAUTH = settings.OAUTH
-        url = OAUTH['facebook']['access_token_url']+'?redirect_uri=%s' % OAUTH['facebook']['callback_url']
-        body = {
-                'client_id': OAUTH['facebook']['app_key'],
-                'client_secret': OAUTH['facebook']['app_secret'],
-                'code': code,
-                }
-        response, content = oauth2.httplib2.Http().request(url, method='POST', body=body)
-        if response['status'] != 200:
-            raise Exception(response)
-        params = parse_qs(content, keep_blank_values=False)
+        content = get_access_token(code, 
+                                   OAUTH['facebook']['callback_url'],
+                                   OAUTH['facebook']['app_key'],
+                                   OAUTH['facebook']['app_secret'], 
+                                   )
+#        url = OAUTH['facebook']['access_token_url']+'?redirect_uri=%s' % OAUTH['facebook']['callback_url']
+#        body = {
+#                'client_id': OAUTH['facebook']['app_key'],
+#                'client_secret': OAUTH['facebook']['app_secret'],
+#                'code': code,
+#                }
+#        response, content = oauth2.httplib2.Http().request(url, method='POST', body=body)
+#        if response['status'] != 200:
+#            raise Exception(response)
+
         token = {   
-                'access_token' : params['access_token'][0], 
+                'access_token' : content, 
             }
         from clients.facebook import FacebookClient
-        client = FacebookClient(access_token = token['access_token'])
+        client = FacebookClient(access_token = content)
         if request.user.is_authenticated():#usuario ya esta logeado, guardamos el token de su cuenta
             client.authorize(request.user)
         else:
@@ -239,8 +249,8 @@ def facebook_access_request(request, next=None):
     else:
         return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
     if next is None:
-        next = reverse('geouser.views.dashboard')
-        return HttpResponseRedirect(next)
+        return HttpResponseRedirect(reverse('geouser.views.dashboard'))
+    return HttpResponseRedirect(next)
     
     
 @login_required
