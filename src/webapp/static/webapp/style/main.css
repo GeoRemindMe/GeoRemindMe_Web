@@ -24,10 +24,6 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
 }
-sup{
-    font-size: 9px;
-    vertical-align: super;
-}
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
@@ -930,7 +926,7 @@ background: linear-gradient(left, rgba(237,237,237,1) 0%,rgba(250,250,250,1) 50%
 
 div#left-col ul#friends-to-follow {
     float: left;
-    margin: 0 2em 1em;
+    margin: 0 1em 1em;
 }
 
 
@@ -977,15 +973,15 @@ div#left-col ul#friends-to-follow li div.avatar div.removable {
 }
 
 div#left-col ul#friends-to-follow li{
-    background-color: #F0F0F0;
-    border: 1px dotted #BBBBBB;
+    background-color: #DCDCDC;
+    border: 1px solid white;
     clear: none;
     display: block;
     float: left;
     margin-bottom: 10px;
     padding-left: 1em;
     padding-right: 1em;
-    width: 125px;
+    width: 135px;
 }
 div#left-col ul#friends-to-follow li:after{
 	clear: both;
@@ -1315,10 +1311,9 @@ div#left-col ul {
 div#left-col ul#friends-to-follow li div.avatar a.user-img img {
     height: 30px;
     width:30px;
-    margin:3px 0 0;
+    margin:0;
 }
 div#left-col ul#friends-to-follow li a {
-/*
     background-position: 6px 4px;
     border: 0 none;
     font-size: 1em;
@@ -1327,10 +1322,6 @@ div#left-col ul#friends-to-follow li a {
     min-height: 0;
     padding: 1px 3px 1px 26px;
     width: auto;
-*/
-    margin: 0;
-    min-height: 0;
-    padding: 0;
 }
 div#left-col ul#friends-to-follow li a.hoverlink{
     font-size: 1em;
@@ -1391,9 +1382,6 @@ div#left-col ul#friends-to-follow li a:hover {
     height:25px;
 }
 
-div#left-col ul#friends-to-follow div.removable{
-    margin-right:-8px;
-}
 div.removable {
 	margin-right: -69;
 }
@@ -1698,8 +1686,7 @@ ul#chronology li div.timeline-msg {
 
 
 ul#chronology li div.timeline-msg {
-    padding-right: 70px;
-    width: 420px;
+    width:420px;
 }
 
 ul#chronology li.msg-305 div.timeline-msg div.msg{

@@ -166,7 +166,8 @@ class FacebookClient(object):
             
             if user.facebook_user is None:
                 fbuser = FacebookUser.register(user=user, uid=facebookInfo['id'], 
-                                               email=facebookInfo['email'], realname=facebookInfo["name"],
+                                               email=facebookInfo.get('email', None),
+                                               realname=facebookInfo["name"],
                                                profile_url=facebookInfo["link"],
                                                access_token=self.consumer.access_token)
             else:
@@ -595,11 +596,28 @@ def parse_signed_request(signed_request, app_secret=settings.OAUTH['facebook']['
     else:
         return data
   
+
 def auth_url(app_id, canvas_url, perms = None):
     url = "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s" % (app_id, canvas_url)
     if perms:
-        url += "scope=%s" % (",".join(perms))
+        url += "&scope=%s" % (",".join(perms))
     return url
+
+
+def get_access_token(code, callback_url, client_id, client_secret):
+    args = {'redirect_uri': callback_url,
+            'client_id': client_id,
+            'client_secret': client_secret,
+            'code':code}
+    
+    request = httplib2.Http()
+    response, content = request.request("https://graph.facebook.com/oauth/access_token?" + 
+                                            urllib.urlencode(args))
+    if response['status'] != 200:
+        raise GraphAPIError(content["error_code"],content["error_msg"])
+    result = content.split("=")[1]
+    return result
+
 
 def get_app_access_token():
     
