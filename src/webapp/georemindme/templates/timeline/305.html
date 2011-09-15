@@ -9,6 +9,7 @@
 
 
 <li class="msg-{{obj.msg_id}}">
+    
     {% if obj.is_private = false and obj.username = request.user %}
         Evitamos que se muestre duplicado un "Te gusta la sugerencia X"
     {% else %}
@@ -21,6 +22,7 @@
                 </a>
             </div>
             <div class="timeline-msg">
+                <span class="timeline-icon">&nbsp;</span>
                 <span class="small-text">Te gusta la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="dark-link">{{obj.instance.instance.user}}</a>:</span>
         {% else %}
             <div class="avatar">
@@ -29,6 +31,7 @@
                 </a>
             </div>
             <div class="timeline-msg">
+                <span class="timeline-icon">&nbsp;</span>
                 <span class="small-text">
                     A <a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> le gusta la sugerencia:
 <!--
@@ -46,10 +49,10 @@
                     <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="dark-link link">
                         <img src="{% embedded_avatar obj.instance.instance.user.username %}" title="{{obj.instance.instance.user.username}}">
                     </a>
-                    <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="dark-link link">{{obj.instance.instance}}</a>
+                    <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="hoverlink">{{obj.instance.instance}}</a>
                 </div>
                 <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}" class="dark-link">{{obj.instance.instance.poi.name}}</a></span>
-                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="details">Ver sugerencia</a></span>
+                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="details"><img src="/static/common/img/transparent.gif" />Ver sugerencia</a></span>
             </div>
     {% endif %}
 </li>

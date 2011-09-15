@@ -5,12 +5,14 @@
 {% endcomment %} 
 
 <li class="msg-{{obj.msg_id}}">
+    
     <div class="avatar">
         <a href="{% url2 in_facebook public_profile obj.username %}" title="{{obj.username}}">
             <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
         </a>
     </div>
     <div class="timeline-msg">
+        <span class="timeline-icon">&nbsp;</span>
         {% comment %}  Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar {% endcomment %} 
         
         {% if obj.instance.user.username = request.user.username %}
@@ -29,7 +31,7 @@
             {% if reques.user.is_authenticated %}
                 | <span class="focusInput hoverlink comment">Comentar</span> 
             {% endif %}
-            | <a href="{% url2 in_facebook view_list obj.instance.id %}" class="hoverlink details">Ver lista</a>  
+            | <a href="{% url2 in_facebook view_list obj.instance.id %}" class="hoverlink details"><img src="/static/common/img/transparent.gif" />Ver lista</a>  
             {% if obj.instance.user.username != request.user.username and reques.user.is_authenticated %}            
                 | {{obj.has_follower}},
                 <span title="Guardar en favoritos"  class="remember-forget" value="{{obj.instance.id}}" type="list" {%if obj.user_follower%}remember="true"{%endif%}>
@@ -70,7 +72,7 @@
                             <span class="action-bar">
                                 - 
                                 <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
-                
+                                    <img src="/static/common/img/transparent.gif" />
                                     <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
                                         <span class="hoverlink">Ya no me gusta</span> 
 <!--

@@ -13,7 +13,7 @@
                 <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
             </a>
         </div>
-        
+        <span class="timeline-icon">&nbsp;</span>
         {% if obj.instance.username = request.user.username %}
             <a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> ahora te está siguiendo<br>
         {% else %}

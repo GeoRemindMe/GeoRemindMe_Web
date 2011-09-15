@@ -3,10 +3,12 @@
 {% url fb_notifications as notifications_section %}
 {% load tags %}
 {% block extra_js %}
+<!--
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/grm.js"></script>
     <script src="/static/facebookApp/js/social.js"></script>   
     <script src="/static/facebookApp/js/chronology.js"></script>
+-->
     
     <script type="text/javascript">
         $(document).ready(function(){
@@ -117,7 +119,7 @@
         
             <!-- Si hay más mensajes -->
             {% if chronology.1|length > 9%}
-                <div class="load-more">Cargar más</div>
+                <div class="load-more btn">Cargar más</div>
             {% endif %}    
             
             

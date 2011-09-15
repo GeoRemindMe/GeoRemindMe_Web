@@ -11,10 +11,17 @@
 	<title>
       {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
     </title>
-	<link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
-	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
        
-    <meta name="description" content="Un mundo entero de sugerencias por descubrir">
+    {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
+        <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
+        <link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">    
+    {% else %}
+        <link type="text/css" rel="stylesheet" href="/static/common/css/style.min.css">
+    {% endif %}
+<!--
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+-->
+    <script type="text/javascript" src="/static/common/multifarce.js"></script>
     
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>    
     
@@ -22,6 +29,7 @@
     <script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
 -->
 
+<!--
     <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
@@ -32,11 +40,14 @@
     <script type="text/javascript" src="/static/webapp/js/jquery.lavalamp.js"></script>
     
     <script type="text/javascript" src="/static/webapp/js/jquery.reversegeocode.min.js"></script>
+-->
 
     {% block extra_js %}{%endblock%}
+<!--
     <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
     
     <script type="text/javascript" src="/static/common/js/jquery.cookies.2.2.0.min.js"></script>
+-->
     <script type="text/javascript">
     
         // Menu desplegable "Listas"
@@ -116,14 +127,14 @@
 	<header id="header-top" class="container">
 		<div id="logo-link">
             <a href="/">
-                <img src="/static/webapp/img/logo-webapp8.png" alt="" id="logo">
+                <img src="/static/common/img/transparent.gif" alt="" id="logo">
             </a>
         </div>
 		
 		
         <div id="nav-menu">
 			{% if user.username %}
-				<a href="{% url add_suggestion %}" id="add-suggestion-btn"><img src="/static/common/img/plus.png">Añadir sugerencia</a>
+				<a href="{% url add_suggestion %}" id="add-suggestion-btn"><img src="/static/common/img/transparent.gif">Añadir sugerencia</a>
 				{% block nav %}
 					<ul class="lavaLamp">
 						<li class="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>

@@ -8,40 +8,11 @@
 
 {% block id %} id="activity" {%endblock%}
 
-{% block extraContent %}
-    {% if friends_to_follow|length %}        
-        
-        <div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-friends-to-follow"></div>
-        <p class="p-follow-friends"><em>Personas sugeridas:</em></p>
-        
-        <ul id="friends-to-follow" class="clear">
-            {% for id, f in friends_to_follow.items %}
-                
-                <li> <!--style="{% cycle 'clear:left' ''%}">-->
-                    <div class="avatar">
-                        <div class="removable" value="{{f.id}}" type="person"><a href="#">Remove</a></div>
-                        <a href="{% url2 in_facebook public_profile f.username%}" title="{{ f.username }}" class="user-img">
-                            <img class="user-picture" src="{% embedded_avatar f.username%}" alt="{{f.username}} avatar"/>
-                        </a>
-                        <div class="user-info">
-                            <a href="{% url2 in_facebook public_profile f.username%}" class="link">{{f.username}}</a><br>
-                            Sugerencias: {{f.counters.suggested}}
-                        </div>
-                        <div id="following_state_{{ id }}" class="follow-btn">
-                            <span  onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following hoverlink">Seguir</a></span>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-            
-        </ul>
-        <hr>
-    {% endif %}
-{% endblock %}
+
 
 {% block pre_chronology %} 
     <h1>Actividad</h1>
-    <div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-activity"></div>
+    <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-activity"></div>
     
     
     <div class="help-txt" style="display:none" id="help-friends-to-follow-text" title="Ayuda: Personas a las que podrías conocer">

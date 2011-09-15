@@ -8,6 +8,7 @@
 
 
 <li class="msg-{{obj.msg_id}}">
+    
     {%if not obj.instance.user.username = obj.instance.instance.user.username %}
         {% comment %}  Si me gusta un comentario mío no se muestra {% endcomment %} 
         
@@ -22,6 +23,7 @@
 -->
             </div>
             <div class="timeline-msg">
+                <span class="timeline-icon">&nbsp;</span>
                 <span class="small-text">Te ha gustado el comentario  <a href="{% url2 in_facebook public_profile obj.instance.user.username %}"  class="dark-link">{{obj.instance.instance.user.username}}</a>:</span>
             
         {% else %}
@@ -31,6 +33,7 @@
                 </a>
             </div>
             <div class="timeline-msg">
+                <span class="timeline-icon">&nbsp;</span>
                 <span class="small-text">
                     A <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">{{obj.instance.user.username}}</a>
                     le gusta el comentario:
@@ -58,7 +61,7 @@
 
                 <span class="timestamp">  {{obj.created|naturaltime}}</span>  
                 <span class="action-bar">
-                    | <a href="{% url2 in_facebook view_suggestion obj.instance.instance.instance.slug %}" class="details">Ver sugerencia</a> 
+                    | <a href="{% url2 in_facebook view_suggestion obj.instance.instance.instance.slug %}" class="details"><img src="/static/common/img/transparent.gif" />Ver sugerencia</a> 
                 </span
             </div>
     {% else %}

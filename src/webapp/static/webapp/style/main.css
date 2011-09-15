@@ -74,7 +74,8 @@ span.action-bar a{
 #view-suggestion div.suggestion h1 a ,
 #webapp #header-top #account-info a,
 #suggestions .share-suggestion a,
-#webapp a#edit-profile-btn{
+#webapp a#edit-profile-btn,
+#webapp a#edit-settings-btn{
     color:black
 }
 #webapp a#edit-profile-btn{
@@ -275,6 +276,15 @@ background: linear-gradient(left, rgba(238,238,238,1) 0%,rgba(254,254,254,1) 50%
     float:left;
     text-align: center;
     margin-top:0.4em;
+}
+#logo-link a{
+    background: url("/static/webapp/img/logos.png") repeat scroll 0 0 transparent;
+    display: block;
+    margin-top: 5px;
+}
+#logo-link #logo{
+    width:228px;
+    height:42px;
 }
 
 #header-nav {
@@ -561,8 +571,13 @@ a#register-btn.anonymous{
     padding:0;
 }
 #colored-chickens{
-text-align:center
+    background: url("/static/webapp/img/logos.png") no-repeat scroll 0 -53px transparent;
+    height: 25px;
+    margin: 20px auto;
+    text-align: center;
+    width: 158px;
 }
+
 #colored-chickens img{
 margin-top:1em;
 }
@@ -836,8 +851,8 @@ margin-top:1em;
     -moz-border-radius: 5px 5px 5px 5px;
     border-radius: 5px 5px 5px 5px;
     background-color: #F0EBE2;
-    background-image: url("/static/webapp/img/Search-32.png");
-    background-position: 4px 3px;
+    background-image: url("/static/webapp/img/grm_webapp_sprite.png");
+    background-position: -72px 1px;
     background-repeat: no-repeat;
     height: 28px;
     line-height: 20px;
@@ -1032,8 +1047,13 @@ div#left-col ul#friends-to-follow li:after{
 	text-shadow: 0px 1px 0px #000000;
 */
 }
-#right-col #public-profile h1{
+#right-col #public-profile h1,
+#right-col #profile h1{
     display:inline-block;
+}
+
+#webapp a#edit-settings-btn{
+    margin: 0.5em 0 1em;
 }
 
 #right-col #view-suggestion h1, #right-col h1 a{
@@ -1096,10 +1116,13 @@ a#add-suggestion-btn,
 
 }
 a#add-suggestion-btn img{
+    background: url("/static/webapp/img/grm_webapp_sprite.png") no-repeat scroll -28px -28px transparent;
     float: left;
+    height: 16px;
     margin-left: 8px;
     margin-right: -9px;
     margin-top: 7px;
+    width: 16px;
 }
 
 #left-col a#add-suggestion-btn{
@@ -1320,7 +1343,7 @@ div#left-col ul#friends-to-follow li a {
     font-weight: normal;
     line-height: 2em;
     min-height: 0;
-    padding: 1px 3px 1px 26px;
+    padding: 1px 3px 1px 0px;
     width: auto;
 }
 div#left-col ul#friends-to-follow li a.hoverlink{
@@ -1383,7 +1406,7 @@ div#left-col ul#friends-to-follow li a:hover {
 }
 
 div.removable {
-	margin-right: -69;
+	margin-right: 0;
 }
 div.removable a{
     visibility:hidden;
@@ -1474,8 +1497,8 @@ div.removable a {
 	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.75);
 }
 #user-menu span{
-	background-image: url("/static/webapp/img/dropdownmenu.png");
-    background-position: 37px 11px;
+	background-image: url("/static/webapp/img/grm_webapp_sprite.png");
+    background-position: 31px -21px;
     background-repeat: no-repeat;
     content: ".";
     display: block;
@@ -1610,6 +1633,13 @@ div#right-col #profile table{
 */
 
 }
+div.load-more{
+    display: block;
+    float: none;
+    margin: 0 auto;
+    width: 80px;
+}
+
 div.waiting{
     
     background-color:#E4E4E4;
@@ -1686,7 +1716,9 @@ ul#chronology li div.timeline-msg {
 
 
 ul#chronology li div.timeline-msg {
+/*
     width:420px;
+*/
 }
 
 ul#chronology li.msg-305 div.timeline-msg div.msg{
@@ -1899,95 +1931,47 @@ div#content {
     width: 510px;
 }
 
+    ul#chronology li.msg-0 span.timeline-icon,
+    ul#chronology li.msg-1 span.timeline-icon,
+    ul#chronology li.msg-2 span.timeline-icon,
+    ul#chronology li.msg-3 span.timeline-icon,
+    ul#chronology li.msg-100 span.timeline-icon,
+    ul#chronology li.msg-101 span.timeline-icon,
+    ul#chronology li.msg-110 span.timeline-icon,
+    ul#chronology li.msg-120 span.timeline-icon,
+    ul#chronology li.msg-121 span.timeline-icon,
+    ul#chronology li.msg-125 span.timeline-icon,
+    ul#chronology li.msg-300 span.timeline-icon,
+    ul#chronology li.msg-303 span.timeline-icon,
+    ul#chronology li.msg-305 span.timeline-icon,
+    ul#chronology li.msg-350 span.timeline-icon,
+    ul#chronology li.msg-353 span.timeline-icon,
+    ul#chronology li.msg-360 span.timeline-icon{
+        background-image: url("/static/webapp/img/timeline/timeline_sprite.png");
+        background-position: right 10px;
+        background-repeat: no-repeat;
+        display: block;
+        float: right;
+        height: 64px;
+        width: 64px;
+    }
 
-
-
-    ul#chronology li.msg-0{
-        background-image: url("/static/webapp/img/timeline/0.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-1{
-        background-image: url("/static/webapp/img/timeline/1.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-2{
-        background-image: url("/static/webapp/img/timeline/2.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-3{
-        background-image: url("/static/webapp/img/timeline/3.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    ul#chronology li.msg-101,ul#chronology li.msg-100{
-        background-image: url("/static/webapp/img/timeline/100.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-110{
-        background-image: url("/static/webapp/img/timeline/110.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-120,ul#chronology li.msg-121{
-        background-image: url("/static/webapp/img/timeline/120.png");
-        background-position: 99% 10%;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-125{
-        background-image: url("/static/webapp/img/timeline/125.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-300{
-        background-image: url("/static/webapp/img/timeline/300.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-303{
-        background-image: url("/static/webapp/img/timeline/303.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-305{
-        background-image: url("/static/webapp/img/timeline/305.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-350{
-        background-image: url("/static/webapp/img/timeline/350.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    
-    ul#chronology li.msg-353{
-        background-image: url("/static/webapp/img/timeline/353.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    ul#chronology li.msg-355{
-        background-image: url("/static/webapp/img/timeline/355.png");
-        background-position: right 10px;
-        background-repeat: no-repeat;
-    }
-    ul#chronology li.msg-360{
-        background-image: url("/static/webapp/img/timeline/110.png");
-        background-position: 99% 10px;
-        background-repeat: no-repeat;
-    }
+    ul#chronology li.msg-0 span.timeline-icon{background-position: right -2px;}
+    ul#chronology li.msg-1 span.timeline-icon{background-position: right -66px;}
+    ul#chronology li.msg-2 span.timeline-icon{background-position: right -130px;}
+    ul#chronology li.msg-3 span.timeline-icon{background-position: right -194px;}
+    ul#chronology li.msg-101 span.timeline-icon,
+    ul#chronology li.msg-100 span.timeline-icon{background-position: right -258px;}
+    ul#chronology li.msg-110 span.timeline-icon{background-position: right -322px;}    
+    ul#chronology li.msg-120 span.timeline-icon,
+    ul#chronology li.msg-121 span.timeline-icon{background-position: 99% -386px;}
+    ul#chronology li.msg-125 span.timeline-icon{background-position: right -450px;}
+    ul#chronology li.msg-300 span.timeline-icon{background-position: right -514px;}
+    ul#chronology li.msg-303 span.timeline-icon{background-position: right -578px;}
+    ul#chronology li.msg-305 span.timeline-icon{background-position: right -641px;}
+    ul#chronology li.msg-350 span.timeline-icon{background-position: right -706px;}
+    ul#chronology li.msg-353 span.timeline-icon{background-position: right -770px;} 
+    ul#chronology li.msg-360 span.timeline-icon{background-position: 99% -844px;}
 
 
 #webapp #create-profile-out{
