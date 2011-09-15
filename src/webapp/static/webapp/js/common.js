@@ -39,6 +39,52 @@ $(document).ajaxSend(function(event, xhr, settings) {
 
 
 $(document).ready(function(){
+    
+    
+            
+    if($('.active-section').length!=0)
+        $(".lavaLamp").lavaLamp({ fx: "backout", speed: 700 })
+    $('.help-txt').dialog({
+        autoOpen:false,
+        resizable: false,
+        buttons: [{
+                text: "Cerrar",
+                click: function() { $(this).dialog("close"); }
+            }],
+        draggable: false,
+        width:560,
+        position: ['center', 125]
+    });
+
+
+    $('.help-icon img').click(function(){
+        $('#'+$(this).attr('id')+'-text').dialog("open");
+    })
+    
+    $("[placeholder]").placeholder();
+                
+    $(".user-dropDownBtn, .user-submenu ").hoverIntent(hiConfig);
+    $(".user-dropDownBtn").click(function(){
+        //Alineamos el menu desplegable desde la esquina sup-izq.
+        var tmp=$('#dropdown-list-user').width();
+        tmp=52-tmp;
+        $('#dropdown-list-user').css("margin-left",tmp+'px')
+        
+        $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+    })
+    
+    $("#left-col").css("height",$("#right-col").height()+'px');
+    $("#right-col").bind("resize",function(){
+        $("#left-col").css("height",$(this).height()+'px');
+    });
+    
+    $('#search-form').bind('submit', function(e){
+        e.preventDefault;
+        window.location="/search/"+$(this).find("input[type='text']").val();
+        return false;
+    });
+
+
     var userAgent = navigator.userAgent.toLowerCase();
     jQuery.browser = {
         version: (userAgent.match( /.+(?:rv|it|ra|ie|me)[\/: ]([\d.]+)/ ) || [])[1],

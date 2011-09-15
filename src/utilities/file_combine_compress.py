@@ -37,45 +37,35 @@ def compress(in_files, out_file, in_type='js', verbose=False,
 
     #os.remove(temp_file)
 
-
-
-SCRIPTS = [
+COMMON = [
     '../webapp/static/webapp/js/jquery.min.js',
+    '../webapp/static/webapp/js/jquery.tmpl.js', 
     '../webapp/static/webapp/js/jquery-ui.min.js',
-    '../webapp/static/facebookApp/js/grm.js',
-    '../webapp/static/facebookApp/js/vault.js',
-    
-    '../webapp/static/facebookApp/js/main.js',
-    '../webapp/static/facebookApp/js/social.js',
-    '../webapp/static/facebookApp/js/chronology.js',
-    
-    '../webapp/static/webapp/js/jquery.tmpl.min.js',
+    '../webapp/static/facebookApp/js/grm.js',       
     '../webapp/static/webapp/js/common.js',
-    
-    '../webapp/static/facebookApp/js/geo-autocomplete/lib/jquery.autocomplete_geomod.js',
-    '../webapp/static/facebookApp/js/geo-autocomplete/geo_autocomplete.js',
-    
-    #'../webapp/static/facebookApp/js/suggestion.js', <-- Solo se usa en ADD SUGGESTION
-    '../webapp/static/common/js/jquery.ui/jquery.ui.core.js',
-    '../webapp/static/common/js/jquery.ui/jquery.ui.widget.js',
-    '../webapp/static/common/js/jquery.ui/jquery.ui.mouse.js',
-    '../webapp/static/common/js/jquery.ui/jquery.ui.resizable.js',
-    '../webapp/static/webapp/js/jquery.jeditable.js',
-    '../webapp/static/webapp/js/static.js',
-    '../webapp/static/facebookApp/js/jquery.ba-resize.min.js',
     '../webapp/static/facebookApp/js/jquery.hoverIntent.minified.js',
     '../webapp/static/webapp/js/jquery.lavalamp.js',
     '../webapp/static/webapp/js/jquery.reversegeocode.min.js',
     '../webapp/static/common/js/jquery.cookies.2.2.0.min.js',
     '../webapp/static/webapp/js/jquery.placeholder.js',
-    
-    
-    #'../webapp/static/facebookApp/js/geo-autocomplete/lib/jquery-ui/js/jquery-ui-1.8.5.custom.min.js',
-    #'../webapp/static/facebookApp/js/geo-autocomplete/ui.geo_autocomplete.js',
+]
+COMMON_OUT_DEBUG = '../webapp/static/common/js/common.js'
+COMMON_OUT = '../webapp/static/common/js/common.min.js'
 
-    ]
-SCRIPTS_OUT_DEBUG = '../webapp/static/common/js/multifarce.js'
-SCRIPTS_OUT = '../webapp/static/common/js/multifarce.min.js'
+CHRONOLOGY = [
+    '../webapp/static/facebookApp/js/social.js',    #
+    '../webapp/static/facebookApp/js/chronology.js',#
+]
+CHRONOLOGY_OUT_DEBUG = '../webapp/static/common/js/chronology.js'
+CHRONOLOGY_OUT = '../webapp/static/common/js/chronology.min.js'
+
+# MOCHILA
+BAG = [
+    '../webapp/static/webapp/js/jquery.jeditable.js',
+    '../webapp/static/common/js/raw/bag.js'
+]
+BAG_OUT_DEBUG = '../webapp/static/common/js/bag.js'
+BAG_OUT = '../webapp/static/common/js/bag.min.js'
 
 STYLESHEETS = [
     '../webapp/static/facebookApp/css/main.css',
@@ -85,11 +75,55 @@ STYLESHEETS = [
 STYLESHEETS_OUT = '../webapp/static/common/css/style.min.css'
 
 def main():
+    
+    print 'Compressing JavaScript COMMON...'
+    compress(COMMON, COMMON_OUT, 'js', False, COMMON_OUT_DEBUG)
+    
+    print 'Compressing JavaScript CHRONOLOGY...'
+    compress(CHRONOLOGY, CHRONOLOGY_OUT, 'js', False, CHRONOLOGY_OUT_DEBUG)
+    
     print 'Compressing JavaScript...'
-    compress(SCRIPTS, SCRIPTS_OUT, 'js', False, SCRIPTS_OUT_DEBUG)
+    compress(BAG, BAG_OUT, 'js', False, BAG_OUT_DEBUG)
 
     print 'Compressing CSS...'
     compress(STYLESHEETS, STYLESHEETS_OUT, 'css')
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
+    
+    
+
+
+#~ DASHBOARD = [
+    #~ '../webapp/static/webapp/js/jquery.min.js',
+    #~ '../webapp/static/webapp/js/jquery-ui.min.js',
+    #~ '../webapp/static/facebookApp/js/grm.js',
+    #~ '../webapp/static/facebookApp/js/vault.js',
+    #~ '../webapp/static/facebookApp/js/main.js',
+    #~ '../webapp/static/facebookApp/js/social.js',
+    #~ '../webapp/static/facebookApp/js/chronology.js',
+    #~ '../webapp/static/webapp/js/jquery.tmpl.js',
+    #~ '../webapp/static/webapp/js/common.js',
+    #~ '../webapp/static/facebookApp/js/geo-autocomplete/lib/jquery.autocomplete_geomod.js',
+    #~ '../webapp/static/facebookApp/js/geo-autocomplete/geo_autocomplete.js',
+    #~ #'../webapp/static/facebookApp/js/suggestion.js', <-- Solo se usa en ADD SUGGESTION
+    #~ '../webapp/static/common/js/jquery.ui/jquery.ui.core.js',
+    #~ '../webapp/static/common/js/jquery.ui/jquery.ui.widget.js',
+    #~ '../webapp/static/common/js/jquery.ui/jquery.ui.mouse.js',
+    #~ '../webapp/static/common/js/jquery.ui/jquery.ui.resizable.js',
+    #~ '../webapp/static/webapp/js/jquery.jeditable.js',
+    #~ '../webapp/static/webapp/js/static.js',
+    #~ '../webapp/static/facebookApp/js/jquery.ba-resize.min.js',
+    #~ '../webapp/static/facebookApp/js/jquery.hoverIntent.minified.js',
+    #~ '../webapp/static/webapp/js/jquery.lavalamp.js',
+    #~ '../webapp/static/webapp/js/jquery.reversegeocode.min.js',
+    #~ '../webapp/static/common/js/jquery.cookies.2.2.0.min.js',
+    #~ '../webapp/static/webapp/js/jquery.placeholder.js',
+    #~ #'../webapp/static/facebookApp/js/geo-autocomplete/lib/jquery-ui/js/jquery-ui-1.8.5.custom.min.js',
+    #~ #'../webapp/static/facebookApp/js/geo-autocomplete/ui.geo_autocomplete.js',
+    #~ ]

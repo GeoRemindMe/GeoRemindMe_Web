@@ -2379,7 +2379,7 @@ input{
             line-height: 1.6em;
             margin: 6px 5px;
             outline: medium none;
-            padding: 0 0px;
+            padding: 0 7px; /* Aumentamos para los botones de la mochila */
             text-align: center;
             text-decoration: none;
             vertical-align: middle;
@@ -2484,10 +2484,12 @@ input{
     #suggest_suggestion_menu span.dropDownBtn{
         margin:-2px 0 0 0.5em;
     }
-    .save-at{
-        background: url("/static/webapp/img/dropdownmenu.png") no-repeat scroll 96% 4px transparent !important;
-        margin-right: -4px;
-        padding-right: 17px;
+    
+    .save-at img{
+        background: url("/static/webapp/img/grm_webapp_sprite.png") repeat scroll -6px -32px transparent;
+        height: 9px;
+        margin-bottom: -1px;
+        width: 9px;
     }
     ul.share-suggestion a.share-suggestion{
         background: url("/static/facebookApp/img/sprite_social_min.png") no-repeat scroll 4px 3px transparent;
@@ -3509,7 +3511,9 @@ input{
 
 #webapp ul#dropdown-list.submenu,
 #facebookApp #add-suggestion ul#dropdown-list.submenu{
+/*
     min-height: 250px;
+*/
     min-width: 330px;
 }
 #webapp #suggestion-info .dropDownBtn li {
