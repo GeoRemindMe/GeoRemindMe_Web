@@ -1029,8 +1029,15 @@ input{
         margin: 10px 0;
     }
     #SocialUserProfile-form input[type="submit"]{
+/*
         clear:both;
+*/
         float:right;
+    }
+    #SocialUserProfile-form #first-step{
+        clear: left;
+        margin: 10px 0;
+        float:left;
     }
     
     ul#link-social-accounts{
@@ -1071,6 +1078,10 @@ input{
     
     ul#link-social-accounts li a#twitter{
         background: url("/static/facebookApp/img/sprite_social.png") no-repeat scroll 0 0 transparent;
+    }
+    
+    ul#link-social-accounts li a#facebook{
+        background: url("/static/facebookApp/img/sprite_social.png") no-repeat scroll 0 -64px transparent;
     }
     .rounded-button{
         -moz-border-radius: 4px 4px 4px 4px;

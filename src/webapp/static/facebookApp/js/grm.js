@@ -1,3 +1,4 @@
+kkk=[];
 GRM = { common : {}, autocomplete : {} };
 
 GRM.common.token = "*****GRMtoken****";
@@ -433,7 +434,10 @@ GRM.removable = function() {
         
         var item = $(this);
         
+        
+        kkk.push($(this));
         $(this).parent().hover(
+            
             function(){item.show();},
             function(){item.hide();}
         );
