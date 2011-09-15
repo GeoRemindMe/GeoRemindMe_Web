@@ -30,7 +30,7 @@ class GPRequest(Http):
     
     def __init__(self, *args, **kwargs):
         mem = Client()
-        super(self.__class__, self).__init__(cache=mem, timeout=20, *args, **kwargs)
+        super(self.__class__, self).__init__(cache=mem, *args, **kwargs)
         from django.conf import settings
         self.key = settings.API['google_places']
 

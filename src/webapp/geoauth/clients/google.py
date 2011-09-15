@@ -89,7 +89,6 @@ class GoogleFriendsRPC(object):
         try:
             goclient = GoogleClient(user=user)
             self.rpc = goclient.get_contacts_to_follow(rpc=self.rpc)
-            
         except:
             return None
         return self.rpc
