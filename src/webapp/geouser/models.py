@@ -777,6 +777,12 @@ class User(polymodel.PolyModel, HookedModel):
         if access_token is None:
             return False
         return True
+    
+    def has_perms_facebook(self):
+        access_token = db.GqlQuery('SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user', provider='facebook', user=self.key()).get()
+        if access_token is None:
+            return False
+        return True
 
 from helpers import UserHelper
 from watchers import *
