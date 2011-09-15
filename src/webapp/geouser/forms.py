@@ -222,17 +222,22 @@ class UserProfileForm(forms.Form):
                             email=self.cleaned_data['email'], 
                             description=self.cleaned_data['description'], 
                             sync_avatar_with = self.cleaned_data['sync_avatar_with'])
-            return True
+            return user
         except User.UniqueEmailConstraint:  # email already in use
-                fail = _("Email already in use")
-                self._errors['email'] = self.error_class([fail])
-                return None
+            raise
+            fail = _("Email already in use")
+            self._errors['email'] = self.error_class([fail])
+            return None
         except User.UniqueUsernameConstraint, e:
+            raise
             fail = _('Username already in use')
             self._errors['username'] = self.error_class([fail])
+            return None
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
+            raise
             fail = _(e.message)
             self._errors['email'] = self.error_class([fail])
+            return None
 
 
 class UserForm(forms.Form):

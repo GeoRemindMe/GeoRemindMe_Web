@@ -530,6 +530,10 @@ class User(polymodel.PolyModel, HookedModel):
                     import logging
                     logging.debug('Usuario %s username repetido: %s - %s' % (u.id, self.username, u))
                     raise self.UniqueUsernameConstraint(self.username)
+                
+    def _post_put(self, **kwargs):
+        import memcache
+        memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)
 
     def __str__(self):
         if self.username is None:

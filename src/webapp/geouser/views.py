@@ -150,22 +150,6 @@ def logout(request):
 # CONFIGURACION DE LA CUENTA, PRIVACIDAD, ETC.
 #===============================================================================
 @login_required
-def update_profile(request):
-    """**Descripción**: Actualiza el nombre de usuario y el avatar.
-        
-        :return: Solo devuelve errores si el proceso falla.
-    """
-    if request.method == 'POST':
-        from forms import UserProfileForm
-        f = UserProfileForm(request.POST, prefix='user_settings_profile')
-        if f.is_valid():
-            updated = f.save(request.user, file=request.POST['avatar'])
-            if updated:
-                return
-        return f.errors
-
-
-@login_required
 def update_user(request):
     """**Descripción**: Permite actualizar el email y la contraseña.
         
@@ -331,6 +315,7 @@ def edit_profile (request, template='webapp/edit_profile.html'):
         if f.is_valid():
             modified = f.save(user=request.user)
             if modified:
+                request.session['user'] = modified
                 if '/fb/' in template:
                     return HttpResponseRedirect('/fb/user/%s/' % request.user.username)
                 else:
