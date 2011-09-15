@@ -36,7 +36,7 @@
     -->
                     </span> 
                     <div>
-                        Usar el avatar de: <br>
+                        Usar el avatar de:<br>
                         <select id="id_user_set_profile-sync_avatar_with" name="user_set_profile-sync_avatar_with">
                             {% if user.facebook_user %}
                                 <option value="facebook" {% if user.profile.sync_avatar_with = "facebook" %} selected="selected"{% endif %}>Facebook</option>
@@ -59,7 +59,9 @@
 					<dd><span id="editPass" class="hoverlink">Editar password</span></dd>
 					
 					<dt><label for="id_user_set_profile-email" readonly>Email</label>:</dt>
-					<dd>{{form.email}}</dd>
+					<dd>
+                        <input type="text" name="user_set_profile-email" value="{{request.user.email}}" id="id_user_set_profile-email" readonly>
+                    </dd>
                     <span class="error-msg">{{form.errors.email}}</span>
 					
 					<dt><label for="id_user_set_profile-description">Descripción</label>:</dt>
