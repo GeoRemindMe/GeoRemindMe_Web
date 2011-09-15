@@ -1,4 +1,25 @@
 kkk=[];
+
+// Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
+hiConfig = {
+    sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
+    interval: 0, // number = milliseconds for onMouseOver polling interval
+    timeout: 500, // number = milliseconds delay before onMouseOut
+    over: function() {
+        $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
+    },
+    out: function() {
+        
+        var inputVisibility=$('#dropdown-list .new-list').css('display');
+        if($("#dropdown-list").hasClass('visible-display')==false && inputVisibility!="inline-block"){
+            $(this).find('ul:first').slideUp(400);
+            $("#dropdown-list").removeClass('visible-display');
+            
+        }
+        
+    }
+}
+
 GRM = { common : {}, autocomplete : {} };
 
 GRM.common.token = "*****GRMtoken****";
@@ -274,25 +295,7 @@ GRM.menuList = function(settings) {
     return this.each(function(){
         
         // Menu desplegable "Listas"
-            // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
-            hiConfig = {
-                sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
-                interval: 0, // number = milliseconds for onMouseOver polling interval
-                timeout: 500, // number = milliseconds delay before onMouseOut
-                over: function() {
-                    $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
-                },
-                out: function() {
-					
-					var inputVisibility=$('#dropdown-list .new-list').css('display');
-                    if($("#dropdown-list").hasClass('visible-display')==false && inputVisibility!="inline-block"){
-                        $(this).find('ul:first').slideUp(400);
-                        $("#dropdown-list").removeClass('visible-display');
-                        
-                    }
-                    
-                }
-            }
+            
             
             $(this).hoverIntent(hiConfig);
             $(this).find('.submenu').hoverIntent(hiConfig);

@@ -3,6 +3,11 @@
 {% load tags %}
 
 {% block title %}Configuración de la cuenta{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+{%endblock%}
+
 {% block goBack %}{%endblock%}
 {% block body %}
     <div id="profile">
@@ -46,7 +51,7 @@
                 <li><strong>Identificación</strong>: si quieres que no te pidamos que te identifiques si ya estás identificado en otra red.</li>
                 <li><strong>Comunicación</strong>: si quieres que tus sugerencias lleguen a tus amigos, followers, etc. y para poder sugerirte conocidos tuyos a los que podrías seguir para no perderte sus sugerencias.</li>
             </ul>
-            
+            <fb:login-button perms="{{permissions}}" show-faces="true"></fb:login-button>
             <table>
                 <tr id="head">
                     <td>Red</td>
@@ -55,16 +60,24 @@
                 </tr>
                 <tr>
                     <td><span id="facebook-icon">Facebook</span></td>
-                    {% if not user.facebook_user %}
+                    {% if not user.has_perms_facebook and not user.facebook_user%}
                         <td>
                             <a href="/login/facebook/?cls" target="_blank">Autorizar</a> 
                         </td>
                     {% else %}
                         <td>
-                            <a href="/oauth/revocate/facebook" target="_blank">Revocar</a>
+                            <a href="/oauth/revocate/facebook" target="_blank">Revocar (<fb:name uid="{{user.facebook_user.uid}}"></fb:name>)</a>
                         </td>
                     {% endif %}
-                    <td>----</td>
+                    {% if not user.facebook_user %}
+                        <td>
+                            <a href="http://apps.facebook.com/georemindme" target="_blank">Instalar App.</a> 
+                        </td>
+                    {% else %}
+                        <td>
+                            <a href="http://www.facebook.com/settings?tab=applications" target="_blank">Desinstalar App FB. (<fb:name uid="{{user.facebook_user.uid}}"></fb:name>)</a>
+                        </td>
+                    {% endif %}
                 </tr>
                 <tr>
                     <td><span id="twitter-icon">Twitter</span> </td>
@@ -72,14 +85,14 @@
                         {% if not user.twitter_user %}
                             <a href="/login/twitter/?cls" target="_blank">Autorizar</a> 
                         {% else %}
-                            <a href="/oauth/revocate/twitter" target="_blank">Revocar</a>
+                            <a href="/oauth/revocate/twitter" target="_blank">Revocar permisos ({{user.twitter_user.username}})</a>
                         {% endif %}
                     </td>
                     <td>
                         {% if not user.has_perms_twitter %}
                             <a href="/ext/twitter/perms" target="_blank">Autorizar</a> 
                         {% else %}
-                            <a href="http://twitter.com/settings/applications" target="_blank">Revocar</a>
+                            <a href="http://twitter.com/settings/applications" target="_blank">Revocar permisos ({{user.twitter_user.username}})</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -147,8 +160,10 @@
         
         <hr>
         <div id="desinstall">
-            <a href="">Desinstalar la aplicación</a> | 
+            <a href="http://www.facebook.com/settings?tab=applications">Desinstalar la aplicación</a> | 
+<!--
             <a href="">Cancelar mi cuenta en GeoRemindMe</a>
+-->
         </div>
     </div>
     

@@ -5,4 +5,5 @@
 virtualme/*
 .settings
 src/fixtures/*
+src/fixtures/dev_appserver.datastore
 src/webapp/settings.py

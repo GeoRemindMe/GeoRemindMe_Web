@@ -38,11 +38,13 @@
                     <div>
                         Usar el avatar de: <br>
                         <select id="id_user_set_profile-sync_avatar_with" name="user_set_profile-sync_avatar_with">
-                            <option value="facebook">Facebook</option>
-                            {% if profile.sociallinks.twitter %}
-                                <option value="twitter">Twitter</option>
+                            {% if user.facebook_user %}
+                                <option value="facebook" {% if user.profile.sync_avatar_with = "facebook" %} selected="selected"{% endif %}>Facebook</option>
+                            {% endif%}
+                            {% if user.has_perms_twitter or user.twitter_user %}
+                                <option value="twitter" {% if user.profile.sync_avatar_with = "twitter" %} selected="selected"{% endif %}>Twitter</option>
                             {% endif %}
-                            <option selected="selected" value="gravatar">Gravatar</option>
+                            <option {% if user.profile.sync_avatar_with = "gravatar" %} selected="selected"{% endif %} value="gravatar">Gravatar</option>
                         </select>    
                     </div>
                 </div>          
@@ -56,7 +58,7 @@
 					<dt>Password:</dt>
 					<dd><span id="editPass" class="hoverlink">Editar password</span></dd>
 					
-					<dt><label for="id_user_set_profile-email">Email</label>:</dt>
+					<dt><label for="id_user_set_profile-email" readonly>Email</label>:</dt>
 					<dd>{{form.email}}</dd>
                     <span class="error-msg">{{form.errors.email}}</span>
 					

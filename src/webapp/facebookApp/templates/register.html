@@ -12,117 +12,115 @@
         {% include "register_menu.html" %}
     {% endblock %}
 
+    {% block mainButton %}{% endblock %}
 
-    {%if request.user.email and not request.user.facebook_user %}
-        
-        {% block mainButton %}{% endblock %}
-
-        {% block goBack %}{%endblock%}
-        {% block body %}
-            <p>Hola {{request.user.name}}!</p>
-            
-            <p>
-                Nos alegra verte por aquí, para poder empezar a usar la aplicación de Facebook
-                tienes que <a href="/login/facebook/?cls" target="_blank">autorizar a la aplicación</a> 
-                para que pueda acceder a los siguientes datos:       
-            </p>
-            <ul>
-                <li>A tus amigos: para poder avisarte cuando se creen una cuenta</li>
-                <li>Email para poder enviarte notificaciones periódicas</li>
-                <li>Acceder a tu cuenta cuando no estés online</li>
-                <li>Tus "me gusta" para poder aprender de tus gustos</li>
-                <li>Tu localización para avisarte de sugerencias cerca tuya</li>
-                <li>Ciudad de origen: para avisarte cuando hagamos eventos en tu ciudad</li>
-                <li>Publicar en tu muro: para darte la opción de compartir tus sugerencias</li>
-            </ul>
-        {% endblock %}
-        
+    {% block goBack %}{%endblock%}
+    {% block body %}
     
-    {% else %}
+        {%if request.user.email and not request.user.facebook_user %}
+            
+            
+                <p>Hola {{request.user.name}}!</p>
+                
+                <p>
+                    Nos alegra verte por aquí, para poder empezar a usar la aplicación de Facebook
+                    tienes que <a href="/login/facebook/?cls" target="_blank">autorizar a la aplicación</a> 
+                    para que pueda acceder a los siguientes datos:       
+                </p>
+                <ul>
+                    <li><strong>Lista de amigos</strong>: para poder avisarte cuando se creen una cuenta.</li>
+                    <li><strong>Email</strong>: para poder enviarte notificaciones periódicas.</li>
+                    <li><strong>Acceso offline</strong>: para que puedas publicar en tu muro sin necesidad de estar identificado en Facebook.</li>
+                    <li><strong>Tus "me gusta" e intereses</strong>: para poder aprender de tus gustos y así poder hacerte mejores sugerencias.</li>
+                    <li><strong>Ciudad de origen</strong>: para avisarte cuando hagamos eventos en tu ciudad</li>
+                    <li><strong>Publicar en tu muro</strong>: para darte la opción de compartir tus sugerencias</li>
+                </ul>
+                <p>
+                    De todos modos queremos recordarte que si en cualquier momento quisieras, podrías desautorizar a la 
+                    aplicación desde tu configuración de GeoRemindMe! y desde la de Facebook.<br>
+                    Si tienes alguna duda al respecto estaremos encantados de ayudarte desde <a href="mailto:info@georemindme.com">info@georemindme.com</a>.
+                </p>
+        {% else %}
 
-        
+            
 
 
-        {%block extra_js%}
-            <style type="text/css">
-                #description {
-                    clear: both;
-                    float: left;
-                    font-weight: bold;
+            {%block extra_js%}
+                <style type="text/css">
+                    #description {
+                        clear: both;
+                        float: left;
+                        font-weight: bold;
+                        
+                        text-align: left;
+                        width: 500px;
+                    }
                     
-                    text-align: left;
-                    width: 500px;
-                }
-                
-                #description h2, #description p {
-                    font-size: 1.4em;
-                    font-weight: normal;
-                }
-                #description h2 {
-                    text-align: center;
-                    line-height:1.5em;
-                }
+                    #description h2, #description p {
+                        font-size: 1.4em;
+                        font-weight: normal;
+                    }
+                    #description h2 {
+                        text-align: center;
+                        line-height:1.5em;
+                    }
 
-                ul#benefits {
-                    height: 130px;
-                    margin-bottom: 10px;
-                    margin-top: 25px;
-                    width:545px;
-                    margin-right: 0;
-                }
-                ul {
-                    clear: both;
-                    margin: 0;
-                    padding: 0;
-                }
-                ul {
-                    list-style-type: disc;
-                }
-                ul, ol {
-                    margin: 0 1.5em 1.5em 0;
-                    padding-left: 1.5em;
-                }
+                    ul#benefits {
+                        height: 130px;
+                        margin-bottom: 10px;
+                        margin-top: 25px;
+                        width:545px;
+                        margin-right: 0;
+                    }
+                    ul {
+                        clear: both;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    ul {
+                        list-style-type: disc;
+                    }
+                    ul, ol {
+                        margin: 0 1.5em 1.5em 0;
+                        padding-left: 1.5em;
+                    }
 
-                ul#benefits li {
-                    float: left;
-                    list-style: none outside none;
-                    margin: 0;
-                    padding: 80px 8px 0;
-                    text-align: center;
-                    width: 150px;
-                }
-                #description ul li, #description-list ul li {
-                    display: list-item;
-                    font-weight: normal;
-                    list-style: none;
-                    margin-right: 10px;
-                }
-                
-                #description-list ul li {
-                    list-style: square outside none;
-                    line-height:2em;
-                }
-                #whatsup-icon {
-                    background: url("http://www.georemindme.com/media/img/whatsup.png") no-repeat scroll 50px 0 transparent;
-                }
-                #explore-icon {
-                    background: url("http://www.georemindme.com/media/img/explore.png") no-repeat scroll 50px 0 transparent;
-                }
-                #reminder-icon {
-                    background: url("http://www.georemindme.com/media/img/reminder.png") no-repeat scroll 50px 0 transparent;
-                }
-                strong, dfn {
-                    font-weight: bold;
-                }
+                    ul#benefits li {
+                        float: left;
+                        list-style: none outside none;
+                        margin: 0;
+                        padding: 80px 8px 0;
+                        text-align: center;
+                        width: 150px;
+                    }
+                    #description ul li, #description-list ul li {
+                        display: list-item;
+                        font-weight: normal;
+                        list-style: none;
+                        margin-right: 10px;
+                    }
+                    
+                    #description-list ul li {
+                        list-style: square outside none;
+                        line-height:2em;
+                    }
+                    #whatsup-icon {
+                        background: url("http://www.georemindme.com/media/img/whatsup.png") no-repeat scroll 50px 0 transparent;
+                    }
+                    #explore-icon {
+                        background: url("http://www.georemindme.com/media/img/explore.png") no-repeat scroll 50px 0 transparent;
+                    }
+                    #reminder-icon {
+                        background: url("http://www.georemindme.com/media/img/reminder.png") no-repeat scroll 50px 0 transparent;
+                    }
+                    strong, dfn {
+                        font-weight: bold;
+                    }
 
-            </style>
-        {%endblock%}
+                </style>
+            {%endblock%}
 
 
-        {% block mainButton %}{% endblock %}
-
-        {% block goBack %}{%endblock%}
-        {% block body %}
             <div id="register-panel" style="font-size: 1.1em;">
                 <div id="description">
                     <h2>{% trans "GeoRemindMe allows you to manage, rate and share geolocated suggestions on <em>your favorite social networks</em>." %}</h2>
@@ -161,7 +159,7 @@
                     <fb:login-button perms="{{permissions}}" show-faces="true"></fb:login-button>
                 </div>
             </div>
-            
-        {% endblock %}
-    {% endif %}
+                
+        {% endif %}
+    {%endblock%}
 {% endif %}
