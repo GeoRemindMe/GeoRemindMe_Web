@@ -82,17 +82,17 @@
                 <tr>
                     <td><span id="twitter-icon">Twitter</span> </td>
                     <td>
-                        {% if not user.twitter_user %}
+                        {% if not user.has_perms_twitter and not user.twitter_user %}
                             <a href="/login/twitter/?cls" target="_blank">Autorizar</a> 
                         {% else %}
-                            <a href="/oauth/revocate/twitter" target="_blank">Revocar permisos ({{user.twitter_user.username}})</a>
+                            <a href="/oauth/revocate/twitter" target="_blank">Revocar permisos (@{{user.twitter_user.username}})</a>
                         {% endif %}
                     </td>
                     <td>
-                        {% if not user.has_perms_twitter %}
+                        {% if not user.twitter_user %}
                             <a href="/ext/twitter/perms" target="_blank">Autorizar</a> 
                         {% else %}
-                            <a href="http://twitter.com/settings/applications" target="_blank">Revocar permisos ({{user.twitter_user.username}})</a>
+                            <a href="http://twitter.com/settings/applications" target="_blank">Revocar permisos (@{{user.twitter_user.username}})</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -137,6 +137,7 @@
             <p>Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.</p>
         </div>
         
+<!--
         <div class="section">	
             <div class="header">
                 <h2>Idioma</h2>
@@ -154,6 +155,7 @@
                 <a href="{% url2 in_facebook edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
             </p>
         </div>
+-->
         
     
         

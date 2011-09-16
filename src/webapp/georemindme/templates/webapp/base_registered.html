@@ -11,101 +11,27 @@
 	<title>
       {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
     </title>
-	<link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
-	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
        
-    <meta name="description" content="Un mundo entero de sugerencias por descubrir">
-    
-    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>    
-    
-<!--
-    <script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
--->
-
-    <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
-
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
-    <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
-    <script type="text/javascript" src="/static/webapp/js/jquery.tmpl.min.js"></script>
-    <script type="text/javascript" src="/static/webapp/js/common.js"></script>
-	<script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
-    <script type="text/javascript" src="/static/webapp/js/jquery.lavalamp.js"></script>
-    
-    <script type="text/javascript" src="/static/webapp/js/jquery.reversegeocode.min.js"></script>
-
-    {% block extra_js %}{%endblock%}
-    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
-    
-    <script type="text/javascript" src="/static/common/js/jquery.cookies.2.2.0.min.js"></script>
+    <!-- URLs from Django to a Global var in JS -->
     <script type="text/javascript">
-    
-        // Menu desplegable "Listas"
-        // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
-        hiConfig = {
-            sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
-            interval: 0, // number = milliseconds for onMouseOver polling interval
-            timeout: 500, // number = milliseconds delay before onMouseOut
-            over: function() {
-                var tmp=$('#dropdown-list-user').width();
-                tmp=52-tmp;
-                $('#dropdown-list-user').css("margin-left",tmp+'px')
-                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
-            },
-            out: function() {
-                if($("#dropdown-list-user").hasClass('visible-display')==false)
-                    $(this).find('ul:first').slideUp(400);
-            }
-        }
-        
         {% include "urls.html" %}
-    
-        $(document).ready(function(){          
-            
-            if($('.active-section').length!=0)
-                $(".lavaLamp").lavaLamp({ fx: "backout", speed: 700 })
-            $('.help-txt').dialog({
-                autoOpen:false,
-                resizable: false,
-                buttons: [{
-                        text: "Cerrar",
-                        click: function() { $(this).dialog("close"); }
-                    }],
-                draggable: false,
-                width:560,
-                position: ['center', 125]
-            });
-        
-       
-            $('.help-icon img').click(function(){
-                $('#'+$(this).attr('id')+'-text').dialog("open");
-            })
-            
-            $("[placeholder]").placeholder();
-                        
-            $(".user-dropDownBtn, .user-submenu ").hoverIntent(hiConfig);
-            $(".user-dropDownBtn").click(function(){
-				//Alineamos el menu desplegable desde la esquina sup-izq.
-				var tmp=$('#dropdown-list-user').width();
-				tmp=52-tmp;
-				$('#dropdown-list-user').css("margin-left",tmp+'px')
-				
-                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
-            })
-            
-            $("#left-col").css("height",$("#right-col").height()+'px');
-            $("#right-col").bind("resize",function(){
-                $("#left-col").css("height",$(this).height()+'px');
-            });
-            
-            $('#search-form').bind('submit', function(e){
-                e.preventDefault;
-                window.location="/search/"+$(this).find("input[type='text']").val();
-                return false;
-            });
-        });
     </script>
+       
+    {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
+        <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
+        <link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
+        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+        <script type="text/javascript" src="/static/common/js/common.js"></script>    
+    {% else %}
+        <link type="text/css" rel="stylesheet" href="/static/common/css/style.min.css">
+        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+        <script type="text/javascript" src="/static/common/js/common.min.js"></script>    
+    {% endif %}
+    
+    
+    {% block extra_js %}{%endblock%}
 	<!--[if lt IE 9]>
-	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	
 </head>
@@ -116,14 +42,14 @@
 	<header id="header-top" class="container">
 		<div id="logo-link">
             <a href="/">
-                <img src="/static/webapp/img/logo-webapp8.png" alt="" id="logo">
+                <img src="/static/common/img/transparent.gif" alt="GeoRemindMe!" id="logo">
             </a>
         </div>
 		
 		
         <div id="nav-menu">
 			{% if user.username %}
-				<a href="{% url add_suggestion %}" id="add-suggestion-btn"><img src="/static/common/img/plus.png">Añadir sugerencia</a>
+				<a href="{% url add_suggestion %}" id="add-suggestion-btn"><img src="/static/common/img/transparent.gif">Añadir sugerencia</a>
 				{% block nav %}
 					<ul class="lavaLamp">
 						<li class="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>

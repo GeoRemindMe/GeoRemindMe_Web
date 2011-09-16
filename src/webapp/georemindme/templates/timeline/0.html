@@ -6,6 +6,7 @@
 {% endcomment %}
 
 <li class="msg-{{obj.msg_id}}">
+    
     <div class="avatar">
         <a href="{% url2 in_facebook public_profile 'georemindme' %}" title="GeoRemindMe">
             <img src="{% embedded_avatar 'georemindme' %}" alt="avatar"/>
@@ -13,6 +14,7 @@
     </div>
 
     <div class="timeline-msg">
+        <span class="timeline-icon">&nbsp;</span>
         <p>¡Genial! ya has creado <a href="{% url2 in_facebook public_profile request.user.username %}">tu cuenta</a> en GeoRemindMe, <strong>ya puedes empezar a recibir y enviar sugerencias</strong>.</p>
         <p>Aquí te dejamos un video de introducción a la plaforma:</p>
         <span class="timestamp"> {{obj.created|naturaltime}}</span>  

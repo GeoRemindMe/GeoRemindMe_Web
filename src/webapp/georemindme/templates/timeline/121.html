@@ -8,6 +8,7 @@
 
 
 <li class="msg-{{obj.msg_id}}">
+    
     {% if obj.instance.user.username = request.user.username %}
         <div class="avatar">
             <a href="{% url2 in_facebook public_profile request.user %}" title="{{request.user}}">
@@ -16,6 +17,7 @@
         </div>
         <div class="removable" value="{{obj.instance.id}}" type="comment"><a href="#">Remove</a></div>
         <div class="timeline-msg">
+            <span class="timeline-icon">&nbsp;</span>
             
             <span class="small-text">Has añadido:</span><br>
     {% else %}
@@ -25,6 +27,7 @@
             </a>
         </div>
         <div class="timeline-msg">
+            <span class="timeline-icon">&nbsp;</span>
             <span class="small-text">
                 <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">
                     {{obj.instance.user.username}}
@@ -51,6 +54,7 @@
                 {% if obj.instance.instance.user.username != request.user.username %}
                     | 
                     <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="comment">
+                        <img src="/static/common/img/transparent.gif" />
                         <span class="dislike">
                             <span class="hoverlink">Ya no me gusta</span> 
                         </span>
@@ -60,7 +64,7 @@
                         </span>
                     </span>
                 {% endif %}
-                | <a href="{% url2 in_facebook view_list obj.instance.instance.id  %}" class="details">Ver lista</a>  
+                | <a href="{% url2 in_facebook view_list obj.instance.instance.id  %}" class="details"><img src="/static/common/img/transparent.gif" />Ver lista</a>  
             </span>
         </div>
 </li>
