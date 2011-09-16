@@ -159,7 +159,8 @@ def _get_city(components):
     for i in components:
         if 'locality' in i['types']:
             return i['short_name']
-            
+
+
 def search_place(pos, radius=500, types=None, language=None, name=None, sensor=False):
     """ Busca lugares cercano a la posicion usando la API de Google Places
         
@@ -196,6 +197,7 @@ def search_place(pos, radius=500, types=None, language=None, name=None, sensor=F
     search = GPRequest().do_search(pos, radius, types, language, name, sensor)
     return _add_urls_to_results(search)
 
+
 @login_required
 def add_from_google_reference(request, reference):
     """ Añade un lugar a partir de una referencia
@@ -214,7 +216,6 @@ def add_from_google_reference(request, reference):
     except Exception, e:
         return render_to_response('webapp/placeerror.html', {'error': e},
                                   context_instance=RequestContext(request))
-    
     return redirect(place.get_absolute_url(), permanent=True)
 
 
