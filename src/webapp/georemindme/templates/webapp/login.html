@@ -7,11 +7,16 @@
 	<meta name="google-site-verification" content="VzbSgMqvrPL6WuAhRfBzAFXM0GyU73igO1yjheV2Tc4" />
 
 	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
-	<script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
-    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
-    <script type="text/javascript" src="/static/facebookApp/js/grm.js"></script>
-    <script type="text/javascript" src="/static/webapp/js/jquery.tmpl.min.js"></script>
-    <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+	<link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+    
+    {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
+        
+        <script type="text/javascript" src="/static/common/js/common.js"></script>    
+    {% else %}
+        <script type="text/javascript" src="/static/common/js/common.min.js"></script>    
+    {% endif %}
+    
+    
 
     
     <script type="text/javascript">
@@ -60,8 +65,6 @@
 				}
 			});
 			
-			/*** placeholding ***/
-			$("[placeholder]").placeholder();
 			
 			/*** slide up/down register ***/
 			$('.register-text-aux').toggle(function(){

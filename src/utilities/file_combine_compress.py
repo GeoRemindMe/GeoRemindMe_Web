@@ -67,6 +67,28 @@ BAG = [
 BAG_OUT_DEBUG = '../webapp/static/common/js/bag.js'
 BAG_OUT = '../webapp/static/common/js/bag.min.js'
 
+# VIEW_SUGGESTION
+VIEW_SUGGESTION = [
+    '../webapp/static/common/js/raw/view_suggestion.js',
+    '../webapp/static/common/js/raw/wapi_panoramio.js'
+]
+VIEW_SUGGESTION_OUT_DEBUG = '../webapp/static/common/js/view_suggestion.js'
+VIEW_SUGGESTION_OUT = '../webapp/static/common/js/view_suggestion.min.js'
+
+# VIEW_PLACE
+VIEW_PLACE = [
+    '../webapp/static/common/js/raw/view_place.js'
+]
+VIEW_PLACE_OUT_DEBUG = '../webapp/static/common/js/view_place.js'
+VIEW_PLACE_OUT = '../webapp/static/common/js/view_place.min.js'
+
+# VIEW_LIST
+VIEW_LIST = [
+    '../webapp/static/common/js/raw/view_list.js'
+]
+VIEW_LIST_OUT_DEBUG = '../webapp/static/common/js/view_list.js'
+VIEW_LIST_OUT = '../webapp/static/common/js/view_list.min.js'
+
 STYLESHEETS = [
     '../webapp/static/facebookApp/css/main.css',
     '../webapp/static/webapp/style/main.css',
@@ -82,9 +104,18 @@ def main():
     print 'Compressing JavaScript CHRONOLOGY...'
     compress(CHRONOLOGY, CHRONOLOGY_OUT, 'js', False, CHRONOLOGY_OUT_DEBUG)
     
-    print 'Compressing JavaScript...'
+    print 'Compressing JavaScript BAG...'
     compress(BAG, BAG_OUT, 'js', False, BAG_OUT_DEBUG)
+    
+    print 'Compressing JavaScript VIEW_SUGGESTION...'
+    compress(VIEW_SUGGESTION, VIEW_SUGGESTION_OUT, 'js', False, VIEW_SUGGESTION_OUT_DEBUG)
 
+    #~ print 'Compressing JavaScript VIEW_PLACE...'
+    #~ compress(VIEW_PLACE, VIEW_PLACE_OUT, 'js', False, VIEW_PLACE_OUT_DEBUG)
+    #~ 
+    #~ print 'Compressing JavaScript VIEW_LIST...'
+    #~ compress(VIEW_LIST, VIEW_LIST_OUT, 'js', False, VIEW_LIST_OUT_DEBUG)
+    
     print 'Compressing CSS...'
     compress(STYLESHEETS, STYLESHEETS_OUT, 'css')
 
