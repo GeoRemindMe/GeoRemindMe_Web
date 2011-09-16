@@ -21,20 +21,32 @@
 <!--
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 -->
-
-    
-    <script type="text/javascript" src="/static/webapp/js/jquery.js"></script>
-<!--
-    <script type="text/javascript" src="/static/webapp/js/jquery.min.js"></script>
--->
-<!--
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
--->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
-    <script type="text/javascript" src="/static/webapp/js/common.js"></script>
     <script type="text/javascript" src="https://connect.facebook.net/en_US/all.js"></script>
+    
+    
+    {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
+        <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
+<!--
+        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+-->
+        <script type="text/javascript" src="/static/common/js/common_facebookApp.js"></script>    
+    {% else %}
+        <link type="text/css" rel="stylesheet" href="/static/common/css/fb_style.min.css">
+<!--
+        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+-->
+        <script type="text/javascript" src="/static/common/js/common_facebookApp.min.js"></script>    
+    {% endif %}
+
+<!--
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
+    
+    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/common.js"></script>
+    
     <script type="text/javascript" src="/static/facebookApp/js/jquery.ba-resize.min.js"></script>
     <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
+-->
 
     <script type="text/javascript">
         {% include "urls.html" %}
@@ -128,6 +140,12 @@
 
     <script src="/static/facebookApp/js/main.js"></script>
     <script>
+        {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
+            DEBUG_mode=true;
+        {% else %}
+            DEBUG_mode=false;
+        {% endif %}
+    
         <!-- async loading of facebook js sdk  -->
         $(document).ready(function(){ 
             facebookInit({

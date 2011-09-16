@@ -66,7 +66,7 @@
                         </td>
                     {% else %}
                         <td>
-                            <a href="/oauth/revocate/facebook" target="_blank">Revocar (<fb:name uid="{{user.facebook_user.uid}}"></fb:name>)</a>
+                            <a href="/oauth/revocate/facebook" target="_blank">Revocar</a> (<a href="{{user.facebook_user.profile_url}}">{{user.facebook_user.realname}}</a>)
                         </td>
                     {% endif %}
                     {% if not user.facebook_user %}
@@ -75,7 +75,7 @@
                         </td>
                     {% else %}
                         <td>
-                            <a href="http://www.facebook.com/settings?tab=applications" target="_blank">Desinstalar App FB. (<fb:name uid="{{user.facebook_user.uid}}"></fb:name>)</a>
+                            <a href="http://www.facebook.com/settings?tab=applications" target="_blank">Desinstalar App FB.</a> (<a href="{{user.facebook_user.profile_url}}">{{user.facebook_user.realname}}</a>)
                         </td>
                     {% endif %}
                 </tr>

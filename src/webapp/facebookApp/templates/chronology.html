@@ -2,86 +2,13 @@
 {% load i18n %}
 {% url fb_notifications as notifications_section %}
 {% load tags %}
+
 {% block extra_js %}
-    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
-    <script src="/static/facebookApp/js/grm.js"></script>
-    <script src="/static/facebookApp/js/social.js"></script>   
-    <script src="/static/facebookApp/js/chronology.js"></script>
-    
-    <script type="text/javascript">
-        $(document).ready(function(){
-            
-            GRM.updateTabCounters();
-            
-            if($("#activity").length!=0){
-                $('.load-more').attr("type","activity");
-            }else if($("#public-profile").length!=0){
-                $('.load-more').attr("type","timeline");
-            }else if($("#notifications").length!=0){
-                $('.load-more').attr("type","notifications");
-            }
-        
-    
-            
-            //Adding behaviour to tab content
-            $('#tabMenu li').not('.clear-box').click(function(){
-                tab_id=$('#tabMenu li.active').attr('id')
-                $('#'+tab_id+'_content').addClass('hidden');
-                $('#tabMenu li.active').removeClass('active');
-                
-                tab_id=$(this).attr('id')
-                $('#'+tab_id+'_content').removeClass('hidden');
-                $(this).addClass('active');
-            })
-            
-            $('#filter-suggestions').click(function(){
-                $(':regex(class,(msg-300|msg-303))').show();
-                //Oculto todos aquellos que no son sugerencias
-                $('#chronology li').not('.msg-300').not('.msg-303').not('.suggestion-comment').hide();
-            });
-            
-            $('#filter-lists').click(function(){
-                $(':regex(class,(msg-350|msg-353))').show();
-                //Oculto todos aquellos que no son sugerencias
-                $('#chronology li').not('.msg-350').not('.msg-353').not('.suggestion-comment').hide();
-            });
-            
-            $('#filter-likes').click(function(){
-                $(':regex(class,(msg-125|msg-305|msg-355))').show();
-                //Ocultamos aquellos que no son 125 ni 355
-                $('#chronology li').not('.msg-125').not('.msg-305').not('.msg-355').hide()  
-            });
-                
-            $('#filter-comments').click(function(){
-                $(':regex(class,(msg-120|msg-121))').show();
-                //Oculto todos aquellos que no son sugerencias
-                $('#chronology li').not('.msg-120').not('.msg-121').hide();
-            });
-            
-            $('#no-filter').click(function(){
-                //Muestro todos
-                $('#chronology li:not(.suggestion-comment)').show();
-            });
-            
-            //$('.user-picture').each(function(i,elem){
-                
-            //    (new Image()).src = $(elem).attr('src')
-            //})
-            
-			//Cargar más elementos del Timeline
-            $(".load-more").click(function(){
-                GRM.loadTimeline({
-                    //'query_id':$(this).attr('value'),
-                    container:'#chronology',
-                    url:'/ajax/get/'+$(this).attr('type')+'/',
-                });
-            });
-
-        });
-    </script>
-    
-    
-
+    {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
+        <script type="text/javascript" src="/static/common/js/chronology.js"></script>    
+    {% else %}
+        <script type="text/javascript" src="/static/common/js/chronology.min.js"></script>    
+    {% endif %}
 {%endblock%}
 
 {% block embed_js %}{%endblock%}
@@ -90,6 +17,7 @@
 {% block goBack %}{%endblock%}
 {% block body %}
     <div {% block id %} {%endblock%} class="clear">
+        
         {% block pre_chronology %} {%endblock%}
         {% if chronology.1|length %}    
     
@@ -116,7 +44,7 @@
         
             <!-- Si hay más mensajes -->
             {% if chronology.1|length > 9%}
-                <div class="load-more">Cargar más</div>
+                <div class="load-more btn">Cargar más</div>
             {% endif %}    
             
             
@@ -133,7 +61,7 @@
     <script id="commentTemplate" type="text/x-jquery-tmpl">
         <li>
 			<div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
-            <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="user avatar"><a href="{% url2 in_facebook public_profile user.username %}" class="black-link">{{user.username}}</a>: ${msg}<br>
+            <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="user avatar"><a href="{% url fb_public_profile user.username %}" class="dark-link">{{user.username}}</a>: ${msg}<br>
             <span class="timestamp">0 minutes ago</span>
 
         </li>

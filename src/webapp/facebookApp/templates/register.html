@@ -20,7 +20,7 @@
         {%if request.user.email and not request.user.facebook_user %}
             
             
-                <p>Hola {{request.user.name}}!</p>
+                <p>Hola {{request.user.username}}!</p>
                 
                 <p>
                     Nos alegra verte por aquí, para poder empezar a usar la aplicación de Facebook
@@ -151,7 +151,11 @@
                         
                     </span>
                 </div>
-                <p>{{request.user.email}} and not {{request.user.facebook_user}}</p>
+                <p>
+                    request.user.email={{request.user.email}} and <br>
+                    request.user.facebook_user.realname={{request.user.facebook_user.realname}}
+                    {{request.COOKIES}}
+                </p>
                 <p class="left" style="clear:both;display:block;width:100%;text-align:left">
                     <strong>Regístrate haciendo clic en el siguiente botón:</strong>
                 </p>

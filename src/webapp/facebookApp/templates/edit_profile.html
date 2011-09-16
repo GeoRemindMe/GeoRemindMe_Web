@@ -24,7 +24,6 @@
         
         
         <h1>Editar perfil</h1>
-        
         <div class="section">
             <form method="post" action="." id="editForm">
                 <div id="avatar">
@@ -58,7 +57,7 @@
 					<dt>Password:</dt>
 					<dd><span id="editPass" class="hoverlink">Editar password</span></dd>
 					
-					<dt><label for="id_user_set_profile-email" readonly>Email</label>:</dt>
+					<dt><label for="id_user_set_profile-email">Email</label>:</dt>
 					<dd>
                         <input type="text" name="user_set_profile-email" value="{{request.user.email}}" id="id_user_set_profile-email" readonly>
                     </dd>

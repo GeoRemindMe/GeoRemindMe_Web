@@ -27,10 +27,26 @@ Lisa
 ===================================
 georemindme-dev
 ===================================
-{"id":"100002909153953","access_token":"170924166301288|2a10ed2c1375e78173264ebf.0-100002909153953|C6grKGK7NMjVd2o1Jil8HeDPoB0","login_url":"https:\/\/www.facebook.com\/platform\/test_account_login.php?user_id=100002909153953&n=vwnpPWJQ1OIByuP","email":"mrmuxns_qinstein_1316166629\u0040tfbnw.net","password":"1183270901"}
+Dave // hhkaos on fixtures/dev_appserver.datastore
+{"id":"100002934954064","access_token":"170924166301288|50087daa4e8123d40825a850.0-100002934954064|ic9ysJn8fzcr50rfuNNPoz7LX9A",
+"login_url":
+https://www.facebook.com/platform/test_account_login.php?user_id=100002934954064&n=jYm1883fiBf4gEC
+"email":"sgsvehy_valtchanovwitz_1316166700@tfbnw.net","password":"caracola"}
 
-{"id":"100002905613884","access_token":"170924166301288|ab06c83a79faa88d73870617.0-100002905613884|RgJOBpEjasZcUC1D2uFmQUAnB-A","login_url":"https:\/\/www.facebook.com\/platform\/test_account_login.php?user_id=100002905613884&n=2Ms1HjNHDXlLAye","email":"ucdmdhm_lauson_1316166689\u0040tfbnw.net","password":"457133843"}
+Donna
+{"id":"100002909153953","access_token":"170924166301288|2a10ed2c1375e78173264ebf.0-100002909153953|C6grKGK7NMjVd2o1Jil8HeDPoB0",
+"login_url":
+https://www.facebook.com/platform/test_account_login.php?user_id=100002909153953&n=vwnpPWJQ1OIByuP
+"email":"mrmuxns_qinstein_1316166629@tfbnw.net","password":"1183270901"}
 
-{"id":"100002934954064","access_token":"170924166301288|50087daa4e8123d40825a850.0-100002934954064|ic9ysJn8fzcr50rfuNNPoz7LX9A","login_url":"https:\/\/www.facebook.com\/platform\/test_account_login.php?user_id=100002934954064&n=jYm1883fiBf4gEC","email":"sgsvehy_valtchanovwitz_1316166700\u0040tfbnw.net","password":"1794701602"}
+Charlie
+{"id":"100002905613884","access_token":"170924166301288|ab06c83a79faa88d73870617.0-100002905613884|RgJOBpEjasZcUC1D2uFmQUAnB-A",
+"login_url":
+https://www.facebook.com/platform/test_account_login.php?user_id=100002905613884&n=2Ms1HjNHDXlLAye
+"email":"ucdmdhm_lauson_1316166689@tfbnw.net","password":"457133843"}
 
-{"id":"100002926164052","access_token":"170924166301288|d5a349f56b9d83fb1df20b83.0-100002926164052|R-kj5PJ0D7sRwCq7DJBK73z-OoY","login_url":"https:\/\/www.facebook.com\/platform\/test_account_login.php?user_id=100002926164052&n=lKJM3fEcIBu2FcF","email":"uzdgqwk_chengsky_1316166715\u0040tfbnw.net","password":"1051408979"}
+
+{"id":"100002926164052","access_token":"170924166301288|d5a349f56b9d83fb1df20b83.0-100002926164052|R-kj5PJ0D7sRwCq7DJBK73z-OoY",
+"login_url":
+https://www.facebook.com/platform/test_account_login.php?user_id=100002926164052&n=lKJM3fEcIBu2FcF
+"email":"uzdgqwk_chengsky_1316166715@tfbnw.net","password":"1051408979"}

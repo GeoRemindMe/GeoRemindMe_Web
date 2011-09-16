@@ -280,9 +280,11 @@ input{
     .like-dislike,.likex16{
         display: inline-block;
         line-height: 20px;
-        padding-left: 20px;
+/*
+        padding-left: 20px; Ya no es necesaria en view suggestion
+*/
     }
-    .like-dislike img,.likex16{
+    .like-dislike img,.likex16 img{
         background: url("/static/webapp/img/grm_webapp_sprite.png") no-repeat scroll -53px -3px transparent;
         height: 16px !important;
         margin: 0 !important;
@@ -296,13 +298,19 @@ input{
         background:url("/static/common/img/accept.png") no-repeat scroll 0 -2px transparent;
         padding-left: 20px;
     }
-    .remember-forget,.saved{
-        background: url("/static/common/img/save.png") no-repeat scroll 0 -2px transparent;
-        padding-left: 20px;
+    .remember-forget img,
+    .saved img{
+        background-position: -77px -27px;
     }
-	#print-icon{
-		background-image: url("/static/common/img/printer.png");
-		background-repeat:no-repeat;
+	#print-icon img{
+		background: url("/static/webapp/img/grm_webapp_sprite.png") no-repeat scroll -150px -83px transparent;
+        border: 0 none !important;
+        clear: none !important;
+        float: left !important;
+        height: 16px;
+        margin: 0 !important;
+        padding: 0 5px 0 0;
+        width: 18px;
 	}
     #notification-msg{
         border: 1px dotted #CCCCCC;
@@ -2648,22 +2656,32 @@ input{
     }
     
     #view-suggestion #print-icon{
-		background-position: 2px -32px;
+		background-position: -150px -83px;
 		
 		float: none;
 		height: 16px;
 		line-height: 16px;
 		margin-top: 1.5em;
+/*
 		padding-left: 25px;
+*/
     }
 		
 	#view-suggestion #add-to-list{
-		background-image: url("/static/common/img/suggestionsx16.png");
-        background-position: 2px 50%;
-        background-repeat: no-repeat;
+		
         margin-top: 5px;
+/*
         padding-left: 25px;
+*/
 	}
+    #view-suggestion #add-to-list img{
+        background: url("/static/webapp/img/grm_webapp_sprite.png") repeat scroll -25px -2px transparent;
+        border: 0 none;
+        float: left;
+        height: 16px;
+        margin: 0;
+        width: 22px;
+    }
     #view-suggestion .show-more{
 		float: none;
 		color: #3896FF;
@@ -2822,7 +2840,7 @@ input{
         display: block;
         float: left;
         line-height: 20px;
-        margin-right: 20px;
+        margin-right: 15px;
         margin-top: 0;
     }
     #view-suggestion div.suggestion ul#action-bar>li p{
@@ -2906,11 +2924,20 @@ input{
         
     #view-suggestion p.popular,
     #view-list p.popular{
-        background-image: url("/static/facebookApp/img/icons/comments.png") !important;
+        background-image: none !important;
         font-size: 1.3em;
         font-weight: normal;
         line-height: 3em;
         margin: 0;        
+    }
+    
+    #view-suggestion p.popular img{
+        background: url("/static/webapp/img/grm_webapp_sprite.png") no-repeat scroll -192px -37px transparent;
+        float: left;
+        height: 32px;
+        margin-right: 10px;
+        margin-top: 4px;
+        width: 32px;
     }
     #view-suggestion p.big,
     #view-place p.big,
@@ -3048,14 +3075,36 @@ input{
     #view-suggestion p.popular,
     #view-list p.popular,
     #view-place p.popular{
+/*
         background-image: url("/static/facebookApp/img/icons/suggestions.png");
+*/
+/*
         background-position: 0 10px;
         background-repeat: no-repeat;
+*/
         margin: 0 1em;
         padding-left: 45px;
     }
+    #view-place p.popular img{
+        background: url("/static/webapp/img/grm_webapp_sprite.png") repeat scroll -190px -76px transparent;
+        float: left;
+        height: 32px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 10px;
+        width: 32px;
+    }
+    #view-suggestion p.popular,
     #view-place p.popular{
-        background-position: 0 22px
+        padding-left:0;
+        
+    }
+    #view-place p.popular{
+/*
+        background-position: 0 22px;
+*/
+        line-height: 1.5em;
+        margin: 1em auto;
     }
     .lists-title{
 		background-image: url("/static/facebookApp/img/icons/lists.png");
@@ -3088,7 +3137,7 @@ input{
     }
     #place-details{
         float: left;
-        width: 270px;
+        width: 260px;
     }
     #place-pictures{
         float: right;
@@ -3123,7 +3172,9 @@ input{
     }
     #view-place #action-bar li#print-icon{
         background-position: 2px -32px;
+/*
         padding-left: 25px;
+*/
     }
     #view-place #action-bar li.suggestion{
         background-image: url("/static/common/img/add.png");
@@ -3617,4 +3668,21 @@ ul.ui-autocomplete li.ui-menu-item:nth-child(even){
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.55);
     margin-left: 10px;
     margin-top: 5px;
+}
+
+
+.panoramio-wapi-tos img{
+    background: url("/static/webapp/img/grm_webapp_sprite.png") no-repeat scroll 0 -129px transparent;
+    height: 14px;
+    max-width: none;
+    width: 70px;
+}
+
+#view-suggestion .suggestion #action-bar img{
+    background-image: url("/static/webapp/img/grm_webapp_sprite.png");
+    border: 0 none;
+    float: left;
+    height: 16px;
+    margin: 0;
+    width: 22px;
 }

@@ -9,11 +9,19 @@
     <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
     <script src="/static/facebookApp/js/grm.js"></script>
 -->
+    
+    <script type="text/javascript">
+        <!-- Definimos la variable global necesaria para pedir las fotos a Panoramio -->    
+        latlngStr = "{{suggestion.poi.location}}".split(",",2);
+    </script>
+    
     {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
         <script type="text/javascript" src="/static/common/js/view_suggestion.js"></script>    
     {% else %}
         <script type="text/javascript" src="/static/common/js/view_suggestion.min.js"></script>    
     {% endif %}
+    
+    
 
 {%endblock%}
 
@@ -118,15 +126,15 @@
 &markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false">
             </a>
             
-            <div><strong>Pictures of the area from :</strong><span id="panoramio-tos"></span></div>
+            <div><strong>Fotos de la zona :</strong><span id="panoramio-tos"></span></div>
             
 			<hr>
             
             <ul id="action-bar">
-                <li id="print-icon"><a href="?print" target="_blank" class="hoverlink">Imprimir</a></li>
+                <li id="print-icon"><a href="?print" target="_blank" class="hoverlink"><img src="/static/common/img/transparent.gif"> Imprimir</a></li>
                 {% if request.user.username %}
                     <li id="add-to-list" value="{{suggestion.id}}">
-                        <span class="hoverlink" onclick="javascript:$('#add-to-list .dropDownBtn').show();">Añadir a una lista </span>
+                        <span class="hoverlink" onclick="javascript:$('#add-to-list .dropDownBtn').show();"><img src="/static/common/img/transparent.gif"> Añadir a una lista </span>
                         <span class="btn dropDownBtn" style="display:none">
                             <span class="save-at">---------</span>
                             <ul class="submenu" style="display:none" id="dropdown-list">
@@ -149,10 +157,11 @@
                     <li>
                         <span class="btn likeBtn" id="save-btn">
                             <span title="Guardar en favoritos"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if user_follower%}remember="true"{%endif%}>
-                                <span class="remember hoverlink">
+                                <img src="/static/common/img/transparent.gif">
+                                <span class="remember hoverlink" {%if user_follower%}style="display:none"{%endif%}>
                                     Guardar
                                 </span>
-                                <span class="forget hoverlink">
+                                <span class="forget hoverlink" {%if not user_follower%}style="display:none"{%endif%}>
                                     Guardada
                                 </span>
                             </span>
@@ -161,12 +170,13 @@
                     <li>
                         <span class="likeBtn btn">
                             <span class="like-dislike-suggestion likex16" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
+                                <img src="/static/common/img/transparent.gif">
                                 <span class="dislike">
-                                    <span class="text hoverlink">Ya no me gusta</span> 
+                                    <span class="text hoverlink" {% if not has_voted %}style="display:none"{%endif%}>Ya no me gusta</span> 
                                 </span>
                                 
                                 <span class="like">
-                                    <span class="text hoverlink" >Me gusta</span> 
+                                    <span class="text hoverlink" {% if has_voted %}style="display:none"{%endif%}>Me gusta</span> 
                                 </span> 
                             </span>
                         </span>
@@ -190,7 +200,7 @@
         
         {% if top_comments %}
             <div id="popular-box" class="clear">
-                <p class="popular">Los comentarios más populares</p>
+                <p class="popular"><img src="/static/common/img/transparent.gif">Los comentarios más populares</p>
                 <ul class="comments" id="popular-comments">
                     {% for c in top_comments %}
                         <li class="comment-element" {% if forloop.first %}style="border-top:0px"{% endif %}>

@@ -37,7 +37,7 @@ def compress(in_files, out_file, in_type='js', verbose=False,
 
     #os.remove(temp_file)
 
-COMMON = [
+COMMON_WEBAPP = [
     '../webapp/static/webapp/js/jquery.min.js',
     '../webapp/static/webapp/js/jquery.tmpl.js', 
     '../webapp/static/webapp/js/jquery-ui.min.js',
@@ -49,8 +49,24 @@ COMMON = [
     '../webapp/static/common/js/jquery.cookies.2.2.0.min.js',
     '../webapp/static/webapp/js/jquery.placeholder.js',
 ]
-COMMON_OUT_DEBUG = '../webapp/static/common/js/common.js'
-COMMON_OUT = '../webapp/static/common/js/common.min.js'
+COMMON_WEBAPP_OUT_DEBUG = '../webapp/static/common/js/common_webapp.js'
+COMMON_WEBAPP_OUT = '../webapp/static/common/js/common_webapp.min.js'
+
+
+COMMON_FACEBOOKAPP = [
+    '../webapp/static/webapp/js/jquery.min.js',
+    '../webapp/static/webapp/js/jquery.tmpl.js',
+    '../webapp/static/webapp/js/jquery-ui.min.js',
+    '../webapp/static/webapp/js/jquery.placeholder.js',
+    '../webapp/static/webapp/js/common.js',
+    '../webapp/static/facebookApp/js/jquery.ba-resize.min.js',
+    '../webapp/static/facebookApp/js/jquery.hoverIntent.minified.js',
+    '../webapp/static/facebookApp/js/grm.js',       
+    
+]
+
+COMMON_FACEBOOKAPP_OUT_DEBUG = '../webapp/static/common/js/common_facebookApp.js'
+COMMON_FACEBOOKAPP_OUT = '../webapp/static/common/js/common_facebookApp.min.js'
 
 CHRONOLOGY = [
     '../webapp/static/facebookApp/js/social.js',    #
@@ -69,6 +85,7 @@ BAG_OUT = '../webapp/static/common/js/bag.min.js'
 
 # VIEW_SUGGESTION
 VIEW_SUGGESTION = [
+    '../webapp/static/common/js/raw/load_panoramio.js',
     '../webapp/static/common/js/raw/view_suggestion.js',
     '../webapp/static/common/js/raw/wapi_panoramio.js'
 ]
@@ -77,17 +94,23 @@ VIEW_SUGGESTION_OUT = '../webapp/static/common/js/view_suggestion.min.js'
 
 # VIEW_PLACE
 VIEW_PLACE = [
-    '../webapp/static/common/js/raw/view_place.js'
+    '../webapp/static/common/js/raw/load_panoramio.js',
+    '../webapp/static/common/js/raw/view_place.js',
+    '../webapp/static/common/js/raw/wapi_panoramio.js'
 ]
 VIEW_PLACE_OUT_DEBUG = '../webapp/static/common/js/view_place.js'
 VIEW_PLACE_OUT = '../webapp/static/common/js/view_place.min.js'
 
-# VIEW_LIST
-VIEW_LIST = [
-    '../webapp/static/common/js/raw/view_list.js'
+# ADD_SUGGESTION
+ADD_SUGGESTION = [
+
+    '../webapp/static/common/js/raw/add_suggestion.js',
+    '../webapp/static/facebookApp/js/geo-autocomplete/lib/jquery.autocomplete_geomod.js',
+    '../webapp/static/facebookApp/js/geo-autocomplete/geo_autocomplete.js',
 ]
-VIEW_LIST_OUT_DEBUG = '../webapp/static/common/js/view_list.js'
-VIEW_LIST_OUT = '../webapp/static/common/js/view_list.min.js'
+ADD_SUGGESTION_OUT_DEBUG = '../webapp/static/common/js/add_suggestion.js'
+ADD_SUGGESTION_OUT = '../webapp/static/common/js/add_suggestion.min.js'
+
 
 STYLESHEETS = [
     '../webapp/static/facebookApp/css/main.css',
@@ -96,10 +119,18 @@ STYLESHEETS = [
     ]
 STYLESHEETS_OUT = '../webapp/static/common/css/style.min.css'
 
+FB_STYLESHEETS = [
+    '../webapp/static/facebookApp/css/main.css',
+    ]
+FB_STYLESHEETS_OUT = '../webapp/static/common/css/fb_style.min.css'
+
 def main():
     
-    print 'Compressing JavaScript COMMON...'
-    compress(COMMON, COMMON_OUT, 'js', False, COMMON_OUT_DEBUG)
+    print 'Compressing JavaScript COMMON_WEBAPP...'
+    compress(COMMON_WEBAPP, COMMON_WEBAPP_OUT, 'js', False, COMMON_WEBAPP_OUT_DEBUG)
+    
+    print 'Compressing JavaScript COMMON_FACEBOOKAPP...'
+    compress(COMMON_FACEBOOKAPP, COMMON_FACEBOOKAPP_OUT, 'js', False, COMMON_FACEBOOKAPP_OUT_DEBUG)
     
     print 'Compressing JavaScript CHRONOLOGY...'
     compress(CHRONOLOGY, CHRONOLOGY_OUT, 'js', False, CHRONOLOGY_OUT_DEBUG)
@@ -109,6 +140,12 @@ def main():
     
     print 'Compressing JavaScript VIEW_SUGGESTION...'
     compress(VIEW_SUGGESTION, VIEW_SUGGESTION_OUT, 'js', False, VIEW_SUGGESTION_OUT_DEBUG)
+    
+    print 'Compressing JavaScript VIEW_PLACE...'
+    compress(VIEW_PLACE, VIEW_PLACE_OUT, 'js', False, VIEW_PLACE_OUT_DEBUG)
+    
+    print 'Compressing JavaScript ADD_SUGGESTION...'
+    compress(ADD_SUGGESTION, ADD_SUGGESTION_OUT, 'js', False, ADD_SUGGESTION_OUT_DEBUG)
 
     #~ print 'Compressing JavaScript VIEW_PLACE...'
     #~ compress(VIEW_PLACE, VIEW_PLACE_OUT, 'js', False, VIEW_PLACE_OUT_DEBUG)
@@ -118,6 +155,9 @@ def main():
     
     print 'Compressing CSS...'
     compress(STYLESHEETS, STYLESHEETS_OUT, 'css')
+    
+    print 'Compressing FACEBOOK CSS...'
+    compress(FB_STYLESHEETS, FB_STYLESHEETS_OUT, 'css')
 
 if __name__ == '__main__':
     main()
