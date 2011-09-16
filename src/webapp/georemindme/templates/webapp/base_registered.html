@@ -1,11 +1,13 @@
 {% load tags %}
+{% load i18n %}
 
 {% url dashboard as dashboard %}
 {% url notifications as notifications_section %}
 {% url user_suggestions as user_suggestions %}
 
 <!DOCTYPE HTML>
-<html lang="es-ES">
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{LANGUAGE_CODE}}">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Expires" content="0">

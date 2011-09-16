@@ -1,4 +1,5 @@
 {% load tags %}
+{% load i18n %}
 
 {% url fb_dashboard as dashboard %}
 {% url fb_notifications as notifications_section %}
@@ -9,74 +10,34 @@
 
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
-<head>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{LANGUAGE_CODE}}">
+    {% block redirect %}{% endblock %}
     <meta charset="utf-8">
     <title>
       {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
     </title>
-    {% block redirect %}{% endblock %}
     <meta name="description" content="">
-    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
-    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/jquery-ui/jquery-ui-1.8.16.custom.css">
 <!--
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/jquery-ui/jquery-ui-1.8.16.custom.css">
 -->
-    <script type="text/javascript" src="https://connect.facebook.net/en_US/all.js"></script>
-    
-    
     {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
         <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
-<!--
-        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
--->
+        <script type="text/javascript" src="https://connect.facebook.net/en_US/all.js"></script>
         <script type="text/javascript" src="/static/common/js/common_facebookApp.js"></script>    
     {% else %}
         <link type="text/css" rel="stylesheet" href="/static/common/css/fb_style.min.css">
-<!--
-        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
--->
+        <script type="text/javascript" src="https://connect.facebook.net/en_US/all.js"></script>
         <script type="text/javascript" src="/static/common/js/common_facebookApp.min.js"></script>    
     {% endif %}
 
-<!--
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
-    
-    <script type="text/javascript" src="/static/webapp/js/jquery.placeholder.js"></script>
-    <script type="text/javascript" src="/static/webapp/js/common.js"></script>
-    
-    <script type="text/javascript" src="/static/facebookApp/js/jquery.ba-resize.min.js"></script>
-    <script type="text/javascript" src="/static/facebookApp/js/jquery.hoverIntent.minified.js"></script>
--->
 
     <script type="text/javascript">
         {% include "urls.html" %}
         
-        // Menu desplegable "Listas"
-        // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
-        hiConfig = {
-            sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
-            interval: 0, // number = milliseconds for onMouseOver polling interval
-            timeout: 500, // number = milliseconds delay before onMouseOut
-            over: function() {
-                var tmp=$('#dropdown-list-user').width();
-                tmp=52-tmp;
-                $('#dropdown-list-user').css("margin-left",tmp+'px')
-                $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
-            },
-            out: function() {
-                if($("#dropdown-list-user").hasClass('visible-display')==false)
-                    $(this).find('ul:first').slideUp(400);
-            }
-        }
-        
         $(document).ready(function(){
-            
             resizeIframe();
-            
-            $("#right-col").resize(function(){
-                resizeIframe();
-            });
-            
+            $("#right-col").resize(function(){resizeIframe();});
         });
     </script>
     {% block extra_js %}{%endblock%}
@@ -138,7 +99,6 @@
     <div id="fb-root"></div>
     <div id="templates"></div>
 
-    <script src="/static/facebookApp/js/main.js"></script>
     <script>
         {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
             DEBUG_mode=true;

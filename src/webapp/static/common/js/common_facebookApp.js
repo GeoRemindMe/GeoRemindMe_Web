@@ -1142,8 +1142,6 @@ $(document).ready(function(){
 * @author    Brian Cherne brian(at)cherne(dot)net
 */
 (function($){$.fn.hoverIntent=function(f,g){var cfg={sensitivity:7,interval:100,timeout:0};cfg=$.extend(cfg,g?{over:f,out:g}:f);var cX,cY,pX,pY;var track=function(ev){cX=ev.pageX;cY=ev.pageY};var compare=function(ev,ob){ob.hoverIntent_t=clearTimeout(ob.hoverIntent_t);if((Math.abs(pX-cX)+Math.abs(pY-cY))<cfg.sensitivity){$(ob).unbind("mousemove",track);ob.hoverIntent_s=1;return cfg.over.apply(ob,[ev])}else{pX=cX;pY=cY;ob.hoverIntent_t=setTimeout(function(){compare(ev,ob)},cfg.interval)}};var delay=function(ev,ob){ob.hoverIntent_t=clearTimeout(ob.hoverIntent_t);ob.hoverIntent_s=0;return cfg.out.apply(ob,[ev])};var handleHover=function(e){var ev=jQuery.extend({},e);var ob=this;if(ob.hoverIntent_t){ob.hoverIntent_t=clearTimeout(ob.hoverIntent_t)}if(e.type=="mouseenter"){pX=ev.pageX;pY=ev.pageY;$(ob).bind("mousemove",track);if(ob.hoverIntent_s!=1){ob.hoverIntent_t=setTimeout(function(){compare(ev,ob)},cfg.interval)}}else{$(ob).unbind("mousemove",track);if(ob.hoverIntent_s==1){ob.hoverIntent_t=setTimeout(function(){delay(ev,ob)},cfg.timeout)}}};return this.bind('mouseenter',handleHover).bind('mouseleave',handleHover)}})(jQuery);
-kkk=[];
-
 // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
 hiConfig = {
     sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
@@ -1582,7 +1580,6 @@ GRM.removable = function() {
         var item = $(this);
         
         
-        kkk.push($(this));
         $(this).parent().hover(
             
             function(){item.show();},
@@ -2168,4 +2165,78 @@ $.extend(
 })(jQuery)  
 
 
+
+Config = null;
+
+$(document).ready(function() {
+    
+    var dialogSettings={
+            autoOpen:false,
+			resizable: false,
+            buttons: [{
+                    text: "Cerrar",
+                    click: function() { $(this).dialog("close"); }
+                }],
+            draggable: false,
+			width:560,
+            
+    }
+    if(typeof($('#webapp'))=="undefined")
+        dialogSettings['position'] = ['right', 45];
+    else
+        dialogSettings['position'] = ['top', 65];
+        
+    $('.help-txt').dialog(dialogSettings);
+    
+       
+    $('.help-icon img').click(function(){
+        $('#'+$(this).attr('id')+'-text').dialog("open");
+    })
+});
+
+function facebookInit(config) {
+  Config = config;
+
+  FB.init(config);
+  FB.Event.subscribe('auth.sessionChange', handleSessionChange);
+
+  //FB.Canvas.setAutoResize();
+  //if (typeof resizeIframe != "undefined") resizeIframe();
+  // ensure we're always running on apps.facebook.com
+  // if we are opening http://localhost:8080/fb/ or
+  // georemindme.appspot.com/fb we will be redirected
+  if (window == top && DEBUG_mode==false) { 
+      alert("No puedes entrar a esta URL sin estar en Facebook, procedemos a redireccionarte");
+      goHome(); 
+  }
+}
+
+function handleSessionChange(response) {
+    tmp=response;
+    console.log(tmp)
+    console.log(Config.userIdOnServer);
+    console.log(tmp.session);
+    console.log(tmp.session.uid);
+    //This checks if the user have changed the session and if it
+    //is incoherent or there ir no session we move to home
+    if ((Config.userIdOnServer && !response.session) ||
+        Config.userIdOnServer != response.session.uid) 
+    {
+        //goHome();
+    }
+}
+
+function goHome() {
+    top.location = 'http://apps.facebook.com/' + Config.canvasName + '/';
+}
+
+function resizeIframe() {
+    var tam=$('#right-col').height(); //Get height of the iframe
+    //console.log("Entro y tam="+tam);
+    //~ tam=tam+250;
+    //~ console.log('Resize to '+tam);
+    FB.Canvas.setSize({ height: tam });
+    $('#right-col').css('min-height',tam+'px');
+    
+}
 

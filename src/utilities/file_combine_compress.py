@@ -46,12 +46,17 @@ COMMON_WEBAPP = [
     '../webapp/static/facebookApp/js/jquery.hoverIntent.minified.js',
     '../webapp/static/webapp/js/jquery.lavalamp.js',
     '../webapp/static/webapp/js/jquery.reversegeocode.min.js',
-    '../webapp/static/common/js/jquery.cookies.2.2.0.min.js',
+    '../webapp/static/common/js/raw/jquery.cookies.2.2.0.min.js',
     '../webapp/static/webapp/js/jquery.placeholder.js',
 ]
 COMMON_WEBAPP_OUT_DEBUG = '../webapp/static/common/js/common_webapp.js'
 COMMON_WEBAPP_OUT = '../webapp/static/common/js/common_webapp.min.js'
 
+LOGIN = [
+    '../webapp/static/common/js/raw/login.js',
+]
+LOGIN_OUT_DEBUG = '../webapp/static/common/js/login.js'
+LOGIN_OUT = '../webapp/static/common/js/login.min.js'
 
 COMMON_FACEBOOKAPP = [
     '../webapp/static/webapp/js/jquery.min.js',
@@ -61,7 +66,8 @@ COMMON_FACEBOOKAPP = [
     '../webapp/static/webapp/js/common.js',
     '../webapp/static/facebookApp/js/jquery.ba-resize.min.js',
     '../webapp/static/facebookApp/js/jquery.hoverIntent.minified.js',
-    '../webapp/static/facebookApp/js/grm.js',       
+    '../webapp/static/facebookApp/js/grm.js',
+    '../webapp/static/facebookApp/js/main.js'
     
 ]
 
@@ -129,6 +135,9 @@ def main():
     print 'Compressing JavaScript COMMON_WEBAPP...'
     compress(COMMON_WEBAPP, COMMON_WEBAPP_OUT, 'js', False, COMMON_WEBAPP_OUT_DEBUG)
     
+    print 'Compressing JavaScript LOGIN...'
+    compress(LOGIN, LOGIN_OUT, 'js', False, LOGIN_OUT_DEBUG)
+    
     print 'Compressing JavaScript COMMON_FACEBOOKAPP...'
     compress(COMMON_FACEBOOKAPP, COMMON_FACEBOOKAPP_OUT, 'js', False, COMMON_FACEBOOKAPP_OUT_DEBUG)
     
@@ -193,7 +202,7 @@ if __name__ == '__main__':
     #~ '../webapp/static/facebookApp/js/jquery.hoverIntent.minified.js',
     #~ '../webapp/static/webapp/js/jquery.lavalamp.js',
     #~ '../webapp/static/webapp/js/jquery.reversegeocode.min.js',
-    #~ '../webapp/static/common/js/jquery.cookies.2.2.0.min.js',
+    #~ '../webapp/static/common/js/raw/jquery.cookies.2.2.0.min.js',
     #~ '../webapp/static/webapp/js/jquery.placeholder.js',
     #~ #'../webapp/static/facebookApp/js/geo-autocomplete/lib/jquery-ui/js/jquery-ui-1.8.5.custom.min.js',
     #~ #'../webapp/static/facebookApp/js/geo-autocomplete/ui.geo_autocomplete.js',
