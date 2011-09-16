@@ -5,6 +5,7 @@ import time
 
 from django.utils.translation import gettext_lazy as _
 from django.utils import simplejson
+from django.conf import settings as __web_settings
 from google.appengine.ext import db, search
 from google.appengine.ext.db import polymodel
 from google.appengine.ext.db import BadValueError
@@ -472,7 +473,7 @@ class Suggestion(Event, Visibility, Taggable):
         from libs.vavag import VavagRequest
         from os import environ
         try:
-            from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
+             # parche hasta conseguir que se cachee variable global
             client = VavagRequest(__web_settings.SHORTENER_ACCESS['user'], __web_settings.SHORTENER_ACCESS['key'])
             response =  client.set_pack('http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
             self._short_url = response['packUrl']
@@ -487,7 +488,6 @@ class Suggestion(Event, Visibility, Taggable):
             # nadie la añadió
             suggestion_deleted.send(sender=self, user=self.user)
             return super(Suggestion, self).delete()
-        from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
         generico = User.objects.get_by_username(__web_settings.GENERICO, keys_only=True)
         if generico == Suggestion.user.get_value_for_datastore(self):
             from geolist.models import ListSuggestion 
@@ -555,7 +555,6 @@ class Suggestion(Event, Visibility, Taggable):
             from mapsServices.fusiontable import ftclient, sqlbuilder
             try:
                 ftclient = ftclient.OAuthFTClient()
-                from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
                 import unicodedata
                 name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
                 return ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],

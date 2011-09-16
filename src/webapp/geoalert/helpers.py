@@ -63,7 +63,7 @@ class EventHelper(object):
         event = self._klass.get(key)
         if event is None:
             return None
-        if event.user.key() == user.key():
+        if event.__class__.user.get_value_for_datastore(event) == user.key():
             return event
         return None
 
@@ -79,8 +79,15 @@ class EventHelper(object):
         event = self._klass.get_by_id(int(id))
         if event is None:
             return None
-        if event.user.key() == user.key():
+        if event.__class__.user.get_value_for_datastore(event) != user.key():
+            return None
+        if event.__class__.user.get_value_for_datastore(event) == querier.key():
             return event
+        if hasattr(event, '_vis'):
+            if event._is_public():
+                return event
+            elif event._is_shared() and event.user_invited(querier):
+                return event
         return None
 
     def get_by_id_querier(self, id, querier):
@@ -95,8 +102,8 @@ class EventHelper(object):
         event = self.get_by_id(id)
         if event is None:
             return None
-        if event.user is not None:
-            if event.user.key() == querier.key():
+        if event.__class__.user.get_value_for_datastore(event) is not None:
+            if event.__class__.user.get_value_for_datastore(event) == querier.key():
                 return event
         if hasattr(event, '_vis'):
             if event._is_public():
@@ -116,9 +123,8 @@ class EventHelper(object):
         events_lists = []
         from georemindme.funcs import prefetch_refprops
         events = p.fetch_page(page)
-        events = prefetch_refprops(events, self._klass.user, self._klass.poi)
         for event in events:
-            if event.user.key() == querier.key():
+            if event.__class__.user.get_value_for_datastore(event) == querier.key():
                 events_lists.append(event)
             elif hasattr(event, '_vis'):
                 if event._is_public():
@@ -126,6 +132,7 @@ class EventHelper(object):
                 elif event._is_shared() and event.user_invited(querier):
                     events_lists.append(event)
         if len(events_lists) != 0:
+            events_lists = prefetch_refprops(events_lists, self._klass.user, self._klass.poi)
             return [p.id, events_lists], p.page_count()
         return None, 0
 
@@ -171,7 +178,7 @@ class AlertHelper(EventHelper):
         event = self._klass.get_by_id(int(id))
         if event is None:
             return None
-        if event.user.key() == user.key():
+        if event.__class__.user.get_value_for_datastore(event) == user.key():
                 return event
         return None
 
@@ -217,7 +224,7 @@ class SuggestionHelper(EventHelper):
                 if suggestion._is_private():
                     if not querier.is_authenticated():
                         return None
-                    if suggestion.user.key() != querier.key():
+                    if suggestion.__class__.user.get_value_for_datastore(suggestion) == querier.key():
                         return None
                 elif suggestion._is_shared():
                     if not querier.is_authenticated():
@@ -282,7 +289,7 @@ class SuggestionHelper(EventHelper):
         from geolist.models import ListSuggestion
         if event.user is None:
             return None
-        if event.user.key() == user.key():
+        if event.__class__.user.get_value_for_datastore(event) == querier.key():
             if user.key() == querier.key():
                 lists = ListSuggestion.objects.get_by_suggestion(event, querier)
                 setattr(event, 'lists', lists)
@@ -310,7 +317,7 @@ class SuggestionHelper(EventHelper):
         if event is None:
             return None
         from geolist.models import ListSuggestion
-        if event.user.key() == querier.key():
+        if event.__class__.user.get_value_for_datastore(event) == querier.key():
             lists = ListSuggestion.objects.get_by_suggestion(event, querier)
             setattr(event, 'lists', lists)
             return event

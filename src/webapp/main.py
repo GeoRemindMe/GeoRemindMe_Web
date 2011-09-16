@@ -64,17 +64,14 @@ django.dispatch.Signal.disconnect(
                                   got_request_exception,
                                   _rollback_on_exception
                                   )
+application = django.core.handlers.wsgi.WSGIHandler()
 
 def main():
-    from django.conf import settings
-    global __web_settings
-    __web_settings = settings
     # Create a Django application for WSGI.
-    application = django.core.handlers.wsgi.WSGIHandler()
-    
+    global application
+    #application = django.core.handlers.wsgi.WSGIHandler()
     # Run the WSGI CGI handler with that application.
     util.run_wsgi_app(application)
-
 
 if __name__ == '__main__':
     main()

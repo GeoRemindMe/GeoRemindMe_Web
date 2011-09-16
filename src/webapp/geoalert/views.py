@@ -54,10 +54,8 @@ def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
     top_comments = Comment.objects.get_top_voted(suggestion, request.user)
     in_lists = ListSuggestion.objects.get_by_suggestion(suggestion, request.user)
     # construir un diccionario con todas las keys resueltas y usuarios
-    in_lists = prefetch_refprops(in_lists, ListSuggestion.user)
     in_lists = [l.to_dict(resolve=False) for l in in_lists]
     # listas del usuario
-    
     lists = [l for l in lists if not suggestion.key() in l.keys]
     lists = prefetch_refprops(lists, ListSuggestion.user)
     lists = [l.to_dict(resolve=False) for l in lists]

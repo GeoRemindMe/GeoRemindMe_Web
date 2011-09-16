@@ -36,7 +36,7 @@ def do_comment(querier, instance_id, kind, msg):
     obj = eval(kind).get_by_id(instance_id)
     if obj is None:
         return None
-    if obj.user.key() != querier.key():
+    if obj.__class__.user.get_value_for_datastore(obj) != querier.key():
         if hasattr(obj, '_vis'):
             if obj._is_private():
                 return None
@@ -71,7 +71,7 @@ def get_comments(querier, instance_id, kind, query_id=None, page=1, async=False)
     obj = eval(kind).get_by_id(instance_id)
     if obj is None:
         return None
-    if obj.user.key() != querier.key():
+    if obj.__class__.user.get_value_for_datastore(obj) != querier.key():
         if hasattr(obj, '_vis'):
             if obj._is_private():
                 return None
@@ -128,7 +128,7 @@ def do_vote(querier, kind, instance_id, vote=1):
         return None
     if obj is None:
         return None
-    if obj.user.key() != querier.key():
+    if obj.__class__.user.get_value_for_datastore(obj) != querier.key():
         if hasattr(obj, '_vis'):
             if obj._is_private():
                 return None
@@ -159,7 +159,7 @@ def get_votes(querier, kind, instance_id):
     obj = eval(kind).get_by_id(instance_id)
     if obj is None:
         return None
-    if obj.user.key() != querier.key():
+    if obj.__class__.user.get_value_for_datastore(obj) != querier.key():
         if hasattr(obj, '_vis'):
             if obj._is_private():
                 return None

@@ -141,7 +141,7 @@ class CommentHelper(object):
         if comment is not None:
             if comment.deleted:
                 return None
-            if comment.user.key() == user.key():
+            if Comment.user.get_value_for_datastore(comment) == user.key():
                 return comment
         return None      
     
@@ -156,11 +156,12 @@ class CommentHelper(object):
         if comment is not None:
             if comment.deleted:
                 return None
-            if comment.user.key() == querier.key():
+            if Comment.user.get_value_for_datastore(comment) == querier.key():
                 return comment
             elif comment._is_public(): # comentario publico
                 return comment
-            elif comment.instance.user.key() == querier.key(): # comentario en un objeto publico
+            elif Comment.instance.user.get_value_for_datastore(comment) == querier.key():
+            # comentario en un objeto publico
                 return comment
             elif comment.instance._is_public(): # la instancia es publica, sus comentarios son publicos
                 return comment

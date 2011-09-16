@@ -3,6 +3,7 @@
 from geouser.models import User, AnonymousUser
 from models import *
 from models_indexes import ListFollowersIndex
+from georemindme.funcs import prefetch_refprops
 
 class ListHelper(object):
     _klass = List
@@ -19,8 +20,8 @@ class ListHelper(object):
         q = self._klass.all().filter('_vis =', 'public').filter('active =', True).order('-modified')
         from georemindme.paging import PagedQuery
         p = PagedQuery(q, id = query_id)
-        from georemindme.funcs import prefetch_refprops
-        lists = prefetch_refprops(p.fetch_page(page), self._klass.user)
+        lists = p.fetch_page(page)
+        prefetch_refprops(lists, self._klass.user)
         return [p.id, lists]
 
     def get_by_id(self, id):
@@ -55,7 +56,7 @@ class ListHelper(object):
         list = self.get_by_id(id)
         if list is None:
             return None
-        if list.user.key() == querier.key():
+        if list.__class__.user.get_value_for_datastore(list) == querier.key():
             return list
         if hasattr(list, '_vis'):
             if list._is_public():
@@ -78,7 +79,7 @@ class ListHelper(object):
         if list is not None:
             if not list.active:
                 return None
-            if list.user.key() == user.key():
+            if list.__class__.user.get_value_for_datastore(list) == user.key():
                 return list
         return None
 
@@ -137,8 +138,8 @@ class ListHelper(object):
         if not all:
             from georemindme.paging import PagedQuery
             p = PagedQuery(q, id = query_id)
-            from georemindme.funcs import prefetch_refprops
-            lists = prefetch_refprops(p.fetch_page(page), self._klass.user)
+            lists = p.fetch_page(page)
+            prefetch_refprops(lists, self._klass.user)
             return [p.id, lists]
         else:
             return q.run()
@@ -153,10 +154,9 @@ class ListHelper(object):
         lists = self._klass.all().filter('_tags_list =', tagInstance.key())
         p = PagedQuery(lists, id = query_id)
         return_list = []
-        from georemindme.funcs import prefetch_refprops
-        lists = prefetch_refprops(p.fetch_page(page), self._klass.user)
-        for list in lists:
-            if list.user.key() == querier.key():
+        lists_page = p.fetch_page(page)
+        for list in lists_page:
+            if list.__class__.user.get_value_for_datastore(list) == querier.key():
                 return_list.append(list)
             elif hasattr(list, '_vis'):
                 if list._is_public():
@@ -164,6 +164,7 @@ class ListHelper(object):
                 elif list._is_shared() and list.user_invited(querier):
                     return_list.append(list)
         if len(return_list) != 0:
+            prefetch_refprops(return_list, self._klass.user)
             return [p.id, return_list]
         return None
 
@@ -176,20 +177,22 @@ class ListSuggestionHelper(ListHelper):
             raise TypeError()
         lists = self._klass.all().filter('keys =', suggestion.key()).filter('active =', True)
         lists_loaded = []
-        from georemindme.funcs import prefetch_refprops
-        lists = prefetch_refprops(lists, self._klass.user)
         for list in lists:
             if not querier.is_authenticated():
                 if list._is_public():
                     lists_loaded.append(list)
             else:
-                if list.user.key() == querier.key():
+                if list.__class__.user.get_value_for_datastore(list) == querier.key():
                     lists_loaded.append(list)
                 elif list._is_public():
                     lists_loaded.append(list)
                 elif list._is_shared() and list.user_invited(querier):
                     lists_loaded.append(list)
-        return lists_loaded
+        if len(lists_loaded) != 0:
+            prefetch_refprops(lists_loaded, self._klass.user)
+            return lists_loaded
+        return []
+        
 
 class ListRequestedHelper(ListSuggestionHelper):
     _klass = ListRequested
@@ -207,7 +210,7 @@ class ListRequestedHelper(ListSuggestionHelper):
         list = self.get_by_id(id)
         if list is None or not isinstance(list, ListRequested):
             return None
-        if list.user.key() == querier.key():
+        if list.__class__.user.get_value_for_datastore(list) == querier.key():
             return list
         if list._is_public():
             return list
