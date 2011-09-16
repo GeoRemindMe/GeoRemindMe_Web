@@ -367,9 +367,9 @@ class SuggestionHelper(EventHelper):
                                                    )
                            )
             results = query.splitlines()
-            del results[0] #  quitar la primera linea con el nombre de la columna
-            if results[0] == '<HEAD>':
+            if len(results) == 1:
                 return None
+            del results[0] #  quitar la primera linea con el nombre de la columna
             sugs = [db.Key.from_path(self._klass.kind(), int(result)) for result in results] # construir todas las keys para consultar en bach
             from google.appengine.api import datastore
             sugs = datastore.Get(sugs)
