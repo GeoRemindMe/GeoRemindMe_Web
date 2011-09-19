@@ -51,6 +51,7 @@ def login_panel(request):
             else:
                 if request.facebook['client'].user is None:
                     request.facebook['client'].authorize(request.user)
+                    init_user_session(request, request.user, remember=True, is_from_facebook=True)
 #                    from geouser.models import AnonymousUser
 #                    user_logged = request.user
 #                    request.session.delete()
@@ -61,7 +62,8 @@ def login_panel(request):
 #                                                   },
 #                                                  context_instance=RequestContext(request)
 #                                                  )
-                init_user_session(request, request.user, remember=True, is_from_facebook=True)
+                else:
+                    request.session.delete()
                 return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
     return render_to_response('register.html', {'permissions': __web_settings.OAUTH['facebook']['scope'] },

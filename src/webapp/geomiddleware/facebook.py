@@ -38,6 +38,7 @@ class FacebookMiddleware(object):
                                         'client': FacebookClient(access_token=cookie['code'])
                                     }
                 except:
+                    raise
                     pass
         if not hasattr(request, 'facebook'):
             from facebookApp.watchers import disconnect_all

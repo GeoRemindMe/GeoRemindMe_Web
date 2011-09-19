@@ -553,11 +553,13 @@ class Suggestion(Event, Visibility, Taggable):
         """
         if self._is_public():
             from mapsServices.fusiontable import ftclient, sqlbuilder
+            from django.conf import settings
             try:
                 ftclient = ftclient.OAuthFTClient()
                 import unicodedata
                 name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
-                return ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_SUGGS'],
+                return ftclient.query(sqlbuilder.SQL().insert(
+                                                        settings.FUSIONTABLES['TABLE_SUGGS'],
                                                         {'name': name,
                                                         'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
                                                         'sug_id': self.id,

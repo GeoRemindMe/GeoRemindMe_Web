@@ -50,7 +50,7 @@ class geosession(object):
             else:
                 if deleted:
                     response.delete_cookie(settings.COOKIE_NAME, path=settings.SESSION_COOKIE_PATH, domain=settings.SESSION_COOKIE_DOMAIN)
-                    response.delete_cookie('fbs_%s' % settings.OAUTH['facebook']['app_key'], path=settings.SESSION_COOKIE_PATH, domain=settings.SESSION_COOKIE_DOMAIN)
+                    response.delete_cookie('fbsr_%s' % settings.OAUTH['facebook']['app_key'], path=settings.SESSION_COOKIE_PATH, domain=settings.SESSION_COOKIE_DOMAIN)
                 elif cookieless:
                     request.session.put()
                 elif anonymous:

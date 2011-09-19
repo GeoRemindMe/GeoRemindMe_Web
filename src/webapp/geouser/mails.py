@@ -81,7 +81,7 @@ def send_confirm_mail(to=None, confirm_code=None, language='en'):
 
 def send_remind_pass_mail(to=None, remind_code=None, language='en'):
     def generate_remind_pass_link(to, remind_code):
-        url = _('<a href="%s">Password reminder link</a>') % generate_remind_pass_url(to, remind_code)
+        url = _(u'<a href="%s">Password reminder link</a>') % generate_remind_pass_url(to, remind_code)
         return url
 
     def generate_remind_pass_url(to, confirm_code):
@@ -99,8 +99,8 @@ def send_remind_pass_mail(to=None, remind_code=None, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _("Solicitud de nueva contraseña en GeoRemindMe!")
-    message.body = _("""
+    message.subject = _(u"Solicitud de nueva contraseña en GeoRemindMe!")
+    message.body = _(u"""
         Hemos recibido una petición de cambio de contraseña, para hacer el cambio tan solo \n
         tienes que acceder a esta página:\n
         %(url)s\n
@@ -113,7 +113,7 @@ def send_remind_pass_mail(to=None, remind_code=None, language='en'):
         """) % {
                     'url': generate_remind_pass_url(to, remind_code)
                 }
-    message.html = _("""
+    message.html = _(u"""
         <html><head></head><body>
         <p>
         Hemos recibido una petición de cambio de contraseña, para hacer el cambio tan 
@@ -142,8 +142,8 @@ def send_notification_follower(to, follower, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _("%s te está siguiendo ahora en Georemindme!") % follower
-    message.body = _("""
+    message.subject = _(u"%s te está siguiendo ahora en Georemindme!") % follower
+    message.body = _(u"""
         %(username)s te está siguiendo ahora, puedes ver su perfil en:\n
         %(user_profile)s\n
         \n
@@ -156,7 +156,7 @@ def send_notification_follower(to, follower, language='en'):
                     'username': follower.username,
                     'user_profile': follower.get_absolute_url
                 }
-    message.html = _("""
+    message.html = _(u"""
         <html><head></head><body>
         %(username)s te está siguiendo ahora, puedes ver su perfil en:<br>
         <a href="%(user_profile)s">%(user_profile)s</a><br>
@@ -179,8 +179,8 @@ def send_notification_suggestion_follower(to, suggestion, user, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _("%s ha guardado tu sugerencia: \"%s\" en GeoRemindMe!") % (user, suggestion.name)
-    message.body = _("""
+    message.subject = _(u"%s ha guardado tu sugerencia: \"%s\" en GeoRemindMe!") % (user, suggestion.name)
+    message.body = _(u"""
         El usuario %s(username)s ha guardado tu sugerencia '%(suggestion)s' en su mochila para no olvidarse de hacerla
         y poder compartirla con otros usuarios.\n
         \n
@@ -198,7 +198,7 @@ def send_notification_suggestion_follower(to, suggestion, user, language='en'):
                     'username': user.username,
                     'user_profile':user.get_absolute_url
                 }
-    message.html = _("""
+    message.html = _(u"""
         <html><head></head><body>
         <p>
         El usuario %s(username)s ha guardado tu sugerencia '%(suggestion)s' en su mochila para no olvidarse de hacerla
@@ -229,8 +229,8 @@ def send_notification_suggestion_comment(to, comment, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _("%s commented in your suggestion: %s at Georemindme") % (comment.user, comment.instance.name)
-    message.body = _("""
+    message.subject = _(u"%s commented in your suggestion: %s at Georemindme") % (comment.user, comment.instance.name)
+    message.body = _(u"""
         El usuario %s(username)s ha hecho el siguiente comentario en tu sugerencia '%(suggestion)s':
         %(msg)s\n
         \n
@@ -252,7 +252,7 @@ def send_notification_suggestion_comment(to, comment, language='en'):
                     'msg': comment.msg,
                     'suggestion_link': comment.instance.short_url,
                 }
-    message.html = _("""
+    message.html = _(u"""
         <html><head></head><body>
         <p>
         El usuario %s(username)s ha hecho el siguiente comentario en tu sugerencia '%(suggestion)s':
@@ -286,10 +286,10 @@ def send_notification_account_summary(to, user, followers, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _("Personas que han empezado a seguirte esta semana en Georemindme")
+    message.subject = _(u"Personas que han empezado a seguirte esta semana en Georemindme")
     names = '\n- '.join(str(follow) for follow in followers)
-    names_html = '<br>- '.join(("<a href=\"%(link)s\">%(username)s</a>") % {'username':str(follow),'link':str(follow.get_absolute_url)} for follow in followers)
-    message.body = _("""
+    names_html = '<br>- '.join((u"<a href=\"%(link)s\">%(username)s</a>") % {'username':str(follow),'link':str(follow.get_absolute_url)} for follow in followers)
+    message.body = _(u"""
         ¡Hola %(username)s!,\n
         Esta semana han empezado a seguirte %(num_followers)d personas.\n
         Aquí puede ver un listado:
@@ -303,7 +303,7 @@ def send_notification_account_summary(to, user, followers, language='en'):
                     'username':user.username,
                     'num_followers':len(followers)
                 }
-    message.html = _("""
+    message.html = _(u"""
         <html><head></head><body>
         ¡Hola %(username)s!,<br>
         Esta semana han empezado a seguirte %(num_followers)d personas.<br>
@@ -329,8 +329,8 @@ def send_notification_suggestion_summary(to, suggestions, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _("Resumen de la actividad en tus sugerencias - GeoRemindMe!")
-    message.body = _("""
+    message.subject = _(u"Resumen de la actividad en tus sugerencias - GeoRemindMe!")
+    message.body = _(u"""
         Aquí te dejamos un resumen de los comentarios, valoraciones, etc que han recibido tus sugerencias a lo largo de la semana\n
         %(suggestion)s\n
         \n
@@ -340,7 +340,7 @@ def send_notification_suggestion_summary(to, suggestions, language='en'):
         """) % {
                     'suggestion': suggestions,
                 }
-    message.html = _("""
+    message.html = _(u"""
         <html><head></head><body>
         <p>
         Aquí te dejamos un resumen de los comentarios, valoraciones, etc que han recibido tus sugerencias a lo largo de la semana<br>
