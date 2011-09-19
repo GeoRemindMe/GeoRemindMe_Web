@@ -560,16 +560,22 @@ def get_user_from_cookie(cookies, app_id=settings.OAUTH['facebook']['app_key'], 
     http://github.com/facebook/connect-js/. Read more about Facebook
     authentication at http://developers.facebook.com/docs/authentication/.
     """
-    cookie = cookies.get("fbs_" + app_id, "")
-    if not cookie: return None
-    args = dict((k, v[-1]) for k, v in cgi.parse_qs(cookie.strip('"')).items())
-    payload = "".join(k + "=" + args[k] for k in sorted(args.keys())
-                      if k != "sig")
-    sig = hashlib.md5(payload + app_secret).hexdigest()
-    expires = int(args["expires"])
-    if sig == args.get("sig") and (expires == 0 or time.time() < expires):
-        return args
-    else:
+    cookie = cookies.get("fbsr_" + app_id, "")
+    if not cookie: # cookie antigua
+        cookie = cookies.get("fbs_" + app_id, "")
+        if not cookie: return None
+        args = dict((k, v[-1]) for k, v in cgi.parse_qs(cookie.strip('"')).items())
+        payload = "".join(k + "=" + args[k] for k in sorted(args.keys())
+                          if k != "sig")
+        sig = hashlib.md5(payload + app_secret).hexdigest()
+        expires = int(args["expires"])
+        if sig == args.get("sig") and (expires == 0 or time.time() < expires):
+            return args
+        else:
+            return None
+    try:
+        return parse_signed_request(cookie)
+    except:
         return None
 
 def parse_signed_request(signed_request, app_secret=settings.OAUTH['facebook']['app_secret']):

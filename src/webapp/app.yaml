@@ -11,6 +11,9 @@ handlers:
 - url: /robots.txt
   static_files: static/robots.txt
   upload: static/robots.txt
+  
+- url: /sitemap.xml
+  script: sitemap.py  
 
 - url: /favicon.ico
   static_files: static/webapp/img/favicon.png

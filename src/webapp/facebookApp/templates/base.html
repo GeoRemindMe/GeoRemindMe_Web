@@ -18,9 +18,10 @@
       {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
     </title>
     <meta name="description" content="">
-<!--
-    <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/jquery-ui/jquery-ui-1.8.16.custom.css">
--->
+    <!--
+        <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/jquery-ui/jquery-ui-1.8.16.custom.css">
+    -->
+
     {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
         <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
         <script type="text/javascript" src="https://connect.facebook.net/en_US/all.js"></script>
@@ -30,11 +31,14 @@
         <script type="text/javascript" src="https://connect.facebook.net/en_US/all.js"></script>
         <script type="text/javascript" src="/static/common/js/common_facebookApp.min.js"></script>    
     {% endif %}
+    <script type="text/javascript" src="/static/common/js/jquery.cookies.2.2.0.min.js"></script>        
+    <script type="text/javascript" src="/static/facebookApp/js/main.js"></script>    
 
 
     <script type="text/javascript">
         {% include "urls.html" %}
         
+
         $(document).ready(function(){
             resizeIframe();
             $("#right-col").resize(function(){resizeIframe();});
@@ -99,27 +103,59 @@
     <div id="fb-root"></div>
     <div id="templates"></div>
 
-    <script>
+
+
+    <script type="text/javascript">
         {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
             DEBUG_mode=true;
         {% else %}
             DEBUG_mode=false;
         {% endif %}
-    
+        
+        
+        
+        permissions="{{permissions}}";     
+        {% if request.user.facebook_user.uid %}
+            user_uid={{request.user.facebook_user.uid}};
+        {% endif %}
+
         <!-- async loading of facebook js sdk  -->
         $(document).ready(function(){ 
-            facebookInit({
-				appId: '{{app_settings.appId}}', 
-				status : true, // check login status
-				cookie : true, // enable cookies to allow the server to access the session
-				xfbml  : true,  // parse XFBML
-				canvasName  : '{{app_settings.canvasName}}',
-                
-                {%if request.user.facebook_user.uid %} userIdOnServer  : {{request.user.facebook_user.uid}} {%endif%}
-            });
             
+            window.fbAsyncInit = function() {
+                facebookInit({
+                    appId: '{{app_settings.appId}}', 
+                    status : true, // check login status
+                    cookie : true, // enable cookies to allow the server to access the session
+                    xfbml  : true,  // parse XFBML
+                    canvasName  : '{{app_settings.canvasName}}',
+                    oauth  : true,
+                    
+                    {%if request.user.facebook_user.uid %} userIdOnServer  : {{request.user.facebook_user.uid}} {%endif%}
+                });
+                               
+                {% block callBackFBInit %}{% endblock %}
+            }
+            
+            
+            
+            
+            $("#right-col").resize(function(){
+                resizeIframe();
+            });
         });
         
+        (function() {
+            var e = document.createElement('script');
+            e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+            e.async = true;
+            document.getElementById('fb-root').appendChild(e);
+        }());
+        (function() {
+            var e = document.createElement('script');
+            e.src = "/static/facebookApp/js/main.js";
+            document.getElementById('fb-root').appendChild(e);
+        }());
         <!--  async loading of google analytics -->
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-19272923-3']);
