@@ -35,7 +35,7 @@ class FacebookMiddleware(object):
                 try:
                     request.facebook = {'uid': cookie['user_id'],
                                         'access_token': cookie['code'],
-                                        'client': FacebookClient(access_token=cookie['access_token'])
+                                        'client': FacebookClient(access_token=cookie['code'])
                                     }
                 except:
                     pass
