@@ -39,6 +39,8 @@
 -->
         <script type="text/javascript" src="/static/common/js/common_facebookApp.min.js"></script>    
     {% endif %}
+    <script type="text/javascript" src="/static/common/js/jquery.cookies.2.2.0.min.js"></script>        
+    <script type="text/javascript" src="/static/facebookApp/js/main.js"></script>    
 
 <!--
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
@@ -141,17 +143,13 @@
         {% else %}
             DEBUG_mode=false;
         {% endif %}
-    
-        function check_ext_perm(session,callback) {
-            var query = FB.Data.query('select email,offline_access,user_likes,user_interests,read_friendlists,user_hometown,publish_stream from permissions where uid='+ session.userID);
-            query.wait(function(rows) {
-                if(rows[0].publish_stream == 1) {
-                    callback(true);
-                } else {
-                    callback(false);
-                }
-            });
-        };
+        
+        
+        
+        permissions="{{permissions}}";     
+        {% if request.user.facebook_user.uid %}
+            user_uid={{request.user.facebook_user.uid}};
+        {% endif %}
 
         <!-- async loading of facebook js sdk  -->
         $(document).ready(function(){ 
@@ -167,7 +165,7 @@
                     
                     {%if request.user.facebook_user.uid %} userIdOnServer  : {{request.user.facebook_user.uid}} {%endif%}
                 });
-                
+                               
                 {% block callBackFBInit %}{% endblock %}
             }
             

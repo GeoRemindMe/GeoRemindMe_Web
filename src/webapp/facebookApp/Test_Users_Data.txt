@@ -27,13 +27,13 @@ Lisa
 ===================================
 georemindme-dev
 ===================================
-Dave // hhkaos on fixtures/dev_appserver.datastore
+Dave 
 {"id":"100002934954064","access_token":"170924166301288|50087daa4e8123d40825a850.0-100002934954064|ic9ysJn8fzcr50rfuNNPoz7LX9A",
 "login_url":
 https://www.facebook.com/platform/test_account_login.php?user_id=100002934954064&n=jYm1883fiBf4gEC
 "email":"sgsvehy_valtchanovwitz_1316166700@tfbnw.net","password":"caracola"}
 
-Donna
+Donna // hhkaos on fixtures/dev_appserver.datastore
 {"id":"100002909153953","access_token":"170924166301288|2a10ed2c1375e78173264ebf.0-100002909153953|C6grKGK7NMjVd2o1Jil8HeDPoB0",
 "login_url":
 https://www.facebook.com/platform/test_account_login.php?user_id=100002909153953&n=vwnpPWJQ1OIByuP

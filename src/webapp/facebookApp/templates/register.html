@@ -3,40 +3,56 @@
 
 {% block callBackFBInit %}
     
-    FB.getLoginStatus(function(response) {
-        {% if request.user.facebook_user.uid %}
-            console.log("estoy identificado en GeoRemindMe con {{request.user.username}} y tengo un usuario asociado a mi cuenta con uid "+{{request.user.facebook_user.uid}});
-            //Estamos identificados en GeoRemindMe
-            var userID={{request.user.facebook_user.uid}};
-            
-            if (response.authResponse) {
-                //Y también lo estamos en Facebook
-                //window.location="/fb/dashboard/"
-                console.log("logueado en facebook con el nombr que sale en ****, GeoRemindMe allows you to...")
+    if(grmLogged()){
+        if(haveLinkedAccount({{request.user.facebook_user.uid}})){
+            FB.getLoginStatus(function(response) {
+                if (response.status=="connected"){
+                    if(response.authResponse.userID!=user_uid)
+                        alert("UIDs incoherentes "+response.authResponse.userID+"!="+user_uid);
+                    else{
+                        console.log("Redirijo");
+                        //window.location="dashboard/";
+                    }
+                }
+                else{
+                    console.log("Pido login")
+                    $('.known-user').show();
+                    $('.login-btn').show()
+                }
+            });
+        }else{
+            console.log("Pido permisos")
+            $('.known-user').show();
+            $('.no-authorized').show()
+            $('.register-btn').show()
+        }
+    }
+    else{
+        //Mostramos las funcionalidades
+        $('#description').show();
+        
+        FB.getLoginStatus(function(response) {
+            if (response.status=="connected"){
+                if(hasPerms(response.authResponse)){
+                    console.log("Redirijo");
+                    //window.location="dashboard/";
+                }
+                else{
+                    console.log("Pido permisos")
+                    $('.known-user').show();
+                    $('.no-authorized').show()
+                    $('.register-btn').show()
+                }
             }
-        {%else%}
-            console.log("no estoy identificado en GeoRemindMe ");
-            //No estamos identificados en GeoRemindMe
-            if (response.authResponse) {
-                //Pero si estamos en FB 
-                check_ext_perm(response.authResponse, function(isworking) {
-                    //Comprobamos si tenemos permisos para la app de FB
-                   if(isworking) {
-                      //window.location="/fb/dashboard/"
-                      console.log("Tenemos permisos en FB y estamos identificados, pero no en GEO "+{{request.COOKIES.georemindme_session_cookie}})
-                      console.log("logueado en facebook con el nombre que sale en ****, GeoRemindMe allows you to...")
-                   } else {
-                      console.log("No estamos identificados en GeoRemindMe pero si en FB y no tenemos perms");
-                      //Mostramos mensaje conocido
-                   }
-                });
-            }else{
-                //Tampoco estamos identificados en FB
-                console.log("No estamos ni en Geo y en FB")
+            else{
+                console.log("Pido permisos")
+                $('.unknown-user').show();
+                $('.no-authorized').show()
+                $('.register-btn').show()
             }
-            //Sino tenemos permisos mostramos el msg de registrar
-        {%endif%}
-    });
+        });
+    }
+    
 
 {% endblock %}
 
@@ -115,35 +131,59 @@
     </style>
 {%endblock%}
 
-{%if request.COOKIES.georemindme_session_cookie and request.user.facebook_user %}
-    {% block redirect %}
-<!--
-        <meta http-equiv="REFRESH" content="0;url=/fb/dashboard/">
--->
 
-    {% endblock %}
-{% else %}
     
-    {% block title %}Welcome to GeoRemindMe{% endblock %}
-    {% block nav %} 
-        {% include "register_menu.html" %}
-    {% endblock %}
+{% block title %}Welcome to GeoRemindMe{% endblock %}
+{% block nav %} 
+    {% include "register_menu.html" %}
+{% endblock %}
 
-    {% block mainButton %}{% endblock %}
+{% block mainButton %}{% endblock %}
 
-    {% block goBack %}{%endblock%}
-    {% block body %}
+{% block goBack %}{%endblock%}
+{% block body %}
+   
     
-        
-        {%if request.user.email and not request.user.facebook_user %}
+        <div id="register-panel" style="font-size: 1.1em;">
+            <div id="description">
+                <h2>{% trans "GeoRemindMe te permite gestionar, valorar y compartir sugerencias geolocalizadas <em>usando la potencia de tus redes sociales favoritas</em>." %}</h2>
+
+                <p class="known-user clear" style="display:none">
+                    Buenas
+                    {% if request.user.username %} 
+                        {{request.user.username}}
+                    {% else %}
+                        {% if request.user.facebook_user %}
+                        
+                            <span><fb:name uid="{{request.user.facebook_user.uid}}" firstnameonly="true" useyou="false" linked="false"/></span>
+                        {% endif %}
+                    {% endif %}, nos alegra verte por aquí.
+                </p>
+                <p class="unknown-user clear" style="display:none">
+                    <span><fb:name uid="{{request.user.facebook_user.uid}}" firstnameonly="true" useyou="false" linked="false"/></span>, {% trans "utiliza GeoRemindMe para:" %}:
+                </p>
+                
+                <span id="description-list">                    
+                    <div id="slider-container">
+                        <div id="slider">
+                            <ul>
+                                <li><span class="slide-icon">{% trans "<strong>Pedir a tus contactos de Facebook, Twitter, etc. sugerencias</strong> y listas de sugerencias para tus viajes, descubrir nuevos restaurantes, etc..." %}</span></li>
+                                <li><span class="slide-icon">{% trans "Consultar <strong>sugerencias personalizadas</strong> en base a tus gustos y a tu localización" %}</span></li>
+                                <li><span class="slide-icon">{% trans "<strong>Search and filter</strong> suggestions from other people" %}.</span></li>
+                                <li><span class="slide-icon">{% trans "<strong>Sigue </strong> a otras personas con gustos similares a los tuyos" %}.</span></li>
+                                <li><span class="slide-icon">{% trans "<strong>Descarga o imprime</strong> listas de sugerencias y sobre rutas turísticas" %}.</span></li>
+                                <li><span class="slide-icon">{% trans "<strong>Guarda, comenta y valora</strong> las sugerencias de tus contactos" %}.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </span>
             
-                <div id="known-user" style="display:none">
-                    
-                    
-                    <p>
-                        Nos alegra verte por aquí, para poder empezar a usar la aplicación de Facebook
+                
+                <div class="no-authorized" style="display:none">
+                    <p> 
+                        Para poder empezar a usar la aplicación de Facebook
                         tienes que <a href="/login/facebook/?cls" target="_blank">autorizar a la aplicación</a> 
-                        para que pueda acceder a los siguientes datos:       
+                        para que pueda acceder a los siguientes datos:
                     </p>
                     <ul>
                         <li><strong>Lista de amigos</strong>: para poder avisarte cuando se creen una cuenta.</li>
@@ -153,62 +193,27 @@
                         <li><strong>Ciudad de origen</strong>: para avisarte cuando hagamos eventos en tu ciudad</li>
                         <li><strong>Publicar en tu muro</strong>: para darte la opción de compartir tus sugerencias</li>
                     </ul>
-                    <p>
-                        De todos modos queremos recordarte que si en cualquier momento quisieras, podrías desautorizar a la 
-                        aplicación desde tu configuración de GeoRemindMe! y desde la de Facebook.<br>
-                        Si tienes alguna duda al respecto estaremos encantados de ayudarte desde <a href="mailto:info@georemindme.com">info@georemindme.com</a>.
-                    </p>
                 </div>
-        {% else %}
-
-            <div id="unknown-user">
-                <div id="register-panel" style="font-size: 1.1em;">
-                    <div id="description">
-                        <h2>{% trans "GeoRemindMe allows you to manage, rate and share geolocated suggestions on <em>your favorite social networks</em>." %}</h2>
-                     
-                        <ul id="benefits">
-                            <li id="whatsup-icon">{% trans "<strong>Find</strong> cool stuff to do" %}.</li>
-                            <li id="explore-icon">{% trans "<strong>Discover</strong> and explore new places" %}.</li>
-                            <li id="reminder-icon">{% trans "<strong>Don't forget</strong> anything you wanted to do" %}.</li>
-                        </ul>
-
-
-                        <span id="description-list">
-                            
-                            <p><span><fb:name uid="{{request.user.facebook_user.uid}}" firstnameonly="true" useyou="false" linked="false"/></span>, {% trans "GeoRemindme allows you to:" %}:</p>
-                            <div id="slider-container">
-                                <div id="slider">
-                                    <ul>
-                                        <li><span class="slide-icon">{% trans "<strong>Share and receive suggestions</strong> from your friends, institutions, local shops, etc..." %}</span></li>
-                                        <li><span class="slide-icon">{% trans "Get <strong>personalized suggestions</strong> depending on what you like and were you are" %}</span></li>
-                                        <li><span class="slide-icon">{% trans "<strong>Search and filter</strong> suggestions from other people" %}.</span></li>
-                                        <li><span class="slide-icon">{% trans "<strong>Follow</strong> the users and the shops you are interested in" %}.</span></li>
-                                        <li><span class="slide-icon">{% trans "<strong>Download or print</strong> touristic routes and get around in the city" %}.</span></li>
-                                        <li><span class="slide-icon">{% trans "<strong>Rate and comment</strong> the suggestions" %}.</span></li>
-                                        <li><span class="slide-icon">{% trans "And in the future...we want you to get <strong>promos and vouchers</strong> to enjoy wherever you are" %}.</span></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                        </span>
-                    </div>
-                    
-                    <p class="left" style="clear:both;display:block;width:100%;text-align:left">
-                        {% if request.user.facebook_user.uid %}
-                            <strong>Personas que ya disfrutan de la aplicación</strong>
-                        {% else %}
-                            <strong>Regístrate haciendo clic en el siguiente botón:</strong>
-                        {% endif %}
-                        
-                    </p>
-                    <div class="left">
-                        
-                        <fb:login-button perms="{{permissions}}" show-faces="true"></fb:login-button>
-                        
-                    </div>
-                    
-                </div>
+                <p style="font-size: inherit; line-height: 1.5em;">
+                    Recuerda que en cualquier momento, puedes desautorizar a la 
+                    aplicación desde la sección de configuración de tu cuenta y desde Facebook.
+                </p>
+                <p>
+                    Si tienes alguna duda al respecto estaremos encantados de ayudarte desde 
+                    <a href="mailto:info@georemindme.com">info@georemindme.com</a>.
+                </p>
             </div>
-        {% endif %}
-    {%endblock%}
-{% endif %}
+            
+
+            <div class="login-btn clear" style="display:none">
+                <a class="hoverlink" href="/login/facebook/">Entrar</span>
+            </div>
+            <div class="register-btn clear" style="display:none">
+                <a class="hoverlink" href="/login/facebook/">Autorizar</span>
+            </div>
+            
+        </div>
+    
+    
+{%endblock%}
+
