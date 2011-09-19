@@ -118,7 +118,8 @@ def prefetch_refpropsEntity(entities, *props):
     ref_keys = [x[prop] for x, prop in fields]
     if len(ref_keys) > 0:
         ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
-    ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
+    else:
+        return []
     return ref_entities
 
 

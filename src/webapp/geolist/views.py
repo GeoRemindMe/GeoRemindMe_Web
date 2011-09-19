@@ -384,7 +384,7 @@ def follow_list_suggestion(request, id):
 
         :returns: True si se añadio, False si no tiene permisos
     '''
-    user = request.session['user']
+    user = request.user
     list = ListSuggestion.objects.get_by_id(id)
     follow = list.add_follower(user)
 
@@ -401,7 +401,6 @@ def get_all_public_list_suggestion(request, query_id=None, page=1):
         :returns: [query_id, [:class:`geolist.models.ListSuggestion`]
     '''
     lists = ListSuggestion.objects.get_all_public(query_id=query_id, page=page)
-
     return lists
 
 @login_required
@@ -412,7 +411,6 @@ def get_all_shared_list_suggestion(request):
         :returns: [:class:`geolist.models.ListSuggestion`]
     '''
     lists = ListSuggestion.objects.get_shared_list(request.user)
-
     return lists
 
 

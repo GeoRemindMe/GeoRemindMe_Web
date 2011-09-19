@@ -114,7 +114,6 @@ class CommentHelper(object):
     def load_comments_from_async(self, query_id, comments_async, querier):
         if querier is None:
             raise TypeError
-        comments_loaded = []
         comments_objects = []
         for comment in comments_async:
             comments_objects.append(comment)
