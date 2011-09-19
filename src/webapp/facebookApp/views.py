@@ -47,7 +47,6 @@ def login_panel(request):
                                            context_instance=RequestContext(request)
                                           )
             else: # setup del usuario completo
-                raise
                 try:
                     request.facebook['client'].authorize(request.user)
                     init_user_session(request, request.user, remember=True, is_from_facebook=True)
