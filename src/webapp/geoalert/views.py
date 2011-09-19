@@ -349,16 +349,15 @@ def add_suggestion(request, template='webapp/add_suggestion.html'):
     f = SuggestionForm();
     # tambien devolvemos las listas posibles
     from geolist.models import ListSuggestion
-    from georemindme.funcs import prefetch_refprops
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
-    lists = prefetch_refprops(lists, ListSuggestion.user)
     lists = [l.to_dict(resolve=False) for l in lists]
     return  render_to_response(template, {'f': f,
                                           'lists': lists,
                                           },
                                context_instance=RequestContext(request)
                                )
-    
+
+
 @login_required
 def save_suggestion(request, form, id=None):
     """ Añade una sugerencia
@@ -524,6 +523,7 @@ def share_on_facebook(request, suggestion_id, msg):
     except:
         return None
     return post_id
+
 
 @login_required
 def share_on_twitter(request, suggestion_id, msg):

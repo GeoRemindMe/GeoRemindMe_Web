@@ -175,7 +175,6 @@ def dashboard(request, template='webapp/dashboard.html'):
         :return: Solo devuelve errores si el proceso falla.
     """
     from forms import SocialUserForm
-    
     if request.user.username is None:
         if request.method == 'POST':
             f = SocialUserForm(request.POST, 
@@ -184,7 +183,6 @@ def dashboard(request, template='webapp/dashboard.html'):
                                            'username': request.user.username,
                                          }
                                )
-            
             if f.is_valid():
                 user = f.save(request.user)
                 if not user:
@@ -600,10 +598,17 @@ def get_avatar(request, username):
 def close_window(request):
     return render_to_response('webapp/close_window.html', {}, context_instance=RequestContext(request))
 
-@admin_required
+#@admin_required
 def update(request):
-    from google.appengine.ext.deferred import defer
-    defer(__update_users)  # mandar email de notificacion
+    #from google.appengine.ext.deferred import defer
+    #defer(__update_users)  # mandar email de notificacion
+    from geovote.models import VoteCounter
+    from geoalert.models import Event
+    from google.appengine.ext import db
+    counters = VoteCounter.all()
+    for v in counters:
+        v.instance_key = db.get(v.instance).key()
+        v.put()
     return HttpResponse('Updating users...')
 
 
@@ -624,3 +629,4 @@ def __update_users():
         if sc is None:
             sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
         db.put([profile, settings, sc, counters, sociallinks])
+

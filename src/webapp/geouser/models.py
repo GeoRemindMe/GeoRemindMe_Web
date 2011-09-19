@@ -147,7 +147,6 @@ class User(polymodel.PolyModel, HookedModel):
         from google.appengine.datastore import datastore_query
         # definir las consultas
         query_chrono = UserTimelineFollowersIndex.all().filter('followers =', self.key()).order('-created')
-        #query_chrono = db.GqlQuery('SELECT __key__ FROM UserTimelineFollowersIndex WHERE followers = :user ORDER BY created DESC', user=self.key())
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
         # recuperar cursores
         if query_id is not None and len(query_id)>=2:
@@ -162,20 +161,28 @@ class User(polymodel.PolyModel, HookedModel):
         timeline = []
         timeline_chrono = []
         activity_async = query_activity.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
+        chrono_async = query_chrono.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
+        _go_chrono = True
+        chrono = None
         for activity_timeline in activity_async:
-            chrono_async = query_chrono.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE-(len(timeline)+len(timeline_chrono))))
-            for chrono in chrono_async:
+            while _go_chrono:
                 if len(timeline) + len(timeline_chrono) >= TIMELINE_PAGE_SIZE:
+                    _go_chrono = False
+                    break
+                if chrono is None:
+                    try:
+                        chrono = chrono_async.next()
+                    except:
+                        _go_chrono = False
                         break
                 if chrono is not None and chrono.created > activity_timeline.modified:
                     timeline_chrono.append(chrono)
-                    cursor_chronology = query_chrono.cursor()
+                    chrono = None
                 else:
                     break
             timeline.append(activity_timeline)
             if len(timeline) + len(timeline_chrono) >= TIMELINE_PAGE_SIZE:
                 break
-            query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology) # avanzamos la consulta hasta el ultimo chronology añadido
         # generar timeline
         timeline_chrono = fetch_parents(timeline_chrono)
         timeline = prefetch_refprops(timeline, UserTimeline.user)
@@ -204,7 +211,7 @@ class User(polymodel.PolyModel, HookedModel):
                     } for activity_timeline in timeline]
         from operator import itemgetter
         timeline_sorted = sorted(timeline, key=itemgetter('modified'), reverse=True)
-        chronology = [[cursor_chronology, query_activity.cursor()], timeline_sorted] 
+        chronology = [[query_chrono.cursor(), query_activity.cursor()], timeline_sorted] 
         return chronology
 
     def get_notifications_timeline(self, query_id=None):

@@ -38,6 +38,7 @@ class ShardedCounter(db.Model):
         Contador sharded
         instance es el key del objeto al que apunta
     """
+    instance_key = db.ReferenceProperty(None)
     instance = db.TextProperty(required=True)
     count = db.IntegerProperty(required=True, default=0)
     
@@ -48,14 +49,13 @@ class ShardedCounter(db.Model):
             counts all the sharded counters
         ''' 
         from google.appengine.api import memcache
-        instance=str(instance)
-        total = memcache.get(instance)
+        total = memcache.get(str(instance))
         if total is None:
             total = 0
-            counters = cls.gql('WHERE instance = :1', instance)
+            counters = cls.all().filter('instance_key =', instance)
             for counter in counters:
                 total += counter.count
-            memcache.add(instance, str(total), 60)
+            memcache.add(str(instance), str(total), 60)
         return int(total)
     
     @classmethod
@@ -64,21 +64,20 @@ class ShardedCounter(db.Model):
             Increment the counter of given key
         '''
         from google.appengine.api import memcache
-        instance=str(instance)
         def increase():
             import random
             index = random.randint(0, SHARDS-1)#select a random shard to increases
-            shard_key = instance + str(index)#creates key_name
+            shard_key = str(instance) + str(index)#creates key_name
             counter = cls.get_by_key_name(shard_key)
             if not counter:#if counter doesn't exist, create a new one
-                counter = cls(key_name=shard_key, instance=instance)
+                counter = cls(key_name=shard_key, instance_key=instance)
             counter.count += count
             counter.put()
         db.run_in_transaction(increase)
         if count > 0:
-            memcache.incr(instance, initial_value=0)
+            memcache.incr(str(instance), initial_value=0)
         else:
-            memcache.decr(instance, initial_value=0)
+            memcache.decr(str(instance), initial_value=0)
     
 
 VISIBILITY_CHOICES = (

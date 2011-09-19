@@ -161,7 +161,6 @@ def _load_ref_instances(timelines):
     from models import User
     from models_acc import UserTimelineSuggest, UserTimeline
     from geovote.models import Comment, Vote
-    
     # cargo todas las referencias en instance
     instances = [t.instance for t in timelines if not isinstance(t.instance, User)]
     instances.extend(prefetch_refprops([t for t in timelines if isinstance(t, UserTimelineSuggest)], UserTimelineSuggest.list))
