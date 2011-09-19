@@ -235,7 +235,6 @@ def facebook_access_request(request, next=None):
 #        response, content = oauth2.httplib2.Http().request(url, method='POST', body=body)
 #        if response['status'] != 200:
 #            raise Exception(response)
-
         token = {   
                 'access_token' : content, 
             }

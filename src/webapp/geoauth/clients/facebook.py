@@ -59,6 +59,8 @@ class FacebookClient(object):
     _fb_id = None
     user = None
     consumer = None 
+    
+    _facebookInfo = None
         
     def __init__(self, access_token=None, user=None):
         if user is None and access_token is None:
@@ -118,10 +120,11 @@ class FacebookClient(object):
         - updated_time
         - id: 100002508846747
         """
-   
-        me = self.consumer.get_object("me")
-        self._fb_id = me['id']
-        return me
+        if self._facebookInfo is None:
+            me = self.consumer.get_object("me")
+            self._fb_id = me['id']
+            self._facebookInfo = me
+        return self._facebookInfo
     
     def get_friends(self, rpc=None):
         if self._fb_id is None:
@@ -162,8 +165,8 @@ class FacebookClient(object):
             else:
                 token.user = user
                 token.put()
+            self.consumer = GraphAPI(access_token=token.token_key)
             facebookInfo = self.get_user_info()
-            
             if user.facebook_user is None:
                 fbuser = FacebookUser.register(user=user, uid=facebookInfo['id'], 
                                                email=facebookInfo.get('email', None),
@@ -573,10 +576,7 @@ def get_user_from_cookie(cookies, app_id=settings.OAUTH['facebook']['app_key'], 
             return args
         else:
             return None
-    try:
-        return parse_signed_request(cookie)
-    except:
-        return None
+    return parse_signed_request(cookie)
 
 def parse_signed_request(signed_request, app_secret=settings.OAUTH['facebook']['app_secret']):
     """Return dictionary with signed request data."""
@@ -600,6 +600,20 @@ def parse_signed_request(signed_request, app_secret=settings.OAUTH['facebook']['
     if sig != expected_sig:
         raise ValueError("'signed_request' signature mismatch")
     else:
+        if 'code' in data:
+            args = {
+                    'client_id': settings.OAUTH['facebook']['app_key'],
+                    'client_secret': settings.OAUTH['facebook']['app_secret'], 
+                    'code': data['code'],
+                    'redirect_uri': ''
+                    }
+    
+            request = httplib2.Http()
+            response, content = request.request("https://graph.facebook.com/oauth/access_token?" + 
+                                            urllib.urlencode(args))
+            if response['status'] != 200:
+                raise GraphAPIError(content["error_code"],content["error_msg"])
+            data['oauth_token'] = content.split("=")[1]
         return data
   
 
@@ -620,6 +634,7 @@ def get_access_token(code, callback_url, client_id, client_secret):
     response, content = request.request("https://graph.facebook.com/oauth/access_token?" + 
                                             urllib.urlencode(args))
     if response['status'] != 200:
+        raise Exception(response)
         raise GraphAPIError(content["error_code"],content["error_msg"])
     result = content.split("=")[1]
     return result

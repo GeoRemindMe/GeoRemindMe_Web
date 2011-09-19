@@ -47,14 +47,14 @@ def login_panel(request):
                                            context_instance=RequestContext(request)
                                           )
             else: # setup del usuario completo
-                if request.facebook['client'].user is None:
-                    try:
-                        request.facebook['client'].authorize(request.user)
-                        init_user_session(request, request.user, remember=True, is_from_facebook=True)
-                    except:
-                        return render_to_response('register.html', {'permissions': __web_settings.OAUTH['facebook']['scope'] },
-                                                context_instance=RequestContext(request)
-                              )
+                raise
+                try:
+                    request.facebook['client'].authorize(request.user)
+                    init_user_session(request, request.user, remember=True, is_from_facebook=True)
+                except:
+                    return render_to_response('register.html', {'permissions': __web_settings.OAUTH['facebook']['scope'] },
+                                            context_instance=RequestContext(request)
+                          )
                 return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
     #Identificarse o registrarse
     return render_to_response('register.html', {'permissions': __web_settings.OAUTH['facebook']['scope'] },
