@@ -27,24 +27,33 @@ $(document).ready(function() {
 });
 
 function facebookInit(config) {
-  Config = config;
+    Config = config;
 
-  FB.init(config);
-  FB.Event.subscribe('auth.sessionChange', handleSessionChange);
+    FB.init(config);
+    FB.Event.subscribe('auth.sessionChange', handleSessionChange);
 
-  //FB.Canvas.setAutoResize();
-  //if (typeof resizeIframe != "undefined") resizeIframe();
-  // ensure we're always running on apps.facebook.com
-  // if we are opening http://localhost:8080/fb/ or
-  // georemindme.appspot.com/fb we will be redirected
-  if (window == top && DEBUG_mode==false) { goHome(); }
+    
+   
+    
+    
+    //FB.Canvas.setAutoResize();
+    //if (typeof resizeIframe != "undefined") resizeIframe();
+    // ensure we're always running on apps.facebook.com
+    // if we are opening http://localhost:8080/fb/ or
+    // georemindme.appspot.com/fb we will be redirected
+    if (window == top && DEBUG_mode==false) { goHome(); }
 }
 
 function handleSessionChange(response) {
+    console.log("SESION CHANGED")
     tmp=response;
+    console.log("response=")
     console.log(tmp)
+    console.log("Config.userIdOnServer=")
     console.log(Config.userIdOnServer);
+    console.log("tmp.session=")
     console.log(tmp.session);
+    console.log("tmp.session.uid=")
     console.log(tmp.session.uid);
     //This checks if the user have changed the session and if it
     //is incoherent or there ir no session we move to home

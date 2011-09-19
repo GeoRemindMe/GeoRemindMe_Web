@@ -21,7 +21,9 @@
 <!--
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 -->
+<!--
     <script type="text/javascript" src="https://connect.facebook.net/en_US/all.js"></script>
+-->
     
     
     {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
@@ -69,15 +71,7 @@
             }
         }
         
-        $(document).ready(function(){
-            
-            resizeIframe();
-            
-            $("#right-col").resize(function(){
-                resizeIframe();
-            });
-            
-        });
+        
     </script>
     {% block extra_js %}{%endblock%}
    
@@ -138,28 +132,64 @@
     <div id="fb-root"></div>
     <div id="templates"></div>
 
+<!--
     <script src="/static/facebookApp/js/main.js"></script>
-    <script>
+-->
+    <script type="text/javascript">
         {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
             DEBUG_mode=true;
         {% else %}
             DEBUG_mode=false;
         {% endif %}
     
+        function check_ext_perm(session,callback) {
+            var query = FB.Data.query('select email,offline_access,user_likes,user_interests,read_friendlists,user_hometown,publish_stream from permissions where uid='+ session.userID);
+            query.wait(function(rows) {
+                if(rows[0].publish_stream == 1) {
+                    callback(true);
+                } else {
+                    callback(false);
+                }
+            });
+        };
+
         <!-- async loading of facebook js sdk  -->
         $(document).ready(function(){ 
-            facebookInit({
-				appId: '{{app_settings.appId}}', 
-				status : true, // check login status
-				cookie : true, // enable cookies to allow the server to access the session
-				xfbml  : true,  // parse XFBML
-				canvasName  : '{{app_settings.canvasName}}',
-                
-                {%if request.user.facebook_user.uid %} userIdOnServer  : {{request.user.facebook_user.uid}} {%endif%}
-            });
             
+            window.fbAsyncInit = function() {
+                facebookInit({
+                    appId: '{{app_settings.appId}}', 
+                    status : true, // check login status
+                    cookie : true, // enable cookies to allow the server to access the session
+                    xfbml  : true,  // parse XFBML
+                    canvasName  : '{{app_settings.canvasName}}',
+                    oauth  : true,
+                    
+                    {%if request.user.facebook_user.uid %} userIdOnServer  : {{request.user.facebook_user.uid}} {%endif%}
+                });
+                
+                {% block callBackFBInit %}{% endblock %}
+            }
+            
+            
+            
+            
+            $("#right-col").resize(function(){
+                resizeIframe();
+            });
         });
         
+        (function() {
+            var e = document.createElement('script');
+            e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+            e.async = true;
+            document.getElementById('fb-root').appendChild(e);
+        }());
+        (function() {
+            var e = document.createElement('script');
+            e.src = "/static/facebookApp/js/main.js";
+            document.getElementById('fb-root').appendChild(e);
+        }());
         <!--  async loading of google analytics -->
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-19272923-3']);
