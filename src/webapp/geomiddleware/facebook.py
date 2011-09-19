@@ -33,11 +33,10 @@ class FacebookMiddleware(object):
             cookie = get_user_from_cookie(request.COOKIES)
             if cookie is not None:
                 try:
-                    request.facebook = {'uid': cookie['uid'],
-                                        'access_token': cookie['access_token'],
+                    request.facebook = {'uid': cookie['user_id'],
+                                        'access_token': cookie['code'],
                                         'client': FacebookClient(access_token=cookie['access_token'])
                                     }
-                    
                 except:
                     pass
         if not hasattr(request, 'facebook'):
