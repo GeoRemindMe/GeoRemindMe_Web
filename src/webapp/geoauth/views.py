@@ -258,7 +258,6 @@ def revocate_perms(request, provider):
     from models import OAUTH_Access
     token = OAUTH_Access.get_token_user(provider, request.user)
     if token is not None:
-        socialUser = eval('request.user.%s_user' % token.provider)
         import memcache
         memclient = memcache.mem.Client()
         rpc = memclient.delete_multi_async(['%sfbclientuser_%s' % (memcache.version, 
@@ -268,6 +267,7 @@ def revocate_perms(request, provider):
                                                               token.token_key
                                                           )]
                                            )
+        socialUser = eval('request.user.%s_user' % token.provider)
         if socialUser is not None:
             socialUser.delete()
         token.delete()
