@@ -18,7 +18,7 @@
 					
             {% endif %}
             
-            {% if not user.facebook_user or not user.has_perms_twitter %}
+            {% if not user.facebook_user %}
                 function onFocus(){
                     var networks=["twitter","facebook"];
                     for (i=0; i<networks.length ; i++){

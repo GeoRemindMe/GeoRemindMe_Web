@@ -46,7 +46,7 @@
                 <strong>Comprueba ahora<sup>(1)</sup> cuales de tus amigos ya están en GeoRemindMe!</strong>:
             </p>
             <ul id="link-social-accounts">
-            {% if not user.has_perms_twitter %}
+            {% if not user.twitter_user %}
                 <li><a id="twitter" href="/ext/twitter/contacts/" target="_blank"><strong>Buscar ahora</strong> entre las personas que sigo en Twitter</a></li>
             {% endif %}
             {% if not user.facebook_user %}

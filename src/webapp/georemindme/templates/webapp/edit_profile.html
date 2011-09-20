@@ -40,7 +40,7 @@
                             {% if user.facebook_user %}
                                 <option value="facebook" {% if user.profile.sync_avatar_with = "facebook" %} selected="selected"{% endif %}>Facebook</option>
                             {% endif%}
-                            {% if user.has_perms_twitter or user.twitter_user %}
+                            {% if user.twitter_user %}
                                 <option value="twitter" {% if user.profile.sync_avatar_with = "twitter" %} selected="selected"{% endif %}>Twitter</option>
                             {% endif %}
                             <option {% if user.profile.sync_avatar_with = "gravatar" %} selected="selected"{% endif %} value="gravatar">Gravatar</option>

@@ -10,18 +10,18 @@
                     if(response.authResponse.userID!=user_uid)
                         alert("UIDs incoherentes "+response.authResponse.userID+"!="+user_uid);
                     else{
-                        console.log("Redirijo");
-                        //window.location="dashboard/";
+                        //console.log("Redirijo");
+                        window.location="dashboard/";
                     }
                 }
                 else{
-                    console.log("Pido login")
+                    //console.log("Pido login")
                     $('.known-user').show();
                     $('.login-btn').show()
                 }
             });
         }else{
-            console.log("Pido permisos")
+            //console.log("Pido permisos")
             $('.known-user').show();
             $('.no-authorized').show()
             $('.register-btn').show()
@@ -34,18 +34,18 @@
         FB.getLoginStatus(function(response) {
             if (response.status=="connected"){
                 if(hasPerms(response.authResponse)){
-                    console.log("Redirijo");
-                    //window.location="dashboard/";
+                    //console.log("Redirijo");
+                    window.location="dashboard/";
                 }
                 else{
-                    console.log("Pido permisos")
+                    //console.log("Pido permisos")
                     $('.known-user').show();
                     $('.no-authorized').show()
                     $('.register-btn').show()
                 }
             }
             else{
-                console.log("Pido permisos")
+                //console.log("Pido permisos")
                 $('.unknown-user').show();
                 $('.no-authorized').show()
                 $('.register-btn').show()
@@ -162,7 +162,7 @@
                         
                             <span><fb:name uid="{{request.user.facebook_user.uid}}" firstnameonly="true" useyou="false" linked="false"/></span>
                         {% endif %}
-                    {% endif %}, nos alegra verte por aquí.
+                    {% endif %}{% trans ", nos alegra verte por aquí!.<p>Ahora puedes utilizar la aplicación de GeoRemindMe! en Facebook para:</p>" %}
                 </p>
                 <p class="unknown-user clear" style="display:none">
                     <span><fb:name uid="{{request.user.facebook_user.uid}}" firstnameonly="true" useyou="false" linked="false"/></span>, {% trans "utiliza GeoRemindMe para:" %}:
@@ -210,10 +210,10 @@
             
 
             <div class="login-btn clear" style="display:none">
-                <a class="btn" href="/login/facebook/">Entrar</a>
+                <a class="btn" href="/login/facebook/?callback_url=http://apps.facebook.com/georemindme" target="_blank">Entrar</a>
             </div>
             <div class="register-btn clear" style="display:none">
-                <a class="btn" href="/login/facebook/">Autorizar</a>
+                <a class="btn" href="/login/facebook/?callback_url=http://apps.facebook.com/georemindme">Autorizar</a>
             </div>
             
         </div>

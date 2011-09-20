@@ -45,22 +45,16 @@
             
             <p>
                 No queremos ser <em>otra red social más</em>; sino una herramienta de enlace entre tus redes actuales para gestionar tus recomendaciones.<br>
-                Por ello, para una mejor experiencia puede autorizarnos para:
+                Por ello, para ofrecerte una mejor experiencia puedes autorizarnos para que puedas utilizar la potencia de tus redes desde GeoRemindMe!
             </p>
-            <ul>
-                <li><strong>Identificación</strong>: si quieres que no te pidamos que te identifiques si ya estás identificado en otra red.</li>
-                <li><strong>Comunicación</strong>: si quieres que tus sugerencias lleguen a tus amigos, followers, etc. y para poder sugerirte conocidos tuyos a los que podrías seguir para no perderte sus sugerencias.</li>
-            </ul>
-            <fb:login-button perms="{{permissions}}" show-faces="true"></fb:login-button>
             <table>
                 <tr id="head">
                     <td>Red</td>
-                    <td>Identificación</td>
-                    <td>Comunicaciones</td>
+                    <td>Estado</td>
                 </tr>
                 <tr>
                     <td><span id="facebook-icon">Facebook</span></td>
-                    {% if not user.has_perms_facebook and not user.facebook_user%}
+                    {% if not user.facebook_user%}
                         <td>
                             <a href="/login/facebook/?cls" target="_blank">Autorizar</a> 
                         </td>
@@ -69,30 +63,14 @@
                             <a href="/oauth/revocate/facebook" target="_blank">Revocar</a> (<a href="{{user.facebook_user.profile_url}}">{{user.facebook_user.realname}}</a>)
                         </td>
                     {% endif %}
-                    {% if not user.facebook_user %}
-                        <td>
-                            <a href="http://apps.facebook.com/georemindme" target="_blank">Instalar App.</a> 
-                        </td>
-                    {% else %}
-                        <td>
-                            <a href="http://www.facebook.com/settings?tab=applications" target="_blank">Desinstalar App FB.</a> (<a href="{{user.facebook_user.profile_url}}">{{user.facebook_user.realname}}</a>)
-                        </td>
-                    {% endif %}
                 </tr>
                 <tr>
                     <td><span id="twitter-icon">Twitter</span> </td>
                     <td>
-                        {% if not user.has_perms_twitter and not user.twitter_user %}
+                        {% if not user.twitter_user %}
                             <a href="/login/twitter/?cls" target="_blank">Autorizar</a> 
                         {% else %}
                             <a href="/oauth/revocate/twitter" target="_blank">Revocar permisos (@{{user.twitter_user.username}})</a>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if not user.twitter_user %}
-                            <a href="/ext/twitter/perms" target="_blank">Autorizar</a> 
-                        {% else %}
-                            <a href="http://twitter.com/settings/applications" target="_blank">Revocar permisos (@{{user.twitter_user.username}})</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -104,16 +82,6 @@
                         {% else %}
                             <a href="/oauth/revocate/google" target="_blank">Revocar</a>
                         {% endif %}
-                    </td>
-                    <td>
-                        <em>Esperando la API de Google+</em>
-<!--
-                        {% if not user.google_user.has_perms %}
-                            <a href="/ext/google/contacts?cls" target="_blank">Autorizar</a> 
-                        {% else %}
-                            <a href=""/oauth/revocate/google" target="_blank">Revocar</a>
-                        {% endif %}
--->
                     </td>
                 </tr>
             </table>
