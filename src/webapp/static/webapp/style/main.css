@@ -285,6 +285,7 @@ background: linear-gradient(left, rgba(238,238,238,1) 0%,rgba(254,254,254,1) 50%
 #logo-link #logo{
     width:228px;
     height:42px;
+    float:none;
 }
 
 #header-nav {
