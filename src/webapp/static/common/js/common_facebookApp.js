@@ -2213,10 +2213,10 @@ function facebookInit(config) {
 
 function handleSessionChange(response) {
     tmp=response;
-    console.log(tmp)
-    console.log(Config.userIdOnServer);
-    console.log(tmp.session);
-    console.log(tmp.session.uid);
+    //~ console.log(tmp)
+    //~ console.log(Config.userIdOnServer);
+    //~ console.log(tmp.session);
+    //~ console.log(tmp.session.uid);
     //This checks if the user have changed the session and if it
     //is incoherent or there ir no session we move to home
     if ((Config.userIdOnServer && !response.session) ||

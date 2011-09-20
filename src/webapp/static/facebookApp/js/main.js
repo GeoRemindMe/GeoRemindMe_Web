@@ -44,16 +44,16 @@ function facebookInit(config) {
 }
 
 function handleSessionChange(response) {
-    console.log("SESION CHANGED")
+    //~ console.log("SESION CHANGED")
     tmp=response;
-    console.log("response=")
-    console.log(tmp)
-    console.log("Config.userIdOnServer=")
-    console.log(Config.userIdOnServer);
-    console.log("tmp.session=")
-    console.log(tmp.session);
-    console.log("tmp.session.uid=")
-    console.log(tmp.session.uid);
+    //~ console.log("response=")
+    //~ console.log(tmp)
+    //~ console.log("Config.userIdOnServer=")
+    //~ console.log(Config.userIdOnServer);
+    //~ console.log("tmp.session=")
+    //~ console.log(tmp.session);
+    //~ console.log("tmp.session.uid=")
+    //~ console.log(tmp.session.uid);
     //This checks if the user have changed the session and if it
     //is incoherent or there ir no session we move to home
     if ((Config.userIdOnServer && !response.session) ||
@@ -135,7 +135,7 @@ function loginApp(){
                 //Redireccionamos
             });
         } else {
-            console.log('User cancelled login or did not fully authorize.');
+            //~ console.log('User cancelled login or did not fully authorize.');
         }
     }, {scope: permissions});
 }
