@@ -813,7 +813,11 @@ function saveSuggestion(){
             tags: $('#id_tags').val()
         };
         if($('#date [type="checkbox"]').is(':checked')==false){
+<<<<<<< HEAD
+            //console.log("Entro por el checkbox no marcado");
+=======
             //~ console.log("Entro por el checkbox no marcado");
+>>>>>>> 91748379449d9c7fb73bdda0275f9a849120d5f1
             tmp=$('#date [type="checkbox"]');
             splittedDate=$('#start-date').val().split("/")
             params['starts_month']=splittedDate[0]
@@ -1001,8 +1005,13 @@ function getEventPlace(){
             for (var i = 0; i < results.length; i++) {
                 var place = results[i];
                 //~ createMarker(results[i]); 
+<<<<<<< HEAD
+                if(results[i].reference==poi_reference)
+                    //console.log(results[i])
+=======
                 //~ if(results[i].reference==poi_reference)
                     //~ console.log(results[i])
+>>>>>>> 91748379449d9c7fb73bdda0275f9a849120d5f1
             }
         }
     });
