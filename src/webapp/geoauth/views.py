@@ -222,11 +222,10 @@ def facebook_access_request(request, next=None):
         from clients.facebook import get_access_token
         OAUTH = settings.OAUTH
         content = get_access_token(code, 
-                                   '',
+                                   OAUTH['facebook']['callback_url'],
                                    OAUTH['facebook']['app_key'],
                                    OAUTH['facebook']['app_secret'], 
                                    )
-        OAUTH['facebook']['callback_url']
 #        url = OAUTH['facebook']['access_token_url']+'?redirect_uri=%s' % OAUTH['facebook']['callback_url']
 #        body = {
 #                'client_id': OAUTH['facebook']['app_key'],
@@ -265,9 +264,13 @@ def revocate_perms(request, provider):
                                                   ),
                                       '%sfbclienttoken_%s' % (memcache.version, 
                                                               token.token_key
-                                                          )]
+                                                          ),
+                                      '%ssession%s' % (memcache.version,
+                                                       request.session.session_id
+                                                       ),
+                                                    ]
                                            )
-        socialUser = eval('request.user.%s_user' % token.provider)
+        socialUser = getattr(request.user, '%s_user' % token.provider)
         if socialUser is not None:
             socialUser.delete()
         token.delete()

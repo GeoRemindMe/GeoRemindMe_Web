@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+
+<!-- NO COPY & PASTE!! -->
+
 {% load i18n %}
 {% load tags %}
 
@@ -6,6 +9,7 @@
 
 {% block extra_js %}
     <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 {%endblock%}
 
 {% block goBack %}{%endblock%}
@@ -130,7 +134,7 @@
         
         <hr>
         <div id="desinstall">
-            <a href="http://www.facebook.com/settings?tab=applications">Desinstalar la aplicación</a> | 
+            <a href="http://www.facebook.com/settings?tab=applications">Desinstalar la aplicación</a> 
 <!--
             <a href="">Cancelar mi cuenta en GeoRemindMe</a>
 -->
