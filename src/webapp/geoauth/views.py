@@ -258,8 +258,18 @@ def revocate_perms(request, provider):
     from models import OAUTH_Access
     token = OAUTH_Access.get_token_user(provider, request.user)
     if token is not None:
+        import memcache
+        memclient = memcache.mem.Client()
+        rpc = memclient.delete_multi_async(['%sfbclientuser_%s' % (memcache.version, 
+                                                  request.user.id
+                                                  ),
+                                      '%sfbclienttoken_%s' % (memcache.version, 
+                                                              token.token_key
+                                                          )]
+                                           )
         socialUser = eval('request.user.%s_user' % token.provider)
         if socialUser is not None:
             socialUser.delete()
         token.delete()
+        rpc.get_result()
     return HttpResponseRedirect(reverse('geouser.views.close_window'))
