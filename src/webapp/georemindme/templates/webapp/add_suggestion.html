@@ -34,9 +34,9 @@
                                     },
                                     context: $(this),
                                     success: function(data){
-                                        console.log(data);
+                                        //console.log(data);
                                         if(data[networks[i]]){
-                                            console.log(networks[i]);
+                                            //console.log(networks[i]);
                                             showMessage("¡Genial! ya puedes empezar a disfrutar de todas las ventajas","success");
                                             $('li[data-network='+networks[i]+']').removeClass('inactive')
                                             $('li[data-network='+networks[i]+'] span').removeClass(''+networks[i]+'-inactive').addClass(''+networks[i]+'-active')
