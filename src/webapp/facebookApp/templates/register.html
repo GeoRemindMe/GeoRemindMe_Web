@@ -75,6 +75,9 @@
             text-align: center;
             line-height:1.5em;
         }
+        .no-authorized{
+            line-height: 2em;
+        }
 
         ul#benefits {
             height: 130px;
@@ -98,7 +101,7 @@
 
         ul#benefits li {
             float: left;
-            list-style: none outside none;
+            list-style: square outside none;
             margin: 0;
             padding: 80px 8px 0;
             text-align: center;
@@ -107,7 +110,7 @@
         #description ul li, #description-list ul li {
             display: list-item;
             font-weight: normal;
-            list-style: none;
+            list-style: square outside none;
             margin-right: 10px;
         }
         
@@ -126,6 +129,10 @@
         }
         strong, dfn {
             font-weight: bold;
+        }
+        a.btn{
+            color:white;
+            text-decoration:none
         }
 
     </style>
@@ -203,10 +210,10 @@
             
 
             <div class="login-btn clear" style="display:none">
-                <a class="hoverlink" href="/login/facebook/">Entrar</span>
+                <a class="btn" href="/login/facebook/">Entrar</a>
             </div>
             <div class="register-btn clear" style="display:none">
-                <a class="hoverlink" href="/login/facebook/">Autorizar</span>
+                <a class="btn" href="/login/facebook/">Autorizar</a>
             </div>
             
         </div>
