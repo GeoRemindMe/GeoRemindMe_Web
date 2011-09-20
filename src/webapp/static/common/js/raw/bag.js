@@ -278,7 +278,7 @@ $(document).ready(function(){
             console.log("No desmarcamos porque val="+$(this).val());
         }else{
             $(this).parent().find('.anytime [type="checkbox"]').attr('checked',false);
-            console.log("Desmarcamos porque val="+$(this).val());
+            //~ console.log("Desmarcamos porque val="+$(this).val());
         }
         tmp=$(this)
     })
@@ -669,7 +669,7 @@ function set_editable_fields(objID){
          settings['submitdata']=get_suggestion_id(this);
          //Guardamos el valor modificado en una var. temporal
          tmp=$(this).find("input").val();
-         console.log(tmp)
+         //~ console.log(tmp)
          asd=this
     }
     $('.editable_list_name').editable('/ajax/suggestion/list/modify/', name_field);

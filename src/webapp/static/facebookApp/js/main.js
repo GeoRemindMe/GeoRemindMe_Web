@@ -44,8 +44,6 @@ function facebookInit(config) {
 }
 
 function handleSessionChange(response) {
-
-    tmp=response;
     //This checks if the user have changed the session and if it
     //is incoherent or there ir no session we move to home
     if ((Config.userIdOnServer && !response.session) ||
@@ -127,7 +125,7 @@ function loginApp(){
                 //Redireccionamos
             });
         } else {
-            console.log('User cancelled login or did not fully authorize.');
+            //~ console.log('User cancelled login or did not fully authorize.');
         }
     }, {scope: permissions});
 }

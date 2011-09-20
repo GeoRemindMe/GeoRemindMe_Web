@@ -2212,8 +2212,6 @@ function facebookInit(config) {
 }
 
 function handleSessionChange(response) {
-
-    tmp=response;
     //This checks if the user have changed the session and if it
     //is incoherent or there ir no session we move to home
     if ((Config.userIdOnServer && !response.session) ||
