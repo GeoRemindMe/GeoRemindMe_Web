@@ -109,7 +109,7 @@ def login_facebook(request):
         :return: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
     """
     from geoauth.views import facebook_authenticate_request
-    return facebook_authenticate_request(request)
+    return facebook_authenticate_request(request, callback_url=request.GET['callback_url'] if 'callback_url' in request.GET else None)
 
 
 def login_twitter(request):

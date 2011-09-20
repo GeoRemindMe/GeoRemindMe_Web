@@ -18,7 +18,7 @@ def new_suggestion(sender, **kwargs):
     params= {
                 "name": "Ver detalles de la sugerencia",
                 "link": __web_settings.WEB_APP+"suggestion/"+sender.slug,
-                "caption": "Destalles del sitio (%(sitio)s), comentarios, etc." % {'sitio':sender.poi.name},
+                "caption": "Detalles del sitio (%(sitio)s), comentarios, etc." % {'sitio':sender.poi.name},
                 #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
                 #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
             }
