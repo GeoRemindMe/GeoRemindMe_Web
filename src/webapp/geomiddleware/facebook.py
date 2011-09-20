@@ -6,17 +6,17 @@ from geoauth.clients.facebook import get_user_from_cookie, parse_signed_request,
 
 class FacebookCSRFMiddleware(object):
     def process_request(self, request):
-        if 'signed_request' in request.REQUEST:
-            try:
+        try:
+            if 'signed_request' in request.REQUEST:
                 data = parse_signed_request(request.REQUEST['signed_request'])
                 request.method = 'GET'
                 request.csrf_processing_done = True
-            except:
-                pass
-        else:
-            cookie = get_user_from_cookie(request.COOKIES)
-            if cookie is not None:
-                request.csrf_processing_done = True
+            else:
+                cookie = get_user_from_cookie(request.COOKIES)
+                if cookie is not None:
+                    request.csrf_processing_done = True
+        except:
+            pass
         request.csrf_processing_done = False
 
 
@@ -25,21 +25,19 @@ class FacebookMiddleware(object):
         if 'signed_request' in request.REQUEST:
             data = parse_signed_request(request.REQUEST['signed_request'])
             if 'oauth_token' in data:
-                
                 request.facebook = {'uid': data['user_id'],
                                     'access_token': data['oauth_token'],
                                     'client': FacebookClient(access_token=data['oauth_token'])
                                     }
         if not hasattr(request, 'facebook'):
-            cookie = get_user_from_cookie(request.COOKIES)
-            if cookie is not None:
                 try:
-                    request.facebook = {'uid': cookie['user_id'],
+                    cookie = get_user_from_cookie(request.COOKIES)
+                    if cookie is not None:
+                        request.facebook = {'uid': cookie['user_id'],
                                         'access_token': cookie['oauth_token'],
                                         'client': FacebookClient(access_token=cookie['oauth_token'])
                                     }
                 except:
-                    raise
                     pass
         if not hasattr(request, 'facebook'):
             from facebookApp.watchers import disconnect_all
