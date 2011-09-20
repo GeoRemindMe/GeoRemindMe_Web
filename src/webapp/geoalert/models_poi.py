@@ -415,6 +415,8 @@ class Place(POI):
             from georemindme.models_utils import _Do_later_ft
             later = _Do_later_ft(instance_key=self.key())
             later.put()
+            from google.appengine.ext import deferred
+            raise deferred.PermanentTaskFailure()
             
     def to_dict(self):
         return {'id': self.id,
