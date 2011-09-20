@@ -175,8 +175,9 @@ class FacebookClient(object):
                                                access_token=self.consumer.access_token)
             else:
                 user.facebook_user.update(
+                             uid=facebookInfo['id'],
                              realname = facebookInfo['name'],
-                             profile_url=facebookInfo["link"]
+                             profile_url=facebookInfo["link"],
                             )
             self.user = user
             self.token  = token
