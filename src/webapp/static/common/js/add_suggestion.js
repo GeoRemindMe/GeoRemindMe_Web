@@ -813,11 +813,8 @@ function saveSuggestion(){
             tags: $('#id_tags').val()
         };
         if($('#date [type="checkbox"]').is(':checked')==false){
-<<<<<<< HEAD
-            //console.log("Entro por el checkbox no marcado");
-=======
+
             //~ console.log("Entro por el checkbox no marcado");
->>>>>>> 91748379449d9c7fb73bdda0275f9a849120d5f1
             tmp=$('#date [type="checkbox"]');
             splittedDate=$('#start-date').val().split("/")
             params['starts_month']=splittedDate[0]
@@ -1879,7 +1876,7 @@ $.fn.selection = function(start, end) {
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Requires jQuery Autocomplete plugin by Jörn Zaefferer - see http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/
+ * Requires jQuery Autocomplete plugin by Jï¿½rn Zaefferer - see http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/
  * jquery.autocomplete.js requires a minor modification for geo_autocomplete to work, as shown in /lib/jquery.autocomplete_geomod.js
  * 
  */
