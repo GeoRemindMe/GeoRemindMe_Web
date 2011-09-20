@@ -28,11 +28,11 @@
 
         
         <span class="action-bar">
-            {% if reques.user.is_authenticated %}
+            {% if request.user.is_authenticated %}
                 | <span class="focusInput hoverlink comment">Comentar</span> 
             {% endif %}
             | <a href="{% url2 in_facebook view_list obj.instance.id %}" class="hoverlink details"><img src="/static/common/img/transparent.gif" />Ver lista</a>  
-            {% if obj.instance.user.username != request.user.username and reques.user.is_authenticated %}            
+            {% if obj.instance.user.username != request.user.username and request.user.is_authenticated %}            
                 | {{obj.has_follower}},
                 <span title="Guardar en favoritos"  class="remember-forget" value="{{obj.instance.id}}" type="list" {%if obj.user_follower%}remember="true"{%endif%}>
                     <span class="remember">Guardar</span>

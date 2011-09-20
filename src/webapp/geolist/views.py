@@ -493,7 +493,7 @@ def share_on_facebook(request, id, msg):
     params= {
                 "name": "Ver detalles de la sugerencia",
                 "link": list.short_url if list.short_url is not None else '%s%s' % (environ['HTTP_HOST'], list.get_absolute_url()),
-                #"caption": "Destalles del sitio (%(sitio)s), comentarios, etc." % {'sitio': list.poi.name},
+                #"caption": "Detalles del sitio (%(sitio)s), comentarios, etc." % {'sitio': list.poi.name},
                 #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
                 #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
             }

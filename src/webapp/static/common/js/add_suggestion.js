@@ -813,7 +813,7 @@ function saveSuggestion(){
             tags: $('#id_tags').val()
         };
         if($('#date [type="checkbox"]').is(':checked')==false){
-            console.log("Entro por el checkbox no marcado");
+            //console.log("Entro por el checkbox no marcado");
             tmp=$('#date [type="checkbox"]');
             splittedDate=$('#start-date').val().split("/")
             params['starts_month']=splittedDate[0]
@@ -1002,7 +1002,7 @@ function getEventPlace(){
                 var place = results[i];
                 //~ createMarker(results[i]); 
                 if(results[i].reference==poi_reference)
-                    console.log(results[i])
+                    //console.log(results[i])
             }
         }
     });

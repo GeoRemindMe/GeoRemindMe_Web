@@ -74,7 +74,8 @@ def new_suggestion(sender, **kwargs):
     p = db.put_async([timeline, timelinePublic])
     sender.user.counters.set_suggested()
     if sender._is_public():
-        sender.insert_ft()
+        from google.appengine.ext.deferred import defer
+        defer(sender.insert_ft)
     p.get_result()
 suggestion_new.connect(new_suggestion)
 
@@ -143,7 +144,8 @@ def deleted_privateplace(sender, **kwargs):
 def new_place(sender, **kwargs):
     #timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=450)
     #timeline.put()
-    sender.insert_ft()
+    from google.appengine.ext.deferred import defer
+    defer(sender.insert_ft)
 place_new.connect(new_place)
 
 

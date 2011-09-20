@@ -120,7 +120,9 @@ class FacebookUser(SocialUser):
         user_social_new.send(sender=ufacebook)
         return ufacebook
     
-    def update(self, realname, profile_url):
+    def update(self, realname, profile_url, uid=None):
+        if uid is not None:
+            self.uid = uid
         self.realname= realname
         self.profile_url = profile_url
         self.put()

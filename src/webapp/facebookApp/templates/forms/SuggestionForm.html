@@ -1,6 +1,6 @@
 {% load tags %}
 {% load i18n %}
-<div class="help-icon"><img src="/static/facebookApp/img/help.png" alt="Help" id="help-add-suggestion"></div>
+<div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-add-suggestion"></div>
 <form id="add-suggestion-form" action="javascript: return false;" >
 <!--
         name = forms.CharField(required=True)
@@ -165,7 +165,7 @@
                             <li data-network="facebook"><span class="facebook-inactive request-access" id="perms-facebook" title="Activar permisos para comunicarse con Facebook">&nbsp;</span></li>
                         {% endif %}
                         
-                        {% if user.has_perms_twitter %}
+                        {% if user.twitter_user %}
                             <!--Tenemos permiso para enviar la sugerencia a Twitter -->
                             <li data-network="twitter"><span class="twitter-active" title="Enviar sugerencia a mi cuenta de Twitter">&nbsp;</span></li>
                         {% else %}
@@ -202,7 +202,7 @@
     </div>
 {% endif %}
 
-{% if not user.has_perms_twitter %}
+{% if not user.twitter_user %}
     <div class="help-txt" style="display:none" id="perms-twitter-text" title="Configurar la cuenta de Twitter">
         <p>Configura tu cuenta de Twitter y obtén las siguientes ventajas:</p>
         <ul>

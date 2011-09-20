@@ -570,10 +570,11 @@ class Suggestion(Event, Visibility, Taggable):
                                                        )
                                )
             except:  # Si falla, se guarda para intentar añadir mas tarde
-                raise
                 from georemindme.models_utils import _Do_later_ft
                 later = _Do_later_ft(instance_key=self.key())
                 later.put()
+                from google.appengine.ext import deferred
+                raise deferred.PermanentTaskFailure()
     
     def __str__(self):
         return unicode(self.name).encode('utf-8')

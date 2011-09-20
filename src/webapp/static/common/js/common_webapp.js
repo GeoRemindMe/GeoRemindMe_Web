@@ -906,8 +906,6 @@ load:function(c){c=this._getIndex(c);var h=this,i=this.options,j=this.anchors.eq
 url:function(c,h){this.anchors.eq(c).removeData("cache.tabs").data("load.tabs",h);return this},length:function(){return this.anchors.length}});b.extend(b.ui.tabs,{version:"1.8.11"});b.extend(b.ui.tabs.prototype,{rotation:null,rotate:function(c,h){var i=this,j=this.options,n=i._rotate||(i._rotate=function(p){clearTimeout(i.rotation);i.rotation=setTimeout(function(){var l=j.selected;i.select(++l<i.anchors.length?l:0)},c);p&&p.stopPropagation()});h=i._unrotate||(i._unrotate=!h?function(p){p.clientX&&
 i.rotate(null)}:function(){t=j.selected;n()});if(c){this.element.bind("tabsshow",n);this.anchors.bind(j.event+".tabs",h);n()}else{clearTimeout(i.rotation);this.element.unbind("tabsshow",n);this.anchors.unbind(j.event+".tabs",h);delete this._rotate;delete this._unrotate}return this}})})(jQuery);
 
-kkk=[];
-
 // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
 hiConfig = {
     sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
@@ -1346,7 +1344,6 @@ GRM.removable = function() {
         var item = $(this);
         
         
-        kkk.push($(this));
         $(this).parent().hover(
             
             function(){item.show();},

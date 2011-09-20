@@ -151,26 +151,29 @@ class _Session_Data(_Session_Dict, db.Model):
                 :type session_id: :class:`string`
                 :returns: :class:`_Session_Data` o None
         '''
-        import memcache
-        session = memcache.get("%ssession%s" % (memcache.version,
-                                               session_id))
-        if session is None:
-            session = _Session_Data.get_by_key_name(session_id)
+        try:
+            import memcache
+            session = memcache.get("%ssession%s" % (memcache.version,
+                                                   session_id))
+            if session is None:
+                session = _Session_Data.get_by_key_name(session_id)
+                if session is not None:
+                    session = {
+                               'session': session,
+                               'user': session._user
+                               }
+                    memcache.set("%ssession%s" % (memcache.version,
+                                                     session['session'].id),
+                                                 session,
+                                                 time = session['session'].get_expiry_age()
+                            )
             if session is not None:
-                session = {
-                           'session': session,
-                           'user': session._user
-                           }
-                memcache.set("%ssession%s" % (memcache.version,
-                                                 session['session'].id),
-                                             session,
-                                             time = session['session'].get_expiry_age()
-                        )
-        if session is not None:
-            if session['session'].is_valid():
-                session['session']._user = session['user']
-                session['session'].decode()
-                return session['session']
+                if session['session'].is_valid():
+                    session['session']._user = session['user']
+                    session['session'].decode()
+                    return session['session']
+        except:
+            pass
         return None
     
     def get_expiry_age(self):

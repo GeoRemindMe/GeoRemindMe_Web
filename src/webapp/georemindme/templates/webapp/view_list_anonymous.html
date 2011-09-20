@@ -156,7 +156,7 @@
     <!--
                         <span class="timestamp">{{obj.instance.created|naturaltime}} </span> 
     -->
-                        {% if reques.user.is_authenticated %}
+                        {% if request.user.is_authenticated %}
                         <span class="action-bar" style="display:none">
 
                             {% if obj.instance.user.username != request.user.username %}

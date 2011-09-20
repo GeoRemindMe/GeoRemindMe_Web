@@ -175,8 +175,9 @@ class FacebookClient(object):
                                                access_token=self.consumer.access_token)
             else:
                 user.facebook_user.update(
+                             uid=facebookInfo['id'],
                              realname = facebookInfo['name'],
-                             profile_url=facebookInfo["link"]
+                             profile_url=facebookInfo["link"],
                             )
             self.user = user
             self.token  = token
@@ -467,7 +468,10 @@ class GraphAPI(object):
                                             urllib.urlencode(args), 
                                             method='GET' if post_data is None else 'POST',
                                             body=post_data)
-        content = _parse_json(content)
+        try:
+            content = _parse_json(content)
+        except:
+            raise OAUTHException("Can't parse json")
         if response['status'] != 200:
             raise GraphAPIError(content["error"]["type"],
                                 content["error"]["message"])

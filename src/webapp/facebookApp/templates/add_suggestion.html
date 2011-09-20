@@ -18,7 +18,7 @@
 					
             {% endif %}
             
-            {% if not user.facebook_user or not user.has_perms_twitter %}
+            {% if not user.facebook_user %}
                 function onFocus(){
                     var networks=["twitter","facebook"];
                     for (i=0; i<networks.length ; i++){
@@ -34,9 +34,9 @@
                                     },
                                     context: $(this),
                                     success: function(data){
-                                        console.log(data);
+                                        //console.log(data);
                                         if(data[networks[i]]){
-                                            console.log(networks[i]);
+                                            //console.log(networks[i]);
                                             showMessage("¡Genial! ya puedes empezar a disfrutar de todas las ventajas","success");
                                             $('li[data-network='+networks[i]+']').removeClass('inactive')
                                             $('li[data-network='+networks[i]+'] span').removeClass(''+networks[i]+'-inactive').addClass(''+networks[i]+'-active')
@@ -87,7 +87,7 @@
     </script>
     
     <!--<script src="/static/webapp/js/dashboard.js"></script>-->
-    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&language=es&region=ES"></script>
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&language=es&region=ES&key={% if request.is_secure %}{{google_api.google_maps_secure}}{% else %}{{GOOGLE_API.google_maps}}{% endif %}"></script>
     {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
         <script type="text/javascript" src="/static/common/js/add_suggestion.js"></script>    
     {% else %}

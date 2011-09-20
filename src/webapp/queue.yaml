@@ -1,10 +1,10 @@
 queue:
 - name: email
-  rate: 50/s
+  rate: 5/s
   
 - name: timelineFollowers
-  rate: 5/s
+  rate: 2/s
   
 - name: listFollowers
-  rate: 5/s
+  rate: 2/s
   

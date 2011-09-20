@@ -31,26 +31,19 @@ function facebookInit(config) {
 
     FB.init(config);
     FB.Event.subscribe('auth.sessionChange', handleSessionChange);
-    
+
     //FB.Canvas.setAutoResize();
     //if (typeof resizeIframe != "undefined") resizeIframe();
     // ensure we're always running on apps.facebook.com
     // if we are opening http://localhost:8080/fb/ or
     // georemindme.appspot.com/fb we will be redirected
-    if (window == top && DEBUG_mode==false) { goHome(); }
+    if (window == top && DEBUG_mode==false) { 
+        alert("No puedes entrar a esta URL sin estar en Facebook, procedemos a redireccionarte");
+        goHome(); 
+    }
 }
 
 function handleSessionChange(response) {
-    console.log("SESION CHANGED")
-    tmp=response;
-    console.log("response=")
-    console.log(tmp)
-    console.log("Config.userIdOnServer=")
-    console.log(Config.userIdOnServer);
-    console.log("tmp.session=")
-    console.log(tmp.session);
-    console.log("tmp.session.uid=")
-    console.log(tmp.session.uid);
     //This checks if the user have changed the session and if it
     //is incoherent or there ir no session we move to home
     if ((Config.userIdOnServer && !response.session) ||
@@ -132,7 +125,7 @@ function loginApp(){
                 //Redireccionamos
             });
         } else {
-            console.log('User cancelled login or did not fully authorize.');
+            //~ console.log('User cancelled login or did not fully authorize.');
         }
     }, {scope: permissions});
 }

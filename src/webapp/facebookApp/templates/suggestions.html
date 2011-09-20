@@ -10,11 +10,30 @@
     {% else %}
         <script type="text/javascript" src="/static/common/js/bag.min.js"></script>    
     {% endif %}
-    <script src="https://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    
 {%endblock%}
 
 {% block goBack %}{%endblock%}
 {% block body %}
+    {% if not user.twitter_user %}
+        <script type="text/javascript">
+             // Add a script element as a child of the body
+             function downloadJSAtOnload() {
+                 var element = document.createElement("script");
+                 element.src = "https://platform.twitter.com/widgets.js";
+                 document.body.appendChild(element);
+             }
+
+             // Check for browser support of event handling capability
+             if (window.addEventListener)
+                window.addEventListener("load", downloadJSAtOnload, false);
+             else if (window.attachEvent)
+                window.attachEvent("onload", downloadJSAtOnload);
+             else 
+                window.onload = downloadJSAtOnload;
+        </script>
+    {% endif %}
+
     <div id="suggestions">
         <h1>Tu mochila</h1>
         <div id="legend">Tipo de contenido: 
@@ -88,7 +107,7 @@
                                             <dt>
                                                 Autor:
                                                 <div class="help-icon">
-                                                    <img id="help-suggestion" alt="Help" src="/static/facebookApp/img/help.png">
+                                                    <img src="/static/common/img/transparent.gif" alt="Help"  id="help-suggestion">
                                                 </div>
                                             </dt>
                                             <dd>
@@ -438,8 +457,7 @@
 		<p>Envía esta sugerencia a tus seguidores en Twitter.</p>
         <textarea id="twitter_msg" data-id="${elem_id}" event-type="${type}">${link}</textarea>
         <span id="twitter-counter">140</span>
-        {{user.has_perms_twitter}}
-        {% if user.has_perms_twitter %}
+        {% if user.twitter_user %}
 			{% comment %}
 				Si tiene la cuenta de Twitter asociada le dejamos escribir directamente:
 			{% endcomment %}
