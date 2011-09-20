@@ -33,6 +33,7 @@ def geoAuth(request):
                             },
             'notifications': request.user.counters.notifications if request.user.is_authenticated() else None,
             'in_facebook': True if (request.path.find('/fb/') == 0) or (request.is_ajax() and request.META['HTTP_REFERER'].find('/fb/') != -1) else False,
+            'is_secure': request.is_secure(),
             'google_api': settings.API,
             }
     return parameters
