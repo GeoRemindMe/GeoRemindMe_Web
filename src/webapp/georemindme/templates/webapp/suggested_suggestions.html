@@ -76,7 +76,7 @@
                     </div>
                 
                 
-                    {%if not request.COOKIES.near_suggestions %}
+                    {%if not request.COOKIES.near_suggestions and google_api %}
                         <script type="text/javascript" src="https://maps.google.com/maps?file=api&amp;v=2&amp;key={% if request.is_secure %}{{google_api.google_maps_secure}}{% else %}{{google_api.google_maps}}{% endif %}"></script>
                     {%endif%}
 
