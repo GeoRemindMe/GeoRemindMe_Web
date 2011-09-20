@@ -131,9 +131,7 @@
     </style>
 {%endblock%}
 
-
-    
-{% block title %}Welcome to GeoRemindMe{% endblock %}
+{% block title %}Un mundo entero por descubrir - GeoRemindMe{% endblock %}
 {% block nav %} 
     {% include "register_menu.html" %}
 {% endblock %}
@@ -146,7 +144,7 @@
     
         <div id="register-panel" style="font-size: 1.1em;">
             <div id="description">
-                <h2>{% trans "GeoRemindMe te permite gestionar, valorar y compartir sugerencias geolocalizadas <em>usando la potencia de tus redes sociales favoritas</em>." %}</h2>
+                <h2>{% trans "GeoRemindMe te permite gestionar, valorar y compartir sugerencias <strong>usando la potencia de tus redes sociales favoritas</strong>." %}</h2>
 
                 <p class="known-user clear" style="display:none">
                     Buenas
@@ -167,9 +165,8 @@
                     <div id="slider-container">
                         <div id="slider">
                             <ul>
-                                <li><span class="slide-icon">{% trans "<strong>Pedir a tus contactos de Facebook, Twitter, etc. sugerencias</strong> y listas de sugerencias para tus viajes, descubrir nuevos restaurantes, etc..." %}</span></li>
+                                <li><span class="slide-icon">{% trans "<strong>Pedir a tus contactos</strong> de Facebook, Twitter, etc. <strong>sugerencias y listas de sugerencias</strong> para tus viajes, descubrir nuevos restaurantes, etc..." %}</span></li>
                                 <li><span class="slide-icon">{% trans "Consultar <strong>sugerencias personalizadas</strong> en base a tus gustos y a tu localización" %}</span></li>
-                                <li><span class="slide-icon">{% trans "<strong>Search and filter</strong> suggestions from other people" %}.</span></li>
                                 <li><span class="slide-icon">{% trans "<strong>Sigue </strong> a otras personas con gustos similares a los tuyos" %}.</span></li>
                                 <li><span class="slide-icon">{% trans "<strong>Descarga o imprime</strong> listas de sugerencias y sobre rutas turísticas" %}.</span></li>
                                 <li><span class="slide-icon">{% trans "<strong>Guarda, comenta y valora</strong> las sugerencias de tus contactos" %}.</span></li>
