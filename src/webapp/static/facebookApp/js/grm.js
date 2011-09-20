@@ -1,5 +1,3 @@
-kkk=[];
-
 // Defino que submenus deben estar visibles cuando se pasa el mouse por encima            
 hiConfig = {
     sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
@@ -438,7 +436,6 @@ GRM.removable = function() {
         var item = $(this);
         
         
-        kkk.push($(this));
         $(this).parent().hover(
             
             function(){item.show();},

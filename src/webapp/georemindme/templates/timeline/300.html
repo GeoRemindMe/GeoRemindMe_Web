@@ -33,13 +33,14 @@
         <span class="timestamp">  {{obj.created|naturaltime}}</span>  
         
         <span class="action-bar">
-            {% if reques.user.is_authenticated %}
+            {% if request.user.is_authenticated %}
                 | <span class="focusInput hoverlink comment">Comentar</span> 
             {% endif %}
             | <a href="{% url2 in_facebook view_suggestion obj.instance.slug %}" class="details"><img src="/static/common/img/transparent.gif" />Ver sugerencia</a>  
             
+        
             
-            {% if obj.instance.user.username != request.user.username and reques.user.is_authenticated %}            
+            {% if obj.instance.user.username != request.user.username and request.user.is_authenticated %}            
                 | 
                 <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
                     <img src="/static/common/img/transparent.gif" />

@@ -3686,3 +3686,10 @@ ul.ui-autocomplete li.ui-menu-item:nth-child(even){
     margin: 0;
     width: 22px;
 }
+
+
+#facebookApp div.load-more.btn{
+    float: none;
+    margin: auto;
+    width: 100px;
+}

@@ -25,19 +25,21 @@ class FacebookMiddleware(object):
         if 'signed_request' in request.REQUEST:
             data = parse_signed_request(request.REQUEST['signed_request'])
             if 'oauth_token' in data:
+                
                 request.facebook = {'uid': data['user_id'],
                                     'access_token': data['oauth_token'],
                                     'client': FacebookClient(access_token=data['oauth_token'])
                                     }
-        else:
+        if not hasattr(request, 'facebook'):
             cookie = get_user_from_cookie(request.COOKIES)
             if cookie is not None:
                 try:
                     request.facebook = {'uid': cookie['user_id'],
-                                        'access_token': cookie['code'],
-                                        'client': FacebookClient(access_token=cookie['code'])
+                                        'access_token': cookie['oauth_token'],
+                                        'client': FacebookClient(access_token=cookie['oauth_token'])
                                     }
                 except:
+                    raise
                     pass
         if not hasattr(request, 'facebook'):
             from facebookApp.watchers import disconnect_all
