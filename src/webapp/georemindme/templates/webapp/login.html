@@ -1,0 +1,205 @@
+{% load tags %}
+{% load i18n %}
+<!DOCTYPE HTML>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{LANGUAGE_CODE}}">
+<head>
+	<meta charset="UTF-8">
+	<title>GeoRemindMe!</title>
+	<meta name="google-site-verification" content="VzbSgMqvrPL6WuAhRfBzAFXM0GyU73igO1yjheV2Tc4" />
+
+	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
+	<link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+    
+    {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
+        
+        <script type="text/javascript" src="/static/common/js/common_webapp.js"></script>    
+        <script type="text/javascript" src="/static/common/js/login.js"></script>    
+    {% else %}
+        <script type="text/javascript" src="/static/common/js/common_webapp.min.js"></script>    
+        <script type="text/javascript" src="/static/common/js/login.min.js"></script>    
+    {% endif %}
+    
+    
+
+    
+    
+	
+</head>
+<body id="loginSec">
+    <div id="notification-msg" style="display:none">Mensaje con lo que sea</div>
+
+	<header id="header-top" class="container">
+		<a href="/"><img src="/static/webapp/img/logo2.png" alt="" id="logo"></a>
+		<nav id="header-nav">
+			<ul>
+				<li><a href="http://help.georemindme.com/">Ayuda</a></li>
+				<li><a href="http://blog.georemindme.com">Blog</a></li>
+<!--
+				<li><a href="http://m.georemindme.com/">Móvil</a></li>
+-->
+				<li><a href="http://team.georemindme.com/">Comunidad</a></li>
+			</ul>
+		</nav>
+
+        <div id="login-bar">
+            <p>Identifícate usando:</p>
+            <ul>
+                <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para 
+identificarte"><span>Twitter</span></li>
+                <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para 
+identificarte"><span>Facebook</span></li>
+                <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para 
+identificarte"><span>Google</span></li>
+                <li class="georemindme" title="Identifícate usando tus datos de GeoRemindMe"><span>GeoRemindMe</span></li>
+            </ul>
+            <div id="georemindme-form" style="display:none">
+                <form action="." method="post" id="loginForm">
+                    <input type="text" name="email" placeholder="Usuario o email"/>
+                    <input type="password" name="password" id="password" placeholder="Contraseña"/>
+                    <input type="submit" id="login-btn" value="Entrar" />
+                    <div id="login-submenu">
+                        <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> Recordarme</span>
+                        <span><a href="/remind/" class="link">Recuperar contraseña</a></span>
+                        <span class="link" onclick="javascript:showMenu()">Cancelar</span>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+		
+		
+		
+	</header>
+	<div id="background-login">
+		<div id="main" class="container">
+			<section id="left-block">
+				
+                <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+                <script>
+                    new TWTR.Widget({
+                        version: 2,
+                        type: 'search',
+                        search: '#geo-suggestion',
+                        interval: 30000,
+                        title: 'Sugerencias de los usuarios',
+                        subject: 'GeoRemindMe! en Twitter',
+                        width: 420,
+                        height: 222,
+                        theme: {
+                            shell: {
+                                background: '#606060',
+                                color: '#FFFFFF'
+                            },
+                            tweets: {
+                                background: '#ffffff',
+                                color: '#444444',
+                                links: '#1985b5'
+                            }
+                        },
+                        features: {
+                            scrollbar: true,
+                            loop: true,
+                            live: true,
+                            hashtags: true,
+                            timestamp: true,
+                            avatars: true,
+                            toptweets: true,
+                            behavior: 'default'
+                        }
+                    }).render().start();
+                </script>
+<!--
+                <div id="left-arrow">
+                    <span>&nbsp;</span>
+                </div>
+				<div id="rollover">
+					<p class="intro-text"><span class="bigger-intro-text"><strong>Compartir y recibir sugerencias</strong> usando 
+tus redes sociales</span></p>
+					<div class="users-box">
+						<article>
+							<img src="/static/webapp/img/kaos.png" alt="" class="user-avatar">
+							<p class="user-name">hhkaos</p>
+							<p class="user-suggestion">Deberías ir al hackathon. Conoces mucha gente y aprendes un montón. 
+Ya verás lo enrrollados que sosmos.</p>
+						</article>
+						<article>
+							<img src="/static/webapp/img/anna.png" alt="" class="user-avatar">
+							<p class="user-name">annalogik</p>
+							<p class="user-suggestion">Y tenemos galletitas! :D</p>
+						</article>
+					</div>
+				</div>
+				<div id="right-arrow">
+                    <span>&nbsp;</span>
+                </div>
+-->
+				
+<!--
+				<p class="bottom-p">Ya somos XXX personas compartiendo YYY sugerencias.</p>
+-->
+			</section>
+			<section id="right-block">
+				<h2>¿Eres nuevo?</h2>
+                <div id="register-with-social">
+                    <p>Crea tu perfil utilizando una de tus cuentas.</p>
+                    <ul id="register-menu">
+                        <li id="twitter"><span>Twitter</span></li>
+                        <li id="facebook" class="active"><span>Facebook</span></li>
+                        <li id="google"><span>Google</span></li>
+                    </ul>
+                    <a href="/ext/twitter/perms" id="register-btn">Regístrate</a>
+                </div>
+				
+				
+				<p class="register-text-aux">O crea una nueva cuenta desde cero y conéctala.</p>
+                <div style="display:none" id="registerForm">
+                    <form action="." method="POST" id="registerFormForm">
+<!--
+                        <input type="text" name="" value="" placeholder="Nombre de usuario"/>
+-->
+                        <span id="emailStatus" style="float:right;display:none;" class="ok">&nbsp;</span><input type="text" name="registerEmail" 
+id="registerEmail" placeholder= "Email" />
+                        <div></div>
+                        <input type="password" name="userRegisterPass1" id="userRegisterPass1" placeholder="Contraseña"/>
+                        <input type="password" name="userRegisterPass2" id="userRegisterPass2" placeholder="Repite la contraseña"/>
+                        <div id='passwordStatus'>Las contraseñas no coinciden</div>
+                        <div id="agreement">
+                            <input type="checkbox" id="termsCheckbox" title="Check this box if you agree" value="terms"/>
+                            <span id="textTermsCheckbox">He leido y acepto las <a href="/tos" class="hoverlink">Condiciones de uso</a>.</span>
+                        </div>
+						{% csrf_token %}
+                        <input type="submit" value="Continuar"/>
+                    </form>
+                </div>
+			</section>
+<!--
+			<div id="avatar-chain">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+			</div>
+-->
+
+		</div>
+	</div>
+	
+	<footer id="footer" class="container">
+		<div class="footer-links">
+<!--
+			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> 
+-->
+<!--
+            · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+-->
+		</div>
+		<div class="footer-links right-links">
+			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a 
+href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
+		</div>
+	</footer>
+    {% include "browser_msgs.html" %}
+</body>
+</html>
+
