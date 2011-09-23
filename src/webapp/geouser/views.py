@@ -603,7 +603,7 @@ def get_avatar(request, username):
 def close_window(request):
     return render_to_response('webapp/close_window.html', {}, context_instance=RequestContext(request))
 
-#@admin_required
+@admin_required
 def update(request):
     from google.appengine.ext.deferred import defer
     defer(__update_users)  # mandar email de notificacion
