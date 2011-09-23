@@ -377,6 +377,9 @@ def followers_panel(request, username, template='webapp/followers.html'):
     else:
         from geouser.api import get_followers
         followers = get_followers(request.user, username=username)
+    if not request.user.is_authenticated():
+            pos = template.rfind('.html')
+            template = template[:pos] + '_anonymous' + template[pos:]
     return  render_to_response(template, {'followers': followers[1],
                                           'username_page':username,
                                           },
@@ -390,6 +393,9 @@ def followings_panel(request, username, template='webapp/followings.html'):
     else:
         from geouser.api import get_followings
         followings = get_followings(request.user, username=username)
+    if not request.user.is_authenticated():
+            pos = template.rfind('.html')
+            template = template[:pos] + '_anonymous' + template[pos:]
     return  render_to_response(template, {'followings': followings[1],
                                            'username_page':username
                                            },
@@ -544,15 +550,10 @@ def get_perms_twitter(request):
 
 @login_required
 def get_friends_twitter(request):
-    """**Descripción**: Obtiene una lista con los contactos en gmail que
+    """**Descripción**: Obtiene una lista con los contactos en twitter que
     el usuario puede seguir
     
     """
-    from geoauth.views import client_access_request
-    if 'oauth_token' in request.GET:
-        client_access_request(request, 'twitter')
-        if 'cls' in request.GET:
-            return HttpResponseRedirect(reverse('geouser.views.close_window'))
     from geoauth.clients.twitter import TwitterClient
     try:
         c = TwitterClient(user=request.user)
@@ -602,17 +603,17 @@ def get_avatar(request, username):
 def close_window(request):
     return render_to_response('webapp/close_window.html', {}, context_instance=RequestContext(request))
 
-#@admin_required
+@admin_required
 def update(request):
-    #from google.appengine.ext.deferred import defer
-    #defer(__update_users)  # mandar email de notificacion
-    from geovote.models import VoteCounter
-    from geoalert.models import Event
-    from google.appengine.ext import db
-    counters = VoteCounter.all()
-    for v in counters:
-        v.instance_key = db.get(v.instance).key()
-        v.put()
+    from google.appengine.ext.deferred import defer
+    defer(__update_users)  # mandar email de notificacion
+#    from geovote.models import VoteCounter
+#    from geoalert.models import Event
+#    from google.appengine.ext import db
+#    counters = VoteCounter.all()
+#    for v in counters:
+#        v.instance_key = db.get(v.instance).key()
+#        v.put()
     return HttpResponse('Updating users...')
 
 
