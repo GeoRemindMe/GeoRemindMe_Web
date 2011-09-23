@@ -463,6 +463,10 @@ background: linear-gradient(left, rgba(238,238,238,1) 0%,rgba(254,254,254,1) 50%
 	margin-left: 30px;
 }
 
+#loginSec #right-block #register-with-social p{
+    line-height: 1.3em;
+}
+
 #right-block ul li {
 	float: left;
 	margin-top: 4px;
