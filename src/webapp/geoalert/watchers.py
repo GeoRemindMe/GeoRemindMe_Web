@@ -71,11 +71,12 @@ alert_done.connect(done_alert)
 def new_suggestion(sender, **kwargs):
     timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=300)
     timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=300, _vis=sender._get_visibility())
-    p = db.put_async([timeline, timelinePublic])
+    p = db.put_async([timeline])
     sender.user.counters.set_suggested()
     if sender._is_public():
         from google.appengine.ext.deferred import defer
         defer(sender.insert_ft)
+    timelinePublic.put()
     p.get_result()
 suggestion_new.connect(new_suggestion)
 

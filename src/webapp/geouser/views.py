@@ -377,6 +377,9 @@ def followers_panel(request, username, template='webapp/followers.html'):
     else:
         from geouser.api import get_followers
         followers = get_followers(request.user, username=username)
+    if not request.user.is_authenticated():
+            pos = template.rfind('.html')
+            template = template[:pos] + '_anonymous' + template[pos:]
     return  render_to_response(template, {'followers': followers[1],
                                           'username_page':username,
                                           },
@@ -390,6 +393,9 @@ def followings_panel(request, username, template='webapp/followings.html'):
     else:
         from geouser.api import get_followings
         followings = get_followings(request.user, username=username)
+    if not request.user.is_authenticated():
+            pos = template.rfind('.html')
+            template = template[:pos] + '_anonymous' + template[pos:]
     return  render_to_response(template, {'followings': followings[1],
                                            'username_page':username
                                            },
@@ -413,13 +419,13 @@ def confirm(request, user, code):
     u = User.objects.get_by_email_not_confirm(email)
     if u is not None:
         if u.confirm_user(code):
-            msg = _("User %s confirmed. Please log in.") % user
+            msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u
             return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
     u = User.objects.get_by_email(email, keys_only=True)
     if u is not None:
-        msg = _("User %s confirmed. Please log in.") % user
+        msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u
     else:
-        msg = _("Invalid user %s") % user
+        msg = _("Usuario erroneo %s.") % email
     return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
 
 
@@ -544,15 +550,10 @@ def get_perms_twitter(request):
 
 @login_required
 def get_friends_twitter(request):
-    """**Descripción**: Obtiene una lista con los contactos en gmail que
+    """**Descripción**: Obtiene una lista con los contactos en twitter que
     el usuario puede seguir
     
     """
-    from geoauth.views import client_access_request
-    if 'oauth_token' in request.GET:
-        client_access_request(request, 'twitter')
-        if 'cls' in request.GET:
-            return HttpResponseRedirect(reverse('geouser.views.close_window'))
     from geoauth.clients.twitter import TwitterClient
     try:
         c = TwitterClient(user=request.user)
@@ -604,33 +605,38 @@ def close_window(request):
 
 #@admin_required
 def update(request):
-    #from google.appengine.ext.deferred import defer
-    #defer(__update_users)  # mandar email de notificacion
-    from geovote.models import VoteCounter
-    from geoalert.models import Event
-    from google.appengine.ext import db
-    counters = VoteCounter.all()
-    for v in counters:
-        v.instance_key = db.get(v.instance).key()
-        v.put()
+    from google.appengine.ext.deferred import defer
+    defer(__update_users)  # mandar email de notificacion
+#    from geovote.models import VoteCounter
+#    from geoalert.models import Event
+#    from google.appengine.ext import db
+#    counters = VoteCounter.all()
+#    for v in counters:
+#        v.instance_key = db.get(v.instance).key()
+#        v.put()
     return HttpResponse('Updating users...')
 
 
 def __update_users():
+    from django.conf import settings
     from models import User
     from models_acc import UserSocialLinks
+    generico = User.objects.get_by_username('georemindme')
     users = User.all()
     for user in users:
-        profile = user.profile
-        settings = user.settings
-        counters = user.counters
-        from models_acc import SearchConfigGooglePlaces
-        from google.appengine.ext import db
-        sociallinks = profile.sociallinks
-        if sociallinks is None:
-            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
-        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
-        if sc is None:
-            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
-        db.put([profile, settings, sc, counters, sociallinks])
+#        profile = user.profile
+#        settings = user.settings
+#        counters = user.counters
+#        from models_acc import SearchConfigGooglePlaces
+#        from google.appengine.ext import db
+#        sociallinks = profile.sociallinks
+#        if sociallinks is None:
+#            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
+#        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
+#        if sc is None:
+#            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
+#        db.put([profile, settings, sc, counters, sociallinks])
+        user.add_following(followid=generico.id)
+        generico.add_following(followid=user.id)
+
 

@@ -8,6 +8,9 @@ from google.appengine.api.taskqueue import Task
 from google.appengine.ext import db
 from google.appengine.api import mail
 
+from geouser.models import User
+from geouser.models_acc import UserTimeline, UserTimelineBase
+
 
 def admin_required(func):
     def _wrapper(*args, **kwargs):
