@@ -39,7 +39,7 @@ class ShardedCounter(db.Model):
         instance es el key del objeto al que apunta
     """
     instance_key = db.ReferenceProperty(None)
-    instance = db.TextProperty(required=True)
+    instance = db.TextProperty()
     count = db.IntegerProperty(required=True, default=0)
     
     @classmethod

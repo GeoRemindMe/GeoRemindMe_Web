@@ -20,19 +20,17 @@
         <script type="text/javascript" src="/static/common/js/login.min.js"></script>    
     {% endif %}
     
-    
+    <link type="text/css" rel="stylesheet" href="/static/webapp/style/easySlider.css"  media="screen, projection" />
+    <script type="text/javascript" src="/static/webapp/js/easySlider1.5.js"></script>
 
-    
     <script type="text/javascript">
-		$(document).ready(function() {
-			var element = document.createElement("script");
-            element.src = "/static/common/js/common_webapp_deferred.min.js";
-            $(this).append(element)
-		});
-		
-		
-        
-	</script>
+        $(document).ready(function(){
+            $("#slider").easySlider({
+                controlsFade: false,                
+            });
+        });
+    </script>
+    
 	
 </head>
 <body id="loginSec">
@@ -44,7 +42,9 @@
 			<ul>
 				<li><a href="http://help.georemindme.com/">Ayuda</a></li>
 				<li><a href="http://blog.georemindme.com">Blog</a></li>
+<!--
 				<li><a href="http://m.georemindme.com/">Móvil</a></li>
+-->
 				<li><a href="http://team.georemindme.com/">Comunidad</a></li>
 			</ul>
 		</nav>
@@ -52,9 +52,12 @@
         <div id="login-bar">
             <p>Identifícate usando:</p>
             <ul>
-                <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para identificarte"><span>Twitter</span></li>
-                <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para identificarte"><span>Facebook</span></li>
-                <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para identificarte"><span>Google</span></li>
+                <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para 
+identificarte"><span>Twitter</span></li>
+                <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para 
+identificarte"><span>Facebook</span></li>
+                <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para 
+identificarte"><span>Google</span></li>
                 <li class="georemindme" title="Identifícate usando tus datos de GeoRemindMe"><span>GeoRemindMe</span></li>
             </ul>
             <div id="georemindme-form" style="display:none">
@@ -79,51 +82,47 @@
 		<div id="main" class="container">
 			<section id="left-block">
 				
-                <script src="http://widgets.twimg.com/j/2/widget.js"></script>
-                <script>
-                    new TWTR.Widget({
-                        version: 2,
-                        type: 'search',
-                        search: '#geo-suggestion',
-                        interval: 30000,
-                        title: 'Sugerencias de los usuarios',
-                        subject: 'GeoRemindMe! en Twitter',
-                        width: 420,
-                        height: 222,
-                        theme: {
-                            shell: {
-                                background: '#606060',
-                                color: '#FFFFFF'
-                            },
-                            tweets: {
-                                background: '#ffffff',
-                                color: '#444444',
-                                links: '#1985b5'
-                            }
-                        },
-                        features: {
-                            scrollbar: true,
-                            loop: true,
-                            live: true,
-                            hashtags: true,
-                            timestamp: true,
-                            avatars: true,
-                            toptweets: true,
-                            behavior: 'default'
-                        }
-                    }).render().start();
-                </script>
+                <div id="description">
+                    <h2>{% trans "GeoRemindMe! es una herramienta especializada en enviar y recibir sugerencias personalizadas en base a tu localización y a tus gustos." %}</h2>
+
+                    <ul id="benefits">
+                        <li id="whatsup-icon">{% trans "<strong>Encuentra</strong> cosas interesantes que hacer" %}.</li>
+                        <li id="explore-icon">{% trans "<strong>Descubre</strong> y explora nuevo lugares" %}.</li>
+                        <li id="reminder-icon">{% trans "<strong>No olvides nada</strong> de lo que querías hacer" %}.</li>
+                    </ul>
+
+
+                    <span id="description-list">
+                        
+                        <p>{% trans "GeoRemindme te permite" %}:</p>
+                        <div id="slider-container">
+                            <div id="slider">
+                                <ul>
+                                    <li id="search-icon"><span class="slide-icon">{% trans "<strong>Consulta</strong> sugerencias personalizadas en base a tus gustos y a tu localización" %}.</span></li>
+                                    <li id="suscription-icon"><span class="slide-icon">{% trans "<strong>Sigue</strong> a otras personas con gustaos similares a los tuyos" %}.</span></li>
+                                    <li id="print-icon"><span class="slide-icon">{% trans "<strong>Descarga o imprime</strong> listas de sugerencias como: rutas turísticas, los mejores restaurantes, ocio, etc" %}.</span></li>
+                                    <li id="rate-icon"><span class="slide-icon">{% trans "<strong>Guarda, comentar y valora</strong> las sugerencias que más te interesen" %}.</span></li>
+                                    <li id="checkin-icon"><span class="slide-icon">{% trans "Y en el furuto... queremos ofrecerte <strong>promociones y descuentos</strong> para disfrutar donde te encuentres" %}.</span></li>
+                                    <li id="share-icon"><span class="slide-icon">{% trans "Y <strong>pedir sugerencias</strong> a tus contactos de Facebook, Twitter</strong>" %}.</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </span>
+                </div>
 <!--
                 <div id="left-arrow">
                     <span>&nbsp;</span>
                 </div>
 				<div id="rollover">
-					<p class="intro-text"><span class="bigger-intro-text"><strong>Compartir y recibir sugerencias</strong> usando tus redes sociales</span></p>
+					<p class="intro-text"><span class="bigger-intro-text"><strong>Compartir y recibir sugerencias</strong> usando 
+tus redes sociales</span></p>
 					<div class="users-box">
 						<article>
 							<img src="/static/webapp/img/kaos.png" alt="" class="user-avatar">
 							<p class="user-name">hhkaos</p>
-							<p class="user-suggestion">Deberías ir al hackathon. Conoces mucha gente y aprendes un montón. Ya verás lo enrrollados que sosmos.</p>
+							<p class="user-suggestion">Deberías ir al hackathon. Conoces mucha gente y aprendes un montón. 
+Ya verás lo enrrollados que sosmos.</p>
 						</article>
 						<article>
 							<img src="/static/webapp/img/anna.png" alt="" class="user-avatar">
@@ -144,13 +143,13 @@
 			<section id="right-block">
 				<h2>¿Eres nuevo?</h2>
                 <div id="register-with-social">
-                    <p>Crea tu perfil utilizando una de tus cuentas.</p>
+                    <p><u>Selecciona la cuenta</u> con la que quieres crear tu perfil:</p>
                     <ul id="register-menu">
                         <li id="twitter"><span>Twitter</span></li>
                         <li id="facebook" class="active"><span>Facebook</span></li>
                         <li id="google"><span>Google</span></li>
                     </ul>
-                    <a href="/ext/twitter/perms" id="register-btn">Regístrate</a>
+                    <a href="/ext/twitter/perms" id="register-btn">Continuar</a>
                 </div>
 				
 				
@@ -160,7 +159,8 @@
 <!--
                         <input type="text" name="" value="" placeholder="Nombre de usuario"/>
 -->
-                        <span id="emailStatus" style="float:right;display:none;" class="ok">&nbsp;</span><input type="text" name="registerEmail" id="registerEmail" placeholder= "Email" />
+                        <span id="emailStatus" style="float:right;display:none;" class="ok">&nbsp;</span><input type="text" name="registerEmail" 
+id="registerEmail" placeholder= "Email" />
                         <div></div>
                         <input type="password" name="userRegisterPass1" id="userRegisterPass1" placeholder="Contraseña"/>
                         <input type="password" name="userRegisterPass2" id="userRegisterPass2" placeholder="Repite la contraseña"/>
@@ -196,9 +196,11 @@
 -->
 		</div>
 		<div class="footer-links right-links">
-			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
+			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a 
+href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
 		</div>
 	</footer>
     {% include "browser_msgs.html" %}
 </body>
 </html>
+
