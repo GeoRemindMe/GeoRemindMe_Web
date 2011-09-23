@@ -69,7 +69,8 @@ def new_follower(sender, **kwargs):
     else:
         timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=100, visible=False)
         timelinePublic = UserTimeline(user = sender, instance = kwargs['following'], msg_id=100)
-        put = db.put_async([timeline, timelinePublic])
+        put = db.put_async([timeline])
+        timelinePublic.put()
     from google.appengine.ext.deferred import defer
     defer(settings.notify_follower, sender.key())  # mandar email de notificacion
     put.get_result()
