@@ -76,14 +76,12 @@
                     </div>
                 
                 
-                    {%if not request.COOKIES.near_suggestions %}
-                        <script type="text/javascript" src="https://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw"></script>
+                    {%if not request.COOKIES.near_suggestions and google_api %}
+                        <script type="text/javascript" src="https://maps.google.com/maps?file=api&amp;v=2&amp;key={% if request.is_secure %}{{google_api.google_maps_secure}}{% else %}{{google_api.google_maps}}{% endif %}"></script>
                     {%endif%}
 
 
                     <script type="text/javascript">
-            
-                    //jQuery.getScript('http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAr-AoA2f89U6keY8jwYAhgRSH1N1fcQdmTcucWBDBdqkgAa1-PhQhWKwe8ygo_Y3tFrHmB0jtJoQ0Bw');
                     
                     function loadSuggestions(lat,lng){
                         //Recupera las sugerencias para una lat,lng (por defecto la última guardada)

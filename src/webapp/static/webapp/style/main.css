@@ -285,6 +285,7 @@ background: linear-gradient(left, rgba(238,238,238,1) 0%,rgba(254,254,254,1) 50%
 #logo-link #logo{
     width:228px;
     height:42px;
+    float:none;
 }
 
 #header-nav {
@@ -404,8 +405,11 @@ background: linear-gradient(left, rgba(238,238,238,1) 0%,rgba(254,254,254,1) 50%
 	position: relative;
 }
 
-#right-block,#left-block {
-	padding-top: 60px;
+#left-block {
+	margin-top: 15px;
+}
+#right-block{
+    margin-top: 40px;
 }
 
 #left-block {
@@ -413,10 +417,19 @@ background: linear-gradient(left, rgba(238,238,238,1) 0%,rgba(254,254,254,1) 50%
 	float: left;
 	width: 500px;
 }
-#loginSec #left-block {
-    width:auto;
+#loginSec #right-block {
+    width: 410px;
 }
-
+#loginSec #left-block {
+    width:490px;
+    background-color: rgba(68, 71, 76, 0.3);
+    border: 1px dotted #666666;
+    clear: left;
+    color: white;
+    float: left;
+    line-height: 1.5em;
+    padding: 10px;
+}
 #right-block {
 	width: 450px;
 	float: right;

@@ -2293,7 +2293,7 @@ function loginApp(){
                 //Redireccionamos
             });
         } else {
-            console.log('User cancelled login or did not fully authorize.');
+            //~ console.log('User cancelled login or did not fully authorize.');
         }
     }, {scope: permissions});
 }

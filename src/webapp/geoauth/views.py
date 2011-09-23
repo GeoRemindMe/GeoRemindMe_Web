@@ -11,11 +11,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
+from geouser.models import User
 from geouser.forms import LoginForm
 from geouser.decorators import login_required
 from geouser.funcs import login_func, init_user_session
 from server import OAUTH_Server
 from exceptions import OAUTHException
+
 
 
 #===============================================================================
@@ -93,7 +95,7 @@ def client_token_request(request, provider, callback_url=None):
     if callback_url is None:
         callback_url = OAUTH[provider]['callback_url']
     if provider.lower() == 'google':  # pasamos el scope con los permisos que queremos en google
-        response, content = client.request('%s?scope=https://www.google.com/m8/feeds/' % OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
+        response, content = client.request('%s?scope=https://www.google.com/fusiontables/api/query' % OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
     else:
         response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
     if response['status'] != 200:
@@ -244,7 +246,8 @@ def facebook_access_request(request, next=None):
             client.authorize(request.user)
         else:
             user = client.authenticate()
-            init_user_session(request, user)
+            if isinstance(user, User):
+                init_user_session(request, user)
     else:
         return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
     if next is None:

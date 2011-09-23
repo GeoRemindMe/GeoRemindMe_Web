@@ -3,22 +3,8 @@
 {% load i18n %}
 
 {% block extra_js %}
-<script type="text/javascript" src="/static/webapp/js/static.js"></script> 
-
-<!-- Loading lightbox plugin--> 
-<script type="text/javascript" src="/static/webapp/js/jquery.lightbox-0.5.js"></script> 
-<link rel="stylesheet" type="text/css" href="/static/webapp/style/jquery.lightbox-0.5.css" media="screen" /> 
- <script type="text/javascript"> 
-    $(function() {
-        $('.screenshots a').lightBox();
-    });
-    $(document).ready(function(){
-
-   }
- </script> 
+    <script type="text/javascript" src="/static/webapp/js/static.js"></script> 
 {%endblock%}
-
-{%block section%}id="error404"{%endblock%}
 
 {%block breadcumb%}
    <nav> 
@@ -27,15 +13,13 @@
 {%endblock%}
    
 
-{%block content%}
-
-    <figure id="DizzyChicken">
-        <img id="DizzyImage" alt="Dizzy Chicken" src="/static/webapp/img/dizzy_chicken.png">
-    </figure>
-    
+{%block body%}
                
-    <div id="big-text">  
-        <p>¡Oops Error 404!</p>
+    <div id="big-text" class="error404">  
+        <h1>¡Oops Error 404!</h1>
+        <figure id="DizzyChicken">
+            <img id="DizzyImage" alt="Dizzy Chicken" src="/static/webapp/img/dizzy_chicken.png">
+        </figure>
         <p><strong>Geo</strong> ha buscado y buscado... ¡pero no ha encontrado nada!</p>
 
         <!--Begin of the content-->
@@ -52,14 +36,15 @@
                 var textSearch="{{request.get_full_path}}";
                 textSearch=textSearch.substring(1, textSearch.length-1);
                 $("input[type=text]").focus().val(textSearch);
-                $("input[type=text]").submit()
+                $("input[type=text]").focus();
+                $(".gsc-input input[type=text]").submit();
+                $('.gsc-branding').remove();
             }, true);
         </script>
         
+<!--
         <link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" /> 
-        <style type="text/css">
-            .cse .gsc-control-cse div, .gsc-control-cse div {
-            text-align: left;
-        </style>
+-->
+        
     </div>
 {%endblock%}

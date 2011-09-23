@@ -3693,3 +3693,32 @@ ul.ui-autocomplete li.ui-menu-item:nth-child(even){
     margin: auto;
     width: 100px;
 }
+
+#loginSec #big-text.error404,
+#loginSec #big-text.error500{
+    font-size:1.1em;
+    line-height: 2em;
+}
+
+#loginSec #big-text.error404 p,
+#loginSec #big-text.error500 p{
+    font-size:1.1em;
+    line-height: 2em;
+     margin: 1em 0;
+}
+
+#loginSec #big-text.error-500 h1,
+#loginSec #big-text.error404 h1{
+    display:block;
+    margin-bottom: 1em;
+}
+
+#loginSec #big-text.error404 #DizzyChicken,
+#loginSec #big-text.error500 #DizzyChicken{
+    text-align: center;
+}
+
+#loginSec #big-text.error404 #DizzyChicken img,
+#loginSec #big-text.error500 #DizzyChicken img{
+    width: 170px;
+}

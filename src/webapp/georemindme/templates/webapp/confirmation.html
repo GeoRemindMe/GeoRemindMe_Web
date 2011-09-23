@@ -1,11 +1,14 @@
 {% extends "webapp/base_anonymous.html" %}
 
 {% load i18n %}
+{% load tags %}
 
-{% block content %}
-        <div id="big-text">  
-         <p>{{msg}}</p>
-      </div>
-{%endblock%}
-      
 
+{% block title %}Mensaje confirmación{% endblock %}
+
+{% block goBack %}{%endblock%}    
+{% block body %}
+    <div id="big-text">  
+        <p>{{msg}}</p>
+    </div>
+{% endblock %}

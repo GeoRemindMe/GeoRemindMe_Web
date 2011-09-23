@@ -210,7 +210,7 @@ class FacebookClient(object):
         else:#no existe, creamos un nuevo usuario
             self.user = User.objects.get_by_email(facebookInfo['email'])
             if self.user is None:
-                self.user = User.register(email=facebookInfo['email'], password=password if password is not None else make_random_string(length=6))
+                self.user = User.register(email=facebookInfo['email'], confirmed=True, password=password if password is not None else make_random_string(length=6))
                 self.user.profile.sync_avatar_with = 'facebook' #  por defecto, si el usuario es nuevo sincronizamos con facebook
                 self.user.profile.put()
         if not self.authorize(self.user):

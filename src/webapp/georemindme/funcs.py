@@ -142,7 +142,8 @@ def single_prefetch_refprops(entity, *props):
     fields = [(entity, prop) for prop in props]
     ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields]
     ref_keys = filter(None, ref_keys)
-    ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
+    ref_entities = db.get(set(ref_keys))
+    ref_entities = dict((x.key(), x) for x in ref_entities if x is not None) 
     for (entity, prop), ref_key in zip(fields, ref_keys):
         prop.__set__(entity, ref_entities[ref_key])
     return entity
