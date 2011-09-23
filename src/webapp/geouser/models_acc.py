@@ -484,6 +484,8 @@ class UserTimeline(UserTimelineBase, Visibility):
                 from geovote.models import Comment, Vote
                 if isinstance(self.instance, Comment) or isinstance(self.instance, Vote):
                     index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.instance.user.id])
+                if isinstance(self.instance, User):
+                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.id])    
                 else:
                     index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.user.id])
                 index.put()
