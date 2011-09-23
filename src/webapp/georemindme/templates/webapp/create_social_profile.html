@@ -1,6 +1,7 @@
 {% extends "webapp/base_registered.html" %}
 {% load i18n %}
 
+{% block title %}GeoRemindMe! - Registro{% endblock %}
 
 {% block mainButton %}{% endblock %}
 
@@ -40,22 +41,58 @@
         <div id="step-one" {%if form.errors %}style="display:none"{%endif%}> 
             <h2>Paso 1 de 2: Recibe más y mejores sugerencias</h2>
             <p>
-                Para recibir sugerencias de mejor calidad, lo más importante es que te conectes con usuarios que compartan gustos contigo.<br>
+                Para empezar a ver sugerencias necesitas crearte una red de contactos <strong>con los que compartas gustos</strong>, por ello vamos a mostrarte a usuarios que pensamos que te pueden interesar seguir.<br>
             </p>
+            <hr>
             <p>
-                <strong>Comprueba ahora<sup>(1)</sup> cuales de tus amigos ya están en GeoRemindMe!</strong>:
+                <strong>Usuarios de GeoRemindMe! a los que podrías conocer:</strong>
             </p>
+            <p>Buscar ahora entre mis contactos de:</p>
             <ul id="link-social-accounts">
             {% if not user.twitter_user %}
-                <li><a id="twitter" href="/ext/twitter/contacts/" target="_blank"><strong>Buscar ahora</strong> entre las personas que sigo en Twitter</a></li>
+                <li><a id="twitter" href="/ext/twitter/contacts/" class="hoverlink" target="_blank" title="Buscar ahora  entre las personas que sigo"> Twitter</a></li>
+            {% else %}
+                <li>Twitter</li>
             {% endif %}
             {% if not user.facebook_user %}
-                <li><a id="facebook" href="/ext/facebook/contacts/" target="_blank"><strong>Buscar ahora</strong> entre mis amigos de Facebook</a></li>
+                <li><a id="facebook" href="/ext/facebook/contacts/" class="hoverlink" target="_blank" title="Buscar ahora entre mis amigos">Facebook</a></li>
+            {% else %}
+                <li>Facebook</li>    
             {% endif %}
             {% if not user.google_user %}
-                <li><a id="google" href="/ext/google/contacts/" target="_blank"><strong>Buscar ahora</strong> entre mis contactos de Gmail</a></li>
+                <li><a id="google" href="/ext/google/contacts/" class="hoverlink" target="_blank" title="Buscar ahora entre mis contactos">Google</a></li>
+            {% else %}
+                <li>Google</li>
             {% endif %}
             </ul>
+            <ul id="known-contacts">
+                <li>
+                    <img src="/user/jneight/picture/">
+                    <span class="username"><a href="">jneight</a></span>
+                    <span class="follow">
+                        <div id="following_state_{{ id }}">
+                            <span onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                        </div>
+                    </span>
+                </li>
+            </ul>
+            <hr>
+            
+            <ul id="suggested-contacts">
+                <li>
+                    <img src="/user/jneight/picture/">
+                    <span class="username"><a href="">jneight</a></span>
+                    <span class="follow">
+                        <div id="following_state_{{ id }}">
+                            <span onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                        </div>
+                    </span>
+                    <hr>
+                    <a href="">"lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."</a>
+                    <hr>
+                </li>
+            </ul>
+            
             <span class="btn" id="last-step">Paso 2</span>
             <div class="note clear">
                 <strong class="show-more" onclick="javascript:toggle_showMore()">[Ver más]</strong><strong>(1)</strong>: 
