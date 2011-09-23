@@ -413,13 +413,13 @@ def confirm(request, user, code):
     u = User.objects.get_by_email_not_confirm(email)
     if u is not None:
         if u.confirm_user(code):
-            msg = _("User %s confirmed. Please log in.") % user
+            msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u
             return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
     u = User.objects.get_by_email(email, keys_only=True)
     if u is not None:
-        msg = _("User %s confirmed. Please log in.") % user
+        msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u
     else:
-        msg = _("Invalid user %s") % user
+        msg = _("Usuario erroneo %s.") % email
     return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
 
 
