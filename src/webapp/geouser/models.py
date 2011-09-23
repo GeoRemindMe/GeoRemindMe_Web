@@ -478,10 +478,16 @@ class User(polymodel.PolyModel, HookedModel):
             sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
             scgoogleplaces = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
             save = db.put_async([sociallinks, scgoogleplaces])
-            from google.appengine.ext.deferred import defer
             from signals import user_new
             from watchers import new_user_registered
             user_new.send(sender=user, status=trans)
+            try:
+                generico = User.objects.get_by_username('georemindme')
+                if generico is not None:
+                    user.add_following(followid=generico.id)
+                    generico.add_following(followid=user.id)
+            except:
+                pass
             save.get_result()
             return user
 
