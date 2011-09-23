@@ -575,6 +575,8 @@ class Suggestion(Event, Visibility, Taggable):
                 from georemindme.models_utils import _Do_later_ft
                 later = _Do_later_ft(instance_key=self.key())
                 later.put()
+                import logging
+                logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
                 from google.appengine.ext import deferred
                 raise deferred.PermanentTaskFailure(e)
     

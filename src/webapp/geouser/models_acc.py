@@ -206,21 +206,13 @@ class UserCounter(db.Model):
     followings = db.IntegerProperty(default=0)
     followers = db.IntegerProperty(default=0)
     notifications = db.IntegerProperty(default=0)
+    supported = db.IntegerProperty(default=0)
+    influenced = db.IntegerProperty(default=0)
     created = db.DateTimeProperty(auto_now_add=True)
     
     @classproperty
     def objects(self):
         return UserCounterHelper()
-    
-    @property
-    def supported(self):
-        from georemindme.models_utils import ShardedCounter
-        return ShardedCounter.get_count('%s_supported'% self.parent().key())
-    
-    @property
-    def influenced(self):
-        from georemindme.models_utils import ShardedCounter
-        return ShardedCounter.get_count('%s_influenced'% self.parent().key())
     
     def _change_counter(self, prop, value):
         value = int(value)
@@ -240,12 +232,10 @@ class UserCounter(db.Model):
         return db.run_in_transaction(self._change_counter, 'alerts', value)
     
     def set_supported(self, value=1):
-        from georemindme.models_utils import ShardedCounter
-        return ShardedCounter.increase_counter('%s_supported'% self.parent().key(), value)
+        return db.run_in_transaction(self._change_counter, 'supported', value)
     
     def set_influenced(self, value=1):
-        from georemindme.models_utils import ShardedCounter
-        return ShardedCounter.increase_counter('%s_influenced'% self.parent().key(), value)
+        return db.run_in_transaction(self._change_counter, 'influenced', value)
     
     def set_followings(self, value=1):
         return db.run_in_transaction(self._change_counter, 'followings', value)
@@ -372,7 +362,8 @@ class UserTimelineSystem(UserTimelineBase):
 class UserTimeline(UserTimelineBase, Visibility):
     msg = db.TextProperty(required=False)
     msg_id = db.IntegerProperty(required=False, default=-1)
-    instance = db.ReferenceProperty(None) 
+    instance = db.ReferenceProperty(None)
+    _new = False
     
 #    @property
 #    def msg(self):
@@ -477,6 +468,8 @@ class UserTimeline(UserTimelineBase, Visibility):
 
     def notify_followers(self):
         if self._is_public():
+            from geoalert.models import Event
+            from geovote.models import Comment, Vote
             if UserTimelineFollowersIndex.all().ancestor(self.key()).count() != 0:
                 return True
             followers = self.user.get_followers()
@@ -491,6 +484,8 @@ class UserTimeline(UserTimelineBase, Visibility):
                 from geovote.models import Comment, Vote
                 if isinstance(self.instance, Comment) or isinstance(self.instance, Vote):
                     index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.instance.user.id])
+                if isinstance(self.instance, User):
+                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.id])    
                 else:
                     index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.user.id])
                 index.put()
@@ -511,7 +506,7 @@ class UserTimeline(UserTimelineBase, Visibility):
         else:  
             super(self.__class__, self).put()
             from signals import user_timeline_new
-            from watchers import *
+            from watchers import new_timeline
             user_timeline_new.send(sender=self)
             
 

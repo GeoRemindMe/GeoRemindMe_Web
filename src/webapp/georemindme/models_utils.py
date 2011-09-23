@@ -73,6 +73,7 @@ class ShardedCounter(db.Model):
                 counter = cls(key_name=shard_key, instance_key=instance)
             counter.count += count
             counter.put()
+        
         db.run_in_transaction(increase)
         if count > 0:
             memcache.incr(str(instance), initial_value=0)
