@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Expires" content="0">
 	<title>
-      {% block title %}Welcome{% endblock %} &mdash; GeoRemindMe
+      {% block title %}GeoRemindMe! un mundo entero de sugerencias por descubrir{% endblock %}
     </title>
        
     <!-- URLs from Django to a Global var in JS -->
@@ -70,7 +70,7 @@
 					<ul class="lavaLamp">
 						<li class="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
 						<li class="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
-						<li class="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">{% if notifications > 0 %}<strong>Notificaciones</strong>{% else %}Notificaciones{%endif%}</a></li>
+						<li class="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">{% if notifications > 0 %}<strong><u>Notificaciones</u></strong>{% else %}Notificaciones{%endif%}</a></li>
 
 					</ul>
 				{% endblock %}
