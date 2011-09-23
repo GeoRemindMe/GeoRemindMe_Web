@@ -6,7 +6,7 @@
 
 <li class="msg-{{obj.msg_id}}">
     <div class="avatar">
-        <a href="/fb/user/georemindme/" title="GeoRemindMe">
+        <a href="{% url2 in_facebook public_profile 'georemindme' %}" title="GeoRemindMe">
             <img src="{% embedded_avatar 'georemindme' %}" alt="avatar"/>
         </a>
     </div>
