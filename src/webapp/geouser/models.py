@@ -444,7 +444,7 @@ class User(polymodel.PolyModel, HookedModel):
         return True
 
     @classmethod
-    def register(cls, language='en', **kwargs):
+    def register(cls, language='en', confirmed=False, **kwargs):
         '''
         Registra un nuevo usuario, crea todas las instancias hijas necesarias
 
@@ -467,6 +467,8 @@ class User(polymodel.PolyModel, HookedModel):
         if 'email' in kwargs:
             validate_email(kwargs['email'].decode('utf8'))
         user = User(**kwargs)
+        if confirmed:
+            user.toggle_confirmed()
         user.put()
         trans = db.run_in_transaction(_tx, user)
         if not trans:
