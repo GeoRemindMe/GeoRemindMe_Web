@@ -478,7 +478,6 @@ class Suggestion(Event, Visibility, Taggable):
             response =  client.set_pack('http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
             self._short_url = response['packUrl']
         except Exception, e:
-            raise
             import logging
             logging.error('ERROR EN VAVAG: %s' % e)
             self._short_url = None
