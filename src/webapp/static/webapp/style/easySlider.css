@@ -1,0 +1,211 @@
+/* content */
+				
+	.left{
+		float:left;
+		margin-top:.5em;
+		margin-right:15px;
+		}			
+	.left img{
+		border:1px solid #e1e1e1;
+		border-top:1px solid #e8e8e8e8;
+		border-left:1px solid #e8e8e8e8;
+		background:#f1f1f1;
+		padding:5px;
+		}				
+			
+	/* slider */
+
+		#slider ul, #slider li{ 
+			margin:0;
+			padding:0;
+			list-style:none;
+			}	
+		#slider, #slider li{ 
+			height:95px;
+			width:420px;
+			overflow:hidden;
+			}	
+		#slider{ 
+			margin-left:5px;
+			margin-right:10px;
+			float:left;
+			margin-bottom: 10px;
+            padding-top: 10px;
+			border:1px dotted #777;
+            line-height: 2em;
+			}	
+		#prevBtn, #nextBtn{ 
+			display:block;
+			width:24px;
+			height:77px;
+			float:left;
+			}	
+		#nextBtn{ 
+			left:701px;
+			}														
+		#prevBtn a, #nextBtn a{  
+			display:block;
+			width:30px;
+			height:77px;
+			background:url("/static/webapp/img/login_sec/btn_prev.png") no-repeat 0 10px;	
+			text-indent: -8000px
+			}	
+		#nextBtn a{ 
+			background:url("/static/webapp/img/login_sec/btn_next.png") no-repeat 0 10px;	
+			}								
+	
+	/* // slider */													
+
+	.col strong, .full strong{
+		padding:0 2px;
+		background:#f1f1f1;
+		}
+	.col a, .full a{
+		font-weight:bold;
+		text-decoration:underline;
+		}		
+
+
+	.full ul, .full li{
+		margin:0;
+		padding:0;
+		list-style:none;
+		}
+	.full li{
+		padding:3px 15px;
+		background:#f1f1f1;
+		margin-bottom:1px;
+		}		
+
+/* // content */
+
+#share-icon{
+	background:url("/static/webapp/img/login_sec/share.png") no-repeat 5px 10px;	
+}
+#rate-icon{
+	background:url("/static/webapp/img/login_sec/rate.png") no-repeat 5px 10px;	
+}
+#search-icon{
+	background:url("/static/webapp/img/login_sec/search.png") no-repeat 5px 10px;	
+}
+#print-icon{
+	background:url("/static/webapp/img/login_sec/print.png") no-repeat 5px 10px;	
+}
+
+#suscription-icon{
+	background:url("/static/webapp/img/login_sec/suscription.png") no-repeat 5px 10px;	
+}
+#checkin-icon{
+	background:url("/static/webapp/img/login_sec/checkin.png") no-repeat 20px 10px;	
+}
+#customize-icon{
+	background:url("/static/webapp/img/login_sec/customize.png") no-repeat 5px 10px;	
+}
+#whatsup-icon{
+	background:url("/static/webapp/img/login_sec/whatsup.png") no-repeat 50px 0;	
+}
+#explore-icon{
+	background:url("/static/webapp/img/login_sec/explore.png") no-repeat 50px 0;	
+}
+#reminder-icon{
+	background:url("/static/webapp/img/login_sec/reminder.png") no-repeat 50px 0;	
+}
+#fb-compatible{
+	background:url("/static/webapp/img/icons/social/fb.png") no-repeat 0px 0;	
+}
+#twitter-compatible{
+	background:url("/static/webapp/img/icons/social/twitter.png") no-repeat 0px 0;	
+}
+#gcal-compatible{
+	background:url("/static/webapp/img/icons/social/gcal.png") no-repeat 0px 0;	
+}
+
+
+.slide-icon{
+    display: block;
+    font-size: 1.5em;
+    margin: 0 auto;
+    padding: 5px 5px 5px 80px;
+    width: 300px;
+}
+ul#benefits {
+	height: 130px;
+    margin-bottom: 10px;
+    margin-top: 25px;
+}
+ul#benefits li{
+	list-style:none;
+	float:left;
+	width:130px;
+	margin:0;
+	padding:80px 8px 0;
+	text-align:center;
+	
+}
+
+ul#compatible {
+	height: 40px;
+	float:left;
+	clear:none;
+	margin-top: 15px;
+}
+ul#compatible li{
+	display: block;
+    float: left;
+    height: 40px;
+    list-style: none outside none;
+    margin: 0;
+    width: 45px;
+	
+}
+ul#compatible li span{
+	display:none;
+}
+
+#description-list p{
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+p#p-compatible{
+	float:left;
+	line-height: 32px;
+	margin-right:10px;
+	margin-top: 15px;
+}
+#know_more p {
+	clear: both;
+    font-size: 1.1em;
+    font-weight: normal;
+	margin:0;
+}
+
+/*
+ * PRESS SLIDER
+ */
+
+#media-appearances ul, #media-appearances li{ 
+			margin:0;
+			padding:0;
+			list-style:none;
+			width:490px;
+			
+			}	
+
+#media-appearances{ 
+	margin-left:5px;
+	margin-right:10px;
+	float:left;
+	height:550px;
+	text-align:center;
+	overflow:hidden;	
+	border:1px dotted #ccc;
+}
+	
+#media-appearances li img{
+	max-height:350px;
+}
+div#media-appearances ul li div.center span{
+	display: block;
+}
+
