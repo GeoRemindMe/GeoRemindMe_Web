@@ -1002,13 +1002,10 @@ function getEventPlace(){
             for (var i = 0; i < results.length; i++) {
                 var place = results[i];
                 //~ createMarker(results[i]); 
-<<<<<<< HEAD
-                if(results[i].reference==poi_reference)
-                    //console.log(results[i])
-=======
+
                 //~ if(results[i].reference==poi_reference)
                     //~ console.log(results[i])
->>>>>>> 91748379449d9c7fb73bdda0275f9a849120d5f1
+
             }
         }
     });
