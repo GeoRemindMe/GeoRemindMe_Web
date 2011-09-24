@@ -444,7 +444,7 @@ class User(polymodel.PolyModel, HookedModel):
         return True
 
     @classmethod
-    def register(cls, language='en', **kwargs):
+    def register(cls, language='en', confirmed=False, **kwargs):
         '''
         Registra un nuevo usuario, crea todas las instancias hijas necesarias
 
@@ -467,6 +467,8 @@ class User(polymodel.PolyModel, HookedModel):
         if 'email' in kwargs:
             validate_email(kwargs['email'].decode('utf8'))
         user = User(**kwargs)
+        if confirmed:
+            user.toggle_confirmed()
         user.put()
         trans = db.run_in_transaction(_tx, user)
         if not trans:
@@ -476,10 +478,16 @@ class User(polymodel.PolyModel, HookedModel):
             sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
             scgoogleplaces = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
             save = db.put_async([sociallinks, scgoogleplaces])
-            from google.appengine.ext.deferred import defer
             from signals import user_new
             from watchers import new_user_registered
             user_new.send(sender=user, status=trans)
+            try:
+                generico = User.objects.get_by_username('georemindme')
+                if generico is not None:
+                    user.add_following(followid=generico.id)
+                    generico.add_following(followid=user.id)
+            except:
+                pass
             save.get_result()
             return user
 

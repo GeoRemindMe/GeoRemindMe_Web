@@ -211,7 +211,6 @@ class PrivatePlace(POI):
             
     
     def put(self, from_comment=False):
-        self.update_location()
         if self.is_saved():
             super(PrivatePlace, self).put()
             if from_comment:

@@ -1018,26 +1018,78 @@ input{
         float:left;
     }
     
+    #last-step{
+        margin-bottom: 10px;
+    }
+    
+/*
     ul#link-social-accounts{
         list-style: none outside none;
         margin: 0 auto;
         padding: 0;
         width: 450px;        
     }
+*/    
     
-    #last-step{
-        margin-bottom: 10px;
+    #right-col #social-profile div#step-one p{
+        clear: left;
+        display: inline-block;
     }
-    
+    #right-col #social-profile div#step-one ul#link-social-accounts{
+        display: inline;
+    }
     #link-social-accounts li{
-        -moz-border-radius: 15px 15px 15px 15px;
-        -webkit-border-radius: 15px 15px 15px 15px;
-        background-color: #FFEE7F;
-        border: 2px solid #FFCB04;
-        list-style: none outside none;
-        margin: 10px;
-        padding: 10px;
+        display:inline;
+        margin-left:10px;
     }
+    
+    ul#known-contacts{
+        margin-top:10px;
+    }
+    #known-contacts li{
+        border: 1px dotted #777777;
+        display: inline-block;
+        margin-bottom: 15px;
+        margin-right: 15px;
+        padding: 0;
+        width: 165px;
+    }
+    #known-contacts li img{
+        border-right: 1px dotted #777777;
+        float: left;
+        height: 50px;
+        padding: 5px;
+        width: 50px;
+    }
+    #known-contacts li span a{
+        background-color: #E5E5E5;
+        border-bottom: 1px dotted;
+        color: black !important;
+        display: inline-block;
+        line-height: 30px;
+        padding: 0 4px;
+        text-align: center;
+        text-decoration: none;
+        width: 96px;
+    }
+    #known-contacts li span.follow a {
+        border:0;
+    }
+    #known-contacts li span a:hover{
+        background-color: #ffffff;
+    }
+    
+    
+    #known-contacts li span{
+    }
+    
+    ul#suggested-contacts{
+    }
+    ul#suggested-contacts li{
+    }
+    
+    
+/*
     #link-social-accounts li:hover{
         background-color: #FFCB04;
     }
@@ -1061,6 +1113,7 @@ input{
     ul#link-social-accounts li a#facebook{
         background: url("/static/facebookApp/img/sprite_social.png") no-repeat scroll 0 -64px transparent;
     }
+*/
     .rounded-button{
         -moz-border-radius: 4px 4px 4px 4px;
         border-radius: 4px 4px 4px 4px;
@@ -1233,6 +1286,7 @@ input{
         display: inline-block;
         margin: 0.5em 0 0.5em 0.5em;
         padding-left: 15px;
+        width:400px;
     }
     
     #activity .avatar{
@@ -3692,5 +3746,34 @@ ul.ui-autocomplete li.ui-menu-item:nth-child(even){
     float: none;
     margin: auto;
     width: 100px;
+}
+
+#loginSec #big-text.error404,
+#loginSec #big-text.error500{
+    font-size:1.1em;
+    line-height: 2em;
+}
+
+#loginSec #big-text.error404 p,
+#loginSec #big-text.error500 p{
+    font-size:1.1em;
+    line-height: 2em;
+     margin: 1em 0;
+}
+
+#loginSec #big-text.error-500 h1,
+#loginSec #big-text.error404 h1{
+    display:block;
+    margin-bottom: 1em;
+}
+
+#loginSec #big-text.error404 #DizzyChicken,
+#loginSec #big-text.error500 #DizzyChicken{
+    text-align: center;
+}
+
+#loginSec #big-text.error404 #DizzyChicken img,
+#loginSec #big-text.error500 #DizzyChicken img{
+    width: 170px;
 }
 

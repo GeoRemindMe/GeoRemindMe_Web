@@ -66,5 +66,5 @@ class OAuthFTClient(FTClient):
                                        method="POST",
                                        body=query)
         if resp['status'] != 200:
-            raise Exception(resp['status'])
+            raise Exception(content)
         return content

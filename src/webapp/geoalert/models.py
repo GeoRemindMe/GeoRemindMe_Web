@@ -5,7 +5,7 @@ import time
 
 from django.utils.translation import gettext_lazy as _
 from django.utils import simplejson
-from django.conf import settings as __web_settings
+from django.conf import settings
 from google.appengine.ext import db, search
 from google.appengine.ext.db import polymodel
 from google.appengine.ext.db import BadValueError
@@ -287,8 +287,8 @@ class Suggestion(Event, Visibility, Taggable):
     @property
     def short_url(self):
         from os import environ
-        if environ['REMOTE_ADDR'] == '127.0.0.1':
-            return 'http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
+#        if environ['HTTP_HOST'] == 'localhost:8080':
+#            return 'http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
         if self._short_url is None:
             self._get_short_url()
             if self._short_url is not None:
@@ -474,10 +474,12 @@ class Suggestion(Event, Visibility, Taggable):
         from os import environ
         try:
             # parche hasta conseguir que se cachee variable global
-            client = VavagRequest(__web_settings.SHORTENER_ACCESS['user'], __web_settings.SHORTENER_ACCESS['key'])
+            client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
             response =  client.set_pack('http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
             self._short_url = response['packUrl']
-        except:
+        except Exception, e:
+            import logging
+            logging.error('ERROR EN VAVAG: %s' % e)
             self._short_url = None
             
     def delete(self):
@@ -488,7 +490,7 @@ class Suggestion(Event, Visibility, Taggable):
             # nadie la añadió
             suggestion_deleted.send(sender=self, user=self.user)
             return super(Suggestion, self).delete()
-        generico = User.objects.get_by_username(__web_settings.GENERICO, keys_only=True)
+        generico = User.objects.get_by_username(settings.GENERICO, keys_only=True)
         if generico == Suggestion.user.get_value_for_datastore(self):
             from geolist.models import ListSuggestion 
             # es del usuario georemindme, la borramos
@@ -569,12 +571,14 @@ class Suggestion(Event, Visibility, Taggable):
                                                          }
                                                        )
                                )
-            except:  # Si falla, se guarda para intentar añadir mas tarde
+            except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
                 from georemindme.models_utils import _Do_later_ft
                 later = _Do_later_ft(instance_key=self.key())
                 later.put()
+                import logging
+                logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
                 from google.appengine.ext import deferred
-                raise deferred.PermanentTaskFailure()
+                raise deferred.PermanentTaskFailure(e)
     
     def __str__(self):
         return unicode(self.name).encode('utf-8')
