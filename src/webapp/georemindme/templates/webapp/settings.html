@@ -5,7 +5,23 @@
 {% block title %}Configuración de la cuenta{% endblock %}
 
 {% block extra_js %}
-    <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+    {% if in_facebook %}
+		<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+	{% endif %}
+	
+	<script type="text/javascript">
+		
+		$(document).ready(function(){
+			$('.help-icon img').click(function(){
+				//showHelp('#add-suggestion-btn','#addSuggestion-toolbox','up');
+				//showHelp('#','#help-language-text','up');
+				showHelp('#privacy-pointer','#help-privacy-text','left');
+				showHelp('#accounts-pointer','#help-accounts-control-text','left');
+				showHelp('#notifications-pointer','#help-notifications-text','left');
+			});
+		});
+		
+	</script>
 {%endblock%}
 
 {% block goBack %}{%endblock%}
@@ -15,7 +31,7 @@
         <h1>Configuración de la cuenta</h1>
         <a href="{% url2 in_facebook edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
         
-        <div class="section">
+        <div class="section" id="notifications-pointer">
             <div class="header">
                 <h2>Notificaciones</h2>
                 <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-notifications"></div>
@@ -37,10 +53,9 @@
             </dl>
         </div>
         
-        <div class="section">
+        <div class="section" id="accounts-pointer">
             <div class="header">
                 <h2>Control de cuentas</h2>
-                <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-accounts-control"></div>
             </div>
             
             <p>
@@ -87,10 +102,9 @@
             </table>
         </div>
         
-        <div class="section">
+        <div class="section" id="privacy-pointer">
             <div class="header">
                 <h2>Privacidad</h2>
-                <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-privacy"></div>
             </div>
         
             
@@ -137,24 +151,29 @@
         </div>
     </div>
     
-    <div class="help-txt" style="display:none" id="help-notifications-text" title="Ayuda: Notificaciones">
+    <div id="help-notifications-text">
         <p>Texto de ayuda notificaciones</p>
         <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
     </div>
     
-    <div class="help-txt" style="display:none" id="help-accounts-control-text" title="Ayuda: Control de cuentas">
+    <div id="help-accounts-control-text">
         <p>Texto de ayuda control de cuentas</p>
         <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
     </div>
     
-    <div class="help-txt" style="display:none" id="help-privacy-text" title="Ayuda: Privacidad">
+    <div id="help-privacy-text">
         <p>Texto de ayuda privacidad</p>
         <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
     </div>
     
-    <div class="help-txt" style="display:none" id="help-language-text" title="Ayuda: Idioma">
+    <div id="help-language-text">
         <p>Texto de ayuda idioma</p>
         <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
     </div>
+    
+    <div id="addSuggestion-toolbox" style="display:none">
+		<p>Empieza a crear contenido haciendo clic aquí.</p>
+		<p>Puedes compartir las sugerencias que crees a través de las redes sociales que tengas conectadas.</p>
+	</div>
     
 {% endblock %}

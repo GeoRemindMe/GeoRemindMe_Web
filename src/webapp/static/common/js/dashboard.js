@@ -2262,10 +2262,6 @@ $(document).ready(function(){
         position: ['center', 125]
     });
 
-
-    $('.help-icon img').click(function(){
-        $('#'+$(this).attr('id')+'-text').dialog("open");
-    })
     
     $("[placeholder]").placeholder();
                 

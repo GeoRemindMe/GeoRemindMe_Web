@@ -21,9 +21,9 @@ $(document).ready(function() {
     $('.help-txt').dialog(dialogSettings);
     
        
-    $('.help-icon img').click(function(){
-        $('#'+$(this).attr('id')+'-text').dialog("open");
-    })
+    //$('.help-icon img').click(function(){
+    //    $('#'+$(this).attr('id')+'-text').dialog("open");
+    //})
 });
 
 function facebookInit(config) {
