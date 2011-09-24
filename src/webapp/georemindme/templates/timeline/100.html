@@ -4,22 +4,43 @@
     100: Usuario empieza a seguirte | UT
 {% endcomment %} 
 
-<li class="msg-{{obj.msg_id}}">
-    {% if obj.is_private %}
-        NO entra porque en chronology está puesto que no
-    {% else %}
-        <div class="avatar">
-            <a href="{% url2 in_facebook public_profile obj.username %}" title="{{obj.username}}">
-                <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
-            </a>
-        </div>
-        <span class="timeline-icon">&nbsp;</span>
-        {% if obj.instance.username = request.user.username %}
-            <a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> ahora te está siguiendo<br>
-        {% else %}
-            <a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> ahora sigue a <a href="{% url2 in_facebook public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
-        {% endif %}
-    {% endif %}
 
-    <span class="timestamp"> {{obj.created|naturaltime}}</span>  
-</li>
+{% if obj.is_private and obj.instance.username = request.user.username %}
+	<li class="msg-{{obj.msg_id}}">
+		<div class="avatar">
+			<a href="{% url2 in_facebook public_profile obj.username %}" title="{{obj.username}}">
+				<img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+			</a>
+		</div>
+		<span class="timeline-icon">&nbsp;</span>
+		<a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> ahora te está siguiendo<br>
+		<span class="timestamp"> {{obj.created|naturaltime}}</span>  
+	</li>
+<!--
+	NO entra porque en chronology está puesto que no
+	<p>{{obj}}</p>
+	
+	<span class="timestamp"> {{obj.created|naturaltime}}</span>  
+-->
+{% else %}
+	{% if obj.instance.username and obj.username != 'georemindme' %}
+		<li class="msg-{{obj.msg_id}}">
+			<div class="avatar">
+				<a href="{% url2 in_facebook public_profile obj.username %}" title="{{obj.username}}">
+					<img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+				</a>
+			</div>
+			<span class="timeline-icon">&nbsp;</span>
+			{% if obj.instance.username = request.user.username %}
+				<a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> ahora te está siguiendo<br>
+			{% else %}
+				<a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> ahora sigue a <a href="{% url2 in_facebook public_profile obj.instance.username %}">{{obj.instance.username}}</a><br>
+			{% endif %}
+			
+			<span class="timestamp"> {{obj.created|naturaltime}}</span> 
+		</li>
+	{% endif %}
+{% endif %}
+
+
+

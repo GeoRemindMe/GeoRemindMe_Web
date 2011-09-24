@@ -813,7 +813,6 @@ function saveSuggestion(){
             tags: $('#id_tags').val()
         };
         if($('#date [type="checkbox"]').is(':checked')==false){
-
             //~ console.log("Entro por el checkbox no marcado");
             tmp=$('#date [type="checkbox"]');
             splittedDate=$('#start-date').val().split("/")
@@ -1002,10 +1001,8 @@ function getEventPlace(){
             for (var i = 0; i < results.length; i++) {
                 var place = results[i];
                 //~ createMarker(results[i]); 
-
                 //~ if(results[i].reference==poi_reference)
                     //~ console.log(results[i])
-
             }
         }
     });
@@ -1873,7 +1870,7 @@ $.fn.selection = function(start, end) {
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Requires jQuery Autocomplete plugin by Jï¿½rn Zaefferer - see http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/
+ * Requires jQuery Autocomplete plugin by Jörn Zaefferer - see http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/
  * jquery.autocomplete.js requires a minor modification for geo_autocomplete to work, as shown in /lib/jquery.autocomplete_geomod.js
  * 
  */
