@@ -7,6 +7,7 @@
 <li class="msg-{{obj.msg_id}}">
     {% if obj.is_private %}
         NO entra porque en chronology está puesto que no
+        {{obj}}
     {% else %}
         <div class="avatar">
             <a href="{% url2 in_facebook public_profile obj.username %}" title="{{obj.username}}">
