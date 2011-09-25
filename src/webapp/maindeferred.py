@@ -31,34 +31,9 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 use_library('django', '1.2')
 
-import django.core.handlers.wsgi
-import django.dispatch
-from django.core.signals import got_request_exception
-from django.db import _rollback_on_exception
-
-import cPickle, pickle
-sys.modules['cPickle'] = sys.modules['pickle']
-
-def log_exception(*args, **kwds):
-    logging.exception('Exception in task:')
-# Log errors.
-django.dispatch.Signal.connect(
-                               got_request_exception,
-                               log_exception
-                               )
-# Unregister the rollback event handler.
-django.dispatch.Signal.disconnect(
-                                  got_request_exception,
-                                  _rollback_on_exception
-                                  )
-defer_application = deferred.application
-
 def main():
-    # Create a Django application for WSGI.
-    global defer_application
-    #application = django.core.handlers.wsgi.WSGIHandler()
-    # Run the WSGI CGI handler with that application.
-    util.run_wsgi_app(defer_application)
+    import django
+    util.run_wsgi_app(deferred.application)
 
 if __name__ == '__main__':
-    main()
+    main() 

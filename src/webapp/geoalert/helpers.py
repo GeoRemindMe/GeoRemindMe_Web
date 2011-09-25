@@ -389,10 +389,11 @@ class SuggestionHelper(EventHelper):
             from georemindme.funcs import prefetch_refpropsEntity
             prefetch = prefetch_refpropsEntity(sugs, 'user')
             sugs = [{'id': sug.key().id(),
-                     'slug': sug['slug'],
+                     'slug': sug['slug'] if 'slug' in sug else None,
                      'username': prefetch[sug['user']].username,
-                     'name': sug['name'],
-                     'description': sug['description']} for sug in sugs]
+                     'name': sug['name'] if 'name' in sug else None,
+                     'description': sug['description'] if 'description' in sug else None} 
+                    for sug in sugs]
             if querier.is_authenticated():
                 client.set('%ssug_nearest%s,%s_%s' % (memcache.version,
                                                    location.lat,
