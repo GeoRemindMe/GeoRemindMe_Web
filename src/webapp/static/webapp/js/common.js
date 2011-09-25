@@ -57,9 +57,7 @@ $(document).ready(function(){
     });
 
 
-    $('.help-icon img').click(function(){
-        $('#'+$(this).attr('id')+'-text').dialog("open");
-    })
+
     
     $("[placeholder]").placeholder();
                 

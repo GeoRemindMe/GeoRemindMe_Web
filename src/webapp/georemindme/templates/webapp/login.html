@@ -30,6 +30,7 @@
             });
         });
     </script>
+
     
 	
 </head>
@@ -52,12 +53,9 @@
         <div id="login-bar">
             <p>Identifícate usando:</p>
             <ul>
-                <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para 
-identificarte"><span>Twitter</span></li>
-                <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para 
-identificarte"><span>Facebook</span></li>
-                <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para 
-identificarte"><span>Google</span></li>
+                <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para identificarte"><span>Twitter</span></li>
+                <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para identificarte"><span>Facebook</span></li>
+                <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para identificarte"><span>Google</span></li>
                 <li class="georemindme" title="Identifícate usando tus datos de GeoRemindMe"><span>GeoRemindMe</span></li>
             </ul>
             <div id="georemindme-form" style="display:none">
@@ -110,19 +108,28 @@ identificarte"><span>Google</span></li>
 
                     </span>
                 </div>
+
 <!--
                 <div id="left-arrow">
                     <span>&nbsp;</span>
                 </div>
 				<div id="rollover">
+<<<<<<< HEAD
+					<p class="intro-text"><span class="bigger-intro-text"><strong>Compartir y recibir sugerencias</strong> usando tus redes sociales</span></p>
+=======
 					<p class="intro-text"><span class="bigger-intro-text"><strong>Compartir y recibir sugerencias</strong> usando 
 tus redes sociales</span></p>
+>>>>>>> 3e0646c68dfde503bc20d254a78fc525d7658153
 					<div class="users-box">
 						<article>
 							<img src="/static/webapp/img/kaos.png" alt="" class="user-avatar">
 							<p class="user-name">hhkaos</p>
+<<<<<<< HEAD
+							<p class="user-suggestion">Deberías ir al hackathon. Conoces mucha gente y aprendes un montón. Ya verás lo enrrollados que sosmos.</p>
+=======
 							<p class="user-suggestion">Deberías ir al hackathon. Conoces mucha gente y aprendes un montón. 
 Ya verás lo enrrollados que sosmos.</p>
+>>>>>>> 3e0646c68dfde503bc20d254a78fc525d7658153
 						</article>
 						<article>
 							<img src="/static/webapp/img/anna.png" alt="" class="user-avatar">
@@ -144,12 +151,14 @@ Ya verás lo enrrollados que sosmos.</p>
 				<h2>¿Eres nuevo?</h2>
                 <div id="register-with-social">
                     <p><u>Selecciona la cuenta</u> con la que quieres crear tu perfil:</p>
+
                     <ul id="register-menu">
                         <li id="twitter"><span>Twitter</span></li>
                         <li id="facebook" class="active"><span>Facebook</span></li>
                         <li id="google"><span>Google</span></li>
                     </ul>
                     <a href="/ext/twitter/perms" id="register-btn">Continuar</a>
+
                 </div>
 				
 				
@@ -159,8 +168,9 @@ Ya verás lo enrrollados que sosmos.</p>
 <!--
                         <input type="text" name="" value="" placeholder="Nombre de usuario"/>
 -->
-                        <span id="emailStatus" style="float:right;display:none;" class="ok">&nbsp;</span><input type="text" name="registerEmail" 
-id="registerEmail" placeholder= "Email" />
+
+                        <span id="emailStatus" style="float:right;display:none;" class="ok">&nbsp;</span><input type="text" name="registerEmail" id="registerEmail" placeholder= "Email" />
+
                         <div></div>
                         <input type="password" name="userRegisterPass1" id="userRegisterPass1" placeholder="Contraseña"/>
                         <input type="password" name="userRegisterPass2" id="userRegisterPass2" placeholder="Repite la contraseña"/>
@@ -196,11 +206,11 @@ id="registerEmail" placeholder= "Email" />
 -->
 		</div>
 		<div class="footer-links right-links">
-			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a 
-href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
+
+			 <a href="http://www.twitter.com/georemindme">@GeoRemindMe</a> · <a href="http://www.facebook.com/georemindme">Fans</a> · <a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
+
 		</div>
 	</footer>
     {% include "browser_msgs.html" %}
 </body>
 </html>
-

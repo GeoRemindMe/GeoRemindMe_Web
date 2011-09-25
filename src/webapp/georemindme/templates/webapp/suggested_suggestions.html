@@ -119,10 +119,15 @@
                                     //Ponemos de donde están cerca
                                     if(address)
                                         $('#my_location').text(address);
-                                    $('#close-suggestions-box').show();
+                                    else{
+                                        loadHTML5Location();
+                                        
+                                    }
+                                    $('#close-suggestions-box').slideIn('slow');
                                 }else{
+                                    
                                     $('#close-suggestions').empty();
-                                    $('#close-suggestions').append("<li><div style=\"padding:0 1.3em;line-height:2em\">Lo sentimos no se ha encontrado ninguna sugerencia cerca tuya</div></li>");
+                                    $('#close-suggestions').append("<li><div style=\"padding:0 1.3em;line-height:2em\">Lo sentimos mucho pero no hemos encontrado ninguna sugerencia cerca de tu localización. Estamos trabajando todo lo que podemos para conseguir que entre todos creemos sugerencias por todo el mundo y pronto esta herramienta desarrolle todo el potencial que tiene. Si te gusta el proyecto y quieres unirte a la comunidad de colaboradores por favor escríbenos a info@georemindme.com y nos pondremos en contacto contigo lo más rápido posible. Disculpa por las molestias y ¡gracias por estar aquí!</div></li>");
                                 }
                             }
                         });
@@ -137,7 +142,7 @@
                                 //Guardamos la latitud y longitud detectadas
                                 $.cookies.set('lat',latitud);
                                 $.cookies.set('lng',longitud);
-                                
+                                /*
                                 //Recuperamos las sugerencias y las metemos en la caja
                                 loadSuggestions(latitud,longitud);
                                 
@@ -151,6 +156,7 @@
                                 });
                                 
                                 $('#close-suggestions-box').show();
+                                */
                                 
                             }, function(e){
                                 tmp=e;
@@ -158,77 +164,44 @@
                             });
                         }
                     }
-                    function loadCookieLocation(){
-                        //Cargamos la latitud y longitud
-                        var latitud=$.cookies.get('lat')
-                        var longitud=$.cookies.get('lng')
-                        var address=$.cookies.get('address')
-                        if($.cookies.get('near_suggestions')=="" || $.cookies.get('near_suggestions')==null)
-                            loadSuggestions(latitud,longitud);
-                        else{
-                            $('#my_location').text($.cookies.get('address'))
-                            $('#close-suggestions').empty();
-                            $('#close-suggestions').append($.cookies.get('near_suggestions'));
-                            $('#close-suggestions-box').show();                        
-                        }
-                        
-                        
-                        
-                    }
-                    if($.cookies.get('georemindme_session_cookie')==null){
-                        //Si no estamos identificados 
+                    
+                    //-------------------------------------------------------------------------
+                    //Primero si no tenemos localización la pedimos
+                    {% if request.user.is_authenticated %}
+                        var latlng="{{request.user.last_point}}";
+                        latlng=latlng.split(",");
+                        $.cookies.set('lat',latlng[0]);
+                        $.cookies.set('lng',latlng[1]);
+                    {% endif %}
+                    
+                    if(typeof(latlng)==undefined){
                         if($.cookies.get('lat')==null || $.cookies.get('lng')==null){
-                            //Si no tenemos una latitud y longitud guardadas la pedimos por HTML5
                             loadHTML5Location();
-                            
-                        }else{
-                            //Si tenemos ya cookie
-                            loadCookieLocation();
                         }
-                    }else{
-                        //Si estamos identificados
-                        {% if request.user.is_authenticated %}
-                            if($.cookies.get('lat')==null || $.cookies.get('lng')==null){
-                                
-                                var latlng="{{request.user.last_point}}";
-                                latlng=latlng.split(",");
-                                $.cookies.set('lat',latlng[0]);
-                                $.cookies.set('lng',latlng[1]);
-                                //Si no tenemos una latitud y longitud ponemos la última recordada
-                                loadSuggestions();
-                                
-                                //Ponemos de donde están cerca
-                                var latitud=latlng[0];
-                                var longitud=latlng[1];
-                                $('#my_location').reversegeocode({
-                                    lat: latitud,
-                                    lng: longitud,
-                                    callback:function(address){
-                                        $.cookies.set('address',address);    
-                                        $('#my_location').text(address);
-                                    }
-                                });
-                                
-                                
-                                $('#close-suggestions-box').show();
-                            }else{
-                                //Si tenemos ya cookie
-                                loadCookieLocation();
-                            }
-                        {% endif %}
                     }
                     
-                    
-                    
-                    
+                    //Si obtenemos localización procedemos
+                    if($.cookies.get('lat')!=null && $.cookies.get('lng')!=null){
+                        var latitud=$.cookies.get('lat');
+                        var longitud=$.cookies.get('lng');
                         
+                        //Si no tenemos la dirección la buscamos
+                        if($.cookies.get('address')==null){
+                            $('#my_location').reversegeocode({
+                                lat: latitud,
+                                lng: longitud,
+                                callback:function(address){
+                                    $.cookies.set('address',address);    
+                                    $('#my_location').text(address);
+                                }
+                            });
+                        }
+                        
+                        //Procedemos a cargar las sugerencias si las hubiese
+                        loadSuggestions(latitud,longitud);
+                        
+                    }
                     
-                    //if($.cookies.get('near_suggestions')==null){                    
-                        //loadSuggestions();
-                    //}else{
-                    //    $('#close-suggestions').empty();
-                     //   $('#close-suggestions').append($.cookies.get('near_suggestions'));
-                    //}
 				</script>
 				
 				{%endif%}
@@ -256,7 +229,8 @@
             -->
                     </div>
                     <div class="footer-links">
-                        <a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
+                        <a href="http://www.twitter.com/georemindme">@GeoRemindMe</a> · <a href="http://www.facebook.com/georemindme">Fans</a> · <a href="http://blog.georemindme.com/">Blog</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a> 
+                        
                     </div>
                     <p id="colored-chickens"><img src="/static/common/img/transparent.gif"></p>
                 </footer>
