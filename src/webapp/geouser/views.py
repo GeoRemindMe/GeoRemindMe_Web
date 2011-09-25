@@ -562,7 +562,7 @@ def get_friends_twitter(request):
         c = TwitterClient(user=request.user)
         contacts = c.get_friends_to_follow()
     except:
-        return HttpResponseRedirect(reverse('geouser.views.get_perms_twitter'))
+        return HttpResponseRedirect(reverse('geouser.views.login_twitter'))
     
     return render_to_response('webapp/contacts_twitter.html', {'contacts' : contacts, },
                               context_instance=RequestContext(request))
