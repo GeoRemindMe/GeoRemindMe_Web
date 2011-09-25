@@ -144,15 +144,15 @@ class User(polymodel.PolyModel, HookedModel):
         from geovote.models import Comment, Vote
         from geoalert.models import Event
         from geolist.models import List
-        from google.appengine.datastore import datastore_query
+        #from google.appengine.datastore import datastore_query
         # definir las consultas
         query_chrono = UserTimelineFollowersIndex.all().filter('followers =', self.key()).order('-created')
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
         # recuperar cursores
         if query_id is not None and len(query_id)>=2:
             cursor_chronology = query_id[0]
-            query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology)
             cursor_activity = query_id[1]
+            query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology)
             query_activity = query_activity.with_cursor(start_cursor=cursor_activity)
         else:
             cursor_activity = None
@@ -160,8 +160,8 @@ class User(polymodel.PolyModel, HookedModel):
         # let's go!
         timeline = []
         timeline_chrono = []
-        activity_async = query_activity.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
-        chrono_async = query_chrono.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
+        activity_async = query_activity.run()#run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
+        chrono_async = query_chrono.run()#run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
         _go_chrono = True
         chrono = None
         for activity_timeline in activity_async:
@@ -172,6 +172,7 @@ class User(polymodel.PolyModel, HookedModel):
                 if chrono is None:
                     try:
                         chrono = chrono_async.next()
+                        #chrono = chrono_async.pop(0)
                     except:
                         _go_chrono = False
                         break
