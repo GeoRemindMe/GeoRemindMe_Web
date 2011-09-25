@@ -41,13 +41,18 @@ handlers:
 - url: /test.*
   script: gaeunit/gaeunit.py
   
+- url: /_ah/queue/deferred
+  script: maindeferred.py
+  login: admin
+  
 - url: /.*
   script: main.py
   secure: always
+  
 
 builtins:
 - appstats: on
-- deferred: on
+- remote_api: on
 
 inbound_services:
 - warmup
