@@ -354,13 +354,13 @@ class SuggestionHelper(EventHelper):
         import memcache
         client = memcache.mem.Client()
         if querier.is_authenticated():
-            sugs = client.gets('%ssug_nearest%s,%s_%s' % (memcache.version,
+            sugs = client.get('%ssug_nearest%s,%s_%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon,
                                                    querier.username,
                                                    ))
         else:
-            sugs = client.gets('%ssug_nearest%s,%s' % (memcache.version,
+            sugs = client.get('%ssug_nearest%s,%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon
                                                    ))

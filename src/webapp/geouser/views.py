@@ -249,6 +249,9 @@ def public_profile(request, username, template='webapp/profile.html'):
     from georemindme.funcs import prefetch_refprops
     from geoalert.models import Suggestion
     from geoalert.views import get_suggestion
+    if username.lower() == 'none':
+        raise Http404()
+    
     if request.user.is_authenticated() \
      and request.user.username is not None \
      and request.user.username.lower() == username.lower():

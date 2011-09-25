@@ -481,13 +481,6 @@ class User(polymodel.PolyModel, HookedModel):
             from signals import user_new
             from watchers import new_user_registered
             user_new.send(sender=user, status=trans)
-            try:
-                generico = User.objects.get_by_username('georemindme')
-                if generico is not None:
-                    user.add_following(followid=generico.id)
-                    generico.add_following(followid=user.id)
-            except:
-                pass
             save.get_result()
             return user
 

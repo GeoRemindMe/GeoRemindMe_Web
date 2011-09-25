@@ -20,6 +20,7 @@ import os, logging, sys
 #carga la aplicacion
 from google.appengine.ext.webapp import util
 from google.appengine.dist import use_library
+from google.appengine.ext import deferred
 
 # elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
 for k in [k for k in sys.modules if k.startswith('django')]: 
@@ -48,8 +49,10 @@ import django.core.handlers.wsgi
 import django.dispatch
 from django.core.signals import got_request_exception
 from django.db import _rollback_on_exception
+
 import cPickle, pickle
 sys.modules['cPickle'] = sys.modules['pickle']
+
 
 def log_exception(*args, **kwds):
     logging.exception('Exception in request:')
