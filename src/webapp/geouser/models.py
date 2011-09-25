@@ -144,7 +144,7 @@ class User(polymodel.PolyModel, HookedModel):
         from geovote.models import Comment, Vote
         from geoalert.models import Event
         from geolist.models import List
-        #from google.appengine.datastore import datastore_query
+        from google.appengine.datastore import datastore_query
         # definir las consultas
         query_chrono = UserTimelineFollowersIndex.all().filter('followers =', self.key()).order('-created')
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
@@ -160,8 +160,8 @@ class User(polymodel.PolyModel, HookedModel):
         # let's go!
         timeline = []
         timeline_chrono = []
-        activity_async = query_activity.run()#run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
-        chrono_async = query_chrono.run()#run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
+        activity_async = query_activity.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
+        chrono_async = query_chrono.run(config=datastore_query.QueryOptions(limit=TIMELINE_PAGE_SIZE))
         _go_chrono = True
         chrono = None
         for activity_timeline in activity_async:
