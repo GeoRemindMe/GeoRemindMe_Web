@@ -216,6 +216,7 @@ def dashboard(request, template='webapp/dashboard.html'):
     from django.utils import simplejson
     chronology[0] = simplejson.dumps(chronology[0])
     if friends is None:
+        # usuarios con mas sugerencias
         from geouser.models_acc import UserCounter
         from georemindme.funcs import fetch_parentsKeys
         top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
