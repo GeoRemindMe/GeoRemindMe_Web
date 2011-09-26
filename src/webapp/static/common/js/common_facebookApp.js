@@ -1706,7 +1706,13 @@ GRM.loadTimeline = function(params){
             var container=params['container'];
             var url=params['url'];
             
-            var data="query_id="+$(container).attr("value");
+            var data = {};
+            data['query_id'] = $(container).attr("value");
+            
+            if ($(container).attr("username"))
+                data['username'] = $(container).attr("username");
+            
+            
             $('.load-more').addClass("waiting");
 
             
