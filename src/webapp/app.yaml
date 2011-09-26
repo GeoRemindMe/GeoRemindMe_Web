@@ -40,9 +40,10 @@ handlers:
   
 - url: /test.*
   script: gaeunit/gaeunit.py
+  login: admin
   
 - url: /_ah/queue/deferred
-  script: maindeferred.py
+  script: main.py
   login: admin
   
 - url: /.*
