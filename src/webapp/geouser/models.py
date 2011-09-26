@@ -237,11 +237,11 @@ class User(polymodel.PolyModel, HookedModel):
         if query_id is None:
             query = datastore.Query(kind='_Notification', filters={'owner =': self.key()})
         if query_id is not None:
-            query = datastore.Query(kind='_Notification', filters={'owner =': self.key()}, cursor=query_id)
+            query = datastore.Query(kind='_Notification', filters={'owner =': self.key()}, cursor=datastore.datastore_query.Cursor.from_websafe_string(query_id))
         query.Order(('_created', datastore.Query.DESCENDING))
         timelines = query.Get(TIMELINE_PAGE_SIZE)
         timelines, instances = prefetch_timeline(timelines)
-        return [query.GetCursor(), [{'id': timeline.id, 'created': timeline.created,
+        return [query.GetCursor().to_websafe_string(), [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
                         'msg': timeline.msg, 
                         'username':timeline.user.username,

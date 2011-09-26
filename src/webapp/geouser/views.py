@@ -392,9 +392,16 @@ def followers_panel(request, username, template='webapp/followers.html'):
     else:
         from geouser.api import get_followers
         followers = get_followers(request.user, username=username)
+    
     if not request.user.is_authenticated():
             pos = template.rfind('.html')
             template = template[:pos] + '_anonymous' + template[pos:]
+    if followers is None:
+        return  render_to_response(template, {'followers': [],
+                                           'username_page':username
+                                           },
+                                           context_instance=RequestContext(request)
+                               )
     return  render_to_response(template, {'followers': followers[1],
                                           'username_page':username,
                                           },
@@ -411,6 +418,12 @@ def followings_panel(request, username, template='webapp/followings.html'):
     if not request.user.is_authenticated():
             pos = template.rfind('.html')
             template = template[:pos] + '_anonymous' + template[pos:]
+    if followings is None:
+        return  render_to_response(template, {'followings': [],
+                                           'username_page':username
+                                           },
+                                           context_instance=RequestContext(request)
+                               )
     return  render_to_response(template, {'followings': followings[1],
                                            'username_page':username
                                            },
