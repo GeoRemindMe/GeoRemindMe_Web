@@ -992,12 +992,46 @@ GRM.like = function(settings) {
         
         $(this).click(function() {
             
-            GRM.wait();
             
             var type = $(this).attr('type'), id = $(this).attr('value'), vote = (typeof $(this).attr('like') != "undefined" )?-1:1;
             
+            /*GRM.wait();
             if (settings.progress_class)
-                $(this).addClass(settings.progress_class);
+                $(this).addClass(settings.progress_class);*/
+            
+            function toggleme(me) {
+                // disliking
+                if (typeof me.attr('like') != "undefined") {
+                    // send vote -1
+                    me.find('.dislike').hide();
+                    me.find('.like').show();
+                    me.removeAttr("like");
+                    
+                    if (settings.dislike_class)
+                        me.removeClass(settings.dislike_class);
+                    
+                    if (settings.like_class)
+                        me.addClass(settings.like_class);
+                        
+                }
+                
+                // liking
+                else {
+                    // send vote +1
+                    me.find('.like').hide();
+                    me.find('.dislike').show();
+                    me.attr("like","true");
+                    
+                    if (settings.like_class)
+                        me.removeClass(settings.like_class);
+                    
+                    if (settings.dislike_class)
+                        me.addClass(settings.dislike_class);
+                }
+                
+            }
+            
+            toggleme($(this));
             
             $.ajax({
                     type: "POST",
@@ -1007,41 +1041,15 @@ GRM.like = function(settings) {
                         puntuation: vote
                     },
                     context: $(this),
+                    error: function() { toggleme($(this)); },
                     success: function(data){
-                        
-                        // disliking
-                        if (typeof $(this).attr('like') != "undefined" && data!=null) {
-                            // send vote -1
-                            $(this).find('.dislike').hide();
-                            $(this).find('.like').show();
-                            $(this).removeAttr("like");
-                            
-                            if (settings.dislike_class)
-                                $(this).removeClass(settings.dislike_class);
-                            
-                            if (settings.like_class)
-                                $(this).addClass(settings.like_class);
-                                
-                        }
-                        
-                        // liking
-                        else if(data!=null) {
-                            // send vote +1
-                            $(this).find('.like').hide();
-                            $(this).find('.dislike').show();
-                            $(this).attr("like","true");
-                            
-                            if (settings.like_class)
-                                $(this).removeClass(settings.like_class);
-                            
-                            if (settings.dislike_class)
-                                $(this).addClass(settings.dislike_class);
-                        }
                         
                         if(data!=null)
                             $(this).find('.increase').text(data.votes);
-                        else
+                        else {
                             showMessage("Pio! Perdona se ha producido un error<br>Estamos trabajando en solucionarlo","error");
+                            toggleme($(this));
+                        }
                         
                         if (settings.callback)
                             settings.callback();
@@ -1049,10 +1057,10 @@ GRM.like = function(settings) {
                     },
                     complete: function()
                     {
+                        /*
                         if (settings.progress_class)
                             $(this).removeClass(settings.progress_class);
-                        
-                        GRM.nowait();
+                        GRM.nowait();*/
                     }
                 });
         });
@@ -1078,6 +1086,7 @@ GRM.remember = function(settings) {
        
     return this.each(function(){
 
+
         // get init state
         var state = (typeof $(this).attr('remember') != "undefined" );
 
@@ -1095,7 +1104,6 @@ GRM.remember = function(settings) {
 
         $(this).click(function() {
             
-            GRM.wait();
             
             //Primero comprobamos el tipo de mensaje
             var elemType;
@@ -1106,9 +1114,45 @@ GRM.remember = function(settings) {
             var id = $(this).attr('value'), url = (typeof $(this).attr('remember') != "undefined" )?"/ajax/delete/"+elemType+"/follower/":"/ajax/add/"+elemType+"/follower/";
             
             
-            
+            /*
+            GRM.wait();
             if (settings.progress_class)
-                $(this).addClass(settings.progress_class);
+                $(this).addClass(settings.progress_class);*/
+
+
+            function toggleme(me) {
+                // disliking
+                if (typeof me.attr('remember') != "undefined" ) {
+                    // send vote -1
+                    me.find('.forget').hide();
+                    me.find('.remember').show();
+                    me.removeAttr("remember");
+                    
+                    if (settings.forget_class)
+                        me.removeClass(settings.forget_class);
+                    
+                    if (settings.remember_class)
+                        me.addClass(settings.remember_class);
+                        
+                }
+                
+                // liking
+                else {
+                    // send vote +1
+                    me.find('.remember').hide();
+                    me.find('.forget').show();
+                    me.attr("remember","true");
+                    
+                    if (settings.remember_class)
+                        me.removeClass(settings.remember_class);
+                    
+                    if (settings.forget_class)
+                        me.addClass(settings.forget_class);
+                    }
+                
+                }
+            
+            toggleme($(this));
             
             $.ajax({
                     type: "POST",
@@ -1118,46 +1162,19 @@ GRM.remember = function(settings) {
                         list_id:id
                     },
                     context: $(this),
+                    error: function() {
+                        toggleme($(this));
+                    },
                     success: function(){
-                        
-                        // disliking
-                        if (typeof $(this).attr('remember') != "undefined" ) {
-                            // send vote -1
-                            $(this).find('.forget').hide();
-                            $(this).find('.remember').show();
-                            $(this).removeAttr("remember");
-                            
-                            if (settings.forget_class)
-                                $(this).removeClass(settings.forget_class);
-                            
-                            if (settings.remember_class)
-                                $(this).addClass(settings.remember_class);
-                                
-                        }
-                        
-                        // liking
-                        else {
-                            // send vote +1
-                            $(this).find('.remember').hide();
-                            $(this).find('.forget').show();
-                            $(this).attr("remember","true");
-                            
-                            if (settings.remember_class)
-                                $(this).removeClass(settings.remember_class);
-                            
-                            if (settings.forget_class)
-                                $(this).addClass(settings.forget_class);
-                            }
                         
                         if (settings.callback)
                             settings.callback();
                     },
                     complete: function()
                     {
-                        if (settings.progress_class)
+                        /*if (settings.progress_class)
                             $(this).removeClass(settings.progress_class);
-                        
-                        GRM.nowait();
+                        GRM.nowait();*/
                     }
                 });
         });
