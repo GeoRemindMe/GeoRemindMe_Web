@@ -129,7 +129,10 @@ class FacebookClient(object):
     def get_friends(self, rpc=None):
         if self._fb_id is None:
             self.get_user_info()
-        friends = self.consumer.get_connections(self._fb_id, "friends", rpc=rpc)
+        #friends = self.consumer.get_connections(self._fb_id, "friends", rpc=rpc)
+        friends = self.consumer.fql('SELECT uid FROM user \
+                                    WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) \
+                                    AND is_app_user = 1')
         return friends
     
     def get_friends_to_follow(self, rpc=None):
@@ -141,7 +144,8 @@ class FacebookClient(object):
         friends = friends['data']
         registered = {}
         for f in friends:
-            user_to_follow = FacebookUser.objects.get_by_id(f['id'])
+            #user_to_follow = FacebookUser.objects.get_by_id(f['id'])
+            user_to_follow = FacebookUser.objects.get_by_id(f['uid'])
             if user_to_follow is not None and user_to_follow.user.username is not None and not self.user.is_following(user_to_follow.user):
                 registered[user_to_follow.user.id]= {
                                                    'username':user_to_follow.user.username, 

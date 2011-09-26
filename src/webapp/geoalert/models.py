@@ -287,8 +287,8 @@ class Suggestion(Event, Visibility, Taggable):
     @property
     def short_url(self):
         from os import environ
-#        if environ['HTTP_HOST'] == 'localhost:8080':
-#            return 'http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
+        if environ['HTTP_HOST'] == 'localhost:8080':
+            return 'http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
         if self._short_url is None:
             self._get_short_url()
             if self._short_url is not None:
