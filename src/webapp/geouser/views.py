@@ -207,6 +207,7 @@ def dashboard(request, template='webapp/dashboard.html'):
                                       )
     #------------------------------------------------------------------------------ 
     import memcache
+    friends = None
     friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
     if friends is None: # lanzamos las peticiones asincronas
         handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
@@ -215,11 +216,20 @@ def dashboard(request, template='webapp/dashboard.html'):
     from django.utils import simplejson
     chronology[0] = simplejson.dumps(chronology[0])
     if friends is None:
+        from geouser.models_acc import UserCounter
+        from georemindme.funcs import fetch_parentsKeys
+        top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
+        top_users = fetch_parentsKeys(top_users)
+        top_users = filter(None, top_users)
+        friends = {}
+        for user in top_users:
+            friends[user.id] = {'username': user.username,
+                                'id': user.id
+                                }
         from google.appengine.runtime import apiproxy_errors
         try:
             for rpc in list_rpc:
                 rpc.wait()
-            friends = {} # diccionario con todos los amigos
             #los unimos en uno
             [friends.update(rpc.friends) for rpc in handlers_rpcs]
             if len(friends) > 0:
@@ -627,19 +637,19 @@ def __update_users():
     generico = User.objects.get_by_username('georemindme')
     users = User.all()
     for user in users:
-#        profile = user.profile
-#        settings = user.settings
-#        counters = user.counters
-#        from models_acc import SearchConfigGooglePlaces
-#        from google.appengine.ext import db
-#        sociallinks = profile.sociallinks
-#        if sociallinks is None:
-#            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
-#        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
-#        if sc is None:
-#            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
-#        db.put([profile, settings, sc, counters, sociallinks])
-        user.add_following(followid=generico.id)
-        generico.add_following(followid=user.id)
+        profile = user.profile
+        settings = user.settings
+        counters = user.counters
+        from models_acc import SearchConfigGooglePlaces
+        from google.appengine.ext import db
+        sociallinks = profile.sociallinks
+        if sociallinks is None:
+            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
+        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
+        if sc is None:
+            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
+        db.put([profile, settings, sc, counters, sociallinks])
+#        user.add_following(followid=generico.id)
+#        generico.add_following(followid=user.id)
 
 
