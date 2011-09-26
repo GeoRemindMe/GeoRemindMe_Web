@@ -1,0 +1,57 @@
+/*
+ *
+ * Browser error
+ *  
+ */
+
+#browser-error-msg{
+    background: url("/static/webapp/img/colored_chickens.png") repeat-x scroll 4px 98% transparent;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 6px 5px rgba(0, 0, 0, 0.35);
+    font-size: 1.1em;
+    line-height: 2em;
+    margin: 2em auto;
+    padding: 1em 1em 3em;
+    width: 890px;
+}
+#browser-error-msg h1{
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: 1.5em;
+    border-bottom: 1px solid #CCCCCC;
+    color: #333333;
+}
+#browser-error-msg p{
+    margin: 0.5em 0;
+}
+#browser-error-msg strong{
+    font-weight: bold;
+}
+#browser-error-msg ul,
+#browser-error-msg ol{
+    list-style: square outside none;
+    margin-bottom: 1em;
+    margin-left: 2em;
+}
+#browser-error-msg ol{
+    list-style: decimal outside none;
+}
+
+#browser-error-msg .bad-news{
+    background: -moz-linear-gradient(center top , #FFE0ED 0%, #FFD1E4 100%) repeat scroll 0 0 transparent;
+    display: inline-block;
+    font-size: 1em;
+    padding: 0 0.3em;
+}
+#browser-error-msg .good-news{
+    background:-moz-linear-gradient(center top , #CDEB8B 0%, #E0EAC9 100%) repeat scroll 0 0 transparent;
+    display: inline-block;
+    font-size: 1em;
+    padding: 0 0.3em;
+}
+#browser-error-msg a img{
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.55);
+    margin-left: 10px;
+    margin-top: 5px;
+}
