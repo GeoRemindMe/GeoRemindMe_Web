@@ -223,7 +223,7 @@ def dashboard(request, template='webapp/dashboard.html'):
         top_users = filter(None, top_users)
         friends = {}
         for user in top_users:
-            if not request.user.is_following(user):
+            if not user.key() == request.user.key() and not request.user.is_following(user):
                 friends[user.id] = {'username': user.username,
                                     'id': user.id
                                     }
