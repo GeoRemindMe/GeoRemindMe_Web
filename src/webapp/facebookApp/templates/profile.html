@@ -3,13 +3,7 @@
 {% load tags %}
 
 {% block title %}Perfil público de {{profile.username}}{% endblock %}
-{% block embed_js %}
-    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
-    <script src="/static/facebookApp/js/grm.js"></script>
-    <script src="/static/facebookApp/js/social.js"></script>
-    <script src="/static/facebookApp/js/chronology.js"></script>
-
-    
+{% block embed_js %}  
     <script type="text/javascript">
     
     $("#user-avatar").ready(function(){
