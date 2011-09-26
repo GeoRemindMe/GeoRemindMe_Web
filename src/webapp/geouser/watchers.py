@@ -62,7 +62,7 @@ def new_follower(sender, **kwargs):
     from models_acc import UserTimelineSystem, UserTimeline, UserSettings
     if not isinstance(kwargs['following'], db.Key):
         raise AttributeError
-    if kwargs['following'].username == 'georemindme' or sender.username == 'georemindme':
+    if kwargs['following'].id() == 962005 or sender.username == 'georemindme':
         return 
     settings = UserSettings.objects.get_by_id(kwargs['following'].id())
     if not settings.show_followings:
