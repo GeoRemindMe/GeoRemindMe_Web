@@ -1072,9 +1072,13 @@ $(document).ready(function(){
         $(this).find('ul:first:hidden').css({visibility: "visible",display: "none"}).slideDown(400);
     })
     
-    $("#left-col").css("height",$("#right-col").height()+'px');
-    $("#right-col").bind("resize",function(){
-        $("#left-col").css("height",$(this).height()+'px');
+    /*** Resize right column ***/
+    $("#left-col").css("height",$(this).height()+'px');
+    $("#right-col, #left-col").bind("resize",function(){
+        if($("#right-col").height() > $("#left-col").css("height"))
+            $("#left-col").css("height",$("#right-col").height()+'px');
+        else
+            $("#right-col").css("height",$("#left-col").height()+'px');
     });
     
     $('#search-form').bind('submit', function(e){

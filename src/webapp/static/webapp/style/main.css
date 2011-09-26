@@ -99,7 +99,13 @@ ul#chronology a:visited,
 div#left-col li a {
     color: #333333;
 }
-
+left-col:after{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+}
 /*------- HOME STYLE ---------*/
 #loginSec #header-top form{
     margin-top: -7px;
