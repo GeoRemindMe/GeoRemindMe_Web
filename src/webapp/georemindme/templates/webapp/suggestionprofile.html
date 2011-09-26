@@ -37,10 +37,12 @@
                 <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/>
 -->
                 <a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> sugiere:
+                {%comment%}
                 <span id="suggestion-vote-counter">
                         <span class="none" {% if suggestion.counters.votes > 0%}style="display:none"{%endif%}>Aún no ha recibido valoraciones</span>
                         <span class="votes-msg" {% if suggestion.counters.votes = 0%}style="display:none"{%endif%}>Valoraciones recibidas: <span id="vote-counter">{{suggestion.counters.votes}}</span></span>
                 </span>
+                {%endcomment%}
                 
                 <br>
                 {{suggestion.name}}
@@ -171,12 +173,12 @@
                         <span class="likeBtn btn">
                             <span class="like-dislike-suggestion likex16" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
                                 <img src="/static/common/img/transparent.gif">
-                                <span class="dislike">
-                                    <span class="text hoverlink" {% if not has_voted %}style="display:none"{%endif%}>Ya no me gusta</span> 
+                                <span class="dislike" {% if not has_voted %}style="display:none"{%endif%}>
+                                    <span class="text hoverlink" title="Ya no te gusta">Ya te gusta (<span class="increase">{{suggestion.counters.votes}}</span>)</span> 
                                 </span>
                                 
-                                <span class="like">
-                                    <span class="text hoverlink" {% if has_voted %}style="display:none"{%endif%}>Me gusta</span> 
+                                <span class="like" {% if has_voted %}style="display:none"{%endif%}>
+                                    <span class="text hoverlink">Me gusta (<span class="increase">{{suggestion.counters.votes}}</span>)</span> 
                                 </span> 
                             </span>
                         </span>

@@ -99,7 +99,13 @@ ul#chronology a:visited,
 div#left-col li a {
     color: #333333;
 }
-
+left-col:after{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+}
 /*------- HOME STYLE ---------*/
 #loginSec #header-top form{
     margin-top: -7px;
@@ -1666,6 +1672,7 @@ div.waiting{
     color: black;
 }
 #close-suggestions img,
+#recent-suggestions img,
 #trending-suggestions img{
     display: block;
     float: left;
@@ -1675,6 +1682,7 @@ div.waiting{
 
 }
 #close-suggestions a.clean,
+#recent-suggestions a.clean,
 #trending-suggestions a.clean{
     border:0;
     line-height:auto;
@@ -1686,6 +1694,7 @@ div.waiting{
 
 
 #close-suggestions li,
+#recent-suggestions li,
 #trending-suggestions li{
 
 }
@@ -2034,3 +2043,5 @@ div#content {
 #view-list ul#suggestion-list {
     margin-bottom:1em;
 }
+
+
