@@ -9,6 +9,7 @@
 
 from signals import comment_new, comment_deleted, vote_new, vote_deleted
 from geoalert.signals import suggestion_deleted
+from django.conf import settings
 
 
 def new_comment(sender, **kwargs):

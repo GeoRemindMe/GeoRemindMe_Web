@@ -288,7 +288,6 @@ def send_notification_account_summary(to, user, followers, language='en'):
     message.to = to
     message.subject = _(u"Personas que han empezado a seguirte esta semana en Georemindme")
     names = '\n- '.join(str(follow) for follow in followers)
-    names_html = '<br>- '.join((u"<a href=\"%(link)s\">%(username)s</a>") % {'username':str(follow),'link':str(follow.get_absolute_url)} for follow in followers)
     message.body = _(u"""
         ¡Hola %(username)s!,\n
         Esta semana han empezado a seguirte %(num_followers)d personas.\n
@@ -320,7 +319,11 @@ def send_notification_account_summary(to, user, followers, language='en'):
         """) % {
                     'names': names,
                     'username':user.username,
-                    'num_followers':len(followers)
+                    'num_followers':len(followers),
+                    'names_html': '<br>- '.join((u"<a href=\"%(link)s\">%(username)s</a>") %
+                                                    {'username':str(follow),
+                                                     'link':str(follow.get_absolute_url)
+                                                     } for follow in followers)
                 }
     translation.deactivate()
     message.push()

@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.conf import settings
 
 from decorators import login_required, admin_required
 
@@ -141,9 +142,9 @@ def logout(request):
         :return: Redirige al usuario a donde le diga la función login_panel.
     """
     request.session.delete()
-    from google.appengine.api import users
-    #return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
-    return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
+    #from google.appengine.api import users
+    return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
+    #return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
 
 
 #===============================================================================
@@ -215,11 +216,22 @@ def dashboard(request, template='webapp/dashboard.html'):
     from django.utils import simplejson
     chronology[0] = simplejson.dumps(chronology[0])
     if friends is None:
+        # usuarios con mas sugerencias
+        from geouser.models_acc import UserCounter
+        from georemindme.funcs import fetch_parentsKeys
+        top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
+        top_users = fetch_parentsKeys(top_users)
+        top_users = filter(None, top_users)
+        friends = {}
+        for user in top_users:
+            if not user.key() == request.user.key() and not request.user.is_following(user):
+                friends[user.id] = {'username': user.username,
+                                    'id': user.id
+                                    }
         from google.appengine.runtime import apiproxy_errors
         try:
             for rpc in list_rpc:
                 rpc.wait()
-            friends = {} # diccionario con todos los amigos
             #los unimos en uno
             [friends.update(rpc.friends) for rpc in handlers_rpcs]
             if len(friends) > 0:
@@ -249,6 +261,9 @@ def public_profile(request, username, template='webapp/profile.html'):
     from georemindme.funcs import prefetch_refprops
     from geoalert.models import Suggestion
     from geoalert.views import get_suggestion
+    if username.lower() == 'none':
+        raise Http404()
+    
     if request.user.is_authenticated() \
      and request.user.username is not None \
      and request.user.username.lower() == username.lower():
@@ -559,7 +574,7 @@ def get_friends_twitter(request):
         c = TwitterClient(user=request.user)
         contacts = c.get_friends_to_follow()
     except:
-        return HttpResponseRedirect(reverse('geouser.views.get_perms_twitter'))
+        return HttpResponseRedirect(reverse('geouser.views.login_twitter'))
     
     return render_to_response('webapp/contacts_twitter.html', {'contacts' : contacts, },
                               context_instance=RequestContext(request))
@@ -603,7 +618,7 @@ def get_avatar(request, username):
 def close_window(request):
     return render_to_response('webapp/close_window.html', {}, context_instance=RequestContext(request))
 
-#@admin_required
+@admin_required
 def update(request):
     from google.appengine.ext.deferred import defer
     defer(__update_users)  # mandar email de notificacion
@@ -624,19 +639,19 @@ def __update_users():
     generico = User.objects.get_by_username('georemindme')
     users = User.all()
     for user in users:
-#        profile = user.profile
-#        settings = user.settings
-#        counters = user.counters
-#        from models_acc import SearchConfigGooglePlaces
-#        from google.appengine.ext import db
-#        sociallinks = profile.sociallinks
-#        if sociallinks is None:
-#            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
-#        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
-#        if sc is None:
-#            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
-#        db.put([profile, settings, sc, counters, sociallinks])
-        user.add_following(followid=generico.id)
-        generico.add_following(followid=user.id)
+        profile = user.profile
+        settings = user.settings
+        counters = user.counters
+        from models_acc import SearchConfigGooglePlaces
+        from google.appengine.ext import db
+        sociallinks = profile.sociallinks
+        if sociallinks is None:
+            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
+        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
+        if sc is None:
+            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
+        db.put([profile, settings, sc, counters, sociallinks])
+#        user.add_following(followid=generico.id)
+#        generico.add_following(followid=user.id)
 
 

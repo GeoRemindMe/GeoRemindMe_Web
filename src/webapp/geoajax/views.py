@@ -296,6 +296,7 @@ def add_following(request):
        
             :returns: boolean
     """ 
+    from django.conf import settings
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     if username == 'None':
@@ -316,6 +317,7 @@ def delete_following(request):
        
             :returns: boolean
     """
+    from django.conf import settings
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     deleted = geouser.del_following(request.user, userid=userid, username=username)
@@ -370,7 +372,8 @@ def get_profile_timeline(request):
     query_id = request.POST.get('query_id', None)
     timeline = geouser.get_profile_timeline(request.user, userid, username, query_id=query_id)
     from funcs import render_timeline
-    timeline[1] = render_timeline(request, timeline[1])
+    if timeline is not None:
+        timeline[1] = render_timeline(request, timeline[1])
     return HttpResponse(simplejson.dumps(timeline), mimetype="application/json")
 
 

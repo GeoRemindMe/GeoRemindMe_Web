@@ -151,8 +151,8 @@ class User(polymodel.PolyModel, HookedModel):
         # recuperar cursores
         if query_id is not None and len(query_id)>=2:
             cursor_chronology = query_id[0]
-            query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology)
             cursor_activity = query_id[1]
+            query_chrono = query_chrono.with_cursor(start_cursor=cursor_chronology)
             query_activity = query_activity.with_cursor(start_cursor=cursor_activity)
         else:
             cursor_activity = None
@@ -172,6 +172,7 @@ class User(polymodel.PolyModel, HookedModel):
                 if chrono is None:
                     try:
                         chrono = chrono_async.next()
+                        #chrono = chrono_async.pop(0)
                     except:
                         _go_chrono = False
                         break
@@ -481,13 +482,6 @@ class User(polymodel.PolyModel, HookedModel):
             from signals import user_new
             from watchers import new_user_registered
             user_new.send(sender=user, status=trans)
-            try:
-                generico = User.objects.get_by_username('georemindme')
-                if generico is not None:
-                    user.add_following(followid=generico.id)
-                    generico.add_following(followid=user.id)
-            except:
-                pass
             save.get_result()
             return user
 

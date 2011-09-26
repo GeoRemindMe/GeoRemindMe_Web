@@ -3666,63 +3666,6 @@ ul.ui-autocomplete li.ui-menu-item:nth-child(even){
 }
 
 
-/*
- *
- * Browser error
- *  
- */
-
-#browser-error-msg{
-    background: url("/static/webapp/img/colored_chickens.png") repeat-x scroll 4px 98% transparent;
-    border-radius: 10px 10px 10px 10px;
-    box-shadow: 0 0 6px 5px rgba(0, 0, 0, 0.35);
-    font-size: 1.1em;
-    line-height: 2em;
-    margin: 2em auto;
-    padding: 1em 1em 3em;
-    width: 890px;
-}
-#browser-error-msg h1{
-    font-size: 1.5em;
-    font-weight: bold;
-    line-height: 1.5em;
-    border-bottom: 1px solid #CCCCCC;
-    color: #333333;
-}
-#browser-error-msg p{
-    margin: 0.5em 0;
-}
-#browser-error-msg strong{
-    font-weight: bold;
-}
-#browser-error-msg ul,
-#browser-error-msg ol{
-    list-style: square outside none;
-    margin-bottom: 1em;
-    margin-left: 2em;
-}
-#browser-error-msg ol{
-    list-style: decimal outside none;
-}
-
-#browser-error-msg .bad-news{
-    background: -moz-linear-gradient(center top , #FFE0ED 0%, #FFD1E4 100%) repeat scroll 0 0 transparent;
-    display: inline-block;
-    font-size: 1em;
-    padding: 0 0.3em;
-}
-#browser-error-msg .good-news{
-    background:-moz-linear-gradient(center top , #CDEB8B 0%, #E0EAC9 100%) repeat scroll 0 0 transparent;
-    display: inline-block;
-    font-size: 1em;
-    padding: 0 0.3em;
-}
-#browser-error-msg a img{
-    border: 1px solid #CCCCCC;
-    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.55);
-    margin-left: 10px;
-    margin-top: 5px;
-}
 
 
 .panoramio-wapi-tos img{
@@ -3775,4 +3718,56 @@ ul.ui-autocomplete li.ui-menu-item:nth-child(even){
 #loginSec #big-text.error404 #DizzyChicken img,
 #loginSec #big-text.error500 #DizzyChicken img{
     width: 170px;
+}
+
+/*
+ *
+ * HELP LAYOUT (BOXES & ARROWS)
+ *  
+ */
+
+.arrow{
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-top: 10px solid transparent;
+	width: 0;
+	height: 0;
+	position: absolute;
+}
+.arrow-up {
+	border-bottom: 10px solid #1C1C1C;
+	border-top:0;
+}
+.arrow-down {
+	border-top: 10px solid #1C1C1C;
+	border-bottom: 0;
+}
+.arrow-right {
+	border-left: 10px solid #1c1c1c;
+	border-right: 0;
+}
+
+.arrow-left {
+	border-right: 10px solid #1C1C1C;
+	border-left: 0;
+}
+.help-box{
+	padding: 0 5px;
+	width: 250px;
+	margin: 15px;
+	
+	color:white;
+	background: #5798be; /* Old browsers */
+	background: -moz-linear-gradient(top, #5798be 0%, #0a6a9f 3%, #04344f 71%, #04344f 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5798be), color-stop(3%,#0a6a9f), color-stop(71%,#04344f), color-stop(100%,#04344f)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #5798be 0%,#0a6a9f 3%,#04344f 71%,#04344f 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #5798be 0%,#0a6a9f 3%,#04344f 71%,#04344f 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, #5798be 0%,#0a6a9f 3%,#04344f 71%,#04344f 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5798be', endColorstr='#04344f',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, #5798be 0%,#0a6a9f 3%,#04344f 71%,#04344f 100%); /* W3C */
+	border:1px solid #3c3c3c;
+	text-shadow: 1px 1px 1px #000;
+	position:absolute;
+	z-index: 100;
 }

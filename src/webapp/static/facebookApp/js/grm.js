@@ -1043,4 +1043,68 @@ $.extend(
 });  
 })(jQuery)  
 
+//How to use: showHelp('#mobile','#texto3','right');
+function showHelp(element,text_help,position,plusLeft,plusTop){
+	if(!$(text_help).hasClass('help-box'))
+		$(text_help).addClass('help-box');
+	
+	$(text_help +' div.arrow').each(function(i,elem){
+		$(elem).remove();
+	});
+	arrow = $('<div class="arrow arrow-'+position+'"></div>');
+	$(text_help).append(arrow);
+	
 
+	var adjust_top,adjust_left,arrow_top,arrow_left;
+	var box_size = [$(text_help).width(),$(text_help).height()]
+	
+	if(position==='right'){
+		adjust_top=-15;
+		adjust_left=-300;
+		arrow_top=0;
+		arrow_left=box_size[0]+11;//5px porque tiene 10 de ancho
+	}else if(position==='left'){
+		adjust_top=-15;
+		adjust_left=$(element).width();
+		arrow_top=0;
+		arrow_left=-11;//5px porque tiene 10 de ancho
+	}else if(position==='up'){
+		adjust_top=$(element).height();
+		adjust_left=-$(text_help).width()/2+$(element).width()/2-20;
+		arrow_top=-11;
+		arrow_left=box_size[0]/2-5;//5px porque tiene 10 de ancho
+	}else if(position==='down'){
+		adjust_top=-$(text_help).height()-40;
+		adjust_left=-$(text_help).width()/2+$(element).width()/2-20;
+		arrow_top=box_size[1]+8;
+		arrow_left=box_size[0]/2-5;//5px porque tiene 10 de ancho
+	}
+
+	if(plusTop!=null)
+		adjust_top += plusTop;
+	if(plusLeft!=null)
+		adjust_left += plusLeft;
+
+	
+	var pos=$(element).position()
+	var top_pos=pos['top']+adjust_top;
+	var left_pos=pos['left']+adjust_left;
+	
+	$(text_help).css('top',top_pos+'px')
+	$(text_help).css('left',left_pos+'px')
+	
+	$(text_help).show();
+	
+	$(text_help +' div.arrow').css('top',arrow_top+'px')
+	$(text_help +' div.arrow').css('left',arrow_left+'px')
+	
+	if($('#showing-help').length==0){
+		invisible_layer = $('<div id="showing-help" style="width:100%;height:100%;position:absolute;z-index:99" onclick="javascript:closeHelp()"></div>');
+		$('body').prepend(invisible_layer)
+	}
+}
+
+function closeHelp(){
+	$('.help-box').hide();
+	$('#showing-help').remove();
+}

@@ -157,6 +157,22 @@ class EventHelper(object):
         if not isinstance(user, User):
             raise TypeError()
         return self._klass.all().filter('user =', user).filter('modified >', last_sync).order('-modified').fetch(50)
+    
+    def get_by_last_created(self, limit, querier):
+        events = self._klass.all().order('-created').fetch(limit)
+        if events is None:
+            return None
+        event_to_response = []
+        for e in events:
+            if e._is_public():
+                event_to_response.append(e)
+            elif e.__class__.user.get_value_for_datastore(e) == querier.key():
+                event_to_response.append(e)
+            elif e._is_shared() and e.user_invited(querier):
+                event_to_response.append(e)
+        from georemindme.funcs import prefetch_refprops
+        prefetch_refprops(event_to_response, self._klass.user)
+        return event_to_response
 
 
 class AlertHelper(EventHelper):
@@ -354,13 +370,13 @@ class SuggestionHelper(EventHelper):
         import memcache
         client = memcache.mem.Client()
         if querier.is_authenticated():
-            sugs = client.gets('%ssug_nearest%s,%s_%s' % (memcache.version,
+            sugs = client.get('%ssug_nearest%s,%s_%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon,
                                                    querier.username,
                                                    ))
         else:
-            sugs = client.gets('%ssug_nearest%s,%s' % (memcache.version,
+            sugs = client.get('%ssug_nearest%s,%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon
                                                    ))
@@ -389,10 +405,11 @@ class SuggestionHelper(EventHelper):
             from georemindme.funcs import prefetch_refpropsEntity
             prefetch = prefetch_refpropsEntity(sugs, 'user')
             sugs = [{'id': sug.key().id(),
-                     'slug': sug['slug'],
+                     'slug': sug['slug'] if 'slug' in sug else None,
                      'username': prefetch[sug['user']].username,
-                     'name': sug['name'],
-                     'description': sug['description']} for sug in sugs]
+                     'name': sug['name'] if 'name' in sug else None,
+                     'description': sug['description'] if 'description' in sug else None} 
+                    for sug in sugs]
             if querier.is_authenticated():
                 client.set('%ssug_nearest%s,%s_%s' % (memcache.version,
                                                    location.lat,

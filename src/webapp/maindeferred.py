@@ -21,6 +21,7 @@ import os, logging, sys
 from google.appengine.ext.webapp import util
 from google.appengine.dist import use_library
 from google.appengine.ext import deferred
+from google.appengine.ext.webapp import template
 
 # elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
 for k in [k for k in sys.modules if k.startswith('django')]: 
@@ -30,20 +31,6 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 # carga version 1.2.5 de django
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 use_library('django', '1.2')
-
-'''
-# Remove the standard version of Django.
-for k in [k for k in sys.modules if k.startswith('django')]:
-  del sys.modules[k]
-
-# Force sys.path to have our own directory first, in case we want to import
-# from it.
-sys.path.insert(0, 'django.zip')
-sys.path.insert(0,os.path.abspath(os.path.dirname(__file__)))
-
-# Must set this env var *before* importing any part of Django
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-'''
 
 import django.core.handlers.wsgi
 import django.dispatch
@@ -57,26 +44,8 @@ sys.modules['cPickle'] = sys.modules['pickle']
 def log_exception(*args, **kwds):
     logging.exception('Exception in request:')
 
-# Log errors.
-django.dispatch.Signal.connect(
-                               got_request_exception,
-                               log_exception
-                               )
-
-# Unregister the rollback event handler.
-django.dispatch.Signal.disconnect(
-                                  got_request_exception,
-                                  _rollback_on_exception
-                                  )
-application = django.core.handlers.wsgi.WSGIHandler()
-
 def main():
-    # Create a Django application for WSGI.
-    global application
-    #application = django.core.handlers.wsgi.WSGIHandler()
-    # Run the WSGI CGI handler with that application.
-    util.run_wsgi_app(application)
+    util.run_wsgi_app(deferred.application)
 
 if __name__ == '__main__':
-    main()
-
+    main() 

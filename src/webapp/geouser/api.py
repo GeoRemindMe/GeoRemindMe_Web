@@ -29,9 +29,10 @@ def get_followers(querier, userid=None, username=None, page=1, query_id=None):
             profile_key = User.objects.get_by_id(userid, keys_only=True)
         elif username:
             profile_key = User.objects.get_by_username(username, keys_only=True)
-        settings = UserSettings.objects.get_by_id(profile_key.id())
-        if settings.show_followers:
-            return User.objects.get_followers(userid=userid, username=username, page=page, query_id=query_id)
+        if profile_key is not None:
+            settings = UserSettings.objects.get_by_id(profile_key.id())
+            if settings.show_followers:
+                return User.objects.get_followers(userid=userid, username=username, page=page, query_id=query_id)
     return None
 
 
@@ -59,9 +60,10 @@ def get_followings(querier, userid=None, username=None, page=1, query_id=None):
             user_key = User.objects.get_by_id(userid, keys_only=True)
         elif username:
             user_key = User.objects.get_by_username(username, keys_only=True)
-        settings = UserSettings.objects.get_by_id(user_key.id())
-        if settings.show_followings:
-            return User.objects.get_followings(userid=userid, username=username, page=page, query_id=query_id)
+        if user_key is not None:
+            settings = UserSettings.objects.get_by_id(user_key.id())
+            if settings.show_followings:
+                return User.objects.get_followings(userid=userid, username=username, page=page, query_id=query_id)
     return None
 
 

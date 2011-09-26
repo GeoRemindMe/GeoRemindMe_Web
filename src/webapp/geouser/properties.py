@@ -80,6 +80,8 @@ class UsernameProperty(db.StringProperty):
         if raw is None:
             return None
         raw = raw.lower()
+        if raw == 'none':
+            raise ValueError(_("Invalid username"))
         if len(raw) < 5:
             raise ValueError(_("Invalid username"))
         import re
