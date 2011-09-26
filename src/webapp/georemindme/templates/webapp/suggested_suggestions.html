@@ -39,13 +39,13 @@
                             </div>
                         </li>
                     {% endfor %}
-                    
                 </ul>
-                <hr>
+                
             {% endif %}
 				{% block extraContent %} {% endblock %}
 				
                 {% if request.get_full_path != "/suggestions/add/"%}
+                    <hr id="hr-close-suggestions-box" style="display:none">
                     <div class="black-box" id="close-suggestions-box" style="display:none">
                         <p>
                             <em>Sugerencias cerca de ti</em>: 
@@ -124,6 +124,7 @@
                                         
                                     }
                                     $('#close-suggestions-box').slideIn('slow');
+                                    $('#hr-close-suggestions-box').show();
                                 }else{
                                     
                                     $('#close-suggestions').empty();
@@ -205,7 +206,27 @@
 				</script>
 				
 				{%endif%}
-				
+				<hr>
+                <div class="black-box" id="recent-suggestions-box">
+                    <p>
+                        <em>Últimas sugerencias</em>: 
+                    </p>
+                    <ul id="recent-suggestions">
+                        {% for obj in last_suggestions %}
+                            <li>
+                                <a href="/user/{{obj.user.username}}/" class="clean">
+                                    <img src="/user/{{obj.user.username}}/picture/" alt="{{obj.user.username}}">
+                                </a>
+                                <a href="/suggestion/{{obj.slug}}/" class="black-link">
+                                    {{obj.name}}<br>
+                                    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <hr>
+                </div>
 <!--
 				<div class="black-box">
                     <p><em>Sugerencias más relevantes</em>:</p>

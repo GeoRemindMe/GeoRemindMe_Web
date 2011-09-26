@@ -1666,6 +1666,7 @@ div.waiting{
     color: black;
 }
 #close-suggestions img,
+#recent-suggestions img,
 #trending-suggestions img{
     display: block;
     float: left;
@@ -1675,6 +1676,7 @@ div.waiting{
 
 }
 #close-suggestions a.clean,
+#recent-suggestions a.clean,
 #trending-suggestions a.clean{
     border:0;
     line-height:auto;
@@ -1686,6 +1688,7 @@ div.waiting{
 
 
 #close-suggestions li,
+#recent-suggestions li,
 #trending-suggestions li{
 
 }
