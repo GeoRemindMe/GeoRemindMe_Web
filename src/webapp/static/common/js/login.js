@@ -20,7 +20,7 @@ $(document).ready(function() {
                     GRM.nowait();
                 }
                 else {
-                    window.location=msg._redirect;
+                    setTimeout(function(){window.location=msg._redirect;},3000);
                 }
             }
         });
