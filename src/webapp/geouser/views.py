@@ -207,7 +207,6 @@ def dashboard(request, template='webapp/dashboard.html'):
                                       )
     #------------------------------------------------------------------------------ 
     import memcache
-    friends = None
     friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
     if friends is None: # lanzamos las peticiones asincronas
         handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
