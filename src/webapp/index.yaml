@@ -70,6 +70,12 @@ indexes:
 - kind: Event
   properties:
   - name: class
+  - name: created
+    direction: desc
+
+- kind: Event
+  properties:
+  - name: class
   - name: user
   - name: created
     direction: desc
