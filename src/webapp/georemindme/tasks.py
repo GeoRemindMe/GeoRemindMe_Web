@@ -3,6 +3,7 @@
 import os
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 from google.appengine.api.taskqueue import Task
 from google.appengine.ext import db
