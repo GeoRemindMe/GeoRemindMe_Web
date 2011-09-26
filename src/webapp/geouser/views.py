@@ -223,9 +223,10 @@ def dashboard(request, template='webapp/dashboard.html'):
         top_users = filter(None, top_users)
         friends = {}
         for user in top_users:
-            friends[user.id] = {'username': user.username,
-                                'id': user.id
-                                }
+            if not request.user.is_following(user):
+                friends[user.id] = {'username': user.username,
+                                    'id': user.id
+                                    }
         from google.appengine.runtime import apiproxy_errors
         try:
             for rpc in list_rpc:
