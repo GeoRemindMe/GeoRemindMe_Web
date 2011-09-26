@@ -157,6 +157,22 @@ class EventHelper(object):
         if not isinstance(user, User):
             raise TypeError()
         return self._klass.all().filter('user =', user).filter('modified >', last_sync).order('-modified').fetch(50)
+    
+    def get_by_last_created(self, limit, querier):
+        events = self._klass.all().order('-created').fetch(limit)
+        if events is None:
+            return None
+        event_to_response = []
+        for e in events:
+            if e._is_public():
+                event_to_response.append(e)
+            elif e.__class__.user.get_value_for_datastore(e) == querier.key():
+                event_to_response.append(e)
+            elif e._is_shared() and e.user_invited(querier):
+                event_to_response.append(e)
+        from georemindme.funcs import prefetch_refprops
+        prefetch_refprops(event_to_response, self._klass.user)
+        return event_to_response
 
 
 class AlertHelper(EventHelper):
