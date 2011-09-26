@@ -141,9 +141,9 @@ def logout(request):
         :return: Redirige al usuario a donde le diga la función login_panel.
     """
     request.session.delete()
-    from google.appengine.api import users
-    #return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
-    return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
+    #from google.appengine.api import users
+    return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
+    #return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
 
 
 #===============================================================================
@@ -208,30 +208,30 @@ def dashboard(request, template='webapp/dashboard.html'):
     #------------------------------------------------------------------------------ 
     import memcache
     friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
-#    if friends is None: # lanzamos las peticiones asincronas
-#        handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
+    if friends is None: # lanzamos las peticiones asincronas
+        handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
     chronology = request.user.get_activity_timeline()
     # FIXME: CHAPUZA, LA PLANTILLA ESPERA RECIBIR EL QUERY_ID EN JSON :)
     from django.utils import simplejson
     chronology[0] = simplejson.dumps(chronology[0])
-#    if friends is None:
-#        from google.appengine.runtime import apiproxy_errors
-#        try:
-#            for rpc in list_rpc:
-#                rpc.wait()
-#            friends = {} # diccionario con todos los amigos
-#            #los unimos en uno
-#            [friends.update(rpc.friends) for rpc in handlers_rpcs]
-#            if len(friends) > 0:
-#                if len(request.user.settings.blocked_friends_sug)>0:
-#                    for k in friends.keys():
-#                        if k in request.user.settings.blocked_friends_sug:
-#                            del friends[k]
-#                memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 11235)
-#        except:
-#        #except apiproxy_errors.DeadlineExceededError:
-#            import logging
-#            logging.error('Handling DeadlineExceededError for user friends: %s' % request.user.id)
+    if friends is None:
+        from google.appengine.runtime import apiproxy_errors
+        try:
+            for rpc in list_rpc:
+                rpc.wait()
+            friends = {} # diccionario con todos los amigos
+            #los unimos en uno
+            [friends.update(rpc.friends) for rpc in handlers_rpcs]
+            if len(friends) > 0:
+                if len(request.user.settings.blocked_friends_sug)>0:
+                    for k in friends.keys():
+                        if k in request.user.settings.blocked_friends_sug:
+                            del friends[k]
+                memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 11235)
+        except:
+        #except apiproxy_errors.DeadlineExceededError:
+            import logging
+            logging.error('Handling DeadlineExceededError for user friends: %s' % request.user.id)
     return  render_to_response(template, {
                                           'friends_to_follow': friends,
                                           'chronology': chronology,
