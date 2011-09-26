@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 from google.appengine.ext import db
 from models import User
+from django.conf import settings
 
 
 class _Notification(db.Model):
