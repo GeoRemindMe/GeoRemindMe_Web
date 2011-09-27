@@ -1,4 +1,4 @@
-webapp_django_version = '1.2'
+#webapp_django_version = '1.2'
 #import os, sys
 #from google.appengine.dist import use_library
 #
