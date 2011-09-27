@@ -8,14 +8,17 @@
 	<title>GeoRemindMe!</title>
 	<meta name="google-site-verification" content="VzbSgMqvrPL6WuAhRfBzAFXM0GyU73igO1yjheV2Tc4" />
 
-	<link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
-	<link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
     
     {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
-        
+        <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
+        <link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
+        <link type="text/css" rel="stylesheet" href="/static/common/css/browser_error.css">
+        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
         <script type="text/javascript" src="/static/common/js/common_webapp.js"></script>    
         <script type="text/javascript" src="/static/common/js/login.js"></script>    
     {% else %}
+        <link type="text/css" rel="stylesheet" href="/static/common/css/style.min.css">
+        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
         <script type="text/javascript" src="/static/common/js/common_webapp.min.js"></script>    
         <script type="text/javascript" src="/static/common/js/login.min.js"></script>    
     {% endif %}
