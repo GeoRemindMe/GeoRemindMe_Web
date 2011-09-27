@@ -206,10 +206,10 @@ def dashboard(request, template='webapp/dashboard.html'):
         from geouser.models_acc import UserCounter
         from georemindme.funcs import fetch_parentsKeys
         top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
-        top_users = fetch_parentsKeys(top_users)
-        top_users = filter(None, top_users)
+        top_users_parents = fetch_parentsKeys(top_users)
+        top_users_parents = filter(None, top_users)
         top_users_dict = {}
-        for user in top_users:
+        for user in top_users_parents:
             if not user.key() == request.user.key() and not request.user.is_following(user):
                 top_users_dict[user.id] = {'username': user.username,
                                     'id': user.id,
@@ -239,10 +239,10 @@ def dashboard(request, template='webapp/dashboard.html'):
         from geouser.models_acc import UserCounter
         from georemindme.funcs import fetch_parentsKeys
         top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
-        top_users = fetch_parentsKeys(top_users)
-        top_users = filter(None, top_users)
+        top_users_parents = fetch_parentsKeys(top_users)
+        top_users_parents = filter(None, top_users)
         friends = {}
-        for user in top_users:
+        for user in top_users_parents:
             if not user.key() == request.user.key() and not request.user.is_following(user):
                 friends[user.id] = {'username': user.username,
                                     'id': user.id
