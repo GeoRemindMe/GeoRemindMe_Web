@@ -353,7 +353,7 @@ def block_contacts(request):
 
 @ajax_request
 def get_contacts_facebook(request):
-
+    pass
 
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
