@@ -20,18 +20,14 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 import os, logging, sys
 #carga la aplicacion
 from google.appengine.ext.webapp import util
-from google.appengine.dist import use_library
+from google.appengine.ext.webapp import template
 from google.appengine.ext import deferred
 
-# elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
-for k in [k for k in sys.modules if k.startswith('django')]: 
-    del sys.modules[k] 
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 # carga version 1.2.5 de django
-
-use_library('django', '1.2')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+from google.appengine.dist import use_library
+use_library('django', '1.2')
 
 import django.core.handlers.wsgi
 import django.dispatch
