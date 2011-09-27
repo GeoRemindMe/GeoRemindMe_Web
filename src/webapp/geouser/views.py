@@ -210,7 +210,7 @@ def dashboard(request, template='webapp/dashboard.html'):
         top_users = filter(None, top_users)
         top_users_dict = []
         for user in top_users:
-            #if not user.key() == request.user.key() and not request.user.is_following(user):
+            if not user.key() == request.user.key() and not request.user.is_following(user):
                 top_users_dict.append({'username': user.username,
                                     'id': user.id,
                                     'last_sugs': Suggestion.objects.get_by_last_created(limit=3,
