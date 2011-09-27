@@ -85,7 +85,7 @@ class UsernameProperty(db.StringProperty):
         if len(raw) < 5:
             raise ValueError(_("Invalid username"))
         import re
-        if re.search(r'[^a-z0-9]', raw):
+        if re.search(r'[^a-z0-9_]', raw):
             raise ValueError(_("Invalid username"))
         return str(raw)
     

@@ -31,9 +31,8 @@ def login_forced(func, *args, **kwargs):
     
 @decorator
 def admin_required(func, *args, **kwargs):
-    session = args[0].session  # request es el primer parametro que pasamos
-    user = session.get('user')
-    if user and user.is_authenticated() and user.is_admin():
+    from google.appengine.api import users
+    if users.is_current_user_admin():
         return func(*args, **kwargs)
     from views import login
     return login(args[0])

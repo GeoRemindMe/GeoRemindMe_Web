@@ -202,8 +202,12 @@ def dashboard(request, template='webapp/dashboard.html'):
                                            'username': request.user.username,
                                          }
                                )
-        top_users = {}
         from geoalert.models import Suggestion
+        from geouser.models_acc import UserCounter
+        from georemindme.funcs import fetch_parentsKeys
+        top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
+        top_users = fetch_parentsKeys(top_users)
+        top_users = filter(None, top_users)
         for user in top_users:
             if not user.key() == request.user.key() and not request.user.is_following(user):
                 top_users[user.id] = {'username': user.username,
@@ -211,7 +215,8 @@ def dashboard(request, template='webapp/dashboard.html'):
                                     'last_sugs': Suggestion.objects.get_by_last_created(limit=3,
                                                                                         user=user,
                                                                                         querier=request.user
-                                                                                        )
+                                                                                        ),
+                                    'counters': user.counters
                                     }
         return render_to_response('webapp/create_social_profile.html',
                                    {'form': f,
@@ -646,22 +651,23 @@ def update(request):
 def __update_users():
     from django.conf import settings
     from models import User
-    from models_acc import UserSocialLinks
-    generico = User.objects.get_by_username('georemindme')
+#    from models_acc import UserSocialLinks
+#    generico = User.objects.get_by_username('georemindme')
     users = User.all()
     for user in users:
-        profile = user.profile
-        settings = user.settings
-        counters = user.counters
-        from models_acc import SearchConfigGooglePlaces
-        from google.appengine.ext import db
-        sociallinks = profile.sociallinks
-        if sociallinks is None:
-            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
-        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
-        if sc is None:
-            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
-        db.put([profile, settings, sc, counters, sociallinks])
+#        profile = user.profile
+#        settings = user.settings
+#        counters = user.counters
+#        from models_acc import SearchConfigGooglePlaces
+#        from google.appengine.ext import db
+#        sociallinks = profile.sociallinks
+#        if sociallinks is None:
+#            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
+#        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
+#        if sc is None:
+#            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
+        #db.put([profile, settings, sc, counters, sociallinks])
+        user.put()
 #        user.add_following(followid=generico.id)
 #        generico.add_following(followid=user.id)
 

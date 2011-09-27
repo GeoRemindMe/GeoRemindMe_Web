@@ -46,6 +46,7 @@ class User(polymodel.PolyModel, HookedModel):
     remind_code = db.TextProperty(indexed=False)
     date_remind = db.DateTimeProperty(indexed=False)
     last_point = db.GeoPtProperty(default=db.GeoPt(37.176487, -3.597929), indexed=False)
+    last_address = db.GeoPtProperty(default='', indexed=False)
     has = db.StringListProperty(default=['active:T', 'confirmed:F', 'admin:F'])
     created = db.DateTimeProperty(auto_now_add=True, indexed=False)
     last_login = db.DateTimeProperty(indexed=False)
