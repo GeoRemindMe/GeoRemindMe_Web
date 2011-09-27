@@ -136,6 +136,8 @@ def do_vote(querier, kind, instance_id, vote=1):
                 return None
         else:
             return None
+    else: # no se puede votar lo de uno mismo
+        return None
     vote = Vote.do_vote(user=querier, instance=obj, count=vote)
     return {'vote': vote, 'votes': _get_vote(obj.key())}
 
