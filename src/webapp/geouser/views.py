@@ -206,12 +206,12 @@ def dashboard(request, template='webapp/dashboard.html'):
         from geouser.models_acc import UserCounter
         from georemindme.funcs import fetch_parentsKeys
         top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
-        top_users_parents = fetch_parentsKeys(top_users)
-        top_users_parents = filter(None, top_users)
-        top_users_dict = {}
-        for user in top_users_parents:
-            if not user.key() == request.user.key() and not request.user.is_following(user):
-                top_users_dict[user.id] = {'username': user.username,
+        top_users = fetch_parentsKeys(top_users)
+        top_users = filter(None, top_users)
+        top_users_dict = []
+        for user in top_users:
+            #if not user.key() == request.user.key() and not request.user.is_following(user):
+                top_users_dict.append({'username': user.username,
                                     'id': user.id,
                                     'last_sugs': Suggestion.objects.get_by_last_created(limit=3,
                                                                                         user=user,
@@ -219,6 +219,7 @@ def dashboard(request, template='webapp/dashboard.html'):
                                                                                         ),
                                     'counters': user.counters,
                                     }
+                                      )
         return render_to_response('webapp/create_social_profile.html',
                                    {'form': f,
                                     'top_users': top_users_dict
@@ -239,10 +240,10 @@ def dashboard(request, template='webapp/dashboard.html'):
         from geouser.models_acc import UserCounter
         from georemindme.funcs import fetch_parentsKeys
         top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
-        top_users_parents = fetch_parentsKeys(top_users)
-        top_users_parents = filter(None, top_users)
+        top_users = fetch_parentsKeys(top_users)
+        top_users = filter(None, top_users)
         friends = {}
-        for user in top_users_parents:
+        for user in top_users:
             if not user.key() == request.user.key() and not request.user.is_following(user):
                 friends[user.id] = {'username': user.username,
                                     'id': user.id
