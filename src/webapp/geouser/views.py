@@ -202,8 +202,12 @@ def dashboard(request, template='webapp/dashboard.html'):
                                            'username': request.user.username,
                                          }
                                )
-        top_users = {}
         from geoalert.models import Suggestion
+        from geouser.models_acc import UserCounter
+        from georemindme.funcs import fetch_parentsKeys
+        top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
+        top_users = fetch_parentsKeys(top_users)
+        top_users = filter(None, top_users)
         for user in top_users:
             if not user.key() == request.user.key() and not request.user.is_following(user):
                 top_users[user.id] = {'username': user.username,
@@ -211,7 +215,8 @@ def dashboard(request, template='webapp/dashboard.html'):
                                     'last_sugs': Suggestion.objects.get_by_last_created(limit=3,
                                                                                         user=user,
                                                                                         querier=request.user
-                                                                                        )
+                                                                                        ),
+                                    'counters': user.counters
                                     }
         return render_to_response('webapp/create_social_profile.html',
                                    {'form': f,
