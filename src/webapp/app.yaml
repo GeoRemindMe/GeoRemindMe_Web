@@ -46,6 +46,10 @@ handlers:
   script: maindeferred.py
   login: admin
   
+- url: /remote_api
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+#login: admin
+  
 - url: /.*
   script: main.py
   secure: always
@@ -53,7 +57,7 @@ handlers:
 
 builtins:
 - appstats: on
-- remote_api: on
+#- remote_api: on
 
 inbound_services:
 - warmup
