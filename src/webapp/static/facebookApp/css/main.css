@@ -1091,8 +1091,9 @@ input{
         border: 1px dotted #CCCCCC;
         display: block;
         float: left;
+        margin-right: 10px;
         padding: 1em;
-        width: 250px;
+        width: 235px;
     }
     
     ul#suggested-contacts img{
@@ -3780,4 +3781,16 @@ ul.ui-autocomplete li.ui-menu-item:nth-child(even){
 	text-shadow: 1px 1px 1px #000;
 	position:absolute;
 	z-index: 100;
+}
+
+sup{
+    font-size: 9px !important;
+    vertical-align: super !important;
+}
+
+#social-profile div#step-one form#SocialUserProfile-form div.fieldWrapper p{
+    font-size: 1em;
+    font-style: italic;
+    line-height: 1.8em;
+    margin: 9px 0 9px 10px;
 }
