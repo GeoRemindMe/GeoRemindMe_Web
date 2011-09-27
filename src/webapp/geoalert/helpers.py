@@ -158,8 +158,11 @@ class EventHelper(object):
             raise TypeError()
         return self._klass.all().filter('user =', user).filter('modified >', last_sync).order('-modified').fetch(50)
     
-    def get_by_last_created(self, limit, querier):
-        events = self._klass.all().order('-created').fetch(limit)
+    def get_by_last_created(self, limit, querier, user=None):
+        if user is None:
+            events = self._klass.all().order('-created').fetch(limit)
+        else:
+            events = self._klass.all().filter('user =', user).order('-created').fetch(limit)
         if events is None:
             return None
         event_to_response = []

@@ -351,6 +351,10 @@ def block_contacts(request):
     return HttpResponse(simplejson.dumps(True))
 
 
+@ajax_request
+def get_contacts_facebook(request):
+
+
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================

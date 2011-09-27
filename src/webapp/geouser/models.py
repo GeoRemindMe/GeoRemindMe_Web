@@ -67,24 +67,24 @@ class User(polymodel.PolyModel, HookedModel):
         return int(self.key().id())
 
     @property
-    def google_user(self):
+    def google_user(self, keys_only=False):
         if self._google_user is None:
             from models_social import GoogleUser
-            self._google_user = GoogleUser.all().filter('user =', self).get()
+            self._google_user = GoogleUser.all(keys_only=keys_only).filter('user =', self).get()
         return self._google_user
 
     @property
-    def facebook_user(self):
+    def facebook_user(self, keys_only=False):
         if self._facebook_user is None:
             from models_social import FacebookUser
-            self._facebook_user = FacebookUser.all().filter('user =', self).get()
+            self._facebook_user = FacebookUser.all(keys_only=keys_only).filter('user =', self).get()
         return self._facebook_user
 
     @property
-    def twitter_user(self):
+    def twitter_user(self, keys_only=False):
         if self._twitter_user is None:
             from models_social import TwitterUser
-            self._twitter_user = TwitterUser.all().filter('user =', self).get()
+            self._twitter_user = TwitterUser.all(keys_only=keys_only).filter('user =', self).get()
         return self._twitter_user
 
     @property
@@ -735,30 +735,33 @@ class User(polymodel.PolyModel, HookedModel):
     def get_absolute_fburl(self):
         return '/fb%s' % self.get_absolute_url()
 
-    def get_friends_to_follow(self, rpc=False):
+    def get_friends_to_follow(self, provider = None, rpc=False):
         import memcache
         friends = memcache.get('%sfriends_to_%s' % (memcache.version, self.key()))
         if friends is None:
             friends_rpc = [] # lista de rpcs
             #RPC PARA FACEBOOK
             try:
-                from geoauth.clients.facebook import FacebookFriendsRPC
-                fb_rpc = FacebookFriendsRPC()
-                friends_rpc.append(fb_rpc.fetch_friends(self))
+                if provider is None or provider.lower() == 'facebook':
+                    from geoauth.clients.facebook import FacebookFriendsRPC
+                    fb_rpc = FacebookFriendsRPC()
+                    friends_rpc.append(fb_rpc.fetch_friends(self))
             except:
                 pass
             #RPC PARA TWITTER
             try:
-                from geoauth.clients.twitter import TwitterFriendsRPC
-                tw_rpc = TwitterFriendsRPC()
-                friends_rpc.append(tw_rpc.fetch_friends(self))
+                if provider is None or provider.lower() == 'twitter':
+                    from geoauth.clients.twitter import TwitterFriendsRPC
+                    tw_rpc = TwitterFriendsRPC()
+                    friends_rpc.append(tw_rpc.fetch_friends(self))
             except:
                 pass
             #RPC PARA GOOGLE
             try:
-                from geoauth.clients.google import GoogleFriendsRPC
-                go_rpc = GoogleFriendsRPC()
-                friends_rpc.append(go_rpc.fetch_friends(self))
+                if provider is None or provider.lower() == 'google':
+                    from geoauth.clients.google import GoogleFriendsRPC
+                    go_rpc = GoogleFriendsRPC()
+                    friends_rpc.append(go_rpc.fetch_friends(self))
             except:
                 pass
             friends_rpc = filter(None, friends_rpc)
@@ -779,6 +782,29 @@ class User(polymodel.PolyModel, HookedModel):
                         if k in self.settings.blocked_friends_sug:
                             del friends[k]
                 memcache.set('%sfriends_to_%s' % (memcache.version, self.key()), friends, 11235)
+        return friends
+    
+    def _callback_get_friends_to_follow(self, handlers_rpcs, list_rpc, friends={}):
+        if type(friends) != type(dict()):
+            return {}
+        from google.appengine.runtime import apiproxy_errors
+        import memcache
+        client = memcache.mem.Client()
+        try:
+            for rpc in list_rpc:
+                rpc.wait()
+            #los unimos en uno
+            [friends.update(rpc.friends) for rpc in handlers_rpcs]
+            if len(friends) > 0:
+                if len(self.settings.blocked_friends_sug)>0:
+                    for k in friends.keys():
+                        if k in self.settings.blocked_friends_sug:
+                            del friends[k]
+                client.set('%sfriends_to_%s' % (memcache.version, self.id, friends, 11235))
+        except Exception, e:
+        #except apiproxy_errors.DeadlineExceededError:
+            import logging
+            logging.error('Handling Exception getting user friends: %s - %s' % (self.id, e))
         return friends
 
     def to_dict(self):
