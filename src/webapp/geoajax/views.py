@@ -627,11 +627,13 @@ def get_near_suggestions(request):
     """
     
     location = request.POST.get('location', None)
+    address = request.POST.get('address', None)
     if location is None and not request.user.is_authenticated():
         return HttpResponseForbidden()
     if location is not None and request.user.is_authenticated():
         from google.appengine.ext import db
         request.user.last_point = db.GeoPt(location)
+        request.user.last_adress = address
         request.user.put()
     if location is None and request.user.is_authenticated():
         location = request.user.last_point

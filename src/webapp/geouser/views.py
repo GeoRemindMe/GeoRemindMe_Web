@@ -651,22 +651,23 @@ def update(request):
 def __update_users():
     from django.conf import settings
     from models import User
-    from models_acc import UserSocialLinks
-    generico = User.objects.get_by_username('georemindme')
+#    from models_acc import UserSocialLinks
+#    generico = User.objects.get_by_username('georemindme')
     users = User.all()
     for user in users:
-        profile = user.profile
-        settings = user.settings
-        counters = user.counters
-        from models_acc import SearchConfigGooglePlaces
-        from google.appengine.ext import db
-        sociallinks = profile.sociallinks
-        if sociallinks is None:
-            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
-        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
-        if sc is None:
-            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
-        db.put([profile, settings, sc, counters, sociallinks])
+#        profile = user.profile
+#        settings = user.settings
+#        counters = user.counters
+#        from models_acc import SearchConfigGooglePlaces
+#        from google.appengine.ext import db
+#        sociallinks = profile.sociallinks
+#        if sociallinks is None:
+#            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
+#        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
+#        if sc is None:
+#            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
+        #db.put([profile, settings, sc, counters, sociallinks])
+        user.put()
 #        user.add_following(followid=generico.id)
 #        generico.add_following(followid=user.id)
 
