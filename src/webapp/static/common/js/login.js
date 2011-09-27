@@ -139,7 +139,8 @@ $(document).ready(function() {
              {
                 if(typeof(data._redirect)!="undefined")
                 {
-                   window.location = data._redirect
+                   REDIRECT = data._redirect;
+                   setTimeout(function(){window.location = REDIRECT}, 3000);
                 }
              }
              
