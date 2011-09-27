@@ -48,7 +48,7 @@ handlers:
   
 - url: /remote_api
   script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
-#login: admin
+  login: admin
   
 - url: /.*
   script: main.py

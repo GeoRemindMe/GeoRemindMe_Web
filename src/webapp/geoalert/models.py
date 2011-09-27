@@ -364,7 +364,7 @@ class Suggestion(Event, Visibility, Taggable):
                     if sugg._is_public():
                         if sugg.short_url is None:
                             sugg._get_short_url()
-                        msg = _("#grm %s") % sugg.short_url
+                        msg = _("%s #grm %s") % (sugg.name[:105], sugg.short_url)
                         from geoauth.clients.twitter import TwitterClient
                         try:
                             tw_client=TwitterClient(user=sugg.user)

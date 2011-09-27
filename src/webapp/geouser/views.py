@@ -240,10 +240,10 @@ def dashboard(request, template='webapp/dashboard.html'):
                         if k in request.user.settings.blocked_friends_sug:
                             del friends[k]
                 memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 11235)
-        except:
+        except Exception, e:
         #except apiproxy_errors.DeadlineExceededError:
             import logging
-            logging.error('Handling DeadlineExceededError for user friends: %s' % request.user.id)
+            logging.error('Handling Exception getting user friends: %s - %s' % (request.user.id, e))
     return  render_to_response(template, {
                                           'friends_to_follow': friends,
                                           'chronology': chronology,

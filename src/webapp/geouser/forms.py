@@ -105,17 +105,17 @@ class RegisterForm(forms.Form):
             self._errors['email'] = self.error_class([fail])
             
 
-class SocialUserForm(forms.Form):
+class SocialTwitterUserForm(forms.Form):
     '''
         Formulario para pedir un correo y username a los usuarios que entran desde una red social
     '''
     email = forms.EmailField(label=_('email'), required=True)
     username = forms.CharField(label=_('username'), required=True)
-    password = forms.CharField(required=False, max_length=settings.MAX_PWD_LENGTH,
+    password = forms.CharField(required=True, max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    password2 = forms.CharField(label=_("Repeat password"), required=False,
+    password2 = forms.CharField(label=_("Repeat password"), required=True,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
@@ -143,10 +143,10 @@ class SocialUserForm(forms.Form):
     def save(self, user):
         from geouser.models import User
         try:
-            if self.cleaned_data['password'] != '':
-                result = user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'], password=self.cleaned_data['password'])
-            else:
-                result=  user.update(email=self.cleaned_data['email'], username=self.cleaned_data['username'])
+            result=  user.update(email=self.cleaned_data['email'], 
+                                 username=self.cleaned_data['username'], 
+                                 password=self.cleaned_data['password']
+                                 )
         except User.UniqueEmailConstraint, e:
             fail = _('Email already in use')
             self._errors['email'] = self.error_class([fail])
@@ -167,7 +167,134 @@ class SocialUserForm(forms.Form):
         except:
             pass
         return result
+    
+    
+class SocialFacebookUserForm(forms.Form):
+    '''
+        Formulario para pedir un correo y username a los usuarios que entran desde una red social
+    '''
+    username = forms.CharField(label=_('username'), required=True)
+    password = forms.CharField(required=True, max_length=settings.MAX_PWD_LENGTH,
+                               min_length=settings.MIN_PWD_LENGTH,
+                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               )
+    password2 = forms.CharField(label=_("Repeat password"), required=True,
+                               max_length=settings.MAX_PWD_LENGTH,
+                               min_length=settings.MIN_PWD_LENGTH,
+                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               )
+    
+    def clean(self):
+        """
+         Clean data and check if the two passwords are the same
+        """
+        cleaned_data = self.cleaned_data
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
 
+        if password and password2:
+            if password.find(' ') != -1:
+                msg = _("Passwords can't have white spaces")
+                self._errors['password'] = self.error_class([msg])
+
+            if password != password2:
+                msg = _("Passwords must be the same.")
+                self._errors['password'] = self.error_class([msg])
+
+        return cleaned_data
+    
+    def save(self, user):
+        from geouser.models import User
+        try:
+            result =  user.update(username=self.cleaned_data['username'],
+                                  password=self.cleaned_data['password']
+                                  )
+        except User.UniqueUsernameConstraint, e:
+            fail = _('Username already in use')
+            self._errors['username'] = self.error_class([fail])
+            return
+        except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
+            fail = _(e.message)
+            self._errors['email'] = self.error_class([fail])
+            return
+        try: # usuario ya configurado, registramos como seguidor.
+            generico = User.objects.get_by_username('georemindme')
+            if generico is not None:
+                user.add_following(followid=generico.id)
+                generico.add_following(followid=user.id)
+        except:
+            pass
+        return result
+    
+    
+class SocialGoogleUserForm(forms.Form):
+    '''
+        Formulario para pedir un correo y username a los usuarios que entran desde una red social
+    '''
+    username = forms.CharField(label=_('username'), required=True)
+    password = forms.CharField(required=True, max_length=settings.MAX_PWD_LENGTH,
+                               min_length=settings.MIN_PWD_LENGTH,
+                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               )
+    password2 = forms.CharField(label=_("Repeat password"), required=True,
+                               max_length=settings.MAX_PWD_LENGTH,
+                               min_length=settings.MIN_PWD_LENGTH,
+                               widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
+                               )
+    
+    def clean(self):
+        """
+         Clean data and check if the two passwords are the same
+        """
+        cleaned_data = self.cleaned_data
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+
+        if password and password2:
+            if password.find(' ') != -1:
+                msg = _("Passwords can't have white spaces")
+                self._errors['password'] = self.error_class([msg])
+
+            if password != password2:
+                msg = _("Passwords must be the same.")
+                self._errors['password'] = self.error_class([msg])
+
+        return cleaned_data
+    
+    def save(self, user):
+        from geouser.models import User
+        try:
+            result = user.update(username=self.cleaned_data['username'], 
+                                 password=self.cleaned_data['password']
+                                 )
+        except User.UniqueEmailConstraint, e:
+            fail = _('Email already in use')
+            self._errors['email'] = self.error_class([fail])
+            return
+        except User.UniqueUsernameConstraint, e:
+            fail = _('Username already in use')
+            self._errors['username'] = self.error_class([fail])
+            return
+        except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
+            fail = _(e.message)
+            self._errors['email'] = self.error_class([fail])
+            return
+        try: # usuario ya configurado, registramos como seguidor.
+            generico = User.objects.get_by_username('georemindme')
+            if generico is not None:
+                user.add_following(followid=generico.id)
+                generico.add_following(followid=user.id)
+        except:
+            pass
+        return result
+    
+    
+class SocialUserForm(forms.Form):
+    '''
+        Formulario para pedir un correo y username a los usuarios que entran desde una red social
+    '''
+    username = forms.CharField(label=_('username'), required=True)
+    
 
 AVATAR_CHOICES = (
           ('none', _('None')),

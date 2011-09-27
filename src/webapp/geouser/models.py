@@ -241,6 +241,8 @@ class User(polymodel.PolyModel, HookedModel):
         query.Order(('_created', datastore.Query.DESCENDING))
         timelines = query.Get(TIMELINE_PAGE_SIZE)
         timelines, instances = prefetch_timeline(timelines)
+        from operator import attrgetter
+        timelines = sorted(timelines, key=attrgetter('modified'), reverse=True)
         return [query.GetCursor().to_websafe_string(), [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
                         'msg': timeline.msg, 
