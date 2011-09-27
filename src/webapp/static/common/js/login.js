@@ -139,8 +139,7 @@ $(document).ready(function() {
              {
                 if(typeof(data._redirect)!="undefined")
                 {
-                   REDIRECT = data._redirect;
-                   setTimeout(function(){window.location = REDIRECT}, 3000);
+                   window.location = data._redirect;
                 }
              }
              
