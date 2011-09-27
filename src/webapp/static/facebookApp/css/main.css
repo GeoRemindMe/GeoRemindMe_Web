@@ -1083,12 +1083,22 @@ input{
     #known-contacts li span{
     }
     
+    
+    
     ul#suggested-contacts{
     }
     ul#suggested-contacts li{
+        border: 1px dotted #CCCCCC;
+        display: block;
+        float: left;
+        padding: 1em;
+        width: 250px;
     }
     
-    
+    ul#suggested-contacts img{
+        float: left;
+        margin-right: 10px;
+    }
 /*
     #link-social-accounts li:hover{
         background-color: #FFCB04;
