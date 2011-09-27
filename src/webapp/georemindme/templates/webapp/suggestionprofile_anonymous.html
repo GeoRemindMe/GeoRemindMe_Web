@@ -5,11 +5,6 @@
 
 {% block title %}{{suggestion.name}}{% endblock %}
 {% block extra_js %}
-<!--
-    <script src="/static/webapp/js/jquery.tmpl.min.js"></script>
-    <script src="/static/facebookApp/js/grm.js"></script>
--->
-    
     <script type="text/javascript">
         <!-- Definimos la variable global necesaria para pedir las fotos a Panoramio -->    
         latlngStr = "{{suggestion.poi.location}}".split(",",2);

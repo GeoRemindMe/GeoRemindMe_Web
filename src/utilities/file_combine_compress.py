@@ -67,7 +67,8 @@ COMMON_FACEBOOKAPP = [
     '../webapp/static/facebookApp/js/jquery.ba-resize.min.js',
     '../webapp/static/facebookApp/js/jquery.hoverIntent.minified.js',
     '../webapp/static/facebookApp/js/grm.js',
-    '../webapp/static/facebookApp/js/main.js'
+    '../webapp/static/facebookApp/js/main.js',
+    
     
 ]
 
@@ -121,12 +122,14 @@ ADD_SUGGESTION_OUT = '../webapp/static/common/js/add_suggestion.min.js'
 STYLESHEETS = [
     '../webapp/static/facebookApp/css/main.css',
     '../webapp/static/webapp/style/main.css',
+    '../webapp/static/common/css/browser_error.css',
     #'../webapp/static/common/css/jquery-ui.css'
     ]
 STYLESHEETS_OUT = '../webapp/static/common/css/style.min.css'
 
 FB_STYLESHEETS = [
     '../webapp/static/facebookApp/css/main.css',
+    '../webapp/static/common/css/browser_error.css',
     ]
 FB_STYLESHEETS_OUT = '../webapp/static/common/css/fb_style.min.css'
 

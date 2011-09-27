@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.conf import settings
 
 from decorators import login_required, admin_required
 
@@ -141,9 +142,9 @@ def logout(request):
         :return: Redirige al usuario a donde le diga la función login_panel.
     """
     request.session.delete()
-    from google.appengine.api import users
-    #return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
-    return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
+    #from google.appengine.api import users
+    return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
+    #return HttpResponseRedirect(users.create_logout_url(reverse('georemindme.views.login_panel')))
 
 
 #===============================================================================
@@ -208,30 +209,41 @@ def dashboard(request, template='webapp/dashboard.html'):
     #------------------------------------------------------------------------------ 
     import memcache
     friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
-#    if friends is None: # lanzamos las peticiones asincronas
-#        handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
+    if friends is None: # lanzamos las peticiones asincronas
+        handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
     chronology = request.user.get_activity_timeline()
     # FIXME: CHAPUZA, LA PLANTILLA ESPERA RECIBIR EL QUERY_ID EN JSON :)
     from django.utils import simplejson
     chronology[0] = simplejson.dumps(chronology[0])
-#    if friends is None:
-#        from google.appengine.runtime import apiproxy_errors
-#        try:
-#            for rpc in list_rpc:
-#                rpc.wait()
-#            friends = {} # diccionario con todos los amigos
-#            #los unimos en uno
-#            [friends.update(rpc.friends) for rpc in handlers_rpcs]
-#            if len(friends) > 0:
-#                if len(request.user.settings.blocked_friends_sug)>0:
-#                    for k in friends.keys():
-#                        if k in request.user.settings.blocked_friends_sug:
-#                            del friends[k]
-#                memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 11235)
-#        except:
-#        #except apiproxy_errors.DeadlineExceededError:
-#            import logging
-#            logging.error('Handling DeadlineExceededError for user friends: %s' % request.user.id)
+    if friends is None:
+        # usuarios con mas sugerencias
+        from geouser.models_acc import UserCounter
+        from georemindme.funcs import fetch_parentsKeys
+        top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
+        top_users = fetch_parentsKeys(top_users)
+        top_users = filter(None, top_users)
+        friends = {}
+        for user in top_users:
+            if not user.key() == request.user.key() and not request.user.is_following(user):
+                friends[user.id] = {'username': user.username,
+                                    'id': user.id
+                                    }
+        from google.appengine.runtime import apiproxy_errors
+        try:
+            for rpc in list_rpc:
+                rpc.wait()
+            #los unimos en uno
+            [friends.update(rpc.friends) for rpc in handlers_rpcs]
+            if len(friends) > 0:
+                if len(request.user.settings.blocked_friends_sug)>0:
+                    for k in friends.keys():
+                        if k in request.user.settings.blocked_friends_sug:
+                            del friends[k]
+                memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 11235)
+        except:
+        #except apiproxy_errors.DeadlineExceededError:
+            import logging
+            logging.error('Handling DeadlineExceededError for user friends: %s' % request.user.id)
     return  render_to_response(template, {
                                           'friends_to_follow': friends,
                                           'chronology': chronology,
@@ -380,9 +392,16 @@ def followers_panel(request, username, template='webapp/followers.html'):
     else:
         from geouser.api import get_followers
         followers = get_followers(request.user, username=username)
+    
     if not request.user.is_authenticated():
             pos = template.rfind('.html')
             template = template[:pos] + '_anonymous' + template[pos:]
+    if followers is None:
+        return  render_to_response(template, {'followers': [],
+                                           'username_page':username
+                                           },
+                                           context_instance=RequestContext(request)
+                               )
     return  render_to_response(template, {'followers': followers[1],
                                           'username_page':username,
                                           },
@@ -399,6 +418,12 @@ def followings_panel(request, username, template='webapp/followings.html'):
     if not request.user.is_authenticated():
             pos = template.rfind('.html')
             template = template[:pos] + '_anonymous' + template[pos:]
+    if followings is None:
+        return  render_to_response(template, {'followings': [],
+                                           'username_page':username
+                                           },
+                                           context_instance=RequestContext(request)
+                               )
     return  render_to_response(template, {'followings': followings[1],
                                            'username_page':username
                                            },
@@ -627,19 +652,19 @@ def __update_users():
     generico = User.objects.get_by_username('georemindme')
     users = User.all()
     for user in users:
-#        profile = user.profile
-#        settings = user.settings
-#        counters = user.counters
-#        from models_acc import SearchConfigGooglePlaces
-#        from google.appengine.ext import db
-#        sociallinks = profile.sociallinks
-#        if sociallinks is None:
-#            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
-#        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
-#        if sc is None:
-#            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
-#        db.put([profile, settings, sc, counters, sociallinks])
-        user.add_following(followid=generico.id)
-        generico.add_following(followid=user.id)
+        profile = user.profile
+        settings = user.settings
+        counters = user.counters
+        from models_acc import SearchConfigGooglePlaces
+        from google.appengine.ext import db
+        sociallinks = profile.sociallinks
+        if sociallinks is None:
+            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
+        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
+        if sc is None:
+            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
+        db.put([profile, settings, sc, counters, sociallinks])
+#        user.add_following(followid=generico.id)
+#        generico.add_following(followid=user.id)
 
 

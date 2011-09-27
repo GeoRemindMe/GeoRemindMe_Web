@@ -1,12 +1,13 @@
 # coding=utf-8
 
 import logging
-
+from django.conf import settings
 from signals import *
 from exceptions import *
 
 from geouser.models_acc import UserTimelineSystem, UserTimeline
 from models_poi import *
+
 
 
 def new_alert(sender, **kwargs):

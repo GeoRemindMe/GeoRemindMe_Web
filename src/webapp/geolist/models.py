@@ -2,6 +2,7 @@
 
 from django.utils import simplejson
 from google.appengine.ext import db
+from django.conf import settings
 
 from geouser.models import User
 from georemindme.models_utils import Visibility, HookedModel
@@ -115,13 +116,15 @@ class List(db.polymodel.PolyModel, HookedModel):
     
     def _get_short_url(self):
         from libs.vavag import VavagRequest
-        from django.conf import settings
         from os import environ
         try:
+            # parche hasta conseguir que se cachee variable global
             client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
-            response =  client.set_pack('%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
-            self._short_url = response['results']['packUrl']
-        except:
+            response =  client.set_pack('http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
+            self._short_url = response['packUrl']
+        except Exception, e:
+            import logging
+            logging.error('ERROR EN VAVAG: %s' % e)
             self._short_url = None
 
 

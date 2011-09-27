@@ -38,7 +38,7 @@
                 <li id="filter-comments">Comentarios <span id="comments-counter"></span></li>
                 
             </ul>
-            <ul id="chronology" value="{{chronology.0}}" page="1" {% if notifications %} notifications="{{notifications}}" {% endif %}>
+            <ul id="chronology" value="{{chronology.0}}" {% if profile.username%}username="{{profile.username}}"{%endif%} page="1" {% if notifications %} notifications="{{notifications}}" {% endif %}>
                 {% include "timeline.html" %}
             </ul>
         

@@ -296,6 +296,7 @@ def add_following(request):
        
             :returns: boolean
     """ 
+    from django.conf import settings
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     if username == 'None':
@@ -316,6 +317,7 @@ def delete_following(request):
        
             :returns: boolean
     """
+    from django.conf import settings
     userid = request.POST.get('userid', None)
     username = request.POST.get('username', None)
     deleted = geouser.del_following(request.user, userid=userid, username=username)

@@ -9,6 +9,7 @@
 
 from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
+from django.conf import settings
 
 from georemindme.models_utils import HookedModel, Visibility
 from georemindme.decorators import classproperty

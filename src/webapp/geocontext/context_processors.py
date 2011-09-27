@@ -18,6 +18,7 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 """
 from geouser.models import AnonymousUser
 from georemindme.forms import ContactForm
+from geoalert.models import Suggestion
 from django.conf import settings
 
 
@@ -35,6 +36,7 @@ def geoAuth(request):
             'in_facebook': True if (request.path.find('/fb/') == 0) or (request.is_ajax() and request.META['HTTP_REFERER'].find('/fb/') != -1) else False,
             'is_secure': request.is_secure(),
             'google_api': settings.API,
+            'last_suggestions': Suggestion.objects.get_by_last_created(5, querier=request.user)
             }
     return parameters
     

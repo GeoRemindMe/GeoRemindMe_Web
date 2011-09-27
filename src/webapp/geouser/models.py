@@ -237,11 +237,11 @@ class User(polymodel.PolyModel, HookedModel):
         if query_id is None:
             query = datastore.Query(kind='_Notification', filters={'owner =': self.key()})
         if query_id is not None:
-            query = datastore.Query(kind='_Notification', filters={'owner =': self.key()}, cursor=query_id)
+            query = datastore.Query(kind='_Notification', filters={'owner =': self.key()}, cursor=datastore.datastore_query.Cursor.from_websafe_string(query_id))
         query.Order(('_created', datastore.Query.DESCENDING))
         timelines = query.Get(TIMELINE_PAGE_SIZE)
         timelines, instances = prefetch_timeline(timelines)
-        return [query.GetCursor(), [{'id': timeline.id, 'created': timeline.created,
+        return [query.GetCursor().to_websafe_string(), [{'id': timeline.id, 'created': timeline.created,
                         'modified': timeline.modified,
                         'msg': timeline.msg, 
                         'username':timeline.user.username,
@@ -577,11 +577,13 @@ class User(polymodel.PolyModel, HookedModel):
         if following is not None:
             if following == self.key():
                 return True
+            # actualiza la cache de amigos sugeridos
             import memcache
             friends = memcache.get('%sfriends_to_%s' % (memcache.version, self.key()))
             if friends is not None and int(following.id()) in friends:
                 del friends[int(following.id())]
                 memcache.set('%sfriends_to_%s' % (memcache.version, self.key()), friends, 300)
+            # añadimos el seguidor
             from models_acc import UserFollowingIndex
             is_following = UserFollowingIndex.all().filter('following =', following).ancestor(self.key()).count()
             if is_following != 0:  # en este caso, el usuario ya esta siguiendo al otro, no hacemos nada mas.

@@ -26,12 +26,8 @@ from django.views.generic.simple import direct_to_template, redirect_to
 
 urlpatterns = patterns('georemindme.views',
     url(r'^$', 'login_panel'),
-    url(r'^(?i)timonholandes/$', 'register_panel' ),
-    #url(r'^private/', 'homeprivate'),
-    #url(r'^team/$',direct_to_template, {'template': 'team.html', 'extra_context': {'active': 'team',}}, 'georemindme.team'),
     url(r'^(?i)m/$', direct_to_template, {'template': 'mobile/index.html'}, 'georemindme.mobile'),
     url(r'^(?i)lang/$', 'set_language'),
-    #url(r'^(?i)stats/daily/$', 'stats_daily'),
     url(r'^(?i)general/$', direct_to_template, {'template': 'webapp/general.html'}),
     url(r'^(?i)clean/sessions/$', 'clean_sessions'),
     url(r'^(?i)tasks/email/$', 'email_worker'),

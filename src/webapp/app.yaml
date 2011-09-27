@@ -3,7 +3,7 @@ version: live
 runtime: python
 api_version: 1
 
-default_expiration: "5d"
+default_expiration: "0d"
 
 
 handlers:
@@ -40,10 +40,15 @@ handlers:
   
 - url: /test.*
   script: gaeunit/gaeunit.py
+  login: admin
   
 - url: /_ah/queue/deferred
-  script: maindeferred.py
+  script: $PYTHON_LIB/google/appengine/ext/deferred/__init__.py
   login: admin
+  
+- url: /remote_api
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+#login: admin
   
 - url: /.*
   script: main.py
@@ -52,7 +57,7 @@ handlers:
 
 builtins:
 - appstats: on
-- remote_api: on
+#- remote_api: on
 
 inbound_services:
 - warmup

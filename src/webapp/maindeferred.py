@@ -21,6 +21,7 @@ import os, logging, sys
 from google.appengine.ext.webapp import util
 from google.appengine.dist import use_library
 from google.appengine.ext import deferred
+from google.appengine.ext.webapp import template
 
 # elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
 for k in [k for k in sys.modules if k.startswith('django')]: 
@@ -31,8 +32,19 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 use_library('django', '1.2')
 
+import django.core.handlers.wsgi
+import django.dispatch
+from django.core.signals import got_request_exception
+from django.db import _rollback_on_exception
+
+import cPickle, pickle
+sys.modules['cPickle'] = sys.modules['pickle']
+
+
+def log_exception(*args, **kwds):
+    logging.exception('Exception in request:')
+
 def main():
-    import django
     util.run_wsgi_app(deferred.application)
 
 if __name__ == '__main__':
