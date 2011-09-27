@@ -3,7 +3,7 @@ version: live
 runtime: python
 api_version: 1
 
-default_expiration: "0d"
+default_expiration: "1h"
 
 
 handlers:
@@ -43,12 +43,12 @@ handlers:
   login: admin
   
 - url: /_ah/queue/deferred
-  script: $PYTHON_LIB/google/appengine/ext/deferred/__init__.py
+  script: maindeferred.py
   login: admin
   
 - url: /remote_api
   script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
-#login: admin
+  login: admin
   
 - url: /.*
   script: main.py

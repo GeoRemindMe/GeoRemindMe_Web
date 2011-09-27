@@ -175,10 +175,16 @@ def dashboard(request, template='webapp/dashboard.html'):
         
         :return: Solo devuelve errores si el proceso falla.
     """
-    from forms import SocialUserForm
     if request.user.username is None:
+        if request.user.email is None:
+            from forms import SocialTwitterUserForm as formClass
+        else:
+            if request.user.google_user is None and request.user.facebook_user is None:
+                from forms import SocialUserForm as formClass
+            else:
+                from forms import SocialFacebookGoogleUserForm as formClass
         if request.method == 'POST':
-            f = SocialUserForm(request.POST, 
+            f = formClass(request.POST, 
                                prefix='user_set_username', 
                                initial = { 'email': request.user.email,
                                            'username': request.user.username,
@@ -186,26 +192,33 @@ def dashboard(request, template='webapp/dashboard.html'):
                                )
             if f.is_valid():
                 user = f.save(request.user)
-                if not user:
-                    return render_to_response('webapp/create_social_profile.html', {'form': f}, 
-                                   context_instance=RequestContext(request)
-                                  )
-                request.session['user'] = user
-                request.session.put()
-                return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-            else:
-                return render_to_response('webapp/create_social_profile.html', {'form': f}, 
-                                       context_instance=RequestContext(request)
-                                      )
+                if user:
+                    request.session['user'] = user
+                    request.session.put()
+                    return HttpResponseRedirect(reverse('geouser.views.dashboard'))
         else:
-            f = SocialUserForm(prefix='user_set_username', 
+            f = formClass(prefix='user_set_username', 
                                initial = { 'email': request.user.email,
                                            'username': request.user.username,
                                          }
                                )
-            return render_to_response('webapp/create_social_profile.html', {'form': f}, 
-                                       context_instance=RequestContext(request)
-                                      )
+        top_users = {}
+        from geoalert.models import Suggestion
+        for user in top_users:
+            if not user.key() == request.user.key() and not request.user.is_following(user):
+                top_users[user.id] = {'username': user.username,
+                                    'id': user.id,
+                                    'last_sugs': Suggestion.objects.get_by_last_created(limit=3,
+                                                                                        user=user,
+                                                                                        querier=request.user
+                                                                                        )
+                                    }
+        return render_to_response('webapp/create_social_profile.html',
+                                   {'form': f,
+                                    'top_users': top_users
+                                    }, 
+                                   context_instance=RequestContext(request)
+                                  )
     #------------------------------------------------------------------------------ 
     import memcache
     friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
@@ -228,22 +241,8 @@ def dashboard(request, template='webapp/dashboard.html'):
                 friends[user.id] = {'username': user.username,
                                     'id': user.id
                                     }
-        from google.appengine.runtime import apiproxy_errors
-        try:
-            for rpc in list_rpc:
-                rpc.wait()
-            #los unimos en uno
-            [friends.update(rpc.friends) for rpc in handlers_rpcs]
-            if len(friends) > 0:
-                if len(request.user.settings.blocked_friends_sug)>0:
-                    for k in friends.keys():
-                        if k in request.user.settings.blocked_friends_sug:
-                            del friends[k]
-                memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 11235)
-        except:
-        #except apiproxy_errors.DeadlineExceededError:
-            import logging
-            logging.error('Handling DeadlineExceededError for user friends: %s' % request.user.id)
+        # amigos de otras redes sociales
+        friends = request.user._callback_get_friends_to_follow(handlers_rpcs, list_rpc, friends)
     return  render_to_response(template, {
                                           'friends_to_follow': friends,
                                           'chronology': chronology,
@@ -263,7 +262,6 @@ def public_profile(request, username, template='webapp/profile.html'):
     from geoalert.views import get_suggestion
     if username.lower() == 'none':
         raise Http404()
-    
     if request.user.is_authenticated() \
      and request.user.username is not None \
      and request.user.username.lower() == username.lower():

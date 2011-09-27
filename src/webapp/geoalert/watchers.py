@@ -75,8 +75,15 @@ def new_suggestion(sender, **kwargs):
     p = db.put_async([timeline])
     sender.user.counters.set_suggested()
     if sender._is_public():
-        from google.appengine.ext.deferred import defer
-        defer(sender.insert_ft)
+        from google.appengine.ext.deferred import defer, PermanentTaskFailure 
+        try:
+            defer(sender.insert_ft)
+        except PermanentTaskFailure, e:
+            from georemindme.models_utils import _Do_later_ft
+            later = _Do_later_ft(instance_key=sender.key())
+            later.put()
+            import logging
+            logging.error('ERROR FUSIONTABLES %s: %s' % (sender.id, e))
     timelinePublic.put()
     p.get_result()
 suggestion_new.connect(new_suggestion)
@@ -146,8 +153,15 @@ def deleted_privateplace(sender, **kwargs):
 def new_place(sender, **kwargs):
     #timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=450)
     #timeline.put()
-    from google.appengine.ext.deferred import defer
-    defer(sender.insert_ft)
+    from google.appengine.ext.deferred import defer, PermanentTaskFailure 
+    try:
+        defer(sender.insert_ft)
+    except PermanentTaskFailure, e:
+        from georemindme.models_utils import _Do_later_ft
+        later = _Do_later_ft(instance_key=sender.key())
+        later.put()
+        import logging
+        logging.error('ERROR FUSIONTABLES %s: %s' % (sender.id, e))
 place_new.connect(new_place)
 
 
