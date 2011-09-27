@@ -385,7 +385,6 @@ class SuggestionHelper(EventHelper):
                                                    ))
         if sugs is None:
             from mapsServices.fusiontable import ftclient, sqlbuilder
-            
             ftclient = ftclient.OAuthFTClient()
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
             query = ftclient.query(sqlbuilder.SQL().select(__web_settings.FUSIONTABLES['TABLE_SUGGS'], cols=['sug_id'],
