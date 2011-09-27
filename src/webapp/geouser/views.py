@@ -208,19 +208,20 @@ def dashboard(request, template='webapp/dashboard.html'):
         top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
         top_users = fetch_parentsKeys(top_users)
         top_users = filter(None, top_users)
+        top_users_dict = {}
         for user in top_users:
             if not user.key() == request.user.key() and not request.user.is_following(user):
-                top_users[user.id] = {'username': user.username,
+                top_users_dict[user.id] = {'username': user.username,
                                     'id': user.id,
                                     'last_sugs': Suggestion.objects.get_by_last_created(limit=3,
                                                                                         user=user,
                                                                                         querier=request.user
                                                                                         ),
-                                    'counters': user.counters
+                                    'counters': user.counters,
                                     }
         return render_to_response('webapp/create_social_profile.html',
                                    {'form': f,
-                                    'top_users': top_users
+                                    'top_users': top_users_dict
                                     }, 
                                    context_instance=RequestContext(request)
                                   )
