@@ -347,13 +347,18 @@ def block_contacts(request):
                 del friends[userid]
                 memcache.set('%sfriends_to_%s' % (memcache.version, request.user.key()), friends, 300)
             request.user.settings.put()
-            return HttpResponse(simplejson.dumps(True))
-    return HttpResponse(simplejson.dumps(True))
+            return HttpResponse(simplejson.dumps(True), mimetype="application/json")
+    return HttpResponse(simplejson.dumps(True), mimetype="application/json")
 
 
 @ajax_request
-def get_contacts_facebook(request):
-    pass
+def get_contacts(request):
+    if not request.user.is_authenticated():
+        return HttpResponseForbidden()
+    handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
+    friends = request.user._callback_get_friends_to_follow(handlers_rpcs, list_rpc)
+    return HttpResponse(simplejson.dumps(friends), mimetype="application/json")
+
 
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
