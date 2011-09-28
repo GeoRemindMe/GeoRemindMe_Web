@@ -357,6 +357,16 @@ def get_contacts(request):
         return HttpResponseForbidden()
     handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
     friends = request.user._callback_get_friends_to_follow(handlers_rpcs, list_rpc)
+    from geouser.models_acc import UserCounter
+    from georemindme.funcs import fetch_parentsKeys
+    top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
+    top_users = fetch_parentsKeys(top_users)
+    top_users = filter(None, top_users)
+    for user in top_users:
+        if not user.key() == request.user.key() and not request.user.is_following(user):
+            friends[user.id] = {'username': user.username,
+                                'id': user.id
+                                }
     return HttpResponse(simplejson.dumps(friends), mimetype="application/json")
 
 
