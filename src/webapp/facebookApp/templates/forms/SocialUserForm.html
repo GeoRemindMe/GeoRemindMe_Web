@@ -4,10 +4,12 @@
     <script type="text/javascript">
     
         function samePass(){
-            if($('#id_user_set_username-password').val()==$('#id_user_set_username-password2').val())
+            if($('#id_user_set_username-password').val()==$('#id_user_set_username-password2').val() && $('#id_user_set_username-password2').val()!="")
                 return true;
-            else
+            else{
+                $('#password-error').text('La contraseña tiene que estar entre 5 y 12 caracteres y ser iguales').fadeIn('slow');
                 return false;
+            }
         }
         
         function validUsername(){
