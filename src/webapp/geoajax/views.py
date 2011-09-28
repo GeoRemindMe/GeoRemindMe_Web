@@ -806,9 +806,9 @@ def get_perms(request):
              'google': False,
              }
     from geouser.models_social import SocialUser
-    facebook = db.GqlQuery('SELECT __key__ FROM OAUTH_Access WHERE provider = "facebook" AND user = :user', user=request.user.key()).get()
-    twitter = db.GqlQuery('SELECT __key__ FROM OAUTH_Access WHERE provider = "twitter" AND user = :user', user=request.user.key()).get()
-    google = db.GqlQuery('SELECT __key__ FROM OAUTH_Access WHERE provider = "google" AND user = :user', user=request.user.key()).get()
+    facebook = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='facebook', user=request.user.key()).get()
+    twitter = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='twitter', user=request.user.key()).get()
+    google = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='google', user=request.user.key()).get()
     
     if facebook:
         perms['facebook'] = True
