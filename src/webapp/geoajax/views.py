@@ -810,11 +810,11 @@ def get_perms(request):
     twitter = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='twitter', user=request.user.key()).get()
     google = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='google', user=request.user.key()).get()
     
-    if facebook:
+    if facebook is not None:
         perms['facebook'] = True
-    if twitter:
+    if twitter is not None:
         perms['twitter'] = True
-    if google:
+    if google is not None:
         perms['google'] = True
     return HttpResponse(simplejson.dumps(perms), mimetype='application/json')
     
