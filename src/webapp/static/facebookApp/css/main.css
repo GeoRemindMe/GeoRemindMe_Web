@@ -582,6 +582,10 @@ input{
         padding: 1px 15px 2px;
         text-align: center;
     }
+    .btn.pressed{
+        border-color:#0E1F5B #D9DFEA #D9DFEA #0E1F5B;
+        color:#555;
+    }
     div#add-suggestion div span#submit-button.btn{
         margin-right:1em;
     }
@@ -1086,19 +1090,24 @@ input{
     
     
     ul#suggested-contacts{
+        width: 255px;
+        float:left;
     }
     ul#suggested-contacts li{
         border: 1px dotted #CCCCCC;
+        clear: both;
         display: block;
-        float: left;
+        height: 30px;
+        margin-bottom: 10px;
         margin-right: 10px;
-        padding: 1em;
-        width: 235px;
+        padding: 0.5em;
     }
     
     ul#suggested-contacts img{
         float: left;
         margin-right: 10px;
+        height: 30px;
+        width: 30px;
     }
 /*
     #link-social-accounts li:hover{
@@ -3793,4 +3802,31 @@ sup{
     font-style: italic;
     line-height: 1.8em;
     margin: 9px 0 9px 10px;
+}
+
+#background.social-profile #right-col{
+    min-height: 0;
+    width: 920px;
+}
+#background.social-profile h2{
+    margin: 1em 0 .3em;
+}
+#background.social-profile div#user-suggestions{
+    border: 1px dotted #AAAAAA;
+    float: left;
+    padding: 0.5em;
+    width: 645px;
+}
+#background.social-profile .btn{
+    padding: 1px 5px 2px;
+    margin-left: 10px;
+}
+
+#background.social-profile div#user-suggestions a img{
+    float:left;
+    margin-right: 10px;
+}
+
+#background.social-profile div#user-suggestions a span.btn{
+    margin-top: 15px;
 }

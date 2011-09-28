@@ -97,13 +97,15 @@
         {% endif %}
 	</header>
 	</div>
-	<div id="background">
+	<div id="background" class="{% block section_class %}{%endblock%}">
 		<div id="base" class="container">
 			
 			<div id="right-col">
 				{% block body %}{% endblock %}
 			</div>
-			{% include "webapp/suggested_suggestions.html" %}
+            {% block right_col %}
+                {% include "webapp/suggested_suggestions.html" %}
+            {%endblock%}
 		</div>
 	</div>
 	
