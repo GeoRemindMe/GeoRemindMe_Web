@@ -35,6 +35,29 @@
             return true;				
         }
         
+        function validateForm(){
+            var validForm=true;
+             if($('#id_user_set_username-email').length>0){
+                if(!validEmail()){
+                    validForm=false;
+                    //console.log("Email y usuario validos")
+                }
+            }
+            if($('#id_user_set_username-username').length>0){
+                if(!validUsername()){
+                    validForm=false;
+                    //console.log("Usuario invalido")
+                }
+            }
+            if($('#id_user_set_username-password').length>0){
+                if(!samePass()){
+                    validForm=false;
+                    //console.log("Password invalidos")
+                }
+            }
+            return validForm;
+        }
+        
         $(document).ready(function(){
             
             //-------------------------------------
@@ -71,21 +94,8 @@
             
             //Form validation
             $("form").submit(function() {
-                var pass1=$('#id_user_set_username-password').val()
-                var pass2=$('#id_user_set_username-password2').val()
-                var validForm=false;
                 
-                if(validEmail() && validUsername()){
-                    validForm=true;
-                    //console.log("Email y usuario validos")
-                }
-                if(!samePass()){
-                     $('#password2-error').text('Por favor revise las contraseñas, no coinciden').fadeIn('slow');
-                     validForm=false;
-                     //console.log("Password invalidos")
-                }
-                
-                if(validForm)
+                if(validateForm())
                     return true;
                 else
                     return false;

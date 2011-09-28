@@ -195,7 +195,21 @@ def dashboard(request, template='webapp/dashboard.html'):
                 if user:
                     request.session['user'] = user
                     request.session.put()
-                    return HttpResponseRedirect(reverse('geouser.views.dashboard'))
+                    response = HttpResponseRedirect(reverse('geouser.views.dashboard'))
+                    # cookie de primer login
+                    from time import time
+                    from datetime import datetime
+                    max_age = datetime.fromtimestamp(time() + settings.SESSION_COOKIE_AGE*2)
+                    expires = max_age - datetime.now()
+                    expires = expires.days * 86400 + expires.seconds
+                    response.set_cookie('new_user_%s' % request.user.id, 
+                                        '', 
+                                        max_age=  60 * 60 * 24 * 7 * 52,
+                                        domain=settings.SESSION_COOKIE_DOMAIN,
+                                        path=settings.SESSION_COOKIE_PATH,
+                                        secure=settings.SESSION_COOKIE_SECURE
+                                        )
+                    return response
         else:
             f = formClass(prefix='user_set_username', 
                                initial = { 'email': request.user.email,

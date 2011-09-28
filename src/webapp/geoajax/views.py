@@ -357,7 +357,18 @@ def get_contacts(request):
         return HttpResponseForbidden()
     handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
     friends = request.user._callback_get_friends_to_follow(handlers_rpcs, list_rpc)
-    return HttpResponse(simplejson.dumps(friends), mimetype="application/json")
+    from geouser.models_acc import UserCounter
+    from georemindme.funcs import fetch_parentsKeys
+    top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
+    top_users = fetch_parentsKeys(top_users)
+    top_users = filter(None, top_users)
+    for user in top_users:
+        if not user.key() == request.user.key() and not request.user.is_following(user):
+            friends[user.id] = {'username': user.username,
+                                'id': user.id
+                                }
+    friends_to_list = friends.values()
+    return HttpResponse(simplejson.dumps(friends_to_list), mimetype="application/json")
 
 
 #===============================================================================
@@ -795,15 +806,15 @@ def get_perms(request):
              'google': False,
              }
     from geouser.models_social import SocialUser
-    facebook = db.GqlQuery("SELECT __key__ FROM SocialUser WHERE user = :1 AND class='FacebookUser'", request.user.key()).get()
-    twitter = db.GqlQuery("SELECT __key__ FROM SocialUser WHERE user = :1 AND class='TwitterUser'", request.user.key()).get()
-    google = db.GqlQuery("SELECT __key__ FROM SocialUser WHERE user = :1 AND class='GoogleUser'", request.user.key()).get()
+    facebook = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='facebook', user=request.user.key()).get()
+    twitter = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='twitter', user=request.user.key()).get()
+    google = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='google', user=request.user.key()).get()
     
-    if facebook:
+    if facebook is not None:
         perms['facebook'] = True
-    if twitter:
+    if twitter is not None:
         perms['twitter'] = True
-    if google:
+    if google is not None:
         perms['google'] = True
     return HttpResponse(simplejson.dumps(perms), mimetype='application/json')
     

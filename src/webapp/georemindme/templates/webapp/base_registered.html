@@ -53,7 +53,7 @@
     </script>
 	
 </head>
-<body class="logged {% block section_class %}{% endblock %}" id="webapp">
+<body class="logged" id="webapp">
     <div id="wait-mask" style="display:none"></div>
     <div id="notification-msg" style="display:none"></div>
 	<div id="bg-header" class="orange-gradient">
@@ -97,15 +97,15 @@
         {% endif %}
 	</header>
 	</div>
-	<div id="background">
+	<div id="background" class="{% block section_class %}{%endblock%}">
 		<div id="base" class="container">
 			
 			<div id="right-col">
 				{% block body %}{% endblock %}
 			</div>
-            {% block right_block %}
+            {% block right_col %}
                 {% include "webapp/suggested_suggestions.html" %}
-            {% endblock %}
+            {%endblock%}
 		</div>
 	</div>
 	

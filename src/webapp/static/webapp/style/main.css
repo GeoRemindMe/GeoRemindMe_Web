@@ -1577,7 +1577,9 @@ div.removable a {
     text-decoration:underline;
 }
 
-.btn,.load-more {
+.btn,
+.load-more,
+#background.social-profile #suggested-contacts li div span a {
     color:black;
     background: rgb(255,255,255); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%); /* FF3.6+ */
@@ -2022,8 +2024,8 @@ div#content {
 #right-col #link-social-accounts a{
     color:black;
 }
-#right-col #link-social-accounts a#twitter{
-    background: url("/static/webapp/img/grm_webapp_sprite.png") repeat scroll -103px -53px transparent;
+#right-col #link-social-accounts a{
+    
     display: block;
     float: left;
     height: 16px;
@@ -2031,23 +2033,37 @@ div#content {
     margin: 4px 0 4px 10px;
     padding-left: 20px;
 }
-#right-col #link-social-accounts a#facebook{
+#right-col #link-social-accounts a{
+    display: block;
+    float: left;
+    height: 16px;
+    line-height: 16px;
+    margin: 4px 0 4px 10px;
+    padding-left: 20px;
+}
+#right-col #link-social-accounts li#facebook{
     background: url("/static/webapp/img/grm_webapp_sprite.png") repeat scroll -103px -85px transparent;
-    display: block;
-    float: left;
-    height: 16px;
-    line-height: 16px;
-    margin: 4px 0 4px 10px;
     padding-left: 20px;
 }
-#right-col #link-social-accounts a#google{
+#right-col #link-social-accounts li#google{
     background: url("/static/webapp/img/grm_webapp_sprite.png") repeat scroll -103px -69px transparent;
-    display: block;
-    float: left;
+    padding-left: 20px;
+}
+#right-col #link-social-accounts li#twitter{
+    background: url("/static/webapp/img/grm_webapp_sprite.png") repeat scroll -103px -53px transparent;
+    padding-left: 20px;
+}
+#right-col #link-social-accounts li span{
+    background-color:#F6F6F6;
+}
+#right-col #link-social-accounts a{
+    
+    display: inline-block;
+    float: none;
     height: 16px;
     line-height: 16px;
-    margin: 4px 0 4px 10px;
-    padding-left: 20px;
+    margin: 4px 0;
+    padding-left: 0;
 }
 #right-col #social-profile ul#link-social-accounts li a.hoverlink span{
     background-color: #F6F6F6;

@@ -1,7 +1,7 @@
 cron:
-- description: daily stats summary job
-  url: /stats/daily/
-  schedule: every 24 hours
+#- description: daily stats summary job
+#url: /stats/daily/
+#schedule: every 24 hours
   
 - description: hourly invalid sessions cleaning job
   url: /clean/sessions/
