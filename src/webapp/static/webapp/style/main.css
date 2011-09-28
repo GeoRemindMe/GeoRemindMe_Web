@@ -2022,6 +2022,38 @@ div#content {
 #right-col #link-social-accounts a{
     color:black;
 }
+#right-col #link-social-accounts a#twitter{
+    background: url("/static/webapp/img/grm_webapp_sprite.png") repeat scroll -103px -53px transparent;
+    display: block;
+    float: left;
+    height: 16px;
+    line-height: 16px;
+    margin: 4px 0 4px 10px;
+    padding-left: 20px;
+}
+#right-col #link-social-accounts a#facebook{
+    background: url("/static/webapp/img/grm_webapp_sprite.png") repeat scroll -103px -85px transparent;
+    display: block;
+    float: left;
+    height: 16px;
+    line-height: 16px;
+    margin: 4px 0 4px 10px;
+    padding-left: 20px;
+}
+#right-col #link-social-accounts a#google{
+    background: url("/static/webapp/img/grm_webapp_sprite.png") repeat scroll -103px -69px transparent;
+    display: block;
+    float: left;
+    height: 16px;
+    line-height: 16px;
+    margin: 4px 0 4px 10px;
+    padding-left: 20px;
+}
+#right-col #social-profile ul#link-social-accounts li a.hoverlink span{
+    background-color: #F6F6F6;
+    display: inline-block;
+    line-height: 16px;
+}
 #SocialUserProfile-form input[type="submit"]{
     color:black;
 }
@@ -2045,3 +2077,7 @@ div#content {
 }
 
 
+.create-social-profile #right-col{
+    width: 905px;
+    min-height: 0;
+}

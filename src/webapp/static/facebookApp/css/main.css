@@ -1050,30 +1050,30 @@ input{
         border: 1px dotted #777777;
         display: inline-block;
         margin-bottom: 15px;
-        margin-right: 15px;
+        margin-right: 10px;
         padding: 0;
         width: 165px;
     }
     #known-contacts li img{
         border-right: 1px dotted #777777;
         float: left;
-        height: 50px;
+        height: 30px;
         padding: 5px;
-        width: 50px;
+        width: 30px;
     }
     #known-contacts li span a{
         background-color: #E5E5E5;
-        border-bottom: 1px dotted;
+        border-bottom: 1px dotted #555555;
         color: black !important;
         display: inline-block;
-        line-height: 30px;
         padding: 0 4px;
         text-align: center;
         text-decoration: none;
-        width: 96px;
+        width: 116px
     }
     #known-contacts li span.follow a {
         border:0;
+        background-color: #CEFFC6;
     }
     #known-contacts li span a:hover{
         background-color: #ffffff;
@@ -1081,24 +1081,36 @@ input{
     
     
     #known-contacts li span{
+        display: inline-block;
+        float: left;
+        line-height: 20px;
+    }
+    
+    #social-profile  div#social-bar p{
+        display: inline-block;
+        float: left;
     }
     
     
-    
     ul#suggested-contacts{
+    }
+    div#social-profile div h2{
+        margin: 0.8em 0 0.2em;
     }
     ul#suggested-contacts li{
         border: 1px dotted #CCCCCC;
         display: block;
         float: left;
         margin-right: 10px;
-        padding: 1em;
+        padding: 0.5em;
         width: 235px;
     }
     
     ul#suggested-contacts img{
         float: left;
+        height: 30px;
         margin-right: 10px;
+        width: 30px
     }
 /*
     #link-social-accounts li:hover{

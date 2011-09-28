@@ -45,50 +45,65 @@
 </script>
 {% endblock %}
 
+{% block section_class %}create-social-profile{% endblock %}
+
 {% block body %}
     <div id="social-profile">
         <h1>¡Genial ya estás dentro!</h1>
         
-        <hr>
         <div id="step-one" {%if form.errors %}style="display:none"{%endif%}> 
             <h2>Paso 1 de 2: Elige tu nombre de usuario</h2>
             {% include "forms/SocialUserForm.html" %}
-            <p class="footer-notes">
+            <div class="footer-notes" style="clear:left">
                 <sup>(*)</sup> Una vez elegido el nombre de usuario, este se utilizará para crear tu perfil público .
-            </p>
+            </div>
         </div>
         <div id="step-two"  {%if not form.errors %}style="display:none"{%endif%}>
-            <h2>Paso 2 de 2: Recibe más y mejores sugerencias</h2>
-            <p>
-                Para empezar a ver sugerencias necesitas crearte una red de contactos <strong>con los que compartas gustos</strong>, por ello vamos a mostrarte a usuarios que pensamos que te pueden interesar seguir.<br>
-            </p>
+            <h2>Paso 2 de 2: Recibe más y mejores sugerencias siguiendo a gente de tu interés</h2>
             <hr>
             <p>
                 <strong>Usuarios de GeoRemindMe! a los que podrías conocer:</strong>
             </p>
-            <p>Buscar ahora entre mis contactos de:</p>
-            <ul id="link-social-accounts">
-            {% if not user.twitter_user %}
-                <li><a id="twitter" href="/ext/twitter/contacts/" class="hoverlink" target="_blank" title="Buscar ahora  entre las personas que sigo"> Twitter</a></li>
-            {% else %}
-                <li>Twitter</li>
-            {% endif %}
-            {% if not user.facebook_user %}
-                <li><a id="facebook" href="/ext/facebook/contacts/" class="hoverlink" target="_blank" title="Buscar ahora entre mis amigos">Facebook</a></li>
-            {% else %}
-                <li>Facebook</li>    
-            {% endif %}
-            {% if not user.google_user %}
-                <li><a id="google" href="/ext/google/contacts/" class="hoverlink" target="_blank" title="Buscar ahora entre mis contactos">Google</a></li>
-            {% else %}
-                <li>Google</li>
-
-            {% endif %}
-            </ul>
             <ul id="known-contacts">
                 <li>
                     <img src="/user/jneight/picture/">
-                    <span class="username"><a href="">jneight</a></span>
+                    <span class="username"><a href="../user/jneight">jneight</a></span>
+                    <span class="follow">
+                        <div id="following_state_{{ id }}">
+                            <span onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                        </div>
+                    </span>
+                </li>
+                <li>
+                    <img src="/user/jneight/picture/">
+                    <span class="username"><a href="../user/jneight">jneight</a></span>
+                    <span class="follow">
+                        <div id="following_state_{{ id }}">
+                            <span onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                        </div>
+                    </span>
+                </li>
+                <li>
+                    <img src="/user/jneight/picture/">
+                    <span class="username"><a href="../user/jneight">jneight</a></span>
+                    <span class="follow">
+                        <div id="following_state_{{ id }}">
+                            <span onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                        </div>
+                    </span>
+                </li>
+                <li>
+                    <img src="/user/jneight/picture/">
+                    <span class="username"><a href="../user/jneight">jneight</a></span>
+                    <span class="follow">
+                        <div id="following_state_{{ id }}">
+                            <span onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                        </div>
+                    </span>
+                </li>
+                <li>
+                    <img src="/user/jneight/picture/">
+                    <span class="username"><a href="../user/jneight">jneight</a></span>
                     <span class="follow">
                         <div id="following_state_{{ id }}">
                             <span onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
@@ -96,6 +111,45 @@
                     </span>
                 </li>
             </ul>
+            <div id="social-bar">
+                <p>Buscar ahora entre mis contactos de:</p>
+                <ul id="link-social-accounts">
+                {% if not user.twitter_user %}
+                    <li><a id="twitter" href="/ext/twitter/contacts/" class="hoverlink" target="_blank" title="Buscar ahora  entre las personas que sigo"> <span>Twitter</span></a></li>
+                {% else %}
+                    <li>Twitter</li>
+                {% endif %}
+                {% if not user.facebook_user %}
+                    <li><a id="facebook" href="/ext/facebook/contacts/" class="hoverlink" target="_blank" title="Buscar ahora entre mis amigos"><span>Facebook</span></a></li>
+                {% else %}
+                    <li>Facebook</li>    
+                {% endif %}
+                {% if not user.google_user %}
+                    <li><a id="google" href="/ext/google/contacts/" class="hoverlink" target="_blank" title="Buscar ahora entre mis contactos"><span>Google</span></a></li>
+                {% else %}
+                    <li>Google</li>
+
+                {% endif %}
+                </ul>
+            </div>
+            <div class="footer-notes clear">
+                <strong class="show-more" onclick="javascript:toggle_showMore()">[Ver más]</strong>
+                <p>
+                    En ningún momento enviaremos ningún correo electrónico a tus contactos sin tu permiso. <span id="show-more-text"><br>
+                    Nosotros también hemos pasado por otras páginas que envían correos a nuestros contactos sin permiso pero nosotros
+                    somos buena gente ;D. 
+                
+                    <br><strong>Tan solo queremos ofrecerte una herramienta con todas las comodidades.</strong><br>
+                
+                    Un saludo y gracias por confiar en <a href="http://georemindme.com/team" target="_blank">nuestro equipo</a>.
+                
+                </span>
+                </p>
+            </div>
+            <div style="margin:1.5em 0 0.7em;height:26px">
+                <span class="btn left clear" id="first-step">Volver al "Paso 1"</span>
+                <span class="btn">Terminar</span>
+            </div>
             <hr>
             <p>
                 <strong>Usuarios más activos:</strong>
@@ -106,7 +160,7 @@
                         {% if obj.username %}
                             <li>
                                 <img src="/user/{{obj.username}}/picture/">
-                                <span class="username"><a href="">{{obj.username}}</a></span>
+                                <span class="username"><a href="">{{obj.username}}</a></span><br>
                                 Sugerencias: {{obj.counters.suggested}}
                                 <hr>
                                 {% for sug in obj.last_sugs %}
@@ -127,21 +181,9 @@
             <span class="btn left clear" id="first-step">Volver al "Paso 1"</span>
             <span class="btn">Terminar</span>
             
-            <div class="note clear">
-                <strong class="show-more" onclick="javascript:toggle_showMore()">[Ver más](1)</strong>: 
-                <p>
-                    En ningún momento enviaremos ningún correo electrónico... <div id="show-more-text"> a tus contactos sin tu permiso. 
-                    Nosotros también hemos pasado por página que envían correos a nuestros usuarios sin nuestro permiso pero nosotros
-                    no somos de esta clase. 
-                </p>
-                
-                
-                <br><br><strong>Tan solo queremos ofrecerte una herramienta con todas las comodidades.</strong><br><br>
-                
-                    Un saludo y gracias por confiar en <a href="http://georemindme.com/team" target="_blank">nosotros</a>.
-                
-                </div>
-            </div>
+            
         </div>
     </div>
 {%endblock%}
+
+{% block right_block %}{%endblock%}
