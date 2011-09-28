@@ -95,7 +95,7 @@ def client_token_request(request, provider, callback_url=None):
     if callback_url is None:
         callback_url = OAUTH[provider]['callback_url']
     if provider.lower() == 'google':  # pasamos el scope con los permisos que queremos en google
-        response, content = client.request('%s?scope=https://www.google.com/fusiontables/api/query' % OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
+        response, content = client.request('%s?scope=https://www.google.com/m8/feeds/' % OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
     else:
         response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
     if response['status'] != 200:
