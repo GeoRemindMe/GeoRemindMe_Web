@@ -48,6 +48,7 @@ COMMON_WEBAPP = [
     '../webapp/static/webapp/js/jquery.reversegeocode.min.js',
     '../webapp/static/common/js/raw/jquery.cookies.2.2.0.min.js',
     '../webapp/static/webapp/js/jquery.placeholder.js',
+    '../webapp/static/common/js/chronology.js',
 ]
 COMMON_WEBAPP_OUT_DEBUG = '../webapp/static/common/js/common_webapp.js'
 COMMON_WEBAPP_OUT = '../webapp/static/common/js/common_webapp.min.js'
@@ -68,8 +69,7 @@ COMMON_FACEBOOKAPP = [
     '../webapp/static/facebookApp/js/jquery.hoverIntent.minified.js',
     '../webapp/static/facebookApp/js/grm.js',
     '../webapp/static/facebookApp/js/main.js',
-    
-    
+    '../webapp/static/facebookApp/js/chronology.js',
 ]
 
 COMMON_FACEBOOKAPP_OUT_DEBUG = '../webapp/static/common/js/common_facebookApp.js'
