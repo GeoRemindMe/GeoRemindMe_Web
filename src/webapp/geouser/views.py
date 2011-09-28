@@ -199,11 +199,12 @@ def dashboard(request, template='webapp/dashboard.html'):
                     # cookie de primer login
                     from time import time
                     from datetime import datetime
-                    expires = datetime.fromtimestamp(time() + settings.SESSION_COOKIE_AGE)
-                    response.set_cookie('new_user_%s' % user.id, 
-                                        None, 
-                                        max_age= expires,
-                                        expires= expires.days * 86400 + expires.seconds,
+                    max_age = datetime.fromtimestamp(time() + settings.SESSION_COOKIE_AGE*2)
+                    expires = max_age - datetime.now()
+                    expires = expires.days * 86400 + expires.seconds
+                    response.set_cookie('new_user_%s' % request.user.id, 
+                                        '', 
+                                        max_age=  60 * 60 * 24 * 7 * 52,
                                         domain=settings.SESSION_COOKIE_DOMAIN,
                                         path=settings.SESSION_COOKIE_PATH,
                                         secure=settings.SESSION_COOKIE_SECURE
