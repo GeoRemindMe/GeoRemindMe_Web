@@ -568,7 +568,8 @@ input{
         color:#01F;
     }
     
-    .btn{
+    .btn,
+    #background.social-profile #suggested-contacts li div span a{
         background-color: #5973A8;
         border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
         border-style: solid;
@@ -1045,6 +1046,7 @@ input{
     #link-social-accounts li{
         display:inline;
         margin-left:10px;
+        text-transform: capitalize;
     }
     
     ul#known-contacts{
@@ -1090,7 +1092,7 @@ input{
     
     
     ul#suggested-contacts{
-        width: 255px;
+        width: 300px;
         float:left;
     }
     ul#suggested-contacts li{
@@ -3815,7 +3817,7 @@ sup{
     border: 1px dotted #AAAAAA;
     float: left;
     padding: 0.5em;
-    width: 645px;
+    width: 600px;
 }
 #background.social-profile .btn{
     padding: 1px 5px 2px;
@@ -3829,4 +3831,9 @@ sup{
 
 #background.social-profile div#user-suggestions a span.btn{
     margin-top: 15px;
+}
+
+#background.social-profile ul#suggested-contacts li div.following-state{
+}
+#background.social-profile ul#suggested-contacts li div.waiting{
 }

@@ -568,7 +568,8 @@ input{
         color:#01F;
     }
     
-    .btn{
+    .btn,
+    #background.social-profile #suggested-contacts li div span a{
         background-color: #5973A8;
         border-color: #D9DFEA #0E1F5B #0E1F5B #D9DFEA;
         border-style: solid;
@@ -581,6 +582,10 @@ input{
         line-height: 20px;
         padding: 1px 15px 2px;
         text-align: center;
+    }
+    .btn.pressed{
+        border-color:#0E1F5B #D9DFEA #D9DFEA #0E1F5B;
+        color:#555;
     }
     div#add-suggestion div span#submit-button.btn{
         margin-right:1em;
@@ -1083,12 +1088,28 @@ input{
     #known-contacts li span{
     }
     
+    
+    
     ul#suggested-contacts{
+        width: 300px;
+        float:left;
     }
     ul#suggested-contacts li{
+        border: 1px dotted #CCCCCC;
+        clear: both;
+        display: block;
+        height: 30px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        padding: 0.5em;
     }
     
-    
+    ul#suggested-contacts img{
+        float: left;
+        margin-right: 10px;
+        height: 30px;
+        width: 30px;
+    }
 /*
     #link-social-accounts li:hover{
         background-color: #FFCB04;
@@ -3770,6 +3791,50 @@ ul.ui-autocomplete li.ui-menu-item:nth-child(even){
 	text-shadow: 1px 1px 1px #000;
 	position:absolute;
 	z-index: 100;
+}
+
+sup{
+    font-size: 9px !important;
+    vertical-align: super !important;
+}
+
+#social-profile div#step-one form#SocialUserProfile-form div.fieldWrapper p{
+    font-size: 1em;
+    font-style: italic;
+    line-height: 1.8em;
+    margin: 9px 0 9px 10px;
+}
+
+#background.social-profile #right-col{
+    min-height: 0;
+    width: 920px;
+}
+#background.social-profile h2{
+    margin: 1em 0 .3em;
+}
+#background.social-profile div#user-suggestions{
+    border: 1px dotted #AAAAAA;
+    float: left;
+    padding: 0.5em;
+    width: 600px;
+}
+#background.social-profile .btn{
+    padding: 1px 5px 2px;
+    margin-left: 10px;
+}
+
+#background.social-profile div#user-suggestions a img{
+    float:left;
+    margin-right: 10px;
+}
+
+#background.social-profile div#user-suggestions a span.btn{
+    margin-top: 15px;
+}
+
+#background.social-profile ul#suggested-contacts li div.following-state{
+}
+#background.social-profile ul#suggested-contacts li div.waiting{
 }
 
 /*

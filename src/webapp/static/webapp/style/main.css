@@ -1577,7 +1577,9 @@ div.removable a {
     text-decoration:underline;
 }
 
-.btn,.load-more {
+.btn,
+.load-more,
+#background.social-profile #suggested-contacts li div span a {
     color:black;
     background: rgb(255,255,255); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%); /* FF3.6+ */
