@@ -367,7 +367,8 @@ def get_contacts(request):
             friends[user.id] = {'username': user.username,
                                 'id': user.id
                                 }
-    return HttpResponse(simplejson.dumps(friends), mimetype="application/json")
+    friends_to_list = friends.values()
+    return HttpResponse(simplejson.dumps(friends_to_list), mimetype="application/json")
 
 
 #===============================================================================
