@@ -72,8 +72,9 @@ class geosession(object):
                             expires = request.session.get_expires()
                         request.session.put()
                         response.set_cookie(settings.COOKIE_NAME,
-                                        request.session.session_id, max_age=max_age,
-                                        expires=expires, domain=settings.SESSION_COOKIE_DOMAIN,
+                                        request.session.session_id, 
+                                        max_age=max_age,
+                                        #expires=expires, domain=settings.SESSION_COOKIE_DOMAIN,
                                         path=settings.SESSION_COOKIE_PATH,
                                         secure=settings.SESSION_COOKIE_SECURE,
                                         #httponly=settings.COOKIE_SESSION_HTTPONLY or None
