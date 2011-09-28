@@ -20,7 +20,7 @@ $(document).ready(function() {
                     GRM.nowait();
                 }
                 else {
-                    function(){window.location=msg._redirect;}
+                    window.location=msg._redirect;
                 }
             }
         });
@@ -139,8 +139,7 @@ $(document).ready(function() {
              {
                 if(typeof(data._redirect)!="undefined")
                 {
-                   REDIRECT = data._redirect;
-                   function(){window.location = REDIRECT}
+                   window.location = data._redirect;
                 }
              }
              
