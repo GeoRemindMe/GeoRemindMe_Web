@@ -74,11 +74,17 @@ $(document).ready(function(){
     /*** Resize right column ***/
     $("#left-col").css("height",$(this).height()+'px');
     $("#right-col, #left-col").bind("resize",function(){
+        $("#right-col,#left-col").css("height","auto")
         if($("#right-col").height() > $("#left-col").css("height"))
             $("#left-col").css("height",$("#right-col").height()+'px');
         else
             $("#right-col").css("height",$("#left-col").height()+'px');
     });
+    
+    $.bind("DOMSubtreeModified", function() {
+        alert("tree changed");
+    });
+
     
     $('#search-form').bind('submit', function(e){
         e.preventDefault;
