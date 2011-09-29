@@ -73,6 +73,14 @@
         });
         $('#suggested-contacts li:first-child .preview-suggestions').click();
         
+        $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        
         var networks_perms=[
             { network: "twitter", has_perms: {% if user.has_perms_twitter %}true{% else %}false{% endif %}},
             { network: "facebook", has_perms:  {% if user.facebook_user %}true{% else %}false{% endif %}},
@@ -96,11 +104,11 @@
                             for (i=0; i<networks_perms.length ; i++){
                                 var social_network=networks_perms[i]["network"];
                                 if(networks_perms[i]['has_perms']!=data[social_network]){
-                                    console.log("Se acaban de conceder permisos a "+social_network);
+                                    //console.log("Se acaban de conceder permisos a "+social_network);
                                     showMessage("Buscando personas a las que podrías conocer de "+social_network,"success");
                                     loadNewContacts();
                                     networks_perms[i]['has_perms']=data[social_network];
-                                    $('#link-social-accounts #'+social_network).empty().append(social_network)
+                                    $('#link-social-accounts #'+social_network).empty().append("<span>"+social_network+"</span>")
                                 }
                             };
                         },

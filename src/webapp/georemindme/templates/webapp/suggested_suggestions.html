@@ -112,13 +112,14 @@
                                     $('#close-suggestions').append($.cookies.get('near_suggestions'));
                                     
                                     //Ponemos de donde están cerca
+                                    var address=$.cookies.get('address');    
                                     if(address)
                                         $('#my_location').text(address);
                                     else{
                                         loadHTML5Location();
                                         
                                     }
-                                    $('#close-suggestions-box').slideIn('slow');
+                                    $('#close-suggestions-box').slideDown('slow');
                                     $('#hr-close-suggestions-box').show();
                                 }else{
                                     
@@ -168,6 +169,7 @@
                         latlng=latlng.split(",");
                         $.cookies.set('lat',latlng[0]);
                         $.cookies.set('lng',latlng[1]);
+                        $.cookies.set('address',"{{request.user.last_address}}");
                     {% endif %}
                     
                     if(typeof(latlng)==undefined){
