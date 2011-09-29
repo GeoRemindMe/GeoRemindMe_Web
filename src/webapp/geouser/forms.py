@@ -233,6 +233,26 @@ class SocialUserForm(forms.Form):
     '''
     username = forms.CharField(label=_('username'), required=True)
     
+    def save(self, user):
+        from geouser.models import User
+        try:
+            result =  user.update(username=self.cleaned_data['username'])
+        except User.UniqueUsernameConstraint, e:
+            fail = _('Username already in use')
+            self._errors['username'] = self.error_class([fail])
+            return
+        except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
+            fail = _(e.message)
+            self._errors['email'] = self.error_class([fail])
+            return
+        try: # usuario ya configurado, registramos como seguidor.
+            generico = User.objects.get_by_username('georemindme')
+            if generico is not None:
+                user.add_following(followid=generico.id)
+                generico.add_following(followid=user.id)
+        except:
+            pass
+        return result
 
 AVATAR_CHOICES = (
           ('none', _('None')),
