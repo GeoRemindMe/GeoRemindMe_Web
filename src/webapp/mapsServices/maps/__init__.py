@@ -15,6 +15,7 @@ class MapsAPIError(Exception):
 
 class MapsRequest(Http):
     _reverse_url = 'http://maps.googleapis.com/maps/api/geocode/json?'
+    headers = { 'User-Agent' : 'Georemindme:0.1' }
     
     def __init__(self, *args, **kwargs):
         mem = memcache.mem.Client()
@@ -24,9 +25,9 @@ class MapsRequest(Http):
     def get_address(self, location, sensor=False):
         if not isinstance(location, db.GeoPt):
             return MapsAPIError('invalid location')
-        url = self._reverse_url + 'latlng=%s,%s&sensor=%s' % (location.lat, 
+        url = self._reverse_url + 'latlng=%d,%d&sensor=%s' % (location.lat, 
                                                     location.lon, 
-                                                    ('true' if sensor else 'false', self.key)
+                                                    ('true' if sensor else 'false')
                                                     )
         return self._do_request(url)
         
@@ -41,7 +42,7 @@ class MapsRequest(Http):
                 :raises: :class:`GPAPIError`
         """
         response, content = self.request(url, method=method, body=body, headers=self.headers)
-        if response['status'] != 200:
-            raise MapsAPIError(response['status'], 'ERROR IN REQUEST')
+        if int(response['status']) != 200:
+            raise MapsAPIError(response['status'], content)
         json = simplejson.loads(content)
         return json 

@@ -32,7 +32,7 @@ class GPRequest(Http):
         mem = Client()
         super(self.__class__, self).__init__(cache=mem, *args, **kwargs)
         from django.conf import settings
-        self.key = settings.API['google_places']
+        self.key = settings.API['google_maps']
 
     def do_search(self, pos, radius=500, types=None, language=None, name=None, sensor=False):
         """
@@ -132,7 +132,7 @@ class GPRequest(Http):
                 :raises: :class:`GPAPIError`
         """
         response, content = self.request(url, method=method, body=body, headers=self.headers)
-        if response['status'] != 200:
+        if int(response['status']) != 200:
             raise GPAPIError(response['status'], 'ERROR IN REQUEST')
         json = simplejson.loads(content)
         return json
