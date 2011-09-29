@@ -72,9 +72,9 @@ class NotificationHandler(TaskHandler):
 @admin_required
 def timelinefollowers_worker(request):
     timeline = db.get(request.POST['timeline'])
-    if not hasattr(timeline, 'notify_followers'):
-        return HttpResponse()
     if timeline is not None:
+        if not hasattr(timeline, 'notify_followers'):
+            return HttpResponse()
         notified = timeline.notify_followers()
         if notified:
             return HttpResponse()
@@ -85,6 +85,8 @@ def timelinefollowers_worker(request):
 def list_notify_worker(request):
     list = db.get(request.POST['list'])
     if list is not None:
+        if not hasattr(list, 'notify_followers'):
+            return HttpResponse()
         notified = list.notify_followers()
         if notified:
             return HttpResponse()
