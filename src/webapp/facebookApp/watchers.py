@@ -20,7 +20,7 @@ def new_suggestion(sender, **kwargs):
                 "link": __web_settings.WEB_APP+"suggestion/"+sender.slug,
                 "caption": "Detalles del sitio (%(sitio)s), comentarios, etc." % {'sitio':sender.poi.name},
                 #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
-                #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
+                "picture": 'https://georemindme.appspot.com/user/georemindme/picture/",
             }
     if sender.description is not None:
         params["description"]=sender.description
