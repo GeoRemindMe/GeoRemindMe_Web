@@ -37,18 +37,22 @@ class TwitterClient(Client):
     
     def get_user_info(self):
         """Obtiene la infomacion del perfil del usuario"""
-        response, content = self.request(self.url_credentials)
-        if response['status'] != 200:
-            raise TwitterAPIError(response['status'], response)
-        return simplejson.loads(content)
-    
+        return simplejson.loads(self._do_request(self.url_credentials))
+            
     def get_other_user_info(self, id):
-        response, content = self.request(self.url_user_info+'?user_id=%s' % id)
+        return simplejson.loads(self._do_request(self.url_user_info+'?user_id=%s' % id))
+    
+    def _do_request(self, url):
+        response, content = self.request(url)
+        if response['status'] == 400: # no tenemos permisos, borrar usuario
+            OAUTH_Access.remove_token(self.user, 'twitter')
+            if self.user.twitter_user is not None:
+                self.user.twitter_user.delete()
+            raise TwitterAPIError(response['status'], content)
         if response['status'] != 200:
-            raise TwitterAPIError(response['status'], response)
-        return simplejson.loads(content)
-    
-    
+            raise TwitterAPIError(response['status'], content)
+        return content
+        
     def get_friends(self, rpc=None):
         twitterInfo = self.get_user_info()
         if rpc is not None:
@@ -59,16 +63,10 @@ class TwitterClient(Client):
                                                        ),
                                             method='GET'
                                             )
-        response, content = self.request(
-                                        self.url_friends + '?user_id=%s&screen_name=%s' % (
+        return self._do_request(self.url_friends + '?user_id=%s&screen_name=%s' % (
                                                                        twitterInfo['id'], 
                                                                        twitterInfo['screen_name']
-                                                                       ),
-                                         method='GET'
-                                         )
-        if response['status'] != 200:
-            raise TwitterAPIError(response['status'], content)
-        return content
+                                                                       ))
     
     def get_friends_to_follow(self, rpc=None):
         from geouser.models_social import TwitterUser

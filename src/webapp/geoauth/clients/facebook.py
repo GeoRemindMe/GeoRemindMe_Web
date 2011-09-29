@@ -475,6 +475,14 @@ class GraphAPI(object):
             content = _parse_json(content)
         except:
             raise OAUTHException("Can't parse json")
+        if response['status'] == 400:
+            token = OAUTH_Access.get_token(self.access_token)
+            if token is not None:
+                if token.user.twitter_user is not None:
+                    token.user.facebook_user.delete()
+                token.delete()
+            raise GraphAPIError(content["error"]["type"],
+                                content["error"]["message"])
         if response['status'] != 200:
             raise GraphAPIError(content["error"]["type"],
                                 content["error"]["message"])
