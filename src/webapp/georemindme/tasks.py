@@ -78,7 +78,7 @@ def timelinefollowers_worker(request):
         notified = timeline.notify_followers()
         if notified:
             return HttpResponse()
-        return HttpResponseBadRequest()
+    return HttpResponse()
 
 @csrf_exempt
 @admin_required
@@ -90,7 +90,7 @@ def list_notify_worker(request):
         notified = list.notify_followers()
         if notified:
             return HttpResponse()
-        return HttpResponseBadRequest()
+    return HttpResponse()
     
         
         
