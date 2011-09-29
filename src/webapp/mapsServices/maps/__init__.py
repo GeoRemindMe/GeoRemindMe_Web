@@ -25,7 +25,7 @@ class MapsRequest(Http):
     def get_address(self, location, sensor=False):
         if not isinstance(location, db.GeoPt):
             return MapsAPIError('invalid location')
-        url = self._reverse_url + 'latlng=%d,%d&sensor=%s' % (location.lat, 
+        url = self._reverse_url + 'latlng=%f,%f&sensor=%s' % (location.lat, 
                                                     location.lon, 
                                                     ('true' if sensor else 'false')
                                                     )
