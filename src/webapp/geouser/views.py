@@ -460,20 +460,22 @@ def confirm(request, user, code):
 		:type code: string
 		:return: En caso de que todo vaya correctamente solicitar identificarse al usuario. En caso contrario devuelve un mensaje de error
 	"""
+    if hasattr(request, 'session'):
+        request.session.delete()
     import base64
     email = base64.urlsafe_b64decode(user.encode('ascii'))
     from models import User
     u = User.objects.get_by_email_not_confirm(email)
     if u is not None:
         if u.confirm_user(code):
-            msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u
+            msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u.email
             return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
         else:
-            msg = _("Codigo de confirmacion incorrecto") % u
+            msg = _("Codigo de confirmacion incorrecto")
             return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
     u = User.objects.get_by_email(email, keys_only=True)
     if u is not None:
-        msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u
+        msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u.email
     else:
         msg = _("Usuario erroneo %s.") % email
     return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
