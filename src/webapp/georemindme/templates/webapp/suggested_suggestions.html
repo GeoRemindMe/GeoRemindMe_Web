@@ -7,8 +7,9 @@
                         {% csrf_token %}
 					</form>
 				</div>
-				<hr>
+				
                 {% if friends_to_follow|length %}        
+                <hr>
                 <p style="float:left;font-weight:bold;margin-left:20px">
                     <strong>Personas sugeridas:</strong>
                 </p>
@@ -237,9 +238,10 @@
                             </li>
                         {% endfor %}
                     </ul>
-                    
-                    <hr>
                 </div>
+                
+                <hr>
+                
                 <footer id="footer" class="container">
                     <div class="footer-links">
 <!--
