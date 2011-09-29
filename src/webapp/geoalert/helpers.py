@@ -412,8 +412,8 @@ class SuggestionHelper(EventHelper):
                      'name': sug['name'] if 'name' in sug else None,
                      'description': sug['description'] if 'description' in sug else None} 
                     for sug in sugs]
-            from operator import itemgetter
-            sugs = sorted(sugs, key=itemgetter('modified'), reverse=True)
+            #from operator import itemgetter
+            #sugs = sorted(sugs, key=itemgetter('modified'), reverse=True)
             if querier.is_authenticated():
                 client.set('%ssug_nearest%s,%s_%s' % (memcache.version,
                                                    location.lat,
