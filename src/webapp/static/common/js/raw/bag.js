@@ -428,12 +428,12 @@ function submenuLiBehave(obj){
     data['list_id']=[$(obj).attr('id').substring(7,$(obj).attr('id').length)];
     data['suggestions']=new Array();
     
-    var checkedSuggestions=$('.suggestion input[type=checkbox]').filter(':checked');
+    var checkedSuggestions=$('.suggestion input[name=suggestions]').filter(':checked');
     if( checkedSuggestions.length==0){
         showMessage("No hay ninguna sugerencia seleccionada","error")
     }else{
         checkedSuggestions.each(function(i,elem){
-            //console.log("Añadimos a la lista: "+addToList+", la sugerencia: "+);
+            //console.log("Añadimos a la lista: la sugerencia: "+$(elem).attr('id'));
             data['suggestions'][i]=$(elem).attr('id').substring(9,$(this).attr('id').length)
         });
         $.ajax({
