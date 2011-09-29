@@ -167,7 +167,7 @@ class TwitterFriendsRPC(object):
         if int(result.status_code) != 200:
             return {}
         friends_result = simplejson.loads(result.content)
-        if 'data' in friends_result:
+        if 'ids' in friends_result:
             friends_result = friends_result['ids']
         for i in friends_result:
             user_to_follow = TwitterUser.objects.get_by_id(i)
