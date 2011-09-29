@@ -7,8 +7,9 @@
                         {% csrf_token %}
 					</form>
 				</div>
-				<hr>
+				
                 {% if friends_to_follow|length %}        
+                <hr>
                 <p style="float:left;font-weight:bold;margin-left:20px">
                     <strong>Personas sugeridas:</strong>
                 </p>
@@ -70,8 +71,9 @@
                     </div>
                 
                 
-                    {%if not request.COOKIES.near_suggestions and google_api %}
+                    {%if google_api %}
                         <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=2&key={% if request.is_secure %}{{google_api.google_maps_secure}}{% else %}{{google_api.google_maps}}{% endif %}&sensor=false"></script>
+                        <script type="text/javascript" src="https://maps.google.com/maps?file=api&v=2&key={% if request.is_secure %}{{google_api.google_maps_secure}}{% else %}{{google_api.google_maps}}{% endif %}&sensor=false"></script>
                     {%endif%}
 
 
@@ -112,15 +114,22 @@
                                     
                                     //Ponemos de donde están cerca
                                     var address=$.cookies.get('address');    
-                                    if(address)
+                                    if(address!=null && address!="")
                                         $('#my_location').text(address);
                                     else{
-                                        loadHTML5Location();
+                                        $('#my_location').reversegeocode({
+                                            lat: lat,
+                                            lng: lng,
+                                            callback:function(address){
+                                                $.cookies.set('address',address);    
+                                                $('#my_location').text(address);
+                                            }
+                                        });
                                         
                                     }
                                     
                                     if($('#my_location').html()==="Cargando..."){
-                                        $('#my_location').empty();
+                                        $('#my_location').html($('#close-suggestions li').length);
                                         console.log("Ha habido un error cargando la localización");
                                     }
                                     
@@ -191,7 +200,7 @@
                             var longitud=$.cookies.get('lng');
                             
                             //Si no tenemos la dirección la buscamos
-                            if($.cookies.get('address')==null){
+                            if($.cookies.get('address')=="" || $.cookies.get('address')==null){
                                 $('#my_location').reversegeocode({
                                     lat: latitud,
                                     lng: longitud,
@@ -229,9 +238,10 @@
                             </li>
                         {% endfor %}
                     </ul>
-                    
-                    <hr>
                 </div>
+                
+                <hr>
+                
                 <footer id="footer" class="container">
                     <div class="footer-links">
 <!--
