@@ -59,6 +59,14 @@
                 }
             {% endif %}
             
+            //Ayuda de usuario
+            $('.help-icon img').click(function(){
+				showHelp('#add-tags','#details-toolbox','up');
+                showHelp('#social-share','#socialNetworks-toolbox','down');
+                showHelp('#visibility','#share-toolbox','down');
+            })
+            //Show user help: si es la primera vez que entra
+            helpUser();
         });
         
         I18N = {}
@@ -120,4 +128,23 @@
 -->
         {% include "forms/SuggestionForm.html" %}
     </div>
+    
+    <div id="details-toolbox" style="display:none">
+		<p>Haciendo clic aquí podrás añadir <strong>información adicional</strong> a tu sugerencia.</p>
+	</div>
+    <div id="socialNetworks-toolbox" style="display:none">
+		<p>
+            Cuando creas una sugerencia se <strong>comparte a través de tus redes sociales</strong>.
+        </p>
+        <p>
+            Puedes desactivarlo haciendo clic sobre el icono correspondiente.
+        </p>
+	</div>
+    <div id="share-toolbox" style="display:none">
+		<p>
+            Puedes <strong>cambiar la visilibilidad</strong> de tu sugerencia.
+        </p>
+        <p>- Si marcas como pública una sugerencia cualquier persona podrá verla en tu perfil</p>
+        <p>- Si la marcas como privada solo podrás verla tú.</p>
+	</div>
 {%endblock%}

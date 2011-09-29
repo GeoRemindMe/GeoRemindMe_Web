@@ -2,7 +2,25 @@
 {% load i18n %}
 {% load tags %}
 
-{% block embed_js %}{%endblock%}
+{% block embed_js %}
+    <script type="text/javascript">
+        
+        
+        $(document).ready(function(){
+            
+            
+            $('.help-icon img').click(function(){
+				showHelp('#add-suggestion-btn','#addSuggestion-toolbox','up');
+                showHelp('.lavaLamp','#menu-toolbox','up');
+                showHelp('#tabMenu','#timeline-toolbox','up');
+                
+            })
+            
+            //Show user help: si es la primera vez que entra
+            helpUser();
+        });
+    </script>
+{%endblock%}
 
 {% block id %} id="activity" {%endblock%}
 
@@ -39,5 +57,23 @@
         
 
     </div>
+    
+    <div id="addSuggestion-toolbox" style="display:none">
+		<p>Crea y comparte tus sugerencias aquí.</p>
+	</div>
+    <div id="menu-toolbox" style="display:none">
+		<p>Estas son las secciones principales:</p>
+        <ul>
+            <li><strong>Actividad</strong>: ahora mismo te encuentras aquí, donde recibirás las últimas novedades (sugerencias, listas, etc.) de las personas a las que sigues.</li>
+            <li><strong>Tú mochila</strong>: en la mochila podrás consultar y gestionar tus sugerencias favoritas.</li>
+            <li><strong>Notificaciones</strong>: aquí te avisaremos cuando alguien empiece a seguir, comente una de tu sugerencias, etc.</li>
+        </ul>
+	</div>
+    <div id="timeline-toolbox" style="display:none">
+		<p>
+            <strong>Linea de tiempo</strong>: aquí irás recibiendo las novedades de tus contactos.
+        </p>
+        <p>Haciendo clic en cada una de las pestañas podrás filtrar los mensajes por tipo.</p>
+	</div>
 {%endblock%}
 

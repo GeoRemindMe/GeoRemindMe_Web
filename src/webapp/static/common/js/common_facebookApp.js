@@ -1038,6 +1038,30 @@ $(document).ajaxSend(function(event, xhr, settings) {
 });
 
 
+function helpUser(){
+        if(typeof(user_id)!="undefined"){
+            if($.cookies.get("new_user_"+user_id)!=null){
+                //Obtenemos la sección actual
+                var current_section=$('#right-col > div').attr('id')
+                
+                //Si hace falta creamos la cookie como un hash
+                if($.cookies.get("new_user_"+user_id)=="")
+                    $.cookies.set("new_user_"+user_id,{})
+                
+                var visited_sections=$.cookies.get("new_user_"+user_id);
+                
+                //Comprobamos si la sección no ha sido visitada
+                if(typeof(visited_sections[current_section])=="undefined"){
+                    visited_sections[current_section]=true;
+                    $('.help-icon img').click();
+                }
+                
+                //Marcamos la sección como visitada
+                $.cookies.set("new_user_"+user_id,visited_sections)
+            }
+        }
+    }
+
 
 $(document).ready(function(){
     
@@ -1073,19 +1097,22 @@ $(document).ready(function(){
     })
     
     /*** Resize right column ***/
-    $("#left-col").css("height",$(this).height()+'px');
-    $("#right-col, #left-col").bind("resize",function(){
-        $("#right-col,#left-col").css("height","auto")
-        if($("#right-col").height() > $("#left-col").css("height"))
-            $("#left-col").css("height",$("#right-col").height()+'px');
-        else
-            $("#right-col").css("height",$("#left-col").height()+'px');
-    });
+    //$("#left-col").css("height",$(this).height()+'px');
+    $("#right-col,#left-col").css("height","auto")
+    //$("#right-col, #left-col").bind("resize",function(){
+        
+    //    if($("#right-col").height() > $("#left-col").height())
+    //        $("#left-col").css("height",$("#right-col").height()+'px');
+        //else
+            //$("#right-col").css("height",$("#left-col").height()+'px');
+    //});
     
-    $.bind("DOMSubtreeModified", function() {
-        alert("tree changed");
-    });
+    //$.bind("DOMSubtreeModified", function() {
+    //    alert("tree changed");
+    //});
 
+
+    
     
     $('#search-form').bind('submit', function(e){
         e.preventDefault;
@@ -1329,8 +1356,6 @@ GRM.remember = function(settings) {
     }, settings);
        
     return this.each(function(){
-
-
         // get init state
         var state = (typeof $(this).attr('remember') != "undefined" );
 

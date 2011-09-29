@@ -978,7 +978,7 @@ function submenuLiBehave(obj){
         showMessage("No hay ninguna sugerencia seleccionada","error")
     }else{
         checkedSuggestions.each(function(i,elem){
-            console.log("Añadimos a la lista: la sugerencia: "+$(elem).attr('id'));
+            //console.log("Añadimos a la lista: la sugerencia: "+$(elem).attr('id'));
             data['suggestions'][i]=$(elem).attr('id').substring(9,$(this).attr('id').length)
         });
         $.ajax({

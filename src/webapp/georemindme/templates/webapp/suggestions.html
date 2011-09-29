@@ -10,7 +10,16 @@
     {% else %}
         <script type="text/javascript" src="/static/common/js/bag.min.js"></script>    
     {% endif %}
-    
+    <script type="text/javascript">
+        $(document).ready(function(){           
+            //Ayuda de usuario
+            $('.help-icon img').click(function(){
+				showHelp('#suggestions_lists','#tabMenu-toolbox','left');
+            })
+            //Show user help: si es la primera vez que entra
+            helpUser();
+        });
+    </script>
 {%endblock%}
 
 {% block goBack %}{%endblock%}
@@ -32,16 +41,12 @@
              else 
                 window.onload = downloadJSAtOnload;
         </script>
+        
     {% endif %}
 
     <div id="suggestions">
         <h1>Tu mochila</h1>
-        <div id="legend">Tipo de contenido: 
-			<ul>
-				<li><span class="mine">&nbsp;</span>Generado por ti</li>
-				<li><span class="not-mine">&nbsp;</span>Guardado</li>
-			</ul>
-		</div>
+        <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-activity"></div>
         <ul id="tabMenu">
             <li id="your_suggestions" class="active">Sugerencias (<span id="suggestions-tab-counter">{{suggestions.1|length}}</span>)</li>
             <li id="suggestions_lists">Listas (<span id="lists-tab-counter">{{lists|length}}</span>)</li>
@@ -83,10 +88,10 @@
                     </div>
                     
                     <!-- Objetos Suggestion-->
-                    {% if user.counters.suggested = 0 and suggestions_following|length = 0 %}
+                    {% if suggestions.1|length = 0 %}
                         <div id="noSuggestions" class="tab-content">
                             <span>
-                                Aún no has hecho ninguna sugerencia, para empezar:<br>
+                                <h2>Aún <strong>no has hecho ni has guardado ninguna sugerencia</strong>, para empezar:</h2>
                                 <a href="{% url2 in_facebook add_suggestion %}" id="btn-add-suggestion">Añade una sugerencia</a>
                             </span>
                         </div>
@@ -352,7 +357,12 @@
             </table>
         </div>
     </div>
-    
+    <div id="legend"><span>Tipo de contenido: </span>
+        <ul>
+            <li><span class="mine">&nbsp;</span>Generado por ti</li>
+            <li><span class="not-mine">&nbsp;</span>Guardado</li>
+        </ul>
+    </div>
     
     <script id="suggestionTemplate" type="text/x-jquery-tmpl">
         <div id="suggestion_${element.id}" class="suggestion">
@@ -484,5 +494,8 @@
     </div>
     
     
+    <div id="tabMenu-toolbox" style="display:none">
+		<p>En estas pestañas encontraras agrupadas tus sugerencias y la listas junto con aquellas que hayas guardado.</p>
+	</div>
     
 {% endblock %}

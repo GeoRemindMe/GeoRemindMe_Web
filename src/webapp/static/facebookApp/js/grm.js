@@ -177,8 +177,6 @@ GRM.remember = function(settings) {
     }, settings);
        
     return this.each(function(){
-
-
         // get init state
         var state = (typeof $(this).attr('remember') != "undefined" );
 

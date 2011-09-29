@@ -1117,7 +1117,7 @@ div#left-col ul#friends-to-follow li:after{
 	visibility: hidden;
 }
 #legend{
-    margin-top: -3.5em;
+    margin-top: 0em;
 }
 
 
@@ -1274,7 +1274,7 @@ ul#tabMenu li.active {
 }
 
 #suggestions ul#tabMenu {
-    margin-top: 3em;
+    margin-top: 1em;
 }
 ul#tabMenu {
     border-bottom: 1px dotted #CCCCCC;
