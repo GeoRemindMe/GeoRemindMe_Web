@@ -95,8 +95,8 @@ class Test(unittest.TestCase):
         assert User.objects.get_by_email_not_confirm(123)== None, 'Busqueda por username erronea'
         assert User.objects.get_by_email_not_confirm(None)== None, 'Busqueda por username erronea'
         
-        assert len(User.objects.get_top_users(self, limit=2))==2, 'Busqueda top users erronea'
-        
+        assert len(User.objects.get_top_users(limit=2))==2, 'Busqueda top users erronea'
+
         
     def test_follow(self):
         User.register(email='test@test.com', password='123456', username='usertest')
