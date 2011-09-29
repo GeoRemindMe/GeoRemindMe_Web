@@ -209,7 +209,6 @@ class SuggestionForm(forms.Form):
                      to_twitter = self.cleaned_data['to_twitter'],
                      )
         except:
-            raise
             return None
         if suggestion is not None:
             list_id = list_id

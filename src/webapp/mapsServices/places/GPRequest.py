@@ -32,7 +32,7 @@ class GPRequest(Http):
         mem = Client()
         super(self.__class__, self).__init__(cache=mem, *args, **kwargs)
         from django.conf import settings
-        self.key = settings.API['google_maps']
+        self.key = settings.API['google_places']
 
     def do_search(self, pos, radius=500, types=None, language=None, name=None, sensor=False):
         """
