@@ -91,7 +91,7 @@ def login_google(request):
                     guser.update(ugoogle.email(), realname=ugoogle.nickname())
             else:
                 from georemindme.funcs import make_random_string
-                user = User.register(email=ugoogle.email(), password=make_random_string(length=6))
+                user = User.register(email=ugoogle.email(), password=make_random_string(length=6), confirmed=True)
                 guser = GoogleUser.register(user=user, uid=ugoogle.user_id(), email=ugoogle.email(), realname=ugoogle.nickname())
             from funcs import init_user_session
             init_user_session(request, user)
@@ -467,6 +467,9 @@ def confirm(request, user, code):
     if u is not None:
         if u.confirm_user(code):
             msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u
+            return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
+        else:
+            msg = _("Codigo de confirmacion incorrecto") % u
             return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
     u = User.objects.get_by_email(email, keys_only=True)
     if u is not None:

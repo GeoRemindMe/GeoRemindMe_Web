@@ -128,7 +128,7 @@ class TwitterClient(Client):
             if not auth:
                 raise AttributeError
         else:#no existe, creamos un nuevo usuario
-            self.user = User.register(password=make_random_string(length=6))
+            self.user = User.register(password=make_random_string(length=6), confirmed=True)
             self.user.settings.sync_avatar_with = 'twitter' #  por defecto, si el usuario es nuevo sincronizamos con facebook
             self.user.settings.put()
             self.authorize(user)
