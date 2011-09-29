@@ -12,7 +12,7 @@ from decorators import facebook_required
 
 
 def login_panel(request):
-    from geouser.forms import SocialFacebookUserForm
+    from geouser.forms import SocialFacebookGoogleUserForm
     if hasattr(request, 'facebook'):
         if not request.user.is_authenticated():
             user = request.facebook['client'].authenticate()
@@ -26,7 +26,7 @@ def login_panel(request):
         if request.user.is_authenticated():
             if request.user.username is None or request.user.email is None:
                 if request.method == 'POST':
-                    f = SocialFacebookUserForm(request.POST, 
+                    f = SocialFacebookGoogleUserForm(request.POST, 
                                        prefix='user_set_username', 
                                        initial = { 'email': request.user.email,
                                                    'username': request.user.username,
@@ -38,7 +38,7 @@ def login_panel(request):
                             init_user_session(request, user, remember=True, is_from_facebook=True)
                             return HttpResponseRedirect(reverse('facebookApp.views.dashboard'))
                 else:
-                    f = SocialFacebookUserForm(prefix='user_set_username', 
+                    f = SocialFacebookGoogleUserForm(prefix='user_set_username', 
                                        initial = { 'email': request.user.email,
                                                    'username': request.user.username,
                                                   }
