@@ -638,11 +638,10 @@ def get_near_suggestions(request):
             result = MapsRequest()
             result = result.get_address(request.user.last_point)
             if 'formatted_address' in result['results'][0]:
-                request.user.last_adress = result['results'][0]['formatted_address']
+                request.user.last_address = result['results'][0]['formatted_address']
         except Exception, e:
             import logging
             logging.error('ERROR OBTENIENDO DIRECCION: %s' % e)
-            pass
         request.user.put()
     if location is None and request.user.is_authenticated():
         location = request.user.last_point
