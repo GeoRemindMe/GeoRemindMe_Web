@@ -67,7 +67,6 @@
     <!--
                         <div id="address_output"></div>
     -->
-                        <hr>
                     </div>
                 
                 
@@ -119,8 +118,15 @@
                                         loadHTML5Location();
                                         
                                     }
+                                    
+                                    if($('#my_location').html()==="Cargando..."){
+                                        $('#my_location').empty();
+                                        console.log("Ha habido un error cargando la localización");
+                                    }
+                                    
                                     $('#close-suggestions-box').slideDown('slow');
                                     $('#hr-close-suggestions-box').show();
+                                    $("#right-col").resize()
                                 }else{
                                     
                                     $('#close-suggestions').empty();
@@ -162,43 +168,45 @@
                         }
                     }
                     
-                    //-------------------------------------------------------------------------
-                    //Primero si no tenemos localización la pedimos
-                    {% if request.user.is_authenticated %}
-                        var latlng="{{request.user.last_point}}";
-                        latlng=latlng.split(",");
-                        $.cookies.set('lat',latlng[0]);
-                        $.cookies.set('lng',latlng[1]);
-                        $.cookies.set('address',"{{request.user.last_address}}");
-                    {% endif %}
-                    
-                    if(typeof(latlng)==undefined){
-                        if($.cookies.get('lat')==null || $.cookies.get('lng')==null){
-                            loadHTML5Location();
-                        }
-                    }
-                    
-                    //Si obtenemos localización procedemos
-                    if($.cookies.get('lat')!=null && $.cookies.get('lng')!=null){
-                        var latitud=$.cookies.get('lat');
-                        var longitud=$.cookies.get('lng');
+                    $(document).ready(function(){
+                        //-------------------------------------------------------------------------
+                        //Primero si no tenemos localización la pedimos
+                        {% if request.user.is_authenticated %}
+                            var latlng="{{request.user.last_point}}";
+                            latlng=latlng.split(",");
+                            $.cookies.set('lat',latlng[0]);
+                            $.cookies.set('lng',latlng[1]);
+                            $.cookies.set('address',"{{request.user.last_address}}");
+                        {% endif %}
                         
-                        //Si no tenemos la dirección la buscamos
-                        if($.cookies.get('address')==null){
-                            $('#my_location').reversegeocode({
-                                lat: latitud,
-                                lng: longitud,
-                                callback:function(address){
-                                    $.cookies.set('address',address);    
-                                    $('#my_location').text(address);
-                                }
-                            });
+                        if(typeof(latlng)==undefined){
+                            if($.cookies.get('lat')==null || $.cookies.get('lng')==null){
+                                loadHTML5Location();
+                            }
                         }
                         
-                        //Procedemos a cargar las sugerencias si las hubiese
-                        loadSuggestions(latitud,longitud);
-                        
-                    }
+                        //Si obtenemos localización procedemos
+                        if($.cookies.get('lat')!=null && $.cookies.get('lng')!=null){
+                            var latitud=$.cookies.get('lat');
+                            var longitud=$.cookies.get('lng');
+                            
+                            //Si no tenemos la dirección la buscamos
+                            if($.cookies.get('address')==null){
+                                $('#my_location').reversegeocode({
+                                    lat: latitud,
+                                    lng: longitud,
+                                    callback:function(address){
+                                        $.cookies.set('address',address);    
+                                        $('#my_location').text(address);
+                                    }
+                                });
+                            }
+                            
+                            //Procedemos a cargar las sugerencias si las hubiese
+                            loadSuggestions(latitud,longitud);
+                            
+                        }
+                    });
                     
 				</script>
 				
@@ -234,7 +242,7 @@
             -->
                     </div>
                     <div class="footer-links">
-                        <a href="http://www.twitter.com/georemindme">@GeoRemindMe</a> · <a href="http://www.facebook.com/georemindme">Fans</a> · <a href="http://blog.georemindme.com/">Blog</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a> 
+                        <a href="http://www.twitter.com/georemindme">@GeoRemindMe</a> · <a href="http://www.facebook.com/georemindme">Fans</a> · <a href="http://blog.georemindme.com/">Blog</a> · <a href="http://getsatisfaction.com/georemindme">Feedback</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a> 
                         
                     </div>
                     <p id="colored-chickens"><img src="/static/common/img/transparent.gif"></p>

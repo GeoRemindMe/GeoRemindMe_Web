@@ -593,6 +593,13 @@ a#register-btn.anonymous{
     color: #AAAAAA;
     padding:0;
 }
+#footer:after{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+}
 #colored-chickens{
     background: url("/static/webapp/img/logos.png") no-repeat scroll 0 -53px transparent;
     height: 25px;
