@@ -806,7 +806,7 @@ class User(polymodel.PolyModel, HookedModel):
         except Exception, e:
         #except apiproxy_errors.DeadlineExceededError:
             import logging
-            logging.error('Handling Exception getting user friends: %s - %s' % (self.id, e.value))
+            logging.error('Handling Exception getting user friends: %s - %s' % (self.id, e))
         return friends
 
     def to_dict(self):

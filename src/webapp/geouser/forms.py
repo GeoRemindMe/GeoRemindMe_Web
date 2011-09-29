@@ -422,7 +422,7 @@ class UserSettingsForm(forms.Form):
     time_notification_suggestion_follower = forms.ChoiceField(label=_('New follower on suggestions'), choices=CHOICES)
     time_notification_suggestion_comment = forms.ChoiceField(label=_('New comment on suggestions'), choices=CHOICES)
     time_notification_account = forms.ChoiceField(label=_('New account follower'), choices=CHOICES)
-    language = forms.ChoiceField(label=_('Language'), choices=settings.LANGUAGES)
+    language = forms.ChoiceField(label=_('Language'), choices=settings.LANGUAGES, required=False)
     
     
     def save(self, user):

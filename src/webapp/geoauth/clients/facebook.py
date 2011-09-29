@@ -233,7 +233,7 @@ class FacebookClient(object):
 class FacebookFriendsRPC(object):
     def fetch_friends(self, user):
         from geouser.models import urlfetch
-        self.rpc = urlfetch.create_rpc(deadline=7, callback=self.handle_results)
+        self.rpc = urlfetch.create_rpc(deadline=5, callback=self.handle_results)
         self.user = user
         self.friends = {}
         try:
