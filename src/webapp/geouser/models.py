@@ -756,6 +756,7 @@ class User(polymodel.PolyModel, HookedModel):
                     tw_rpc = TwitterFriendsRPC()
                     friends_rpc.append(tw_rpc.fetch_friends(self))
             except:
+                raise
                 pass
             #RPC PARA GOOGLE
             try:
@@ -805,7 +806,7 @@ class User(polymodel.PolyModel, HookedModel):
         except Exception, e:
         #except apiproxy_errors.DeadlineExceededError:
             import logging
-            logging.error('Handling Exception getting user friends: %s - %s' % (self.id, e))
+            logging.error('Handling Exception getting user friends: %s - %s' % (self.id, e.value))
         return friends
 
     def to_dict(self):

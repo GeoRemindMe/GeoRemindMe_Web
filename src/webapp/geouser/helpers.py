@@ -132,6 +132,14 @@ class UserHelper(object):
                         'profile':u.profile 
                         } for u in users]
                 ]
+        
+    def get_top_users(self, limit=5):
+        from geouser.models_acc import UserCounter
+        from georemindme.funcs import fetch_parentsKeys
+        top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(limit)
+        top_users = fetch_parentsKeys(top_users)
+        top_users = filter(None, top_users)
+        return top_users
 
     def _get(self, string=None):
         from models import User

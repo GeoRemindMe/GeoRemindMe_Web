@@ -15,6 +15,7 @@ from django.template import RequestContext
 from django.conf import settings
 
 from decorators import login_required, admin_required
+from geouser.models import User
 
 
 #===============================================================================
@@ -217,11 +218,7 @@ def dashboard(request, template='webapp/dashboard.html'):
                                          }
                                )
         from geoalert.models import Suggestion
-        from geouser.models_acc import UserCounter
-        from georemindme.funcs import fetch_parentsKeys
-        top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
-        top_users = fetch_parentsKeys(top_users)
-        top_users = filter(None, top_users)
+        top_users = User.objects.get_top_users()
         top_users_dict = []
         for user in top_users:
             if not user.key() == request.user.key() and not request.user.is_following(user):
@@ -251,11 +248,7 @@ def dashboard(request, template='webapp/dashboard.html'):
     chronology[0] = simplejson.dumps(chronology[0])
     if friends is None:
         # usuarios con mas sugerencias
-        from geouser.models_acc import UserCounter
-        from georemindme.funcs import fetch_parentsKeys
-        top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(5)
-        top_users = fetch_parentsKeys(top_users)
-        top_users = filter(None, top_users)
+        top_users = User.objects.get_top_users()
         friends = {}
         for user in top_users:
             if not user.key() == request.user.key() and not request.user.is_following(user):
@@ -389,7 +382,10 @@ def edit_settings(request, template="webapp/edit_settings.html"):
         if f.is_valid():
             f.save(request.user)
             request.session['LANGUAGE_CODE'] = request.user.settings.language
-            return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
+            if 'facebookApp' in template:
+                return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
+            else:
+                return HttpResponseRedirect(reverse('geouser.views.profile_settings'))
     else:
         f = UserSettingsForm(prefix='user_set_settings', initial = { 
                                                                   'time_notification_suggestion_follower': request.user.settings.time_notification_suggestion_follower,

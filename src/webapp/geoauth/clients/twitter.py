@@ -164,11 +164,11 @@ class TwitterFriendsRPC(object):
     def handle_results(self):
         result = self.rpc.get_result()
         from django.utils import simplejson
-        if result.status_code != 200:
+        if int(result.status_code) != 200:
             return {}
         friends_result = simplejson.loads(result.content)
         if 'data' in friends_result:
-            friends_result = friends_result['data']
+            friends_result = friends_result['ids']
         for i in friends_result:
             user_to_follow = TwitterUser.objects.get_by_id(i)
             if user_to_follow is not None and user_to_follow.user.username is not None and not self.user.is_following(user_to_follow.user):

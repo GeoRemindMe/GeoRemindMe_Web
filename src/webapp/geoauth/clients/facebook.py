@@ -247,7 +247,7 @@ class FacebookFriendsRPC(object):
         result = self.rpc.get_result()
         from django.utils import simplejson
         from geouser.models_social import FacebookUser
-        if result.status_code != 200:
+        if int(result.status_code) != 200:
             return {}
         friends_result = simplejson.loads(result.content)
         if 'data' in friends_result:
