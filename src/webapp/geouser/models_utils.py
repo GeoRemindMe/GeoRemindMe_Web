@@ -59,7 +59,7 @@ class _Report_Account_follower(db.Model):
         Guarda la lista de nuevos followers para posteriormente ser
         notificada a los usuarios que no quieren email instantaneos
     """
-    keys = db.StringListProperty(db.Key)
+    keys = db.StringListProperty(db.Key) # claves de seguidores
     created = db.DateTimeProperty(auto_now_add=True)
     
     @classmethod
@@ -95,13 +95,18 @@ class _Report_Account_follower(db.Model):
         self.put()
         
     def send_notification(self, user):
-        from geouser.mails import send_notification_account_summary
-        followers = db.get(self.keys)
-        send_notification_account_summary(user.email,
+        try:
+            if user.email is not None:
+                from geouser.mails import send_notification_account_summary
+                followers = db.get(self.keys)
+                send_notification_account_summary(user.email,
                                           user=user,
                                           followers=followers,
                                           language=user.get_language()
                                           )
+        except Exception, e:
+            import logging
+            logging.error('Handling Exception sending _Report_Account_follower: %s - %s' % (user.id, e))
         
     @property
     def id(self):
@@ -110,8 +115,8 @@ class _Report_Account_follower(db.Model):
 
 class _Report_Suggestion_changed(db.Model):
     from properties import JSONProperty
-    user = db.ReferenceProperty(User)
-    counters = JSONProperty()
+    user = db.ReferenceProperty(User) # creador de la sugerencia
+    counters = JSONProperty() # contadores
     created = db.DateTimeProperty(auto_now_add=True)
 
     @classmethod
@@ -129,7 +134,6 @@ class _Report_Suggestion_changed(db.Model):
             try:
                 report.put()
             except:
-                raise
                 raise deferred.PermanentTaskFailure
         return report
     
@@ -147,10 +151,28 @@ class _Report_Suggestion_changed(db.Model):
                           }
                 }
 
+    @classmethod        
+    def send_notification(cls, reports, user):
+        if user.email is not None:
+            try:            
+                from geouser.mails import send_notification_suggestion_summary
+                suggs = {}
+                for report in reports:
+                    suggs.update(report.to_dict())
+                    report.delete()
+                if len(suggs) != 0:
+                    send_notification_suggestion_summary(user.email,
+                                       suggestions=suggs,
+                                       language=user.get_language()
+                                       )
+            except Exception, e:
+                import logging
+                logging.error('Handling Exception sending _Report_Suggestion_changed: %s - %s' % (user.id, e))
+
 
 class _Report_Suggestion_commented(db.Model):
-    user = db.ReferenceProperty(User)
-    time_first_comment = db.DateTimeProperty()
+    user = db.ReferenceProperty(User) # creador de la sugerencia
+    time_first_comment = db.DateTimeProperty() # fecha del primer comentario
     created = db.DateTimeProperty(auto_now_add=True)
 
     @classmethod
