@@ -73,7 +73,7 @@ class NotificationHandler(TaskHandler):
 def timelinefollowers_worker(request):
     timeline = db.get(request.POST['timeline'])
     if timeline is not None:
-        if not hasattr(timeline, 'notify_followers'):
+        if hasattr(timeline, 'notify_followers'):
             return HttpResponse()
         notified = timeline.notify_followers()
         if notified:
