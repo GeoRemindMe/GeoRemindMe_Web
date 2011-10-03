@@ -172,7 +172,7 @@ class TwitterFriendsRPC(object):
         else:
             return {}
         friends_key = ['tw%s' % f for f in friends_result]
-        users_to_follow = TwitterUser.get_by_id(int(friends_key))
+        users_to_follow = TwitterUser.get_by_key_name(friends_key)
         users_to_follow = filter(None, users_to_follow)
         for user_to_follow in users_to_follow:
             if user_to_follow.user.username is not None and \
