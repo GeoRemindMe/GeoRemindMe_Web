@@ -577,7 +577,6 @@ class Suggestion(Event, Visibility, Taggable):
                 raise deferred.PermanentTaskFailure(e)
             
     def update_ft(self):
-        if self.is_public():
             from mapsServices.fusiontable import ftclient, sqlbuilder
             from django.conf import settings
             try:
@@ -600,11 +599,12 @@ class Suggestion(Event, Visibility, Taggable):
                                                             settings.FUSIONTABLES['TABLE_SUGGS'],
                                                             ['name', 'location', 'modified', 'relevance'],
                                                             [
-                                                             name, '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
-                                                                self.modified.isoformat(),
-                                                                self._calc_relevance(),
+                                                             name, 
+                                                             '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
+                                                             self.modified.isoformat(),
+                                                             str(self._calc_relevance()),
                                                             ],
-                                                            r
+                                                            int(r)
                                                            )
                                    )
             except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
