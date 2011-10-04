@@ -577,6 +577,7 @@ class Suggestion(Event, Visibility, Taggable):
                 raise deferred.PermanentTaskFailure(e)
             
     def update_ft(self):
+        if self._is_public():
             from mapsServices.fusiontable import ftclient, sqlbuilder
             from django.conf import settings
             try:
