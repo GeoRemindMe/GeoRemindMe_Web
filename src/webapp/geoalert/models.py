@@ -582,20 +582,31 @@ class Suggestion(Event, Visibility, Taggable):
             from django.conf import settings
             try:
                 ftclient = ftclient.OAuthFTClient()
-                import unicodedata
-                name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
-                return ftclient.query(sqlbuilder.SQL().update(
+                rowid = ftclient.query(sqlbuilder.SQL().select(
                                                         settings.FUSIONTABLES['TABLE_SUGGS'],
-                                                        {'name': name,
-                                                        'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
-                                                        'sug_id': self.id,
-                                                        'modified': self.modified.isoformat(),
-                                                        'created': self.created.isoformat(),
-                                                        'relevance': self._calc_relevance(),
-                                                         },
-                                                        
+                                                        ['sug_id'],
+                                                        'sug_id = %d' % self.id
+                                                        )
                                                        )
-                               )
+                rowid = rowid.splitlines()
+                if len(rowid) == 1:
+                    return
+                del rowid[0]
+                for r in rowid:
+                    r = int(r)
+                    import unicodedata
+                    name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
+                    return ftclient.query(sqlbuilder.SQL().update(
+                                                            settings.FUSIONTABLES['TABLE_SUGGS'],
+                                                            ['name', 'location', 'modified', 'relevance'],
+                                                            [
+                                                             name, '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
+                                                                self.modified.isoformat(),
+                                                                self._calc_relevance(),
+                                                            ],
+                                                            r
+                                                           )
+                                   )
             except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
                 import logging
                 logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))

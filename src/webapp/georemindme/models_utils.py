@@ -15,6 +15,7 @@ class _Do_later_ft(db.Model):
     instance_key = db.ReferenceProperty(None)
     created = db.DateTimeProperty(auto_now_add=True)
     last_try = db.DateTimeProperty(auto_now=True)
+    update = db.BooleanProperty(default=False)
     
     @classmethod
     def try_again(cls):

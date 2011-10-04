@@ -92,7 +92,14 @@ def modified_suggestion(sender, **kwargs):
     #timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=301, _vis=sender._get_visibility())
     #db.put([timeline, timelinePublic])
     #actualizar fusiontables
-    pass
+    if sender._is_public():
+        from google.appengine.ext.deferred import defer, PermanentTaskFailure 
+        try:
+            defer(sender.update_ft)
+        except PermanentTaskFailure, e:
+            from georemindme.models_utils import _Do_later_ft
+            later = _Do_later_ft(instance_key=sender.key(), update=True)
+            later.put()
 suggestion_modified.connect(modified_suggestion)
 
 
