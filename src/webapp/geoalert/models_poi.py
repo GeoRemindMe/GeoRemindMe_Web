@@ -3,6 +3,7 @@
 from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db, search
 from google.appengine.ext.db import polymodel
+from django.conf import settings
 
 from georemindme.decorators import classproperty
 from georemindme.models_utils import Visibility
@@ -259,17 +260,30 @@ class Place(POI):
     foursquare_id = db.StringProperty()
     business = db.ReferenceProperty(Business)
     users = db.ListProperty(db.Key)  #  lista con los usuarios que administran el POI
+    _short_url = db.TextProperty(default=None)
  
     
     @classproperty
     def objects(self):
         return PlaceHelper()
-
     
+    @property
+    def short_url(self):
+        from os import environ
+        if environ['HTTP_HOST'] == 'localhost:8080':
+            return 'http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
+        if self._short_url is None:
+            self._get_short_url()
+            if self._short_url is not None:
+                self.put()
+            else:
+                from os import environ
+                return 'http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url())
+        return self._short_url
+
     def delete(self):
         pass
- 
-    
+     
     def put(self, from_comment=False):
         """
             Comprueba que el slug es unico
@@ -426,6 +440,19 @@ class Place(POI):
                 'address': unicode(self.address),
                 'created': self.created if self.created is not None else 0,
                 }
+        
+    def _get_short_url(self):
+        from libs.vavag import VavagRequest
+        from os import environ
+        try:
+            # parche hasta conseguir que se cachee variable global
+            client = VavagRequest(settings.SHORTENER_ACCESS['user'], settings.SHORTENER_ACCESS['key'])
+            response =  client.set_pack('http://%s%s' % (environ['HTTP_HOST'], self.get_absolute_url()))
+            self._short_url = response['packUrl']
+        except Exception, e:
+            import logging
+            logging.error('ERROR EN VAVAG: %s' % e)
+            self._short_url = None
         
     def __str__(self):
         if self.name is not None:
