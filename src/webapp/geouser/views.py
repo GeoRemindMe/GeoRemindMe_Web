@@ -471,7 +471,7 @@ def confirm(request, user, code):
             return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
     u = User.objects.get_by_email(email, keys_only=True)
     if u is not None:
-        msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u.email
+        msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % email
     else:
         msg = _("Usuario erroneo %s.") % email
     return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
@@ -511,24 +511,24 @@ def remind_user_code(request, user, code):
     :type code: int
 	"""
     import base64
-    user = base64.urlsafe_b64decode(user.encode('ascii'))
+    email = base64.urlsafe_b64decode(user.encode('ascii'))
     from models import User
-    user = User.objects.get_by_email(user)
+    user = User.objects.get_by_email(email)
     if user is not None:
         from exceptions import OutdatedCode, BadCode
+        from forms import RecoverPassForm
         try:
-            user.reset_password(code)
+            user.reset_password(code) # comprueba codigo valido
             if request.method == 'POST':
-                from forms import RecoverPassForm
                 f = RecoverPassForm(request.POST, prefix='pass_recover')
                 if f.is_valid():
                     user.reset_password(code, password=f.cleaned_data['password'])
                     msg = _("Password changed, please log in.")
-                    return render_to_response('user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
-                else:
-                    f = RecoverPassForm(prefix='pass_recover')
+                    return render_to_response('webapp/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
+            else:
+                f = RecoverPassForm(prefix='pass_recover')
                 msg = _("Set your new password.")
-            return render_to_response('user_pass.html', {'form': f, 'msg': msg}, context_instance=RequestContext(request))
+            return render_to_response('webapp/user_pass.html', {'form': f, 'msg': msg}, context_instance=RequestContext(request))
         except OutdatedCode, o:
             msg = _(o.message)
         except BadCode, i:

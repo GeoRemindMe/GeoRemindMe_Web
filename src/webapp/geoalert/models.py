@@ -445,7 +445,6 @@ class Suggestion(Event, Visibility, Taggable):
             return self
         from django.template.defaultfilters import slugify
         # buscar slug
-        
         if self.is_saved():
             # estamos modificando sugerencia
             super(Suggestion, self).put()
@@ -572,13 +571,37 @@ class Suggestion(Event, Visibility, Taggable):
                                                        )
                                )
             except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
-                from georemindme.models_utils import _Do_later_ft
-                later = _Do_later_ft(instance_key=self.key())
-                later.put()
                 import logging
                 logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
                 from google.appengine.ext import deferred
                 raise deferred.PermanentTaskFailure(e)
+            
+    def update_ft(self):
+        if self.is_public():
+            from mapsServices.fusiontable import ftclient, sqlbuilder
+            from django.conf import settings
+            try:
+                ftclient = ftclient.OAuthFTClient()
+                import unicodedata
+                name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
+                return ftclient.query(sqlbuilder.SQL().update(
+                                                        settings.FUSIONTABLES['TABLE_SUGGS'],
+                                                        {'name': name,
+                                                        'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
+                                                        'sug_id': self.id,
+                                                        'modified': self.modified.isoformat(),
+                                                        'created': self.created.isoformat(),
+                                                        'relevance': self._calc_relevance(),
+                                                         },
+                                                        
+                                                       )
+                               )
+            except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
+                import logging
+                logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
+                from google.appengine.ext import deferred
+                raise deferred.PermanentTaskFailure(e)
+            
     
     def __str__(self):
         return unicode(self.name).encode('utf-8')
