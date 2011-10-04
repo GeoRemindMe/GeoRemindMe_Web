@@ -130,10 +130,10 @@ class FacebookClient(object):
     def get_friends(self, rpc=None):
         if self._fb_id is None:
             self.get_user_info()
-        #friends = self.consumer.get_connections(self._fb_id, "friends", rpc=rpc)
-        friends = self.consumer.fql('SELECT uid FROM user \
-                                    WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) \
-                                    AND is_app_user = 1')
+        friends = self.consumer.get_connections(self._fb_id, "friends", rpc=rpc)
+        #friends = self.consumer.fql('SELECT uid FROM user \
+        # WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) \
+        # AND is_app_user = 1')
         return friends
     
     def get_friends_to_follow(self, rpc=None):
