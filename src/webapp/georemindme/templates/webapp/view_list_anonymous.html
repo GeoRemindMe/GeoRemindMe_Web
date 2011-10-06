@@ -145,7 +145,7 @@
 
                         <span class="msg"><a href="{% url2 in_facebook view_suggestion obj.instance.slug %}" class="hoverlink">{{obj.instance.name}}</a></span>
                         {% if obj.instance.poi.slug %}
-                            <span class="suggestionPlace">{% trans 'En <a href="{% url2 in_facebook view_place obj.instance.poi.slug %}" class="dark-link">{{obj.instance.poi.name}}</a>' %}</span>
+                            <span class="suggestionPlace">{% trans 'En' %} <a href="{% url2 in_facebook view_place obj.instance.poi.slug %}" class="dark-link">{{obj.instance.poi.name}}</a></span>
                         {% endif %}
                         <span class="action-bar" style="display:none">
 

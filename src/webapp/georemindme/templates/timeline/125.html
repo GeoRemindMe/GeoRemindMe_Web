@@ -1,5 +1,5 @@
 {% load tags %}
-
+{% load i18n %}
 {% comment %} 
     Mensaje nº 125
     125: A [X] le gusta un comentario | UT
@@ -31,8 +31,8 @@
             <div class="timeline-msg">
                 <span class="timeline-icon">&nbsp;</span>
                 <span class="small-text">
-                    {% trans 'A <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">{{obj.instance.user.username}}</a>
-                    le gusta el comentario:' %}
+                    {% trans 'A' %} <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">{{obj.instance.user.username}}</a>
+                    {% trans 'le gusta el comentario:' %}
                 </span>
                 
                 

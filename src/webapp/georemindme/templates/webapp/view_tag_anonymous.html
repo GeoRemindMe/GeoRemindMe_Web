@@ -30,7 +30,13 @@
 	<div id="suggestion-tag-search">
         
     
-		<h2 class="clear">{% trans "Se ha{{suggestions.1|length|pluralize:'n'}} encontrado {{suggestions.1|length}} sugerencia{{suggestions.1|length|pluralize:'s'}} que contiene{{suggestions.1|length|pluralize:'n'}} la palabra clave \"<strong>{{tag}}</strong>\":" %}</h2>
+		<h2 class="clear">
+        {% if suggestions.1|length = 1 %}
+            {% blocktrans %}Se ha encontrado 1 sugerencia que contiene la palabra clave "<strong>{{tag}}</strong>":{% endblocktrans %}
+        {% else %}
+            {% blocktrans %}Sugerencias que contienen la palabra clave "<strong>{{tag}}</strong>":{% endblocktrans %}
+        {% endif %}
+        </h2>
         
 		<ul>
             {% for obj in suggestions.1 %}
@@ -40,7 +46,7 @@
                     </div>
                     <div class="search-text">
                         <a class="sugg-link hoverlink" href="{%url2 in_facebook view_suggestion obj.slug %}">{{obj.name}}</a> <br>
-                        {% trans 'En <span class="sugg-place"><a href="{%url2 in_facebook view_place obj.poi.slug %}" class="black-link">{{obj.poi.name}}</a> | Creada: {{obj.created|naturaltime}}</span>' %}
+                        {% trans 'En' %} <span class="sugg-place"><a href="{%url2 in_facebook view_place obj.poi.slug %}" class="black-link">{{obj.poi.name}}</a> | Creada: {{obj.created|naturaltime}}</span>
                     </div>
                 </li>
 			{% endfor %}
@@ -49,7 +55,7 @@
         <form action="." method="post" id="tag-search-form">
             {% trans 'Buscar sugerencias que tengan la(s) palabra(s) clave:' %}<br>
             <input type="text" placeholder="{{tag}}"/>
-            <input type="submit" value="{% trans 'Buscar' %]" onclick="search(this)">
+            <input type="submit" value="{% trans 'Buscar' %}" onclick="search(this)">
         </form>
 	</div>
 	

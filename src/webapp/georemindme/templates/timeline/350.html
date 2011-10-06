@@ -1,4 +1,5 @@
 {% load tags %}
+{% load i18n %}
 {% comment %} 
     Mensaje nº 350
     350: Nueva lista de sugerencias creada
@@ -8,7 +9,7 @@
     
     <div class="avatar">
         <a href="{% url2 in_facebook public_profile obj.username %}" title="{{obj.username}}">
-            <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} {%trans "avatar" %}"/>
+            <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} {% trans "avatar" %}"/>
         </a>
     </div>
     <div class="timeline-msg">
@@ -36,7 +37,7 @@
                 | {{obj.has_follower}},
                 <span title="{%trans "Guardar en favoritos" %}"  class="remember-forget" value="{{obj.instance.id}}" type="list" {%if obj.user_follower%}remember="true"{%endif%}>
                     <span class="remember">{%trans "Guardar" %}</span>
-                    <span class="forget">{%trans "Guardada %}</span>
+                    <span class="forget">{%trans "Guardada" %}</span>
                 </span>
             {% endif %}
         </span>

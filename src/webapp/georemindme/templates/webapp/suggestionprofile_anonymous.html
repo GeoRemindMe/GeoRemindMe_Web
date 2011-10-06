@@ -123,7 +123,7 @@
 			
 			<a title="Más detalles sobre: {{suggestion.poi.name}}" href="{% url2 in_facebook view_place suggestion.poi.slug %}">
 					<img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x150&maptype=roadmap
-&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false">
+&markers=color:red%7C{{suggestion.poi.location}}&sensor=false">
             </a>
             
             <div><strong>{%trans "Fotos de la zona :" %}</strong><span id="panoramio-tos"></span></div>
