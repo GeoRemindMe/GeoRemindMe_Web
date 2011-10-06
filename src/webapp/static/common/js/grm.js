@@ -47,7 +47,7 @@ GRM.common.get = function(s){
         </span>
     </span>
     
-    $('.like-dislike').remember({like_class: "xxx", dislike_class: "xxx", progress_class: "xxx"});
+    $('.like-dislike').like({like_class: "xxx", dislike_class: "xxx", progress_class: "xxx"});
 */
 GRM.like = function(settings) {
     
@@ -57,8 +57,14 @@ GRM.like = function(settings) {
         progress_class: null,
         callback: null           
     }, settings);
-       
+    
+    var token = "grm-like";
+    
     return this.each(function(){
+        
+        if ($(this).attr(token))
+            return;
+        $(this).attr(token,true);
 
         // get init state
         var state = (typeof $(this).attr('like') != "undefined" );
@@ -175,8 +181,15 @@ GRM.remember = function(settings) {
         progress_class: null,
         callback: null    
     }, settings);
-       
+    
+    var token = "grm-remember";
+    
     return this.each(function(){
+        
+        if ($(this).attr(token))
+            return;
+        $(this).attr(token,true);
+        
         // get init state
         var state = (typeof $(this).attr('remember') != "undefined" );
 
@@ -445,7 +458,14 @@ GRM.menuList = function(settings) {
 
 GRM.removable = function() {
 
+    var token = "grm-removable";
+
     return this.each(function(){
+
+        if ($(this).attr(token))
+            return;
+        $(this).attr(token,true);
+
         $(this).hide();
         
         var item = $(this);
