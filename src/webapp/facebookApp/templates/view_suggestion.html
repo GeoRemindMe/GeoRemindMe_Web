@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load tags %}
+{% load filters %}
 
 {% block title %}{{suggestion.name}}{% endblock %}
 {% block extra_js %}   
@@ -41,7 +42,7 @@
                 {{suggestion.name}}
             </h1>
             {% if suggestion.description %}
-                <p class="more-info"><strong>Instrucciones/explicación</strong>: <br>{{suggestion.description|linebreaksbr|urlize}} </p>
+                <p class="more-info"><strong>Instrucciones/explicación</strong>: <br>{{suggestion.description|urlize|twitterize|linebreaksbr}} </p>
             {% endif %}
             
             {% if suggestion.date_starts or suggestion.date_ends %}
