@@ -804,14 +804,18 @@ function saveSuggestion(){
         $('#submit-button').text("Enviando...")
         $('#submit-button').addClass("waiting")
         GRM.wait();
-        
+		
         var params = { 
             name: $('#id_name').val(), 
-            place_reference: placeReference, 
-            description: $('#id_description').val(),
+            place_reference: placeReference,
+			
+			// esto envia el campo vacío si tiene el mismo valor que el placeholder
+            description: ($('#id_description').val() == $('#id_description').attr('placeholder'))?'':$('#id_description').val(),
+			
             visibility: $('#id_visibility').val(),
             tags: $('#id_tags').val()
         };
+		
         if($('#date [type="checkbox"]').is(':checked')==false){
             //~ console.log("Entro por el checkbox no marcado");
             tmp=$('#date [type="checkbox"]');
