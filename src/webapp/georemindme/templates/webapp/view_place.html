@@ -1,7 +1,8 @@
 {% extends "webapp/base_registered.html" %}
+{% load i18n %}
 {% load tags %}
 
-{% block title %}Ver sitio{% endblock %}
+{% block title %}{% trans 'Ver sitio' %}{% endblock %}
 {% block extra_js %}
 
     <script type="text/javascript">
@@ -23,12 +24,12 @@
         <div id="place-container">
             <h1 class="clear">{{place.name}}</h1>
             <div id="place-details">
-                <p><strong>Dirección</strong>: {{place.address}}</p>
+                <p><strong>{% trans 'Dirección' %}</strong>: {{place.address}}</p>
                 <a href="http://maps.google.com/maps?q={{place.location}}&hl=en&ie=UTF8&z=16"><img src="http://maps.googleapis.com/maps/api/staticmap?center={{place.location}}&zoom=14&size=260x147&maptype=satellite
     &markers=color:red%7C{{place.location}}&sensor=false"></a>
             </div>
             <div id="place-pictures">
-                <p>Fotos de la zona</p>
+                <p>{% trans 'Fotos de la zona' %}</p>
                 <div id="wapiblock"><div id="panoramio-imgs"></div></div>
             </div>
             <div class="clear"><span id="panoramio-tos"></span></div>
@@ -36,13 +37,13 @@
         <div>
 			<div id="list-box" class="clear">
                 <p class="big suggestions-title popular">
-                    <img src="/static/common/img/transparent.gif"></span>Sugerencias de usuarios en "{{place.name}}"
+                    <img src="/static/common/img/transparent.gif">{% trans 'Sugerencias de usuarios en "{{place.name}}"' %}
                 </p>
                 <div class="clear" id="action-bar">
                     <ul>
-                        <li id="print-icon"><a href="?print" target="_blank" class="hoverlink"><img src="/static/common/img/transparent.gif"></span>Imprimir sugerencias</a></li>
+                        <li id="print-icon"><a href="?print" target="_blank" class="hoverlink"><img src="/static/common/img/transparent.gif">{% trans 'Imprimir sugerencias' %}</a></li>
                         {%if user.username %}
-                            <li class="suggestion"><a href="{%url2 in_facebook add_suggestion %}?{{place.location}}" class="hoverlink">Nueva sugerencia a este sitio</a></li>
+                            <li class="suggestion"><a href="{%url2 in_facebook add_suggestion %}?{{place.location}}" class="hoverlink">{% trans 'Nueva sugerencia a este sitio' %}</a></li>
                         {%endif%}
                     </div>
                 
@@ -56,7 +57,7 @@
                         <span class="user"><img src="{% embedded_avatar s.instance.user.username %}" alt="{{s.instance.user.username}} avatar"></span>
                         <div class="timeline-msg">
                             
-                            <a href="{% url2 in_facebook public_profile s.instance.user.username %}" class="dark-link">{{s.instance.user.username}}</a> sugiere:<br>
+                            <a href="{% url2 in_facebook public_profile s.instance.user.username %}" class="dark-link">{% trans '{{s.instance.user.username}}</a> sugiere:' %}<br>
                             
                             <span class="msg"><a href="{% url2 in_facebook view_suggestion s.instance.slug %}" class="hoverlink">{{s.instance.name}}</a></span>
                             <span class="timestamp">{{s.instance.created|naturaltime}} </span>
@@ -64,12 +65,12 @@
                             {% if s.instance.user.username != user.username and request.user.is_authenticated %}
                             &nbsp;- 
                             <span class="dislike">
-                                <span class="hoverlink">Ya no me gusta</span> 
-                                <span class="text like-text {% if not s.has_voted %}increase{% endif %}">{{s.instance.counters.votes}}</span> personas
+                                <span class="hoverlink">{% trans 'Ya no me gusta' %}</span> 
+                                <span class="text like-text {% if not s.has_voted %}increase{% endif %}">{{s.instance.counters.votes}}</span> {% trans 'personas' %}
                             </span>
                             
                             <span class="like">
-                                <span class="hoverlink">Me gusta</span> 
+                                <span class="hoverlink">{% trans 'Me gusta' %}</span> 
                             </span>
                             {% endif %}
                         </span>

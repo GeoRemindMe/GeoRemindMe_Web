@@ -130,24 +130,24 @@
 		<div id="login-bar">
             
             
-            <a href="/" id="register-btn" class="anonymous">Create una cuenta</a>
+            <a href="/" id="register-btn" class="anonymous">%{trans "Create una cuenta" %}</a>
             <div style="float:right">
-                <p>Identifícate usando:</p>
+                <p>{%trans "Identifícate usando:" %}</p>
                 <ul>
-                    <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="Usa tu sesión de Twitter para identificarte"><span>Twitter</span></li>
-                    <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="Usa tu sesión de Facebook para identificarte"><span>Facebook</span></li>
-                    <li class="google" onclick="javascript:window.location='/login/google/'" title="Usa tu sesión de Google para identificarte"><span>Google</span></li>
-                    <li class="georemindme" title="Identifícate usando tus datos de GeoRemindMe"><span>GeoRemindMe</span></li>
+                    <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="{%trans "Usa tu sesión de Twitter para identificarte" %}"><span>{%trans "Twitter" %}</span></li>
+                    <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="{%trans "Usa tu sesión de Facebook para identificarte" %}"><span>{%trans "Facebook" %}</span></li>
+                    <li class="google" onclick="javascript:window.location='/login/google/'" title="{%trans "Usa tu sesión de Google para identificarte" %}"><span>{%trans "Google" %}</span></li>
+                    <li class="georemindme" title="{%trans "Identifícate usando tus datos de GeoRemindMe" %}"><span>{%trans "GeoRemindMe" %}</span></li>
                 </ul>
                 <div id="georemindme-form" style="display:none">
                     <form action="." method="post" id="loginForm">
-                        <input type="text" name="email" placeholder="Usuario o email"/>
-                        <input type="password" name="password" id="password" placeholder="Contraseña"/>
-                        <input type="submit" id="login-btn" value="Entrar" />
+                        <input type="text" name="email" placeholder="{%trans "Usuario o email" %}"/>
+                        <input type="password" name="password" id="password" placeholder="{%trans "Contraseña" %}"/>
+                        <input type="submit" id="login-btn" value="{%trans "Entrar" %}" />
                         <div id="login-submenu">
-                            <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> Recordarme</span>
-                            <span><a href="/remind/" class="hoverlink">Recuperar contraseña</a></span>
-                            <span class="hoverlink" onclick="javascript:showMenu()">Cancelar</span>
+                            <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> {%trans "Recordarme" %}</span>
+                            <span><a href="/remind/" class="hoverlink">{%trans "Recuperar contraseña" %}</a></span>
+                            <span class="hoverlink" onclick="javascript:showMenu()">{%trans "Cancelar" %}</span>
                         </div>
                         {% csrf_token %}
                     </form>
@@ -170,13 +170,13 @@
 	
 	<footer id="footer" class="container">
 		<div class="footer-links">
-			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> 
+			{%trans "Idioma · <a href="#">Español</a> · <a href="#">Inglés</a>" %}
 <!--
             · <a href="#">Francés</a> · <a href="#">Wookiee</a>
 -->
 		</div>
 		<div class="footer-links right-links">
-			<a href="http://jobs.georemindme.com/">Empleo</a> · <a href="http://www.georemindme.com/press/">Prensa</a> · <a href="http://www.georemindme.com/sitemap">Mapa del sitio</a>
+			<a href="http://jobs.georemindme.com/">{%trans "Empleo" %}</a> · <a href="http://www.georemindme.com/press/">{%trans "Prensa" %}</a> · <a href="http://www.georemindme.com/sitemap">{%trans "Mapa del sitio" %}</a>
 		</div>
 	</footer>
     {% include "browser_msgs.html" %}

@@ -11,29 +11,29 @@
 <li class="msg-{{obj.msg_id}}">
     
     {% if obj.is_private = false and obj.username = request.user %}
-        Evitamos que se muestre duplicado un "Te gusta la sugerencia X"
+        {%trans "Evitamos que se muestre duplicado un "Te gusta la sugerencia X"" %}
     {% else %}
 
         {% if obj.instance.user.username = request.user.username %}
             {% comment %}  Es de mi timeline {% endcomment %} 
             <div class="avatar">
-                <a href="{% url2 in_facebook public_profile request.user %}" title="Ver perfil en GeoRemindMe">
+                <a href="{% url2 in_facebook public_profile request.user %}" title="{%trans "Ver perfil en GeoRemindMe" %}">
                     <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
                 </a>
             </div>
             <div class="timeline-msg">
                 <span class="timeline-icon">&nbsp;</span>
-                <span class="small-text">Te gusta la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="dark-link">{{obj.instance.instance.user}}</a>:</span>
+                <span class="small-text">{%trans "Te gusta la sugerencia de" %} <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="dark-link">{{obj.instance.instance.user}}</a>:</span>
         {% else %}
             <div class="avatar">
-                <a href="{% url2 in_facebook public_profile obj.username %}" title="Ver perfil en GeoRemindMe">
-                    <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+                <a href="{% url2 in_facebook public_profile obj.username %}" title="{%trans "Ver perfil en GeoRemindMe" %}">
+                    <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} {%trans "avatar" %}"/>
                 </a>
             </div>
             <div class="timeline-msg">
                 <span class="timeline-icon">&nbsp;</span>
                 <span class="small-text">
-                    A <a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> le gusta la sugerencia:
+                    {%trans "A <a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> le gusta la sugerencia:" %}
 <!--
                     {% if obj.instance.instance.user.username = request.user.username %}
                         <strong>tu sugerencia</strong>:
@@ -51,8 +51,8 @@
                     </a>
                     <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="hoverlink">{{obj.instance.instance}}</a>
                 </div>
-                <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}" class="dark-link">{{obj.instance.instance.poi.name}}</a></span>
-                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="details"><img src="/static/common/img/transparent.gif" />Ver sugerencia</a></span>
+                <span class="suggestionPlace">{%trans "En" %} <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}" class="dark-link">{{obj.instance.instance.poi.name}}</a></span>
+                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="details"><img src="/static/common/img/transparent.gif" />{%trans "Ver sugerencia" %}</a></span>
             </div>
     {% endif %}
 </li>

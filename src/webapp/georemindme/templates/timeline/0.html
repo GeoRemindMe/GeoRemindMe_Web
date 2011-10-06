@@ -15,8 +15,8 @@
 
     <div class="timeline-msg">
         <span class="timeline-icon">&nbsp;</span>
-        <p>¡Genial! ya has creado <a href="{% url2 in_facebook public_profile request.user.username %}">tu cuenta</a> en GeoRemindMe, <strong>ya puedes empezar a recibir y enviar sugerencias</strong>.</p>
-        <p>Aquí te dejamos un video de introducción a la plaforma:</p>
+        <p>{% trans '¡Genial! ya has creado <a href="{% url2 in_facebook public_profile request.user.username %}">tu cuenta</a> en GeoRemindMe, <strong>ya puedes empezar a recibir y enviar sugerencias</strong>.' %}</p>
+        <p>{% trans 'Aquí te dejamos un video de introducción a la plaforma:' %}</p>
         <span class="timestamp"> {{obj.created|naturaltime}}</span>  
     </div>
 </li>

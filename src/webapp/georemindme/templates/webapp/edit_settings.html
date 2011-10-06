@@ -1,11 +1,12 @@
 {% extends "webapp/base_registered.html" %}
+{% load i18n %}
 
-{% block title %}Configuración de la cuenta{% endblock %}
+{% block title %}{%trans "Configuración de la cuenta" %}{% endblock %}
 {% block goBack %}{%endblock%}
 {% block body %}
     <div id="profile">
         
-        <h1>Configuración de la cuenta</h1>
+        <h1>{%trans "Configuración de la cuenta" %}</h1>
         
         {% include "forms/SettingsForm.html" %}
         

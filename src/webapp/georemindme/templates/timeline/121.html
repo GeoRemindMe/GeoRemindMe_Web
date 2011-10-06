@@ -15,11 +15,11 @@
                 <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
             </a>
         </div>
-        <div class="removable" value="{{obj.instance.id}}" type="comment"><a href="#">Remove</a></div>
+        <div class="removable" value="{{obj.instance.id}}" type="comment"><a href="#">{% trans 'Remove' %}</a></div>
         <div class="timeline-msg">
             <span class="timeline-icon">&nbsp;</span>
             
-            <span class="small-text">Has añadido:</span><br>
+            <span class="small-text">{% trans 'Has añadido:' %}</span><br>
     {% else %}
         <div class="avatar">
             <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" title="{{obj.instance.user.username}}">
@@ -31,7 +31,7 @@
             <span class="small-text">
                 <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">
                     {{obj.instance.user.username}}
-                </a> ha añadido:
+                </a> {% trans 'ha añadido:' %}
             </span><br>
     {% endif %}
             
@@ -40,11 +40,11 @@
 
 
             <span class="small-text">
-            En
+            {% trans 'En ' %}
             {% if obj.instance.instance.user.username = request.user.username %}
-                <strong> tu lista de sugerencias</strong>
+                {% trans '<strong> tu lista de sugerencias</strong>' %}
             {% else %}
-                la lista de sugerencias
+                {% trans 'la lista de sugerencias' %}
             {% endif %}
             : <a href="{% url2 in_facebook view_list obj.instance.instance.id %}" class="small-link link">{{obj.instance.instance.name|truncatewords:10}}</a></span><br>
             
@@ -56,15 +56,15 @@
                     <span class="like-dislike" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="comment">
                         <img src="/static/common/img/transparent.gif" />
                         <span class="dislike">
-                            <span class="hoverlink">Ya no me gusta</span> 
+                            <span class="hoverlink">{% trans 'Ya no me gusta' %}</span> 
                         </span>
                         
                         <span class="like">
-                            Me gusta
+                            {% trans 'Me gusta' %}
                         </span>
                     </span>
                 {% endif %}
-                | <a href="{% url2 in_facebook view_list obj.instance.instance.id  %}" class="details"><img src="/static/common/img/transparent.gif" />Ver lista</a>  
+                | <a href="{% url2 in_facebook view_list obj.instance.instance.id  %}" class="details"><img src="/static/common/img/transparent.gif" />{% trans 'Ver lista' %}</a>  
             </span>
         </div>
 </li>

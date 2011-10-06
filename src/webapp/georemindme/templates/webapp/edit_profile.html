@@ -2,7 +2,7 @@
 {% load tags %}
 {% load i18n %}
 
-{% block title %}Datos personales{% endblock %}
+{% block title %}{%trans "Datos personales" %}{% endblock %}
 {% block goBack %}{%endblock%}
 
 {% block extra_js %}
@@ -21,7 +21,7 @@
     <div id="edit-profile">
         
         
-        <h1>Editar perfil</h1>
+        <h1>{%trans "Editar perfil" %}</h1>
         <div class="section">
             <form method="post" action="." id="editForm">
                 <div id="avatar">
@@ -36,32 +36,32 @@
                         Usar el avatar de:<br>
                         <select id="id_user_set_profile-sync_avatar_with" name="user_set_profile-sync_avatar_with">
                             {% if user.facebook_user %}
-                                <option value="facebook" {% if user.profile.sync_avatar_with = "facebook" %} selected="selected"{% endif %}>Facebook</option>
+                                <option value="facebook" {% if user.profile.sync_avatar_with = "facebook" %} selected="selected"{% endif %}>{%trans "Facebook" %}</option>
                             {% endif%}
                             {% if user.twitter_user %}
-                                <option value="twitter" {% if user.profile.sync_avatar_with = "twitter" %} selected="selected"{% endif %}>Twitter</option>
+                                <option value="twitter" {% if user.profile.sync_avatar_with = "twitter" %} selected="selected"{% endif %}>{%trans "Twitter" %}</option>
                             {% endif %}
-                            <option {% if user.profile.sync_avatar_with = "gravatar" %} selected="selected"{% endif %} value="gravatar">Gravatar</option>
+                            <option {% if user.profile.sync_avatar_with = "gravatar" %} selected="selected"{% endif %} value="gravatar">{%trans "Gravatar" %}</option>
                         </select>    
                     </div>
                 </div>          
             
 				{% csrf_token %}
 				<dl>
-					<dt><label for="id_user_set_profile-username">Nombre de usuario</label>:</dt>
+					<dt><label for="id_user_set_profile-username">{%trans "Nombre de usuario" %}</label>:</dt>
 					<dd>{{form.username}}</dd>
                     <span class="error-msg">{{form.errors.username}}</span>
 					
-					<dt>Password:</dt>
-					<dd><span id="editPass" class="hoverlink">Editar password</span></dd>
+					<dt>{%trans "Password:" %}</dt>
+					<dd><span id="editPass" class="hoverlink">{%trans "Editar password" %}</span></dd>
 					
-					<dt><label for="id_user_set_profile-email">Email</label>:</dt>
+					<dt><label for="id_user_set_profile-email">{%trans "Email" %}</label>:</dt>
 					<dd>
                         <input type="text" name="user_set_profile-email" value="{{request.user.email}}" id="id_user_set_profile-email" readonly>
                     </dd>
                     <span class="error-msg">{{form.errors.email}}</span>
 					
-					<dt><label for="id_user_set_profile-description">Descripción</label>:</dt>
+					<dt><label for="id_user_set_profile-description">{%trans "Descripción" %}</label>:</dt>
 					<dd>{{form.description}}</dd>
                     <span class="error-msg">{{form.errors.description}}</span>
 					
@@ -76,11 +76,11 @@
 
 <script id="passForm" type="text/x-jquery-tmpl">
 <div id="passForm2">
-    <input type="password" name="user_set_profile-old_password" id="old_pass" placeholder="Antigua contraseña"/>
+    <input type="password" name="user_set_profile-old_password" id="old_pass" placeholder="{%trans "Antigua contraseña" %}"/>
     {{form.errors.old_password}}
-    <input type="password" name="user_set_profile-password" id="pass1" placeholder="Nueva contraseña"/>
+    <input type="password" name="user_set_profile-password" id="pass1" placeholder="{%trans "Nueva contraseña" %}"/>
     {{form.errors.password1}}
-    <input type="password" name="user_set_profile-password2" id="pass2" placeholder="Repite la contraseña"/>
+    <input type="password" name="user_set_profile-password2" id="pass2" placeholder="{%trans "Repite la contraseña" %}"/>
     {{form.errors.password2}}
 </div>
 </script>

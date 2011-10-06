@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load tags %}
 
-{% block title %}Configuración de la cuenta{% endblock %}
+{% block title %}{%trans "Configuración de la cuenta" %}{% endblock %}
 
 {% block extra_js %}
     {% if in_facebook %}
@@ -28,74 +28,74 @@
 {% block body %}
     <div id="profile">
         
-        <h1>Configuración de la cuenta</h1>
-        <a href="{% url2 in_facebook edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
+        <h1>{%trans "Configuración de la cuenta" %}</h1>
+        <a href="{% url2 in_facebook edit_settings %}" class="btn" id="edit-settings-btn">{%trans "Editar" %}</a> 
         
         <div class="section" id="notifications-pointer">
             <div class="header">
-                <h2>Notificaciones</h2>
-                <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-notifications"></div>
+                <h2>{%trans "Notificaciones" %}</h2>
+                <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="{%trans "Help" %}" id="help-notifications"></div>
             </div>
             
             
             
             
-            <p>Te llegarán notificaciones por email cuando:</p>
+            <p>{%trans "Te llegarán notificaciones por email cuando:" %}</p>
             <dl id="mail-notifications">
-                <dt>Otro usuario empieza a seguir tus sugerencias</dt>
+                <dt>{%trans "Otro usuario empieza a seguir tus sugerencias" %}</dt>
                 <dd>{{user.settings.time_notification_account}}</dd>
                 
-                <dt>Recibes un comentario en una sugerencia</dt>
+                <dt>{%trans "Recibes un comentario en una sugerencia" %}</dt>
                 <dd>{{user.settings.time_notification_suggestion_comment}}</dd>
                 
-                <dt>Persona guarda una sugerencia tuya</dt>
+                <dt>{%trans "Persona guarda una sugerencia tuya" %}</dt>
                 <dd>{{user.settings.time_notification_suggestion_follower}}</dd>
             </dl>
         </div>
         
         <div class="section" id="accounts-pointer">
             <div class="header">
-                <h2>Control de cuentas</h2>
+                <h2>{%trans "Control de cuentas" %}</h2>
             </div>
             
             <p>
-                No queremos ser <em>otra red social más</em>; sino una herramienta de enlace entre tus redes actuales para gestionar tus recomendaciones.<br>
-                Por ello, para ofrecerte una mejor experiencia puedes autorizarnos para que puedas utilizar la potencia de tus redes desde GeoRemindMe!
+                {%trans "No queremos ser <em>otra red social más</em>; sino una herramienta de enlace entre tus redes actuales para gestionar tus recomendaciones.<br>
+                Por ello, para ofrecerte una mejor experiencia puedes autorizarnos para que puedas utilizar la potencia de tus redes desde GeoRemindMe!" %}
             </p>
             <table>
                 <tr id="head">
-                    <td>Red</td>
-                    <td>Estado</td>
+                    <td>{%trans "Red" %}</td>
+                    <td>{%trans "Estado" %}</td>
                 </tr>
                 <tr>
-                    <td><span id="facebook-icon">Facebook</span></td>
+                    <td><span id="facebook-icon">{%trans "Facebook" %}</span></td>
                     {% if not user.facebook_user%}
                         <td>
-                            <a href="/login/facebook/?cls" target="_blank">Autorizar</a> 
+                            <a href="/login/facebook/?cls" target="_blank">{%trans "Autorizar" %}</a> 
                         </td>
                     {% else %}
                         <td>
-                            <a href="/oauth/revocate/facebook" target="_blank">Revocar</a> (<a href="{{user.facebook_user.profile_url}}">{{user.facebook_user.realname}}</a>)
+                            <a href="/oauth/revocate/facebook" target="_blank">{%trans "Revocar" %}</a> (<a href="{{user.facebook_user.profile_url}}">{{user.facebook_user.realname}}</a>)
                         </td>
                     {% endif %}
                 </tr>
                 <tr>
-                    <td><span id="twitter-icon">Twitter</span> </td>
+                    <td><span id="twitter-icon">{%trans "Twitter" %}</span> </td>
                     <td>
                         {% if not user.twitter_user %}
-                            <a href="/login/twitter/?cls" target="_blank">Autorizar</a> 
+                            <a href="/login/twitter/?cls" target="_blank">{%trans "Autorizar" %}</a> 
                         {% else %}
-                            <a href="/oauth/revocate/twitter" target="_blank">Revocar permisos (@{{user.twitter_user.username}})</a>
+                            <a href="/oauth/revocate/twitter" target="_blank">{%trans "Revocar permisos" %} (@{{user.twitter_user.username}})</a>
                         {% endif %}
                     </td>
                 </tr>
                 <tr>
-                    <td><span id="google-icon">Google</span> </td>
+                    <td><span id="google-icon">{%trans "Google" %}</span> </td>
                     <td>
                         {% if not user.google_user %}
-                            <a href="/login/google/?cls">Autorizar</a>
+                            <a href="/login/google/?cls">{%trans "Autorizar" %}</a>
                         {% else %}
-                            <a href="/oauth/revocate/google" target="_blank">Revocar</a>
+                            <a href="/oauth/revocate/google" target="_blank">{%trans "Revocar" %}</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -104,19 +104,20 @@
         
         <div class="section" id="privacy-pointer">
             <div class="header">
-                <h2>Privacidad</h2>
+                <h2>{%trans "Privacidad" %}</h2>
             </div>
         
             
             <p>
-                <strong>Visibilidad del perfil</strong>: 
+                <strong>{%trans "Visibilidad del perfil" %}</strong>: 
                 {% if settings.show_public_profile %} 
-                    Público
+                    {%trans "Público" %}
                 {% else %}
-                    Privado
+                    {%trans "Privado" %}
                 {% endif %}
             </p>
-            <p>Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.</p>
+            <p>{%trans "Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.
+" %}</p>
         </div>
         
 <!--
@@ -144,7 +145,7 @@
         
         <hr>
         <div id="desinstall">
-            <a href="http://www.facebook.com/settings?tab=applications">Desinstalar la aplicación</a> 
+            <a href="http://www.facebook.com/settings?tab=applications">{%trans "Desinstalar la aplicación" %}</a> 
 <!--
             <a href="">Cancelar mi cuenta en GeoRemindMe</a>
 -->
@@ -152,25 +153,25 @@
     </div>
     
     <div id="help-notifications-text" style="display:none">
-        <p>Como otras muchas herramientas <strong>recibirás siempre que quieras un resumen por correo</strong> con las novedades de tu red.</p>
+        <p>{%trans "Como otras muchas herramientas <strong>recibirás siempre que quieras un resumen por correo</strong> con las novedades de tu red." %}</p>
     </div>
     
     <div id="help-accounts-control-text" style="display:none">
-        <p>Desde aquí podrás siempre que quieras <strong>conectar o desconectar tus cuentas</strong> de otras redes.</p>
+        <p>{%trans "Desde aquí podrás siempre que quieras <strong>conectar o desconectar tus cuentas</strong> de otras redes." %}</p>
     </div>
     
     <div id="help-privacy-text" style="display:none">
-        <p>Estamos trabajando en la privacidad de los perfiles para darte la opción de <strong>restringir la visibilidad</strong> de tu cuenta solo a tus followings.</p>
+        <p>{%trans "Estamos trabajando en la privacidad de los perfiles para darte la opción de <strong>restringir la visibilidad</strong> de tu cuenta solo a tus followings." %}</p>
     </div>
     
     <div id="help-language-text" style="display:none">
-        <p>Texto de ayuda idioma</p>
-        <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
+        <p>{%trans "Texto de ayuda idioma" %}</p>
+        <p>{%trans "Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>." %}</p>
     </div>
     
     <div id="addSuggestion-toolbox" style="display:none">
-		<p>Empieza a crear contenido haciendo clic aquí.</p>
-		<p>Puedes compartir las sugerencias que crees a través de las redes sociales que tengas conectadas.</p>
+		<p>{%trans "Empieza a crear contenido haciendo clic aquí." %}</p>
+		<p>{%trans "Puedes compartir las sugerencias que crees a través de las redes sociales que tengas conectadas." %}</p>
 	</div>
     
 {% endblock %}

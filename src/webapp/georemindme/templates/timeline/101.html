@@ -18,7 +18,7 @@
             </a>
         </div>
         <span class="timeline-icon">&nbsp;</span>
-        <a href="{% url2 in_facebook public_profile obj.instance %}">{{obj.instance}}</a> ahora te está siguiendo.<br>
+        {% trans '<a href="{% url2 in_facebook public_profile obj.instance %}">{{obj.instance}}</a> ahora te está siguiendo.' %}<br>
     {% endif %}
 
     <span class="timestamp">{{obj.created|naturaltime}}</span>  
