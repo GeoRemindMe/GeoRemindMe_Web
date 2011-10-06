@@ -42,6 +42,6 @@ class OAuthware(object):
                 csrf_cookie = _sanitize_token(csrf_cookie.value)
                 if csrf_token == csrf_cookie:
                     return self.wrapped_app(environ, start_response)
-        start_response('403 ACCESS FORBIDDEN', [('content-type', 'text/plain')])
+        start_response(403, [('content-type', 'text/plain')])
         return ('Access forbidden') 
         
