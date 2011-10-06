@@ -291,6 +291,8 @@ $(document).ready(function() {
     
     //Set characters counter OnKeyUp
     setRemainingCharCounter('#id_name','#counter');
+    // remove \n
+	$('#id_name').bind('keypress',function(e) { if (e.keyCode==13) return false; });
     
      //~ key: 'AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710', // add your key here    
     //Google Maps - Direction Input Autocomplete address
