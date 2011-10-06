@@ -322,6 +322,9 @@ class Suggestion(Event, Visibility, Taggable):
         '''
         if not isinstance(user, User):
             raise TypeError()
+        #if name is not None and name != '':
+        name = name.replace("\r"," ")
+        name = name.replace("\n"," ")
         if id is not None:  
             # como se ha pasado un id, queremos modificar una alerta existente
             sugg = cls.objects.get_by_id_user(id, user, querier=user)
