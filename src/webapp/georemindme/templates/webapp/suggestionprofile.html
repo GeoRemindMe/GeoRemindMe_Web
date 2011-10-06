@@ -237,6 +237,7 @@
             </div>
         {% endif %}
         
+        {% if request.user.is_authenticated %}
         <p class="clear big">¿Tienes algo que añadir a esta sugerencia?</p>
         <textarea id="msg"></textarea>
 <!--
@@ -247,6 +248,7 @@
         </ul>
 -->
         <span class="btn" onclick="sendComment(this,'event',{{suggestion.id}});">Comentar</span>
+        {%endif%}
         
         {% if comments %}
         <ul class="comments" id="comment-list">
