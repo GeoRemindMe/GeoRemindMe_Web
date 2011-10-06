@@ -23,7 +23,7 @@ cron:
   schedule: 1st monday of month 7:00
   target: version-live
   
-- description: daily sitemap jop
+- description: daily sitemap job
   url: /sitemap/build/
   schedule: every day 6:00
   target: version-live

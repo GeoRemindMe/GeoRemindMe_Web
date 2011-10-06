@@ -104,11 +104,11 @@ def _get_all_users(cursor = None):
     """
     keys = []
     if cursor is None:
-        users = User.all().fetch(500)
+        users = User.all().filter('username !=', None).fetch(500)
         keys.extend(users)
     while len(users) == 500:
         keys.extend(users)
-        q = User.all().filter('__key__ >', users[-1].key())
+        q = User.all().filter('username !=', None).filter('__key__ >', users[-1].key())
         users = q.fetch(500)
         keys.extend(users)
     return [x.get_absolute_url() for x in keys]
