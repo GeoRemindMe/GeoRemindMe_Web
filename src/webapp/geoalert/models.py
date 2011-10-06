@@ -587,23 +587,23 @@ class Suggestion(Event, Visibility, Taggable):
                 ftclient = ftclient.OAuthFTClient()
                 rowid = ftclient.query(sqlbuilder.SQL().select(
                                                         settings.FUSIONTABLES['TABLE_SUGGS'],
-                                                        ['sug_id'],
+                                                        ['rowid'],
                                                         'sug_id = %d' % self.id
                                                         )
                                                        )
                 rowid = rowid.splitlines()
                 if len(rowid) == 1:
-                    return
+                    return self.insert_ft()
                 del rowid[0]
                 for r in rowid:
                     r = int(r)
                     import unicodedata
                     name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
-                    return ftclient.query(sqlbuilder.SQL().update(
+                    ftclient.query(sqlbuilder.SQL().update(
                                                             settings.FUSIONTABLES['TABLE_SUGGS'],
                                                             ['name', 'location', 'modified', 'relevance'],
                                                             [
-                                                             name, 
+                                                             name,
                                                              '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
                                                              self.modified.isoformat(),
                                                              str(self._calc_relevance()),
@@ -630,7 +630,10 @@ class Suggestion(Event, Visibility, Taggable):
             votes = Vote.objects.get_vote_counter(self.key())
             from datetime import datetime
             time = datetime.now() - self.modified
-            self._relevance = (self.counters.followers*8 + votes*2) * 15/(time.days+1)
+            try:
+                self._relevance = (self.counters.followers*8 + votes*2) * 15/(time.days+1)
+            except:
+                self._relevance=0
         return self._relevance
         
 

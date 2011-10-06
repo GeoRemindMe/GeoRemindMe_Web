@@ -77,7 +77,7 @@ def new_suggestion(sender, **kwargs):
     if sender._is_public():
         from google.appengine.ext.deferred import defer, PermanentTaskFailure 
         try:
-            defer(sender.insert_ft)
+            defer(sender.insert_ft, _queue="fusiontables")
         except PermanentTaskFailure, e:
             from georemindme.models_utils import _Do_later_ft
             later = _Do_later_ft(instance_key=sender.key())
@@ -95,7 +95,7 @@ def modified_suggestion(sender, **kwargs):
     if sender._is_public():
         from google.appengine.ext.deferred import defer, PermanentTaskFailure 
         try:
-            defer(sender.update_ft)
+            defer(sender.update_ft, _queue='fusiontables')
         except PermanentTaskFailure, e:
             from georemindme.models_utils import _Do_later_ft
             later = _Do_later_ft(instance_key=sender.key(), update=True)
@@ -165,17 +165,20 @@ def new_place(sender, **kwargs):
         defer(sender.insert_ft)
     except PermanentTaskFailure, e:
         from georemindme.models_utils import _Do_later_ft
-        later = _Do_later_ft(instance_key=sender.key())
+        later = _Do_later_ft(instance_key=sender.key(), update=True)
         later.put()
-        import logging
-        logging.error('ERROR FUSIONTABLES %s: %s' % (sender.id, e))
 place_new.connect(new_place)
 
 
 def modified_place(sender, **kwargs):
-    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=451)
-    timeline.put()
-#place_modified.connect(modified_place)
+    from google.appengine.ext.deferred import defer, PermanentTaskFailure 
+    try:
+        defer(sender.update_ft)
+    except PermanentTaskFailure, e:
+        from georemindme.models_utils import _Do_later_ft
+        later = _Do_later_ft(instance_key=sender.key(), update=True)
+        later.put()
+place_modified.connect(modified_place)
 
 
 def deleted_place(sender, **kwargs):

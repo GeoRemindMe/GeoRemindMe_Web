@@ -430,6 +430,44 @@ class Place(POI):
             later.put()
             from google.appengine.ext import deferred
             raise deferred.PermanentTaskFailure()
+        
+    
+    def update_ft(self):
+        from mapsServices.fusiontable import ftclient, sqlbuilder
+        try:
+            ftclient = ftclient.OAuthFTClient()
+            rowid = ftclient.query(sqlbuilder.SQL().select(
+                                                    settings.FUSIONTABLES['TABLE_PLACES'],
+                                                    ['rowid'],
+                                                    'place_id = %d' % self.id
+                                                    )
+                                                   )
+            rowid = rowid.splitlines()
+            if len(rowid) == 1:
+                return self.insert_ft()
+            del rowid[0]
+            for r in rowid:
+                r = int(r)
+                import unicodedata
+                name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
+                ftclient.query(sqlbuilder.SQL().update(
+                                                        settings.FUSIONTABLES['TABLE_PLACES'],
+                                                        ['name', 'bus_id', 'location', 'modified'],
+                                                        [
+                                                         name,
+                                                         self.business.id if self.business is not None else -1,
+                                                         '%s,%s' % (self.location.lat, self.location.lon),
+                                                         self.modified.isoformat(),
+                                                        ],
+                                                        int(r)
+                                                       )
+                               )
+        except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
+            import logging
+            logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
+            from google.appengine.ext import deferred
+            raise deferred.PermanentTaskFailure(e)
+
             
     def to_dict(self):
         return {'id': self.id,

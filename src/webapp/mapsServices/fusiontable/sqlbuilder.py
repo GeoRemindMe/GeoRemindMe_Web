@@ -97,15 +97,16 @@ class SQL:
     if len(cols) != len(values): return None
     updateStatement = ""
     count = 1
-    for i in range(len(cols)):
+    for i in xrange(len(cols)):
         updateStatement = "%s'%s' = " % (updateStatement, cols[i])
-        if type(values[i]).__name__ == 'int':
+        if type(values[i]).__name__ in ('int', 'long'):
             updateStatement = "%s%d" % (updateStatement, values[i])
         elif type(values[i]).__name__ == 'float':
             updateStatement = "%s%f" % (updateStatement, values[i])
         else:
             updateStatement = "%s'%s'" % (updateStatement, 
-                                      values[i].encode('string-escape'))
+                                          values[i].encode('string-escape'))
+
         if count < len(cols): 
             updateStatement = "%s," % (updateStatement)
         count += 1

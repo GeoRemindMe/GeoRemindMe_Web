@@ -3,8 +3,10 @@ queue:
   rate: 5/s
   
 - name: timelineFollowers
-  rate: 2/s
+  rate: 4/s
   
 - name: listFollowers
-  rate: 2/s
+  rate: 4/s
   
+- name: fusiontables
+  rate: 2/s 
