@@ -322,6 +322,9 @@ class Suggestion(Event, Visibility, Taggable):
         '''
         if not isinstance(user, User):
             raise TypeError()
+        #if name is not None and name != '':
+        name = name.replace("\r"," ")
+        name = name.replace("\n"," ")
         if id is not None:  
             # como se ha pasado un id, queremos modificar una alerta existente
             sugg = cls.objects.get_by_id_user(id, user, querier=user)
@@ -445,7 +448,6 @@ class Suggestion(Event, Visibility, Taggable):
             return self
         from django.template.defaultfilters import slugify
         # buscar slug
-        
         if self.is_saved():
             # estamos modificando sugerencia
             super(Suggestion, self).put()
@@ -572,13 +574,49 @@ class Suggestion(Event, Visibility, Taggable):
                                                        )
                                )
             except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
-                from georemindme.models_utils import _Do_later_ft
-                later = _Do_later_ft(instance_key=self.key())
-                later.put()
                 import logging
                 logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
                 from google.appengine.ext import deferred
                 raise deferred.PermanentTaskFailure(e)
+            
+    def update_ft(self):
+        if self._is_public():
+            from mapsServices.fusiontable import ftclient, sqlbuilder
+            from django.conf import settings
+            try:
+                ftclient = ftclient.OAuthFTClient()
+                rowid = ftclient.query(sqlbuilder.SQL().select(
+                                                        settings.FUSIONTABLES['TABLE_SUGGS'],
+                                                        ['sug_id'],
+                                                        'sug_id = %d' % self.id
+                                                        )
+                                                       )
+                rowid = rowid.splitlines()
+                if len(rowid) == 1:
+                    return
+                del rowid[0]
+                for r in rowid:
+                    r = int(r)
+                    import unicodedata
+                    name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
+                    return ftclient.query(sqlbuilder.SQL().update(
+                                                            settings.FUSIONTABLES['TABLE_SUGGS'],
+                                                            ['name', 'location', 'modified', 'relevance'],
+                                                            [
+                                                             name, 
+                                                             '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
+                                                             self.modified.isoformat(),
+                                                             str(self._calc_relevance()),
+                                                            ],
+                                                            int(r)
+                                                           )
+                                   )
+            except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
+                import logging
+                logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
+                from google.appengine.ext import deferred
+                raise deferred.PermanentTaskFailure(e)
+            
     
     def __str__(self):
         return unicode(self.name).encode('utf-8')

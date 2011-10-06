@@ -41,7 +41,7 @@ COMMON_WEBAPP = [
     '../webapp/static/webapp/js/jquery.min.js',
     '../webapp/static/webapp/js/jquery.tmpl.js', 
     '../webapp/static/webapp/js/jquery-ui.min.js',
-    '../webapp/static/facebookApp/js/grm.js',       
+    '../webapp/static/common/js/grm.js',       
     '../webapp/static/webapp/js/common.js',
     '../webapp/static/facebookApp/js/jquery.hoverIntent.minified.js',
     '../webapp/static/webapp/js/jquery.lavalamp.js',
@@ -67,7 +67,7 @@ COMMON_FACEBOOKAPP = [
     '../webapp/static/webapp/js/common.js',
     '../webapp/static/facebookApp/js/jquery.ba-resize.min.js',
     '../webapp/static/facebookApp/js/jquery.hoverIntent.minified.js',
-    '../webapp/static/facebookApp/js/grm.js',
+    '../webapp/static/common/js/grm.js',
     '../webapp/static/facebookApp/js/main.js',
     '../webapp/static/facebookApp/js/chronology.js',
 ]

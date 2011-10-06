@@ -291,7 +291,10 @@ $(document).ready(function() {
     
     //Set characters counter OnKeyUp
     setRemainingCharCounter('#id_name','#counter');
-    
+	
+	// remove \n
+	$('#id_name').bind('keypress',function(e) { if (e.keyCode==13) return false; });
+	
      //~ key: 'AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710', // add your key here    
     //Google Maps - Direction Input Autocomplete address
     $('#address').geo_autocomplete(new google.maps.Geocoder, {
@@ -804,14 +807,18 @@ function saveSuggestion(){
         $('#submit-button').text("Enviando...")
         $('#submit-button').addClass("waiting")
         GRM.wait();
-        
+		
         var params = { 
             name: $('#id_name').val(), 
-            place_reference: placeReference, 
-            description: $('#id_description').val(),
+            place_reference: placeReference,
+			
+			// esto envia el campo vacío si tiene el mismo valor que el placeholder
+            description: ($('#id_description').val() == $('#id_description').attr('placeholder'))?'':$('#id_description').val(),
+			
             visibility: $('#id_visibility').val(),
             tags: $('#id_tags').val()
         };
+		
         if($('#date [type="checkbox"]').is(':checked')==false){
             //~ console.log("Entro por el checkbox no marcado");
             tmp=$('#date [type="checkbox"]');

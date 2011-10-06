@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load tags %}
+{% load filters %}
 
 {% block title %}{{suggestion.name}}{% endblock %}
 {% block extra_js %}
@@ -44,7 +45,8 @@
                 {{suggestion.name}}
             </h1>
             {% if suggestion.description %}
-                <p class="more-info"><strong>{%trans "Instrucciones/explicación" %}</strong>: <br>{{suggestion.description|linebreaksbr|urlize}} </p>
+                <p class="more-info"><strong>{%trans "Instrucciones/explicación" %}</strong>: <br>{{suggestion.description|urlize|twitterize|linebreaksbr}} </p>
+
             {% endif %}
             
             {% if suggestion.date_starts or suggestion.date_ends %}
@@ -236,6 +238,7 @@
             </div>
         {% endif %}
         
+        {% if request.user.is_authenticated %}
         <p class="clear big">{%trans "¿Tienes algo que añadir a esta sugerencia?" %}</p>
         <textarea id="msg"></textarea>
 <!--
@@ -245,7 +248,11 @@
             <li>Sad</li>
         </ul>
 -->
+
         <span class="btn" onclick="sendComment(this,'event',{{suggestion.id}});">{%trans "Comentar" %}</span>
+
+        {%endif%}
+
         
         {% if comments %}
         <ul class="comments" id="comment-list">

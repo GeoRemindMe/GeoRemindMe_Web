@@ -52,5 +52,3 @@ class TimelineService(remote.Service):
                     t.url = a['instance'].get_absolute_url().encode("utf8")
             timelines.append(t)
         return Timelines(timelines=timelines, query_id = activity[0])
-
-    

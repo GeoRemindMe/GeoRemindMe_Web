@@ -105,16 +105,8 @@ def report_notify(request, time):
     from geouser.mails import send_notification_suggestion_summary
     users = UserSettings().all().filter('time_notification_suggestions_follower =', time).run()
     for user in users:
-        suggs = {}
         user = user.parent()
         reports = _Report_Suggestion_changed.all().filter('user =', user).run()
-        for report in reports:
-            suggs.update(report.to_dict())
-            report.delete()
-        if len(suggs) != 0:
-            send_notification_suggestion_summary(user.email,
-                               suggestions=suggs,
-                               language=user.get_language()
-                               )
+        _Report_Suggestion_changed.send_notification(reports, user)
     # TODO: correos de comentarios
     return HttpResponse()

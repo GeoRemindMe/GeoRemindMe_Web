@@ -3,23 +3,29 @@ cron:
 #url: /stats/daily/
 #schedule: every 24 hours
   
-- description: hourly invalid sessions cleaning job
+- description: invalid sessions cleaning job
   url: /clean/sessions/
   schedule: every sunday 7:00
-  target: version-3
+  target: version-live
   
 - description: daily suggestion notifications job
   url: /reports/daily/
   schedule: every day 7:00
-  target: version-3
+  target: version-live
   
 - description: weekly suggestion notifications job
   url: /reports/weekly/
   schedule: every sunday 7:00
-  target: version-3
+  target: version-live
   
 - description: monthly suggestion notifications job
   url: /reports/monthly/
   schedule: 1st monday of month 7:00
-  target: version-3
+  target: version-live
+  
+- description: daily sitemap job
+  url: /sitemap/build/
+  schedule: every day 6:00
+  target: version-live
+ 
  

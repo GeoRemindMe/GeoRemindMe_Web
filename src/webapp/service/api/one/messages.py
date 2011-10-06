@@ -3,6 +3,11 @@
 
 from protorpc import messages
 
+    
+class LoginResponse(messages.Message):
+    session = messages.StringField(1)
+    expires = messages.IntegerField(2)
+
 
 class Timeline(messages.Message):
     msg = messages.StringField(1)

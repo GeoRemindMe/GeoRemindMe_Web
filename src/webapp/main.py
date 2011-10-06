@@ -21,16 +21,18 @@ import os, logging, sys
 from google.appengine.ext.webapp import util
 from google.appengine.ext import deferred
 
+## elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
+for k in [k for k in sys.modules if k.startswith('django')]: 
+    del sys.modules[k] 
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings' 
 from google.appengine.dist import use_library
 use_library('django', '1.2')
 from django.conf import settings
 _ = settings.TEMPLATE_DIRS
 
-## elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
-#for k in [k for k in sys.modules if k.startswith('django')]: 
-#    del sys.modules[k] 
-#sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 import django.core.handlers.wsgi
 import django.dispatch
 from django.core.signals import got_request_exception

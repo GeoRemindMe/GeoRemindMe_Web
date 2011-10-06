@@ -655,6 +655,33 @@ def get_near_suggestions(request):
     from libs.jsonrpc.jsonencoder import JSONEncoder
     return HttpResponse(simplejson.dumps(suggs[:limit], cls=JSONEncoder),
                         mimetype='application/json')
+
+
+@ajax_request
+def get_nearest_suggestions(request):
+    """
+    Obtiene places cercanos a una localizacion dada
+    Parametros POST:
+        location: punto donde buscar
+        radius: radio para las busquedas, en metros (opcional)
+        
+        return suggestion list
+    """
+    
+    location = request.POST.get('location', None)
+    radius = request.POST.get('radius', 5000)
+    if location is None:
+        return HttpResponseBadRequest()
+    try:
+        limit = int(request.POST.get('limit', 4))
+    except:
+        return HttpResponseBadRequest()
+    from geoalert.models import Suggestion
+    suggs = Suggestion.objects.get_nearest(location, radius, querier=None)
+    from libs.jsonrpc.jsonencoder import JSONEncoder
+    return HttpResponse(simplejson.dumps(suggs[:limit], cls=JSONEncoder),
+                        mimetype='application/json')
+    
     
 @ajax_request
 def search_tag_suggestion(request):

@@ -98,18 +98,17 @@ class SQL:
     updateStatement = ""
     count = 1
     for i in range(len(cols)):
-      updateStatement = "%s'%s' = " % (updateStatement, cols[i])
-      if type(values[i]).__name__ == 'int':
-        updateStatement = "%s%d" % (updateStatement, values[i])
-      elif type(values[i]).__name__ == 'float':
-        updateStatement = "%s%f" % (updateStatement, values[i])
-      else:
-        updateStatement = "%s'%s'" % (updateStatement, 
+        updateStatement = "%s'%s' = " % (updateStatement, cols[i])
+        if type(values[i]).__name__ == 'int':
+            updateStatement = "%s%d" % (updateStatement, values[i])
+        elif type(values[i]).__name__ == 'float':
+            updateStatement = "%s%f" % (updateStatement, values[i])
+        else:
+            updateStatement = "%s'%s'" % (updateStatement, 
                                       values[i].encode('string-escape'))
-
-      if count < len(cols): updateStatement = "%s," % (updateStatement)
-      count += 1
-
+        if count < len(cols): 
+            updateStatement = "%s," % (updateStatement)
+        count += 1
     return "UPDATE %d SET %s WHERE ROWID = '%d'" % (table_id, updateStatement, row_id)
 
   def delete(self, table_id, row_id):
@@ -146,14 +145,15 @@ class SQL:
     cols = values.keys()
     values = values.values()
     for value in values:
-      if type(value).__name__ in ('int', 'long'):
-        stringValues = '%s%d' % (stringValues, value)
-      elif type(value).__name__=='float':
-        stringValues = '%s%f' % (stringValues, value)
-      else:
-        stringValues = "%s'%s'" % (stringValues, re.sub(r"(?<!\\)'", "\\'", value))
-      if count < len(values): stringValues = "%s," % (stringValues)
-      count += 1
+        if type(value).__name__ in ('int', 'long'):
+            stringValues = '%s%d' % (stringValues, value)
+        elif type(value).__name__=='float':
+            stringValues = '%s%f' % (stringValues, value)
+        else:
+            stringValues = "%s'%s'" % (stringValues, re.sub(r"(?<!\\)'", "\\'", value))
+        if count < len(values): 
+            stringValues = "%s," % (stringValues)
+        count += 1
 
     return 'INSERT INTO %d (%s) VALUES (%s)' % \
       (int(table_id), ','.join(["'%s'" % col for col in cols]), stringValues)

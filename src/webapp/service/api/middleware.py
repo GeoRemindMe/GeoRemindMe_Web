@@ -7,7 +7,8 @@ class OAuthware(object):
     def __call__(self, environ, start_response):
         import os
         import libs.oauth2 as oauth2
-        
+        if 'LoginService' in environ['PATH_INFO']:
+            return self.wrapped_app(environ, start_response)
         if 'HTTP_X_GEOREMINDME_SESSION' in environ:
             session_id = environ['HTTP_X_GEOREMINDME_SESSION']
             from geomiddleware.sessions.store import SessionStore

@@ -372,7 +372,7 @@ class SuggestionHelper(EventHelper):
             location = db.GeoPt(location)
         import memcache
         client = memcache.mem.Client()
-        if querier.is_authenticated():
+        if querier is not None and querier.is_authenticated():
             sugs = client.get('%ssug_nearest%s,%s_%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon,
@@ -402,19 +402,23 @@ class SuggestionHelper(EventHelper):
             from google.appengine.api import datastore
             sugs = datastore.Get(sugs)
             sugs = filter(None, sugs)
-            if querier.is_authenticated():
+            if querier is not None and querier.is_authenticated():
                 sugs = filter(lambda x: x['user'] != querier.key(), sugs)
             from georemindme.funcs import prefetch_refpropsEntity
-            prefetch = prefetch_refpropsEntity(sugs, 'user')
+            prefetch = prefetch_refpropsEntity(sugs, 'user', 'poi')
+            from operator import itemgetter
+            sugs = sorted(sugs, key=itemgetter('modified'), reverse=True)
             sugs = [{'id': sug.key().id(),
                      'slug': sug['slug'] if 'slug' in sug else None,
                      'username': prefetch[sug['user']].username,
                      'name': sug['name'] if 'name' in sug else None,
-                     'description': sug['description'] if 'description' in sug else None} 
+                     'description': sug['description'] if 'description' in sug else None,
+                     'poi': {'lat': prefetch[sug['poi']].location.lat,
+                             'lon': prefetch[sug['poi']].location.lon,
+                             },
+                     } 
                     for sug in sugs]
-            #from operator import itemgetter
-            #sugs = sorted(sugs, key=itemgetter('modified'), reverse=True)
-            if querier.is_authenticated():
+            if querier is not None and querier.is_authenticated():
                 client.set('%ssug_nearest%s,%s_%s' % (memcache.version,
                                                    location.lat,
                                                    location.lon,

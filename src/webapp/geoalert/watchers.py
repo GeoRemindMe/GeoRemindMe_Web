@@ -82,18 +82,25 @@ def new_suggestion(sender, **kwargs):
             from georemindme.models_utils import _Do_later_ft
             later = _Do_later_ft(instance_key=sender.key())
             later.put()
-            import logging
-            logging.error('ERROR FUSIONTABLES %s: %s' % (sender.id, e))
     timelinePublic.put()
     p.get_result()
 suggestion_new.connect(new_suggestion)
 
 
 def modified_suggestion(sender, **kwargs):
-    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=301)
-    timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=301, _vis=sender._get_visibility())
-    db.put([timeline, timelinePublic])
-#suggestion_modified.connect(modified_suggestion)
+    #timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=301)
+    #timelinePublic = UserTimeline(user = sender.user, instance = sender, msg_id=301, _vis=sender._get_visibility())
+    #db.put([timeline, timelinePublic])
+    #actualizar fusiontables
+    if sender._is_public():
+        from google.appengine.ext.deferred import defer, PermanentTaskFailure 
+        try:
+            defer(sender.update_ft)
+        except PermanentTaskFailure, e:
+            from georemindme.models_utils import _Do_later_ft
+            later = _Do_later_ft(instance_key=sender.key(), update=True)
+            later.put()
+suggestion_modified.connect(modified_suggestion)
 
 
 def deleted_suggestion(sender, **kwargs):

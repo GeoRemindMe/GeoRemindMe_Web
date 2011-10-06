@@ -139,6 +139,8 @@ def send_remind_pass_mail(to=None, remind_code=None, language='en'):
     message.push()
     
 def send_notification_follower(to, follower, language='en'):
+    if to is None or follower is None:
+        raise ValueError()   
     translation.activate(language)
     message = GeoMail()
     message.to = to
@@ -176,6 +178,8 @@ def send_notification_follower(to, follower, language='en'):
     
     
 def send_notification_suggestion_follower(to, suggestion, user, language='en'):
+    if to is None or suggestion is None:
+        raise ValueError()   
     translation.activate(language)
     message = GeoMail()
     message.to = to
@@ -226,6 +230,8 @@ def send_notification_suggestion_follower(to, suggestion, user, language='en'):
     message.push()
     
 def send_notification_suggestion_comment(to, comment, language='en'):
+    if to is None or comment is None:
+        raise ValueError()   
     translation.activate(language)
     message = GeoMail()
     message.to = to
@@ -283,6 +289,8 @@ def send_notification_suggestion_comment(to, comment, language='en'):
     message.push()
     
 def send_notification_account_summary(to, user, followers, language='en'):
+    if to is None:
+        raise ValueError()   
     translation.activate(language)
     message = GeoMail()
     message.to = to
@@ -329,6 +337,8 @@ def send_notification_account_summary(to, user, followers, language='en'):
     message.push()
     
 def send_notification_suggestion_summary(to, suggestions, language='en'):
+    if to is None:
+        raise ValueError()   
     translation.activate(language)
     message = GeoMail()
     message.to = to

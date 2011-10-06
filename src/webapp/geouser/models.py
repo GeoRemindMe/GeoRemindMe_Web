@@ -11,10 +11,13 @@ from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 from google.appengine.api import urlfetch
+from google.appengine.api import datastore
+from google.appengine.datastore import datastore_query
 
 from georemindme.models_utils import HookedModel
 from georemindme.decorators import classproperty
 from properties import PasswordProperty, UsernameProperty
+from georemindme.funcs import prefetch_refprops, fetch_parents, fetch_parentsKeys
 
 
 TIMELINE_PAGE_SIZE = 10
@@ -141,11 +144,9 @@ class User(polymodel.PolyModel, HookedModel):
 
     def get_activity_timeline(self, query_id=None):
         from models_acc import UserTimelineSystem, UserTimeline, UserTimelineFollowersIndex, UserTimelineSuggest
-        from georemindme.funcs import prefetch_refprops, fetch_parents, fetch_parentsKeys
         from geovote.models import Comment, Vote
         from geoalert.models import Event
         from geolist.models import List
-        from google.appengine.datastore import datastore_query
         # definir las consultas
         query_chrono = UserTimelineFollowersIndex.all().filter('followers =', self.key()).order('-created')
         query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
@@ -173,7 +174,6 @@ class User(polymodel.PolyModel, HookedModel):
                 if chrono is None:
                     try:
                         chrono = chrono_async.next()
-                        #chrono = chrono_async.pop(0)
                     except:
                         _go_chrono = False
                         break
@@ -229,11 +229,9 @@ class User(polymodel.PolyModel, HookedModel):
             from geolist.models import List, ListSuggestion
             from geoalert.models import Suggestion
             timelines = db.get(set(ref_keys))
-            from georemindme.funcs import prefetch_refprops
             timelines = prefetch_refprops(timelines, UserTimeline.user, UserTimeline.instance)
             from helpers_acc import _load_ref_instances
             return timelines, _load_ref_instances(timelines)
-        from google.appengine.api import datastore
         from models_utils import _Notification
         if query_id is None:
             query = datastore.Query(kind='_Notification', filters={'owner =': self.key()})
@@ -411,8 +409,8 @@ class User(polymodel.PolyModel, HookedModel):
         if self.email == '' or self.email is None:
             return None
         from georemindme.funcs import make_random_string
-        self.remind_code = make_random_string(length=24)
         from datetime import datetime
+        self.remind_code = make_random_string(length=24)
         self.date_remind = datetime.now()
         self.put()
         from geouser.mails import send_remind_pass_mail
@@ -431,6 +429,9 @@ class User(polymodel.PolyModel, HookedModel):
         '''
         from datetime import datetime, timedelta
         from django.conf import settings
+        from exceptions import BadCode
+        if self.date_remind is None:
+            raise BadCode()
         if self.date_remind+timedelta(days=settings.NO_CONFIRM_ALLOW_DAYS) < datetime.now():
             #checks code is in date
             self.date_remind = None
@@ -438,7 +439,6 @@ class User(polymodel.PolyModel, HookedModel):
             from exceptions import OutdatedCode
             raise OutdatedCode()
         if not self.remind_code == code:
-            from exceptions import BadCode
             raise BadCode()
         if password is not None:
             self.password = password
@@ -802,7 +802,7 @@ class User(polymodel.PolyModel, HookedModel):
                     for k in friends.keys():
                         if k in self.settings.blocked_friends_sug:
                             del friends[k]
-                client.set('%sfriends_to_%s' % (memcache.version, self.id, friends, 11235))
+                client.set('%sfriends_to_%s' % (memcache.version, self.id), friends, 11235)
         except Exception, e:
         #except apiproxy_errors.DeadlineExceededError:
             import logging

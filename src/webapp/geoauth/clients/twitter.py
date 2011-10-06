@@ -169,11 +169,16 @@ class TwitterFriendsRPC(object):
         friends_result = simplejson.loads(result.content)
         if 'ids' in friends_result:
             friends_result = friends_result['ids']
-        for i in friends_result:
-            user_to_follow = TwitterUser.objects.get_by_id(i)
-            if user_to_follow is not None and user_to_follow.user.username is not None and not self.user.is_following(user_to_follow.user):
-                info = self.get_others_user_info(id=user_to_follow.id)
-                self.friends[user_to_follow.user.id] = { 
+        else:
+            return {}
+        friends_key = ['tw%s' % f for f in friends_result]
+        users_to_follow = TwitterUser.get_by_key_name(friends_key)
+        users_to_follow = filter(None, users_to_follow)
+        for user_to_follow in users_to_follow:
+            if user_to_follow.user.username is not None and \
+                not self.user.is_following(user_to_follow.user):
+                    info = self.get_others_user_info(id=user_to_follow.id)
+                    self.friends[user_to_follow.user.id] = { 
                                                'username': user_to_follow.user.username, 
                                                'twittername': info['screen_name'],
                                                'id': user_to_follow.user.id,

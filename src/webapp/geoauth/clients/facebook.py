@@ -47,6 +47,7 @@ import libs.httplib2 as httplib2
 from django.utils import simplejson as json
 _parse_json = json.loads
 
+
 from geoauth.models import OAUTH_Access
 from geoauth.exceptions import OAUTHException
 from geouser.models import User
@@ -129,10 +130,10 @@ class FacebookClient(object):
     def get_friends(self, rpc=None):
         if self._fb_id is None:
             self.get_user_info()
-        #friends = self.consumer.get_connections(self._fb_id, "friends", rpc=rpc)
-        friends = self.consumer.fql('SELECT uid FROM user \
-                                    WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) \
-                                    AND is_app_user = 1')
+        friends = self.consumer.get_connections(self._fb_id, "friends", rpc=rpc)
+        #friends = self.consumer.fql('SELECT uid FROM user \
+        # WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) \
+        # AND is_app_user = 1')
         return friends
     
     def get_friends_to_follow(self, rpc=None):
@@ -252,10 +253,15 @@ class FacebookFriendsRPC(object):
         friends_result = simplejson.loads(result.content)
         if 'data' in friends_result:
             friends_result = friends_result['data']
-        for f in friends_result:
-            user_to_follow = FacebookUser.objects.get_by_id(f['id'])
-            if user_to_follow is not None and user_to_follow.user.username is not None and not self.user.is_following(user_to_follow.user):
-                self.friends[user_to_follow.user.id]= {
+        else:
+            return {}
+        friends_key = ['fu%s' % f['id'] for f in friends_result]
+        users_to_follow = FacebookUser.get_by_key_name(friends_key)
+        users_to_follow = filter(None, users_to_follow)
+        for user_to_follow in users_to_follow:
+            if user_to_follow.user.username is not None and \
+                not self.user.is_following(user_to_follow.user):
+                    self.friends[user_to_follow.user.id]= {
                                            'username':user_to_follow.user.username, 
                                            'uid':user_to_follow.uid,
                                            'id': user_to_follow.user.id,
