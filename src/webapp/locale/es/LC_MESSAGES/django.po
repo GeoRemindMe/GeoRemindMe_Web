@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-07 15:52+0200\n"
+"POT-Creation-Date: 2011-10-07 16:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,18 +20,6 @@ msgstr ""
 msgid ""
 "Por favor seleccione una opción válida. Esta opción no es una de las "
 "opciones disponibles."
-msgstr ""
-
-#: facebookApp/templates/new_suggestion.html:9
-#: georemindme/templates/generic/user_pass.html:17
-#: georemindme/templates/generic/user_pass.html:29
-#: mainApp/templates/mainApp/user_pass.html:17
-#: mainApp/templates/mainApp/user_pass.html:29
-msgid "Enviar"
-msgstr ""
-
-#: facebookApp/templates/new_suggestion.html:9
-msgid "Please fill up all fields"
 msgstr ""
 
 #: facebookApp/templates/register.html:154
@@ -120,11 +107,7 @@ msgstr ""
 msgid "La distancia tiene que ser un número"
 msgstr ""
 
-#: geoalert/forms.py:66
-msgid "Wrong dates"
-msgstr ""
-
-#: geoalert/forms.py:145
+#: geoalert/forms.py:66 geoalert/forms.py:145
 msgid "Fechas incorrectas"
 msgstr ""
 
@@ -135,12 +118,12 @@ msgstr ""
 
 #: geoauth/views.py:68 geouser/views.py:62
 msgid ""
-"El email/password que has introducido es incorrecto.<br/>Por favor asegúrate "
-"que no tienes las mayúsculas actividas e inténtalo de nuevo."
+"El email/contraseña que has introducido es incorrecto.<br/>Por favor "
+"asegúrate que no tienes las mayúsculas actividas e inténtalo de nuevo."
 msgstr ""
 
 #: georemindme/forms.py:15
-msgid "Name"
+msgid "Nombre"
 msgstr ""
 
 #: georemindme/forms.py:16 georemindme/templates/generic/edit_profile.html:58
@@ -297,6 +280,7 @@ msgid "Añadir sugerencia"
 msgstr ""
 
 #: georemindme/templates/generic/base_generic.html:284
+#: georemindme/templates/generic/chronology_anonymous.html:84
 #: georemindme/templates/generic/dashboard.html:30
 #: georemindme/templates/generic/dashboard_mainApp.html:30
 msgid "Actividad"
@@ -472,10 +456,6 @@ msgstr ""
 msgid "Borrar"
 msgstr ""
 
-#: georemindme/templates/generic/chronology_anonymous.html:84
-msgid "Dashboard"
-msgstr ""
-
 #: georemindme/templates/generic/chronology_anonymous.html:97
 msgid "Ver:"
 msgstr ""
@@ -512,7 +492,7 @@ msgstr ""
 #: georemindme/templates/generic/suggestionprofile_anonymous.html:309
 #: georemindme/templates/generic/view_list.html:269
 #: georemindme/templates/generic/view_list_anonymous.html:269
-msgid "0 minutes ago"
+msgid "Hace 0 minutos"
 msgstr ""
 
 #: georemindme/templates/generic/create_social_profile.html:5
@@ -1372,6 +1352,13 @@ msgid ""
 "nueva contraseña:"
 msgstr ""
 
+#: georemindme/templates/generic/user_pass.html:17
+#: georemindme/templates/generic/user_pass.html:29
+#: mainApp/templates/mainApp/user_pass.html:17
+#: mainApp/templates/mainApp/user_pass.html:29
+msgid "Enviar"
+msgstr ""
+
 #: georemindme/templates/generic/user_pass.html:27
 #: mainApp/templates/mainApp/user_pass.html:27
 msgid "Email:"
@@ -1695,7 +1682,7 @@ msgstr ""
 msgid "email"
 msgstr ""
 
-#: geouser/forms.py:113 geouser/forms.py:234
+#: geouser/forms.py:113
 msgid "username"
 msgstr ""
 
@@ -1704,7 +1691,7 @@ msgstr ""
 msgid "El nombre de usuario está siendo utilizado"
 msgstr ""
 
-#: geouser/forms.py:176 geouser/forms.py:264
+#: geouser/forms.py:176 geouser/forms.py:234 geouser/forms.py:264
 msgid "nombre de usuario"
 msgstr ""
 

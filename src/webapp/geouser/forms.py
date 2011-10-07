@@ -231,7 +231,7 @@ class SocialUserForm(forms.Form):
     '''
         Formulario para pedir un correo y username a los usuarios que entran desde una red social
     '''
-    username = forms.CharField(label=_('username'), required=True)
+    username = forms.CharField(label=_('nombre de usuario'), required=True)
     
     def save(self, user):
         from geouser.models import User

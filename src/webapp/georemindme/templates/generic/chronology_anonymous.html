@@ -81,7 +81,7 @@
 
 {% block embed_js %}{%endblock%}
 
-{% block title %}{%trans "Dashboard" %}{% endblock %}
+{% block title %}{%trans "Actividad" %}{% endblock %}
 {% block goBack %}{%endblock%}
 {% block body %}
     <div {% block id %} {%endblock%} class="clear">
@@ -130,7 +130,7 @@
         <li>
 			<div class="removable" value="${id}" type="comment"><a href="#">{%trans "Borrar" %}</a></div>
             <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="user avatar"><a href="{% url fb_public_profile user.username %}" class="black-link">{{user.username}}</a>: ${msg}<br>
-            <span class="timestamp">{%trans "0 minutes ago" %}</span>
+            <span class="timestamp">{%trans "Hace 0 minutos" %}</span>
 
         </li>
     </script>

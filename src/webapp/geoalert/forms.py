@@ -63,7 +63,7 @@ class RemindForm(forms.Form):
         
         if all([starts, ends]):
             if (starts > ends):
-                msg = _("Wrong dates")
+                msg = _("Fechas incorrectas")
                 self._errors['starts'] = self.error_class([msg])
         
         return cleaned_data

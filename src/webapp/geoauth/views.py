@@ -65,7 +65,7 @@ def authorize_token_request(request):
                     if error == '':#el usuario se ha identificado, recargamos la pagina
                         return HttpResponseRedirect(request.get_full_path())
                 else:
-                    error = _("El email/password que has introducido es incorrecto.<br/>Por favor asegúrate que no tienes las mayúsculas actividas e inténtalo de nuevo.")
+                    error = _("El email/contraseña que has introducido es incorrecto.<br/>Por favor asegúrate que no tienes las mayúsculas actividas e inténtalo de nuevo.")
             else:
                 error = ''
                 f = LoginForm(prefix='user_login')
