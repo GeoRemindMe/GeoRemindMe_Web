@@ -11,7 +11,9 @@ from django.conf import settings
 from properties import PickleProperty
 from geouser.models import User
 
-class _Session_Dict(object):
+import UserDict
+
+class _Session_Dict(UserDict.DictMixin):
     _decoded = dict()
     
     @property
@@ -38,6 +40,12 @@ class _Session_Dict(object):
     
     def __setitem__(self, key, value):
         self._decoded[key] = value
+        
+    def __delitem__(self, key):
+        del self._decoded[key]
+        
+    def keys(self):
+        return self._decoded.keys()
         
     def __contains__(self, key):
         try:

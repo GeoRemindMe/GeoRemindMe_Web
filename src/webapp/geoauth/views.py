@@ -125,6 +125,12 @@ def client_access_request(request, provider, next=None):
     except:
         return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
     #lee el token recibido
+    if 'denied' in request.GET:
+        del request.session[provider]
+        if 'cls' in request.GET:
+            return HttpResponseRedirect(reverse('geouser.views.close_window'))
+        else:
+            return reverse('geouser.views.dashboard')
     token = oauth2.Token(request.GET.get('oauth_token'), 
                          request.session[provider]['request_token']['oauth_token_secret'])
     token.set_verifier(request.GET.get('oauth_verifier'))
