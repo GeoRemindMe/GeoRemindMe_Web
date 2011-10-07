@@ -63,8 +63,6 @@ def login_panel(request):
 
 @facebook_required
 def dashboard(request):
-    if request.user.username is None or request.user.email is None:
-        return HttpResponseRedirect('fb_login_panel')
     from geouser.views import dashboard
     return dashboard(request, template='dashboard.html')
 
