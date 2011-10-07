@@ -20,7 +20,7 @@ from cron import report_notify, clean_sessions
 def register_panel(request, login=False):
     if request.session.get('user'):
         return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-    return render_to_response("webapp/register.html", {'login' :login}, context_instance=RequestContext(request))
+    return render_to_response("generic/register.html", {'login' :login}, context_instance=RequestContext(request))
 
 
 def login_panel(request,login=False):
@@ -33,7 +33,7 @@ def login_panel(request,login=False):
     try:
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-        return render_to_response("webapp/login.html", {'login' :login}, context_instance=RequestContext(request))
+        return render_to_response("generic/login.html", {'login' :login}, context_instance=RequestContext(request))
     except DeadlineExceededError:
         return HttpResponseRedirect('/')
 
@@ -54,7 +54,7 @@ def set_language(request):
     return HttpResponseRedirect(request.path)
 
 
-def search_suggestions(request, term=None, template='webapp/search.html'):
+def search_suggestions(request, term=None, template='generic/search.html'):
     #from geoalert.forms import SuggestionForm
     #s = Suggestion.objects.get_by_id(suggestion_id)
     if not request.user.is_authenticated():

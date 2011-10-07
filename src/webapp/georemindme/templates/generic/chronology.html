@@ -1,0 +1,71 @@
+{% extends "generic/base_generic.html" %}
+{% load i18n %}
+{% url fb_notifications as notifications_section %}
+{% load tags %}
+
+{% block extra_js %}
+    {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
+        <script type="text/javascript" src="/static/common/js/chronology.js"></script>    
+    {% else %}
+        <script type="text/javascript" src="/static/common/js/chronology.min.js"></script>    
+    {% endif %}
+{%endblock%}
+
+{% block embed_js %}{%endblock%}
+
+{% block title %}Dashboard{% endblock %}
+{% block goBack %}{%endblock%}
+{% block body %}
+    <div {% block id %} {%endblock%} class="clear">
+        
+        {% block pre_chronology %} {%endblock%}
+        {% if chronology.1|length %}    
+    
+            
+            
+    
+            
+            <ul id="tabMenu" class="clear">
+                <li class="clear-box">Ver:</li>
+                <li id="no-filter" class="active">Todo 
+<!--
+                <span id="all-counter"></span>
+-->
+                </li>
+                <li id="filter-suggestions">Sugerencias <span id="suggestions-counter"></span></li>
+                <li id="filter-lists">Listas <span id="lists-counter"></span></li>
+                <li id="filter-likes">Valoraciones <span id="likes-counter"></span></li>
+                <li id="filter-comments">Comentarios <span id="comments-counter"></span></li>
+                
+            </ul>
+            <ul id="chronology" value="{{chronology.0}}" {% if profile.username%}username="{{profile.username}}"{%endif%} page="1" {% if notifications %} notifications="{{notifications}}" {% endif %}>
+                {% include "timeline.html" %}
+            </ul>
+        
+            <!-- Si hay más mensajes -->
+            {% if chronology.1|length > 9%}
+                <div class="load-more btn">{%trans "Cargar más" %}</div>
+            {% endif %}    
+            
+            
+        {% endif %}    
+    
+        
+        {% block pos_chronology %}{%endblock%}
+
+    </div>
+
+
+    
+    
+    <script id="commentTemplate" type="text/x-jquery-tmpl">
+        <li>
+			<div class="removable" value="${id}" type="comment"><a href="#">{%trans "Borrar" %}</a></div>
+            <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="user avatar"><a href="{% url fb_public_profile user.username %}" class="dark-link">{{user.username}}</a>: ${msg}<br>
+            <span class="timestamp">0 minutes ago</span>
+
+        </li>
+    </script>    
+{% endblock %}
+
+

@@ -31,7 +31,7 @@ class RemindForm(forms.Form):
     starts = forms.SplitDateTimeField(required=False)
     ends = forms.SplitDateTimeField(required=False)
     description = forms.CharField(required=False,widget=forms.Textarea())
-    distance = forms.CharField(label=_('Alert distance (meters)'), required=False)
+    distance = forms.CharField(label=_('Distancia de la alerta (metros)'), required=False)
     active = forms.BooleanField(required=False, initial=True)
     done = forms.BooleanField(required=False)
     
@@ -52,9 +52,9 @@ class RemindForm(forms.Form):
             return 0
         else:
             try:
-                return int(float(data))#remove decimals
+                return int(float(data))#Remove decimals
             except:
-                raise forms.ValidationError(_('Distance must be a number'))
+                raise forms.ValidationError(_('La distancia tiene que ser un número'))
             
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -142,7 +142,7 @@ class SuggestionForm(forms.Form):
                                  )
                 if all([starts, ends]):
                     if (starts > ends):
-                        msg = _("Wrong dates")
+                        msg = _("Fechas incorrectas")
                         self._errors['starts'] = self.error_class([msg])
         except:
             pass

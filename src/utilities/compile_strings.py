@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 
 
+import os
 from os import path
 BASE_DIR = path.normpath(path.dirname(__file__))
 
 import commands
 
+os.chdir( "../webapp" )
 
 if commands.getstatusoutput('django-admin compilemessages')[0]==0:#creates german (de) .po
 	print ' All strings have been succesfully compiled at \'locale/*/LC_MESSAGES/django.po\''

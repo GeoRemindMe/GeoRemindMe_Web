@@ -20,7 +20,7 @@ import memcache
 #===============================================================================
 # PERFIL DE EVENTOS
 #===============================================================================
-def suggestion_profile(request, slug, template='webapp/suggestionprofile.html'):
+def suggestion_profile(request, slug, template='generic/suggestionprofile.html'):
     """Devuelve el perfil de una sugerencia, comprueba la visibilidad de una funcion
         
             :param id: identificador de la sugerencia
@@ -215,7 +215,7 @@ def add_from_google_reference(request, reference):
                                               user = request.user
                                               )
     except Exception, e:
-        return render_to_response('webapp/placeerror.html', {'error': e},
+        return render_to_response('generic/placeerror.html', {'error': e},
                                   context_instance=RequestContext(request))
     return redirect(place.get_absolute_url(), permanent=True)
 
@@ -230,12 +230,12 @@ def add_from_foursquare_id(request, venueid):
                                                   user = request.user
                                                   )
     except Exception, e:
-        return render_to_response('webapp/placeerror.html', {'error': e},
+        return render_to_response('generic/placeerror.html', {'error': e},
                                   context_instance=RequestContext(request))
     return redirect(place.get_absolute_url(), permanent=True)
 
 
-def view_place(request, slug, template='webapp/view_place.html'):
+def view_place(request, slug, template='generic/view_place.html'):
     """ Devuelve la vista con informacion de un lugar
        
            :param slug: slug identificativo del lugar
@@ -305,7 +305,7 @@ def view_place(request, slug, template='webapp/view_place.html'):
 # FUNCIONES PARA AÑADIR, EDITAR, OBTENER Y MODIFICAR RECOMENDACIONES
 #===============================================================================
 @login_required
-def user_suggestions(request, template='webapp/suggestions.html'):
+def user_suggestions(request, template='generic/suggestions.html'):
     from geolist.models import ListSuggestion
     counters = request.user.counters_async()
     lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
@@ -336,7 +336,7 @@ def user_suggestions(request, template='webapp/suggestions.html'):
 
 
 @login_required
-def add_suggestion(request, template='webapp/add_suggestion.html'):
+def add_suggestion(request, template='generic/add_suggestion.html'):
     """ Vista para añadir una sugerencia
         
             :param form: formulario con los datos
@@ -396,7 +396,7 @@ def add_suggestion_invitation(request, eventid, username):
 
 
 @login_required
-def edit_suggestion(request, suggestion_id, template='webapp/add_suggestion.html'):
+def edit_suggestion(request, suggestion_id, template='generic/add_suggestion.html'):
     """ Edita una sugerencia
         
             :param form: formulario con los datos

@@ -70,9 +70,9 @@ def login_func(request, email = None, password = None, remember_me = False, user
                 if from_rpc:
                     error = 0
                 else:
-                    error = _("Email no confirmed in %d days," 
-                              "your access isn't allowed."
-                              "<br/>A new confirm email have been sent."
+                    error = _("Tu cuenta de correo no ha sido confirmada en %d días," 
+                              "por lo que no puedes acceder."
+                              "<br/>Te hemos reenviado el correo para que puedas activarla."
                               % settings.NO_CONFIRM_ALLOW_DAYS)
             else:
                 redirect = get_next(request)
@@ -82,6 +82,6 @@ def login_func(request, email = None, password = None, remember_me = False, user
     if from_rpc:
         error = 1
     else:
-        error = _("The email/password you entered is incorrect"
-                  "<br/>Please make sure your caps lock is off and try again")
+        error = _("El email o la contraseña que has introducido es incorrecta"
+                  "<br/>Por favor asegúrate que no tienes activadas las mayúsculas e inténtalo de nuevo")
     return error, redirect

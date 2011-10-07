@@ -18,7 +18,7 @@
         function onLiClick(obj){
             var checkbox=$(obj).find("span.name");
             if($(checkbox).hasClass("checked"))
-                $(checkbox).removeClass("checked");
+                $(checkbox).BorrarClass("checked");
             else
                 $(checkbox).addClass("checked");
         }
@@ -53,7 +53,7 @@
                                 return $(a).text().toLowerCase() > $(b).text().toLowerCase() ? 1 : -1;
                             });
                             
-                            $("#dropdown-list").removeClass('visible-display');
+                            $("#dropdown-list").BorrarClass('visible-display');
                         }
                     });
                 }
@@ -74,7 +74,7 @@
                 });
                 },function(){
                     $('#description').slideUp('slow',function(){
-                        $("#add-details").removeClass('used');
+                        $("#add-details").BorrarClass('used');
                         //resizeIframe();
                 });
             });
@@ -87,7 +87,7 @@
                 });
                 },function(){
                     $('#tags').slideUp('slow',function(){
-                        $("#add-tags").removeClass('used');
+                        $("#add-tags").BorrarClass('used');
                         //resizeIframe();
                     });
             });
@@ -100,7 +100,7 @@
                 });
             },function(){
                 $('#date').slideUp('slow',function(){
-                    $("#add-date").removeClass('used');
+                    $("#add-date").BorrarClass('used');
                     //resizeIframe();
                 });
             });
@@ -113,7 +113,7 @@
                 });
             },function(){
                 $('#lists').slideUp('slow',function(){
-                    $("#add-to-lists").removeClass('used');
+                    $("#add-to-lists").BorrarClass('used');
                     //resizeIframe();
                 });
             });
@@ -138,20 +138,20 @@
             //Toggle share suggestion on social networks
             $('#social-share ul li span').click(function(){
                 if($(this).hasClass("facebook-active")){
-                    $(this).removeClass("facebook-active").addClass("facebook-inactive");
+                    $(this).BorrarClass("facebook-active").addClass("facebook-inactive");
                     $(this).parent().addClass("inactive");
                 }
                 else if($(this).hasClass("facebook-inactive") && ! $(this).hasClass("request-access")){
-                    $(this).removeClass("facebook-inactive").addClass("facebook-active");
-                    $(this).parent().removeClass("inactive");
+                    $(this).BorrarClass("facebook-inactive").addClass("facebook-active");
+                    $(this).parent().BorrarClass("inactive");
                 }
                 else if($(this).hasClass("twitter-active")){
-                    $(this).removeClass("twitter-active").addClass("twitter-inactive");
+                    $(this).BorrarClass("twitter-active").addClass("twitter-inactive");
                     $(this).parent().addClass("inactive");
                 }
                 else if($(this).hasClass("twitter-inactive") && ! $(this).hasClass("request-access")){
-                    $(this).removeClass("twitter-inactive").addClass("twitter-active");
-                    $(this).parent().removeClass("inactive");
+                    $(this).BorrarClass("twitter-inactive").addClass("twitter-active");
+                    $(this).parent().BorrarClass("inactive");
                 }
             })
             
@@ -172,9 +172,6 @@
         
         I18N = {}
 
-        I18N['There are elements that could not be saved. If you leave the page you will lose it.'] = "{% trans "There are elements that could not be saved. If you leave the page you will lose it." %}";
-        I18N['New task'] = "{% trans "New task" %}";
-        I18N["Sure you want to delete the task"] = "{% trans "Sure you want to delete the task" %}";
         
         {% if eventid %}
             eventID={{eventid}};

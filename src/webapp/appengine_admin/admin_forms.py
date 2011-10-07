@@ -1,3 +1,4 @@
+# coding=utf-8
 import logging
 import pickle
 import copy
@@ -203,8 +204,8 @@ djangoforms.ReferenceProperty.get_value_for_form = _wrapped_get_value_for_form
 
 class ModelMultipleChoiceField(forms.MultipleChoiceField):
     default_error_messages = {
-        'invalid_choice': _(u'Please select a valid choice. '
-            u'That choice is not one of the available choices.'),
+        'invalid_choice': _(u'Por favor seleccione una opción válida. '
+            u'Esta opción no es una de las opciones disponibles.'),
     }
 
     def __init__(self, reference_class, query=None, choices=None,

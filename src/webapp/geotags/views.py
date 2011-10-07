@@ -9,7 +9,7 @@ from django.template import RequestContext
 from geouser.decorators import login_required
 
 
-def view_tag_suggestions(request, slug, page=1, query_id=None, template='webapp/view_tag.html'):
+def view_tag_suggestions(request, slug, page=1, query_id=None, template='generic/view_tag.html'):
     slug = slug.lower()
     from models import Tag
     tag = Tag.objects.get_by_name(slug)

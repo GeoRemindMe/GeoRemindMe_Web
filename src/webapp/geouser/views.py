@@ -59,9 +59,9 @@ def login(request):
             from funcs import login_func
             error, redirect = login_func(request, f.cleaned_data['email'], f.cleaned_data['password'], f.cleaned_data['remember_me'])
         else:
-            error = _("The email/password you entered is incorrect<br/>Please make sure your caps lock is off and try again")
+            error = _("El email/password que has introducido es incorrecto.<br/>Por favor asegúrate que no tienes las mayúsculas actividas e inténtalo de nuevo.")
         return error, redirect
-    return render_to_response('webapp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
+    return render_to_response('mainApp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
 
 
 def login_google(request):
@@ -171,7 +171,7 @@ def update_user(request):
 # DASHBOARD VIEW
 #===============================================================================
 @login_required
-def dashboard(request, template='webapp/dashboard.html'):
+def dashboard(request, template='generic/dashboard.html'):
     """**Descripción**: Permite actualizar el email y la contraseña.
         
         :return: Solo devuelve errores si el proceso falla.
@@ -231,7 +231,7 @@ def dashboard(request, template='webapp/dashboard.html'):
                                     'counters': user.counters,
                                     }
                                       )
-        return render_to_response('webapp/create_social_profile.html',
+        return render_to_response('generic/create_social_profile.html',
                                    {'form': f,
                                     'top_users': top_users_dict
                                     }, 
@@ -264,7 +264,7 @@ def dashboard(request, template='webapp/dashboard.html'):
                                )
 
 
-def public_profile(request, username, template='webapp/profile.html'):
+def public_profile(request, username, template='generic/profile.html'):
     """**Descripción**: Perfil publico que veran los demas usuarios
     
     :param username: nombre de usuario
@@ -334,7 +334,7 @@ def public_profile(request, username, template='webapp/profile.html'):
 
 
 @login_required
-def edit_profile (request, template='webapp/edit_profile.html'):
+def edit_profile (request, template='generic/edit_profile.html'):
     """**Descripción**: Edición del perfil publico que veran los demas usuarios
     
     :param username: nombre de usuario
@@ -361,7 +361,7 @@ def edit_profile (request, template='webapp/edit_profile.html'):
     return render_to_response(template, {'form': f}, context_instance=RequestContext(request))
 
 @login_required
-def profile_settings(request, template='webapp/settings.html'):
+def profile_settings(request, template='generic/settings.html'):
     counters = request.user.counters_async()
     has_twitter = True if request.user.twitter_user is not None else False
     has_google = True if request.user.google_user is not None else False
@@ -375,7 +375,7 @@ def profile_settings(request, template='webapp/settings.html'):
                                             context_instance=RequestContext(request)
                                 )
 @login_required    
-def edit_settings(request, template="webapp/edit_settings.html"):
+def edit_settings(request, template="generic/edit_settings.html"):
     from geouser.forms import UserSettingsForm
     if request.method == 'POST':
         f = UserSettingsForm(request.POST, prefix='user_set_settings')
@@ -401,7 +401,7 @@ def edit_settings(request, template="webapp/edit_settings.html"):
                                                     }, context_instance=RequestContext(request)
                                )
 
-def followers_panel(request, username, template='webapp/followers.html'):
+def followers_panel(request, username, template='generic/followers.html'):
     if request.user.is_authenticated() and username == request.user.username:
         followers=request.user.get_followers()
     else:
@@ -424,7 +424,7 @@ def followers_panel(request, username, template='webapp/followers.html'):
                                )
 
 
-def followings_panel(request, username, template='webapp/followings.html'):
+def followings_panel(request, username, template='generic/followings.html'):
     if request.user.is_authenticated() and username == request.user.username:
         followings=request.user.get_followings()
     else:
@@ -465,16 +465,16 @@ def confirm(request, user, code):
     if u is not None:
         if u.confirm_user(code):
             msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u.email
-            return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
+            return render_to_response('generic/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
         else:
             msg = _("Codigo de confirmacion incorrecto")
-            return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
+            return render_to_response('generic/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
     u = User.objects.get_by_email(email, keys_only=True)
     if u is not None:
         msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % email
     else:
         msg = _("Usuario erroneo %s.") % email
-    return render_to_response('webapp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
+    return render_to_response('generic/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
 
 
 #===============================================================================
@@ -491,15 +491,15 @@ def remind_user(request):
             from models import User
             user = User.objects.get_by_email(f.cleaned_data['email'])
             if user is None:
-                fail = _("Email doesn't exist")
+                fail = _("El correo no existe")
                 f._errors['email'] = f.error_class([fail])
             else:
                 user.send_remind_code()
-                msg = _("A confirmation mail has been sent to %s. Check mail") % user.email
-                return render_to_response('webapp/user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
+                msg = _("Se ha enviado un correo de confirmación a %s. Por favor revisa tu correo") % user.email
+                return render_to_response('generic/user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
     else:
         f = EmailForm(prefix='pass_remind')
-    return render_to_response('webapp/user_pass.html', {'form': f}, context_instance=RequestContext(request))
+    return render_to_response('generic/user_pass.html', {'form': f}, context_instance=RequestContext(request))
 
 
 def remind_user_code(request, user, code):
@@ -523,19 +523,19 @@ def remind_user_code(request, user, code):
                 f = RecoverPassForm(request.POST, prefix='pass_recover')
                 if f.is_valid():
                     user.reset_password(code, password=f.cleaned_data['password'])
-                    msg = _("Password changed, please log in.")
-                    return render_to_response('webapp/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
+                    msg = _("Contraseña cambiada, por favor identifíquese.")
+                    return render_to_response('generic/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
             else:
                 f = RecoverPassForm(prefix='pass_recover')
-                msg = _("Set your new password.")
-            return render_to_response('webapp/user_pass.html', {'form': f, 'msg': msg}, context_instance=RequestContext(request))
+                msg = _("Establece tu nueva contraseña.")
+            return render_to_response('generic/user_pass.html', {'form': f, 'msg': msg}, context_instance=RequestContext(request))
         except OutdatedCode, o:
             msg = _(o.message)
         except BadCode, i:
             msg = _(i.message)
     else:
-        msg = _('Invalid user')
-    return render_to_response('webapp/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
+        msg = _('Usuario inválido')
+    return render_to_response('generic/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
 
 
 @login_required
@@ -557,7 +557,7 @@ def get_contacts_google(request):
     except:
         return HttpResponseRedirect(reverse('geouser.views.get_perms_google'))
 
-    return render_to_response('webapp/contacts_google.html', {'contacts' : contacts, },
+    return render_to_response('generic/contacts_google.html', {'contacts' : contacts, },
                               context_instance=RequestContext(request))
 
 
@@ -609,14 +609,14 @@ def get_friends_twitter(request):
     except:
         return HttpResponseRedirect(reverse('geouser.views.login_twitter'))
     
-    return render_to_response('webapp/contacts_twitter.html', {'contacts' : contacts, },
+    return render_to_response('generic/contacts_twitter.html', {'contacts' : contacts, },
                               context_instance=RequestContext(request))
     
 #===============================================================================
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
 @login_required
-def notifications(request, template='webapp/notifications.html'):
+def notifications(request, template='generic/notifications.html'):
     timeline = request.user.get_notifications_timeline()
     # reset contador de notificaciones
     request.user.counters.set_notifications(-10)
@@ -649,7 +649,7 @@ def get_avatar(request, username):
 
 
 def close_window(request):
-    return render_to_response('webapp/close_window.html', {}, context_instance=RequestContext(request))
+    return render_to_response('generic/close_window.html', {}, context_instance=RequestContext(request))
 
 @admin_required
 def update(request):

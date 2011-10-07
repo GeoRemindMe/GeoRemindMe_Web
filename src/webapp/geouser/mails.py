@@ -81,7 +81,7 @@ def send_confirm_mail(to=None, confirm_code=None, language='en'):
 
 def send_remind_pass_mail(to=None, remind_code=None, language='en'):
     def generate_remind_pass_link(to, remind_code):
-        url = _(u'<a href="%s">Password reminder link</a>') % generate_remind_pass_url(to, remind_code)
+        url = _(u'<a href="%s">Enlace para recordar contraseña</a>') % generate_remind_pass_url(to, remind_code)
         return url
 
     def generate_remind_pass_url(to, confirm_code):
@@ -238,7 +238,7 @@ def send_notification_suggestion_comment(to, comment, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _(u"%(username)s commented in your suggestion: %(name)s at Georemindme") % 
+    message.subject = _(u"%(username)s ha comentado en tu sugerencia: %(name)s en Georemindme") % 
                                 {'username': comment.user, 
                                  'name': comment.instance.name
                                  }
