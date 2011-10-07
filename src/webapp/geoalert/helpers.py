@@ -388,7 +388,7 @@ class SuggestionHelper(EventHelper):
             ftclient = ftclient.OAuthFTClient()
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
             query = ftclient.query(sqlbuilder.SQL().select(__web_settings.FUSIONTABLES['TABLE_SUGGS'], cols=['sug_id'],
-                                                   condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s)) ORDER BY created DESC LIMIT 50' % (location, radius)
+                                                   condition = 'ST_INTERSECTS (location, CIRCLE(LATLNG (%s), %s)) ORDER BY relevance DESC LIMIT 50' % (location, radius)
                                                    )
                            )
             results = query.splitlines()
@@ -399,22 +399,20 @@ class SuggestionHelper(EventHelper):
                 sugs = [db.Key.from_path(self._klass.kind(), int(result)) for result in results] # construir todas las keys para consultar en bach
             except:
                 return []
-            from google.appengine.api import datastore
-            sugs = datastore.Get(sugs)
+            sugs = db.get(sugs)
             sugs = filter(None, sugs)
             if querier is not None and querier.is_authenticated():
-                sugs = filter(lambda x: x['user'] != querier.key(), sugs)
-            from georemindme.funcs import prefetch_refpropsEntity
-            prefetch = prefetch_refpropsEntity(sugs, 'user', 'poi')
-            from operator import itemgetter
-            sugs = sorted(sugs, key=itemgetter('modified'), reverse=True)
+                sugs = filter(lambda x: x.__class__.user.get_value_for_datastore(x) != querier.key(), sugs)
+            from georemindme.funcs import prefetch_refprops
+            prefetch_refprops(sugs, Suggestion.user, Suggestion.poi)
+            sugs = sorted(sugs, key=lambda x: x._calc_relevance(), reverse=True)
             sugs = [{'id': sug.key().id(),
-                     'slug': sug['slug'] if 'slug' in sug else None,
-                     'username': prefetch[sug['user']].username,
-                     'name': sug['name'] if 'name' in sug else None,
-                     'description': sug['description'] if 'description' in sug else None,
-                     'poi': {'lat': prefetch[sug['poi']].location.lat,
-                             'lon': prefetch[sug['poi']].location.lon,
+                     'slug': sug.slug,
+                     'username': sug.user.username,
+                     'name': sug.name,
+                     'description': sug.description,
+                     'poi': {'lat': sug.poi.location.lat,
+                             'lon': sug.poi.location.lon,
                              },
                      } 
                     for sug in sugs]

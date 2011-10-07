@@ -367,7 +367,7 @@ class Suggestion(Event, Visibility, Taggable):
                     if sugg._is_public():
                         if sugg.short_url is None:
                             sugg._get_short_url()
-                        msg = _("%(name)s %(url)s #grm") % {
+                        msg = "%(name)s %(url)s #grm" % {
                                                             'name': sugg.name[:105], 
                                                             'url': sugg.short_url
                                                             }
