@@ -74,6 +74,8 @@ def _get_all_suggs(cursor = None):
     if cursor is None:
         suggs = Suggestion.all().filter('_vis =', 'public').fetch(500)
         keys.extend(suggs)
+    else:
+        suggs = Suggestion.all().filter('_vis =', 'public').with_cursor(cursor).fetch(500)
     while len(suggs) == 500:
         keys.extend(suggs)
         q = Suggestion.all().filter('_vis =', 'public').filter('__key__ >', suggs[-1].key())
