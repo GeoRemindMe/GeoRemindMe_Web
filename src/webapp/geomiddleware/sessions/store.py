@@ -31,6 +31,10 @@ class SessionStore(object):
         self._session[key] = value
         self._modified = True
         
+    def __delitem__(self, key):
+        del self._session[key]
+        self._modified = True
+        
     def __contains__(self, key):
         return self._session.__contains__(key)
         try:

@@ -135,7 +135,7 @@ def _regenerate_sitemap():
         del chunk
 
 
-#@cron_required
+@cron_required
 def build_sitemap(request):
     # crear sitemap
     try:
