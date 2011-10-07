@@ -33,14 +33,22 @@ def send_contact_email(org,msg,to=settings.CONTACT_EMAIL, language='en'):
     message.to = to
     message.subject = "[GeoRemindMe] Email de contacto"
     message.body = _("""
-            %s
-            \n %s dejó el mensaje:\n"%s" 
-        """) % (str(datetime.datetime.now()),org,msg)
+            %(date)s
+            \n %(username)s dejó el mensaje:\n"%(message)s" 
+        """) % {
+                 'date': str(datetime.datetime.now()),
+                 'username': org,
+                 'message': msg
+                 }
     message.html = _("""
             <html><head></head><body>
-            %s<br/>%s dejó el mensaje:<br/>"%s" 
+            %(date)s<br/>%(username)s dejó el mensaje:<br/>"%(message)s" 
             </body></html>
-        """) % (str(datetime.datetime.now()),org,msg)
+        """) % {
+                 'date': str(datetime.datetime.now()),
+                 'username': org,
+                 'message': msg
+                 }
     translation.deactivate()
     message.push()
 
@@ -53,15 +61,23 @@ def send_keepuptodate(org,msg,to=settings.CONTACT_EMAIL, language='en'):
     message.to = to
     message.subject = "[GeoRemindMe] Keep up to date"
     message.body = _("""
-            %s
-            \n %s
-            \n %s
-        """)  % (str(datetime.datetime.now()),org,msg)
+            %(date)s
+            \n %(username)s
+            \n %(message)s
+        """)  % {
+                 'date': str(datetime.datetime.now()),
+                 'username': org,
+                 'message': msg
+                 }
     message.html = _("""
             <html><head></head><body>
-            %s<br/>%s<br/>%s"
+            %(date)s<br/>%(username)s<br/>%(message)s"
             </body></html>
-         """) % (str(datetime.datetime.now()),org,msg)
+         """) % {
+                 'date': str(datetime.datetime.now()),
+                 'username': org,
+                 'message': msg
+                 }
     translation.deactivate()
     message.push()
 

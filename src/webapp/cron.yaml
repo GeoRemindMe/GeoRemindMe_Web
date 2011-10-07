@@ -27,5 +27,9 @@ cron:
   url: /sitemap/build/
   schedule: every day 6:00
   target: version-live
- 
+  
+- description: daily suggestion relevance update job
+  url: /suggestions/cron/
+  schedule: every day 2:00
+  target: version-live
  
