@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load tags %}
 
-{% block title %}GeoRemindMe! - Registro{% endblock %}
+{% block title %}{%trans "GeoRemindMe! - Registro" %}{% endblock %}
 
 {% block mainButton %}{% endblock %}
 
@@ -136,69 +136,69 @@
 
 {% block body %}
     <div id="social-profile">
-        <h1>¡Genial ya estás dentro!</h1>
+        <h1>{%trans "¡Genial ya estás dentro!" %}</h1>
         
         <div id="step-one"> 
-            <h2>Paso 1 de 2: Elige tu nombre de usuario</h2>
+            <h2>{%trans "Paso 1 de 2: Elige tu nombre de usuario" %}</h2>
             <hr>
             {% include "forms/SocialUserForm.html" %}
 
             <div class="footer-notes clear">
-                <sup>(*)</sup> Una vez elegido el nombre de usuario, este se utilizará para crear tu perfil público .
+                <sup>(*)</sup> {%trans "Una vez elegido el nombre de usuario, este se utilizará para crear tu perfil público ." %}
             </div>
         </div>
         <div id="step-two" style="display:none">
 
-            <h2>Paso 2 de 2: Siguiento a personas de tu interés recibirás más y mejores sugerencias</h2>
+            <h2>{%trans "Paso 2 de 2: Siguiento a personas de tu interés recibirás más y mejores sugerencias" %}</h2>
 
             <hr>
             <p>
-                <strong>Usuarios de GeoRemindMe! a los que podrías conocer:</strong>
+                <strong>{%trans "Usuarios de GeoRemindMe! a los que podrías conocer:" %}</strong>
             </p>
             <ul id="known-contacts" style="display:none">
             </ul>
             <div>
-                <p>Buscar ahora entre mis contactos de:</p>
+                <p>{%trans "Buscar ahora entre mis contactos de:" %}</p>
                 <ul id="link-social-accounts">
                 {% if not user.has_perms_twitter %}
-                    <li id="twitter"><a href="/login/twitter/?cls" class="hoverlink" target="_blank" title="Buscar ahora  entre las personas que sigo"><span>Twitter</span></a></li>
+                    <li id="twitter"><a href="/login/twitter/?cls" class="hoverlink" target="_blank" title="{%trans "Buscar ahora  entre las personas que sigo" %}"><span>{%trans "Twitter" %}</span></a></li>
                 {% else %}
-                    <li id="twitter"><span>Twitter</span></li>
+                    <li id="twitter"><span>{%trans "Twitter" %}</span></li>
                 {% endif %}
                 {% if not user.facebook_user %}
-                    <li id="facebook"><a href="/login/facebook/?cls" class="hoverlink" target="_blank" title="Buscar ahora entre mis amigos"><span>Facebook</span></a></li>
+                    <li id="facebook"><a href="/login/facebook/?cls" class="hoverlink" target="_blank" title="{%trans "Buscar ahora entre mis amigos" %}"><span>{%trans "Facebook" %}</span></a></li>
                 {% else %}
-                    <li id="facebook"><span>Facebook</span></li>    
+                    <li id="facebook"><span>{%trans "Facebook" %}</span></li>    
                 {% endif %}
                 {% if not user.has_perms_google %}
-                    <li id="google"><a href="/login/google/?cls" class="hoverlink" target="_blank" title="Buscar ahora entre mis contactos"><span>Google</span></a></li>
+                    <li id="google"><a href="/login/google/?cls" class="hoverlink" target="_blank" title="{%trans "Buscar ahora entre mis contactos" %}"><span>{%trans "Google" %}</span></a></li>
                 {% else %}
-                    <li id="google"><span>Google</span></li>
+                    <li id="google"><span>{%trans "Google" %}</span></li>
 
                 {% endif %}
                 </ul>
 
             </div>
             <div class="footer-notes clear">
-                <strong class="show-more" onclick="javascript:toggle_showMore()">[Ver más]</strong>
+                <strong class="show-more" onclick="javascript:toggle_showMore()">{%trans "[Ver más]" %}</strong>
                 <p>
-                    En ningún momento enviaremos ningún correo electrónico a tus contactos sin tu permiso. <span id="show-more-text"><br>
+                    {%trans "En ningún momento enviaremos ningún correo electrónico a tus contactos sin tu permiso. <span id="show-more-text"><br>
                     Al igual que tú también hemos pasado por otras páginas sin ningún permiso que envían correos a nuestros contactos; pero nosotros no somos así, somos buena gente ;D. 
                 
                     <br><strong>Tan solo queremos ofrecerte una herramienta con todas las comodidades.</strong><br>
                 
-                    Un saludo y gracias por confiar en <a href="http://georemindme.com/team" target="_blank">nuestro equipo</a>.
+                    Un saludo y gracias por confiar en <a href="http://georemindme.com/team" target="_blank">nuestro equipo</a>." %}
                 
                 </span>
                 </p>
             </div>
             <div style="margin: 1.5em 0pt 0.7em; padding-top: 1em; height: 34px;" class="clear">
-                <span class="btn left clear" id="first-step">Volver al "Paso 1"</span>
-                <span class="btn finish-register">Terminar</span>
+                <span class="btn left clear" id="first-step">{%trans "Volver al "Paso 1"" %}</span>
+                <span class="btn finish-register">{%trans "Terminar" %}</span>
             </div>
             <hr>
             <p>
-                <strong>Usuarios más activos:</strong>
+                <strong>{%trans "Usuarios más activos:" %}</strong>
             </p>
             {% if top_users %}
                 <ul id="suggested-contacts">
@@ -208,12 +208,12 @@
 
                                 <a href="{% url2 in_facebook public_profile obj.username %}"><img src="/user/{{obj.username}}/picture/" alt="{{obj.username}}"></a>
                                 <div id="following_state_{{ obj.id }}" class="left">
-                                    <span  onclick="javascript:follow('follow',{{obj.id}})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                                    <span  onclick="javascript:follow('follow',{{obj.id}})"><a href="javascript:void(0)" class="no-following">{%trans "Seguir" %}</a></span>
                                 </div>
-                                <span class="btn preview-suggestions {% if forloop.first %}pressed{% endif %} left">Ver sugerencias</span>
+                                <span class="btn preview-suggestions {% if forloop.first %}pressed{% endif %} left">{%trans "Ver sugerencias" %}</span>
                                 
                                 <div class="suggestions" style="display:none">
-                                    <a href="{% url2 in_facebook public_profile obj.username %}"><span class="btn right">Ver perfil completo</span></a>
+                                    <a href="{% url2 in_facebook public_profile obj.username %}"><span class="btn right">{%trans "Ver perfil completo" %}</span></a>
                                     <a href="{% url2 in_facebook public_profile obj.username %}"><img src="{% embedded_avatar obj.username %}" alt="{{obj.username}}"></a>
                                     <a href="{% url2 in_facebook public_profile obj.username %}">{{obj.username}}</a><br>
                                     Sugerencias: {{obj.counters.suggested}}, seguidores: {{obj.counters.followers}}
@@ -234,8 +234,8 @@
                 </div>
             {% endif %}
             <hr>
-            <span class="btn left clear" id="first-step">Volver al "Paso 1"</span>
-            <span class="btn finish-register">Terminar</span>
+            <span class="btn left clear" id="first-step">{%trans "Volver al "Paso 1"" %}</span>
+            <span class="btn finish-register">{%trans "Terminar" %}</span>
         </div>
     </div>
     
@@ -245,7 +245,7 @@
             <span class="username"><a href="../user/${obj.username}/">${obj.username}</a></span>
             <span class="follow">
                 <div id="following_state_${obj.id}">
-                    <span onclick="javascript:follow('follow',${obj.id})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>
+                    <span onclick="javascript:follow('follow',${obj.id})"><a href="javascript:void(0)" class="no-following">{%trans "Seguir" %}</a></span>
                 </div>
             </span>
         </li>

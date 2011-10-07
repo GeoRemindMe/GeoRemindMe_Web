@@ -37,7 +37,7 @@
                                         //console.log(data);
                                         if(data[networks[i]]){
                                             //console.log(networks[i]);
-                                            showMessage("¡Genial! ya puedes empezar a disfrutar de todas las ventajas","success");
+                                            showMessage(I18N["¡Genial! ya puedes empezar a disfrutar de todas las ventajas"],"success");
                                             $('li[data-network='+networks[i]+']').removeClass('inactive')
                                             $('li[data-network='+networks[i]+'] span').removeClass(''+networks[i]+'-inactive').addClass(''+networks[i]+'-active')
                                             $('li[data-network='+networks[i]+']').removeClass('inactive')
@@ -69,11 +69,6 @@
             helpUser();
         });
         
-        I18N = {}
-
-        I18N['There are elements that could not be saved. If you leave the page you will lose it.'] = "{% trans "There are elements that could not be saved. If you leave the page you will lose it." %}";
-        I18N['New task'] = "{% trans "New task" %}";
-        I18N["Sure you want to delete the task"] = "{% trans "Sure you want to delete the task" %}";
         
         {% if eventid %}
             eventID={{eventid}};
@@ -118,33 +113,30 @@
     
 {%endblock%}
 
-{% block title %}Add new suggestion{% endblock %}
+{% block title %}{%trans "Añadir nueva sugerencia" %}{% endblock %}
 
 {% block goBack %}{%endblock%}    
 {% block body %}
     <div id="add-suggestion">
-<!--
-        <h1>Añadir una sugerencia</h1> 
--->
         {% include "forms/SuggestionForm.html" %}
     </div>
     
     <div id="details-toolbox" style="display:none">
-		<p>Haciendo clic aquí podrás añadir <strong>información adicional</strong> a tu sugerencia.</p>
+		<p>{%trans "Haciendo clic aquí podrás añadir <strong>información adicional</strong> a tu sugerencia." %}</p>
 	</div>
     <div id="socialNetworks-toolbox" style="display:none">
 		<p>
-            Cuando creas una sugerencia se <strong>comparte a través de tus redes sociales</strong>.
+            {%trans "Cuando creas una sugerencia se <strong>comparte a través de tus redes sociales</strong>." %}
         </p>
         <p>
-            Puedes desactivarlo haciendo clic sobre el icono correspondiente.
+            {%trans "Puedes desactivarlo haciendo clic sobre el icono correspondiente." %}
         </p>
 	</div>
     <div id="share-toolbox" style="display:none">
 		<p>
-            Puedes <strong>cambiar la visilibilidad</strong> de tu sugerencia.
+            {%trans "Puedes <strong>cambiar la visilibilidad</strong> de tu sugerencia." %}
         </p>
-        <p>- Si marcas como pública una sugerencia cualquier persona podrá verla en tu perfil</p>
-        <p>- Si la marcas como privada solo podrás verla tú.</p>
+        <p>{%trans "- Si marcas como pública una sugerencia cualquier persona podrá verla en tu perfil" %}</p>
+        <p>{%trans "- Si la marcas como privada solo podrás verla tú." %}</p>
 	</div>
 {%endblock%}

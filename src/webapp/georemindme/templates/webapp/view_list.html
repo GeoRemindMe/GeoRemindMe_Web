@@ -56,10 +56,10 @@
                                     //console.log(data);
                                     //asd=$(this);
                                     if(data==false){
-                                        showMessage("¡Vaya! La propuesta ya ha sido realizada previamente o está en la lista.","error");
+                                        showMessage(I18N["¡Vaya! La propuesta ya ha sido realizada previamente o está en la lista."],"error");
                                     }else{
                                         elem.addClass("strong");
-                                        showMessage("¡Gracias! La propuesta ha sido enviada exitósamente","success");
+                                        showMessage(I18N["¡Gracias! La propuesta ha sido enviada exitósamente"],"success");
                                     }
                                 }
                             });
@@ -73,16 +73,13 @@
             })
             
             $("#suggest_suggestion_menu .dropDownBtn").hoverIntent(hiConfig);
-            
-			//$('#list-description').html($('#list-description').html().replace(/none/ig, "<em>Sin descripción</em>"))
-            
         });
         
         
 	</script>
 {%endblock%}
 
-{% block title %}Sugerencias: "{{list}}"{% endblock %}
+{% block title %}{% trans "Sugerencias:" %} "{{list}}"{% endblock %}
 
 {% block goBack %}{%endblock%}    
 {% block body %}
@@ -93,31 +90,31 @@
 	
 	<div id="list-box" class="clear">
         <p class="clear-left big lists-title">
-            <strong>Lista: "{{list}}"</strong></p>
+            <strong>{% trans "Lista:" %} "{{list}}"</strong></p>
             <div id="suggestion-info">
                 {% if list.description %}
-                    <p>Descripción: <span id="list-description">{{list.description}}</span></p>
+                    <p>{% trans "Descripción:" %} <span id="list-description">{{list.description}}</span></p>
                 {% endif %}
                 <ul>
                     <li id="owner"><img src="{% embedded_avatar list.user.username %}" alt="{{list.user.username}}"> <a href="{% url2 in_facebook public_profile list.user %}" title="{{list.user}}" class="black-link">Autor: {{list.user}}</a></li>
-                    <li class="suggestionx16">Sugerencias: {{suggestions|length}}</li>
-                    <li class="saved">Veces guardada: <span id="followers-counter">{{list.counters.followers}}</span></li>
+                    <li class="suggestionx16">{% trans "Sugerencias:" %} {{suggestions|length}}</li>
+                    <li class="saved">{% trans "Veces guardada:" %} <span id="followers-counter">{{list.counters.followers}}</span></li>
                     {% if list.tags %}
-                        <li>Etiquetas: {{list.tags}}</li>
+                        <li>{% trans "Etiquetas:" %} {{list.tags}}</li>
                     {% endif %}
                 </ul>
                 <div class="clear" id="action-bar">
                     <ul>
-                        <li id="print-icon"><a href="?print" target="_blank"  class="hoverlink">Imprimir</a></li>
+                        <li id="print-icon"><a href="?print" target="_blank"  class="hoverlink">{% trans "Imprimir" %}</a></li>
                         {% if list.user.username != request.user.username and request.user.is_authenticated %}
                             <li>
                                 <span class="remember-forget-list hoverlink saved" value="{{list.id}}" type="list" {%if user_follower%}remember="true"{%endif%}>
-                                    <span class="remember" title="Guardar en favoritos">Guardar</span>
-                                    <span class="forget" title="Puedes consultar tus favoritos en 'Tu mochila'">Guardada</span>
+                                    <span class="remember" title="Guardar en favoritos">{% trans "Guardar" %}</span>
+                                    <span class="forget" title="Puedes consultar tus favoritos en 'Tu mochila'">{% trans "Guardada" %}</span>
                                 </span>
                             </li>
                             <li id="suggest_suggestion"  value="{{list.id}}">
-                                <span class="hoverlink">Proponer sugerencia</span>
+                                <span class="hoverlink">{% trans "Proponer sugerencia" %}</span>
                                 <div id="suggest_suggestion_menu" style="visibility:hidden" value="{{list.id}}" class="right">
                                         <span class="btn dropDownBtn">
                                             <span class="save-at">---------</span>
@@ -129,7 +126,7 @@
                             </li>
                         {% else %}
                             {% if list.user.username == request.user.username %}
-                                <li><a href="{% url2 in_facebook user_suggestions %}" class="hoverlink">Editar desde la mochila</a></li>
+                                <li><a href="{% url2 in_facebook user_suggestions %}" class="hoverlink">{% trans "Editar desde la mochila" %}</a></li>
                             {% endif %}
                         {% endif %}
                     </ul>
@@ -148,32 +145,23 @@
 
                         <span class="msg"><a href="{% url2 in_facebook view_suggestion obj.instance.slug %}" class="hoverlink">{{obj.instance.name}}</a></span>
                         {% if obj.instance.poi.slug %}
-                            <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.poi.slug %}" class="dark-link">{{obj.instance.poi.name}}</a></span>
-    <!--
-                            <br>
-    -->
+                            <span class="suggestionPlace">{% trans 'En' %} <a href="{% url2 in_facebook view_place obj.instance.poi.slug %}" class="dark-link">{{obj.instance.poi.name}}</a></span>
                         {% endif %}
-    <!--
-                        <span class="timestamp">{{obj.instance.created|naturaltime}} </span> 
-    -->
                         <span class="action-bar" style="display:none">
 
                             {% if obj.instance.user.username != request.user.username %}
                                 &nbsp;- 
                                 <span class="like-dislike hoverlink" value="{{obj.instance.id}}" {% if obj.has_voted %}like="true"{%endif%} type="suggestion">
                                     <span class="dislike hoverlink">
-                                        <span>Ya no me gusta</span> 
-    <!--
-                                        <span class="text like-text increase">{{obj.vote_counter}}</span> personas
-    -->
+                                        <span>{% trans "Ya no me gusta" %}</span> 
                                     </span>
                                     
                                     <span class="like">
-                                        Me gusta
+                                        {% trans "Me gusta" %}
                                     </span>
                                 </span>
                                 
-                                | <span title="Guardar en favoritos"  class="remember-forget hoverlink" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">Guardar</span><span class="forget">Guardada</span></span>
+                                | <span title="{% trans "Guardar en favoritos" %}"  class="remember-forget hoverlink" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">{% trans "Guardar" %}</span><span class="forget">{% trans "Guardada" %}</span></span>
                             {% endif %}
                         </span>
                             
@@ -186,7 +174,7 @@
     
 	{% if top_comments %}
 		<div id="popular-box" class="clear">
-            <p class="popular">Los comentarios más populares</p>
+            <p class="popular">{% trans "Los comentarios más populares" %}</p>
             <ul class="comments">
             {% for c in top_comments %}
                 <li class="comment-element">
@@ -204,12 +192,12 @@
                                 &nbsp;- 
                                 <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
                                     <span class="dislike">
-                                        <span class="hoverlink">Ya no me gusta</span> 
+                                        <span class="hoverlink">{% trans "Ya no me gusta" %}</span> 
                                         
                                     </span>
                                     
                                     <span class="like">
-                                        <span class="hoverlink">Me gusta</span> 
+                                        <span class="hoverlink">{% trans "Me gusta" %}</span> 
                                     </span>
                                 </span>
                             </span>
@@ -222,12 +210,12 @@
         </div>
     {% endif %}
 	
-	<h2>¿Tienes algún comentario?</h2>
+	<h2>{% trans "¿Tienes algún comentario?" %}</h2>
     <textarea id="msg"></textarea>
-    <span class="btn" onclick="sendComment(this,'list',{{list.id}});">Comentar</span>
+    <span class="btn" onclick="sendComment(this,'list',{{list.id}});">{% trans "Comentar" %}</span>
 	
     {% if comments.1 %}
-		<h2>Comentarios</h2>
+		<h2>{% trans "Comentarios" %}</h2>
     	<ul class="comments" id="comment-list">
         {% for c in comments.1 %}
             <li class="suggestion-element" {% if forloop.last %}style="border-bottom:1px dotted #BBBBBB"{% endif %}>
@@ -246,12 +234,12 @@
 							&nbsp;- 
 							<span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
 								<span class="dislike">
-									<span class="hoverlink">Ya no me gusta</span> 
+									<span class="hoverlink">{% trans "Ya no me gusta" %}</span> 
 									
 								</span>
 								
 								<span class="like">
-									<span class="hoverlink">Me gusta</span> 
+									<span class="hoverlink">{% trans "Me gusta" %}</span> 
 								</span>
 							</span>
 						</span>
@@ -268,7 +256,7 @@
 	{% if request.user.is_authenticated %}
         <script id="commentTemplate" type="text/x-jquery-tmpl">
             <li>
-                <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
+                <div class="removable" value="${id}" type="comment"><a href="#">{% trans "Remove" %}</a></div>
                 <span class="user">
                     <img class="user-picture" src="{% embedded_avatar user.username %}" alt="user avatar">
                 </span>
@@ -278,7 +266,7 @@
                         ${msg}
                     </span>
                 
-                    <span class="timestamp">0 minutes ago</span>
+                    <span class="timestamp">{% trans "0 minutes ago" %}</span>
                 </div>
 
             </li>

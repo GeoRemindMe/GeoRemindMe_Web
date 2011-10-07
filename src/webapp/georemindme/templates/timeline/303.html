@@ -1,5 +1,5 @@
 {% load tags %}
-
+{% load i18n %}
 {% comment %} 
     Mensaje nº 303
     303: Empiezas a seguir a una sugerencia
@@ -17,7 +17,7 @@
         </div>
         <div class="timeline-msg">
             <span class="timeline-icon">&nbsp;</span>
-            Has guardado en <a href="{% url in_facebook user_suggestions%}">tu baúl</a> la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">{{obj.instance.user.username}}</a>:<br>
+            {% trans 'Has guardado en <a href="{% url in_facebook user_suggestions%}">tu baúl</a> la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">{{obj.instance.user.username}}</a>:' %}<br>
             <a href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a><br>
             <span class="timestamp">  {{obj.created|naturaltime}}</span>  
         </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="timeline-msg">
             <span class="timeline-icon">&nbsp;</span>
-            <a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> ha guardado en su baúl tu sugerencia :<br>
+            {% trans '<a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> ha guardado en su baúl tu sugerencia :' %}<br>
             <a href="{% url2 in_facebook view_suggestion obj.instance.slug %}" class="hoverlink">{{obj.instance.name}}</a><br>
             <span class="timestamp">  {{obj.created|naturaltime}}</span>  
         </div>

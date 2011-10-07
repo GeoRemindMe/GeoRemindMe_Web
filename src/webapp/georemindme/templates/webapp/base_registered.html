@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Expires" content="0">
 	<title>
-      {% block title %}GeoRemindMe! un mundo entero de sugerencias por descubrir{% endblock %}
+      {% block title %}{%trans "GeoRemindMe! un mundo entero de sugerencias por descubrir" %}{% endblock %}
     </title>
        
     <!-- URLs from Django to a Global var in JS -->
@@ -67,12 +67,12 @@
 		
         <div id="nav-menu">
 			{% if user.username %}
-				<a href="{% url add_suggestion %}" id="add-suggestion-btn"><img src="/static/common/img/transparent.gif">Añadir sugerencia</a>
+				<a href="{% url add_suggestion %}" id="add-suggestion-btn"><img src="/static/common/img/transparent.gif">{%trans "Añadir sugerencia" %}</a>
 				{% block nav %}
 					<ul class="lavaLamp">
-						<li class="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">Actividad</a></li>
-						<li class="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">Tu mochila</a></li>
-						<li class="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">{% if notifications > 0 %}<strong><u>Notificaciones</u></strong>{% else %}Notificaciones{%endif%}</a></li>
+						<li class="{% active request dashboard %}"><a id="activity-icon" href="{% url dashboard %}" title="Dashboard">{%trans "Actividad" %}</a></li>
+						<li class="{% active request user_suggestions %}"><a id="vault-icon" href="{% url user_suggestions %}">{%trans "Tu mochila" %}</a></li>
+						<li class="{% active request notifications_section %}"><a id="notifications-icon" href="{% url notifications %}">{% if notifications > 0 %}<strong><u>{%trans "Notificaciones" %}</u></strong>{% else %}{%trans "Notificaciones" %}{%endif%}</a></li>
 
 					</ul>
 				{% endblock %}
@@ -85,15 +85,15 @@
                     <a href="{% url public_profile request.user.username %}">
                     <img src="{% embedded_avatar request.user.username %}" alt=""></a><span>.</span>
                     <ul class="user-submenu" style="display:none" id="dropdown-list-user">
-                        <li><a href="{% url public_profile user.username %}">Mi perfil</a></li>
-                        <li><a href="{% url profile_settings %}">Configuración</a></li>
-                        <li><a href="{% url logout %}">Desconectar</a></li>
+                        <li><a href="{% url public_profile user.username %}">{%trans "Mi perfil" %}</a></li>
+                        <li><a href="{% url profile_settings %}">{%trans "Configuración" %}</a></li>
+                        <li><a href="{% url logout %}">{%trans "Desconectar" %}</a></li>
                     </ul>
                 </div>			
             </div>
         {% else %}
 			<div id="account-info">
-				<a href="/logout/" id="create-profile-out" class="btn">Desconectar</a>
+				<a href="/logout/" id="create-profile-out" class="btn">{%trans "Desconectar" %}</a>
 			</div>
         {% endif %}
 	</header>
