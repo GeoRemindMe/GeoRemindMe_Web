@@ -61,6 +61,8 @@ def login(request):
         else:
             error = _("The email/password you entered is incorrect<br/>Please make sure your caps lock is off and try again")
         return error, redirect
+    if '/m/' in request.PATH:
+        return render_to_response('mobile/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
     return render_to_response('webapp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
 
 
