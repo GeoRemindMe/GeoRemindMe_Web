@@ -4,3 +4,6 @@ Disallow: /login/
 Disallow: /oauth/
 Disallow: /blog/
 Disallow: /ajax/
+Disallow: /remind/
+Disallow: /search/
+
