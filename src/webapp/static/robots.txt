@@ -1,2 +1,6 @@
 User-agent: *
-Disallow: /static
+Disallow: /static/
+Disallow: /login/
+Disallow: /oauth/
+Disallow: /blog/
+Disallow: /ajax/
