@@ -183,10 +183,9 @@ def send_notification_suggestion_follower(to, suggestion, user, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _(u"%(username)s ha guardado tu sugerencia: \"%(name)s\" en GeoRemindMe!") % 
-                                        {'username': user,
-                                         'name': suggestion.name
-                                         }
+    message.subject = _(u"%(username)s ha guardado tu sugerencia: %(name)s en GeoRemindMe!") %  {'username': user,
+                                                                                                 'name': suggestion.name
+                                                                                                 }
     message.body = _(u"""
         El usuario %s(username)s ha guardado tu sugerencia '%(suggestion)s' en su mochila para no olvidarse de hacerla
         y poder compartirla con otros usuarios.\n
@@ -238,10 +237,7 @@ def send_notification_suggestion_comment(to, comment, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _(u"%(username)s ha comentado en tu sugerencia: %(name)s en Georemindme") % 
-                                {'username': comment.user, 
-                                 'name': comment.instance.name
-                                 }
+    message.subject = _(u"%(username)s commented in your suggestion: %(name)s at Georemindme") % {'username': comment.user, 'name': comment.instance.name}
     message.body = _(u"""
         El usuario %s(username)s ha hecho el siguiente comentario en tu sugerencia '%(suggestion)s':
         %(msg)s\n
