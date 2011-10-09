@@ -497,14 +497,16 @@ class UserTimeline(UserTimelineBase, Visibility):
             return True
     
     @classmethod
-    def add_to_follower(self, user, follower, limit=10):
-        timeline = UserTimeline.all(keys_only=True).filter('user =', user.key()).filter('_vis =', 'public').order('-modified').fetch(limit)
+    def add_timelines_to_follower(cls, user_key, follower_key, limit=10):
+        timeline = UserTimeline.all(keys_only=True).filter('user =', user_key).filter('_vis =', 'public').order('-modified').fetch(limit)
         indexes_to_save = []
         for t in timeline:
-            if UserTimelineFollowersIndex.all(keys_only=True).ancestor(t).filter('followers =', follower.key()).get() is not None:
+            if UserTimelineFollowersIndex.all(keys_only=True).ancestor(t).filter('followers =', follower_key).get() is not None:
                 continue # ya esta el usuario como seguidor del timeline
-            index = UserTimelineFollowersIndex.all().ancestor(self.key()).order('-created').get()
-            index.followers.append(follower.key())
+            index = UserTimelineFollowersIndex.all().ancestor(t).order('-created').get()
+            if index is None:  # no existen indices o hemos alcanzado el maximo
+                index = UserTimelineFollowersIndex(parent=t)
+            index.followers.append(follower_key)
             indexes_to_save.append(index)
         db.put(indexes_to_save)
         return True
