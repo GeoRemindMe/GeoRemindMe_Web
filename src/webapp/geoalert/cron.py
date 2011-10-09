@@ -25,3 +25,4 @@ def cron_suggestions(request, cursor=None):
             logging.error('ERROR FUSIONTABLES RELEVANCE: %s' % e)
     return HttpResponse()
         
+

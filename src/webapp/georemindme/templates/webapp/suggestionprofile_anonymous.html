@@ -6,6 +6,7 @@
 
 {% block title %}{{suggestion.name}}{% endblock %}
 {% block extra_js %}
+   
     <script type="text/javascript">
         <!-- Definimos la variable global necesaria para pedir las fotos a Panoramio -->    
         latlngStr = "{{suggestion.poi.location}}".split(",",2);
@@ -32,22 +33,25 @@
 <!--
                 <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/>
 -->
-                <a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> sugiere:
+                <a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> {%trans "sugiere:" %}
+                {%comment%}
                 <span id="suggestion-vote-counter">
-                        <span class="none" {% if suggestion.counters.votes > 0%}style="display:none"{%endif%}>Aún no ha recibido valoraciones</span>
-                        <span class="votes-msg" {% if suggestion.counters.votes = 0%}style="display:none"{%endif%}>Valoraciones recibidas: <span id="vote-counter">{{suggestion.counters.votes}}</span></span>
+                        <span class="none" {% if suggestion.counters.votes > 0%}style="display:none"{%endif%}>{%trans "Aún no ha recibido valoraciones" %}</span>
+                        <span class="votes-msg" {% if suggestion.counters.votes = 0%}style="display:none"{%endif%}>{%trans "Valoraciones recibidas:" %} <span id="vote-counter">{{suggestion.counters.votes}}</span></span>
                 </span>
+                {%endcomment%}
                 
                 <br>
                 {{suggestion.name}}
             </h1>
             {% if suggestion.description %}
-                <p class="more-info"><strong>Instrucciones/explicación</strong>: <br>{{suggestion.description|urlize|twitterize|linebreaksbr}} </p>
+                <p class="more-info"><strong>{%trans "Instrucciones/explicación" %}</strong>: <br>{{suggestion.description|urlize|twitterize|linebreaksbr}} </p>
+
             {% endif %}
             
             {% if suggestion.date_starts or suggestion.date_ends %}
             <p class="more-info">
-                    <strong>Fecha</strong>: 
+                    <strong>{%trans "Fecha" %}</strong>: 
                     [25/04/2011 al 30/05/2011]<br>
                 
             </p>
@@ -57,10 +61,10 @@
                 
             
             <p id="in-lists" class="more-info">
-                <strong>Listas en las que aparece</strong>:
+                <strong>{%trans "Listas en las que aparece" %}</strong>:
                 
                 
-                <span class="no-lists" {% if in_lists %}style="display:none"{% endif %}> esta sugerencia aún no se encuentra en ninguna lista.</span>
+                <span class="no-lists" {% if in_lists %}style="display:none"{% endif %}> {%trans "esta sugerencia aún no se encuentra en ninguna lista." %}</span>
                 
                 <span id="list-lists">
                 {% for obj in in_lists %}
@@ -74,7 +78,7 @@
             
             
             {% if suggestion.tags %}
-                <p id="tag-list-label"><strong>Palabras clave</strong>:</p> 
+                <p id="tag-list-label"><strong>{%trans "Palabras clave" %}</strong>:</p> 
                 <ul id="tag-list">
                 {% for tag in suggestion.tags %}
                     <li>
@@ -97,9 +101,9 @@
             <hr>
             <div class="address">
                 <p>
-                    <strong>Lugar</strong>: <a href="{% url2 in_facebook view_place suggestion.poi.slug %}" class="hoverlink">{{suggestion.poi.name}}</a>
+                    <strong>{%trans "Lugar" %}</strong>: <a href="{% url2 in_facebook view_place suggestion.poi.slug %}" class="hoverlink">{{suggestion.poi.name}}</a>
                     -
-                    <strong>Dirección</strong>:
+                    <strong>{%trans "Dirección" %}</strong>:
                     <a href="http://maps.google.com/maps?q={{suggestion.poi.address}}&t=h&z=16" class="dark-link" target="_blank">{{suggestion.poi.address}}</a>
                     
                 </p>
@@ -119,31 +123,31 @@
 			
 			<a title="Más detalles sobre: {{suggestion.poi.name}}" href="{% url2 in_facebook view_place suggestion.poi.slug %}">
 					<img src="http://maps.googleapis.com/maps/api/staticmap?center={{suggestion.poi.location}}&zoom=14&size=210x150&maptype=roadmap
-&markers=color:blue%7Clabel:S%7C{{suggestion.poi.location}}&sensor=false">
+&markers=color:red%7C{{suggestion.poi.location}}&sensor=false">
             </a>
             
-            <div><strong>Fotos de la zona :</strong><span id="panoramio-tos"></span></div>
+            <div><strong>{%trans "Fotos de la zona :" %}</strong><span id="panoramio-tos"></span></div>
             
 			<hr>
             
             <ul id="action-bar">
-                <li id="print-icon"><a href="?print" target="_blank" class="hoverlink"><img src="/static/common/img/transparent.gif"> Imprimir</a></li>
+                <li id="print-icon"><a href="?print" target="_blank" class="hoverlink"><img src="/static/common/img/transparent.gif"> {%trans "Imprimir" %}</a></li>
                 {% if request.user.username %}
                     <li id="add-to-list" value="{{suggestion.id}}">
-                        <span class="hoverlink" onclick="javascript:$('#add-to-list .dropDownBtn').show();"><img src="/static/common/img/transparent.gif"> Añadir a una lista </span>
+                        <span class="hoverlink" onclick="javascript:$('#add-to-list .dropDownBtn').show();"><img src="/static/common/img/transparent.gif"> {%trans "Añadir a una lista" %} </span>
                         <span class="btn dropDownBtn" style="display:none">
                             <span class="save-at">---------</span>
                             <ul class="submenu" style="display:none" id="dropdown-list">
                                 {% if lists %}
                                     {% for obj in lists %}
                                             <!-- Solo se muestran mis listas -->
-                                            <li value="{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
+                                            <li value="{{obj.id}}"><span class="checkbox name">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> {%trans "sugerencias" %})</li>
 
                                     {% endfor %}
                                 {% endif %}
                                 <li class="new-list-btn">
-                                    <span id="text">Nueva lista...</span>
-                                    <span class="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">Cancel</div>
+                                    <span id="text">{%trans "Nueva lista..." %}</span>
+                                    <span class="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">{%trans "Cancel" %}</div>
                                 </li>
                             </ul>
                         </span>
@@ -152,13 +156,13 @@
                     {% if user.username and suggestion.user.username != user.username %}
                     <li>
                         <span class="btn likeBtn" id="save-btn">
-                            <span title="Guardar en favoritos"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if user_follower%}remember="true"{%endif%}>
+                            <span title="{%trans "Guardar en favoritos" %}"  class="remember-forget" value="{{suggestion.id}}" type="suggestion" {%if user_follower%}remember="true"{%endif%}>
                                 <img src="/static/common/img/transparent.gif">
                                 <span class="remember hoverlink" {%if user_follower%}style="display:none"{%endif%}>
-                                    Guardar
+                                    {%trans "Guardar" %}
                                 </span>
                                 <span class="forget hoverlink" {%if not user_follower%}style="display:none"{%endif%}>
-                                    Guardada
+                                    {%trans "Guardada" %}
                                 </span>
                             </span>
                         </span>
@@ -167,12 +171,12 @@
                         <span class="likeBtn btn">
                             <span class="like-dislike-suggestion likex16" value="{{suggestion.id}}" {% if has_voted %}like="true"{%endif%} type="suggestion">
                                 <img src="/static/common/img/transparent.gif">
-                                <span class="dislike">
-                                    <span class="text hoverlink" {% if not has_voted %}style="display:none"{%endif%}>Ya no me gusta</span> 
+                                <span class="dislike" {% if not has_voted %}style="display:none"{%endif%}>
+                                    <span class="text hoverlink" title="{%trans "Ya te gusta" %}">{%trans "Ya te gusta" %} (<span class="increase">{{suggestion.counters.votes}}</span>)</span> 
                                 </span>
                                 
-                                <span class="like">
-                                    <span class="text hoverlink" {% if has_voted %}style="display:none"{%endif%}>Me gusta</span> 
+                                <span class="like" {% if has_voted %}style="display:none"{%endif%}>
+                                    <span class="text hoverlink">{%trans "Me gusta" %} (<span class="increase">{{suggestion.counters.votes}}</span>)</span> 
                                 </span> 
                             </span>
                         </span>
@@ -196,17 +200,17 @@
         
         {% if top_comments %}
             <div id="popular-box" class="clear">
-                <p class="popular"><img src="/static/common/img/transparent.gif">Los comentarios más populares</p>
+                <p class="popular"><img src="/static/common/img/transparent.gif">{%trans "Los comentarios más populares" %}</p>
                 <ul class="comments" id="popular-comments">
                     {% for c in top_comments %}
                         <li class="comment-element" {% if forloop.first %}style="border-top:0px"{% endif %}>
                     
                             <!-- Añadimos el botón de borrar comentario-->
                             {% if c.username = user.username %}
-                                <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
+                                <div class="removable" value="{{c.id}}" type="comment"><a href="#">{%trans "Remove" %}</a></div>
                             {% endif %}
                                                     
-                            <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar"></span>
+                            <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} {%trans "avatar" %}"></span>
                             <div style="float:left;width:460px;">
                                 <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="dark-link">{{c.username}}</a>: {{c.msg}}</span>
                                 <span class="timestamp">{{c.created|naturaltime}}</span> 
@@ -215,14 +219,14 @@
                                         &nbsp;-
                                         <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
                                             <span class="dislike">
-                                                <span class="hoverlink">Ya no me gusta</span> 
+                                                <span class="hoverlink">{%trans "Ya no me gusta" %}</span> 
 <!--
                                                 <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
 -->
                                             </span>
                                             
                                             <span class="like">
-                                                <span class="hoverlink">Me gusta</span> 
+                                                <span class="hoverlink">{%trans "Me gusta" %}</span> 
                                             </span>
                                         </span>
                                     </span>
@@ -235,7 +239,7 @@
         {% endif %}
         
         {% if request.user.is_authenticated %}
-        <p class="clear big">¿Tienes algo que añadir a esta sugerencia?</p>
+        <p class="clear big">{%trans "¿Tienes algo que añadir a esta sugerencia?" %}</p>
         <textarea id="msg"></textarea>
 <!--
         <ul id="feeling">
@@ -244,8 +248,11 @@
             <li>Sad</li>
         </ul>
 -->
-        <span class="btn" onclick="sendComment(this,'event',{{suggestion.id}});">Comentar</span>
+
+        <span class="btn" onclick="sendComment(this,'event',{{suggestion.id}});">{%trans "Comentar" %}</span>
+
         {%endif%}
+
         
         {% if comments %}
         <ul class="comments" id="comment-list">
@@ -254,10 +261,10 @@
                     
                     <!-- Añadimos el botón de borrar comentario-->
                     {% if c.username = user.username %}
-                        <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
+                        <div class="removable" value="{{c.id}}" type="comment"><a href="#">{%trans "Remove" %}</a></div>
                     {% endif %}
                                             
-                    <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar"></span>
+                    <span class="user"><img src="{% embedded_avatar c.username %}" alt="{{c.username}} {%trans "avatar" %}"></span>
                     <div style="float:left;width:460px">
                         <span class="msg"><a href="{% url2 in_facebook public_profile c.username%}" class="dark-link">{{c.username}}</a>: {{c.msg}}</span>
                         <span class="timestamp">{{c.created|naturaltime}}</span> 
@@ -266,14 +273,14 @@
                                 &nbsp;- 
                                 <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
                                     <span class="dislike">
-                                        <span class="hoverlink">Ya no me gusta</span> 
+                                        <span class="hoverlink">{%trans "Ya no me gusta" %}</span> 
 <!--
                                         <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
 -->
                                     </span>
                                     
                                     <span class="like">
-                                        <span class="hoverlink">Me gusta</span> 
+                                        <span class="hoverlink">{%trans "Me gusta" %}</span> 
                                     </span>
                                 </span>
                             </span>
@@ -286,7 +293,7 @@
         </ul>
         {% endif %}
         {% if comments.1|length == 8 %}
-            <div class="load-more">Cargar más</div>
+            <div class="load-more">{%trans "Cargar más" %}</div>
         {% endif %}
     </div>
     
@@ -295,11 +302,11 @@
     {% if request.user.is_authenticated %}
         <script id="commentTemplate" type="text/x-jquery-tmpl">
             <li class="suggestion-element">
-                <div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
-                <span class="user"><img src="{% embedded_avatar user.username %}" alt="{{user.username}} avatar"></span>
+                <div class="removable" value="${id}" type="comment"><a href="#">{%trans "Remove" %}</a></div>
+                <span class="user"><img src="{% embedded_avatar user.username %}" alt="{{user.username}} {%trans "avatar" %}"></span>
                 <div style="float:left;width:460px">
                     <span class="msg"><a href="{% url2 in_facebook public_profile user.username%}" class="dark-link">{{user.username}}</a>: ${msg}</span>
-                    <span class="timestamp">0 minutes ago</span>
+                    <span class="timestamp">{%trans "0 minutes ago" %}</span>
                 </div>
             </li>
         </script>

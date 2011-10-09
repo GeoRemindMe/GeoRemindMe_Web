@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load tags %}
 
-{% block title %}Perfil público de {{profile.username}}{% endblock %}
+{% block title %}{%trans "Perfil público de" %} {{profile.username}}{% endblock %}
 {% block embed_js %}  
     <script type="text/javascript">
     
@@ -32,23 +32,23 @@
         <div id="col-right-left">
 -->
             <div id="avatar-follow">
-                <a href="/user/{{profile.username}}/picture/"><img id="user-avatar" src="{% embedded_avatar profile.username %}" alt="{{profile.username}} avatar"/></a>
+                <a href="/user/{{profile.username}}/picture/"><img id="user-avatar" src="{% embedded_avatar profile.username %}" alt="{{profile.username}} {%trans "avatar" %}"/></a>
                 <br>
                 {% ifnotequal user.username profile.parent.username %}
                     {% if is_follower %}
                         <div id="following_state_{{ profile.parent.id }}" class="follow-button following-state">
-                            <span  onclick="javascript:follow('unfollow',{{profile.parent.id}})"><a href="#" class="following">Siguiendo</a></span>
+                            <span  onclick="javascript:follow('unfollow',{{profile.parent.id}})"><a href="#" class="following">{%trans "Siguiendo" %}</a></span>
                         </div>
                     {% else %}
                         {% if request.user.is_authenticated %}
                             <div id="following_state_{{ profile.parent.id }}" class="follow-button">
-                                <span  onclick="javascript:follow('follow',{{profile.parent.id}})"><a href="#" class="no-following">Seguir</a></span>
+                                <span  onclick="javascript:follow('follow',{{profile.parent.id}})"><a href="#" class="no-following">{%trans "Seguir" %}</a></span>
                             </div>
                         {% endif %}
                     {% endif %}
                 {% else %}
                     
-                    <span class="btn"><a href="{% url2 in_facebook edit_profile %}" id="edit-profile-btn">Editar</a> </span>
+                    <span class="btn"><a href="{% url2 in_facebook edit_profile %}" id="edit-profile-btn">{%trans "Editar" %}</a> </span>
                     
                 {% endifnotequal %}
             </div>
@@ -70,8 +70,8 @@
 <!--
                 <li id="impacts"><a href=""><span id="counter">{{counters.influenced}}</span> impactos</a></li>
 -->
-                <li><a href="{% url2 in_facebook followers_panel profile.parent.username %}"><span id="counter">{{counters.followers}}</span> seguidores</a></li>
-                <li><a href="{% url2 in_facebook followings_panel profile.parent.username %}"><span id="counter">{{counters.followings}}</span> siguiendo</a></li>
+                <li><a href="{% url2 in_facebook followers_panel profile.parent.username %}"><span id="counter">{{counters.followers}}</span> {%trans "seguidores" %}</a></li>
+                <li><a href="{% url2 in_facebook followings_panel profile.parent.username %}"><span id="counter">{{counters.followings}}</span> {%trans "siguiendo" %}</a></li>
             </ul>
             {% if profile.description %}
                     <p>{{profile.description}}</p>

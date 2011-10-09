@@ -183,10 +183,7 @@ def send_notification_suggestion_follower(to, suggestion, user, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _(u"%(username)s ha guardado tu sugerencia: \"%(name)s\" en GeoRemindMe!") % 
-                                        {'username': user,
-                                         'name': suggestion.name
-                                         }
+    message.subject = _(u"%(username)s ha guardado tu sugerencia: \"%(name)s\" en GeoRemindMe!") % {'username': user, 'name': suggestion.name }
     message.body = _(u"""
         El usuario %s(username)s ha guardado tu sugerencia '%(suggestion)s' en su mochila para no olvidarse de hacerla
         y poder compartirla con otros usuarios.\n
@@ -238,10 +235,7 @@ def send_notification_suggestion_comment(to, comment, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _(u"%(username)s commented in your suggestion: %(name)s at Georemindme") % 
-                                {'username': comment.user, 
-                                 'name': comment.instance.name
-                                 }
+    message.subject = _(u"%(username)s commented in your suggestion: %(name)s at Georemindme") % { 'username': comment.user, 'name': comment.instance.name }
     message.body = _(u"""
         El usuario %s(username)s ha hecho el siguiente comentario en tu sugerencia '%(suggestion)s':
         %(msg)s\n
@@ -313,7 +307,7 @@ def send_notification_account_summary(to, user, followers, language='en'):
         El equipo de GeoRemindMe!
         """) % {
                     'names': names,
-                    'username':user.username,
+                    'username':user.username if user.username is not None else "usuario sin nombre",
                     'num_followers':len(followers)
                 }
     message.html = _(u"""
@@ -332,7 +326,7 @@ def send_notification_account_summary(to, user, followers, language='en'):
         </body></html>
         """) % {
                     'names': names,
-                    'username':user.username,
+                    'username': user.username if user.username is not None else '<i>usuario sin nombre</i>',
                     'num_followers':len(followers),
                     'names_html': '<br>- '.join((u"<a href=\"%(link)s\">%(username)s</a>") %
                                                     {'username':str(follow),

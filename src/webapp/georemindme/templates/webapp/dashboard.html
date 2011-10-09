@@ -27,53 +27,42 @@
 
 
 {% block pre_chronology %} 
-    <h1>Actividad</h1>
+    <h1>{%trans "Actividad" %}</h1>
     <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-activity"></div>
     
     
-    <div class="help-txt" style="display:none" id="help-friends-to-follow-text" title="Ayuda: Personas a las que podrías conocer">
-        <p>Desde aquí te avisaremos de personas a las que puedas conocer para que decidas si quieres seguir sus sugerencias.</p>
-        <p>Para poder mejorar estas sugerencias puedes autorizarnos para buscar entre tus contactos de otras redes:</p>
-            <ul>
-                <li>Twitter: </li>
-                <li>Google: </li>
-                <li>Facebook: </li>
-            </ul>
-            
-        
-        <p>Si tienes alguna pregunta puedes hacerla desde <a href="">la página de la comunidad</a>.</p>
-    </div>
-    <div class="help-txt" style="display:none" id="help-activity-text" title="Ayuda: Actividad en tu red">
-        <p>Desde aquí podrás consultar las últimas acciones de las personas de tu red:</p>
+
+    <div class="help-txt" style="display:none" id="help-activity-text" title="{%trans "Ayuda: Actividad en tu red" %}">
+        <p>{%trans "Desde aquí podrás consultar las últimas acciones de las personas de tu red:" %}</p>
         <ul>
-            <li>Nuevas sugerencias y listas de sugerencias</li>
-            <li>Comentarios en sugerencias</li>
-            <li>Valoraciones de comentarios y sugerencias</li>
-            <li>Las personas a las que empiezan a seguir.</li>
-            <li>etc.</li>
+            <li>{%trans "Nuevas sugerencias y listas de sugerencias" %}</li>
+            <li>{%trans "Comentarios en sugerencias" %}</li>
+            <li>{%trans "Valoraciones de comentarios y sugerencias" %}</li>
+            <li>{%trans "Las personas a las que empiezan a seguir." %}</li>
+            <li>{%trans "etc." %}</li>
         </ul>
-        <p>Además podrás comentar, valorar y guardar en tu baúl aquellas sugerencias y listas de sugerencias que te hayan gustado.</p>
-        <p>Si tienes alguna duda o sugerencia puedes hacerla aquí:</p>
+        <p>{%trans "Además podrás comentar, valorar y guardar en tu baúl aquellas sugerencias y listas de sugerencias que te hayan gustado." %}</p>
+        <p>{%trans "Si tienes alguna duda o sugerencia puedes hacerla aquí:" %}</p>
         
 
     </div>
     
     <div id="addSuggestion-toolbox" style="display:none">
-		<p>Crea y comparte tus sugerencias aquí.</p>
+		<p>{%trans "Crea y comparte tus sugerencias aquí." %}</p>
 	</div>
     <div id="menu-toolbox" style="display:none">
-		<p>Estas son las secciones principales:</p>
+		<p>{%trans "Estas son las secciones principales:" %}</p>
         <ul>
-            <li><strong>Actividad</strong>: ahora mismo te encuentras aquí, donde recibirás las últimas novedades (sugerencias, listas, etc.) de las personas a las que sigues.</li>
-            <li><strong>Tú mochila</strong>: en la mochila podrás consultar y gestionar tus sugerencias favoritas.</li>
-            <li><strong>Notificaciones</strong>: aquí te avisaremos cuando alguien empiece a seguir, comente una de tu sugerencias, etc.</li>
+            <li><strong>{%trans "Actividad</strong>: ahora mismo te encuentras aquí, donde recibirás las últimas novedades (sugerencias, listas, etc.) de las personas a las que sigues." %}</li>
+            <li><strong>{%trans "Tú mochila</strong>: en la mochila podrás consultar y gestionar tus sugerencias favoritas." %}</li>
+            <li><strong>{%trans "Notificaciones</strong>: aquí te avisaremos cuando alguien empiece a seguir, comente una de tu sugerencias, etc." %}</li>
         </ul>
 	</div>
     <div id="timeline-toolbox" style="display:none">
 		<p>
-            <strong>Linea de tiempo</strong>: aquí irás recibiendo las novedades de tus contactos.
+            <strong>{%trans "Linea de tiempo</strong>: aquí irás recibiendo las novedades de tus contactos." %}
         </p>
-        <p>Haciendo clic en cada una de las pestañas podrás filtrar los mensajes por tipo.</p>
+        <p>{%trans "Haciendo clic en cada una de las pestañas podrás filtrar los mensajes por tipo." %}</p>
 	</div>
 {%endblock%}
 

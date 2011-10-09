@@ -1,4 +1,5 @@
 {% load tags %}
+{% load i18n %}
 {% comment %} 
     Mensaje nº 350
     350: Nueva lista de sugerencias creada
@@ -8,7 +9,7 @@
     
     <div class="avatar">
         <a href="{% url2 in_facebook public_profile obj.username %}" title="{{obj.username}}">
-            <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+            <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} {% trans "avatar" %}"/>
         </a>
     </div>
     <div class="timeline-msg">
@@ -16,27 +17,27 @@
         {% comment %}  Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar {% endcomment %} 
         
         {% if obj.instance.user.username = request.user.username %}
-            <div class="removable" value="{{obj.instance.id}}" type="suggestion/list"><a href="#">Remove</a></div>
-            <span class="small-text">has creado una lista con {{obj.instance.keys|length}} sugerencia{{obj.instance.keys|length|pluralize:"s"}}: </span>
+            <div class="removable" value="{{obj.instance.id}}" type="suggestion/list"><a href="#">{%trans "Remove" %}</a></div>
+            <span class="small-text">{%trans "has creado una lista con" %} {{obj.instance.keys|length}} sugerencia{{obj.instance.keys|length|pluralize:"s"}}: </span>
         {% else %}
-            <span class="small-text"><a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> ha creado una lista con {{obj.instance.keys|length}} sugerencias: </span>
+            <span class="small-text"><a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> {%trans "ha creado una lista con {{obj.instance.keys|length}} sugerencias:" %} </span>
         {% endif %}
 
-        <br>Lista: <a class="readable link hoverlink" href="{% url2 in_facebook view_list obj.instance.id %}">{{obj.instance.name}}</a><br>
+        <br>{%trans "Lista:" %} <a class="readable link hoverlink" href="{% url2 in_facebook view_list obj.instance.id %}">{{obj.instance.name}}</a><br>
 
         <span class="timestamp">  {{obj.created|naturaltime}}</span>  
 
         
         <span class="action-bar">
             {% if request.user.is_authenticated %}
-                | <span class="focusInput hoverlink comment">Comentar</span> 
+                | <span class="focusInput hoverlink comment">{%trans "Comentar" %}</span> 
             {% endif %}
-            | <a href="{% url2 in_facebook view_list obj.instance.id %}" class="hoverlink details"><img src="/static/common/img/transparent.gif" />Ver lista</a>  
+            | <a href="{% url2 in_facebook view_list obj.instance.id %}" class="hoverlink details"><img src="/static/common/img/transparent.gif" />{%trans "Ver lista" %}</a>  
             {% if obj.instance.user.username != request.user.username and request.user.is_authenticated %}            
                 | {{obj.has_follower}},
-                <span title="Guardar en favoritos"  class="remember-forget" value="{{obj.instance.id}}" type="list" {%if obj.user_follower%}remember="true"{%endif%}>
-                    <span class="remember">Guardar</span>
-                    <span class="forget">Guardada</span>
+                <span title="{%trans "Guardar en favoritos" %}"  class="remember-forget" value="{{obj.instance.id}}" type="list" {%if obj.user_follower%}remember="true"{%endif%}>
+                    <span class="remember">{%trans "Guardar" %}</span>
+                    <span class="forget">{%trans "Guardada" %}</span>
                 </span>
             {% endif %}
         </span>
@@ -48,7 +49,7 @@
     <div class="comment-box clear" value="{{obj.instance.id}}">
 
         {% if obj.comments.1|length and obj.comments.1|length > 2 %}
-            <div class="show-all-comments">Ver los {{obj.comments.1|length}} comentarios</div>
+            <div class="show-all-comments">{%trans "Ver los {{obj.comments.1|length}} comentarios" %}</div>
         {% endif %}
         <ul id="commentList-{{obj.instance.id}}">
             {% if obj.comments.1 %}
@@ -57,11 +58,11 @@
                         
                         {% comment %}  Añadimos el botón de borrar comentario {% endcomment %} 
                         {% if c.username = user.username %}
-                            <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
+                            <div class="removable" value="{{c.id}}" type="comment"><a href="#">{%trans "Remove" %}</a></div>
                         {% endif %}
                     
                         <a href="{% url2 in_facebook public_profile c.username %}">
-                            <img class="user-picture" src="{% embedded_avatar c.username %}" alt="{{c.username}} avatar">
+                            <img class="user-picture" src="{% embedded_avatar c.username %}" alt="{{c.username}} {%trans "avatar" %}">
                         </a>
                         <a href="{% url2 in_facebook public_profile c.username %}" class="dark-link">
                             {{c.username}}
@@ -74,14 +75,14 @@
                                 <span class="like-dislike" value="{{c.id}}" {% if c.has_voted %}like="true"{%endif%} type="comment">
                                     <img src="/static/common/img/transparent.gif" />
                                     <span class="dislike" {% if not c.has_voted %}style="display:none;"{%endif%} >
-                                        <span class="hoverlink">Ya no me gusta</span> 
+                                        <span class="hoverlink">{%trans "Ya no me gusta" %}</span> 
 <!--
                                         <span class="text like-text {% if not c.has_voted %}increase{% endif %}">{{c.vote_counter}}</span> personas
 -->
                                     </span>
                                     
                                     <span class="like" {% if c.has_voted %}style="display:none;"{%endif%} >
-                                        <span class="hoverlink">Me gusta</span> 
+                                        <span class="hoverlink">{%trans "Me gusta" %}</span> 
                                     </span>
                                 </span>
                             </span>
@@ -93,9 +94,9 @@
         {% if user.is_authenticated %}
         <div class="input-box {% if not obj.comments.1 %} hidden {% endif %}">
             <a href="{% url2 in_facebook public_profile user.username %}">
-                <img alt="user avatar" src="{% embedded_avatar user.username %}" class="min-img hidden">
+                <img alt="{%trans "user avatar" %}" src="{% embedded_avatar user.username %}" class="min-img hidden">
             </a>
-            <form class="commentForm"><textarea empty="true" class="autogrow">Escribe un comentario</textarea></form>
+            <form class="commentForm"><textarea empty="true" class="autogrow">{%trans "Escribe un comentario" %}</textarea></form>
         </div>
         {% endif %}
         

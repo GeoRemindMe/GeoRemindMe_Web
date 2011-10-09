@@ -64,6 +64,8 @@ def new_follower(sender, **kwargs):
         raise AttributeError
     if kwargs['following'].id() == 962005 or sender.username == 'georemindme':
         return 
+    from google.appengine.ext.deferred import defer
+    defer(UserTimeline.add_timelines_to_follower, kwargs['following'], sender.key())
     settings = UserSettings.objects.get_by_id(kwargs['following'].id())
     if not settings.show_followings:
         timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=100, visible=True)

@@ -44,7 +44,7 @@
         
             <!-- Si hay más mensajes -->
             {% if chronology.1|length > 9%}
-                <div class="load-more btn">Cargar más</div>
+                <div class="load-more btn">{%trans "Cargar más" %}</div>
             {% endif %}    
             
             
@@ -60,7 +60,7 @@
     
     <script id="commentTemplate" type="text/x-jquery-tmpl">
         <li>
-			<div class="removable" value="${id}" type="comment"><a href="#">Remove</a></div>
+			<div class="removable" value="${id}" type="comment"><a href="#">{%trans "Remove" %}</a></div>
             <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="user avatar"><a href="{% url fb_public_profile user.username %}" class="dark-link">{{user.username}}</a>: ${msg}<br>
             <span class="timestamp">0 minutes ago</span>
 
