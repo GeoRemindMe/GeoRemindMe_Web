@@ -7,7 +7,7 @@ class OAuthware(object):
     def __call__(self, environ, start_response):
         import os
         import libs.oauth2 as oauth2
-        if 'LoginService' in environ['PATH_INFO']:
+        if 'LoginService' in environ['PATH_INFO'] or 'TimelineService.get_jneight' in environ['PATH_INFO']:
             return self.wrapped_app(environ, start_response)
         if 'HTTP_X_GEOREMINDME_SESSION' in environ:
             session_id = environ['HTTP_X_GEOREMINDME_SESSION']
@@ -42,6 +42,6 @@ class OAuthware(object):
                 csrf_cookie = _sanitize_token(csrf_cookie.value)
                 if csrf_token == csrf_cookie:
                     return self.wrapped_app(environ, start_response)
-        start_response('403 ACCESS FORBIDDEN', [('content-type', 'text/plain')])
+        start_response(403, [('content-type', 'text/plain')])
         return ('Access forbidden') 
         
