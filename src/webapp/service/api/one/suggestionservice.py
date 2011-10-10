@@ -58,10 +58,10 @@ class SuggestionService(remote.Service):
         lists = [l for l in lists]
         lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=True))
         # construir un diccionario con todas las keys resueltas y usuarios
-        instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
-        lists = [l.to_dict(resolve=True, instances=instances) for l in lists]
+        #instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
+        lists = [l.to_dict(resolve=False) for l in lists]
         # añadimos las listas
-        [s.lists.append(l) for l in lists for s in suggestions if s.id in l['keys']]
+        #[s.lists.append(l) for l in lists for s in suggestions if s.id in l['keys']]
         response = []
         for a in suggestions:
             t = Suggestion(
@@ -74,7 +74,7 @@ class SuggestionService(remote.Service):
                            modified = int(mktime(a.modified.utctimetuple())),
                            created = int(mktime(a.created.utctimetuple())),
                            username = a.username,
-                           lists = [List(id=l['id'], name=l['name']) for l in a.lists],
+                           lists = [List(id=l['id'], name=l['name']) for l in lists if s.id in l['keys']],
                            id = a.id,
                          )
             response.append(t)
@@ -97,9 +97,9 @@ class SuggestionService(remote.Service):
         # construir un diccionario con todas las keys resueltas y usuarios
         in_lists = [l.to_dict(resolve=False) for l in in_lists]
         # listas del usuario
-        lists = [l for l in lists if not suggestion.key() in l.keys]
-        lists = prefetch_refprops(lists, ListSuggestion.user)
-        lists = [l.to_dict(resolve=False) for l in lists]
+#        lists = [l for l in lists if not suggestion.key() in l.keys]
+#        lists = prefetch_refprops(lists, ListSuggestion.user)
+#        lists = [l.to_dict(resolve=False) for l in lists]
         comments = Comment.objects.load_comments_from_async(query_id, comments_async, user)
         return Suggestion(id = suggestion.id,
                           name=suggestion.name,
@@ -111,10 +111,9 @@ class SuggestionService(remote.Service):
                           modified = int(mktime(suggestion.modified.utctimetuple())),
                           created = int(mktime(suggestion.created.utctimetuple())),
                           username = suggestion.username,
-                          lists = [List(id=l['id'], name=l['name']) for l in suggestion.lists],
+                          lists = [List(id=l['id'], name=l['name']) for l in in_lists],
                           comments = [Comment(id=c['id']) for c in comments],
                           has_voted=has_voted,
-                          in_lists= in_lists,
                           lists=lists,
                           vote_counter= vote_counter,
                           user_follower= user_follower,

@@ -48,7 +48,13 @@ class Suggestion(messages.Message):
     username = messages.StringField(9)
     id = messages.IntegerField(10)
     lists = messages.MessageField(List, 11, repeated=True)
-    comments = messages.MessageField(Comment, 12, repeated=True)
+    comments = messages.MessageField(Comment, 13, repeated=True)
+    has_voted = messages.BooleanField(14)
+    vote_counter = messages.IntegerField(15)
+    user_follower = messages.BooleanField(16)
+    top_comments = messages.MessageField(Comment, 17, repeated=True)
+    
+    
     
 
 class Suggestions(messages.Message):

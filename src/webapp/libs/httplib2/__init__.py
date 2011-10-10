@@ -1305,6 +1305,7 @@ a string that contains the response entity body.
                 if not connection_type:
                     connection_type = SCHEME_TO_CONNECTION[scheme]
                 certs = list(self.certificates.iter(authority))
+                raise Exception(certs)
                 if issubclass(connection_type, HTTPSConnectionWithTimeout):
                     if certs:
                         conn = self.connections[conn_key] = connection_type(

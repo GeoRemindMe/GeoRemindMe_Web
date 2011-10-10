@@ -632,18 +632,17 @@ def get_avatar(request, username):
         raise Http404
     if user.profile.sync_avatar_with == 'facebook':
         if user.facebook_user is not None:
-            return HttpResponseRedirect("http://graph.facebook.com/%s/picture/" % user.facebook_user.uid)
+            return HttpResponseRedirect("https://graph.facebook.com/%s/picture/" % user.facebook_user.uid)
     elif user.profile.sync_avatar_with == 'twitter':
         if user.twitter_user is not None:
             return HttpResponseRedirect(user.twitter_user.picurl)
-
     email = user.email
-    default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
+    default = "https://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
     size = 50
     # construct the url
     import hashlib
     import urllib
-    gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+    gravatar_url = "https://secure.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
     gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
     return HttpResponseRedirect(gravatar_url)
 
