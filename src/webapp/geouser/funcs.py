@@ -85,3 +85,20 @@ def login_func(request, email = None, password = None, remember_me = False, user
         error = _("El email o la contraseña que has introducido es incorrecta"
                   "<br/>Por favor asegúrate que no tienes activadas las mayúsculas e inténtalo de nuevo")
     return error, redirect
+
+
+def add_timeline_to_follower(user_key, follower_key, limit=10):
+    from models_acc import UserTimeline, UserTimelineFollowersIndex
+    from google.appengine.ext import db
+    timeline = UserTimeline.all(keys_only=True).filter('user =', user_key).filter('_vis =', 'public').order('-modified').fetch(limit)
+    indexes_to_save = []
+    for t in timeline:
+        if UserTimelineFollowersIndex.all(keys_only=True).ancestor(t).filter('followers =', follower_key).get() is not None:
+            continue # ya esta el usuario como seguidor del timeline
+        index = UserTimelineFollowersIndex.all().ancestor(t).order('-created').get()
+        if index is None:  # no existen indices o hemos alcanzado el maximo
+            index = UserTimelineFollowersIndex(parent=t)
+        index.followers.append(follower_key)
+        indexes_to_save.append(index)
+    db.put(indexes_to_save)
+    return True
