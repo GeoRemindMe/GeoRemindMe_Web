@@ -20,7 +20,7 @@
             <div class="removable" value="{{obj.instance.id}}" type="suggestion/list"><a href="#">{%trans "Borrar" %}</a></div>
             <span class="small-text">{%trans "has creado una lista con" %} {{obj.instance.keys|length}} sugerencia{{obj.instance.keys|length|pluralize:"s"}}: </span>
         {% else %}
-            <span class="small-text"><a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> {%trans "ha creado una lista con {{obj.instance.keys|length}} sugerencias:" %} </span>
+            <span class="small-text"><a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> {% blocktrans %} ha creado una lista con {{obj.instance.keys|length}} sugerencias: {% endblocktrans %} </span>
         {% endif %}
 
         <br>{%trans "Lista:" %} <a class="readable link hoverlink" href="{% url2 in_facebook view_list obj.instance.id %}">{{obj.instance.name}}</a><br>
