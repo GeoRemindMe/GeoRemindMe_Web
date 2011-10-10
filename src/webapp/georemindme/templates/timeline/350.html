@@ -17,7 +17,7 @@
         {% comment %}  Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar {% endcomment %} 
         
         {% if obj.instance.user.username = request.user.username %}
-            <div class="removable" value="{{obj.instance.id}}" type="suggestion/list"><a href="#">{%trans "Remove" %}</a></div>
+            <div class="removable" value="{{obj.instance.id}}" type="suggestion/list"><a href="#">{%trans "Borrar" %}</a></div>
             <span class="small-text">{%trans "has creado una lista con" %} {{obj.instance.keys|length}} sugerencia{{obj.instance.keys|length|pluralize:"s"}}: </span>
         {% else %}
             <span class="small-text"><a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> {%trans "ha creado una lista con {{obj.instance.keys|length}} sugerencias:" %} </span>
@@ -58,7 +58,7 @@
                         
                         {% comment %}  Añadimos el botón de borrar comentario {% endcomment %} 
                         {% if c.username = user.username %}
-                            <div class="removable" value="{{c.id}}" type="comment"><a href="#">{%trans "Remove" %}</a></div>
+                            <div class="removable" value="{{c.id}}" type="comment"><a href="#">{%trans "Borrar" %}</a></div>
                         {% endif %}
                     
                         <a href="{% url2 in_facebook public_profile c.username %}">
@@ -94,7 +94,7 @@
         {% if user.is_authenticated %}
         <div class="input-box {% if not obj.comments.1 %} hidden {% endif %}">
             <a href="{% url2 in_facebook public_profile user.username %}">
-                <img alt="{%trans "user avatar" %}" src="{% embedded_avatar user.username %}" class="min-img hidden">
+                <img alt="{%trans "{{user.username}} avatar" %}" src="{% embedded_avatar user.username %}" class="min-img hidden">
             </a>
             <form class="commentForm"><textarea empty="true" class="autogrow">{%trans "Escribe un comentario" %}</textarea></form>
         </div>

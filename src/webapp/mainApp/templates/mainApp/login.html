@@ -1,0 +1,219 @@
+{% load tags %}
+{% load i18n %}
+<!DOCTYPE HTML>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{LANGUAGE_CODE}}">
+<head>
+	<meta charset="UTF-8">
+	<title>{%trans "GeoRemindMe!" %}</title>
+	<meta name="google-site-verification" content="VzbSgMqvrPL6WuAhRfBzAFXM0GyU73igO1yjheV2Tc4" />
+
+    
+    {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
+        <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
+        <link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
+        <link type="text/css" rel="stylesheet" href="/static/common/css/browser_error.css">
+        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+        <script type="text/javascript" src="/static/common/js/common_webapp.js"></script>    
+        <script type="text/javascript" src="/static/common/js/login.js"></script>    
+    {% else %}
+        <link type="text/css" rel="stylesheet" href="/static/common/css/style.min.css">
+        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+        <script type="text/javascript" src="/static/common/js/common_webapp.min.js"></script>    
+        <script type="text/javascript" src="/static/common/js/login.min.js"></script>    
+    {% endif %}
+    
+    <link type="text/css" rel="stylesheet" href="/static/webapp/style/easySlider.css"  media="screen, projection" />
+    <script type="text/javascript" src="/static/webapp/js/easySlider1.5.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#slider").easySlider({
+                controlsFade: false,                
+            });
+        });
+    </script>
+
+    
+	
+</head>
+<body id="loginSec">
+    <div id="notification-msg" style="display:none"></div>
+
+	<header id="header-top" class="container">
+		<a href="/"><img src="/static/webapp/img/logo2.png" alt="" id="logo"></a>
+		<nav id="header-nav">
+			<ul>
+				<li><a href="http://help.georemindme.com/">{%trans "Ayuda" %}</a></li>
+				<li><a href="http://blog.georemindme.com">{%trans "Blog" %}</a></li>
+<!--
+				<li><a href="http://m.georemindme.com/">{%trans "Móvil" %}</a></li>
+-->
+				<li><a href="http://team.georemindme.com/">{%trans "Comunidad" %}</a></li>
+			</ul>
+		</nav>
+
+        <div id="login-bar">
+            <p>{%trans "Identifícate usando:" %}</p>
+            <ul>
+                <li class="twitter" onclick="javascript:window.location='/login/twitter/'" title="{%trans "Usa tu sesión de Twitter para identificarte" %}"><span>{%trans "Twitter" %}</span></li>
+                <li class="facebook" onclick="javascript:window.location='/login/facebook/'" title="{%trans "Usa tu sesión de Facebook para identificarte" %}"><span>{%trans "Facebook" %}</span></li>
+                <li class="google" onclick="javascript:window.location='/login/google/'" title="{%trans "Usa tu sesión de Google para identificarte" %}"><span>{%trans "Google" %}</span></li>
+                <li class="georemindme" title="{%trans "Identifícate usando tus datos de GeoRemindMe" %}"><span>{%trans "GeoRemindMe" %}</span></li>
+            </ul>
+            <div id="georemindme-form" style="display:none">
+                <form action="." method="post" id="loginForm">
+                    <input type="text" name="email" placeholder="{%trans "Usuario o email" %}"/>
+                    <input type="password" name="password" id="password" placeholder="{%trans "Contraseña" %}"/>
+                    <input type="submit" id="login-btn" value="{%trans "Entrar" %}" />
+                    <div id="login-submenu">
+                        <span onclick="checkUncheck(this)"><input name="user_login-remember_me" type="checkbox" /> {%trans "Recordarme" %}</span>
+                        <span><a href="/remind/" class="link">{%trans "Recuperar contraseña" %}</a></span>
+                        <span class="link" onclick="javascript:showMenu()">{%trans "Cancelar" %}</span>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+		
+		
+		
+	</header>
+	<div id="background-login">
+		<div id="main" class="container">
+			<section id="left-block">
+				
+                <div id="description">
+                    <h2>{% trans "GeoRemindMe! es una herramienta especializada en enviar y recibir sugerencias personalizadas en base a tu localización y a tus gustos." %}</h2>
+
+                    <ul id="benefits">
+                        <li id="whatsup-icon">{% trans "<strong>Encuentra</strong> cosas interesantes que hacer" %}.</li>
+                        <li id="explore-icon">{% trans "<strong>Descubre</strong> y explora nuevo lugares" %}.</li>
+                        <li id="reminder-icon">{% trans "<strong>No olvides nada</strong> de lo que querías hacer" %}.</li>
+                    </ul>
+
+
+                    <span id="description-list">
+                        
+                        <p>{% trans "GeoRemindme te permite" %}:</p>
+                        <div id="slider-container">
+                            <div id="slider">
+                                <ul>
+                                    <li id="search-icon"><span class="slide-icon">{% trans "<strong>Consulta</strong> sugerencias personalizadas en base a tus gustos y a tu localización" %}.</span></li>
+                                    <li id="suscription-icon"><span class="slide-icon">{% trans "<strong>Sigue</strong> a otras personas con gustaos similares a los tuyos" %}.</span></li>
+                                    <li id="print-icon"><span class="slide-icon">{% trans "<strong>Descarga o imprime</strong> listas de sugerencias como: rutas turísticas, los mejores restaurantes, ocio, etc" %}.</span></li>
+                                    <li id="rate-icon"><span class="slide-icon">{% trans "<strong>Guarda, comentar y valora</strong> las sugerencias que más te interesen" %}.</span></li>
+                                    <li id="checkin-icon"><span class="slide-icon">{% trans "Y en el furuto... queremos ofrecerte <strong>promociones y descuentos</strong> para disfrutar donde te encuentres" %}.</span></li>
+                                    <li id="share-icon"><span class="slide-icon">{% trans "Y <strong>pedir sugerencias</strong> a tus contactos de Facebook, Twitter</strong>" %}.</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </span>
+                </div>
+
+<!--
+                <div id="left-arrow">
+                    <span>&nbsp;</span>
+                </div>
+				<div id="rollover">
+<<<<<<< HEAD
+					<p class="intro-text"><span class="bigger-intro-text"><strong>Compartir y recibir sugerencias</strong> usando tus redes sociales</span></p>
+=======
+					<p class="intro-text"><span class="bigger-intro-text"><strong>Compartir y recibir sugerencias</strong> usando 
+tus redes sociales</span></p>
+>>>>>>> 3e0646c68dfde503bc20d254a78fc525d7658153
+					<div class="users-box">
+						<article>
+							<img src="/static/webapp/img/kaos.png" alt="" class="user-avatar">
+							<p class="user-name">hhkaos</p>
+<<<<<<< HEAD
+							<p class="user-suggestion">Deberías ir al hackathon. Conoces mucha gente y aprendes un montón. Ya verás lo enrrollados que sosmos.</p>
+=======
+							<p class="user-suggestion">Deberías ir al hackathon. Conoces mucha gente y aprendes un montón. 
+Ya verás lo enrrollados que sosmos.</p>
+>>>>>>> 3e0646c68dfde503bc20d254a78fc525d7658153
+						</article>
+						<article>
+							<img src="/static/webapp/img/anna.png" alt="" class="user-avatar">
+							<p class="user-name">annalogik</p>
+							<p class="user-suggestion">Y tenemos galletitas! :D</p>
+						</article>
+					</div>
+				</div>
+				<div id="right-arrow">
+                    <span>&nbsp;</span>
+                </div>
+-->
+				
+<!--
+				<p class="bottom-p">Ya somos XXX personas compartiendo YYY sugerencias.</p>
+-->
+			</section>
+			<section id="right-block">
+				<h2>{%trans "¿Eres nuevo?" %}</h2>
+                <div id="register-with-social">
+                    <p><u>{%trans "Selecciona la cuenta</u> con la que quieres crear tu perfil:" %}</p>
+
+                    <ul id="register-menu">
+                        <li id="twitter"><span>{%trans "Twitter" %}</span></li>
+                        <li id="facebook" class="active"><span>{%trans "Facebook" %}</span></li>
+                        <li id="google"><span>{%trans "Google" %}</span></li>
+                    </ul>
+                    <a href="/ext/twitter/perms" id="register-btn">{%trans "Continuar" %}</a>
+
+                </div>
+				
+				
+				<p class="register-text-aux">{%trans "O crea una nueva cuenta desde cero y conéctala." %}</p>
+                <div style="display:none" id="registerForm">
+                    <form action="." method="POST" id="registerFormForm">
+<!--
+                        <input type="text" name="" value="" placeholder="{%trans "Nombre de usuario" %}"/>
+-->
+
+                        <span id="emailStatus" style="float:right;display:none;" class="ok">&nbsp;</span><input type="text" name="registerEmail" id="registerEmail" placeholder= "{%trans "Email" %}" />
+
+                        <div></div>
+                        <input type="password" name="userRegisterPass1" id="userRegisterPass1" placeholder="{%trans "Contraseña" %}"/>
+                        <input type="password" name="userRegisterPass2" id="userRegisterPass2" placeholder="{%trans "Repite la contraseña" %}"/>
+                        <div id='passwordStatus'>{%trans "Las contraseñas no coinciden" %}</div>
+                        <div id="agreement">
+                            <input type="checkbox" id="termsCheckbox" title="{%trans "Marca esta casilla si estás de acuerdo" %}" value="terms"/>
+                            <span id="textTermsCheckbox">{%trans 'He leido y acepto las <a href="/tos" class="hoverlink">Condiciones de uso' %}</a>.</span>
+                        </div>
+						{% csrf_token %}
+                        <input type="submit" value="{%trans "Continuar" %}"/>
+                    </form>
+                </div>
+			</section>
+<!--
+			<div id="avatar-chain">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+				<img src="/static/webapp/img/avatar.png" alt="" class="reflect">
+			</div>
+-->
+
+		</div>
+	</div>
+	
+	<footer id="footer" class="container">
+		<div class="footer-links">
+<!--
+			Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> 
+-->
+<!--
+            · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+-->
+		</div>
+		<div class="footer-links right-links">
+
+			 <a href="http://www.twitter.com/georemindme">{%trans "@GeoRemindMe" %}</a> · <a href="http://www.facebook.com/georemindme">{%trans "Fans" %}</a> · <a href="http://jobs.georemindme.com/">{%trans "Empleo" %}</a> · <a href="http://www.georemindme.com/press/">{%trans "Prensa" %}</a> · <a href="http://www.georemindme.com/sitemap">{%trans "Mapa del sitio" %}</a>
+
+		</div>
+	</footer>
+    {% include "browser_msgs.html" %}
+</body>
+</html>

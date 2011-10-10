@@ -1,0 +1,142 @@
+{% extends "generic/base_generic.html" %}
+{% load i18n %}
+
+{% block extra_js %}
+    
+    <script type="text/javascript">
+        
+        $(document).ready(function(){           
+            // When we are coming from view_place to add a suggestion
+            // in that point, we create a default marker in that point
+            {% if request.GET.placelocat %}
+					
+					string = new String('{{request.GET.placelocat}}');
+					var locat = string.split(',');
+					
+					default_marker_X = parseFloat(locat[0]);
+					default_marker_Y = parseFloat(locat[1]);
+					
+            {% endif %}
+            
+            {% if not user.facebook_user %}
+                function onFocus(){
+                    var networks=["twitter","facebook"];
+                    for (i=0; i<networks.length ; i++){
+                        //Si los permisos de una red han cambiado activamos los botones y cerramos el dialogo
+                        if($('#perms-'+networks[i]+'-text').length!=0)
+                            if($('#perms-'+networks[i]+'-text').parent().css('display')!="none"){
+                                GRM.wait();
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/ajax/get/perms/",
+                                    data:{
+                                        csrfmiddlewaretoken:getCookie('csrftoken')
+                                    },
+                                    context: $(this),
+                                    success: function(data){
+                                        //console.log(data);
+                                        if(data[networks[i]]){
+                                            //console.log(networks[i]);
+                                            showMessage(I18N["¡Genial! ya puedes empezar a disfrutar de todas las ventajas"],"success");
+                                            $('li[data-network='+networks[i]+']').removeClass('inactive')
+                                            $('li[data-network='+networks[i]+'] span').removeClass(''+networks[i]+'-inactive').addClass(''+networks[i]+'-active')
+                                            $('li[data-network='+networks[i]+']').removeClass('inactive')
+                                            $('li[data-network='+networks[i]+'] span').removeClass(''+networks[i]+'-inactive').addClass(''+networks[i]+'-active')
+                                            if($('#perms-'+networks[i]+'-'+networks[i]+'').dialog("isOpen"))
+                                                $('#perms-'+networks[i]+'-text').dialog("close")
+                                        }
+                                    },
+                                    complete: function(){GRM.nowait();}
+                                });
+                            }
+                        };
+                    }
+                 
+                if (/*@cc_on!@*/false) { // check for Internet Explorer
+                    document.onfocusin = onFocus;
+                } else {
+                    window.onfocus = onFocus;
+                }
+            {% endif %}
+            
+            //Ayuda de usuario
+            $('.help-icon img').click(function(){
+				showHelp('#add-tags','#details-toolbox','up');
+                showHelp('#social-share','#socialNetworks-toolbox','down');
+                showHelp('#visibility','#share-toolbox','down');
+            })
+            //Show user help: si es la primera vez que entra
+            helpUser();
+        });
+        
+        
+        {% if eventid %}
+            eventID={{eventid}};
+            eventLocation='{{poi_location}}'
+            poi_reference='{{poi_reference}}'
+        {% endif %}
+        
+        /* 
+            Variables usadas durante la inicialización del formulario 
+            de configuración de Google Places con los datos de la BD
+        */
+        searchconfig_google={}
+        searchconfig_google['radius']={{user.settings.searchconfig_google.radius}};
+        searchconfig_google['region_code']='{{user.settings.searchconfig_google.region_code}}';
+        searchconfig_google['location']='{{user.settings.searchconfig_google.location}}';
+        //searchconfig_google['type']='{{user.settings.searchconfig_google.type}}';
+        searchconfig_google['type']='all';
+        
+        
+    </script>
+    
+    <!--<script src="/static/webapp/js/dashboard.js"></script>-->
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&language=es&region=ES&key={% if request.is_secure %}{{google_api.google_maps_secure}}{% else %}{{google_api.google_maps}}{% endif %}"></script>
+    {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
+        <script type="text/javascript" src="/static/common/js/add_suggestion.js"></script>    
+    {% else %}
+        <script type="text/javascript" src="/static/common/js/add_suggestion.min.js"></script>    
+    {% endif %}
+    <!--
+    Autocomplete
+    -->
+    <link rel="stylesheet" type="text/css" href="/static/facebookApp/js/geo-autocomplete/lib/jquery.autocomplete.css" />
+    
+    
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+    
+    <!--Places-->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
+
+
+    
+{%endblock%}
+
+{% block title %}{%trans "Añadir nueva sugerencia" %}{% endblock %}
+
+{% block goBack %}{%endblock%}    
+{% block body %}
+    <div id="add-suggestion">
+        {% include "forms/SuggestionForm.html" %}
+    </div>
+    
+    <div id="details-toolbox" style="display:none">
+		<p>{%trans "Haciendo clic aquí podrás añadir <strong>información adicional</strong> a tu sugerencia." %}</p>
+	</div>
+    <div id="socialNetworks-toolbox" style="display:none">
+		<p>
+            {%trans "Cuando creas una sugerencia se <strong>comparte a través de tus redes sociales</strong>." %}
+        </p>
+        <p>
+            {%trans "Puedes desactivarlo haciendo clic sobre el icono correspondiente." %}
+        </p>
+	</div>
+    <div id="share-toolbox" style="display:none">
+		<p>
+            {%trans "Puedes <strong>cambiar la visilibilidad</strong> de tu sugerencia." %}
+        </p>
+        <p>{%trans "- Si marcas como pública una sugerencia cualquier persona podrá verla en tu perfil" %}</p>
+        <p>{%trans "- Si la marcas como privada solo podrás verla tú" %}.</p>
+	</div>
+{%endblock%}

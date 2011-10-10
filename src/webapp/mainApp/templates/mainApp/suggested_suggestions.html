@@ -1,0 +1,259 @@
+{% load i18n %}
+{%load tags%}
+			<div id="left-col">
+				<div id="search_bar">
+					<form action="/search/" method="post" id="search-form">
+						<input type="text" placeholder="{%trans "Ejemplo: tapas en granada, turismo, paisajes, etc." %}">
+						<input type="submit" value="{%trans "Buscar" %}" class="btn">
+                        {% csrf_token %}
+					</form>
+				</div>
+				
+                {% if friends_to_follow|length %}        
+                <hr>
+                <p style="float:left;font-weight:bold;margin-left:20px">
+                    <strong>{%trans "Personas sugeridas:" %}</strong>
+                </p>
+                <ul id="friends-to-follow" class="clear">
+                    {% for id, f in friends_to_follow.items %}
+                        
+                        <li> <!--style="{% cycle 'clear:left' ''%}">-->
+                            <div class="removable" value="{{f.id}}" type="person"><a href="#">{%trans "Borrar" %}</a></div>    
+                            <div class="avatar">
+                                
+                                <a href="{% url2 in_facebook public_profile f.username%}" title="{{ f.username }}" class="user-img">
+                                    <img class="user-picture" src="{% embedded_avatar f.username%}" alt="{{f.username}} {%trans "avatar" %}"/>
+                                </a>
+                                <div style="float: left;  margin-left:10px; padding: 0pt;">
+                                
+                                    <a href="/user/{{f.username}}" style="padding: 0pt; line-height: 1.5em;" class="hoverlink">
+                                    {{f.username}}</a>
+                                
+                                
+                                    <div id="following_state_{{ id }}">
+                                        <span  onclick="javascript:follow('follow',{{id}})"><a href="javascript:void(0)" class="no-following">{%trans "Seguir" %}</a></span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                
+            {% endif %}
+				{% block extraContent %} {% endblock %}
+				
+                {% if request.get_full_path != "/suggestions/add/"%}
+                    <hr id="hr-close-suggestions-box" style="display:none">
+                    <div class="black-box" id="close-suggestions-box" style="display:none">
+                        <p>
+                            <em>{%trans "Sugerencias cerca de ti" %}</em>: 
+                            (<span id="my_location">{%trans "Cargando..." %}</span>) 
+    <!--
+                            <span class="hoverlink">Cambiar</span>
+    -->
+                        </p>
+                        <ul id="close-suggestions">
+                            <li style="text-align: center; line-height: 16px; color: rgb(204, 204, 204);">
+                                <p style="background-color:inherit;">{%trans "Cargando" %}</p>
+                                <img src="/static/webapp/img/loader3.gif" style="width: 16px; height: 16px; float: none; display: inline; margin: 0pt 0pt 0pt 5px;"/>
+                            </li>
+                        </ul>
+                        <div id="csrfmiddleware" style="display:none">{%csrf_token%}</div>
+    <!--
+                        <p><span class="hoverlink view-more">Ver más</span></p>
+    -->
+    <!--
+                        <div id="address_output"></div>
+    -->
+                    </div>
+                
+                
+                    {%if google_api %}
+                        <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=2&key={% if request.is_secure %}{{google_api.google_maps_secure}}{% else %}{{google_api.google_maps}}{% endif %}&sensor=false"></script>
+                        <script type="text/javascript" src="https://maps.google.com/maps?file=api&v=2&key={% if request.is_secure %}{{google_api.google_maps_secure}}{% else %}{{google_api.google_maps}}{% endif %}&sensor=false"></script>
+                    {%endif%}
+
+
+                    <script type="text/javascript">
+                    
+                    function loadSuggestions(lat,lng){
+                        //Recupera las sugerencias para una lat,lng (por defecto la última guardada)
+                        //y las pinta al terminar
+                        var data={
+                            radius: 5000,
+                            csrfmiddlewaretoken:$('#csrfmiddleware input').val()
+                        }
+                        if(lat && lng){
+                            data['location']=lat+","+lng;
+                        }
+                        
+                        $.ajax({
+                            type: "POST",
+                            url: "/ajax/get/near/suggestions/",
+                            data: data,
+                            dataType:'json',
+                            success: function(data){
+                                //console.log(data);
+                                if(data.length){
+                                    $('#close-suggestions').empty();
+                                    $(data).each(function(i,elem){
+                                        $('#close-suggestions').append('<li><a href="/user/'+elem.username+'/" class="clean"><img src="/user/'+elem.username+'/picture/" alt="'+elem.username+'"></a><a href="/suggestion/'+elem.slug+'/">'+elem.name+'</a></li>');
+                                    })
+                                    
+                                    
+                                    //Set cookie
+                                    $.cookies.set('near_suggestions',$('#close-suggestions').html());
+                                    
+                                    //Recuperamos las sugerencias y las metemos en la caja
+                                    //loadSuggestions(lat,lng);
+                                    $('#close-suggestions').empty();
+                                    $('#close-suggestions').append($.cookies.get('near_suggestions'));
+                                    
+                                    //Ponemos de donde están cerca
+                                    var address=$.cookies.get('address');    
+                                    if(address!=null && address!="")
+                                        $('#my_location').text(address);
+                                    else{
+                                        $('#my_location').reversegeocode({
+                                            lat: lat,
+                                            lng: lng,
+                                            callback:function(address){
+                                                $.cookies.set('address',address);    
+                                                $('#my_location').text(address);
+                                            }
+                                        });
+                                        
+                                    }
+                                    
+                                    if($('#my_location').html()==="Cargando..."){
+                                        $('#my_location').html($('#close-suggestions li').length);
+                                        console.log("Ha habido un error cargando la localización");
+                                    }
+                                    
+                                    $('#close-suggestions-box').slideDown('slow');
+                                    $('#hr-close-suggestions-box').show();
+                                    $("#right-col").resize()
+                                }else{
+                                    
+                                    $('#close-suggestions').empty();
+                                    $('#close-suggestions').append("<li><div style=\"padding:0 1.3em;line-height:2em\">Lo sentimos mucho pero no hemos encontrado ninguna sugerencia cerca de tu localización. Estamos trabajando todo lo que podemos para conseguir que entre todos creemos sugerencias por todo el mundo y pronto esta herramienta desarrolle todo el potencial que tiene. Si te gusta el proyecto y quieres unirte a la comunidad de colaboradores por favor escríbenos a info@georemindme.com y nos pondremos en contacto contigo lo más rápido posible. Disculpa por las molestias y ¡gracias por estar aquí!</div></li>");
+                                }
+                            }
+                        });
+                    }
+                    
+                    function loadHTML5Location(){
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(function(position) {
+                                var latitud=position.coords.latitude;
+                                var longitud=position.coords.longitude;
+                                
+                                //Guardamos la latitud y longitud detectadas
+                                $.cookies.set('lat',latitud);
+                                $.cookies.set('lng',longitud);
+                                /*
+                                //Recuperamos las sugerencias y las metemos en la caja
+                                loadSuggestions(latitud,longitud);
+                                
+                                //Ponemos de donde están cerca
+                                $('#my_location').reversegeocode({
+                                    lat: latitud,
+                                    lng: longitud,
+                                    callback:function(address){
+                                        $.cookies.set('address',address);    
+                                    }
+                                });
+                                
+                                $('#close-suggestions-box').show();
+                                */
+                                
+                            }, function(e){
+                                tmp=e;
+                                //console.log("No se ha compartido localización");
+                            });
+                        }
+                    }
+                    
+                    $(document).ready(function(){
+                        //-------------------------------------------------------------------------
+                        //Primero si no tenemos localización la pedimos
+                        {% if request.user.is_authenticated %}
+                            var latlng="{{request.user.last_point}}";
+                            latlng=latlng.split(",");
+                            $.cookies.set('lat',latlng[0]);
+                            $.cookies.set('lng',latlng[1]);
+                            $.cookies.set('address',"{{request.user.last_address}}");
+                        {% endif %}
+                        
+                        if(typeof(latlng)==undefined){
+                            if($.cookies.get('lat')==null || $.cookies.get('lng')==null){
+                                loadHTML5Location();
+                            }
+                        }
+                        
+                        //Si obtenemos localización procedemos
+                        if($.cookies.get('lat')!=null && $.cookies.get('lng')!=null){
+                            var latitud=$.cookies.get('lat');
+                            var longitud=$.cookies.get('lng');
+                            
+                            //Si no tenemos la dirección la buscamos
+                            if($.cookies.get('address')=="" || $.cookies.get('address')==null){
+                                $('#my_location').reversegeocode({
+                                    lat: latitud,
+                                    lng: longitud,
+                                    callback:function(address){
+                                        $.cookies.set('address',address);    
+                                        $('#my_location').text(address);
+                                    }
+                                });
+                            }
+                            
+                            //Procedemos a cargar las sugerencias si las hubiese
+                            loadSuggestions(latitud,longitud);
+                            
+                        }
+                    });
+                    
+				</script>
+				
+				{%endif%}
+				<hr>
+                <div class="black-box" id="recent-suggestions-box">
+                    <p>
+                        <em>{%trans "Últimas sugerencias" %}</em>: 
+                    </p>
+                    <ul id="recent-suggestions">
+                        {% for obj in last_suggestions %}
+                            <li>
+                                <a href="/user/{{obj.user.username}}/" class="clean">
+                                    <img src="/user/{{obj.user.username}}/picture/" alt="{{obj.user.username}}">
+                                </a>
+                                <a href="/suggestion/{{obj.slug}}/" class="black-link">
+                                    {{obj.name}}<br>
+                                    {{obj.poi.city}}<br>
+                                    <span class="timestamp">  {{obj.created|naturaltime}}</span>  
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <hr>
+                
+                <footer id="footer" class="container">
+                    <div class="footer-links">
+<!--
+                        Idioma · <a href="#">Español</a> · <a href="#">Inglés</a> 
+-->
+            <!--
+                        · <a href="#">Francés</a> · <a href="#">Wookiee</a>
+            -->
+                    </div>
+                    <div class="footer-links">
+                        <a href="http://www.twitter.com/georemindme">{%trans "@GeoRemindMe" %}</a> · <a href="http://www.facebook.com/georemindme">{%trans "Fans" %}</a> · <a href="http://blog.georemindme.com/">{%trans "Blog" %}</a> · <a href="http://getsatisfaction.com/georemindme">{%trans "Feedback" %}</a> · <a href="http://www.georemindme.com/sitemap">{%trans "Mapa del sitio" %}</a> 
+                        
+                    </div>
+                    <p id="colored-chickens"><img src="/static/common/img/transparent.gif"></p>
+                </footer>
+			</div>
