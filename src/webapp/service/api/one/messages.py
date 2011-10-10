@@ -23,9 +23,17 @@ class Timelines(messages.Message):
     timelines = messages.MessageField(Timeline, 1, repeated=True)
     query_id = messages.StringField(2)
     
+
 class List(messages.Message):
     id = messages.IntegerField(1)
     name = messages.StringField(2)
+    
+
+class Comment(messages.Message):
+    id = messages.IntegerField(1)
+    username = messages.StringField(2)
+    message = messages.StringField(3)
+    created = messages.IntegerField(4)
     
     
 class Suggestion(messages.Message):
@@ -37,9 +45,10 @@ class Suggestion(messages.Message):
     places_reference = messages.StringField(6)
     created = messages.IntegerField(7)
     modified = messages.IntegerField(8)
-    client_id = messages.StringField(9)
+    username = messages.StringField(9)
     id = messages.IntegerField(10)
     lists = messages.MessageField(List, 11, repeated=True)
+    comments = messages.MessageField(Comment, 12, repeated=True)
     
 
 class Suggestions(messages.Message):
@@ -56,6 +65,3 @@ class Site(messages.Message):
     
 class Sites(messages.Message):
     sites = messages.MessageField(Site, 1, repeated=True)
-    
-    
-
