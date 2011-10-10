@@ -118,7 +118,7 @@
     {% csrf_token %}
     <div class="fieldWrapper">
         {% if form.email %}
-            <label for="id_Email">Email:</label>
+            <label for="id_Email">{% trans "Email" %}:</label>
             <input id="id_{{form.prefix}}-email" type="text" value="{% if form.initial.email %}{{form.initial.email}}{% endif %}" name="{{form.prefix}}-email">
 
             <div class="error-msg" id="email-error" style="{% if form.errors.email %}display:block {%endif%}">
@@ -128,16 +128,16 @@
         {%endif%}
         
         {% if form.username %}
-            <label for="id_username">Nombre de usuario: <sup>(*)</sup></label>
+            <label for="id_username">{% trans "Nombre de usuario" %}: <sup>(*)</sup></label>
             <input id="id_{{form.prefix}}-username" type="text" value="{% if form.initial.username %}{{form.initial.username}}{% endif %}" name="{{form.prefix}}-username">
-            <p class="footer-notes">(Solo letras, números y _ ).</p>
+            <p class="footer-notes">{% trans "(Solo letras, números y _ )" %}.</p>
             <div class="error-msg" id="username-error"  style="{% if form.errors.username %}display:block {%endif%}">
                 {{form.errors.username}}
             </div>
         {%endif%}
         
         {% if form.password %}
-            <label for="id_password">Contraseña:</label>
+            <label for="id_password">{% trans "Contraseña" %}:</label>
             <input id="id_{{form.prefix}}-password" type="password" value="{% if form.initial.password %}{{form.initial.password}}{% endif %}" name="{{form.prefix}}-password">
             <div class="error-msg" id="password-error">
                 {{form.errors.password}}
@@ -150,7 +150,7 @@
     -->
             </div>
         
-            <label for="id_password2">Repitala "please":</label>
+            <label for="id_password2">{% trans 'Repitala "please"' %}:</label>
             <input id="id_{{form.prefix}}-password2" type="password" value="{% if form.initial.password2 %}{{form.initial.password2}}{% endif %}" name="{{form.prefix}}-password2">
             <div class="error-msg" id="password2-error">
                 {{form.errors.password2}}
@@ -165,7 +165,7 @@
         {%endif%}
         
     </div>
-    <span class="btn clear" id="last-step">Listo</span>
+    <span class="btn clear" id="last-step">{% trans 'Listo' %}</span>
     <input type="submit" value="{% trans "Terminar" %}" id="startBtn" class="btn" title="{% trans 'Por favor rellena todos los campos' %}" style="display:none">
 </form>
 

@@ -13,13 +13,13 @@
 -->
     
         <p id="suggestion-item">
-            <label>¿Qué sugieres?</label>
-            <textarea id="id_name" name="name" placeholder="Introduce una sugerencia, por ejemplo: Os sugiero que algún día veáis el atardecer desde el mirador de San Nicolás">{{name}}</textarea>
+            <label>{% trans "¿Qué sugieres?" %}</label>
+            <textarea id="id_name" name="name" placeholder="{% trans 'Introduce una sugerencia, por ejemplo: Os sugiero que algún día veáis el atardecer desde el mirador de San Nicolás' %}">{{name}}</textarea>
             <span id="counter">140</span>
         </p>
         <div id="more-details">
             <span id="lists">
-                <label>Añadir a las siguientes listas:</label>
+                <label>{% trans "Añadir a las siguientes listas" %}:</label>
 
                 
                 <span class="btn dropDownBtn">
@@ -28,51 +28,51 @@
                         {% if lists %}
                             {% for obj in lists %}
                                 <!-- Solo se muestran mis listas -->
-                                <li id="listid-{{obj.id}}"><span class="checkbox name" value="{{obj.id}}">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> sugerencias)</li>
+                                <li id="listid-{{obj.id}}"><span class="checkbox name" value="{{obj.id}}">{{obj.name}}</span> (<span class="list-{{obj.id}}-counter">{{obj.keys|length}}</span> {% trans "sugerencias" %})</li>
                             {% endfor %}
                         {% endif %}
                         <li class="new-list-btn">
-                            <span id="text">Nueva lista...</span>
-                            <span class="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">Cancel</div>
+                            <span id="text">{% trans "Nueva lista..." %}</span>
+                            <span class="new-list" style="display:none"><input type="text" /></span><div id="cancel-link" onclick="closeDropdown()" style="display:none">{% trans "Cancel" %}</div>
                         </li>
                     </ul>
                 </span>
             </span>
             <p id="tags">
-                <label>Etiquetas:</label>
+                <label>{% trans "Etiquetas" %}:</label>
                 {{f.tags}}
             </p>
             <p id="description">
-                <label>Detalles:</label>
-                <textarea name="description" cols="40" rows="10" id="id_description" placeholder="Información adicional, por ejemplo: enlaces, teléfonos, etc."></textarea>
+                <label>{% trans "Detalles" %}:</label>
+                <textarea name="description" cols="40" rows="10" id="id_description" placeholder="{% trans 'Información adicional, por ejemplo: enlaces, teléfonos, etc.' %}"></textarea>
                 <span id="counter"></span>
             </p>
             <div id="date">
-                <p><strong>Fecha:</strong> <br>Si esta sugerencia solo es posible hacerla en unas fechas concretas por favor indícanos cuales son.</p>
+                <p><strong>{% trans "Fecha" %}:</strong> <br>{% trans "Si esta sugerencia solo es posible hacerla en unas fechas concretas por favor indícanos cuales son" %}.</p>
                 <p class="center">
-                    <input title="Fecha de inicio" size="9" id="start-date" class="date-type" autocomplete="off" placeholder="mm/dd/aa" disabled="true">
-                    <input title="Hora de inicio" size="9" id="start-hour" class="hour-type ui-autocomplete-input" autocomplete="off"  placeholder="hh:mm" aria-haspopup="true" aria-autocomplete="list" role="textbox" disabled="true">
+                    <input title="{% trans 'Fecha de inicio' %}" size="9" id="start-date" class="date-type" autocomplete="off" placeholder="mm/dd/aa" disabled="true">
+                    <input title="{% trans 'Hora de inicio' %}" size="9" id="start-hour" class="hour-type ui-autocomplete-input" autocomplete="off"  placeholder="hh:mm" aria-haspopup="true" aria-autocomplete="list" role="textbox" disabled="true">
                     a
-                    <input title="Fecha de fin" size="9" id="end-date" class="date-type" autocomplete="off" placeholder="mm/dd/aa" disabled="true">
-                    <input title="Hora de fin" size="9" id="end-hour" class="hour-type ui-autocomplete-input" autocomplete="off"  placeholder="hh:mm" aria-haspopup="true" aria-autocomplete="list" role="textbox" disabled="true">
-                    <div><input type="checkbox" checked> <span>Se puede hacer en cualquier momento</span></div>
+                    <input title="{% trans 'Fecha de fin' %}" size="9" id="end-date" class="date-type" autocomplete="off" placeholder="mm/dd/aa" disabled="true">
+                    <input title="{% trans 'Hora de fin' %}" size="9" id="end-hour" class="hour-type ui-autocomplete-input" autocomplete="off"  placeholder="hh:mm" aria-haspopup="true" aria-autocomplete="list" role="textbox" disabled="true">
+                    <div><input type="checkbox" checked> <span>{% trans 'Se puede hacer en cualquier momento' %}</span></div>
                 </p>
             </div>
         </div>
-        <div id="details-form">Añadir: 
-            <span id="add-to-lists" class="hoverlink">A listas</span>| 
-            <span id="add-tags" class="hoverlink">Etiquetas</span> | 
-            <span id="add-details" class="hoverlink">Detalles</span> | 
-            <span id="add-date" class="hoverlink">Fecha</span> 
+        <div id="details-form">{% trans 'Añadir' %}: 
+            <span id="add-to-lists" class="hoverlink">{% trans 'A listas' %}</span>| 
+            <span id="add-tags" class="hoverlink">{% trans 'Etiquetas' %}</span> | 
+            <span id="add-details" class="hoverlink">{% trans 'Detalles' %}</span> | 
+            <span id="add-date" class="hoverlink">{% trans 'Fecha' %}</span> 
         </div>    
         
         <p id="suggestion-place">
-            <label>¿Dónde?</label>
+            <label>{% trans '¿Dónde?' %}</label>
             
             {%comment%}
             <ul id="tabMenu" class="clear">
-                <li id="place-tab" class="active" onclick="javascript:activateTab('place')">Establecimiento</li>
-                <li id="address-tab" onclick="javascript:activateTab('address')">Dirección</li>
+                <li id="place-tab" class="active" onclick="javascript:activateTab('place')">{% trans 'Establecimiento' %}</li>
+                <li id="address-tab" onclick="javascript:activateTab('address')">{% trans 'Dirección' %}</li>
             </ul>
             {%endcomment%}
             <div id="address-container">
@@ -88,11 +88,11 @@
 -->
                 {%endcomment%}
                 <div id="place-form">
-                    {#<label for="place">Nombre:</label>#}
+                    {#<label for="place">{% trans 'Nombre' %}:</label>#}
                     {% if request.GET.placename %}
                         <input type="text" id="place" name="place"  value="{{request.GET.placename}}">
                     {% else %}
-                        <input type="text" id="place" name="place"  placeholder="Introduce el sitio, por ej: Mirador de San Nicolás">
+                        <input type="text" id="place" name="place"  placeholder="{% trans 'Introduce el sitio, por ej: Mirador de San Nicolás' %}">
 <!--
                         <input type="text" id="place" name="place" value="{{poi_name}}">
 -->
@@ -157,31 +157,31 @@
         <div>
             
                 <span id="social-share" class="clear" {% if not user.settings.show_public_profile %} style="display:none"{% endif %}>
-                    Compartir también en 
+                    {% trans 'Compartir también en ' %}
                     <ul>
                         {% if user.facebook_user %}
-                            <li data-network="facebook"><span class="facebook-active" title="Enviar sugerencia a mi muro de Facebook">&nbsp;</span></li>
+                            <li data-network="facebook"><span class="facebook-active" title="{% trans 'Enviar sugerencia a mi muro de Facebook'%}">&nbsp;</span></li>
                         {% else %}
                             <li data-network="facebook" class="inactive"><span class="facebook-inactive request-access" id="perms-facebook" title="Activar permisos para comunicarse con Facebook">&nbsp;</span></li>
                         {% endif %}
                         
                         {% if user.twitter_user %}
                             <!--Tenemos permiso para enviar la sugerencia a Twitter -->
-                            <li data-network="twitter"><span class="twitter-active" title="Enviar sugerencia a mi cuenta de Twitter">&nbsp;</span></li>
+                            <li data-network="twitter"><span class="twitter-active" title="{% trans 'Enviar sugerencia a mi cuenta de Twitter' %}">&nbsp;</span></li>
                         {% else %}
                             <li data-network="twitter" class="inactive"><span class="twitter-inactive request-access" id="perms-twitter" title="Activar permisos para comunicarse con Twitter">&nbsp;</span></li>
                         {% endif %}
                     </ul>
                 </span>
             
-            <span class="btn" id="submit-button" onclick="saveSuggestion()">Enviar</span>
+            <span class="btn" id="submit-button" onclick="saveSuggestion()">{% trans 'Enviar' %}</span>
             <span id="visibility" class="public-icon" >
                 {% if user.settings.show_public_profile %}
-                    <span value="public" title="La sugerencia será visible para todos los usuarios">Pública</span>
-                    <span value="private" style="display:none" title="La sugerencia solo la podrás ver tú">Privada</span>
+                    <span value="public" title="{% trans 'La sugerencia será visible para todos los usuarios' %}">{% trans 'Pública' %}</span>
+                    <span value="private" style="display:none" title="{% trans 'La sugerencia solo la podrás ver tú' %}">{% trans 'Privada' %}</span>
                 {% else %}
-                    <span value="public" style="display:none" title="La sugerencia será visible para todos los usuarios">Pública</span>
-                    <span value="private" title="La sugerencia solo la podrás ver tú">Privada</span>
+                    <span value="public" style="display:none" title="{% trans 'La sugerencia será visible para todos los usuarios' %}">{% trans 'Pública' %}</span>
+                    <span value="private" title="{% trans 'La sugerencia solo la podrás ver tú' %}">{% trans 'Privada' %}</span>
                 {% endif %}
             </span>
                 
@@ -190,34 +190,41 @@
         
     </form>
     
-<div class="help-txt" style="display:none" id="help-add-suggestion-text" title="Ayuda sobre el panel de añadir sugerencias">
-        <p>En esta sección....</p>
-        
-    </div>
+
 {% if not user.facebook_user %}
-    <div class="help-txt" style="display:none" id="perms-facebook-text" title="Configurar la cuenta de Facebook">
-        <p>Para poder enviar tus sugerencias a Facebook necesitas instalarte la aplicación de Facebook.</p>
-        <p><a href="http://apps.facebook.com/georemindme">Instalar la aplicación de GeoRemindMe para Facebook</a></p>
-        <p>Recuerda que en cualquier momento puedes revocar el permiso desde la <a href="{% url2 in_facebook profile_settings %}">configuración de tu cuenta</a>.</p>
+    <div class="help-txt" style="display:none" id="perms-facebook-text" title="{% trans 'Configurar la cuenta de Facebook' %}">
+        <p>{% trans 'Para poder enviar tus sugerencias a Facebook necesitas instalarte la aplicación de Facebook.' %}</p>
+        <p><a href="http://apps.facebook.com/georemindme">{% trans 'Instalar la aplicación de GeoRemindMe para Facebook' %}</a></p>
+        <p>
+            {% url2 in_facebook profile_settings as settings_url%}
+            {% blocktrans %}
+                Recuerda que en cualquier momento puedes revocar el permiso desde la 
+                <a href="{{settings_url}}">configuración de tu cuenta</a>.
+            {% endblocktrans %}
+        </p>
     </div>
 {% endif %}
 
 {% if not user.twitter_user %}
     <div class="help-txt" style="display:none" id="perms-twitter-text" title="Configurar la cuenta de Twitter">
-        <p>Configura tu cuenta de Twitter y obtén las siguientes ventajas:</p>
+        <p>{% trans 'Configura tu cuenta de Twitter y obtén las siguientes ventajas:'%}</p>
         <ul>
-            <li><strong>Comparte</strong> con tus followers las sugerencias que crees.</li>
-            <li><strong>Averigua</strong> que usuarios de los que sigues en Twitter están en GeoRemindMe!</li>
-            <li><strong>Identifícate sin formularios</strong> en GeoRemindMe!.</li>
-            <li>Próximamente: <strong>reserva una URL</strong> con tu nombre de usuario de Twitter</li>
+            <li>{% trans '<strong>Comparte</strong> con tus followers las sugerencias que crees.' %}</li>
+            <li>{% trans '<strong>Averigua</strong> que usuarios de los que sigues en Twitter están en GeoRemindMe!' %}</li>
+            <li>{% trans '<strong>Identifícate sin formularios</strong> en GeoRemindMe!' %}.</li>
+            <li>{% trans 'Próximamente: <strong>reserva una URL</strong> con tu nombre de usuario de Twitter' %}</li>
         </ul>
         <p style="text-align:center;font-weight:1.1em;">
-            <a href="/ext/twitter/perms" target="_blank">Configurar ahora mi cuenta de Twitter</a>
+            <a href="/ext/twitter/perms" target="_blank">{% trans 'Configurar ahora mi cuenta de Twitter' %}</a>
         </p>
-        <p>Una vez concedidos los permisos por favor refresca la página (pulsando F5).</p>
+        <p>{% trans 'Una vez concedidos los permisos por favor refresca la página (pulsando F5)' %}.</p>
         <p>
-            <strong>Recuerda:</strong> <br>
-            En cualquier momento puedes deshacer los cambios desde la <a href="{% url2 in_facebook profile_settings %}">configuración de tu cuenta</a>.
+            <strong>{% trans 'Recuerda' %}:</strong> <br>
+            {% url2 in_facebook profile_settings as settings %}
+            {% blocktrans %}
+                En cualquier momento puedes deshacer los cambios desde la <a href="{{settings}}">
+                configuración de tu cuenta</a>.
+            {% endblocktrans %}    
         </p>
     </div>
 {% endif %}

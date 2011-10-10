@@ -20,8 +20,13 @@
                     <img class="user-picture" src="{% embedded_avatar request.user %}" alt="{{request.user}} {%trans "avatar" %}"/>
                 </a>
             </div>
-            <div class="timeline-msg">
-                <span class="small-text">{%trans "Te gusta la lista de sugerencias de" %} <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:</span>
+            <div class="timeline-msg">               
+                <span class="small-text">
+                {% url2 in_facebook public_profile obj.instance.instance.user.username as profile_url%}
+                {% blocktrans with obj.instance.instance.user as username %}
+                    Te gusta la lista de sugerencias de" %} <a href="{{profile_url}}">{{username}}</a>:
+                {% endblocktrans %}
+                </span>
         {% else %}
             <div class="avatar">
                 <a href="{% url2 in_facebook public_profile obj.username %}" title="{%trans "Ver perfil en GeoRemindMe" %}">
@@ -31,11 +36,17 @@
             <div class="timeline-msg">
                 <span class="small-text">
                     {% url2 in_facebook public_profile obj.username as user_profile%}
-                    {% trans 'A <a href="{{user_profile}}">{{obj.username}}</a> le gusta' %}
                     {% if obj.instance.instance.user.username = request.user.username %}
-                        <strong>{%trans "tu lista de sugerencias" %}</strong>:
+                        <strong>
+                            {% blocktrans with obj.username as username%}
+                                A <a href="{{user_profile}}">{{username}}</a> le gusta tu lista de sugerencias
+                            {% endblocktrans %}
+                        </strong>:
                     {% else %}
-                        {%trans "la lista de sugerencias de" %} <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:
+                        {% url2 in_facebook public_profile obj.instance.instance.user.username as user_profile%}
+                        {% blocktrans with obj.instance.instance.user as username%}
+                            A <a href="{{user_profile}}">{{username}}</a> le gusta la lista de sugerencias de <a href="{{user_profile}}">{{username}}</a>:
+                        {% endblocktrans %}
                     {% endif %}
                 </span>
         {% endif %}

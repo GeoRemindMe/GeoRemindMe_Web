@@ -10,7 +10,7 @@
 <li class="msg-{{obj.msg_id}}">
     
     {% if obj.is_private = false and obj.username = request.user %}
-        {%trans 'Evitamos que se muestre duplicado un "Te gusta la sugerencia X"' %}
+        Evitamos que se muestre duplicado un "Te gusta la sugerencia X"
     {% else %}
 
         {% if obj.instance.user.username = request.user.username %}
@@ -22,7 +22,12 @@
             </div>
             <div class="timeline-msg">
                 <span class="timeline-icon">&nbsp;</span>
-                <span class="small-text">{%trans "Te gusta la sugerencia de" %} <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="dark-link">{{obj.instance.instance.user}}</a>:</span>
+                {% url2 in_facebook public_profile obj.instance.instance.user.username as profile_url%}
+                <span class="small-text">
+                {% blocktrans with obj.instance.instance.user as username%}
+                    Te gusta la sugerencia de <a href="{{profile_url}}" class="dark-link">{{username}}</a>:
+                {% endblocktrans %}    
+                </span>
         {% else %}
             <div class="avatar">
                 <a href="{% url2 in_facebook public_profile obj.username %}" title="{%trans "Ver perfil en GeoRemindMe" %}">
@@ -33,7 +38,7 @@
                 <span class="timeline-icon">&nbsp;</span>
                 <span class="small-text">
                     {% url2 in_facebook public_profile obj_username as profile_url %}
-                    {% blocktrans %}A <a href='{{profile_url}}' class='dark-link'>{{obj.username}}</a> le gusta la sugerencia:{% endblocktrans %}
+                    {% blocktrans with obj.username as username %}A <a href='{{profile_url}}' class='dark-link'>{{username}}</a> le gusta la sugerencia:{% endblocktrans %}
                 </span>
         {% endif %}
                 

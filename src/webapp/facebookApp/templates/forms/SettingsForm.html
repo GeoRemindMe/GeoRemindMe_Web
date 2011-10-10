@@ -1,28 +1,27 @@
 {% load i18n %}
 <!-- It form is for the class SocialUserForm at geouser/forms -->
 
-
 <form method="post"  action=".">
     {% csrf_token %}
     
     
         <div class="section">
             <div class="header">
-                <h2>Notificaciones</h2>
+                <h2>{% trans "Notificaciones" %}</h2>
                 <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help"  id="help-accounts-control"></div>
             </div>
             
-            <p>Te llegarán notificaciones por email cuando:</p>
+            <p>{% trans "Te llegarán notificaciones por email cuando:" %}</p>
             <dl id="mail-notifications">
-                <dt>Otro usuario empieza a seguir tus sugerencias</dt>
+                <dt>{% trans "Otro usuario empieza a seguir tus sugerencias" %}</dt>
                 <dd>{{settings_form.time_notification_account}}</dd>
                 
                 
-                <dt>Recibes un comentario en una sugerencia</dt>
+                <dt>{% trans "Recibes un comentario en una sugerencia" %}</dt>
                 <dd>{{settings_form.time_notification_suggestion_comment}}</dd>
                 
                 
-                <dt>Persona guarda una sugerencia tuya</dt>
+                <dt>{% trans "Persona guarda una sugerencia tuya" %}</dt>
                 <dd>{{settings_form.time_notification_suggestion_follower}}</dd>
                
                 
@@ -35,17 +34,17 @@
         
         <div class="section">
             <div class="header">
-                <h2>Privacidad</h2>
+                <h2>{% trans "Privacidad" %}</h2>
                 <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help"  id="help-accounts-control"></div>
             </div>
             
-            <p><strong>Perfil público</strong>: {{settings_form.show_public_profile}}</p>
+            <p><strong>{% trans "Perfil público" %}</strong>: {{settings_form.show_public_profile}}</p>
             {% if settings_form.show_public_profile.errors %}
                  <span class="error-msg" id="email-error">
                     {{settings_form.show_public_profile.errors}}
                 </span>
             {% endif %}
-            <p>Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.</p>
+            <p>{% trans "Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad." %}</p>
 		</div>
 <!--
 		<div class="section">	
@@ -60,6 +59,6 @@
 
     
     
-    <input type="submit" value="{% trans "Guardar" %}" id="startBtn" title="{% trans 'Por favor rellena toso los campos' %}">
+    <input type="submit" value="{% trans "Guardar" %}" id="startBtn" title="{% trans 'Por favor rellena todos los campos' %}">
 </form>
 
