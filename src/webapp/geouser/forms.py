@@ -19,7 +19,7 @@ class RecoverPassForm(forms.Form):
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    password2 = forms.CharField(label=_("Repeat password"), required=True,
+    password2 = forms.CharField(label=_("Repetir contraseña"), required=True,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
@@ -35,11 +35,11 @@ class RecoverPassForm(forms.Form):
 
         if password and password2:
             if password.find(' ') != -1:
-                msg = _("Passwords can't have white spaces")
+                msg = _("Las contraseñas no pueden contener espacios en blanco")
                 self._errors['password'] = self.error_class([msg])
 
             if password != password2:
-                msg = _("Passwords must be the same.")
+                msg = _("Las contraseñas deben coincidir.")
                 self._errors['password'] = self.error_class([msg])
 
         return cleaned_data
@@ -53,7 +53,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(required=True, max_length=settings.MAX_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    remember_me = forms.BooleanField(label=_("Remember me?"), required=False,
+    remember_me = forms.BooleanField(label=_("Recordar contraseña?"), required=False,
                                      widget=forms.CheckboxInput(),
                                      initial = False
                                      )
@@ -68,7 +68,7 @@ class RegisterForm(forms.Form):
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    password2 = forms.CharField(label=_("Repeat password"), required=True,
+    password2 = forms.CharField(label=_("Repetir contraseña"), required=True,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
@@ -84,11 +84,11 @@ class RegisterForm(forms.Form):
 
         if password and password2:
             if password.find(' ') != -1:
-                msg = _("Passwords can't have white spaces")
+                msg = _("Las contraseñas no pueden contener espacios en blanco")
                 self._errors['password'] = self.error_class([msg])
 
             if password != password2:
-                msg = _("Passwords must be the same.")
+                msg = _("Las contraseñas tienen que ser iguales.")
                 self._errors['password'] = self.error_class([msg])
 
         return cleaned_data
@@ -98,7 +98,7 @@ class RegisterForm(forms.Form):
         try:
             return User.register(email=self.cleaned_data['email'], password=self.cleaned_data['password'], language=language)
         except User.UniqueEmailConstraint, e:
-            fail = _('Email already in use')
+            fail = _('Cuenta de correo en uso')
             self._errors['email'] = self.error_class([fail])
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
             fail = _(e.message)
@@ -115,7 +115,7 @@ class SocialTwitterUserForm(forms.Form):
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    password2 = forms.CharField(label=_("Repeat password"), required=True,
+    password2 = forms.CharField(label=_("Repetir contraseña"), required=True,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
@@ -131,11 +131,11 @@ class SocialTwitterUserForm(forms.Form):
 
         if password and password2:
             if password.find(' ') != -1:
-                msg = _("Passwords can't have white spaces")
+                msg = _("Las contraseñas no pueden contener espacios en blanco")
                 self._errors['password'] = self.error_class([msg])
 
             if password != password2:
-                msg = _("Passwords must be the same.")
+                msg = _("Las contraseñas tienen que ser iguales.")
                 self._errors['password'] = self.error_class([msg])
 
         return cleaned_data
@@ -148,11 +148,11 @@ class SocialTwitterUserForm(forms.Form):
                                  password=self.cleaned_data['password']
                                  )
         except User.UniqueEmailConstraint, e:
-            fail = _('Email already in use')
+            fail = _('Cuenta de correo en uso')
             self._errors['email'] = self.error_class([fail])
             return
         except User.UniqueUsernameConstraint, e:
-            fail = _('Username already in use')
+            fail = _('El nombre de usuario está siendo utilizado')
             self._errors['username'] = self.error_class([fail])
             return
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
@@ -173,12 +173,12 @@ class SocialFacebookGoogleUserForm(forms.Form):
     '''
         Formulario para pedir un correo y username a los usuarios que entran desde una red social
     '''
-    username = forms.CharField(label=_('username'), required=True)
+    username = forms.CharField(label=_('nombre de usuario'), required=True)
     password = forms.CharField(required=True, max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    password2 = forms.CharField(label=_("Repeat password"), required=True,
+    password2 = forms.CharField(label=_("Repetir contraseña"), required=True,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
@@ -194,11 +194,11 @@ class SocialFacebookGoogleUserForm(forms.Form):
 
         if password and password2:
             if password.find(' ') != -1:
-                msg = _("Passwords can't have white spaces")
+                msg = _("Las contraseñas no pueden contener espacios en blanco")
                 self._errors['password'] = self.error_class([msg])
 
             if password != password2:
-                msg = _("Passwords must be the same.")
+                msg = _("Las contraseñas tienen que ser iguales.")
                 self._errors['password'] = self.error_class([msg])
 
         return cleaned_data
@@ -210,7 +210,7 @@ class SocialFacebookGoogleUserForm(forms.Form):
                                   password=self.cleaned_data['password']
                                   )
         except User.UniqueUsernameConstraint, e:
-            fail = _('Username already in use')
+            fail = _('El nombre de usuario está siendo utilizado')
             self._errors['username'] = self.error_class([fail])
             return
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
@@ -231,14 +231,14 @@ class SocialUserForm(forms.Form):
     '''
         Formulario para pedir un correo y username a los usuarios que entran desde una red social
     '''
-    username = forms.CharField(label=_('username'), required=True)
+    username = forms.CharField(label=_('nombre de usuario'), required=True)
     
     def save(self, user):
         from geouser.models import User
         try:
             result =  user.update(username=self.cleaned_data['username'])
         except User.UniqueUsernameConstraint, e:
-            fail = _('Username already in use')
+            fail = _('El nombre de usuario está siendo utilizado')
             self._errors['username'] = self.error_class([fail])
             return
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
@@ -255,27 +255,27 @@ class SocialUserForm(forms.Form):
         return result
 
 AVATAR_CHOICES = (
-          ('none', _('None')),
+          ('none', _('Nadie')),
           ('facebook', _('Facebook')),
           ('twitter', _('Twitter')),
           ('gravatar', _('Gravatar')),
                  )
 class UserProfileForm(forms.Form):
-    username = forms.CharField(label=_('Username'), required=True)
+    username = forms.CharField(label=_('nombre de usuario'), required=True)
     email = forms.EmailField(label=_('email'), required=True)
     description = forms.CharField(widget=forms.TextInput(), required=False)
-    sync_avatar_with = forms.ChoiceField(label=_('Sync your  avatar with'), choices=AVATAR_CHOICES)
-    old_password = forms.CharField(label=_("Current password"), required=False,
+    sync_avatar_with = forms.ChoiceField(label=_('Sincroniza tu avatar con'), choices=AVATAR_CHOICES)
+    old_password = forms.CharField(label=_("Contraseña actual"), required=False,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    password = forms.CharField(label=_("New password"), required=False,
+    password = forms.CharField(label=_("Nueva contraseña"), required=False,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    password2 = forms.CharField(label=_("Repeat new password"), required=False,
+    password2 = forms.CharField(label=_("Repita la nueva contraseña"), required=False,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
@@ -293,13 +293,13 @@ class UserProfileForm(forms.Form):
         if password or password2:
             if old_pass:  # to change password, user must write old pass first
                 if password.find(' ') != -1:
-                    msg = _("Passwords can't have white spaces")
+                    msg = _("Las contraseñas no pueden contener espacios en blanco")
                     self._errors['password'] = self.error_class([msg])
                 elif password != password2:
-                    msg = _("Passwords must be the same.")
+                    msg = _("Las contraseñas tienen que ser iguales.")
                     self._errors['password'] = self.error_class([msg])
             else:
-                msg = _("Old password needed.")
+                msg = _("Necesita introducir la antigua contraseña.")
                 self._errors['old_password'] = self.error_class([msg])
         return cleaned_data
     
@@ -319,14 +319,14 @@ class UserProfileForm(forms.Form):
                             description=self.cleaned_data['description'], 
                             sync_avatar_with = self.cleaned_data['sync_avatar_with'])
             return user
-        except User.UniqueEmailConstraint:  # email already in use
+        except User.UniqueEmailConstraint:  # Cuenta de correo en uso
             raise
-            fail = _("Email already in use")
+            fail = _("Cuenta de correo en uso")
             self._errors['email'] = self.error_class([fail])
             return None
         except User.UniqueUsernameConstraint, e:
             raise
-            fail = _('Username already in use')
+            fail = _('El nombre de usuario está siendo utilizado')
             self._errors['username'] = self.error_class([fail])
             return None
         except Exception, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
@@ -341,17 +341,17 @@ class UserForm(forms.Form):
         Allow the user to change somo info of his account
     """
     email = forms.EmailField(required=True)
-    old_pass = forms.CharField(label=_("Current password"), required=False,
+    old_pass = forms.CharField(label=_("Contraseña actual"), required=False,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    password = forms.CharField(label=_("New password"), required=False,
+    password = forms.CharField(label=_("Nueva contraseña"), required=False,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
                                )
-    password2 = forms.CharField(label=_("Repeat new password"), required=False,
+    password2 = forms.CharField(label=_("Repita la nueva contraseña"), required=False,
                                max_length=settings.MAX_PWD_LENGTH,
                                min_length=settings.MIN_PWD_LENGTH,
                                widget=forms.PasswordInput(attrs={'size': settings.MAX_PWD_LENGTH+2})
@@ -369,13 +369,13 @@ class UserForm(forms.Form):
         if password or password2:
             if old_pass:  # to change password, user must write old pass first
                 if password.find(' ') != -1:
-                    msg = _("Passwords can't have white spaces")
+                    msg = _("Las contraseñas no pueden contener espacios en blanco")
                     self._errors['password'] = self.error_class([msg])
                 elif password != password2:
-                    msg = _("Passwords must be the same.")
+                    msg = _("Las contraseñas tienen que ser iguales.")
                     self._errors['password'] = self.error_class([msg])
             else:
-                msg = _("Old password needed.")
+                msg = _("Necesita introducir la antigua contraseña.")
                 self._errors['old_pass'] = self.error_class([msg])
         return cleaned_data
 
@@ -389,7 +389,7 @@ class UserForm(forms.Form):
             if user.check_password(old_pass):
                 user.password = password
             else:
-                msg = _("Old password wrong.")
+                msg = _("La antigua contraseña es incorrecta.")
                 self._errors['old_pass'] = self.error_class([msg])
                 return None
         elif email != user.email:  # user only wants to change the email
@@ -398,8 +398,8 @@ class UserForm(forms.Form):
         if commit:
             try:
                 user.put()
-            except User.UniqueEmailConstraint:  # email already in use
-                msg = _("email already in use")
+            except User.UniqueEmailConstraint:  # Cuenta de correo en uso
+                msg = _("Cuenta de correo en uso")
                 self._errors['email'] = self.error_class([msg])
                 return None
             except Exception:
@@ -411,18 +411,18 @@ class UserForm(forms.Form):
 
 
 CHOICES = (
-           ('never', _('Never')),
-           ('instant', _('Instant')),
-           ('daily', _('Daily')),
-           ('weekly', _('Weekly')),
-           ('monthly', _('Monthly')),
+           ('never', _('Nunca')),
+           ('instant', _('Instantáneamente')),
+           ('daily', _('Diario')),
+           ('weekly', _('Semanal')),
+           ('monthly', _('Mensual')),
            )
 class UserSettingsForm(forms.Form):
-    show_public_profile = forms.BooleanField(label=_('Profile visibility'), required=False)
-    time_notification_suggestion_follower = forms.ChoiceField(label=_('New follower on suggestions'), choices=CHOICES)
-    time_notification_suggestion_comment = forms.ChoiceField(label=_('New comment on suggestions'), choices=CHOICES)
-    time_notification_account = forms.ChoiceField(label=_('New account follower'), choices=CHOICES)
-    language = forms.ChoiceField(label=_('Language'), choices=settings.LANGUAGES, required=False)
+    show_public_profile = forms.BooleanField(label=_('Visibilidad del perfil'), required=False)
+    time_notification_suggestion_follower = forms.ChoiceField(label=_('Nuevo seguidor en una sugerencia'), choices=CHOICES)
+    time_notification_suggestion_comment = forms.ChoiceField(label=_('Nuevo comentario en una sugerencia'), choices=CHOICES)
+    time_notification_account = forms.ChoiceField(label=_('Nuevo seguidor de la cuenta'), choices=CHOICES)
+    language = forms.ChoiceField(label=_('Idioma'), choices=settings.LANGUAGES, required=False)
     
     
     def save(self, user):

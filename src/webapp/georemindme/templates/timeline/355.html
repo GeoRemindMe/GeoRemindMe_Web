@@ -30,7 +30,8 @@
             </div>
             <div class="timeline-msg">
                 <span class="small-text">
-                    {%trans "A <a href="{% url2 in_facebook public_profile obj.username %}">{{obj.username}}</a> le gusta " %}
+                    {% url2 in_facebook public_profile obj.username as user_profile%}
+                    {% trans 'A <a href="{{user_profile}}">{{obj.username}}</a> le gusta' %}
                     {% if obj.instance.instance.user.username = request.user.username %}
                         <strong>{%trans "tu lista de sugerencias" %}</strong>:
                     {% else %}

@@ -83,9 +83,9 @@ class ShardedCounter(db.Model):
     
 
 VISIBILITY_CHOICES = (
-          ('public', _('Public')),
-          ('private', _('Private')),
-          ('shared', _('Shared')),
+          ('public', _('Publica')),
+          ('private', _('Privada')),
+          ('shared', _('Compartida')),
                       )
 class Visibility(db.Model):
     """Metodos comunes heredados por todas las Clases que necesiten visibilidad"""

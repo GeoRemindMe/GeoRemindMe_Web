@@ -4,28 +4,24 @@
 
 from os import path
 BASE_DIR = path.normpath(path.dirname(__file__))
+import commands,os,sys
 
-LANGUAGES = (
-  #~ ('ca', u'Català'),
-  ('de', u'Deutsch'),
-  ('en', u'English'),
-  ('es', u'Español'),
-  ('fr', u'Francais'),
-  #~ ('gl', u'Galego'),
-  ('it', u'Italiano'),
-  #~ ('nl', u'Nederlands'),
-  #~ ('pl', u'Polski'),
-  #~ ('zh', u'Chinese'),
-  
-)
+os.chdir( "../webapp" )
+CWD = os.getcwd()
+sys.path.append("../webapp")
 
-import commands
+import settings
 
-for lang in LANGUAGES:
-	print 'django-admin.py --settings=../webapp makemessages -l '+lang[0]
-	if commands.getstatusoutput('django-admin --settings=../webapp makemessages -l '+lang[0])[0]==0:#creates german (de) .po
+
+
+
+print "-> Compilando ficheros de idiomas..."
+
+for lang in settings.LANGUAGES:
+	
+	if commands.getstatusoutput('django-admin makemessages -l '+lang[0])[0]==0:#creates german (de) .po
 		print lang[1] + ' strings updated at \'locale/'+lang[0]+'/LC_MESSAGES/django.po\''
-	elif commands.getstatusoutput('django-admin.py --settings=../webapp makemessages -l '+lang[0])[0]==0:#creates german (de) .po
+	elif commands.getstatusoutput('django-admin.py makemessages -l '+lang[0])[0]==0:#creates german (de) .po
 		print lang[1] + ' strings updated at \'locale/'+lang[0]+'/LC_MESSAGES/django.po\''
 	else:
 		print lang[1] + ' strings couldn\'t be updated at \'locale/'+lang[0]+'/LC_MESSAGES/django.po\''

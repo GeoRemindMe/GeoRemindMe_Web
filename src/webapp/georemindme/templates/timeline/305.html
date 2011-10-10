@@ -32,9 +32,8 @@
             <div class="timeline-msg">
                 <span class="timeline-icon">&nbsp;</span>
                 <span class="small-text">
-                    
-                    {% trans "A" %} <a href='{% url2 in_facebook public_profile obj_username %}' class='dark-link'>{{obj.username}}</a> {% trans "le gusta la sugerencia:"%}
-                    
+                    {% url2 in_facebook public_profile obj_username as profile_url %}
+                    {% trans "A <a href='{{profile_url}}' class='dark-link'>{{obj.username}}</a> le gusta la sugerencia:"%}
                 </span>
         {% endif %}
                 
@@ -45,7 +44,7 @@
                     </a>
                     <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="hoverlink">{{obj.instance.instance}}</a>
                 </div>
-                <span class="suggestionPlace">{%trans "En" %} <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}" class="dark-link">{{obj.instance.instance.poi.name}}</a></span>
+                <span class="suggestionPlace">{% trans "En" %} <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}" class="dark-link">{{obj.instance.instance.poi.name}}</a>, {{obj.instance.instance.poi.city}}</span>
                 <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="details"><img src="/static/common/img/transparent.gif" />{%trans "Ver sugerencia" %}</a></span>
             </div>
     {% endif %}

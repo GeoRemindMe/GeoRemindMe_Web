@@ -2,7 +2,7 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   {% for id in ids %}
    <sitemap>
-      <loc>http://{{host}}/{{path}}{{id}}/</loc>
+      <loc>http://www.georemindme.com/{{path}}{{id}}/</loc>
    </sitemap>
   {% endfor %}
 </sitemapindex>

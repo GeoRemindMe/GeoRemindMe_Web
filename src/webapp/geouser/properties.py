@@ -59,9 +59,9 @@ class PasswordProperty(db.TextProperty):
         except:# no esta codificado el password, lo codificamos
             import re
             if len(value) < 5 or len(value) > 12:
-                raise ValueError(_("Invalid password"))
+                raise ValueError(_("Contraseña incorrecta"))
             if re.search(u'[^a-zA-Z0-9]', value):
-                raise ValueError(_("Invalid password"))
+                raise ValueError(_("Contraseña incorrecta"))
             from random import random
             from django.utils.hashcompat import sha_constructor
             alg = "sha1"
@@ -81,12 +81,12 @@ class UsernameProperty(db.StringProperty):
             return None
         raw = raw.lower()
         if raw == 'none':
-            raise ValueError(_("Invalid username"))
+            raise ValueError(_("Usuario inválido"))
         if len(raw) < 5 or len(raw) > 15:
-            raise ValueError(_("Invalid username"))
+            raise ValueError(_("Usuario inválido"))
         import re
         if re.search(r'[^a-z0-9_]', raw):
-            raise ValueError(_("Invalid username"))
+            raise ValueError(_("Usuario inválido"))
         return str(raw)
     
 

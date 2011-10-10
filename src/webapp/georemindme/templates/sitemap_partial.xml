@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   {% for path in paths %}
     <url>
-      <loc>http://georemindme.appspot.com{{path}}</loc>
+      <loc>http://www.georemindme.com{{path}}</loc>
     </url>
   {% endfor %}
 </urlset>
