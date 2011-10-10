@@ -54,8 +54,6 @@ class Suggestion(messages.Message):
     user_follower = messages.BooleanField(16)
     top_comments = messages.MessageField(Comment, 17, repeated=True)
     
-    
-    
 
 class Suggestions(messages.Message):
     query_id = messages.StringField(1)
@@ -71,3 +69,14 @@ class Site(messages.Message):
     
 class Sites(messages.Message):
     sites = messages.MessageField(Site, 1, repeated=True)
+
+
+class Place(messages.Message):
+    id = messages.IntegerField(1)
+    name = messages.StringField(2)
+    address = messages.StringField(3)
+    suggestions = messages.MessageField(4)
+    poi_lat = messages.FloatField(5)
+    poi_lon = messages.FloatField(6)
+    vote_counter = messages.IntegerField(7)
+    
