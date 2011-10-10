@@ -497,17 +497,20 @@ class Suggestion(Event, Visibility, Taggable):
             return super(Suggestion, self).delete()
         generico = User.objects.get_by_username(settings.GENERICO, keys_only=True)
         if generico == Suggestion.user.get_value_for_datastore(self):
-            from geolist.models import ListSuggestion 
+            from geolist.models import ListSuggestion
+            from geouser.models_acc import UserTimelineBase
             # es del usuario georemindme, la borramos
             alerts = AlertSuggestion.all().filter('suggestion =', self.key()).run()
             lists = ListSuggestion.all().filter('keys =', self.key()).run()
+            timelines = UserTimelineBase.all().filter('instance =', self.key()).run()
+            import itertools
             to_save = []
             for l in lists:
                 l.keys.remove(self.key())
                 to_save.append(l)
             p = db.put_async(to_save)
-            for a in alerts:
-                a.delete()
+            it = itertools.chain(alerts, timelines)
+            db.delete(db.delete([i for i in it]))
             suggestion_deleted.send(sender=self, user=generico)
             p.get_result()
             return super(Suggestion, self).delete()
