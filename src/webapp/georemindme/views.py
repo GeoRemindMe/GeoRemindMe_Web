@@ -33,7 +33,7 @@ def login_panel(request,login=False):
     try:
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-        return render_to_response("generic/login.html", {'login' :login}, context_instance=RequestContext(request))
+        return render_to_response("mainApp/login.html", {'login' :login}, context_instance=RequestContext(request))
     except DeadlineExceededError:
         return HttpResponseRedirect('/')
 
