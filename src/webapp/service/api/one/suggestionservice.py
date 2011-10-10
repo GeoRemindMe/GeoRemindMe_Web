@@ -68,7 +68,7 @@ class SuggestionService(remote.Service):
                            places_reference = a.poi.google_places_reference,
                            modified = int(mktime(a.modified.utctimetuple())),
                            created = int(mktime(a.created.utctimetuple())),
-                           lists = [List(id=list['id'], name=list['name']) for l in a.lists],
+                           lists = [List(id=l['id'], name=l['name']) for l in a.lists],
                            id = a.id,
                          )
             response.append(t)
