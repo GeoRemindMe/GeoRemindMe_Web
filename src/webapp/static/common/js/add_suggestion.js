@@ -311,7 +311,7 @@ $(document).ready(function() {
 	});
     
     //Set resizable canvas
-    $('#address-container').resizable({
+    /*$('#address-container').resizable({
         maxWidth: 550 ,
         minWidth: 550,
         handles: 'n,s',
@@ -319,7 +319,7 @@ $(document).ready(function() {
         stop: function(event, ui) {
             resizeIframe()     
         }
-    });
+    });*/
 
     
     //FORM
