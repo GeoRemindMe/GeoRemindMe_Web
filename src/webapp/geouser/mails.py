@@ -235,14 +235,7 @@ def send_notification_suggestion_comment(to, comment, language='en'):
     translation.activate(language)
     message = GeoMail()
     message.to = to
-<<<<<<< HEAD
-    message.subject = _(u"%(username)s commented in your suggestion: %(name)s at Georemindme") % { 'username': comment.user, 'name': comment.instance.name }
-=======
-    message.subject = _(u"%(username)s ha comentado en tu sugerencia: %(name)s en Georemindme") % 
-                                {'username': comment.user, 
-                                 'name': comment.instance.name
-                                 }
->>>>>>> 1771e9abd1ac3c998c9b477d123431c97d154699
+    message.subject = _(u"%(username)s commented in your suggestion: %(name)s at Georemindme") % { 'username': comment.user, 'name': comment.instance.name} 
     message.body = _(u"""
         El usuario %s(username)s ha hecho el siguiente comentario en tu sugerencia '%(suggestion)s':
         %(msg)s\n
