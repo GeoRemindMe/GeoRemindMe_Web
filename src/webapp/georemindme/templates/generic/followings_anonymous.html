@@ -30,9 +30,9 @@
             <div class="user-data">
                 <ul>
                     <li><a href="{% url2 in_facebook public_profile f.username%}" title="{%trans "Sugerencias hechas" %}"><span>{{ f.profile.parent.counters.suggested }}</span>{%trans "Sugerencias" %}</a></li>
-                    <li><a href="{% url2 in_facebook followers_panel f.username%}" title="{%trans "Personas que le siguen" %}"><span>{{ f.profile.parent.counters.followers }}</span>{%trans "Seguidores" %}</a></li>
+                    <li><a href="{% url2 in_facebook followers_panel f.username%}" title="{% blocktrans with f.username as username %} Personas que siguen a {{username}} {% endblocktrans %}" %}"><span>{{ f.profile.parent.counters.followers }}</span>{%trans "Seguidores" %}</a></li>
                     <li><a href="{% url2 in_facebook public_profile f.username%}" title="{%trans "Recomendaciones suyas que te han gustado" %}"><span>{{ f.profile.parent.counters.influenced }}</span>{%trans "Impactos" %}</a></li>
-                    <li><a href="{% url2 in_facebook followings_panel f.username%}" title="{%trans "Personas a las que sigue" %}"><span>{{ f.profile.parent.counters.followings }}</span>{%trans "Siguiendo" %}</a></li>
+                    <li><a href="{% url2 in_facebook followings_panel f.username%}" title="{% blocktrans with f.username as username %} Personas a las que sigue {{username}} {% endblocktrans %}"><span>{{ f.profile.parent.counters.followings }}</span>{%trans "Siguiendo" %}</a></li>
                 </ul>
             </div>
             <hr>

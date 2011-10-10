@@ -183,7 +183,7 @@ function loadGoogleSettings(){
             });
             
         } else {
-            alert("Geocoder failed due to: " + status);
+            alert(gettext("Geocoder failed due to: ") + status);
         }
     });
     
@@ -237,11 +237,11 @@ function saveSettings(engine){
                             if (msg.status !=200){
                                 $('#answerMessage').removeClass('success');
                                 $('#answerMessage').addClass('error');
-                                $('#answerMessage').text("Ha habido un error al añadir la sugerencia, estamos trabajando para solucionarlo.").fadeIn('slow').delay(2000).fadeOut('slow');
+                                $('#answerMessage').text(gettext("Ha habido un error al añadir la sugerencia, estamos trabajando para solucionarlo.")).fadeIn('slow').delay(2000).fadeOut('slow');
                             }else{
                                 $('#answerMessage').removeClass('error');
+                                $('#answerMessage').text(gettext("La sugerencia ha sido añadida con éxito")).fadeIn('slow').delay(2000).fadeOut('slow');
                                 $('#answerMessage').addClass('success');
-                                $('#answerMessage').text("La sugerencia ha sido añadida con éxito").fadeIn('slow').delay(2000).fadeOut('slow');
                                 
                                 //Sobreescribimos los valores anteriores para que cuando volvamos
                                 //a desplegar la configuración salga bien
@@ -257,7 +257,7 @@ function saveSettings(engine){
                         }
                     });//End AJAX
                 } else {
-                    alert("Geocode was not successful for the following reason: " + status);
+                    alert(gettext("Geocode was not successful for the following reason: ") + status);
                 }
             }
         );
@@ -445,7 +445,7 @@ function insertToolbar(map){
     //------------------------------------------------------------------
     var mirilla = document.createElement('DIV');
     $(mirilla).addClass("btnGmaps")
-    $(mirilla).attr('title','My location');
+    $(mirilla).attr('title',gettext('Posición actual'));
     $(mirilla).html('<img src="/static/webapp/img/mirilla.png">');
     
     //Asignamos el comportamiento
@@ -529,13 +529,13 @@ function saveSuggestion(){
     
     
         if($('#suggestion-item textarea').val()==$('#suggestion-item textarea').attr('placeholder')){
-            showMessage('Por favor introduce primero la sugerencia',"error");
+            showMessage(gettext('Por favor introduce primero la sugerencia'),"error");
             $('#suggestion-item textarea').focus()
             return false;
         }
         
         if(placeReference==null){
-            showMessage('Por favor indique el campo "¿Donde?" para continuar',"error");
+            showMessage(gettext('Por favor indique el campo "¿Donde?" para continuar'),"error");
             $('#place').focus()
             return false;
         }
@@ -548,18 +548,18 @@ function saveSuggestion(){
                 
                 if (startDate > endDate){
                     //Comprobamos que inicio < fin
-                    showMessage('Por favor revise que la fecha de inicio sea anterior a la de fin',"error");
+                    showMessage(gettext('Por favor revise que la fecha de inicio sea anterior a la de fin'),"error");
                     return false;
                 }else if(startDate == endDate && $('#start-hour').val() !="hh:mm" && $('#end-hour').val() !="hh:mm"){
                     //Comprobamos que si inicio < fin -> hora inicio < hora fin
                     var startHour=$('#start-hour').val().split(":");
                     var endHour=$('#end-hour').val().split(":");
                     if(startHour[0]>endHour[0]){
-                        showMessage('Por favor revise que la hora de inicio sea anterior a la de fin',"error");
+                        showMessage(gettext('Por favor revise que la hora de inicio sea anterior a la de fin'),"error");
                         return false;
                     }else if(startHour[0]==endHour[0]){
                         if(startHour[1]>endHour[1]){
-                            showMessage('Por favor revise que la hora de inicio sea anterior a la de fin',"error");
+                            showMessage(gettext('Por favor revise que la hora de inicio sea anterior a la de fin'),"error");
                             return false;
                         }
                     }
@@ -568,7 +568,7 @@ function saveSuggestion(){
         }
         
         
-        $('#submit-button').text("Enviando...")
+        $('#submit-button').text(gettext("Enviando..."))
         $('#submit-button').addClass("waiting")
         GRM.wait();
         
@@ -583,7 +583,7 @@ function saveSuggestion(){
             tags: $('#id_tags').val()
         };
         if($('#date [type="checkbox"]').is(':checked')==false){
-            console.log("Entro por el checkbox no marcado");
+            //console.log("Entro por el checkbox no marcado");
             tmp=$('#date [type="checkbox"]');
             splittedDate=$('#start-date').val().split("/")
             params['starts_month']=splittedDate[0]
@@ -625,9 +625,9 @@ function saveSuggestion(){
             complete: function(msg){
                 GRM.nowait();
                 if (msg.status !=200){
-                    showMessage("Error "+msg.status,"error")
+                    showMessage(gettext("Error")+" "+msg.status,"error")
                 }else{
-                    showMessage("La sugerencia ha sido añadida con éxito","success")
+                    showMessage(gettext("La sugerencia ha sido añadida con éxito"),"success")
 
                     
                     //Restablecemos los campos
@@ -646,7 +646,7 @@ function saveSuggestion(){
                     //Reseteamos el mapa
                     instanceMap();
                 }
-                $('#submit-button').text("Enviar")
+                $('#submit-button').text(gettext("Enviar"))
                 $('#submit-button').removeClass("waiting")
             }
         });

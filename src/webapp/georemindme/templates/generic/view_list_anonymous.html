@@ -56,10 +56,10 @@
                                     //console.log(data);
                                     //asd=$(this);
                                     if(data==false){
-                                        showMessage(I18N["¡Vaya! La propuesta ya ha sido realizada previamente o está en la lista."],"error");
+                                        showMessage("{% trans '¡Vaya! La propuesta ya ha sido realizada previamente o está en la lista.' %}","error");
                                     }else{
                                         elem.addClass("strong");
-                                        showMessage(I18N["¡Gracias! La propuesta ha sido enviada exitósamente"],"success");
+                                        showMessage("{% trans '¡Gracias! La propuesta ha sido enviada exitósamente' %}","success");
                                     }
                                 }
                             });

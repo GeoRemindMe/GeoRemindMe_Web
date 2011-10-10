@@ -470,11 +470,11 @@ function saveSettings(engine){
                             if (msg.status !=200){
                                 $('#answerMessage').removeClass('success');
                                 $('#answerMessage').addClass('error');
-                                $('#answerMessage').text("Ha habido un error al añadir la sugerencia, estamos trabajando para solucionarlo.").fadeIn('slow').delay(2000).fadeOut('slow');
+                                $('#answerMessage').text(gettext("Ha habido un error al añadir la sugerencia, estamos trabajando para solucionarlo.")).fadeIn('slow').delay(2000).fadeOut('slow');
                             }else{
                                 $('#answerMessage').removeClass('error');
                                 $('#answerMessage').addClass('success');
-                                $('#answerMessage').text("La sugerencia ha sido añadida con éxito").fadeIn('slow').delay(2000).fadeOut('slow');
+                                $('#answerMessage').text(gettext("La sugerencia ha sido añadida con éxito")).fadeIn('slow').delay(2000).fadeOut('slow');
                                 
                                 //Sobreescribimos los valores anteriores para que cuando volvamos
                                 //a desplegar la configuración salga bien
