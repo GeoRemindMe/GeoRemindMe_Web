@@ -39,7 +39,7 @@
                 
             </ul>
             <ul id="chronology" value="{{chronology.0}}" {% if profile.username%}username="{{profile.username}}"{%endif%} page="1" {% if notifications %} notifications="{{notifications}}" {% endif %}>
-                {% include "timeline.html" %}
+                {% include "generic/timeline.html" %}
             </ul>
         
             <!-- Si hay más mensajes -->
