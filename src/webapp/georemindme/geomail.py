@@ -84,13 +84,14 @@ def send_keepuptodate(org,msg,to=settings.CONTACT_EMAIL, language='en'):
 
 def send_notification_invitation(to, sender, invitation, language='en'):
     from django.utils import translation
+    from geoalert.models import Suggestion
     translation.activate(language)
     message = GeoMail()
     message.to = to
     from geolist.models import List
     if isinstance(invitation.instance,List):
         obj_type=_("una lista")
-    else if isinstance(invitation.instance,Suggestion):
+    elif isinstance(invitation.instance, Suggestion):
         obj_type=_("una sugerencia")
     message.subject = _("%(sender)s ha compartido %(obj_type)s contigo") % {
                             'sender':sender,
