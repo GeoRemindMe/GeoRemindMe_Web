@@ -102,6 +102,7 @@ class MapService(remote.Service):
         if request.id is None and request.google_places_reference is None:
             raise ApplicationError("Unknow place")
         user = User.objects.get_by_id(int(environ['user']))
+        
         def load_suggestions_async(suggestions):
             suggestions_loaded = [s for s in suggestions]
             from georemindme.funcs import prefetch_refprops
