@@ -70,10 +70,11 @@ def login_func(request, email = None, password = None, remember_me = False, user
                 if from_rpc:
                     error = 0
                 else:
-                    error = _(u"Tu cuenta de correo no ha sido confirmada en %d días," 
+                    error = _(u"Tu cuenta de correo no ha sido confirmada en %d días," % settings.NO_CONFIRM_ALLOW_DAYS
                               + u"por lo que no puedes acceder."
                               + u"<br/>Te hemos reenviado el correo para que puedas activarla."
-                              % settings.NO_CONFIRM_ALLOW_DAYS)
+                              )
+                              
             else:
                 redirect = get_next(request)
                 init_user_session(request, user, remember=remember_me, from_rpc=from_rpc)
