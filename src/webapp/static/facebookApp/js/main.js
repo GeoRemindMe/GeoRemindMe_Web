@@ -38,7 +38,7 @@ function facebookInit(config) {
     // if we are opening http://localhost:8080/fb/ or
     // georemindme.appspot.com/fb we will be redirected
     if (window == top && DEBUG_mode==false) { 
-        alert("No puedes entrar a esta URL sin estar en Facebook, procedemos a redireccionarte");
+        alert(gettext("No puedes entrar a esta URL sin estar en Facebook, procedemos a redireccionarte"));
         goHome(); 
     }
 }

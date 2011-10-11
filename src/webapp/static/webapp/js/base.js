@@ -61,19 +61,19 @@ function renderStartBtn(){
 		$('#startBtn').removeClass('disabled');
 		$('#startBtn').addClass('enabled');
 		$('#startBtn').removeAttr('disabled');
-		$('#startBtn').attr('title','Empezar el registro');
+		$('#startBtn').attr('title',gettext('Empezar el registro'));
 	}else{
 		$('#startBtn').removeClass('enabled');
 		$('#startBtn').addClass('disabled');
 		$('#startBtn').attr('disabled', 'disabled');
-		$('#startBtn').attr('title','Por favor completa correctamente el formulario');
+		$('#startBtn').attr('title',gettext('Por favor completa correctamente el formulario'));
 	}
 }
 
 //This function checks the registration form
 function validateForm(){
 	if(!$("#termsCheckbox").attr('checked')){
-		$('#errorTerms').html('Para continuar es necesario marcar esta casilla.');
+		$('#errorTerms').html(gettext('Para continuar es necesario marcar esta casilla.'));
 		checkPasswords();
 		return false;
 	}else{
@@ -102,7 +102,7 @@ function checkEmail(event)
 			
 			$('#msgRegisterEmail').removeClass('msgOK');
 			$('#msgRegisterEmail').addClass('msgNoOK');
-			$('#txtMsgRegisterEmail').html('El email no es válido, por favor revíselo');
+			$('#txtMsgRegisterEmail').html(gettext('El email no es válido, por favor revíselo'));
 			
 			emailOK=false;
 			renderStartBtn();
@@ -124,7 +124,7 @@ function checkEmail(event)
 					if(data.result){
 						$('#msgRegisterEmail').removeClass('msgOK');
 						$('#msgRegisterEmail').addClass('msgNoOK');
-						$('#msgRegisterEmail').html('<span id="txtMsgRegisterEmail">Ya estas registrado. Puedes identificarte y acceder.</span>');
+						$('#msgRegisterEmail').html('<span id="txtMsgRegisterEmail">'+gettext('Ya estas registrado. Puedes identificarte y acceder.')+'</span>');
 						emailOK=false;
 						renderStartBtn();
 					}
@@ -132,7 +132,7 @@ function checkEmail(event)
 					{
 						$('#msgRegisterEmail').removeClass('msgNoOK');
 						$('#msgRegisterEmail').addClass('msgOK');
-						$('#msgRegisterEmail').html('<span id="txtMsgRegisterEmail">Todavía no estas registrado</span>');
+						$('#msgRegisterEmail').html('<span id="txtMsgRegisterEmail">'+gettext('Todavía no estas registrado')+'</span>');
 						emailOK=true;
 						renderStartBtn();
 					}
@@ -155,7 +155,7 @@ function checkPasswords(event){
 			$('#msgRegisterPass')
 				.removeClass('msgOK')
 				.addClass('msgNoOK')
-				.html('Las contraseñas no coinciden')
+				.html(gettext('Las contraseñas no coinciden'))
 				.show();
 		}
 		
@@ -171,7 +171,7 @@ function checkPasswords(event){
 				$('#msgRegisterPass')
 					.removeClass('msgOK')
 					.addClass('msgNoOK')
-					.html('Las contraseñas tienen que tener 6 o más caracteres')
+					.html(gettext('Las contraseñas tienen que tener 6 o más caracteres'))
 					.show();
 			}
 			
