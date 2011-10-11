@@ -2346,7 +2346,7 @@ function facebookInit(config) {
     // if we are opening http://localhost:8080/fb/ or
     // georemindme.appspot.com/fb we will be redirected
     if (window == top && DEBUG_mode==false) { 
-        alert("No puedes entrar a esta URL sin estar en Facebook, procedemos a redireccionarte");
+        alert(gettext("No puedes entrar a esta URL sin estar en Facebook, procedemos a redireccionarte"));
         goHome(); 
     }
 }
@@ -2703,9 +2703,9 @@ function suggestionProposal(elem,action,timeline_id){
         success: function(data){
             if(data==true){
                 if(action=="accept")
-                    $(elem).parent().empty().html("La propuesta ha sido aceptada");
+                    $(elem).parent().empty().html(gettext("La propuesta ha sido aceptada"));
                 else
-                    $(elem).parent().empty().html("La propuesta ha sido rechazada");
+                    $(elem).parent().empty().html(gettext("La propuesta ha sido rechazada"));
             }
             //~ $(elem).parent()
             //~ console.log(data);

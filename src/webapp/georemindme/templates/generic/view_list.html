@@ -2,6 +2,9 @@
 {% load i18n %}
 {% load tags %}
 
+{% block title %}{% blocktrans with list.user as autor%}Lista "{{list}}" de sugerencias creada por {{autor}}{% endblocktrans %}{% endblock %}
+{% block description %}{% if list.description = None and suggestions|length = 0 %}{% trans "Nuestra misión es ofrecer una herramienta para la gestión de sugerencias personalizadas en base a tu localización y a tu gustos." %}{% else %}{% if list.description %}{{list.description}} - {% endif %}{% for obj in suggestions %}{{forloop.counter}}) {{obj.instance.user.username}}:{{obj.instance.name}}{%if not forloop.last %} {%endif%}{%endfor%}{%endif%}{%endblock%}
+{% if list.tags|length != 0 %}{% block keywords %}{% for tag in list.tags %}{{tag}},{% endfor %}{%endblock%}{% endif %}
 
 {% block extra_js %}	
         <script type="text/javascript">
@@ -56,10 +59,10 @@
                                     //console.log(data);
                                     //asd=$(this);
                                     if(data==false){
-                                        showMessage(I18N["¡Vaya! La propuesta ya ha sido realizada previamente o está en la lista."],"error");
+                                        showMessage("{% trans '¡Vaya! La propuesta ya ha sido realizada previamente o está en la lista.' %}","error");
                                     }else{
                                         elem.addClass("strong");
-                                        showMessage(I18N["¡Gracias! La propuesta ha sido enviada exitósamente"],"success");
+                                        showMessage("{% trans '¡Gracias! La propuesta ha sido enviada exitósamente' %}","success");
                                     }
                                 }
                             });
@@ -79,9 +82,7 @@
 	</script>
 {%endblock%}
 
-{% block title %}{% trans "Sugerencias:" %} "{{list}}"{% endblock %}
 
-{% block goBack %}{%endblock%}    
 {% block body %}
     <div id="view-list">
     	
@@ -99,9 +100,11 @@
                     <li id="owner"><img src="{% embedded_avatar list.user.username %}" alt="{{list.user.username}}"> <a href="{% url2 in_facebook public_profile list.user %}" title="{{list.user}}" class="black-link">Autor: {{list.user}}</a></li>
                     <li class="suggestionx16">{% trans "Sugerencias:" %} {{suggestions|length}}</li>
                     <li class="saved">{% trans "Veces guardada:" %} <span id="followers-counter">{{list.counters.followers}}</span></li>
-                    {% if list.tags %}
-                        <li>{% trans "Etiquetas:" %} {{list.tags}}</li>
-                    {% endif %}
+                        {% comment %}
+                        {% if list.tags %}
+                            <li>{% trans "Etiquetas:" %}{% for tag in list.tags %}{{tag}},{% endfor %}</li>
+                        {% endif %}
+                    {% endcomment %}
                 </ul>
                 <div class="clear" id="action-bar">
                     <ul>
@@ -134,7 +137,6 @@
                 </div>           
     
             </div>
-        
         
         <ul id="suggestion-list">
             {% for obj in suggestions %}

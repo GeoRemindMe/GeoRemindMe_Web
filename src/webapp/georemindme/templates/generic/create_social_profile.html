@@ -7,7 +7,9 @@
 {% block mainButton %}{% endblock %}
 
 {% block nav %} 
-    {% include "register_menu.html" %}
+    {% if in_facebook %}
+        {% include "register_menu.html" %}
+    {% endif %}
 {% endblock %}
 
 {% block extra_js %}
@@ -105,7 +107,7 @@
                                 var social_network=networks_perms[i]["network"];
                                 if(networks_perms[i]['has_perms']!=data[social_network]){
                                     //console.log("Se acaban de conceder permisos a "+social_network);
-                                    showMessage("{% trans 'Buscando personas a las que podrías conocer de "+social_network' %},"success"));
+                                    showMessage("{% trans 'Buscando personas a las que podrías conocer de "+social_network' %},"success");
                                     loadNewContacts();
                                     networks_perms[i]['has_perms']=data[social_network];
                                     $('#link-social-accounts #'+social_network).empty().append("<span>"+social_network+"</span>")
@@ -180,12 +182,14 @@
             <div class="footer-notes clear">
                 <strong class="show-more" onclick="javascript:toggle_showMore()">{%trans "[Ver más]" %}</strong>
                 <p>
-                    {%trans "En ningún momento enviaremos ningún correo electrónico a tus contactos sin tu permiso. <span id="show-more-text"><br>
-                    Al igual que tú también hemos pasado por otras páginas sin ningún permiso que envían correos a nuestros contactos; pero nosotros no somos así, somos buena gente ;D. 
+                    {% blocktrans %}
+                        En ningún momento enviaremos ningún correo electrónico a tus contactos sin tu permiso. <span id="show-more-text"><br>
+                        Al igual que tú también hemos pasado por otras páginas sin ningún permiso que envían correos a nuestros contactos; pero nosotros no somos así, somos buena gente ;D. 
                 
-                    <br><strong>Tan solo queremos ofrecerte una herramienta con todas las comodidades.</strong><br>
+                        <br><strong>Tan solo queremos ofrecerte una herramienta con todas las comodidades.</strong><br>
                 
-                    Un saludo y gracias por confiar en <a href="http://georemindme.com/team" target="_blank">nuestro equipo</a>." %}
+                        Un saludo y gracias por confiar en <a href="http://georemindme.com/team" target="_blank">nuestro equipo</a>.
+                    {% endblocktrans %}
                 
                 </span>
                 </p>

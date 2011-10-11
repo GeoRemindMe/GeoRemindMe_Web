@@ -19,16 +19,16 @@ print "-> Compilando ficheros de idiomas..."
 
 for lang in settings.LANGUAGES:
 	
-	if commands.getstatusoutput('django-admin makemessages -l '+lang[0])[0]==0:#creates german (de) .po
+	if commands.getstatusoutput('django-admin makemessages -v 2 -l '+lang[0])[0]==0:#creates german (de) .po
 		print lang[1] + ' strings updated at \'locale/'+lang[0]+'/LC_MESSAGES/django.po\''
-	elif commands.getstatusoutput('django-admin.py makemessages -l '+lang[0])[0]==0:#creates german (de) .po
+	elif commands.getstatusoutput('django-admin.py makemessages -v 2 -l '+lang[0])[0]==0:#creates german (de) .po
 		print lang[1] + ' strings updated at \'locale/'+lang[0]+'/LC_MESSAGES/django.po\''
 	else:
 		print lang[1] + ' strings couldn\'t be updated at \'locale/'+lang[0]+'/LC_MESSAGES/django.po\''
 
-	if commands.getstatusoutput('django-admin makemessages -d djangojs -l '+lang[0])[0]==0:#creates german (de) .po
+	if commands.getstatusoutput('django-admin makemessages -v 2 -d djangojs -l '+lang[0])[0]==0:#creates german (de) .po
 		print lang[1] + ' strings updated at \'locale/'+lang[0]+'/LC_MESSAGES/django.po\''
-	elif commands.getstatusoutput('django-admin.py makemessages -d djangojs -l '+lang[0])[0]==0:#creates german (de) .po
+	elif commands.getstatusoutput('django-admin.py makemessages -v 2 -d djangojs -l '+lang[0])[0]==0:#creates german (de) .po
 		print lang[1] + ' strings updated at \'locale/'+lang[0]+'/LC_MESSAGES/django.po\''
 	else:
 		print lang[1] + ' strings couldn\'t be updated at \'locale/'+lang[0]+'/LC_MESSAGES/django.po\''

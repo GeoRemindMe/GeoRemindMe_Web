@@ -19,10 +19,9 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Expires" content="0">
-	<title>
-      {% block title %}{%trans "GeoRemindMe! un mundo entero de sugerencias por descubrir" %}{% endblock %}
-    </title>
-    
+	<title>{% block title %}{%trans "GeoRemindMe! - Aplicación social para gestionar sugerencias geolocalizadas" %}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{% trans "Nuestra misión es ofrecer una herramienta para la gestión de sugerencias personalizadas en base a tu localización y a tu gustos." %}{% endblock %}" />
+    <meta name="keywords" content="{% block keywords %}{% trans "sugerencias, recomendaciones, viajes, geolocalización, móvil, android, ios, iphone, alertas, aplicación" %}{% endblock %}" />
     
     <!------------------------------- FIN ------------------------------>
     {% if in_facebook %}
@@ -213,9 +212,18 @@
     
     {% block extra_js %}{%endblock%}
     {% block embed_js %}{%endblock%}
-	
+	<style type="text/css">
+        #announcement{
+            background: none repeat scroll 0 0 #F2DCDC;
+            border: 1px solid #DDDDDD;
+            font-family: arial,helvetica,"helvetica neue",sans-serif;
+            padding: 8px 0;
+            text-align: center;
+        }
+    </style>
 </head>
     <!------------------------------- FIN ------------------------------>
+    <div id="announcement"><a href="http://blog.georemindme.com/es/mejoras-version-1-1/">Última cambios</a>: 11/10/2011 - <strong>Ayúdanos a mejorar</strong> votando las <a href="http://getsatisfaction.com/georemindme/ideas/popular">próximas mejoras</a> - Estado: BETA pública v1.1</div>
     
     {% if in_facebook %}
         <body class="logged" id="webapp">
@@ -262,6 +270,7 @@
     {% endif %}
     
                 {% block nav %} 
+                
                     {% if in_facebook %}
                         <ul>
                             <li class="menu-icons main-menu-icons" id="{% active request dashboard %}"><a id="activity-icon" href="{{dashboard}}" title="Dashboard">Actividad</a></li>
