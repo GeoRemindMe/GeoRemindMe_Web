@@ -17,7 +17,8 @@
         </div>
         <div class="timeline-msg">
             <span class="timeline-icon">&nbsp;</span>
-            {% trans 'Has guardado en <a href="{% url in_facebook user_suggestions%}">tu baúl</a> la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">{{obj.instance.user.username}}</a>:' %}<br>
+            {% url in_facebook user_suggestions as suggestion_url %}
+            {% trans 'Has guardado en <a href="{{suggestion_url}}">tu baúl</a> la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.user.username %}" class="dark-link">{{obj.instance.user.username}}</a>:' %}<br>
             <a href="{% url2 in_facebook view_suggestion obj.instance.slug %}">{{obj.instance.name}}</a><br>
             <span class="timestamp">  {{obj.created|naturaltime}}</span>  
         </div>
@@ -29,7 +30,8 @@
         </div>
         <div class="timeline-msg">
             <span class="timeline-icon">&nbsp;</span>
-            {% trans '<a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> ha guardado en su baúl tu sugerencia :' %}<br>
+            {% url2 in_facebook public_profile obj.username as profile_url%}
+            {% trans '<a href="{{profile_url}}" class="dark-link">{{obj.username}}</a> ha guardado en su baúl tu sugerencia :' %}<br>
             <a href="{% url2 in_facebook view_suggestion obj.instance.slug %}" class="hoverlink">{{obj.instance.name}}</a><br>
             <span class="timestamp">  {{obj.created|naturaltime}}</span>  
         </div>
