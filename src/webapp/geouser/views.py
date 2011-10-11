@@ -495,7 +495,7 @@ def remind_user(request):
                 f._errors['email'] = f.error_class([fail])
             else:
                 user.send_remind_code()
-                msg = _("Se ha enviado un correo de confirmación a %s. Por favor revisa tu correo") % user.email
+                msg = _("Se ha enviado un correo de confirmación a %s. Por favor revisa tu correo") % user.email.encode('utf-8')
                 return render_to_response('generic/user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
     else:
         f = EmailForm(prefix='pass_remind')
