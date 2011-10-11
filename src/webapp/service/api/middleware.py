@@ -18,11 +18,15 @@ class OAuthware(object):
                 session.put()
                 return self.wrapped_app(environ, start_response)
         elif 'HTTP_AUTHORIZATION' in environ:
-            headers = {'Authorization': environ['HTTP_AUTHORIZATION']}
-            oauth_request = oauth2.Request.from_request(http_method=environ['REQUEST_METHOD'],
-                                        http_url=environ['PATH_INFO'], 
-                                        headers=headers,
-                                        )
+            try:
+                headers = {'Authorization': environ['HTTP_AUTHORIZATION']}
+                oauth_request = oauth2.Request.from_request(http_method=environ['REQUEST_METHOD'],
+                                            http_url=environ['PATH_INFO'], 
+                                            headers=headers,
+                                            )
+            except:
+                start_response(400, [('content-type', 'text/plain')])
+                return ('Invalid OAUTH Request') 
             if oauth_request is not None:
                 from geoauth.models import OAUTH_Token
                 token = OAUTH_Token.get_token(oauth_request.parameters['oauth_token'])

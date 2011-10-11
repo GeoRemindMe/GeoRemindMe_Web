@@ -81,7 +81,7 @@ class Stats_alert_done(Stats_base):
 def clean_sessions(request):
     from geomiddleware.sessions.models import _Session_Data
     from datetime import datetime
-    sessions = _Session_Data.all().filter('expires <', datetime.now())
+    sessions = _Session_Data.all().filter('expires <', datetime.now()).run()
     try:
         db.delete([session for session in sessions])
     except:
