@@ -44,6 +44,12 @@ class SuggestionService(remote.Service):
     #decorador para indicar los metodos del servicio
     @remote.method(GetSuggestionsRequest, Suggestions)
     def get_suggestions(self, request):
+        """
+            Obtiene la mochila del usuario con la sesion iniciada
+           
+               Recibe: :class:`GetSuggestionsRequest
+               Devuelve: :class:`Suggestions`
+        """
         user = User.objects.get_by_id(int(environ['user']))
         lists_following = ListSuggestion.objects.get_list_user_following(user, async=True)
         lists = ListSuggestion.objects.get_by_user(user=user, querier=user, all=True)
@@ -70,7 +76,7 @@ class SuggestionService(remote.Service):
                            poi_lat = a.poi.location.lat,
                            poi_lon = a.poi.location.lon,
                            poi_id = a.poi.id,
-                           places_reference = a.poi.google_places_reference,
+                           google_places_reference = a.poi.google_places_reference,
                            modified = int(mktime(a.modified.utctimetuple())),
                            created = int(mktime(a.created.utctimetuple())),
                            username = a.username,
@@ -83,6 +89,12 @@ class SuggestionService(remote.Service):
     
     @remote.method(GetSuggestionRequest, Suggestion)
     def get_suggestion(self, request):
+        """
+            Devuelve la informacion sobre una sugerencia
+           
+               Recibe: :class:`GetSuggestionRequest
+               Devuelve: :class:`Suggestion`
+        """
         user = User.objects.get_by_id(int(environ['user']))
         from geovote.api import get_comments
         suggestion = SuggestionModel.objects.get_by_id_querier(request.id, querier=user)
@@ -107,7 +119,7 @@ class SuggestionService(remote.Service):
                           poi_lat=suggestion.poi.location.lat,
                           poi_lon=suggestion.poi.location.lon,
                           poi_id=suggestion.poi.id,
-                          places_reference = suggestion.poi.google_places_reference,
+                          google_places_reference = suggestion.poi.google_places_reference,
                           modified = int(mktime(suggestion.modified.utctimetuple())),
                           created = int(mktime(suggestion.created.utctimetuple())),
                           username = suggestion.username,

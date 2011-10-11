@@ -14,6 +14,18 @@ class GetSiteReverseRequest(messages.Message):
     
 
 class GetPlaceRequest(messages.Message):
+    """
+            Parametros de entrada para realizar una peticion de informacion de
+        un sitio.
+            
+            Parametros:
+                id : :class:`Integer` codigo ID que identifica al lugar
+                google_places_reference: :class:`string` codigo que identifica 
+                    el lugar en google places
+            
+            Ambos parametros son opcionales, pero al menos debes indicar uno, 
+        teniendo id, preferencia sobre google_places_reference
+    """
     id = messages.IntegerField(1)
     google_places_reference = messages.StringField(2)
     
@@ -67,20 +79,33 @@ class MapService(remote.Service):
     
     @remote.method(GetPlaceRequest, Place)
     def get_place(self, request):
+        """
+                Devuelve la informacion sobre un determinado sitio, incluyendo
+            la lista de sugerencias.
+            
+                Recibe :class:`GetPlaceRequest` con el lugar a buscar.
+                
+                Devuelve: :class:`Place` con la informacion del sitio y las sugerencias
+                    existentes.
+                    
+                Excepciones: :class:`ApplicationError` si no existe o faltan parametros
+                    para identificar el sitio.
+        """
         from geouser.models import User
-        from geoalert.models_poi import Place
+        from geoalert.models_poi import Place as PlaceModel
         from geovote.models import Vote
         from geoalert.models import Suggestion as SuggestionModel
         from geoalert.views import _get_city
         from os import environ
         from time import mktime
         from google.appengine.ext import db
-        
+        if request.id is None and request.google_places_reference is None:
+            raise ApplicationError("Unknow place")
         user = User.objects.get_by_id(int(environ['user']))
         def load_suggestions_async(suggestions):
             suggestions_loaded = [s for s in suggestions]
             from georemindme.funcs import prefetch_refprops
-            suggestions = prefetch_refprops([s['instance'] for s in suggestions_loaded], SuggestionModel.user, SuggestionModel.poi)
+            suggestions = prefetch_refprops([s for s in suggestions_loaded], SuggestionModel.user, SuggestionModel.poi)
             suggestions_loaded = []
             for a in suggestions:
                 t = Suggestion(
@@ -89,15 +114,18 @@ class MapService(remote.Service):
                            poi_lat = a.poi.location.lat,
                            poi_lon = a.poi.location.lon,
                            poi_id = a.poi.id,
-                           places_reference = a.poi.google_places_reference,
+                           google_places_reference = a.poi.google_places_reference,
                            modified = int(mktime(a.modified.utctimetuple())),
                            created = int(mktime(a.created.utctimetuple())),
-                           username = a.username,
+                           username = a.user.username,
                            id = a.id,
                          )
                 suggestions_loaded.append(t)
             return suggestions_loaded
-        place = Place.objects.get_by_id(request.id)
+        if request.id is not None:
+            place = PlaceModel.objects.get_by_id(request.id)
+        else:
+            place = PlaceModel.objects.get_by_google_reference(request.google_places_reference)
         if place is None:
             raise ApplicationError("Unknow place")
         query_id, suggestions_async = SuggestionModel.objects.get_by_place(place, 
@@ -130,5 +158,6 @@ class MapService(remote.Service):
                      suggestions = Suggestions(query_id= query_id,
                                                suggestions = load_suggestions_async(suggestions_async)
                                                ),
-                     vote_counter = vote_counter
+                     vote_counter = vote_counter,
+                     google_places_reference=place.google_places_reference
                      )
