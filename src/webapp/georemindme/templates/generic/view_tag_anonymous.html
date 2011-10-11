@@ -23,7 +23,7 @@
 
 {% block title %}{% blocktrans %}Sugerencias relacionadas con "{{tag}}":{% endblocktrans %}{% endblock %}
 {% block description %}{% for obj in suggestions.1 %}{{forloop.counter}}) {{obj}} {%endfor%}{%endblock%}
-{% block keywords %}{{tag}},{% trans "buscador, sugerencias, persolinalizadas, recomendaciones, viajes" %}{% endblock %}
+{% block keywords %}{{tag}}, {% trans "buscador, sugerencias, persolinalizadas, recomendaciones, viajes" %}{% endblock %}
 
 {% block body %}
 	

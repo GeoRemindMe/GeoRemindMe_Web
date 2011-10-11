@@ -212,9 +212,18 @@
     
     {% block extra_js %}{%endblock%}
     {% block embed_js %}{%endblock%}
-	
+	<style type="text/css">
+        #announcement{
+            background: none repeat scroll 0 0 #F2DCDC;
+            border: 1px solid #DDDDDD;
+            font-family: arial,helvetica,"helvetica neue",sans-serif;
+            padding: 8px 0;
+            text-align: center;
+        }
+    </style>
 </head>
     <!------------------------------- FIN ------------------------------>
+    <div id="announcement"><a href="">Última cambios</a>: 11/10/2011 - <strong>Ayúdanos a mejorar</strong> votando las <a href="http://getsatisfaction.com/georemindme/ideas/popular">próximas mejoras</a> - Estado: BETA pública v1.1</div>
     
     {% if in_facebook %}
         <body class="logged" id="webapp">

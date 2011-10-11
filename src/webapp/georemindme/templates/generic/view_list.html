@@ -3,11 +3,8 @@
 {% load tags %}
 
 {% block title %}{% blocktrans with list.user as autor%}Lista "{{list}}" de sugerencias creada por {{autor}}{% endblocktrans %}{% endblock %}
-
 {% block description %}{% if list.description = None and suggestions|length = 0 %}{% trans "Nuestra misión es ofrecer una herramienta para la gestión de sugerencias personalizadas en base a tu localización y a tu gustos." %}{% else %}{% if list.description %}{{list.description}} - {% endif %}{% for obj in suggestions %}{{forloop.counter}}) {{obj.instance.user.username}}:{{obj.instance.name}}{%if not forloop.last %} {%endif%}{%endfor%}{%endif%}{%endblock%}
-
-{% if list.tags|length != 0 %}{% block keywords %}{% for tag in list.tags %}{{tag}},{% endfor %}{%endblock%}
-{% endif %}
+{% if list.tags|length != 0 %}{% block keywords %}{% for tag in list.tags %}{{tag}},{% endfor %}{%endblock%}{% endif %}
 
 {% block extra_js %}	
         <script type="text/javascript">

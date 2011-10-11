@@ -4,6 +4,7 @@
 {% load filters %}
 
 {% block title %}{%trans "Mochila con tus sugerencias y listas favoritas" %}{% endblock %}
+{% block description %}{% trans "Desde la mochila de sugerencias podrás gestionar tus sugerencias y listas favoritas" %}{% endblock %}
 
 {% block extra_js %}
     {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
