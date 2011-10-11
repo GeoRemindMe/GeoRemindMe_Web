@@ -464,17 +464,17 @@ def confirm(request, user, code):
     u = User.objects.get_by_email_not_confirm(email)
     if u is not None:
         if u.confirm_user(code):
-            msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % u.email
-            return render_to_response('generic/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
+            msg = _(u"La cuenta de %s ya esta confirmada, por favor, conectate.") % u.email
+            return render_to_response('mainApp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
         else:
-            msg = _("Codigo de confirmacion incorrecto")
-            return render_to_response('generic/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
+            msg = _(u"Codigo de confirmacion incorrecto")
+            return render_to_response('mainApp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
     u = User.objects.get_by_email(email, keys_only=True)
     if u is not None:
-        msg = _("La cuenta de %s ya esta confirmada, por favor, conectate.") % email
+        msg = _(u"La cuenta de %s ya esta confirmada, por favor, conectate.") % email
     else:
-        msg = _("Usuario erroneo %s.") % email
-    return render_to_response('generic/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
+        msg = _(u"Usuario erroneo %s.") % email
+    return render_to_response('mainApp/confirmation.html', {'msg': msg}, context_instance=RequestContext(request))
 
 
 #===============================================================================
@@ -496,10 +496,10 @@ def remind_user(request):
             else:
                 user.send_remind_code()
                 msg = _(u"Se ha enviado un correo de confirmación a %s. Por favor revisa tu correo") % user.email
-                return render_to_response('generic/user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
+                return render_to_response('mainApp/user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
     else:
         f = EmailForm(prefix='pass_remind')
-    return render_to_response('generic/user_pass.html', {'form': f}, context_instance=RequestContext(request))
+    return render_to_response('mainApp/user_pass.html', {'form': f}, context_instance=RequestContext(request))
 
 
 def remind_user_code(request, user, code):
@@ -524,18 +524,18 @@ def remind_user_code(request, user, code):
                 if f.is_valid():
                     user.reset_password(code, password=f.cleaned_data['password'])
                     msg = _(u"Contraseña cambiada, por favor identifíquese.")
-                    return render_to_response('generic/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
+                    return render_to_response('mainApp/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
             else:
                 f = RecoverPassForm(prefix='pass_recover')
                 msg = _(u"Establece tu nueva contraseña.")
-            return render_to_response('generic/user_pass.html', {'form': f, 'msg': msg}, context_instance=RequestContext(request))
+            return render_to_response('mainApp/user_pass.html', {'form': f, 'msg': msg}, context_instance=RequestContext(request))
         except OutdatedCode, o:
             msg = _(o.message)
         except BadCode, i:
             msg = _(i.message)
     else:
         msg = _(u"Usuario inválido")
-    return render_to_response('generic/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
+    return render_to_response('mainApp/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
 
 
 @login_required
