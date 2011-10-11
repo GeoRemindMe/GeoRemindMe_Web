@@ -82,8 +82,8 @@ def login_func(request, email = None, password = None, remember_me = False, user
     if from_rpc:
         error = 1
     else:
-        error = _("El email o la contraseña que has introducido es incorrecta"
-                  "<br/>Por favor asegúrate que no tienes activadas las mayúsculas e inténtalo de nuevo")
+        error = _(u"El email o la contraseña que has introducido es incorrecta \n"
+                  + u"<br/>Por favor asegúrate que no tienes activadas las mayúsculas e inténtalo de nuevo")
     return error, redirect
 
 

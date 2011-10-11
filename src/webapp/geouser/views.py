@@ -491,11 +491,11 @@ def remind_user(request):
             from models import User
             user = User.objects.get_by_email(f.cleaned_data['email'])
             if user is None:
-                fail = _("El correo no existe")
+                fail = _(u"El correo no existe")
                 f._errors['email'] = f.error_class([fail])
             else:
                 user.send_remind_code()
-                msg = _("Se ha enviado un correo de confirmación a %s. Por favor revisa tu correo") % user.email.encode('utf-8')
+                msg = _(u"Se ha enviado un correo de confirmación a %s. Por favor revisa tu correo") % user.email
                 return render_to_response('generic/user_pass.html', dict(msg=msg), context_instance=RequestContext(request))
     else:
         f = EmailForm(prefix='pass_remind')
@@ -523,18 +523,18 @@ def remind_user_code(request, user, code):
                 f = RecoverPassForm(request.POST, prefix='pass_recover')
                 if f.is_valid():
                     user.reset_password(code, password=f.cleaned_data['password'])
-                    msg = _("Contraseña cambiada, por favor identifíquese.")
+                    msg = _(u"Contraseña cambiada, por favor identifíquese.")
                     return render_to_response('generic/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
             else:
                 f = RecoverPassForm(prefix='pass_recover')
-                msg = _("Establece tu nueva contraseña.")
+                msg = _(u"Establece tu nueva contraseña.")
             return render_to_response('generic/user_pass.html', {'form': f, 'msg': msg}, context_instance=RequestContext(request))
         except OutdatedCode, o:
             msg = _(o.message)
         except BadCode, i:
             msg = _(i.message)
     else:
-        msg = _('Usuario inválido')
+        msg = _(u"Usuario inválido")
     return render_to_response('generic/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
 
 
