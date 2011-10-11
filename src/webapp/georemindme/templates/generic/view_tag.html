@@ -21,9 +21,11 @@
 	</script>
 {%endblock%}
 
-{% block title %}{% trans 'Buscador por palabras clave' %}{% endblock %}
+{% block title %}{% blocktrans %}Sugerencias relacionadas con "{{tag}}":{% endblocktrans %}{% endblock %}
+{% block description %}{% for obj in suggestions.1 %}{{forloop.counter}}) {{obj}} {%endfor%}{%endblock%}
+{% block keywords %}{{tag}},{% trans "buscador, sugerencias, persolinalizadas, recomendaciones, viajes" %}{% endblock %}
 
-{% block goBack %}{%endblock%}   
+   
  
 {% block body %}
 	

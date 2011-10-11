@@ -2,7 +2,12 @@
 {% load i18n %}
 {% load tags %}
 
-{% block title %}{%trans "Seguidores de {{request.user.username}}" %}{% endblock %}
+{% block title %}
+    {% blocktrans with request.user.username as username %} 
+        GeoRemindMe! / Personas que siguen a {{username}}
+    {% endblocktrans %}
+{% endblock %}
+
 {% block body %}
     <h1>
         {% ifequal user.username username_page %}

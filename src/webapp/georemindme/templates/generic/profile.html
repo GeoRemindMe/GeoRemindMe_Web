@@ -2,7 +2,13 @@
 {% load i18n %}
 {% load tags %}
 
-{% block title %}{%trans "Perfil público de" %} {{profile.username}}{% endblock %}
+{% block title %}
+    {% blocktrans with profile.username as username %} 
+        {{username}} en GeoRemindMe!
+    {% endblocktrans %}
+{% endblock %}
+
+
 {% block embed_js %}   
     <script type="text/javascript">
     

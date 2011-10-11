@@ -3,7 +3,12 @@
 {% load tags %}
 {% load filters %}
 
-{% block title %}{{suggestion.name}}{% endblock %}
+{% block title %}{% blocktrans with suggestion.name as sugg and suggestion.user.username as username and suggestion.poi.city as city %}{{username}} sugiere: {{sugg}} (En {{city}}) - GeoRemindMe!{% endblocktrans %}{% endblock %}
+{% block description %}{% if suggestion.description %}{{suggestion.description}} - {% endif %}{% if in_lists %}{%trans "Listas en las que aparece esta sugerencia"%}: {% for obj in in_lists %}{%if obj.visibility == 'public' %}{{obj.name}}{%endif%}{%if not forloop.last%}, {%endif%}{%endfor%} - {%endif%}{% trans "Localización" %}: {{suggestion.poi.address}} {%endblock%}
+{% if suggestion.tags %}
+    {% block keywords %}{% for tag in suggestion.tags %}{{tag}},{% endfor %}{%endblock%}
+{% endif %}
+
 {% block extra_js %}
    
     <script type="text/javascript">
@@ -29,9 +34,7 @@
             
                 
             <h1>
-<!--
-                <img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/>
--->
+                <a href="{% url2 in_facebook public_profile suggestion.user.username %}"><img src="{% embedded_avatar suggestion.user.username %}" title="{{suggestion.user.username}}"/></a>
                 <a href="{% url2 in_facebook public_profile suggestion.user.username %}">{{suggestion.user.username}}</a> {%trans "sugiere:" %}
                 {%comment%}
                 <span id="suggestion-vote-counter">
