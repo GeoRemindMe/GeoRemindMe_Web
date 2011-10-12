@@ -31,7 +31,10 @@ def new_suggestion(sender, **kwargs):
     else:
         params["privacy"]={'value':'CUSTOM','friends':'SELF'}
     try:
-        post_id = fb_client.consumer.put_wall_post("%(sugerencia)s" % {'sugerencia':sender.name.encode('utf-8')}, params)
+        if 'msg' in kwargs:
+            post_id = fb_client.consumer.put_wall_post(msg, params)
+        else:
+            post_id = fb_client.consumer.put_wall_post("%(sugerencia)s" % {'sugerencia':sender.name.encode('utf-8')}, params)
         from models import _FacebookPost
         fb_post = _FacebookPost(instance=str(sender.key()), post=post_id['id'])
         fb_post.put()

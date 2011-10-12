@@ -465,6 +465,9 @@ class Place(POI):
         except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
             import logging
             logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
+            from georemindme.models_utils import _Do_later_ft
+            later = _Do_later_ft(instance_key=self.key(), update=True)
+            later.put()
             from google.appengine.ext import deferred
             raise deferred.PermanentTaskFailure(e)
 
