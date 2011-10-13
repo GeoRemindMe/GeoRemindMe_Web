@@ -17,7 +17,7 @@ def login_required(func, *args, **kwargs):
             return func(*args, **kwargs)
         else: # falta el nombre de usuario, redirigimos al panel
             from views import dashboard
-            return dashboard(request, *args, **kwargs)
+            return dashboard(request)
     from views import login
     return login(args[0])
 
@@ -45,7 +45,7 @@ def username_required(func, *args, **kwargs):
     request = args[0]  # request es el primer parametro que pasamos
     if request.user.is_authenticated() and request.user.username is None:
         from views import dashboard
-        return dashboard(*args, **kwargs)
+        return dashboard(request)
     return func(*args, **kwargs)
     
 
