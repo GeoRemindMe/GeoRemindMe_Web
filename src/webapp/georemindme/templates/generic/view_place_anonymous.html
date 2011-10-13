@@ -2,32 +2,13 @@
 {% load i18n %}
 {% load tags %}
 
-{% block title %}{% trans 'Ver sitio' %}{% endblock %}
+{% block title %}{% blocktrans with place.name as place_name and place.city as city and suggestions.1|length as num_sugg %} {{place_name}}, {{city}} (Sugerencias: {{num_sugg}}){% endblocktrans %}{% endblock %}
+{% block description %}{% for s in suggestions.1%}{{forloop.counter}}) {{s.instance.name}} {% endfor %}{% endblock %}
+{% block keywords %}{{place.city}},{{place.address}}, {% trans "sugerencias" %}{% endblock %}
+
 {% block extra_js %}
 
-    <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl={{user.settings.language}}"></script>
-    <script src="/static/common/js/grm.js"></script>
     <script type="text/javascript">
-    $(document).ready(function(){
-        
-        
-        //Set like & dislike, remember and removable behaviour
-        GRM.init()
-        
-        //Set like&dislike style
-        $('.suggestion-element').hover(
-            function(){$(this).find('.like-dislike').show()},
-            function(){$(this).find('.like-dislike').hide()}
-        )
-        
-        //Load Panoramios photos
-        var latlngStr = "{{place.location}}".split(",",2);
-        var ne={}
-        var sw={}
-
-        ne['lat']=parseFloat(latlngStr[0])+0.003004;
-        ne['lng']=parseFloat(latlngStr[1])+0.002604;
-        
         <!-- Definimos la variable global necesaria para pedir las fotos a Panoramio -->    
         latlngStr = "{{place.location}}".split(",",2);
     </script>
@@ -59,7 +40,7 @@
         <div>
 			<div id="list-box" class="clear">
                 <p class="big suggestions-title popular">
-                    <img src="/static/common/img/transparent.gif">{% trans 'Sugerencias de usuarios en "{{place.name}}"' %}
+                    <img src="/static/common/img/transparent.gif">{% blocktrans with place.name as place_name %} Sugerencias de usuarios en "{{place_name}}" {% endblocktrans %}
                 </p>
                 <div class="clear" id="action-bar">
                     <ul>
@@ -79,7 +60,7 @@
                         <span class="user"><img src="{% embedded_avatar s.instance.user.username %}" alt="{{s.instance.user.username}} avatar"></span>
                         <div class="timeline-msg">
                             
-                            <a href="{% url2 in_facebook public_profile s.instance.user.username %}" class="dark-link">{% trans '{{s.instance.user.username}}</a> sugiere:' %}<br>
+                            <a href="{% url2 in_facebook public_profile s.instance.user.username %}" class="dark-link">{% blocktrans with s.instance.user.username as username %} {{username}}</a> sugiere:{% endblocktrans %}<br>
                             
                             <span class="msg"><a href="{% url2 in_facebook view_suggestion s.instance.slug %}" class="hoverlink">{{s.instance.name}}</a></span>
                             <span class="timestamp">{{s.instance.created|naturaltime}} </span>

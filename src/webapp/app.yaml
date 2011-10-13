@@ -18,27 +18,32 @@ handlers:
 
 - url: /static
   static_dir: static
+  secure: always
 
 - url: /ajax/.*
   script: main.py
   secure: optional
 
-- url: /api/(.*)
+- url: /api/.*
   script: service/api/main.py
   secure: optional
 
-- url: /admin/(.*)
+- url: /admin.*
   script: appengine_admin/main.py
   secure: always
-  
-- url: /appengine_admin_media
-  static_dir: appengine_admin/media
-  secure: always 
   
 - url: /test.*
   script: gaeunit/gaeunit.py
   login: admin
   
+- url: /console.*
+  script: $PYTHON_LIB/google/appengine/ext/admin
+  login: admin
+  
+- url: /appengine_admin_media
+  static_dir: appengine_admin/media
+  secure: always 
+
 - url: /_ah/queue/deferred
   script: maindeferred.py
   login: admin
@@ -52,8 +57,8 @@ handlers:
   secure: always
   
 
-builtins:
-- appstats: on
+#builtins:
+#- appstats: on
 #- remote_api: on
 
 inbound_services:

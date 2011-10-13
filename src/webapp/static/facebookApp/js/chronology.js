@@ -263,9 +263,9 @@ function suggestionProposal(elem,action,timeline_id){
         success: function(data){
             if(data==true){
                 if(action=="accept")
-                    $(elem).parent().empty().html("La propuesta ha sido aceptada");
+                    $(elem).parent().empty().html(gettext("La propuesta ha sido aceptada"));
                 else
-                    $(elem).parent().empty().html("La propuesta ha sido rechazada");
+                    $(elem).parent().empty().html(gettext("La propuesta ha sido rechazada"));
             }
             //~ $(elem).parent()
             //~ console.log(data);

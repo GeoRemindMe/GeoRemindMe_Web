@@ -15,15 +15,16 @@ from django.utils.translation import ugettext as _
 
 from tasks import list_notify_worker, timelinefollowers_worker, email_worker
 from cron import report_notify, clean_sessions
+from geouser.decorators import username_required
 
 
 def register_panel(request, login=False):
     if request.session.get('user'):
         return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-    return render_to_response("webapp/register.html", {'login' :login}, context_instance=RequestContext(request))
+    return render_to_response("generic/register.html", {'login' :login}, context_instance=RequestContext(request))
 
 
-def login_panel(request,login=False):
+def login_panel(request, login=False):
     try:
     # When deployed
         from google.appengine.runtime import DeadlineExceededError
@@ -33,7 +34,7 @@ def login_panel(request,login=False):
     try:
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-        return render_to_response("webapp/login.html", {'login' :login}, context_instance=RequestContext(request))
+        return render_to_response("mainApp/login.html", {'login' :login}, context_instance=RequestContext(request))
     except DeadlineExceededError:
         return HttpResponseRedirect('/')
 
@@ -54,7 +55,8 @@ def set_language(request):
     return HttpResponseRedirect(request.path)
 
 
-def search_suggestions(request, term=None, template='webapp/search.html'):
+@username_required
+def search_suggestions(request, term=None, template='generic/search.html'):
     #from geoalert.forms import SuggestionForm
     #s = Suggestion.objects.get_by_id(suggestion_id)
     if not request.user.is_authenticated():

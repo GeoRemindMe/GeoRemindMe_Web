@@ -143,6 +143,14 @@ indexes:
 
 - kind: UserTimelineBase
   properties:
+  - name: _vis
+  - name: class
+  - name: user
+  - name: modified
+    direction: desc
+
+- kind: UserTimelineBase
+  properties:
   - name: class
   - name: user
   - name: created

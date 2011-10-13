@@ -79,7 +79,7 @@ $(document).ready(function() {
                 dataType:'json',
                 success: function(data){
                     //Añadimos la lista al desplegable
-                    $("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\" value=\""+data.id+"\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
+                    $("<li id=\"listid-"+data.id+"\"><span class=\"checkbox name\" value=\""+data.id+"\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> "+gettext(sugerencias)+"</li>").insertBefore('.new-list-btn');
                     $('#listid-'+data.id).click(function(){onLiClick(this)});
                     $('#listid-'+data.id).click();
                     //Añadimos la lista en la pestaña listas
@@ -190,12 +190,12 @@ $(document).ready(function() {
     $("#add-details").toggle(function(){
         $('#description').slideDown('slow',function(){
             $("#add-details").addClass('used');
-            //resizeIframe();
+            
         });
         },function(){
             $('#description').slideUp('slow',function(){
                 $("#add-details").removeClass('used');
-                //resizeIframe();
+                
         });
     });
     
@@ -203,12 +203,12 @@ $(document).ready(function() {
     $("#add-tags").toggle(function(){
         $('#tags').slideDown('slow',function(){
             $("#add-tags").addClass('used');
-            //resizeIframe();
+            
         });
         },function(){
             $('#tags').slideUp('slow',function(){
                 $("#add-tags").removeClass('used');
-                //resizeIframe();
+                
             });
     });
     
@@ -216,12 +216,12 @@ $(document).ready(function() {
     $("#add-date").toggle(function(){
         $('#date').slideDown('slow',function(){
             $("#add-date").addClass('used');
-            //resizeIframe();
+            
         });
     },function(){
         $('#date').slideUp('slow',function(){
             $("#add-date").removeClass('used');
-            //resizeIframe();
+            
         });
     });
     
@@ -229,16 +229,14 @@ $(document).ready(function() {
     $("#add-to-lists").toggle(function(){
         $('#lists').slideDown('slow',function(){
             $("#add-to-lists").addClass('used');
-            //resizeIframe();
+            
         });
     },function(){
         $('#lists').slideUp('slow',function(){
             $("#add-to-lists").removeClass('used');
-            //resizeIframe();
+            
         });
     });
-    
-    //if (typeof resizeIframe != "undefined") resizeIframe();
     
     $('#visibility span').click(function(){
         var element=$(this).parent().find("span[value='private']");
@@ -313,7 +311,7 @@ $(document).ready(function() {
 	});
     
     //Set resizable canvas
-    $('#address-container').resizable({
+    /*$('#address-container').resizable({
         maxWidth: 550 ,
         minWidth: 550,
         handles: 'n,s',
@@ -321,7 +319,7 @@ $(document).ready(function() {
         stop: function(event, ui) {
             resizeIframe()     
         }
-    });
+    });*/
 
     
     //FORM
@@ -472,11 +470,11 @@ function saveSettings(engine){
                             if (msg.status !=200){
                                 $('#answerMessage').removeClass('success');
                                 $('#answerMessage').addClass('error');
-                                $('#answerMessage').text("Ha habido un error al añadir la sugerencia, estamos trabajando para solucionarlo.").fadeIn('slow').delay(2000).fadeOut('slow');
+                                $('#answerMessage').text(gettext("Ha habido un error al añadir la sugerencia, estamos trabajando para solucionarlo.")).fadeIn('slow').delay(2000).fadeOut('slow');
                             }else{
                                 $('#answerMessage').removeClass('error');
                                 $('#answerMessage').addClass('success');
-                                $('#answerMessage').text("La sugerencia ha sido añadida con éxito").fadeIn('slow').delay(2000).fadeOut('slow');
+                                $('#answerMessage').text(gettext("La sugerencia ha sido añadida con éxito")).fadeIn('slow').delay(2000).fadeOut('slow');
                                 
                                 //Sobreescribimos los valores anteriores para que cuando volvamos
                                 //a desplegar la configuración salga bien

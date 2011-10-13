@@ -4,6 +4,7 @@
 {% load filters %}
 
 {% block title %}{%trans "Mochila con tus sugerencias y listas favoritas" %}{% endblock %}
+{% block description %}{% trans "Desde la mochila de sugerencias podrás gestionar tus sugerencias y listas favoritas" %}{% endblock %}
 
 {% block extra_js %}
     {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
@@ -23,7 +24,7 @@
     </script>
 {%endblock%}
 
-{% block goBack %}{%endblock%}
+
 {% block body %}
     {% if not user.twitter_user %}
         <script type="text/javascript">
@@ -486,17 +487,17 @@
     </script>
     
     <div class="help-txt" style="display:none" id="help-suggestion-text" title="Información">
-        <p>{%trans "Solo el autor de una sugerencia puede modificar sus campos descripción, tags y corregir la localización." %}</p>
-        <p>{%trans "Tu podrás incluir esta sugerencia en cualquiera de tus listas, compartirla con otros usuarios, valorarla y comentarla." %}</p>
-        <p>{%trans "Además podrás comentar, valorar y guardar en tu baúl aquellas sugerencias y listas de sugerencias que te hayan gustado." %}</p>
-        <p>{%trans "Si tienes alguna duda o sugerencia puedes hacerla aquí:" %}</p>
+        <p>{% trans "Solo el autor de una sugerencia puede modificar sus campos descripción, tags y corregir la localización." %}</p>
+        <p>{% trans "Tu podrás incluir esta sugerencia en cualquiera de tus listas, compartirla con otros usuarios, valorarla y comentarla." %}</p>
+        <p>{% trans "Además podrás comentar, valorar y guardar en tu mochila aquellas sugerencias y listas de sugerencias que te hayan gustado." %}</p>
+        <p>{% trans "Si tienes alguna duda o sugerencia puedes hacerla aquí:" %}</p>
         
 
     </div>
     
     
     <div id="tabMenu-toolbox" style="display:none">
-		<p>{%trans "En estas pestañas encontraras agrupadas tus sugerencias y la listas junto con aquellas que hayas guardado." %}</p>
+		<p>{% trans "En estas pestañas encontraras agrupadas tus sugerencias y la listas junto con aquellas que hayas guardado." %}</p>
 	</div>
     
 {% endblock %}

@@ -471,28 +471,46 @@ class UserTimeline(UserTimelineBase, Visibility):
         if self._is_public():
             from geoalert.models import Event
             from geovote.models import Comment, Vote
-            if UserTimelineFollowersIndex.all().ancestor(self.key()).count() != 0:
+            if UserTimelineFollowersIndex.all(keys_only=True).ancestor(self.key()).get() is not None:
                 return True
             followers = self.user.get_followers()
             query_id = followers[0]
             followers = followers[1]
             page = 1
+            indexes_to_save = []
             while len(followers) > 0:
                 page = page+1
                 index = UserTimelineFollowersIndex.all().ancestor(self.key()).order('-created').get()
                 if index is None or len(index.followers) > 80:  # o no existen indices o hemos alcanzado el maximo
                     index = UserTimelineFollowersIndex(parent=self)
-                from geovote.models import Comment, Vote
-                if isinstance(self.instance, Comment) or isinstance(self.instance, Vote):
-                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.instance.user.id])
-                if isinstance(self.instance, User):
-                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.id])    
-                else:
-                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.user.id])
-                index.put()
+#                from geovote.models import Comment, Vote
+#                if isinstance(self.instance, Comment) or isinstance(self.instance, Vote):
+#                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.instance.user.id])
+#                if isinstance(self.instance, User):
+#                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.id])    
+#                else:
+#                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.user.id])
+                index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers])
+                indexes_to_save.append(index)
                 followers = self.user.get_followers(page=page, query_id=query_id)[1]
+            db.put(indexes_to_save)
             return True
     
+    @classmethod
+    def add_timelines_to_follower(cls, user_key, follower_key, limit=10):
+        timeline = UserTimeline.all(keys_only=True).filter('user =', user_key).filter('_vis =', 'public').order('-modified').fetch(limit)
+        indexes_to_save = []
+        for t in timeline:
+            if UserTimelineFollowersIndex.all(keys_only=True).ancestor(t).filter('followers =', follower_key).get() is not None:
+                continue # ya esta el usuario como seguidor del timeline
+            index = UserTimelineFollowersIndex.all().ancestor(t).order('-created').get()
+            if index is None:  # no existen indices o hemos alcanzado el maximo
+                index = UserTimelineFollowersIndex(parent=t)
+            index.followers.append(follower_key)
+            indexes_to_save.append(index)
+        db.put(indexes_to_save)
+        return True
+
     @classmethod
     def insert(self, msg, user, instance=None):
         if msg == '' or not isinstance(msg, basestring):

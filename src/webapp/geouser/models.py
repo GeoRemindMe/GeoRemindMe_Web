@@ -721,13 +721,13 @@ class User(polymodel.PolyModel, HookedModel):
         def __init__(self, value):
             self.value = value
         def __str__(self):
-            return _('Email already in use: %s') % self.value
+            return _('La cuenta de correo "%s" está en uso') % self.value
 
     class UniqueUsernameConstraint(Exception):
         def __init__(self, value):
             self.value = value
         def __str__(self):
-            return _('Username already in use: %s') % self.value
+            return _('Nombre de usuario "%s" está en uso') % self.value
 
     def get_absolute_url(self):
         if self.username is not None:
@@ -806,7 +806,7 @@ class User(polymodel.PolyModel, HookedModel):
         except Exception, e:
         #except apiproxy_errors.DeadlineExceededError:
             import logging
-            logging.error('Handling Exception getting user friends: %s - %s' % (self.id, e))
+            logging.exception('Handling Exception getting user friends: %s - %s' % (self.id, e.message))
         return friends
 
     def to_dict(self):

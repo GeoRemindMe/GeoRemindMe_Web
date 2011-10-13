@@ -34,10 +34,8 @@
                                     },
                                     context: $(this),
                                     success: function(data){
-                                        //console.log(data);
                                         if(data[networks[i]]){
-                                            //console.log(networks[i]);
-                                            showMessage(I18N["¡Genial! ya puedes empezar a disfrutar de todas las ventajas"],"success");
+                                            showMessage("{% trans "¡Genial! ya puedes empezar a disfrutar de todas las ventajas" %}","success");
                                             $('li[data-network='+networks[i]+']').removeClass('inactive')
                                             $('li[data-network='+networks[i]+'] span').removeClass(''+networks[i]+'-inactive').addClass(''+networks[i]+'-active')
                                             $('li[data-network='+networks[i]+']').removeClass('inactive')
@@ -115,7 +113,7 @@
 
 {% block title %}{%trans "Añadir nueva sugerencia" %}{% endblock %}
 
-{% block goBack %}{%endblock%}    
+
 {% block body %}
     <div id="add-suggestion">
         {% include "forms/SuggestionForm.html" %}

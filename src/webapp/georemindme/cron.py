@@ -16,6 +16,8 @@ from libs.decorator import decorator
 def cron_required(func, *args, **kwargs):
     from google.appengine.api import users
     request = args[0]
+    if request is None:
+        return func(*args, **kwargs)
     if 'HTTP_X_APPENGINE_CRON' in request.META:
         return func(*args, **kwargs)
     user = request.session.get('user')
@@ -81,7 +83,7 @@ class Stats_alert_done(Stats_base):
 def clean_sessions(request):
     from geomiddleware.sessions.models import _Session_Data
     from datetime import datetime
-    sessions = _Session_Data.all().filter('expires <', datetime.now())
+    sessions = _Session_Data.all().filter('expires <', datetime.now()).run()
     try:
         db.delete([session for session in sessions])
     except:

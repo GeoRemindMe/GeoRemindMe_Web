@@ -28,9 +28,13 @@ if sys.getdefaultencoding() != default_encoding:
 from django.conf.urls.defaults import *
 import appengine_admin
 
+js_info_dict = {
+    'packages': ('webapp',),
+}
 
 urlpatterns = patterns('',
     (r'^(?i)blog/(?P<path>.*)$', 'django.views.generic.simple.redirect_to', {'url': 'http://blog.georemindme.com/%(path)s', 'permanent': True}),
+    (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', js_info_dict, 'jsi18n'),
     (r'^(?i)oauth/', include('geoauth.urls')),
     (r'^(?i)ajax/', include('geoajax.urls')),
     (r'^(?i)fb/', include('facebookApp.urls')),

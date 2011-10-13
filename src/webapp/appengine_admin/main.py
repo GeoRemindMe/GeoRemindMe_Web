@@ -1,8 +1,9 @@
 import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings' 
 from google.appengine.dist import use_library
-# carga version 1.2.5 de django
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 use_library('django', '1.2')
+from django.conf import settings
+_ = settings.TEMPLATE_DIRS
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app

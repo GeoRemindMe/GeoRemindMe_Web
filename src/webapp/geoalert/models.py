@@ -497,17 +497,20 @@ class Suggestion(Event, Visibility, Taggable):
             return super(Suggestion, self).delete()
         generico = User.objects.get_by_username(settings.GENERICO, keys_only=True)
         if generico == Suggestion.user.get_value_for_datastore(self):
-            from geolist.models import ListSuggestion 
+            from geolist.models import ListSuggestion
+            from geouser.models_acc import UserTimelineBase
             # es del usuario georemindme, la borramos
             alerts = AlertSuggestion.all().filter('suggestion =', self.key()).run()
             lists = ListSuggestion.all().filter('keys =', self.key()).run()
+            timelines = UserTimelineBase.all().filter('instance =', self.key()).run()
+            import itertools
             to_save = []
             for l in lists:
                 l.keys.remove(self.key())
                 to_save.append(l)
             p = db.put_async(to_save)
-            for a in alerts:
-                a.delete()
+            it = itertools.chain(alerts, timelines)
+            db.delete(db.delete([i for i in it]))
             suggestion_deleted.send(sender=self, user=generico)
             p.get_result()
             return super(Suggestion, self).delete()
@@ -561,11 +564,12 @@ class Suggestion(Event, Visibility, Taggable):
         if self._is_public():
             from mapsServices.fusiontable import ftclient, sqlbuilder
             from django.conf import settings
+            from georemindme.models_utils import _Do_later_ft
             try:
                 ftclient = ftclient.OAuthFTClient()
                 import unicodedata
                 name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
-                return ftclient.query(sqlbuilder.SQL().insert(
+                ftclient.query(sqlbuilder.SQL().insert(
                                                         settings.FUSIONTABLES['TABLE_SUGGS'],
                                                         {'name': name,
                                                         'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
@@ -576,9 +580,14 @@ class Suggestion(Event, Visibility, Taggable):
                                                          }
                                                        )
                                )
+                delete = _Do_later_ft().get_by_key_name('_do_later_%s' % self.id)
+                if delete is not None:
+                        delete.delete()
             except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
                 import logging
-                logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
+                logging.error('ERROR FUSIONTABLES new suggestion %s: %s' % (self.id, e))
+                later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key())
+                later.put()
                 from google.appengine.ext import deferred
                 raise deferred.PermanentTaskFailure(e)
             
@@ -586,6 +595,7 @@ class Suggestion(Event, Visibility, Taggable):
         if self._is_public():
             from mapsServices.fusiontable import ftclient, sqlbuilder
             from django.conf import settings
+            from georemindme.models_utils import _Do_later_ft
             try:
                 ftclient = ftclient.OAuthFTClient()
                 rowid = ftclient.query(sqlbuilder.SQL().select(
@@ -614,9 +624,14 @@ class Suggestion(Event, Visibility, Taggable):
                                                             int(r)
                                                            )
                                    )
+                    delete = _Do_later_ft().get_by_key_name('_do_later_%s' % self.id)
+                    if delete is not None:
+                        delete.delete()
             except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
                 import logging
-                logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
+                logging.error('ERROR FUSIONTABLES update suggestion %s: %s' % (self.id, e))
+                later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key(), update=True)
+                later.put()
                 from google.appengine.ext import deferred
                 raise deferred.PermanentTaskFailure(e)
             

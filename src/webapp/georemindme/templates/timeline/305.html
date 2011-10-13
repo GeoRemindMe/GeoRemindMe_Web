@@ -1,6 +1,5 @@
 {% load tags %}
-{% load tags %}
-
+{% load i18n %}
 {% comment %} 
     Mensaje nº 305:
     Te gusta una sugerencia
@@ -17,30 +16,29 @@
         {% if obj.instance.user.username = request.user.username %}
             {% comment %}  Es de mi timeline {% endcomment %} 
             <div class="avatar">
-                <a href="{% url2 in_facebook public_profile request.user %}" title="Ver perfil en GeoRemindMe">
+                <a href="{% url2 in_facebook public_profile request.user %}" title="{%trans "Ver perfil en GeoRemindMe" %}">
                     <img class="user-picture" src="{% embedded_avatar request.user.username %}" alt="{{request.user}} avatar"/>
                 </a>
             </div>
             <div class="timeline-msg">
                 <span class="timeline-icon">&nbsp;</span>
-                <span class="small-text">Te gusta la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="dark-link">{{obj.instance.instance.user}}</a>:</span>
+                {% url2 in_facebook public_profile obj.instance.instance.user.username as profile_url%}
+                <span class="small-text">
+                {% blocktrans with obj.instance.instance.user as username%}
+                    Te gusta la sugerencia de <a href="{{profile_url}}" class="dark-link">{{username}}</a>:
+                {% endblocktrans %}    
+                </span>
         {% else %}
             <div class="avatar">
-                <a href="{% url2 in_facebook public_profile obj.username %}" title="Ver perfil en GeoRemindMe">
-                    <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} avatar"/>
+                <a href="{% url2 in_facebook public_profile obj.username %}" title="{%trans "Ver perfil en GeoRemindMe" %}">
+                    <img class="user-picture" src="{% embedded_avatar obj.username %}" alt="{{obj.username}} {%trans "avatar" %}"/>
                 </a>
             </div>
             <div class="timeline-msg">
                 <span class="timeline-icon">&nbsp;</span>
                 <span class="small-text">
-                    A <a href="{% url2 in_facebook public_profile obj.username %}" class="dark-link">{{obj.username}}</a> le gusta la sugerencia:
-<!--
-                    {% if obj.instance.instance.user.username = request.user.username %}
-                        <strong>tu sugerencia</strong>:
-                    {% else %}
-                        la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}">{{obj.instance.instance.user}}</a>:
-                    {% endif %}
--->
+                    {% url2 in_facebook public_profile obj_username as profile_url %}
+                    {% blocktrans with obj.username as username %}A <a href='{{profile_url}}' class='dark-link'>{{username}}</a> le gusta la sugerencia:{% endblocktrans %}
                 </span>
         {% endif %}
                 
@@ -51,8 +49,8 @@
                     </a>
                     <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="hoverlink">{{obj.instance.instance}}</a>
                 </div>
-                <span class="suggestionPlace">En <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}" class="dark-link">{{obj.instance.instance.poi.name}}</a></span>
-                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="details"><img src="/static/common/img/transparent.gif" />Ver sugerencia</a></span>
+                <span class="suggestionPlace">{% trans "En" %} <a href="{% url2 in_facebook view_place obj.instance.instance.poi.slug %}" class="dark-link">{{obj.instance.instance.poi.name}}</a>, {{obj.instance.instance.poi.city}}</span>
+                <span class="timestamp">{{obj.created|naturaltime}}</span> <span class="action-bar">| <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="details"><img src="/static/common/img/transparent.gif" />{%trans "Ver sugerencia" %}</a></span>
             </div>
     {% endif %}
 </li>

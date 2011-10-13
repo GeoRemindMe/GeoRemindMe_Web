@@ -1,4 +1,4 @@
-{% extends "webapp/base_anonymous.html" %}
+{% extends "generic/base_generic.html" %}
 
 {% load i18n %}
 
@@ -8,7 +8,7 @@
 
 {%block breadcumb%}
    <nav> 
-      <a href="/">{% trans "Back to home" %}</a> 
+      <a href="/">{% trans "Volver al inicio" %}</a> 
    </nav>
 {%endblock%}
    
@@ -38,7 +38,7 @@
                 $("input[type=text]").focus().val(textSearch);
                 $("input[type=text]").focus();
                 $(".gsc-input input[type=text]").submit();
-                $('.gsc-branding').remove();
+                $('.gsc-branding').Borrar();
             }, true);
         </script>
         

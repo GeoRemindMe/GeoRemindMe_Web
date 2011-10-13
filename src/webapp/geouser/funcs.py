@@ -70,10 +70,7 @@ def login_func(request, email = None, password = None, remember_me = False, user
                 if from_rpc:
                     error = 0
                 else:
-                    error = _("Email no confirmed in %d days," 
-                              "your access isn't allowed."
-                              "<br/>A new confirm email have been sent."
-                              % settings.NO_CONFIRM_ALLOW_DAYS)
+                    error = _(u"Tu cuenta de correo no ha sido confirmada en %d días, <br />por lo que no puedes acceder.<br/>Te hemos reenviado el correo para que puedas activarla.")  % settings.NO_CONFIRM_ALLOW_DAYS
             else:
                 redirect = get_next(request)
                 init_user_session(request, user, remember=remember_me, from_rpc=from_rpc)
@@ -82,6 +79,23 @@ def login_func(request, email = None, password = None, remember_me = False, user
     if from_rpc:
         error = 1
     else:
-        error = _("The email/password you entered is incorrect"
-                  "<br/>Please make sure your caps lock is off and try again")
+        error = _(u"El email o la contraseña que has introducido es incorrecta \n"
+                  + u"<br/>Por favor asegúrate que no tienes activadas las mayúsculas e inténtalo de nuevo")
     return error, redirect
+
+
+def add_timeline_to_follower(user_key, follower_key, limit=10):
+    from models_acc import UserTimeline, UserTimelineFollowersIndex
+    from google.appengine.ext import db
+    timeline = UserTimeline.all(keys_only=True).filter('user =', user_key).filter('_vis =', 'public').order('-modified').fetch(limit)
+    indexes_to_save = []
+    for t in timeline:
+        if UserTimelineFollowersIndex.all(keys_only=True).ancestor(t).filter('followers =', follower_key).get() is not None:
+            continue # ya esta el usuario como seguidor del timeline
+        index = UserTimelineFollowersIndex.all().ancestor(t).order('-created').get()
+        if index is None:  # no existen indices o hemos alcanzado el maximo
+            index = UserTimelineFollowersIndex(parent=t)
+        index.followers.append(follower_key)
+        indexes_to_save.append(index)
+    db.put(indexes_to_save)
+    return True

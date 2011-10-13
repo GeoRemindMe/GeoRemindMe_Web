@@ -41,6 +41,6 @@ function loadPanoramioPhotos(latlngStr){
           
     });
 
-    $('#panoramio-tos').append('<div class="panoramio-wapi-tos" style="color: black ! important; background-color: #f9f9f9 ! important;font-family:"lucida grande",tahoma,verdana,arial,sans-serif; font-size:10.8px;line-height:16.2px"><a target="_top" href="http://www.panoramio.com"><img src="/static/common/img/transparent.gif"></a><span>, photos are copyrighted by their owners</span></div>');
+    $('#panoramio-tos').append('<div class="panoramio-wapi-tos" style="color: black ! important; background-color: #f9f9f9 ! important;font-family:"lucida grande",tahoma,verdana,arial,sans-serif; font-size:10.8px;line-height:16.2px"><a target="_top" href="http://www.panoramio.com"><img src="/static/common/img/transparent.gif"></a><span>, '+gettext("los derechos de las fotos pertenecen a los autores")+'</span></div>');
     //------------------------------------------
 }

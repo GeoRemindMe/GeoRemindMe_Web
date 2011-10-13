@@ -3,9 +3,9 @@
 function show_and_hide_stats_callback(){
         var textElement=$(this).parent().find('.show-more-text');
         if($(textElement).css('display')!="none")
-            $(this).html("Mostrar estadísticas")
+            $(this).html(gettext("Mostrar estadísticas"))
         else
-            $(this).html("Ocultar estadísticas")
+            $(this).html(gettext("Ocultar estadísticas"))
         
         $(textElement).toggle('slow')
     }
@@ -37,10 +37,10 @@ function create_share_links(){
             //DIALOGO DE TWITTER
             template="#shareTwitter";
             settings={ 
-                title: "Compartir en Twitter",
+                title: gettext("Compartir en Twitter"),
                 dialogClass: 'twitter-dialog',
                 buttons: [{
-                    text: "Enviar",
+                    text: gettext("Enviar"),
                     click: function() { 
                         
                         var linkEl = $(this).find('.twitter-share-button');
@@ -82,7 +82,7 @@ function create_share_links(){
                         }
                     }
                 },{
-                    text: "Cancelar",
+                    text: gettext("Cancelar"),
                     click: function() { 
                         $(this).dialog("close"); 
                     }}] 
@@ -91,10 +91,10 @@ function create_share_links(){
             //DIALOGO DE FACEBOOK
             template="#shareFacebook";
             settings={ 
-                title: "Compartir en Facebook",
+                title: gettext("Compartir en Facebook"),
                 dialogClass: 'facebook-dialog',
                 buttons: [{
-                    text: "Publicar",
+                    text: gettext("Publicar"),
                     click: function() { 
                         
                         var element=$(this).find('textarea');
@@ -117,13 +117,12 @@ function create_share_links(){
                             data: params,
                             context: $(this),
                             success: function(data){
-//                                        console.log("Hecho!");
                                 $(this).dialog("close"); 
                             }
                         });
                     }
                 },{
-                    text: "Cancelar",
+                    text: gettext("Cancelar"),
                     click: function() { 
                         $(this).dialog("close"); 
                     }
@@ -266,16 +265,14 @@ $(document).ready(function(){
         $(this).removeClass('pressed');
         $('#suggestion-list-lists .not-mine').fadeIn('slow');
     });
-    
 
     create_share_links();
-    
     
     /*Set date picket behaviour*/
     $( ".date-type" ).datepicker();
     $('.datepicker .date-type,.datepicker .hour-type').change(function(){
         if($(this).val()=="mm/dd/aa" || $(this).val()=="hh:mm" || $(this).val()==""){
-            console.log("No desmarcamos porque val="+$(this).val());
+            //console.log("No desmarcamos porque val="+$(this).val());
         }else{
             $(this).parent().find('.anytime [type="checkbox"]').attr('checked',false);
             //~ console.log("Desmarcamos porque val="+$(this).val());
@@ -409,7 +406,7 @@ function removeFromList(obj,listID){
                 
             }
             
-            showMessage("La sugerencia ha sido eliminada de la lista correctamente","success")
+            showMessage(gettext("La sugerencia ha sido eliminada de la lista correctamente"),"success")
 
             
         }
@@ -430,7 +427,7 @@ function submenuLiBehave(obj){
     
     var checkedSuggestions=$('.suggestion input[name=suggestions]').filter(':checked');
     if( checkedSuggestions.length==0){
-        showMessage("No hay ninguna sugerencia seleccionada","error")
+        showMessage(gettext("No hay ninguna sugerencia seleccionada"),"error")
     }else{
         checkedSuggestions.each(function(i,elem){
             //console.log("Añadimos a la lista: la sugerencia: "+$(elem).attr('id'));
@@ -452,7 +449,7 @@ function submenuLiBehave(obj){
                 updateCounter(data.id,data.keys.length);
                 
                 //Mostrar mensaje de éxito
-                showMessage("Las sugerencias han sido añadidas a la lista","success")
+                showMessage(gettext("Las sugerencias han sido añadidas a la lista"),"success")
             }
         });
     }
@@ -572,7 +569,7 @@ function removeLists(){
                     showMessage("Error: "+msg.status,"error")
                 }else{
                     $('#list_'+value.value).fadeOut('slow').remove()
-                    showMessage("Las listas han sido eliminadas con éxito","success")
+                    showMessage(gettext("Las listas han sido eliminadas con éxito"),"success")
                     //Disminuimos el contador
                     $('#lists-tab-counter').text(parseInt($('#lists-tab-counter').text())-1);
                     
@@ -629,15 +626,15 @@ function set_editable_fields(objID){
     var tmp;
     
     var base_settings={ 
-         cancel    : 'Cancel',
+         cancel    : gettext('Cancelar'),
          data: function(value, settings) {
             /* Convert <br> to newline. */
             var retval = value.replace("\n", '').replace(/<br[\s\/]?>/gi, '\n');
             return retval;
         },
-         submit    : 'Guardar',
-         indicator : 'Saving...',
-         tooltip   : 'Click to edit...',
+         submit    : gettext('Guardar'),
+         indicator : gettext('Guardando...'),
+         tooltip   : gettext('Haz clic para editar...'),
          cssclass  : 'editable-fields',
          onblur    : 'ignore',
          callback  : function(value, settings){
@@ -654,7 +651,7 @@ function set_editable_fields(objID){
                         //console.log(settings);
                         //console.log(xhr);
                         //if(xhr.status==500){
-                            showMessage("Ouch! Se ha producido un error; perdón!, lo solucionaremos lo antes posible!","error");
+                            showMessage(gettext("Ouch! Se ha producido un error; perdón!, lo solucionaremos lo antes posible!"),"error");
                         //}
                     }
      }
@@ -678,7 +675,7 @@ function set_editable_fields(objID){
     description_field["type"]="textarea";
     description_field["height"]="40";
     description_field["width"]="390";
-    description_field["placeholder"]="Sin descripción";
+    description_field["placeholder"]=gettext("Sin descripción");
     description_field["onsubmit"]=function(settings, original){
          settings['submitdata']=get_suggestion_id(this);
          //Guardamos el valor modificado en una var. temporal
@@ -686,14 +683,14 @@ function set_editable_fields(objID){
     }
     $('.editable_description').editable('/ajax/add/suggestion/', description_field);
     
-    description_field["placeholder"]="Esta lista aún no tiene descripción";
+    description_field["placeholder"]=gettext("Esta lista aún no tiene descripción");
     $('.editable_list_description').editable('/ajax/suggestion/list/modify/', description_field);
     
     tags_field["name"]="tags";
     tags_field["type"]="text";
     tags_field["height"]="20";
     tags_field["width"]="none";
-    tags_field["placeholder"]="Esta sugerencia no tiene tags";
+    tags_field["placeholder"]=gettext("Esta sugerencia no tiene tags");
     tags_field["onsubmit"]=function(settings, original){
          settings['submitdata']=get_suggestion_id(this);
          //Guardamos el valor modificado en una var. temporal
@@ -701,20 +698,20 @@ function set_editable_fields(objID){
     }
     $('.editable_tags').editable('/ajax/add/suggestion/', tags_field);
     
-    tags_field["placeholder"]="Esta lista de sugerencias no tiene tags";
+    tags_field["placeholder"]=gettext("Esta lista de sugerencias no tiene tags");
     $('.editable_list_tags').editable('/ajax/suggestion/list/modify/', tags_field);             
     
     visibility_field["name"]="visibility";
     visibility_field["type"]="select";
-    visibility_field["data"]="{'public':'Pública','private':'Privada'}";
+    visibility_field["data"]="{'public':'"+gettext("Pública")+"','private':'"+gettext("Privada")+"'}";
     visibility_field["onsubmit"]=function(settings, original){
          settings['submitdata']=get_suggestion_id(this);
          //Guardamos el valor modificado en una var. temporal
          var privacy=$(this).find("select").val()
          if(privacy=="private")
-            tmp="Privada";
+            tmp=gettext("Privada");
          else
-            tmp="Pública";
+            tmp=gettext("Pública");
     }
     $('.editable_visibility').editable('/ajax/add/suggestion/', visibility_field);
     $('.editable_list_visibility').editable('/ajax/suggestion/list/modify/', visibility_field);             
