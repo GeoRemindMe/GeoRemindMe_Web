@@ -112,13 +112,9 @@ class GPRequest(Http):
                 }
         if types is not None:
             dict['types'] = types
-        else:
-            dict['types'] = 'other'
-        url = self._add_url + 'sensor=%s&key=%s' % ('true' if sensor else 'false', self.key)
-        print url
-        print simplejson.dumps(dict)
-        
-        return self._do_request(url, method='POST', body=simplejson.dumps(dict))
+        url = self._add_url + self._parse_get('&sensor=%s&key=%s' % ('true' if sensor else 'false', self.key))
+        raise Exception(url)
+        return self._do_request(url, method='POST', body=dict.__str__())
     
     def delete_place(self, reference, sensor = False):
         dict = {'reference': str(reference)}

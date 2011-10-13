@@ -650,7 +650,6 @@ def get_access_token(code, callback_url, client_id, client_secret):
             'client_id': client_id,
             'client_secret': client_secret,
             'code':code}
-    
     request = httplib2.Http()
     response, content = request.request("https://graph.facebook.com/oauth/access_token?" + 
                                             urllib.urlencode(args))

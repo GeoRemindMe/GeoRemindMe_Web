@@ -111,6 +111,8 @@ def login_facebook(request):
         :return: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
     """
     from geoauth.views import facebook_authenticate_request
+    if 'cls' in request.GET:
+        return facebook_authenticate_request(request, callback_url=request.GET['callback_url'] if 'callback_url' in request.GET else None, cls=True)
     return facebook_authenticate_request(request, callback_url=request.GET['callback_url'] if 'callback_url' in request.GET else None)
 
 
@@ -176,7 +178,7 @@ def dashboard(request, template='generic/dashboard.html'):
         
         :return: Solo devuelve errores si el proceso falla.
     """
-    if not request.user.is_authenticated: # ¡no uses el decorador!
+    if not request.user.is_authenticated(): # ¡no uses el decorador!
         return login(request)
     if request.user.username is None:
         if request.user.email is None:
@@ -537,6 +539,8 @@ def remind_user_code(request, user, code):
             msg = _(o.message)
         except BadCode, i:
             msg = _(i.message)
+        except ValueError, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
+            msg = _(u"Contraseña invalida")
     else:
         msg = _(u"Usuario inválido")
     return render_to_response('mainApp/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))
