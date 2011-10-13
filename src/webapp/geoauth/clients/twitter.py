@@ -186,7 +186,7 @@ class TwitterFriendsRPC(object):
                                                    'twittername': info['screen_name'],
                                                    'id': user_to_follow.user.id,
                                                    }
-                    except:
+                    except Exception, e:
                         import logging
                         logging.exception('No se encontro un usuario de twitter buscado por: %s - %s' % (self.user.id, e.message))
         except Exception, e:
