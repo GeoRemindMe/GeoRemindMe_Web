@@ -24,7 +24,7 @@ def register_panel(request, login=False):
     return render_to_response("generic/register.html", {'login' :login}, context_instance=RequestContext(request))
 
 
-def login_panel(request,login=False):
+def login_panel(request, login=False):
     try:
     # When deployed
         from google.appengine.runtime import DeadlineExceededError
