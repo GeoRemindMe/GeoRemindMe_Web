@@ -1,12 +1,25 @@
 # coding=utf-8
 
 from geouser.decorators import login_required
-
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 @login_required
-def login_panel(request):
-    from georemindme.views import login_panel
-    return login_panel(request, template='mobile/login_panel.html')
+def login_panel(request, login=False):
+    try:
+    # When deployed
+        from google.appengine.runtime import DeadlineExceededError
+    except ImportError:
+    # In the development server
+        from google.appengine.runtime.apiproxy_errors import DeadlineExceededError 
+    try:
+        if request.user.is_authenticated():
+            return HttpResponseRedirect(reverse('mobileApp.views.dashboard'))
+        return render_to_response("mobile/login.html", {'login' :login}, context_instance=RequestContext(request))
+    except DeadlineExceededError:
+        return HttpResponseRedirect('/m/')
     
 
 @login_required
