@@ -564,11 +564,12 @@ class Suggestion(Event, Visibility, Taggable):
         if self._is_public():
             from mapsServices.fusiontable import ftclient, sqlbuilder
             from django.conf import settings
+            from georemindme.models_utils import _Do_later_ft
             try:
                 ftclient = ftclient.OAuthFTClient()
                 import unicodedata
                 name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
-                return ftclient.query(sqlbuilder.SQL().insert(
+                ftclient.query(sqlbuilder.SQL().insert(
                                                         settings.FUSIONTABLES['TABLE_SUGGS'],
                                                         {'name': name,
                                                         'location': '%s,%s' % (self.poi.location.lat, self.poi.location.lon),
@@ -579,11 +580,13 @@ class Suggestion(Event, Visibility, Taggable):
                                                          }
                                                        )
                                )
+                delete = _Do_later_ft().get_by_key_name('_do_later_%s' % self.id)
+                if delete is not None:
+                        delete.delete()
             except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
                 import logging
                 logging.error('ERROR FUSIONTABLES new suggestion %s: %s' % (self.id, e))
-                from georemindme.models_utils import _Do_later_ft
-                later = _Do_later_ft(instance_key=self.key(), update=True)
+                later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key())
                 later.put()
                 from google.appengine.ext import deferred
                 raise deferred.PermanentTaskFailure(e)
@@ -592,6 +595,7 @@ class Suggestion(Event, Visibility, Taggable):
         if self._is_public():
             from mapsServices.fusiontable import ftclient, sqlbuilder
             from django.conf import settings
+            from georemindme.models_utils import _Do_later_ft
             try:
                 ftclient = ftclient.OAuthFTClient()
                 rowid = ftclient.query(sqlbuilder.SQL().select(
@@ -620,11 +624,13 @@ class Suggestion(Event, Visibility, Taggable):
                                                             int(r)
                                                            )
                                    )
+                    delete = _Do_later_ft().get_by_key_name('_do_later_%s' % self.id)
+                    if delete is not None:
+                        delete.delete()
             except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
                 import logging
                 logging.error('ERROR FUSIONTABLES update suggestion %s: %s' % (self.id, e))
-                from georemindme.models_utils import _Do_later_ft
-                later = _Do_later_ft(instance_key=self.key(), update=True)
+                later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key(), update=True)
                 later.put()
                 from google.appengine.ext import deferred
                 raise deferred.PermanentTaskFailure(e)

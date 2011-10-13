@@ -15,6 +15,7 @@ from django.utils.translation import ugettext as _
 
 from tasks import list_notify_worker, timelinefollowers_worker, email_worker
 from cron import report_notify, clean_sessions
+from geouser.decorators import username_required
 
 
 def register_panel(request, login=False):
@@ -54,6 +55,7 @@ def set_language(request):
     return HttpResponseRedirect(request.path)
 
 
+@username_required
 def search_suggestions(request, term=None, template='generic/search.html'):
     #from geoalert.forms import SuggestionForm
     #s = Suggestion.objects.get_by_id(suggestion_id)

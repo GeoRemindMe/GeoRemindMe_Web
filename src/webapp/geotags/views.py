@@ -6,9 +6,10 @@ from django.shortcuts import render_to_response
 from django.shortcuts import Http404
 from django.template import RequestContext
     
-from geouser.decorators import login_required
+from geouser.decorators import username_required
 
 
+@username_required
 def view_tag_suggestions(request, slug, page=1, query_id=None, template='generic/view_tag.html'):
     slug = slug.lower()
     from models import Tag
@@ -29,6 +30,7 @@ def view_tag_suggestions(request, slug, page=1, query_id=None, template='generic
                                context_instance=RequestContext(request))
 
 
+@username_required
 def search_tag_suggestion(request, tag, page=1, query_id=None):
     from models import Tag
     from geoalert.models import Suggestion
@@ -38,7 +40,8 @@ def search_tag_suggestion(request, tag, page=1, query_id=None):
     suggestions = Suggestion.objects.get_by_tag_querier(tag_instance, request.user, page=page, query_id=query_id)
     return suggestions
 
-@login_required
+
+
 def add_suggestion_tag(request, event_id, tags):
     from geoalert.models import Event
     event = Event.objects.get_by_id_user(event_id, request.user)

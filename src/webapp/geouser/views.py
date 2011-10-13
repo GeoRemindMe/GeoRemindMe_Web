@@ -14,7 +14,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.conf import settings
 
-from decorators import login_required, admin_required
+from decorators import login_required, admin_required, username_required
 from geouser.models import User
 
 
@@ -170,12 +170,14 @@ def update_user(request):
 #===============================================================================
 # DASHBOARD VIEW
 #===============================================================================
-@login_required
+#@login_required
 def dashboard(request, template='generic/dashboard.html'):
     """**Descripción**: Permite actualizar el email y la contraseña.
         
         :return: Solo devuelve errores si el proceso falla.
     """
+    if not request.user.is_authenticated: # ¡no uses el decorador!
+        return login(request)
     if request.user.username is None:
         if request.user.email is None:
             from forms import SocialTwitterUserForm as formClass
@@ -263,7 +265,7 @@ def dashboard(request, template='generic/dashboard.html'):
                                           } , RequestContext(request)
                                )
 
-
+@username_required
 def public_profile(request, username, template='generic/profile.html'):
     """**Descripción**: Perfil publico que veran los demas usuarios
     
@@ -401,6 +403,7 @@ def edit_settings(request, template="generic/edit_settings.html"):
                                                     }, context_instance=RequestContext(request)
                                )
 
+@username_required
 def followers_panel(request, username, template='generic/followers.html'):
     if request.user.is_authenticated() and username == request.user.username:
         followers=request.user.get_followers()
@@ -424,6 +427,7 @@ def followers_panel(request, username, template='generic/followers.html'):
                                )
 
 
+@username_required
 def followings_panel(request, username, template='generic/followings.html'):
     if request.user.is_authenticated() and username == request.user.username:
         followings=request.user.get_followings()
