@@ -177,7 +177,7 @@ class TwitterFriendsRPC(object):
         for user_to_follow in users_to_follow:
             if user_to_follow.user.username is not None and \
                 not self.user.is_following(user_to_follow.user):
-                    info = self.get_others_user_info(id=user_to_follow.id)
+                    info = user_to_follow.get_user_info(id=user_to_follow.id)
                     self.friends[user_to_follow.user.id] = { 
                                                'username': user_to_follow.user.username, 
                                                'twittername': info['screen_name'],
