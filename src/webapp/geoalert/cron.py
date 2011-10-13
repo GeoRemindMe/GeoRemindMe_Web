@@ -10,7 +10,7 @@ from models import Suggestion
 
 
 @cron_required
-def cron_suggestions(request, cursor=None):
+def cron_suggestions(request=None, cursor=None):
     q = Suggestion.all().filter('_vis =', 'public')
     if cursor is None:
         suggs = q.fetch(50)

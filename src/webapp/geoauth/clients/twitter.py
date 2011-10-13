@@ -1,4 +1,6 @@
 # coding=utf-8
+
+
 from django.utils import simplejson
 from django.conf import settings
 from libs.oauth2 import Client, Consumer, Token
@@ -167,11 +169,9 @@ class TwitterFriendsRPC(object):
         if int(result.status_code) != 200:
             return {}
         friends_result = simplejson.loads(result.content)
-        if 'ids' in friends_result:
-            friends_result = friends_result['ids']
-        else:
+        if len(friends_result) == 0:
             return {}
-        friends_key = ['tw%s' % f for f in friends_result]
+        friends_key = ['tu%s' % f for f in friends_result]
         users_to_follow = TwitterUser.get_by_key_name(friends_key)
         users_to_follow = filter(None, users_to_follow)
         for user_to_follow in users_to_follow:
