@@ -61,13 +61,7 @@ def login(request):
         else:
             error = _("El email/contraseña que has introducido es incorrecto.<br/>Por favor asegúrate que no tienes las mayúsculas actividas e inténtalo de nuevo.")
         return error, redirect
-<<<<<<< HEAD
     return render_to_response('mainApp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
-=======
-    if '/m/' in request.path:
-        return render_to_response('mobile/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
-    return render_to_response('webapp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
->>>>>>> movil
 
 
 def login_google(request):
