@@ -1,4 +1,4 @@
-{% extends "generic/base_generic.html" %}
+/login/facebook/?callback_url=http://apps.facebook.com/georemindme{% extends "generic/base_generic.html" %}
 {% load i18n %}
 
 {% block callBackFBInit %}
@@ -53,6 +53,15 @@
         });
     }
     
+    function loginFB(){
+        FB.login(function(response) {
+            if (response.authResponse) {
+                window.location="/dashboard"
+            } else {
+                console.log('User cancelled login or did not fully authorize.');
+            }
+        }, {scope: 'email'});
+    }
 
 {% endblock %}
 
@@ -210,7 +219,10 @@
             
 
             <div class="login-btn clear" style="display:none">
+<!--
                 <a class="btn" href="/login/facebook/?callback_url=http://apps.facebook.com/georemindme" target="_blank">Entrar</a>
+-->
+                <span class="btn" onclick="javascript:loginFB()">Entrar</a>
             </div>
             <div class="register-btn clear" style="display:none">
                 <a class="btn" href="/login/facebook/?callback_url=http://apps.facebook.com/georemindme">Autorizar</a>
