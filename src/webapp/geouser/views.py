@@ -200,7 +200,7 @@ def dashboard(request, template='generic/dashboard.html'):
                 if user:
                     request.session['user'] = user
                     request.session.put()
-                    response = HttpResponseRedirect(reverse('geouser.views.dashboard'))
+                    response = HttpResponseRedirect(reverse('geouser.views.dashboard_contacts'))
                     # cookie de primer login
                     from time import time
                     from datetime import datetime
@@ -221,26 +221,12 @@ def dashboard(request, template='generic/dashboard.html'):
                                            'username': request.user.username,
                                          }
                                )
-        from geoalert.models import Suggestion
-        top_users = User.objects.get_top_users()
-        top_users_dict = []
-        for user in top_users:
-            if not user.key() == request.user.key() and not request.user.is_following(user):
-                top_users_dict.append({'username': user.username,
-                                    'id': user.id,
-                                    'last_sugs': Suggestion.objects.get_by_last_created(limit=3,
-                                                                                        user=user,
-                                                                                        querier=request.user
-                                                                                        ),
-                                    'counters': user.counters,
-                                    }
-                                      )
         return render_to_response('generic/create_social_profile.html',
-                                   {'form': f,
-                                    'top_users': top_users_dict
-                                    }, 
-                                   context_instance=RequestContext(request)
-                                  )
+                               {
+                                'f': f
+                                }, 
+                               context_instance=RequestContext(request)
+                              )
     #------------------------------------------------------------------------------ 
     import memcache
     friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
@@ -266,6 +252,30 @@ def dashboard(request, template='generic/dashboard.html'):
                                           'chronology': chronology,
                                           } , RequestContext(request)
                                )
+    
+@login_required    
+def dashboard_contacts(request):
+    from geoalert.models import Suggestion
+    top_users = User.objects.get_top_users()
+    top_users_dict = []
+    for user in top_users:
+        if not user.key() == request.user.key() and not request.user.is_following(user):
+            top_users_dict.append({'username': user.username,
+                                'id': user.id,
+                                'last_sugs': Suggestion.objects.get_by_last_created(limit=3,
+                                                                                    user=user,
+                                                                                    querier=request.user
+                                                                                    ),
+                                'counters': user.counters,
+                                }
+                                  )
+    return render_to_response('generic/add_contacts.html',
+                               {
+                                'top_users': top_users_dict
+                                }, 
+                               context_instance=RequestContext(request)
+                              )
+    
 
 @username_required
 def public_profile(request, username, template='generic/profile.html'):
