@@ -164,24 +164,33 @@ class TwitterFriendsRPC(object):
         return self.rpc
     
     def handle_results(self):
-        result = self.rpc.get_result()
-        from django.utils import simplejson
-        if int(result.status_code) != 200:
-            return {}
-        friends_result = simplejson.loads(result.content)
-        if len(friends_result) == 0:
-            return {}
-        friends_key = ['tu%s' % f for f in friends_result]
-        users_to_follow = TwitterUser.get_by_key_name(friends_key)
-        users_to_follow = filter(None, users_to_follow)
-        for user_to_follow in users_to_follow:
-            if user_to_follow.user.username is not None and \
-                not self.user.is_following(user_to_follow.user):
-                    info = TwitterClient(user=user_to_follow.user).get_user_info()
-                    self.friends[user_to_follow.user.id] = { 
-                                               'username': user_to_follow.user.username, 
-                                               'twittername': info['screen_name'],
-                                               'id': user_to_follow.user.id,
-                                               }
+        try:
+            result = self.rpc.get_result()
+            from django.utils import simplejson
+            if int(result.status_code) != 200:
+                return {}
+            friends_result = simplejson.loads(result.content)
+            if len(friends_result) == 0:
+                return {}
+            friends_key = ['tu%s' % f for f in friends_result]
+            users_to_follow = TwitterUser.get_by_key_name(friends_key)
+            users_to_follow = filter(None, users_to_follow)
+            for user_to_follow in users_to_follow:
+                if user_to_follow.user is not None and user_to_follow.user.username is not None and \
+                    not self.user.is_following(user_to_follow.user):
+                    try:
+                        info = TwitterClient(user=user_to_follow.user)
+                        info = info.get_user_info()
+                        self.friends[user_to_follow.user.id] = { 
+                                                   'username': user_to_follow.user.username, 
+                                                   'twittername': info['screen_name'],
+                                                   'id': user_to_follow.user.id,
+                                                   }
+                    except:
+                        import logging
+                        logging.exception('No se encontro un usuario de twitter buscado por: %s - %s' % (self.user.id, e.message))
+        except Exception, e:
+            import logging
+            logging.exception('Handling Exception getting twitter friends: %s - %s' % (self.user.id, e.message))
         return self.friends
         

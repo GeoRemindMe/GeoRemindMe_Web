@@ -245,27 +245,31 @@ class FacebookFriendsRPC(object):
         return self.rpc
     
     def handle_results(self):
-        result = self.rpc.get_result()
-        from django.utils import simplejson
-        from geouser.models_social import FacebookUser
-        if int(result.status_code) != 200:
-            return {}
-        friends_result = simplejson.loads(result.content)
-        if 'data' in friends_result:
-            friends_result = friends_result['data']
-        else:
-            return {}
-        friends_key = ['fu%s' % f['id'] for f in friends_result]
-        users_to_follow = FacebookUser.get_by_key_name(friends_key)
-        users_to_follow = filter(None, users_to_follow)
-        for user_to_follow in users_to_follow:
-            if user_to_follow.user.username is not None and \
-                not self.user.is_following(user_to_follow.user):
-                    self.friends[user_to_follow.user.id]= {
-                                           'username':user_to_follow.user.username, 
-                                           'uid':user_to_follow.uid,
-                                           'id': user_to_follow.user.id,
-                                           }
+        try:
+            result = self.rpc.get_result()
+            from django.utils import simplejson
+            from geouser.models_social import FacebookUser
+            if int(result.status_code) != 200:
+                return {}
+            friends_result = simplejson.loads(result.content)
+            if 'data' in friends_result:
+                friends_result = friends_result['data']
+            else:
+                return {}
+            friends_key = ['fu%s' % f['id'] for f in friends_result]
+            users_to_follow = FacebookUser.get_by_key_name(friends_key)
+            users_to_follow = filter(None, users_to_follow)
+            for user_to_follow in users_to_follow:
+                if user_to_follow.user.username is not None and \
+                    not self.user.is_following(user_to_follow.user):
+                        self.friends[user_to_follow.user.id]= {
+                                               'username':user_to_follow.user.username, 
+                                               'uid':user_to_follow.uid,
+                                               'id': user_to_follow.user.id,
+                                               }
+        except Exception, e:
+            import logging
+            logging.exception('Handling Exception getting facebook friends: %s - %s' % (self.user.id, e.message))
         return self.friends
         
 
