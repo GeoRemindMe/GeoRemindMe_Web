@@ -1,8 +1,8 @@
 function toggle_showMore(){
     if($('#show-more-text').css('display')!="none")
-        $('.show-more').html("Más información")
+        $('.show-more').html(gettext("Más información"))
     else
-        $('.show-more').html("[Ocultar]")
+        $('.show-more').html(gettext("[Ocultar]"))
     
     $('#show-more-text').toggle('slow')
 }
@@ -37,7 +37,7 @@ function addSuggestionToList(obj){
             $('#list-lists').append(htmlCode);
             
             //Mostrar mensaje de éxito
-            showMessage("Las sugerencia han sido añadida a la lista","success")
+            showMessage(gettext("Las sugerencia han sido añadida a la lista","success"))
         }
     });    
 }
@@ -70,7 +70,7 @@ function removeSuggestionToList(obj){
                 $('.no-lists').show();
                 
             //Mostrar mensaje de éxito
-            showMessage("Las sugerencia ha sido eliminada de la lista","success")
+            showMessage(gettext("Las sugerencia ha sido eliminada de la lista","success"))
         }
     });    
 }
@@ -136,7 +136,7 @@ $(document).ready(function(){
                 dataType:'json',
                 success: function(data){
                     //Añadimos la lista al desplegable
-                    var c=$("<li value=\""+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> sugerencias)</li>").insertBefore('.new-list-btn');
+                    var c=$("<li value=\""+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> "+gettext("sugerencias"))</li>").insertBefore('.new-list-btn');
                     c.click(function(){onLiClick(this)});
                     
                     //Forzamos el click para que se añada la sugerencia a la lista

@@ -43,7 +43,7 @@ def login_panel(request):
                                                    'username': request.user.username,
                                                   }
                                        )
-                return render_to_response('create_social_profile.html', {'form': f}, 
+                return render_to_response('generic/create_social_profile.html', {'form': f}, 
                                            context_instance=RequestContext(request)
                                           )
             else: # setup del usuario completo
@@ -64,97 +64,97 @@ def login_panel(request):
 @facebook_required
 def dashboard(request):
     from geouser.views import dashboard
-    return dashboard(request, template='dashboard.html')
+    return dashboard(request, template='generic/dashboard.html')
 
          
 @facebook_required
 def notifications(request):
     from geouser.views import notifications
-    return notifications(request, template='notifications.html')
+    return notifications(request, template='generic/notifications.html')
 
 
 @facebook_required
 def profile(request, username):
     from geouser.views import public_profile
-    return public_profile(request, username, template='profile.html')
+    return public_profile(request, username, template='generic/profile.html')
 
 
 @facebook_required
 def edit_profile (request):
     from geouser.views import edit_profile
-    return edit_profile(request, template='edit_profile.html')
+    return edit_profile(request, template='generic/edit_profile.html')
 
 
 @facebook_required    
 def user_suggestions(request):
     from geoalert.views import user_suggestions
-    return user_suggestions(request, template='suggestions.html')
+    return user_suggestions(request, template='generic/suggestions.html')
 
 
 @facebook_required    
 def search_suggestions(request,term=None):
     from georemindme.views import search_suggestions
-    return search_suggestions(request, term, template='search.html')    
+    return search_suggestions(request, term, template='generic/search.html')    
 
 
 @facebook_required    
 def add_suggestion(request):
     from geoalert.views import add_suggestion
-    return add_suggestion(request, template='add_suggestion.html')
+    return add_suggestion(request, template='generic/add_suggestion.html')
     
 
 @facebook_required    
 def edit_suggestion(request, suggestion_id):
     from geoalert.views import edit_suggestion
-    return edit_suggestion(request, suggestion_id, template='add_suggestion.html')
+    return edit_suggestion(request, suggestion_id, template='generic/add_suggestion.html')
 
 
 @facebook_required
 def view_suggestion(request, slug):
     from geoalert.views import suggestion_profile
-    return suggestion_profile(request, slug, template='view_suggestion.html')
+    return suggestion_profile(request, slug, template='generic/suggestionprofile.html')
 
 
 @facebook_required
 def view_list(request, id):
     from geolist.views import view_list
-    return view_list(request, id, template='view_list.html')
+    return view_list(request, id, template='generic/view_list.html')
 
 
 @facebook_required
 def view_place(request, place_id):
     from geoalert.views import view_place
-    return view_place(request, place_id, template='view_place.html')
+    return view_place(request, place_id, template='generic/view_place.html')
 
 
 @facebook_required
 def view_tag_suggestions(request, slug):
     from geotags.views import view_tag_suggestions
-    return view_tag_suggestions(request, slug, template='view_tag.html')
+    return view_tag_suggestions(request, slug, template='generic/view_tag.html')
 
 
 @facebook_required
 def profile_settings(request):
     from geouser.views import profile_settings
-    return profile_settings(request, template='settings.html')
+    return profile_settings(request, template='generic/settings.html')
    
 
 @facebook_required
 def edit_settings(request):
     from geouser.views import edit_settings
-    return edit_settings(request, template="edit_settings.html")
+    return edit_settings(request, template="generic/edit_settings.html")
 
 
 @facebook_required
 def followers_panel(request, username):
     from geouser.views import followers_panel
-    return followers_panel(request, username, template='followers.html')
+    return followers_panel(request, username, template='generic/followers.html')
 
 
 @facebook_required
 def followings_panel(request, username):
     from geouser.views import followings_panel
-    return followings_panel(request, username, template='followings.html')
+    return followings_panel(request, username, template='generic/followings.html')
 
 
 def test_users(request):

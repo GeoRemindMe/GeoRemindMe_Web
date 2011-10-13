@@ -62,7 +62,7 @@ $(document).ready(function() {
         var network=$('#register-menu li.active');
         if(network.length==0){
             //Mensaje
-            showMessage("Primero selecciona una de la redes","error")
+            showMessage(gettext("Primero selecciona una de la redes"),"error")
         }else{
             var register_link="/login/"+network.attr('id')+"/";
             $(this).attr('href',register_link)

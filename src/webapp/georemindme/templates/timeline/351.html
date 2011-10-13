@@ -1,4 +1,5 @@
 {% load tags %}
+{% load i18n %}
 
 {% comment %} 
     Mensaje nº 351
@@ -15,7 +16,7 @@
     {% comment %}  Solo si el mensaje ha sido generado por el usuario y no por el sistema se podrá borrar {% endcomment %} 
     {% if not obj.is_private %}
         {% if obj.username = user.username %}
-            <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Remove</a></div>
+            <div class="removable" value="{{obj.instance.id}}" type="suggestion"><a href="#">Borrar</a></div>
         {% endif %}
     {% endif %}
 
@@ -63,7 +64,7 @@
                         
                         <!-- Añadimos el botón de borrar comentario-->
                         {% if c.username = user.username %}
-                            <div class="removable" value="{{c.id}}" type="comment"><a href="#">Remove</a></div>
+                            <div class="removable" value="{{c.id}}" type="comment"><a href="#">Borrar</a></div>
                         {% endif %}
                     
                         <img class="user-picture" src="{% embedded_avatar c.username %}" alt="user avatar"><a href="{% url2 in_facebook public_profile c.username %}">{{c.username}}</a>: {{c.msg}}<br>

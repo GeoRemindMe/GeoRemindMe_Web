@@ -128,15 +128,12 @@ def embedded_avatar(username):
         from geouser.views import get_avatar
         try:
             image_url = get_avatar(None, username)
-            from libs.httplib2 import Http
-            from mapsServices.places.GPRequest import Client
-            mem = Client()
-            req = Http(cache=mem)
-            response, content = req.request(image_url['Location'])
-            encoded_image = "data:image;base64,%s" % base64.b64encode(content)
+            from google.appengine.api import urlfetch
+            result = urlfetch.fetch(image_url['Location'])
+            encoded_image = "data:image;base64,%s" % base64.b64encode(result.content)
             memcache.set('%s%s_avatarcachebase64' % (memcache.version, username), encoded_image, 1123)
         except:
-            return 'http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png'
+            return 'https://georemindme.appspot.com/static/facebookApp/img/no_avatar.png'
     return encoded_image
 
 

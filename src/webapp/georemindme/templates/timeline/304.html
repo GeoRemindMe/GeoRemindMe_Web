@@ -1,5 +1,5 @@
 {% load tags %}
-
+{% load i18n %}
 {% comment %} 
     Mensaje nº 304
     304: Dejar de seguir una sugerencia
@@ -14,7 +14,7 @@
         </a>
     </div>
     <div class="timeline-msg">
-        Ya no tienes la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a> en <a href="{% url in_facebook user_suggestions%}">tu baúl</a>:<br>
+        Ya no tienes la sugerencia de <a href="{% url2 in_facebook public_profile obj.instance.user.username %}">{{obj.instance.user.username}}</a> en <a href="{% url in_facebook user_suggestions%}">tu mochila</a>:<br>
         {{obj.instance.name}}<br>
         <span class="timestamp">  {{obj.created|naturaltime}}</span>  
     </div>

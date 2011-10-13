@@ -4,10 +4,10 @@ $(document).ready(function(){
     //TEMPLATES
     if($('#followTemplate').length==0){
         var temp =  '<script id="followTemplate" type="text/x-jquery-tmpl">\
-                        <span  onclick="javascript:follow(\'follow\',${id})"><a href="javascript:void(0)" class="no-following">Seguir</a></span>\
+                        <span  onclick="javascript:follow(\'follow\',${id})"><a href="javascript:void(0)" class="no-following">'+gettext("Seguir")+'</a></span>\
                     </script>\
                     <script id="unfollowTemplate" type="text/x-jquery-tmpl">\
-                        <span  onclick="javascript:follow(\'unfollow\',${id})"><a href="javascript:void(0)" class="following">Siguiendo</a></span>\
+                        <span  onclick="javascript:follow(\'unfollow\',${id})"><a href="javascript:void(0)" class="following">'+gettext("Siguiendo")+'</a></span>\
                     </script>'
         $('#templates').append(temp).ready()
         
@@ -30,7 +30,7 @@ function follow(action,userid,username) {
     else
         var url = '/ajax/delete/following/'
     
-    $("#following_state_"+userid).children().text("Enviado...")
+    $("#following_state_"+userid).children().text(gettext("Enviado..."))
     $('#following_state_'+userid).removeClass('following-state');
     $("#following_state_"+userid).children().addClass("waiting")
     $.ajax({

@@ -410,12 +410,13 @@ class Place(POI):
             para intentar añadirlo luego
         """
         from mapsServices.fusiontable import ftclient, sqlbuilder
+        from georemindme.models_utils import _Do_later_ft
         try:
             ftclient = ftclient.OAuthFTClient()
             from django.conf import settings as __web_settings # parche hasta conseguir que se cachee variable global
             import unicodedata
             name = unicodedata.normalize('NFKD', self.name).encode('ascii','ignore')
-            return ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_PLACES'],
+            ftclient.query(sqlbuilder.SQL().insert(__web_settings.FUSIONTABLES['TABLE_PLACES'],
                                                     {'name': name,
                                                      'bus_id': self.business.id if self.business is not None else -1,
                                                      'location': '%s,%s' % (self.location.lat, self.location.lon),
@@ -424,9 +425,13 @@ class Place(POI):
                                                      }
                                                    )
                            )
-        except:  # Si falla, se guarda para intentar añadir mas tarde
-            from georemindme.models_utils import _Do_later_ft
-            later = _Do_later_ft(instance_key=self.key())
+            delete = _Do_later_ft().get_by_key_name('_do_later_%s' % self.id)
+            if delete is not None:
+                delete.delete()
+        except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
+            import logging
+            logging.error('ERROR FUSIONTABLES new place %s: %s' % (self.id, e))
+            later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key())
             later.put()
             from google.appengine.ext import deferred
             raise deferred.PermanentTaskFailure()
@@ -434,6 +439,7 @@ class Place(POI):
     
     def update_ft(self):
         from mapsServices.fusiontable import ftclient, sqlbuilder
+        from georemindme.models_utils import _Do_later_ft
         try:
             ftclient = ftclient.OAuthFTClient()
             rowid = ftclient.query(sqlbuilder.SQL().select(
@@ -462,9 +468,14 @@ class Place(POI):
                                                         int(r)
                                                        )
                                )
+                delete = _Do_later_ft().get_by_key_name('_do_later_%s' % self.id)
+                if delete is not None:
+                    delete.delete()
         except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
             import logging
-            logging.error('ERROR FUSIONTABLES %s: %s' % (self.id, e))
+            logging.error('ERROR FUSIONTABLES update place %s: %s' % (self.id, e))
+            later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key(), update=True)
+            later.put()
             from google.appengine.ext import deferred
             raise deferred.PermanentTaskFailure(e)
 

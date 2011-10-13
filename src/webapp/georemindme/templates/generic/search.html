@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load tags %}
 
+{% block title %}{%trans "Buscador de sugerencias geolocalizadas" %}{% endblock %}
 
 {% block extra_js %}
 		<script type="text/javascript">
@@ -14,10 +15,6 @@
         });
 	</script>
 {%endblock%}
-
-{% block title %}{%trans "Buscador" %}{% endblock %}
-
-{% block goBack %}{%endblock%}   
  
 {% block body %}
 	

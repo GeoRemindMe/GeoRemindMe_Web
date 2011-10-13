@@ -35,7 +35,7 @@ class TimelineService(remote.Service):
         from time import mktime
         from geovote.models import Comment, Vote
         for a in activity[1]:
-            t = Timeline(msg=a['msg'], 
+            t = Timeline(msg=a['msg'],
                          msg_id = a['msg_id'],
                          user=a['username'],
                          created=int(mktime(a['modified'].utctimetuple()))
@@ -51,4 +51,4 @@ class TimelineService(remote.Service):
                     t.instance_name=unicode(a['instance'])
                     t.url = a['instance'].get_absolute_url().encode("utf8")
             timelines.append(t)
-        return Timelines(timelines=timelines, query_id = activity[0])
+        return Timelines(timelines=timelines, query_id = '-'.join(activity[0]))

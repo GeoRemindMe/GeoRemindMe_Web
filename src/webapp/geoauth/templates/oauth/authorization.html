@@ -1,5 +1,5 @@
 {% comment %}ESTA PLANTILLA NO SE USA{% endcomment %}
-{% extends "webapp/base.html" %}
+{% extends "generic/base_generic.html" %}
 
 {% load i18n %}
 {% block login %}{%endblock%}
@@ -9,8 +9,8 @@
                       <form action="{{request.get_full_path}}" id="signin" method="post">  
            {% csrf_token %}
 
-              <input type="submit" tabindex="7" value="{% trans "Accept" %}" name="accept">
-			<input type="submit" tabindex="7" value="{% trans "Deny" %}" name="deny">
+              <input type="submit" tabindex="7" value="Aceptar" name="accept">
+			<input type="submit" tabindex="7" value="Rechazar" name="deny">
              </form>
 {%endblock%}
 

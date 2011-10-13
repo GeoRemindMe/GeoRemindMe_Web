@@ -9,13 +9,15 @@
 
 from libs.decorator import decorator
 
-
 @decorator
 def login_required(func, *args, **kwargs):
     request = args[0]  # request es el primer parametro que pasamos
-    #raise Exception(session._session)
     if request.user.is_authenticated():
-        return func(*args, **kwargs)
+        if request.user.username is not None:
+            return func(*args, **kwargs)
+        else: # falta el nombre de usuario, redirigimos al panel
+            from views import dashboard
+            return dashboard(request)
     from views import login
     return login(args[0])
 
@@ -23,7 +25,7 @@ def login_required(func, *args, **kwargs):
 @decorator
 def login_forced(func, *args, **kwargs):
     querier = args[0]
-    if querier.is_authenticated():
+    if querier.is_authenticated() and querier.username is not None:
         return func(*args, **kwargs)
     from django.http import HttpResponseForbidden
     return HttpResponseForbidden()
@@ -36,3 +38,15 @@ def admin_required(func, *args, **kwargs):
         return func(*args, **kwargs)
     from views import login
     return login(args[0])
+
+
+@decorator
+def username_required(func, *args, **kwargs):
+    request = args[0]  # request es el primer parametro que pasamos
+    if request.user.is_authenticated() and request.user.username is None:
+        from views import dashboard
+        return dashboard(request)
+    return func(*args, **kwargs)
+    
+
+

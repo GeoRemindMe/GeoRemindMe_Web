@@ -4,7 +4,7 @@ import sys, traceback
 
 from django.conf import settings
 from django.utils.translation import gettext as _
-_("You're lazy...") # this function lazy-loads settings
+"You're lazy..." # this function lazy-loads settings
 
 
 class Error(Exception):
@@ -61,80 +61,80 @@ class Error(Exception):
 class ParseError(Error):
     """ Invalid JSON. An error occurred on the server while parsing the JSON text. """
     code = -32700
-    message = _('Parse error.')
+    message = 'Parse error.'
 
   
 class InvalidRequestError(Error):
     """ The received JSON is not a valid JSON-RPC Request. """
     code = -32600
-    message = _('Invalid Request.')
+    message = 'Invalid Request.'
     status = 400
 
   
 class MethodNotFoundError(Error):
     """ The requested remote-procedure does not exist / is not available. """
     code = -32601
-    message = _('Method not found.')
+    message = 'Method not found.'
     status = 404
   
 
 class InvalidParamsError(Error):
     """ Invalid method parameters. """
     code = -32602
-    message = _('Invalid params.')
+    message = 'Invalid params.'
 
 
 class ServerError(Error):
     """ Internal JSON-RPC error. """
     code = -32603    
-    message = _('Internal error.')
+    message = 'Internal error.'
     
 class InvalidHashError(Error):
     """ Invalid or not specified md5 security hash code """
     code = -32610
-    message = _('Invalid security hash code')
+    message = 'Invalid security hash code'
     status = 401
 
 # -32099..-32000    Server error.     Reserved for implementation-defined server-errors.  
 class RegisterException(Error):
     """ Wrong email or password """
     code = -32000
-    message = _('Invalid email/password')
+    message = 'Invalid email/password'
 
 
 class NoConfirmedException(Error):
     """ Email not confirmed """
     code = -32001
-    message = _('Account not confirmed, please, check email')    
+    message = 'Account not confirmed, please, check email'
     
 class DeadlineException(Error):
     """ Email not confirmed """
     code = -32002
-    message = _('Deadline exceeded')   
+    message = 'Deadline exceeded'
 
     
 class BadSessionException(Error):
     """ id session is invalid """
     code = -32002
-    message = _('Invalid session')
+    message = 'Invalid session'
 
 # The remainder of the space is available for application defined errors.
 
 
 class RequestPostError(InvalidRequestError):
     """ JSON-RPC requests must be POST """
-    message = _('JSON-RPC requests must be POST')
+    message = 'JSON-RPC requests must be POST'
 
 
 class InvalidCredentialsError(Error):
     """ Invalid login credentials """
     code = 401
-    message = _('Invalid login credentials')
+    message = 'Invalid login credentials'
     status = 401
  
   
 class OtherError(Error):
     """ catchall error """
     code = 500
-    message = _('Error missed by other execeptions')
+    message = 'Error missed by other execeptions'
     status = 500

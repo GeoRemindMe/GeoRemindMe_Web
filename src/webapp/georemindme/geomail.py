@@ -84,18 +84,39 @@ def send_keepuptodate(org,msg,to=settings.CONTACT_EMAIL, language='en'):
 
 def send_notification_invitation(to, sender, invitation, language='en'):
     from django.utils import translation
+    from geoalert.models import Suggestion
     translation.activate(language)
     message = GeoMail()
     message.to = to
-    message.subject = _("%s sent you a new invitation") % sender
+    from geolist.models import List
+    if isinstance(invitation.instance,List):
+        obj_type=_("una lista")
+    elif isinstance(invitation.instance, Suggestion):
+        obj_type=_("una sugerencia")
+    message.subject = _("%(sender)s ha compartido %(obj_type)s contigo") % {
+                            'sender':sender,
+                            'obj_type': obj_type,
+                        }
     message.body = _("""
-            blababababab
-            """)
+            %(sender)s ha compartido una %(obj_type)s privada contigo, para guardarla 
+            en tu mochila tan solo tienes que acceder a las notificaciones de tu cuenta y aceptar
+            la invitación:\n
+            https://georemindme.appspot.com/notifications/
+            """) % {
+                 'obj_type': obj_type,
+                 'sender':sender,
+                 }
     message.html = _("""
                         <html><head></head><body>
-                        blababababa
+                        %(sender)s ha compartido una %(obj_type)s privada contigo, para guardarla 
+                        en tu mochila tan solo tienes que acceder a las notificaciones de tu cuenta y aceptar
+                        la invitación:<br>
+                        https://georemindme.appspot.com/notifications/
                         </body></html>
-                    """)
+                    """) % {
+                 'obj_type': obj_type,
+                 'sender':sender,
+                 }
     translation.deactivate()
     message.push()
     

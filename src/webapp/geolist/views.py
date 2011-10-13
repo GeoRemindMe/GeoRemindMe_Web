@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.shortcuts import Http404
 from django.template import RequestContext
 
-from geouser.decorators import login_required
+from geouser.decorators import login_required, username_required
 from models import ListSuggestion, ListAlert, ListUser, List
 
 #===============================================================================
@@ -129,7 +129,7 @@ def del_list_follower(request, list_id):
     return False
 
 @login_required
-def add_suggestion(request, template='webapp/add_suggestion.html'):
+def add_suggestion(request, template='generic/add_suggestion.html'):
     """ Añade una sugerencia
         
             :param form: formulario con los datos
@@ -414,8 +414,8 @@ def get_all_shared_list_suggestion(request):
     return lists
 
 
-
-def view_list(request, id, template='webapp/view_list.html'):
+@username_required
+def view_list(request, id, template='generic/view_list.html'):
     def load_suggestions_async(suggestions):
         suggestions = suggestions.get_result()
         from georemindme.funcs import prefetch_refprops
@@ -470,7 +470,7 @@ def view_list(request, id, template='webapp/view_list.html'):
                                 },
                                 context_instance=RequestContext(request)
                               )
-    
+
 
 @login_required
 def share_on_facebook(request, id, msg):
@@ -510,6 +510,7 @@ def share_on_facebook(request, id, msg):
         return None
     return post_id
 
+
 @login_required
 def share_on_twitter(request, id, msg):
     list = List.objects.get_by_id_querier(id, request.user)
@@ -526,5 +527,3 @@ def share_on_twitter(request, id, msg):
     except:
         return None
     return True
-    
-    

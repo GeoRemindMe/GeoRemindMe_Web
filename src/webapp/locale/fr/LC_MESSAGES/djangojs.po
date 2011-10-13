@@ -1,0 +1,283 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-10-11 15:01+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: static/common/js/add_suggestion.js:446
+#: static/common/js/raw/add_suggestion.js:446
+#: static/facebookApp/js/suggestion.js:226
+msgid ""
+"Ha habido un error al añadir la sugerencia, estamos trabajando para "
+"solucionarlo."
+msgstr ""
+
+#: static/common/js/add_suggestion.js:450
+#: static/common/js/raw/add_suggestion.js:450
+#: static/facebookApp/js/suggestion.js:229
+#: static/facebookApp/js/suggestion.js:600
+msgid "La sugerencia ha sido añadida con éxito"
+msgstr ""
+
+#: static/common/js/bag.js:549 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:7
+msgid "Mostrar estadísticas"
+msgstr ""
+
+#: static/common/js/bag.js:551 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:9
+msgid "Ocultar estadísticas"
+msgstr ""
+
+#: static/common/js/bag.js:582 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:40
+msgid "Compartir en Twitter"
+msgstr ""
+
+#: static/common/js/bag.js:585 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:43 static/facebookApp/js/suggestion.js:616
+msgid "Enviar"
+msgstr ""
+
+#: static/common/js/bag.js:627 static/common/js/bag.js.py:667
+#: static/common/js/bag.js:1125 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:85 static/common/js/raw/bag.js.py:125
+#: static/common/js/raw/bag.js:583
+msgid "Cancelar"
+msgstr ""
+
+#: static/common/js/bag.js:636 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:94
+msgid "Compartir en Facebook"
+msgstr ""
+
+#: static/common/js/bag.js:639 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:97
+msgid "Publicar"
+msgstr ""
+
+#: static/common/js/bag.js:920 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:378
+msgid "La sugerencia ha sido eliminada de la lista correctamente"
+msgstr ""
+
+#: static/common/js/bag.js:940 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:398
+msgid "No hay ninguna sugerencia seleccionada"
+msgstr ""
+
+#: static/common/js/bag.js:958 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:416
+msgid "Las sugerencias han sido añadidas a la lista"
+msgstr ""
+
+#: static/common/js/bag.js:1072 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:530
+msgid "Las listas han sido eliminadas con éxito"
+msgstr ""
+
+#: static/common/js/bag.js:1131 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:589
+msgid "Guardar"
+msgstr ""
+
+#: static/common/js/bag.js:1132 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:590
+msgid "Guardando..."
+msgstr ""
+
+#: static/common/js/bag.js:1133 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:591
+msgid "Haz clic para editar..."
+msgstr ""
+
+#: static/common/js/bag.js:1149 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:607
+msgid ""
+"Ouch! Se ha producido un error; perdón!, lo solucionaremos lo antes posible!"
+msgstr ""
+
+#: static/common/js/bag.js:1173 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:631
+msgid "Sin descripción"
+msgstr ""
+
+#: static/common/js/bag.js:1181 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:639
+msgid "Esta lista aún no tiene descripción"
+msgstr ""
+
+#: static/common/js/bag.js:1188 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:646
+msgid "Esta sugerencia no tiene tags"
+msgstr ""
+
+#: static/common/js/bag.js:1196 static/common/js/bag.min.js:1
+#: static/common/js/raw/bag.js:654
+msgid "Esta lista de sugerencias no tiene tags"
+msgstr ""
+
+#: static/common/js/bag.js:1201 static/common/js/bag.js.py:1209
+#: static/common/js/bag.min.js:1 static/common/js/raw/bag.js:659
+#: static/common/js/raw/bag.js.py:667
+msgid "Pública"
+msgstr ""
+
+#: static/common/js/bag.js:1201 static/common/js/bag.js.py:1207
+#: static/common/js/bag.min.js:1 static/common/js/raw/bag.js:659
+#: static/common/js/raw/bag.js.py:665
+msgid "Privada"
+msgstr ""
+
+#: static/common/js/chronology.js:7 static/common/js/chronology.min.js:1
+#: static/common/js/common_webapp.js:2408 static/facebookApp/js/social.js:7
+msgid "Seguir"
+msgstr ""
+
+#: static/common/js/chronology.js:10 static/common/js/chronology.min.js:1
+#: static/common/js/common_webapp.js:2411 static/facebookApp/js/social.js:10
+msgid "Siguiendo"
+msgstr ""
+
+#: static/common/js/chronology.js:33 static/common/js/chronology.min.js:1
+#: static/common/js/common_webapp.js:2434 static/facebookApp/js/social.js:33
+msgid "Enviado..."
+msgstr ""
+
+#: static/common/js/chronology.js:315 static/common/js/chronology.min.js:1
+#: static/common/js/common_facebookApp.js:2633
+#: static/common/js/common_webapp.js:2716
+#: static/facebookApp/js/chronology.js:256
+msgid "La propuesta ha sido aceptada"
+msgstr ""
+
+#: static/common/js/chronology.js:317 static/common/js/chronology.min.js:1
+#: static/common/js/common_facebookApp.js:2635
+#: static/common/js/common_webapp.js:2718
+#: static/facebookApp/js/chronology.js:258
+msgid "La propuesta ha sido rechazada"
+msgstr ""
+
+#: static/common/js/login.js:65 static/common/js/login.min.js:1
+#: static/common/js/raw/login.js:65
+msgid "Primero selecciona una de la redes"
+msgstr ""
+
+#: static/common/js/view_place.js:44 static/common/js/view_place.min.js:1
+#: static/common/js/view_suggestion.js:44
+#: static/common/js/raw/load_panoramio.js:44
+msgid "los derechos de las fotos pertenecen a los autores"
+msgstr ""
+
+#: static/common/js/view_suggestion.js:50
+#: static/common/js/raw/view_suggestion.js:3
+msgid "Más información"
+msgstr ""
+
+#: static/common/js/view_suggestion.js:52
+#: static/common/js/raw/view_suggestion.js:5
+msgid "[Ocultar]"
+msgstr ""
+
+#: static/common/js/view_suggestion.js:84
+#: static/common/js/raw/view_suggestion.js:37
+msgid "Las sugerencia han sido añadida a la lista"
+msgstr ""
+
+#: static/common/js/view_suggestion.js:114
+#: static/common/js/raw/view_suggestion.js:67
+msgid "Las sugerencia ha sido eliminada de la lista"
+msgstr ""
+
+#: static/common/js/view_suggestion.js:178
+#: static/common/js/raw/view_suggestion.js:131
+msgid "sugerencias"
+msgstr ""
+
+#: static/facebookApp/js/main.js:38
+msgid ""
+"No puedes entrar a esta URL sin estar en Facebook, procedemos a "
+"redireccionarte"
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:176
+msgid "Geocoder failed due to: "
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:244
+msgid "Geocode was not successful for the following reason: "
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:427
+msgid "Posición actual"
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:504
+msgid "Por favor introduce primero la sugerencia"
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:510
+msgid "Por favor indique el campo \"¿Donde?\" para continuar"
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:523
+msgid "Por favor revise que la fecha de inicio sea anterior a la de fin"
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:530
+#: static/facebookApp/js/suggestion.js:534
+msgid "Por favor revise que la hora de inicio sea anterior a la de fin"
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:543
+msgid "Enviando..."
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:598
+msgid "Error"
+msgstr ""
+
+#: static/webapp/js/base.js:62
+msgid "Empezar el registro"
+msgstr ""
+
+#: static/webapp/js/base.js:67
+msgid "Por favor completa correctamente el formulario"
+msgstr ""
+
+#: static/webapp/js/base.js:73
+msgid "Para continuar es necesario marcar esta casilla."
+msgstr ""
+
+#: static/webapp/js/base.js:101
+msgid "El email no es válido, por favor revíselo"
+msgstr ""
+
+#: static/webapp/js/base.js:121
+msgid "Ya estas registrado. Puedes identificarte y acceder."
+msgstr ""
+
+#: static/webapp/js/base.js:129
+msgid "Todavía no estas registrado"
+msgstr ""
+
+#: static/webapp/js/base.js:151
+msgid "Las contraseñas no coinciden"
+msgstr ""
+
+#: static/webapp/js/base.js:167
+msgid "Las contraseñas tienen que tener 6 o más caracteres"
+msgstr ""
