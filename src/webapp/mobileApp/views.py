@@ -17,7 +17,7 @@ def login_panel(request, login=False):
     try:
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('mobileApp.views.dashboard'))
-        return render_to_response("mobile/login.html", {'login' :login}, context_instance=RequestContext(request))
+        return render_to_response("mobile/index.html", {'login' :login}, context_instance=RequestContext(request))
     except DeadlineExceededError:
         return HttpResponseRedirect('/m/')
     
