@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-@login_required
+
 def login_panel(request, login=False):
     try:
     # When deployed
@@ -18,7 +18,7 @@ def login_panel(request, login=False):
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('mobileApp.views.dashboard'))
         return render_to_response("mobile/index.html", {'login' :login}, context_instance=RequestContext(request))
-    except DeadlineExceededError:
+    except DeadlineExceededError:        
         return HttpResponseRedirect('/m/')
     
 

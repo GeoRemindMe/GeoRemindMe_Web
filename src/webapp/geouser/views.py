@@ -64,7 +64,6 @@ def login(request):
     return render_to_response('mainApp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
 
 
-
 def login_google(request):
     """**Descripción**: Comprueba si ya te has dado de alta en la App con tu cuenta de Google
         para entrar automáticamente y sino pedirte permiso para hacerlo.

@@ -25,12 +25,9 @@
 
 		<div data-role="content">	
 			<ul data-role="listview" data-theme="g">
-				<li><a href="#"><img src="http://i.istockimg.com/file_thumbview_approve/8183124/2/8183124-8183124-intelligence.jpg" alt="">Mercedes</a></li>
-				<li><a href="#"><img src="http://i.istockimg.com/file_thumbview_approve/8183124/2/8183124-8183124-intelligence.jpg" alt="">Audi</a></li>
-				<li><a href="#"><img src="http://i.istockimg.com/file_thumbview_approve/8183124/2/8183124-8183124-intelligence.jpg" alt="">BMW</a></li>
-				<li><a href="#"><img src="http://i.istockimg.com/file_thumbview_approve/8183124/2/8183124-8183124-intelligence.jpg" alt="">Renault</a></li>
-				<li><a href="#"><img src="http://i.istockimg.com/file_thumbview_approve/8183124/2/8183124-8183124-intelligence.jpg" alt="">Ferrari</a></li>
-				<li><a href="#"><img src="http://i.istockimg.com/file_thumbview_approve/8183124/2/8183124-8183124-intelligence.jpg" alt="">Lotus</a></li>
+				{% for obj in chronology.1 %}
+                    <li><a href="#"><img src="" alt="">{{obj.user}}</a></li>
+                {% endfor %}
 			</ul>
 			<br>
 			<a href="#" data-role="button" data-theme="a">Cargar Mas</a>
