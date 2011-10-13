@@ -23,7 +23,7 @@ def register_panel(request, login=False):
     return render_to_response("webapp/register.html", {'login' :login}, context_instance=RequestContext(request))
 
 
-def login_panel(request,login=False):
+def login_panel(request,login=False, template="webapp/login.html"):
     try:
     # When deployed
         from google.appengine.runtime import DeadlineExceededError
@@ -33,7 +33,7 @@ def login_panel(request,login=False):
     try:
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('geouser.views.dashboard'))
-        return render_to_response("webapp/login.html", {'login' :login}, context_instance=RequestContext(request))
+        return render_to_response(template, {'login' :login}, context_instance=RequestContext(request))
     except DeadlineExceededError:
         return HttpResponseRedirect('/')
 
