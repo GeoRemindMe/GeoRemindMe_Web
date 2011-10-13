@@ -223,7 +223,7 @@ def dashboard(request, template='generic/dashboard.html'):
                                )
         return render_to_response('generic/create_social_profile.html',
                                {
-                                'f': f
+                                'form': f
                                 }, 
                                context_instance=RequestContext(request)
                               )
