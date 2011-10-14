@@ -1864,6 +1864,7 @@ $.fn.selection = function(start, end) {
 };
 
 })(jQuery);
+
 /*
  * jQuery geo_autocomplete plugin 1.0
  *
@@ -1932,3 +1933,4 @@ $.fn.extend({
 });
 
 })(jQuery);
+
