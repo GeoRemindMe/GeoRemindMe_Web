@@ -85,7 +85,7 @@ def view_list(request, id):
     return view_list(request, id, template='mobile/view_list.html')
 
 
-@login_required
+#@login_required
 def view_place(request, place_id):
     from geoalert.views import view_place
     return view_place(request, place_id, template='mobile/view_place.html')
