@@ -335,12 +335,22 @@ $(document).ready(function() {
             time.push(FormatNumberLength(hours,2)+":"+FormatNumberLength(minutes,2))
     }
     
-    $( "#start-hour,#end-hour" ).autocomplete({
+    $( "#start-hour" ).autocomplete({
         minLength:0,
         source: function(req, add){ req.term = ''; add(time); }
     });
+    $( "#end-hour" ).autocomplete({
+        minLength:0,
+        source: function(req, add){
+			
+			var idx = time.indexOf($("#start-hour").val());
+			
+			add(time.slice(idx+1));
+			}
+    });
     
     $( "#start-hour,#end-hour" ).focus(function(){ $(this).autocomplete("search"); });
+    $( "#start-hour,#end-hour" ).click(function(){ $(this).autocomplete("search"); });
 	
 });
 
@@ -584,6 +594,76 @@ function loadGMaps(defaultX,defaultY,canvas) {
     }
     
     placesAutocomplete();
+	//autocompleteAddress();
+}
+
+
+
+function autocompleteAddress()
+{
+
+    $("#place")
+        .autocomplete({
+         //This bit uses the geocoder to fetch address values
+          autoFocus: true,
+          source: function(request, response) {
+
+			var data = {};
+			var service = new google.maps.places.PlacesService(map);
+			
+			data['location'] = new google.maps.LatLng(map.getCenter().lat(),map.getCenter().lng());
+			data['radius'] = searchconfig_google['radius'];
+			//data['sensor'] = "false";
+			data['key'] = "AIzaSyBWrR-O_l5STwv1EO7U_Y3JNOnVjexf710";
+			data['name'] = request.term;
+			//data['types'] = 'all';
+			
+			service.search(data, function(results,status) { 
+				response($.map(results, function(item) {
+					return {
+					  label:  item.name,
+					  value: item.name
+					  //latitude: item.geometry.location.lat(),
+					  //longitude: item.geometry.location.lng()
+					}
+				  }));
+				
+				 });
+			
+			/*
+			$.ajax({
+				type:"get",
+				url: "https://maps.googleapis.com/maps/api/place/search/json",
+				data: data,
+				dataType: "json",
+				success: function(data) { console.debug(data); },
+				error: function(data) { console.debug(data); },
+				
+				});
+			  
+            geocoder.geocode( {'address': request.term }, function(results, status) {
+            
+                if (status != google.maps.GeocoderStatus.OK)
+                    return;
+            
+              response($.map(results, function(item) {
+                return {
+                  label:  item.formatted_address,
+                  value: item.formatted_address,
+                  latitude: item.geometry.location.lat(),
+                  longitude: item.geometry.location.lng()
+                }
+              }));
+            })*/
+          },
+          //This bit is executed upon selection of an address
+          select: function(event, ui) {
+
+                var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+                    
+                map.setCenter(location);
+          }
+        });
 }
 
 function createMarker(x,y)
@@ -1058,12 +1138,12 @@ function showMoreDetails(){
 ;(function($) {
 	
 $.fn.extend({
-	autocomplete: function(urlOrData, options) {
+	geoautocomplete: function(urlOrData, options) {
 		var isUrl = typeof urlOrData == "string";
-		options = $.extend({}, $.Autocompleter.defaults, {
+		options = $.extend({}, $.GeoAutocompleter.defaults, {
 			url: isUrl ? urlOrData : null,
 			data: isUrl ? null : urlOrData,
-			delay: isUrl ? $.Autocompleter.defaults.delay : 10,
+			delay: isUrl ? $.GeoAutocompleter.defaults.delay : 10,
 			max: options && !options.scroll ? 10 : 150
 		}, options);
 		
@@ -1074,7 +1154,7 @@ $.fn.extend({
 		options.formatMatch = options.formatMatch || options.formatItem;
 		
 		return this.each(function() {
-			new $.Autocompleter(this, options);
+			new $.GeoAutocompleter(this, options);
 		});
 	},
 	result: function(handler) {
@@ -1094,7 +1174,7 @@ $.fn.extend({
 	}
 });
 
-$.Autocompleter = function(input, options) {
+$.GeoAutocompleter = function(input, options) {
 
 	var KEY = {
 		UP: 38,
@@ -1114,13 +1194,13 @@ $.Autocompleter = function(input, options) {
 
 	var timeout;
 	var previousValue = "";
-	var cache = $.Autocompleter.Cache(options);
+	var cache = $.GeoAutocompleter.Cache(options);
 	var hasFocus = 0;
 	var lastKeyPressCode;
 	var config = {
 		mouseDownOnSelect: false
 	};
-	var select = $.Autocompleter.Select(options, input, selectCurrent, config);
+	var select = $.GeoAutocompleter.Select(options, input, selectCurrent, config);
 	
 	var blockSubmit;
 	
@@ -1463,7 +1543,7 @@ $.Autocompleter = function(input, options) {
 
 };
 
-$.Autocompleter.defaults = {
+$.GeoAutocompleter.defaults = {
 	inputClass: "ac_input",
 	resultsClass: "ac_results",
 	loadingClass: "ac_loading",
@@ -1490,7 +1570,7 @@ $.Autocompleter.defaults = {
     scrollHeight: 180
 };
 
-$.Autocompleter.Cache = function(options) {
+$.GeoAutocompleter.Cache = function(options) {
 
 	var data = {};
 	var length = 0;
@@ -1629,7 +1709,7 @@ $.Autocompleter.Cache = function(options) {
 	};
 };
 
-$.Autocompleter.Select = function (options, input, select, config) {
+$.GeoAutocompleter.Select = function (options, input, select, config) {
 	var CLASSES = {
 		ACTIVE: "ac_over"
 	};
@@ -1881,7 +1961,7 @@ $.fn.selection = function(start, end) {
 
 $.fn.extend({
 	geo_autocomplete: function(_geocoder, _options) {
-		options = $.extend({}, $.Autocompleter.defaults, {
+		options = $.extend({}, $.GeoAutocompleter.defaults, {
 			geocoder: _geocoder,
 			mapwidth: 100,
 			mapheight: 100,
@@ -1918,7 +1998,7 @@ $.fn.extend({
 				return '<img src="' + _src + '" width="' + options.mapwidth + '" height="' + options.mapheight + '" /> ' + _place + '<br clear="both"/>';
 			}
 		}, _options);
-		
+
 		// if highlight is set to false, replace it with a do-nothing function
 		options.highlight = options.highlight || function(value) { return value; };
 		
@@ -1926,7 +2006,7 @@ $.fn.extend({
 		options.formatMatch = options.formatMatch || options.formatItem;
 
 		return this.each(function() {
-			new $.Autocompleter(this, options);
+			new $.GeoAutocompleter(this, options);
 		});
 	}
 });
