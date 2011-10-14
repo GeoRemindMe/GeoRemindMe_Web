@@ -31,7 +31,6 @@ def dashboard(request):
     else:
         return render_to_response("mobile/basic.html", context_instance=RequestContext(request))
 
-
 @login_required         
 def notifications(request):
     from geouser.views import notifications
