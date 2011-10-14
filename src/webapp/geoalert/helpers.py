@@ -410,6 +410,7 @@ class SuggestionHelper(EventHelper):
                      'slug': sug.slug,
                      'username': sug.user.username,
                      'name': sug.name,
+                     'address': sug.poi.address,
                      'description': sug.description,
                      'poi': {'lat': sug.poi.location.lat,
                              'lon': sug.poi.location.lon,
