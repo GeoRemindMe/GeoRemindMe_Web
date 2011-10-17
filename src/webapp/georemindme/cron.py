@@ -87,6 +87,7 @@ def clean_sessions(request):
     try:
         db.delete([session for session in sessions])
     except:
+        raise
         pass
     return HttpResponse()
 
