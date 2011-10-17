@@ -183,7 +183,7 @@ $(document).ready(function(){
                 dataType:'json',
                 success: function(data){
                     //Añadimos la lista al desplegable
-                    var c=$("<li value=\""+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> "+gettext("sugerencias"))</li>").insertBefore('.new-list-btn');
+                    var c=$("<li value=\""+data.id+"\"><span class=\"checkbox name\">"+data.name+"</span> (<span class=\"list-"+data.id+"-counter\">"+data.keys.length+"</span> "+gettext("sugerencias")+")</li>").insertBefore('.new-list-btn');
                     c.click(function(){onLiClick(this)});
                     
                     //Forzamos el click para que se añada la sugerencia a la lista
