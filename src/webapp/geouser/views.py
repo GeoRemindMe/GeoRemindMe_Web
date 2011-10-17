@@ -14,7 +14,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.conf import settings
 
-from decorators import login_required, admin_required
+from decorators import login_required, admin_required, username_required
 from geouser.models import User
 
 
@@ -111,6 +111,8 @@ def login_facebook(request):
         :return: En caso de exito redirige al panel y en caso contrario redirige al panel de login.
     """
     from geoauth.views import facebook_authenticate_request
+    if 'cls' in request.GET:
+        return facebook_authenticate_request(request, callback_url=request.GET['callback_url'] if 'callback_url' in request.GET else None, cls=True)
     return facebook_authenticate_request(request, callback_url=request.GET['callback_url'] if 'callback_url' in request.GET else None)
 
 
@@ -170,12 +172,14 @@ def update_user(request):
 #===============================================================================
 # DASHBOARD VIEW
 #===============================================================================
-@login_required
+#@login_required
 def dashboard(request, template='generic/dashboard.html'):
     """**Descripción**: Permite actualizar el email y la contraseña.
         
         :return: Solo devuelve errores si el proceso falla.
     """
+    if not request.user.is_authenticated(): # ¡no uses el decorador!
+        return login(request)
     if request.user.username is None:
         if request.user.email is None:
             from forms import SocialTwitterUserForm as formClass
@@ -196,7 +200,7 @@ def dashboard(request, template='generic/dashboard.html'):
                 if user:
                     request.session['user'] = user
                     request.session.put()
-                    response = HttpResponseRedirect(reverse('geouser.views.dashboard'))
+                    response = HttpResponseRedirect(reverse('geouser.views.dashboard_contacts'))
                     # cookie de primer login
                     from time import time
                     from datetime import datetime
@@ -217,26 +221,12 @@ def dashboard(request, template='generic/dashboard.html'):
                                            'username': request.user.username,
                                          }
                                )
-        from geoalert.models import Suggestion
-        top_users = User.objects.get_top_users()
-        top_users_dict = []
-        for user in top_users:
-            if not user.key() == request.user.key() and not request.user.is_following(user):
-                top_users_dict.append({'username': user.username,
-                                    'id': user.id,
-                                    'last_sugs': Suggestion.objects.get_by_last_created(limit=3,
-                                                                                        user=user,
-                                                                                        querier=request.user
-                                                                                        ),
-                                    'counters': user.counters,
-                                    }
-                                      )
         return render_to_response('generic/create_social_profile.html',
-                                   {'form': f,
-                                    'top_users': top_users_dict
-                                    }, 
-                                   context_instance=RequestContext(request)
-                                  )
+                               {
+                                'form': f
+                                }, 
+                               context_instance=RequestContext(request)
+                              )
     #------------------------------------------------------------------------------ 
     import memcache
     friends = memcache.get('%sfriends_to_%s' % (memcache.version, request.user.key()))
@@ -262,8 +252,32 @@ def dashboard(request, template='generic/dashboard.html'):
                                           'chronology': chronology,
                                           } , RequestContext(request)
                                )
+    
+@login_required    
+def dashboard_contacts(request):
+    from geoalert.models import Suggestion
+    top_users = User.objects.get_top_users()
+    top_users_dict = []
+    for user in top_users:
+        if not user.key() == request.user.key() and not request.user.is_following(user):
+            top_users_dict.append({'username': user.username,
+                                'id': user.id,
+                                'last_sugs': Suggestion.objects.get_by_last_created(limit=3,
+                                                                                    user=user,
+                                                                                    querier=request.user
+                                                                                    ),
+                                'counters': user.counters,
+                                }
+                                  )
+    return render_to_response('generic/add_contacts.html',
+                               {
+                                'top_users': top_users_dict
+                                }, 
+                               context_instance=RequestContext(request)
+                              )
+    
 
-
+@username_required
 def public_profile(request, username, template='generic/profile.html'):
     """**Descripción**: Perfil publico que veran los demas usuarios
     
@@ -401,6 +415,7 @@ def edit_settings(request, template="generic/edit_settings.html"):
                                                     }, context_instance=RequestContext(request)
                                )
 
+@username_required
 def followers_panel(request, username, template='generic/followers.html'):
     if request.user.is_authenticated() and username == request.user.username:
         followers=request.user.get_followers()
@@ -424,6 +439,7 @@ def followers_panel(request, username, template='generic/followers.html'):
                                )
 
 
+@username_required
 def followings_panel(request, username, template='generic/followings.html'):
     if request.user.is_authenticated() and username == request.user.username:
         followings=request.user.get_followings()
@@ -533,6 +549,8 @@ def remind_user_code(request, user, code):
             msg = _(o.message)
         except BadCode, i:
             msg = _(i.message)
+        except ValueError, e:  # new user is not in DB so raise NotSavedError instead of UniqueEmailConstraint
+            msg = _(u"Contraseña invalida")
     else:
         msg = _(u"Usuario inválido")
     return render_to_response('mainApp/user_pass.html', {'msg': msg}, context_instance=RequestContext(request))

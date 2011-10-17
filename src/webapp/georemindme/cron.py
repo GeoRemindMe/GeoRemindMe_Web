@@ -16,6 +16,8 @@ from libs.decorator import decorator
 def cron_required(func, *args, **kwargs):
     from google.appengine.api import users
     request = args[0]
+    if request is None:
+        return func(*args, **kwargs)
     if 'HTTP_X_APPENGINE_CRON' in request.META:
         return func(*args, **kwargs)
     user = request.session.get('user')
@@ -85,6 +87,7 @@ def clean_sessions(request):
     try:
         db.delete([session for session in sessions])
     except:
+        raise
         pass
     return HttpResponse()
 

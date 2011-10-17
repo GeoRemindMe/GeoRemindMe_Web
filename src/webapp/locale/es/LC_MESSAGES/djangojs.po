@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-17 08:55+0200\n"
+"POT-Creation-Date: 2011-10-17 13:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: static/common/js/add_suggestion.js:446
+#: static/common/js/add_suggestion.js:456
 #: static/common/js/raw/add_suggestion.js:446
 #: static/facebookApp/js/suggestion.js:226
 msgid ""
@@ -25,7 +25,7 @@ msgid ""
 "solucionarlo."
 msgstr ""
 
-#: static/common/js/add_suggestion.js:450
+#: static/common/js/add_suggestion.js:460
 #: static/common/js/raw/add_suggestion.js:450
 #: static/facebookApp/js/suggestion.js:229
 #: static/facebookApp/js/suggestion.js:600

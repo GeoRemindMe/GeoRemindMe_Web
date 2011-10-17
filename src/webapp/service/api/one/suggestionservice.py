@@ -131,6 +131,9 @@ class SuggestionService(remote.Service):
                           user_follower= user_follower,
                           top_comments= top_comments,
                          )
+        
+    @remote.method(GetSuggestionRequest, Suggestion)
+    def get_nearest(self, request):
 #    @remote.method(GetSyncSuggestion, Suggestions)
 #    def sync_suggestions(self, request):
 #        if len(request.suggestions) > 20:

@@ -12,7 +12,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 
 from models import *
-from geouser.decorators import login_required
+from geouser.decorators import login_required, username_required
 from cron import *
 import memcache
 
@@ -20,6 +20,7 @@ import memcache
 #===============================================================================
 # PERFIL DE EVENTOS
 #===============================================================================
+@username_required
 def suggestion_profile(request, slug, template='generic/suggestionprofile.html'):
     """Devuelve el perfil de una sugerencia, comprueba la visibilidad de una funcion
         
@@ -161,7 +162,7 @@ def _get_city(components):
         if 'locality' in i['types']:
             return i['short_name']
 
-
+@username_required
 def search_place(pos, radius=500, types=None, language=None, name=None, sensor=False):
     """ Busca lugares cercano a la posicion usando la API de Google Places
         
@@ -235,6 +236,7 @@ def add_from_foursquare_id(request, venueid):
     return redirect(place.get_absolute_url(), permanent=True)
 
 
+@username_required
 def view_place(request, slug, template='generic/view_place.html'):
     """ Devuelve la vista con informacion de un lugar
        
@@ -497,33 +499,10 @@ def share_on_facebook(request, suggestion_id, msg):
         return None
     if not suggestion._is_public():
         return False
-    if suggestion.short_url is None:
-        suggestion._get_short_url()
-    if hasattr(request, 'facebook'):
-        fb_client = request.facebook['client']
     else:
-        from geoauth.clients.facebook import FacebookClient
-        try:
-            fb_client = FacebookClient(user=request.user)
-        except:
-            return None
-    from os import environ
-    params= {
-                "name": "Ver detalles de la sugerencia",
-                "link": suggestion.short_url if suggestion.short_url is not None else '%s%s' % (environ['HTTP_HOST'], suggestion.get_absolute_url()),
-                "caption": "Detalles del sitio (%(sitio)s), comentarios, etc." % {'sitio': suggestion.poi.name},
-                #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
-                #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
-            }
-    if suggestion.description is not None:
-        params["description"]= suggestion.description
-    #Pasamos todos los valores a UTF-8
-    params = dict([k, v.encode('utf-8')] for k, v in params.items())
-    try:        
-        post_id = fb_client.consumer.put_wall_post(msg, params)
-    except:
-        return None
-    return post_id
+        from facebookApp.watchers import new_suggestion
+        new_suggestion(sender=suggestion, msg=msg)
+    return True
 
 
 @login_required
@@ -541,8 +520,6 @@ def share_on_twitter(request, suggestion_id, msg):
         tw_client=TwitterClient(user=request.user)
         tw_client.send_tweet(msg, suggestion.poi.location)
     except:
-        raise
         return None
     return True
-    
     

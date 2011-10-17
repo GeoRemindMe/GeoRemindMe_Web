@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.shortcuts import Http404
 from django.template import RequestContext
 
-from geouser.decorators import login_required
+from geouser.decorators import login_required, username_required
 from models import ListSuggestion, ListAlert, ListUser, List
 
 #===============================================================================
@@ -414,7 +414,7 @@ def get_all_shared_list_suggestion(request):
     return lists
 
 
-
+@username_required
 def view_list(request, id, template='generic/view_list.html'):
     def load_suggestions_async(suggestions):
         suggestions = suggestions.get_result()
@@ -470,7 +470,7 @@ def view_list(request, id, template='generic/view_list.html'):
                                 },
                                 context_instance=RequestContext(request)
                               )
-    
+
 
 @login_required
 def share_on_facebook(request, id, msg):
@@ -479,36 +479,10 @@ def share_on_facebook(request, id, msg):
         return None
     if not list._is_public():
         return False
-    if list.short_url is None:
-        list._get_short_url()
-    if hasattr(request, 'facebook'):
-        fb_client = request.facebook['client']
     else:
-        from geoauth.clients.facebook import FacebookClient
-        try:
-            fb_client = FacebookClient(user=request.user)
-        except:
-            return None
-    from os import environ
-    params= {
-                "name": "Ver detalles de la sugerencia",
-                "link": list.short_url if list.short_url is not None else '%s%s' % (environ['HTTP_HOST'], list.get_absolute_url()),
-                #"caption": "Detalles del sitio (%(sitio)s), comentarios, etc." % {'sitio': list.poi.name},
-                #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
-                #"picture": environ['HTTP_HOST'] +"/user/"+sender.user.username+"/picture",
-            }
-    if list.description is not None:
-        params["description"]= list.description
-    #Pasamos todos los valores a UTF-8
-    params = dict([k, v.encode('utf-8')] for k, v in params.items())
-    try:        
-        post_id = fb_client.consumer.put_wall_post("%(sugerencia)s" % {
-                                                           'sugerencia': list.name.encode('utf-8')
-                                                           }, 
-                                                       params)
-    except:
-        return None
-    return post_id
+        from facebookApp.watchers import new_list
+        new_list(sender=list, msg=msg)
+    return True
 
 @login_required
 def share_on_twitter(request, id, msg):
@@ -526,5 +500,3 @@ def share_on_twitter(request, id, msg):
     except:
         return None
     return True
-    
-    

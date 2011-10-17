@@ -24,9 +24,12 @@ class _Session_Dict(UserDict.DictMixin):
     def new_session(cls, session_data=None):
         session = _Session_Dict()
         if session_data is not None:
-            session_data = simplejson.loads(session_data)
-            session._decoded = session_data
-            session['LANGUAGE_CODE'] = session_data.get('LANGUAGE_CODE')
+            try:
+                session_data = simplejson.loads(session_data)
+                session._decoded = session_data
+                session['LANGUAGE_CODE'] = session_data.get('LANGUAGE_CODE')
+            except:
+                pass
         return session
     
     def clear(self):

@@ -183,8 +183,8 @@ def authenticate_request(request, provider, callback_url=None, cls=False):
     client = oauth2.Client(consumer)
     if callback_url is None:
         callback_url = OAUTH[provider]['callback_url']
-        if cls:
-            callback_url = callback_url + '?cls'
+    if cls:
+        callback_url = callback_url + '?cls&'
     try:
         response, content = client.request(OAUTH[provider]['request_token_url'], method="POST", callback=callback_url)
     except:
@@ -204,10 +204,13 @@ def authenticate_request(request, provider, callback_url=None, cls=False):
     return HttpResponseRedirect(url)
 
 
-def facebook_authenticate_request(request,get="redirect", callback_url=None):
+def facebook_authenticate_request(request,get="redirect", callback_url=None, cls=False):
     OAUTH = settings.OAUTH
     if callback_url is None:
         callback_url = OAUTH['facebook']['callback_url']
+    if cls:
+        callback_url += 'close/'
+        
     from clients.facebook import auth_url
     url = auth_url(OAUTH['facebook']['app_key'],
                    callback_url,
@@ -224,13 +227,17 @@ def facebook_authenticate_request(request,get="redirect", callback_url=None):
         return HttpResponseRedirect(url)
 
 
-def facebook_access_request(request, next=None):
+def facebook_access_request(request, next=None, close=None):
     code = request.GET.get('code', None)
     if code is not None:
         from clients.facebook import get_access_token
         OAUTH = settings.OAUTH
+        if close:
+            callback_url = OAUTH['facebook']['callback_url']+'close/'
+        else:
+            callback_url = OAUTH['facebook']['callback_url']
         content = get_access_token(code, 
-                                   OAUTH['facebook']['callback_url'],
+                                   callback_url,
                                    OAUTH['facebook']['app_key'],
                                    OAUTH['facebook']['app_secret'], 
                                    )
@@ -256,6 +263,8 @@ def facebook_access_request(request, next=None):
                 init_user_session(request, user)
     else:
         return HttpResponseRedirect(reverse('georemindme.views.login_panel'))
+    if close:
+        return HttpResponseRedirect(reverse('geouser.views.close_window'))
     if next is None:
         return HttpResponseRedirect(reverse('geouser.views.dashboard'))
     return HttpResponseRedirect(next)

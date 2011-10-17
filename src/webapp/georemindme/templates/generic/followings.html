@@ -3,7 +3,7 @@
 {% load tags %}
 
 {% block title %}
-    {% blocktrans with request.user.username as username %} 
+    {% blocktrans with request.user.username as username %}
         GeoRemindMe! / Personas que siguen a {{username}}
     {% endblocktrans %}
 {% endblock %}
@@ -29,7 +29,7 @@
             </div>
             {% ifequal user.username username_page %}
                 <div id="following_state_{{ f.id }}" class="follow-button following-state">
-                    <span  onclick="javascript:follow('unfollow',{{f.id}})"><a href="#" class="following">{%trans "Siguiendo" %}</a></span>
+                    <span onclick="javascript:follow('unfollow',{{f.id}})"><a href="#" class="following">{%trans "Siguiendo" %}</a></span>
                 </div>
             {% endifequal %}
             <div class="user-data">
@@ -42,6 +42,6 @@
             </div>
             <hr>
         </li>
-    {% endfor %}    
+    {% endfor %}
     </ul>
 {% endblock %}

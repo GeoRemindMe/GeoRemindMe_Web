@@ -82,7 +82,7 @@ class UsernameProperty(db.StringProperty):
         raw = raw.lower()
         if raw == 'none':
             raise ValueError(_("Usuario inválido"))
-        if len(raw) < 5 or len(raw) > 15:
+        if len(raw) < 4 or len(raw) > 15:
             raise ValueError(_("Usuario inválido"))
         import re
         if re.search(r'[^a-z0-9_]', raw):

@@ -1,0 +1,234 @@
+{% extends "generic/base_generic.html" %}
+{% load i18n %}
+{% load tags %}
+
+{% block title %}{%trans "GeoRemindMe! - Registro" %}{% endblock %}
+
+{% block mainButton %}{% endblock %}
+
+{% block nav %} 
+    {% if in_facebook %}
+        {% include "register_menu.html" %}
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="/static/facebookApp/js/social.js"></script>    
+<script type="text/javascript">
+    function toggle_showMore(){
+        if($('#show-more-text').css('display')!="none")
+            $('.show-more').html("[Ver más]")
+        else
+            $('.show-more').html("[Ocultar]")
+        
+        $('#show-more-text').toggle('slow')
+    }
+    function loadNewContacts(){
+        $.ajax({
+            type: "POST",
+            url: "/ajax/contacts/get/",
+            context: $(this),
+            data:{
+                csrfmiddlewaretoken:getCookie('csrftoken')
+            },
+            error: function() { },
+            success: function(data){
+                if(data.length){
+                    var new_contacts=0;
+                    $(data).each(function(i,elem){
+                        if(elem.username!=null && $('#following_state_'+elem.id).length==0){
+                            $("#known-contacts-profile").tmpl({obj:elem}).appendTo("#known-contacts");
+                            new_contacts++;
+                        }
+                        if($("#known-contacts").children().length>0)
+                            $("#known-contacts").show()
+                    });
+                    if($('#step-two').css('display')=="block")
+                        if(new_contacts>0)
+                            showMessage("{% trans 'Hemos encontrado "+new_contacts+" personas que podrías conocer en GeoRemindMe!' %}","success");
+                        else
+                            showMessage("{% trans 'Aún no hemos encontrado a ninguna persona que puedas conocer en GeoRemindMe!, pero te avisaremos en cuanto alguien que conozcas se registre."' %},"success");
+                }
+            }
+                    
+        });
+    }
+    
+    $(document).ready(function(){
+        
+        loadNewContacts();
+        $('.preview-suggestions').click(function(){
+            $('#user-suggestions').empty().append($(this).siblings('.suggestions').html());
+            $('#suggested-contacts .pressed').removeClass('pressed');
+            $(this).addClass('pressed');
+        });
+        $('#suggested-contacts li:first-child .preview-suggestions').click();
+        
+        $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        
+        var networks_perms=[
+            { network: "twitter", has_perms: {% if user.has_perms_twitter %}true{% else %}false{% endif %}},
+            { network: "facebook", has_perms:  {% if user.facebook_user %}true{% else %}false{% endif %}},
+            { network: "google", has_perms: {% if user.has_perms_google %}true{% else %}false{% endif %}}
+        ];
+        last_perms=null;
+        {% if not user.facebook_user or not user.twitter_user or not google.has_perms %}
+                function onFocus(){
+                    //Si los permisos de una red han cambiado activamos los botones y cerramos el dialogo
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "/ajax/get/perms/",
+                        data:{
+                            csrfmiddlewaretoken:getCookie('csrftoken')
+                        },
+                        context: $(this),
+                        success: function(data){
+                            //console.log(data);
+                            //last_perms=data;
+                            for (i=0; i<networks_perms.length ; i++){
+                                var social_network=networks_perms[i]["network"];
+                                if(networks_perms[i]['has_perms']!=data[social_network]){
+                                    //console.log("Se acaban de conceder permisos a "+social_network);
+                                    showMessage("{% trans 'Buscando personas a las que podrías conocer de "+social_network' %},"success");
+                                    loadNewContacts();
+                                    networks_perms[i]['has_perms']=data[social_network];
+                                    $('#link-social-accounts #'+social_network).empty().append("<span>"+social_network+"</span>")
+                                }
+                            };
+                        },
+                        complete: function(){}
+                    });
+                }
+                 
+                if (/*@cc_on!@*/false) { // check for Internet Explorer
+                    document.onfocusin = onFocus;
+                } else {
+                    window.onfocus = onFocus;
+                }
+            {% endif %}
+            
+            
+    });
+</script>
+{% endblock %}
+
+{% block section_class %}social-profile{%endblock%}
+
+{% block body %}
+    <div id="social-profile">
+        <h1>{%trans "¡Genial ya estás dentro!" %}</h1>
+        
+        <div id="step-two">
+
+            <h2>{%trans "Paso 2 de 2: Siguiento a personas de tu interés recibirás más y mejores sugerencias" %}</h2>
+
+            <hr>
+            <p>
+                <strong>{%trans "Usuarios de GeoRemindMe! a los que podrías conocer:" %}</strong>
+            </p>
+            <ul id="known-contacts" style="display:none">
+            </ul>
+            <div>
+                <p>{%trans "Buscar ahora entre mis contactos de:" %}</p>
+                <ul id="link-social-accounts">
+                {% if not user.has_perms_twitter %}
+                    <li id="twitter"><a href="/login/twitter/?cls" class="hoverlink" target="_blank" title="{%trans "Buscar ahora  entre las personas que sigo" %}"><span>{%trans "Twitter" %}</span></a></li>
+                {% else %}
+                    <li id="twitter"><span>{%trans "Twitter" %}</span></li>
+                {% endif %}
+                {% if not user.facebook_user %}
+                    <li id="facebook"><a href="/login/facebook/?cls" class="hoverlink" target="_blank" title="{%trans "Buscar ahora entre mis amigos" %}"><span>{%trans "Facebook" %}</span></a></li>
+                {% else %}
+                    <li id="facebook"><span>{%trans "Facebook" %}</span></li>    
+                {% endif %}
+                {% if not user.has_perms_google %}
+                    <li id="google"><a href="/login/google/?cls" class="hoverlink" target="_blank" title="{%trans "Buscar ahora entre mis contactos" %}"><span>{%trans "Google" %}</span></a></li>
+                {% else %}
+                    <li id="google"><span>{%trans "Google" %}</span></li>
+
+                {% endif %}
+                </ul>
+
+            </div>
+            <div class="footer-notes clear">
+                <strong class="show-more" onclick="javascript:toggle_showMore()">{%trans "[Ver más]" %}</strong>
+                <p>
+                    {% blocktrans %}
+                        En ningún momento enviaremos ningún correo electrónico a tus contactos sin tu permiso. <span id="show-more-text"><br>
+                        Al igual que tú también hemos pasado por otras páginas sin ningún permiso que envían correos a nuestros contactos; pero nosotros no somos así, somos buena gente ;D. 
+                
+                        <br><strong>Tan solo queremos ofrecerte una herramienta con todas las comodidades.</strong><br>
+                
+                        Un saludo y gracias por confiar en <a href="http://georemindme.com/team" target="_blank">nuestro equipo</a>.
+                    {% endblocktrans %}
+                
+                </span>
+                </p>
+            </div>
+            <div style="margin: 1.5em 0pt 0.7em; padding-top: 1em; height: 34px;" class="clear">
+                <span class="btn finish-register"><a href="/dashboard" class="black-link">{%trans "Terminar" %}</a></span>
+            </div>
+            <hr>
+            <p>
+                <strong>{%trans "Usuarios más activos:" %}</strong>
+            </p>
+            {% if top_users %}
+                <ul id="suggested-contacts">
+                    {% for obj in top_users %}
+                        {% if obj.username %}
+                            <li>
+
+                                <a href="{% url2 in_facebook public_profile obj.username %}"><img src="/user/{{obj.username}}/picture/" alt="{{obj.username}}"></a>
+                                <div id="following_state_{{ obj.id }}" class="left">
+                                    <span  onclick="javascript:follow('follow',{{obj.id}})"><a href="javascript:void(0)" class="no-following black-link">{%trans "Seguir" %}</a></span>
+                                </div>
+                                <span class="btn preview-suggestions {% if forloop.first %}pressed{% endif %} left">{%trans "Ver sugerencias" %}</span>
+                                
+                                <div class="suggestions" style="display:none">
+                                    <a href="{% url2 in_facebook public_profile obj.username %}" class="black-link"><span class="btn right">{%trans "Ver perfil completo" %}</span></a>
+                                    <a href="{% url2 in_facebook public_profile obj.username %}"><img src="{% embedded_avatar obj.username %}" alt="{{obj.username}}"></a>
+                                    <a href="{% url2 in_facebook public_profile obj.username %}">{{obj.username}}</a><br>
+                                    Sugerencias: {{obj.counters.suggested}}, seguidores: {{obj.counters.followers}}
+                                    <hr>
+                                    {% for sug in obj.last_sugs %}
+                                        <a href="{% url2 in_facebook view_suggestion sug.slug %}">{{sug.name}}</a><br>
+                                        <span class="timestamp">  {{sug.created|naturaltime}}</span>  
+                                        {% if not forloop.last %}
+                                            <hr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </li>
+                        {%endif%}
+                    {% endfor %}
+                </ul>
+                <div id="user-suggestions">
+                </div>
+            {% endif %}
+            <hr>
+            <span class="btn finish-register"><a href="/dashboard" class="black-link">{%trans "Terminar" %}</a></span>
+        </div>
+    </div>
+    
+    <script id="known-contacts-profile" type="text/x-jquery-tmpl">
+        <li>
+            <img src="/user/${obj.username}/picture/">
+            <span class="username"><a href="../user/${obj.username}/">${obj.username}</a></span>
+            <span class="follow">
+                <div id="following_state_${obj.id}">
+                    <span onclick="javascript:follow('follow',${obj.id})"><a href="javascript:void(0)" class="no-following" style="text-decoration:none">{%trans "Seguir" %}</a></span>
+                </div>
+            </span>
+        </li>
+    </script>
+{%endblock%}
+
+{% block right_col %}{%endblock%}
+
