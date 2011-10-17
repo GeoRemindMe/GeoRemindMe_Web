@@ -18,7 +18,7 @@ def cron_suggestions(request=None, cursor=None):
         suggs = q.with_cursor(cursor).fetch(50)
     if len(suggs) >= 50:
         try:
-            defer(cron_suggestions, cursor=q.cursor(), _queue="fusiontables")
+            defer(cron_suggestions, request, cursor=q.cursor(), _queue="fusiontables")
         except PermanentTaskFailure, e:
             import logging
             logging.error('ERROR FUSIONTABLES update relevance: %s' % e)
