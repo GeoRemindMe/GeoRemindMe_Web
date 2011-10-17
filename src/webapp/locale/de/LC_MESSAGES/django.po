@@ -8,11 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2011-10-11 15:00+0200\n"
-=======
-"POT-Creation-Date: 2011-10-07 16:08+0200\n"
->>>>>>> movil
+"POT-Creation-Date: 2011-10-17 08:55+0200\n"
+
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,6 +107,7 @@ msgid "Perfil público"
 msgstr ""
 
 #: facebookApp/templates/forms/SettingsForm.html:47
+#: georemindme/templates/generic/settings.html:119
 msgid ""
 "Por defecto todas las sugerencias y listas de sugerencias serán mostradas "
 "públicamente, aunque siempre existe la posibilidad de cambiarles "
@@ -144,8 +142,8 @@ msgstr ""
 <<<<<<< HEAD
 #: facebookApp/templates/forms/SettingsForm.html:62
 #: facebookApp/templates/forms/SocialUserForm.html:169
-#: georemindme/templates/generic/user_pass.html:18
-#: georemindme/templates/generic/user_pass.html:32
+#: mainApp/templates/mainApp/user_pass.html:18
+#: mainApp/templates/mainApp/user_pass.html:32
 msgid "Por favor rellena todos los campos"
 msgstr ""
 
@@ -301,8 +299,8 @@ msgid "Enviar sugerencia a mi cuenta de Twitter"
 msgstr ""
 
 #: facebookApp/templates/forms/SuggestionForm.html:179
-#: georemindme/templates/generic/user_pass.html:18
-#: georemindme/templates/generic/user_pass.html:32
+#: mainApp/templates/mainApp/user_pass.html:18
+#: mainApp/templates/mainApp/user_pass.html:32
 msgid "Enviar"
 msgstr ""
 
@@ -1798,7 +1796,7 @@ msgstr ""
 msgid "Privado"
 msgstr ""
 
-#: georemindme/templates/generic/settings.html:148
+#: georemindme/templates/generic/settings.html:147
 msgid "Desinstalar la aplicación"
 msgstr ""
 
@@ -2567,6 +2565,8 @@ msgid ""
 msgstr ""
 
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
 #: georemindme/templates/generic/user_pass.html:10
 msgid "Recordar contraseña"
 msgstr ""
@@ -2596,6 +2596,7 @@ msgstr ""
 msgid "Email:"
 msgstr ""
 
+>>>>>>> 16b4509e18cb38febc4ada19b8f4cd5aa408de9a
 #: georemindme/templates/generic/view_list.html:5
 #: georemindme/templates/generic/view_list_anonymous.html:5
 #, python-format
@@ -2894,9 +2895,10 @@ msgid "Te ha gustado el comentario "
 msgstr ""
 
 #: georemindme/templates/timeline/125.html:34
+#, python-format
 msgid ""
-"A <a href=\"{{user_profile}}\" class=\"dark-link\">{{obj.instance.user."
-"username}}</a> le gusta el comentario:"
+"A <a href=\"%(user_profile)s\" class=\"dark-link\">%(username)s</a> le gusta "
+"el comentario: "
 msgstr ""
 
 #: georemindme/templates/timeline/125.html:47
@@ -2919,8 +2921,8 @@ msgid "has creado la sugerencia:"
 msgstr ""
 
 #: georemindme/templates/timeline/300.html:69
-#: georemindme/templates/timeline/350.html:54
-msgid "Ver los {{obj.comments.1|length}} comentarios"
+#, python-format
+msgid "'Ver los %(counter)s comentarios "
 msgstr ""
 
 #: georemindme/templates/timeline/300.html:118
@@ -2929,7 +2931,18 @@ msgid "Escribe un comentario"
 msgstr ""
 
 <<<<<<< HEAD
+#: georemindme/templates/timeline/303.html:22
+msgid ""
+"Has guardado en <a href=\"{{suggestion_url}}\">tu baúl</a> la sugerencia de "
+"<a href=\"{{profile_url}}\" class=\"dark-link\">{{obj.instance.user."
+"username}}</a>:"
+msgstr ""
+
+#: georemindme/templates/timeline/303.html:35
+=======
+<<<<<<< HEAD
 #: georemindme/templates/timeline/303.html:34
+>>>>>>> 16b4509e18cb38febc4ada19b8f4cd5aa408de9a
 #, python-format
 msgid ""
 "\n"
@@ -2979,6 +2992,10 @@ msgid " ha creado una lista con %(counter)s sugerencias: "
 =======
 msgid "ha creado una lista con {{obj.instance.keys|length}} sugerencias:"
 >>>>>>> movil
+msgstr ""
+
+#: georemindme/templates/timeline/350.html:54
+msgid "Ver los {{obj.comments.1|length}} comentarios"
 msgstr ""
 
 #: georemindme/templates/timeline/350.html:100
@@ -3191,10 +3208,16 @@ msgstr ""
 #: geouser/funcs.py:73
 #, python-format
 <<<<<<< HEAD
+msgid ""
+"Tu cuenta de correo no ha sido confirmada en %d días, <br />por lo que no "
+"puedes acceder.<br/>Te hemos reenviado el correo para que puedas activarla."
+=======
+<<<<<<< HEAD
 msgid "Tu cuenta de correo no ha sido confirmada en %d días,"
+>>>>>>> 16b4509e18cb38febc4ada19b8f4cd5aa408de9a
 msgstr ""
 
-#: geouser/funcs.py:86
+#: geouser/funcs.py:82
 msgid "El email o la contraseña que has introducido es incorrecta \n"
 =======
 msgid ""
@@ -3845,4 +3868,28 @@ msgstr ""
 
 #: mainApp/templates/mainApp/suggested_suggestions.html:254
 msgid "Feedback"
+msgstr ""
+
+#: mainApp/templates/mainApp/user_pass.html:10
+msgid "Recordar contraseña"
+msgstr ""
+
+#: mainApp/templates/mainApp/user_pass.html:14
+msgid ""
+"Una última cosa, ya solo queda que nos indiques cual quieres que sea tu "
+"nueva contraseña:"
+msgstr ""
+
+#: mainApp/templates/mainApp/user_pass.html:23
+msgid ""
+"\n"
+"                Por motivos de seguridad no enviamos tu antigua contraseña, "
+"en su lugar te permitimos <strong>establecer una nueva</strong>.<br>\n"
+"                Por favor indícanos la dirección de email con la que te "
+"registrates para que te enviemos un enlace desde el que poder hacerlo.\n"
+"            "
+msgstr ""
+
+#: mainApp/templates/mainApp/user_pass.html:30
+msgid "Email:"
 msgstr ""
