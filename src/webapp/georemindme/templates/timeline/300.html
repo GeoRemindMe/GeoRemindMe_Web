@@ -53,8 +53,11 @@
                         {% trans 'Me gusta' %}
                     </span>
                 </span>
-                
-                | <span title="{% trans 'Guardar en favoritos' %}"  class="remember-forget" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}><span class="remember">{% trans 'Guardar' %}</span><span class="forget">{% trans 'Guardada' %}</span></span>
+                    <img src="/static/common/img/transparent.gif" />
+                    | <span title="{% trans 'Guardar en favoritos' %}"  class="remember-forget" value="{{obj.instance.id}}" {%if obj.user_follower%}remember="true"{%endif%}>
+                    <span class="remember">{% trans 'Guardar' %}</span>
+                    <span class="forget">{% trans 'Guardada' %}</span>
+                </span>
             {% endif %}
         </span>
 
