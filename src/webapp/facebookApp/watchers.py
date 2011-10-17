@@ -52,7 +52,7 @@ def new_list(sender, **kwargs):
     params= {
             "name": sender.name,
             "link": __web_settings.WEB_APP+sender.get_absolute_url(),
-             "caption": _(u"Detalles de la lista, comentarios, etc."),
+            "caption": _(u"Detalles de la lista, comentarios, etc."),
             #"caption": "Foto de %(sitio)s" % {'sitio':sender.poi.name},
             "picture": 'https://georemindme.appspot.com/user/georemindme/picture/',
             }

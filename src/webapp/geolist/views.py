@@ -474,7 +474,7 @@ def view_list(request, id, template='generic/view_list.html'):
 
 @login_required
 def share_on_facebook(request, id, msg):
-    list = List.objects.get_by_id_querier(suggestion_id, request.user)
+    list = List.objects.get_by_id_querier(id, request.user)
     if list is None:
         return None
     if not list._is_public():
