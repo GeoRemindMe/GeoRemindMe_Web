@@ -1761,8 +1761,7 @@ GRM.loadTimeline = function(settings){
         var token = "grm-loadtimeline";
 
         settings = jQuery.extend({
-            container: null,
-            url: null
+            container: null
             
         }, settings);
            
@@ -1785,10 +1784,11 @@ GRM.loadTimeline = function(settings){
                     
                     loadmore.addClass("waiting");
 
+                    var url = '/ajax/get/'+$(this).attr('type')+'/';
                     
                     $.ajax({
                         type: 'POST',
-                        url: settings.url,
+                        url: url,
                         data: data,
                         complete: function() { loadmore.removeClass("waiting"); },
                         success: function(data){
@@ -2521,8 +2521,7 @@ $(document).ready(function(){
         //Cargar más elementos del Timeline
         $(".load-more").loadTimeline({
                 //'query_id':$(this).attr('value'),
-                container:'#chronology',
-                url:'/ajax/get/'+$(this).attr('type')+'/',
+                container:'#chronology'
             });
 });
 

@@ -122,8 +122,7 @@ $(document).ready(function(){
         //Cargar más elementos del Timeline
         $(".load-more").loadTimeline({
                 //'query_id':$(this).attr('value'),
-                container:'#chronology',
-                url:'/ajax/get/'+$(this).attr('type')+'/',
+                container:'#chronology'
             });
 });
 
