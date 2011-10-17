@@ -59,7 +59,7 @@ class _Report_Account_follower(db.Model):
         Guarda la lista de nuevos followers para posteriormente ser
         notificada a los usuarios que no quieren email instantaneos
     """
-    keys = db.ListProperty(db.Key) # claves de seguidores
+    keys = db.StringListProperty(db.Key) # claves de seguidores
     created = db.DateTimeProperty(auto_now_add=True)
     
     @classmethod
@@ -70,16 +70,16 @@ class _Report_Account_follower(db.Model):
         report = cls.get_by_key_name('report_account_follower_%d' % userkey.id())
         if report is not None:
             if add is not None:
-                report.keys.append(add)
+                report.keys.append(str(add))
             if delete is not None:
                 try:
-                    report.keys.remove(delete)
+                    report.keys.remove(str(delete))
                 except:
                     raise deferred.PermanentTaskFailure
         else:
             if add is not None:
                 if type(add) != type(list):
-                    add = [add]
+                    add = [str(add)]
                 report = cls(key_name='report_account_follower_%d' % userkey.id(), keys=add)
             else:
                 return None

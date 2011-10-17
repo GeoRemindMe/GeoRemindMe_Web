@@ -151,7 +151,6 @@ def delete_reminder(request):
 #===============================================================================
 # FUNCIONES AJAX PARA OBTENER, MODIFICAR, BORRAR SUGERE
 #===============================================================================
-@ajax_request
 def save_suggestion(request):
     """
         Añade o edita una sugerencia
@@ -167,7 +166,7 @@ def save_suggestion(request):
         return HttpResponse(simplejson.dumps(dict(id=sug.id)), mimetype="application/json")
     return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
-@ajax_request
+
 def add_suggestion_invitation(request):
     """
         Envia una invitacion a un usuario
@@ -182,7 +181,7 @@ def add_suggestion_invitation(request):
         return invitation
     return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
 
-@ajax_request
+
 def add_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.add_suggestion_follower(request, eventid)
@@ -190,7 +189,7 @@ def add_suggestion_follower(request):
         return result
     return HttpResponse(simplejson.dumps(result), mimetype="application/json")
 
-@ajax_request
+
 def delete_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.del_suggestion_follower(request, eventid)
@@ -818,7 +817,7 @@ def get_suggestions(request):
 @ajax_request
 def get_perms(request):
     if not request.user.is_authenticated():
-        return HttpResponseForbidden()
+        return HttpResponseForbidden
     from google.appengine.ext import db
     perms = {'facebook': False,
              'twitter': False,
