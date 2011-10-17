@@ -387,8 +387,9 @@ class User(polymodel.PolyModel, HookedModel):
         if self.email == '' or self.email is None:
             return None
         if not self.is_confirmed():
-            from georemindme.funcs import make_random_string
-            self.confirm_code = make_random_string(length=24)
+            if self.confirm_code is None or self.confirm_code == '':
+                from georemindme.funcs import make_random_string
+                self.confirm_code = make_random_string(length=24)
             if commit:
                 self.put()
             from geouser.mails import send_confirm_mail
