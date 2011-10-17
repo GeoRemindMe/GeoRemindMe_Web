@@ -27,6 +27,14 @@ handlers:
 - url: /api/.*
   script: service/api/main.py
   secure: optional
+  
+- url: /suggestion/.*
+  script: main.py
+  secure: never
+  
+- url: /place/.*
+  script: main.py
+  secure: never
 
 - url: /admin.*
   script: appengine_admin/main.py
