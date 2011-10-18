@@ -70,16 +70,16 @@ class _Report_Account_follower(db.Model):
         report = cls.get_by_key_name('report_account_follower_%d' % userkey.id())
         if report is not None:
             if add is not None:
-                report.keys.append(str(add))
+                report.keys.append(add)
             if delete is not None:
                 try:
-                    report.keys.remove(str(delete))
+                    report.keys.remove(delete)
                 except:
                     raise deferred.PermanentTaskFailure
         else:
             if add is not None:
                 if type(add) != type(list):
-                    add = [str(add)]
+                    add = [add]
                 report = cls(key_name='report_account_follower_%d' % userkey.id(), keys=add)
             else:
                 return None
