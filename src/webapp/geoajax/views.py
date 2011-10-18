@@ -817,7 +817,7 @@ def get_suggestions(request):
 @ajax_request
 def get_perms(request):
     if not request.user.is_authenticated():
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
     from google.appengine.ext import db
     perms = {'facebook': False,
              'twitter': False,
