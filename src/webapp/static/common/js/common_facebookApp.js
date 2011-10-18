@@ -1756,58 +1756,75 @@ GRM.loadPage = function(params){
             });
         }
 
-GRM.loadTimeline = function(params){
+GRM.loadTimeline = function(settings){
 
-            var container=params['container'];
-            var url=params['url'];
-            
-            var data = {};
-            data['query_id'] = $(container).attr("value");
-            
-            if ($(container).attr("username"))
-                data['username'] = $(container).attr("username");
-            
-            
-            $('.load-more').addClass("waiting");
+        var token = "grm-loadtimeline";
 
+        settings = jQuery.extend({
+            container: null
             
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: data,
-                success: function(data){
-                    $('.load-more').removeClass("waiting");
-                    if(data[1].length>0){
-                        if(data[0].length==2)
-                            $(container).attr("value",'["'+data[0][0]+'","'+data[0][1]+'"]');
-                        else
-                            $(container).attr("value",data[0]);
-                        var nextPage=parseInt($(container).attr("page"))+1;
-                        $(container).attr("page",nextPage);
+        }, settings);
+           
+        return this.each(function(){
+            
+                    if ($(this).attr(token))
+                        return;
                         
-                        $.each(data[1], function(index,suggestion){
-                            var temp=$(suggestion).appendTo(container);
-                            //Anadimos el valor de la página para añadir comportamientos
-                            $(temp).first().attr('value',nextPage);
-                        });
+                    $(this).attr(token,true);
+                    
+                    $(this).click(function(){
                         
-                        setTimelineBehaviour(nextPage);
-                        
-                        GRM.updateTabCounters();
-                        
-                        //Volvemos a filtrar la pestaña activa forzando evento click
-                        $('#'+$('ul#tabMenu .active').attr('id')).click()
-                        
-                        
-                    }
-                    showMessage("Se han cargado "+data[1].length+" elementos nuevos","success");
-                    if(data[1].length<10){
-                        //Si no hay más datos ocultamos el boton de cargar más
-                        $(".load-more").hide();
-                    }
-                }
-            });
-        }
+                    var loadmore = $(this);
+                    
+                    var data = {};
+                    data['query_id'] = $(settings.container).attr("value");
+                    
+                    if ($(settings.container).attr("username"))
+                        data['username'] = $(settings.container).attr("username");
+                    
+                    loadmore.addClass("waiting");
+
+                    var url = '/ajax/get/'+$(this).attr('type')+'/';
+                    
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: data,
+                        complete: function() { loadmore.removeClass("waiting"); },
+                        success: function(data){
+                            if(data[1].length>0){
+                                if(data[0].length==2)
+                                    $(settings.container).attr("value",'["'+data[0][0]+'","'+data[0][1]+'"]');
+                                else
+                                    $(settings.container).attr("value",data[0]);
+                                var nextPage=parseInt($(settings.container).attr("page"))+1;
+                                $(settings.container).attr("page",nextPage);
+                                
+                                $.each(data[1], function(index,suggestion){
+                                    var temp=$(suggestion).appendTo(settings.container);
+                                    //Anadimos el valor de la página para añadir comportamientos
+                                    $(temp).first().attr('value',nextPage);
+                                });
+                                
+                                setTimelineBehaviour(nextPage);
+                                
+                                GRM.updateTabCounters();
+                                
+                                //Volvemos a filtrar la pestaña activa forzando evento click
+                                $('#'+$('ul#tabMenu .active').attr('id')).click()
+                                
+                                
+                            }
+                            showMessage("Se han cargado "+data[1].length+" elementos nuevos","success");
+                            if(data[1].length<10){
+                                //Si no hay más datos ocultamos el boton de cargar más
+                                loadmore.hide();
+                            }
+                        }
+                    });
+                });
+        });
+    }
 
 GRM.sendComment = function(type,text,id,callback){
     
@@ -1926,6 +1943,7 @@ jQuery.fn.search = function(container,fields) {
 }
 
 jQuery.fn.like = GRM.like;
+jQuery.fn.loadTimeline = GRM.loadTimeline;
 jQuery.fn.remember = GRM.remember;
 jQuery.fn.removable = GRM.removable;
 jQuery.fn.menuList = GRM.menuList;
@@ -2501,13 +2519,10 @@ $(document).ready(function(){
         //})
         
         //Cargar más elementos del Timeline
-        $(".load-more").click(function(){
-            GRM.loadTimeline({
+        $(".load-more").loadTimeline({
                 //'query_id':$(this).attr('value'),
-                container:'#chronology',
-                url:'/ajax/get/'+$(this).attr('type')+'/',
+                container:'#chronology'
             });
-        });    
 });
 
 function setTimelineBehaviour(page){

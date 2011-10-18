@@ -151,6 +151,7 @@ def delete_reminder(request):
 #===============================================================================
 # FUNCIONES AJAX PARA OBTENER, MODIFICAR, BORRAR SUGERE
 #===============================================================================
+@ajax_request
 def save_suggestion(request):
     """
         Añade o edita una sugerencia
@@ -167,6 +168,7 @@ def save_suggestion(request):
     return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
 
+@ajax_request
 def add_suggestion_invitation(request):
     """
         Envia una invitacion a un usuario
@@ -182,6 +184,7 @@ def add_suggestion_invitation(request):
     return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
 
 
+@ajax_request
 def add_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.add_suggestion_follower(request, eventid)
@@ -190,6 +193,7 @@ def add_suggestion_follower(request):
     return HttpResponse(simplejson.dumps(result), mimetype="application/json")
 
 
+@ajax_request
 def delete_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.del_suggestion_follower(request, eventid)
@@ -512,6 +516,7 @@ def add_list_follower(request):
     return HttpResponse(simplejson.dumps(added), mimetype="application/json")
 
 
+@ajax_request
 def delete_list_follower(request):
     list_id = request.POST.get('list_id')
     result = geolist.del_list_follower(request, list_id)

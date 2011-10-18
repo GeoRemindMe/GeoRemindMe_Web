@@ -93,7 +93,7 @@
                     <td><span id="google-icon">{%trans "Google" %}</span> </td>
                     <td>
                         {% if not user.google_user %}
-                            <a href="/login/google/?cls">{%trans "Autorizar" %}</a>
+                            <a href="/login/google/?cls" target="_blank">{%trans "Autorizar" %}</a>
                         {% else %}
                             <a href="/oauth/revocate/google" target="_blank">{%trans "Revocar" %}</a>
                         {% endif %}
@@ -116,8 +116,7 @@
                     {%trans "Privado" %}
                 {% endif %}
             </p>
-            <p>{%trans "Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad.
-" %}</p>
+            <p>{%trans "Por defecto todas las sugerencias y listas de sugerencias serán mostradas públicamente, aunque siempre existe la posibilidad de cambiarles individualmente la visibilidad." %}</p>
         </div>
         
 <!--

@@ -59,7 +59,7 @@ class _Report_Account_follower(db.Model):
         Guarda la lista de nuevos followers para posteriormente ser
         notificada a los usuarios que no quieren email instantaneos
     """
-    keys = db.StringListProperty(db.Key) # claves de seguidores
+    keys = db.ListProperty(db.Key) # claves de seguidores
     created = db.DateTimeProperty(auto_now_add=True)
     
     @classmethod

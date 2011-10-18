@@ -14,12 +14,16 @@
 {% block embed_js %}{%endblock%}
 
 {% block title %}Dashboard{% endblock %}
-
+{% block goBack %}{%endblock%}
 {% block body %}
     <div {% block id %} {%endblock%} class="clear">
         
         {% block pre_chronology %} {%endblock%}
         {% if chronology.1|length %}    
+    
+            
+            
+    
             
             <ul id="tabMenu" class="clear">
                 <li class="clear-box">Ver:</li>
@@ -35,17 +39,14 @@
                 
             </ul>
             <ul id="chronology" value="{{chronology.0}}" {% if profile.username%}username="{{profile.username}}"{%endif%} page="1" {% if notifications %} notifications="{{notifications}}" {% endif %}>
-                {% include "generic/timeline.html" %}
+                {% include "timeline.html" %}
             </ul>
         
             <!-- Si hay más mensajes -->
             {% if chronology.1|length > 9%}
                 <div class="load-more btn">{%trans "Cargar más" %}</div>
             {% endif %}    
-            <!-- Objeto oculto 
-            Chronology.1|length={{chronology.1|length}}
-            Chronology.1={{chronology.1}}
-            Fin de objeto oculto -->
+            
             
         {% endif %}    
     

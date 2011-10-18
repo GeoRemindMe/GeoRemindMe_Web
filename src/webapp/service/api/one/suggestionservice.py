@@ -153,4 +153,3 @@ class SuggestionService(remote.Service):
                          )
         response.append(t)
         return Suggestions(query_id='', suggestions=response)
-            

@@ -29,6 +29,8 @@ import django.core.handlers.wsgi
 import django.dispatch
 from django.core.signals import got_request_exception
 from django.db import _rollback_on_exception
+from google.appengine.ext import ereporter
+ereporter.register_logger()
 
 ### elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
 #for k in [k for k in sys.modules if k.startswith('django')]: 
@@ -36,9 +38,18 @@ from django.db import _rollback_on_exception
 #sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 
-def log_exception(*args, **kwds):
+def log_exception(sender, **kwds):
     logging.exception('Exception in request:')
-
+    import traceback
+    
+    from georemindme.geomail import GeoMail
+    mail = GeoMail(to='javier@georemindme.com',
+                   subject='[ERROR][GEOREMINDME]',
+                   body=traceback.format_exc(),
+                   html=traceback.format_exc(),
+                   )
+    mail.push()
+    
 # Log errors.
 django.dispatch.Signal.connect(
                                got_request_exception,

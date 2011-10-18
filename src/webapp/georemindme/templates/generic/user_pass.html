@@ -1,0 +1,40 @@
+{% extends "generic/base_generic.html" %}
+{% load i18n %}
+
+{% block login %} {%endblock%}
+
+{%block section%}id="password-recover"{%endblock%}
+
+
+{% block body %}
+{% if form %}
+    {% if form.password %}
+        <!-- Change your password -->
+        <p>{%trans "Una última cosa, ya solo queda que nos indiques cual quieres que sea tu nueva contraseña:" %}</p>
+        <form method="post" action=".">
+            {% csrf_token %}
+            {{form.as_p}}
+            <div><input type="submit" value="{% trans "Enviar" %}" id="startBtn" title="{% trans "Por favor rellena todos los campos" %}"></div>
+        </form>
+    {% else %}
+        <!-- Recover your password-->
+        <p>
+            {%trans "Por motivos de seguridad no enviamos tu antigua contraseña, en su lugar te permitimos <strong>establecer una nueva</strong>.<br>
+            Por favor indícanos la dirección de email con la que te registrates para que te enviemos un enlace desde el que poder hacerlo." %}
+        </p>
+        <form method="post" action=".">
+            {% csrf_token %}
+            <label for="id_pass_remind-email">{%trans "Email:" %}</label>
+            {{form.email}}
+            <input type="submit" value="{% trans "Enviar" %}" title="{% trans "Por favor rellena todos los campos" %}">
+            <span id="errorTerms">{{form.email.errors}}</span>
+            
+            <span id="msgRegisterEmail"><span id="txtMsgRegisterEmail"></span></span>
+            
+        </form>
+    {% endif %}
+    
+{% else %}
+    {{msg}}
+{% endif %}
+{%endblock%}
