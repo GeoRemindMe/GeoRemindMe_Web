@@ -79,8 +79,8 @@ class SuggestionService(remote.Service):
                            google_places_reference = a.poi.google_places_reference,
                            modified = int(mktime(a.modified.utctimetuple())),
                            created = int(mktime(a.created.utctimetuple())),
-                           username = a.username,
-                           lists = [List(id=l['id'], name=l['name']) for l in lists if s.id in l['keys']],
+                           username = a.user.username,
+                           lists = [List(id=l['id'], name=l['name']) for l in lists if a.id in l['keys']],
                            id = a.id,
                          )
             response.append(t)
@@ -112,7 +112,7 @@ class SuggestionService(remote.Service):
 #        lists = [l for l in lists if not suggestion.key() in l.keys]
 #        lists = prefetch_refprops(lists, ListSuggestion.user)
 #        lists = [l.to_dict(resolve=False) for l in lists]
-        comments = Comment.objects.load_comments_from_async(query_id, comments_async, user)
+        comments = Comment.objects.load_comments_from_async(query_id, comments_async, user)[1]
         return Suggestion(id = suggestion.id,
                           name=suggestion.name,
                           description=suggestion.description,
@@ -122,7 +122,7 @@ class SuggestionService(remote.Service):
                           google_places_reference = suggestion.poi.google_places_reference,
                           modified = int(mktime(suggestion.modified.utctimetuple())),
                           created = int(mktime(suggestion.created.utctimetuple())),
-                          username = suggestion.username,
+                          username = suggestion.user.username,
                           lists = [List(id=l['id'], name=l['name']) for l in in_lists],
                           comments = [Comment(id=c['id']) for c in comments],
                           has_voted=has_voted,
@@ -134,6 +134,7 @@ class SuggestionService(remote.Service):
         
     @remote.method(GetSuggestionRequest, Suggestion)
     def get_nearest(self, request):
+        pass
 #    @remote.method(GetSyncSuggestion, Suggestions)
 #    def sync_suggestions(self, request):
 #        if len(request.suggestions) > 20:
