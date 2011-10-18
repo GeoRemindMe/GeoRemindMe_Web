@@ -41,7 +41,7 @@ class EmailHandler(TaskHandler):
                                                    'to': email.to,
                                                    'subject': email.subject,
                                                    'body' : email.body,
-                                                   'html': email.html,
+                                                   'html': email.html if hasattr(email, 'html') else None,
                                                    },
                                         method = 'POST')
         task.add(queue_name='email')
@@ -50,7 +50,11 @@ class EmailHandler(TaskHandler):
 @csrf_exempt
 @admin_required
 def email_worker(request):
-    mail.send_mail(sender=request.POST['sender'], to=request.POST['to'], subject=request.POST['subject'], body=request.POST['body'], html=request.POST['html'])
+    mail.send_mail(sender=request.POST['sender'], 
+                   to=request.POST['to'], 
+                   subject=request.POST['subject'], 
+                   body=request.POST['body'], 
+                   html=request.POST['html'])
     return HttpResponse()
 
 #===============================================================================

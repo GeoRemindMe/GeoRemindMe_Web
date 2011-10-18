@@ -27,6 +27,10 @@ handlers:
 - url: /api/.*
   script: service/api/main.py
   secure: optional
+
+- url: /_ereporter.*
+  script: $PYTHON_LIB/google/appengine/ext/ereporter/report_generator.py
+  login: admin
   
 - url: /suggestion/.*
   script: main.py
