@@ -335,11 +335,10 @@ $(document).ready(function() {
             time.push(FormatNumberLength(hours,2)+":"+FormatNumberLength(minutes,2))
     }
     
-    $( "#start-hour,#end-hour" ).autocomplete({
+    $( "#start-hour" ).autocomplete({
         minLength:0,
         source: function(req, add){ req.term = ''; add(time); }
     });
-<<<<<<< HEAD
     $( "#end-hour" ).autocomplete({
         minLength:0,
         source: function(req, add){
@@ -353,11 +352,6 @@ $(document).ready(function() {
     $( "#start-hour,#end-hour" ).focus(function(){ $(this).autocomplete("search"); });
     $( "#start-hour,#end-hour" ).click(function(){ $(this).autocomplete("search"); });
 
-=======
-    
-    $( "#start-hour,#end-hour" ).focus(function(){ $(this).autocomplete("search"); });
-	
->>>>>>> e9fe86a333af974e67ed02a9f678472fdad66370
 });
 
 function instanceMap(){
@@ -600,7 +594,6 @@ function loadGMaps(defaultX,defaultY,canvas) {
     }
     
     placesAutocomplete();
-<<<<<<< HEAD
 	//autocompleteAddress();
 }
 
@@ -671,8 +664,6 @@ function autocompleteAddress()
                 map.setCenter(location);
           }
         });
-=======
->>>>>>> e9fe86a333af974e67ed02a9f678472fdad66370
 }
 
 function createMarker(x,y)
@@ -1147,12 +1138,12 @@ function showMoreDetails(){
 ;(function($) {
 
 $.fn.extend({
-	autocomplete: function(urlOrData, options) {
+	geoautocomplete: function(urlOrData, options) {
 		var isUrl = typeof urlOrData == "string";
-		options = $.extend({}, $.Autocompleter.defaults, {
+		options = $.extend({}, $.GeoAutocompleter.defaults, {
 			url: isUrl ? urlOrData : null,
 			data: isUrl ? null : urlOrData,
-			delay: isUrl ? $.Autocompleter.defaults.delay : 10,
+			delay: isUrl ? $.GeoAutocompleter.defaults.delay : 10,
 			max: options && !options.scroll ? 10 : 150
 		}, options);
 
@@ -1163,7 +1154,7 @@ $.fn.extend({
 		options.formatMatch = options.formatMatch || options.formatItem;
 
 		return this.each(function() {
-			new $.Autocompleter(this, options);
+			new $.GeoAutocompleter(this, options);
 		});
 	},
 	result: function(handler) {
@@ -1183,7 +1174,7 @@ $.fn.extend({
 	}
 });
 
-$.Autocompleter = function(input, options) {
+$.GeoAutocompleter = function(input, options) {
 
 	var KEY = {
 		UP: 38,
@@ -1203,19 +1194,14 @@ $.Autocompleter = function(input, options) {
 
 	var timeout;
 	var previousValue = "";
-	var cache = $.Autocompleter.Cache(options);
+	var cache = $.GeoAutocompleter.Cache(options);
 	var hasFocus = 0;
 	var lastKeyPressCode;
 	var config = {
 		mouseDownOnSelect: false
 	};
-<<<<<<< HEAD
 	var select = $.GeoAutocompleter.Select(options, input, selectCurrent, config);
 
-=======
-	var select = $.Autocompleter.Select(options, input, selectCurrent, config);
-	
->>>>>>> e9fe86a333af974e67ed02a9f678472fdad66370
 	var blockSubmit;
 
 	// prevent form submit in opera when selecting with return key
@@ -1557,7 +1543,7 @@ $.Autocompleter = function(input, options) {
 
 };
 
-$.Autocompleter.defaults = {
+$.GeoAutocompleter.defaults = {
 	inputClass: "ac_input",
 	resultsClass: "ac_results",
 	loadingClass: "ac_loading",
@@ -1584,7 +1570,7 @@ $.Autocompleter.defaults = {
     scrollHeight: 180
 };
 
-$.Autocompleter.Cache = function(options) {
+$.GeoAutocompleter.Cache = function(options) {
 
 	var data = {};
 	var length = 0;
@@ -1723,7 +1709,7 @@ $.Autocompleter.Cache = function(options) {
 	};
 };
 
-$.Autocompleter.Select = function (options, input, select, config) {
+$.GeoAutocompleter.Select = function (options, input, select, config) {
 	var CLASSES = {
 		ACTIVE: "ac_over"
 	};
@@ -1959,7 +1945,6 @@ $.fn.selection = function(start, end) {
 
 })(jQuery);
 
-<<<<<<< HEAD
 /*
  * jQuery geo_autocomplete plugin 1.0
  *
@@ -2851,8 +2836,6 @@ $.fn.selection = function(start, end) {
 
 })(jQuery);
 
-=======
->>>>>>> e9fe86a333af974e67ed02a9f678472fdad66370
 /*
  * jQuery geo_autocomplete plugin 1.0
  *
