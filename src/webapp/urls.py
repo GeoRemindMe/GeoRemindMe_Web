@@ -26,7 +26,6 @@ if sys.getdefaultencoding() != default_encoding:
 
 
 from django.conf.urls.defaults import *
-import appengine_admin
 
 js_info_dict = {
     'packages': ('webapp',),
@@ -43,7 +42,7 @@ urlpatterns = patterns('',
     (r'^(?i)sitemap/$', 'sitemap.main_sitemap', {}, 'main_sitemap'),
     (r'^(?i)sitemap/build/$', 'sitemap.build_sitemap', {}, 'build_sitemap'),
     (r'^(?i)sitemap/(?P<id>[^/]*)/$', 'sitemap.response_sitemap', {}, 'response_sitemap'),
-    #(r'', include('georpcjson.urls')),
+    (r'^(?i)test/', include('gaeunit.urls')),
     (r'', include('georemindme.urls')),
     (r'', include('geouser.urls')),
     (r'', include('geoalert.urls')),

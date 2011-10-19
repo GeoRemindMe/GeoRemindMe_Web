@@ -1,8 +1,8 @@
-application: georemindme
+application: georemindme-hrd
 version: live
-runtime: python
+runtime: python27
 api_version: 1
-
+threadsafe: true
 default_expiration: "1h"
 
 
@@ -21,57 +21,34 @@ handlers:
   secure: always
 
 - url: /ajax/.*
-  script: main.py
+  script: main.app
   secure: optional
 
 - url: /api/.*
-  script: service/api/main.py
-  secure: optional
-
-- url: /_ereporter.*
-  script: $PYTHON_LIB/google/appengine/ext/ereporter/report_generator.py
-  login: admin
+  script: service.app
+  secure: always
   
 - url: /suggestion/.*
-  script: main.py
+  script: main.app
   secure: never
   
 - url: /place/.*
-  script: main.py
+  script: main.app
   secure: never
-
-- url: /admin.*
-  script: appengine_admin/main.py
-  secure: always
-  
-- url: /test.*
-  script: gaeunit/gaeunit.py
-  login: admin
-  
-- url: /console.*
-  script: $PYTHON_LIB/google/appengine/ext/admin
-  login: admin
-  
-- url: /appengine_admin_media
-  static_dir: appengine_admin/media
-  secure: always 
-
-- url: /_ah/queue/deferred
-  script: maindeferred.py
-  login: admin
-  
-- url: /remote_api
-  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
-  login: admin
   
 - url: /.*
-  script: main.py
+  script: main.app
   secure: always
   
 
-#builtins:
+builtins:
 #- appstats: on
 #- remote_api: on
+#- deferred: on
 
 inbound_services:
 - warmup
+
+libraries:
+- name: django
+  version: "1.2" 
