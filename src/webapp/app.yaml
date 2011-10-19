@@ -28,6 +28,18 @@ handlers:
   script: service/api/main.py
   secure: optional
 
+- url: /_ereporter.*
+  script: $PYTHON_LIB/google/appengine/ext/ereporter/report_generator.py
+  login: admin
+  
+- url: /suggestion/.*
+  script: main.py
+  secure: never
+  
+- url: /place/.*
+  script: main.py
+  secure: never
+
 - url: /admin.*
   script: appengine_admin/main.py
   secure: always
