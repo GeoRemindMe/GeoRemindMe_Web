@@ -4,7 +4,7 @@
 from libs.httplib2 import Http
 from google.appengine.ext import db
 import memcache
-from django.utils import simplejson
+import json as simplejson
 
 
 class MapsAPIError(Exception):

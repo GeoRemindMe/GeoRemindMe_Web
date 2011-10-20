@@ -95,7 +95,6 @@ class GoogleFriendsRPC(object):
     
     def handle_results(self):
         result = self.rpc.get_result()
-        from django.utils import simplejson
         if result.status_code != 200:
             return {}
         # recibimos en xml, parsear resultado

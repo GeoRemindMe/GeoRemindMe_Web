@@ -44,7 +44,7 @@ import logging
 from django.conf import settings
 import libs.httplib2 as httplib2
 # Find a JSON parser
-from django.utils import simplejson as json
+import json
 _parse_json = json.loads
 
 
@@ -247,11 +247,10 @@ class FacebookFriendsRPC(object):
     def handle_results(self):
         try:
             result = self.rpc.get_result()
-            from django.utils import simplejson
             from geouser.models_social import FacebookUser
             if int(result.status_code) != 200:
                 return {}
-            friends_result = simplejson.loads(result.content)
+            friends_result = json.loads(result.content)
             if 'data' in friends_result:
                 friends_result = friends_result['data']
             else:

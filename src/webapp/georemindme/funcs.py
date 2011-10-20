@@ -7,7 +7,7 @@
 """
 
 
-from django.utils import simplejson
+import json as simplejson
 from google.appengine.ext import db
 
 

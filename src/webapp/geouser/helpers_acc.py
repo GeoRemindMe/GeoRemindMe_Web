@@ -6,6 +6,9 @@
     :synopsis: Helpers de los models_acc
 """
 
+from geouser.models import User
+from geouser.models_acc import UserSettings, UserProfile, UserCounter
+from google.appengine.ext import db
 
 class UserSettingsHelper(object):
     def get_by_id(self, userid, async=False):
@@ -13,17 +16,8 @@ class UserSettingsHelper(object):
             userid = long(userid)
         except:
             return None
-        import memcache
-        settings = memcache.deserialize_instances(memcache.get('%ssettings_%s' % (memcache.version, userid)))
-        if settings is None:
-            from models_acc import UserSettings
-            from models import User
-            from google.appengine.ext import db
-            key = db.Key.from_path(User.kind(), userid, UserSettings.kind(), 'settings_%s' % userid)
-            settings = db.get(key)
-            if settings is not None:
-                memcache.set('%s%s' % (memcache.version, settings.key().name()), memcache.serialize_instances(settings), 300)
-        return settings
+        key = db.Key.from_path(User.kind(), userid, UserSettings.kind(), 'settings_%s' % userid)
+        return UserSettings.get(key)
 
     
 class UserProfileHelper(object):
@@ -32,22 +26,9 @@ class UserProfileHelper(object):
             userid = long(userid)
         except:
             return None
-        import memcache
-        profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, userid)))
-        if profile is None:
-            from models_acc import UserProfile
-            from models import User
-            from google.appengine.ext import db
-            key = db.Key.from_path(User.kind(), userid, UserProfile.kind(), 'profile_%s' % userid)
-            profile = db.get(key)
-            if profile is not None:
-                memcache.set('%s%s' % (memcache.version, profile.key().name()), memcache.serialize_instances(profile), 300)
-        return profile
-        """
-        if async:
-            return db.get_async(key)
-        return db.get(key)
-        """
+        key = db.Key.from_path(User.kind(), userid, UserProfile.kind(), 'profile_%s' % userid)
+        return UserProfile.get(key)
+
 
 class UserCounterHelper(object):
     def get_by_id(self, userid, async=False):
@@ -55,18 +36,14 @@ class UserCounterHelper(object):
             userid = long(userid)
         except:
             return None
-        from models_acc import UserCounter
-        from models import User
-        from google.appengine.ext import db
         key = db.Key.from_path(User.kind(), userid, UserCounter.kind(), 'counters_%s' % userid)
         if async:
             return db.get_async(key)
-        return db.get(key)
+        return UserCounter.get(key)
 
 
 class UserTimelineHelper(object):
     def get_by_instance_user(self, instance, user):
-        from models import User
         if not isinstance(user, User):
             raise TypeError
         from models_acc import UserTimelineBase
@@ -92,9 +69,6 @@ class UserTimelineHelper(object):
         from geoalert.models import Suggestion
         from geolist.models import List
         from models_acc import UserTimeline, UserTimelineSuggest
-        from models import User
-        from georemindme.paging import PagedQuery
-        from google.appengine.ext import db
         query = UserTimeline.all().filter('user =', db.Key.from_path(User.kind(), userid)).order('-created')
         if query_id is not None:  # recuperamos los cursores anteriores
             query = query.with_cursor(start_cursor=query_id)
@@ -158,7 +132,6 @@ def _load_ref_instances(timelines):
                     if isinstance(timeline, UserTimelineSuggest) else None,
     """
     from georemindme.funcs import prefetch_refprops
-    from models import User
     from models_acc import UserTimelineSuggest, UserTimeline
     from geovote.models import Comment, Vote
     # cargo todas las referencias en instance

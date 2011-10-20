@@ -165,5 +165,5 @@ class Invitation(db.Model):
         
     def to_json(self):
         from libs.jsonrpc.jsonencoder import JSONEncoder
-        from django.utils import simplejson
+        import json as simplejson
         return simplejson.dumps(self.to_dict(), cls=JSONEncoder)       

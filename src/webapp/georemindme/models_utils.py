@@ -205,13 +205,13 @@ db.put_async = hokked_put_async
 
 
 old_async_delete = db.delete_async
-def hokked_delete_async(models):
+def hokked_delete_async(models, **kwargs):
     if type(models) != type(list()):
         models = [models]
     for model in models:
         if isinstance(model, HookedModel):
             model._pre_delete()
-    async = old_async_delete(models)
+    async = old_async_delete(models, **kwargs)
     get_result = async.get_result
     def get_result_with_callback():
         for model in models:
@@ -237,13 +237,13 @@ db.put = hokked_put
 
 
 old_delete = db.delete
-def hokked_delete(models):
+def hokked_delete(models, **kwargs):
     if type(models) != type(list()):
         models = [models]
     for model in models:
         if isinstance(model, HookedModel):
             model._pre_delete()
-        model.delete()
+        old_delete(model, **kwargs)
         if isinstance(model, HookedModel):
             model._post_delete()
 db.delete = hokked_delete

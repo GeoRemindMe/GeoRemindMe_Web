@@ -2,7 +2,7 @@
 
 import time
 
-from django.utils import simplejson
+import json as simplejson
 
 from models import _Session_Data, _Session_Dict
 

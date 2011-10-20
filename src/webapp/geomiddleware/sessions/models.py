@@ -3,11 +3,11 @@ from random import randrange
 from datetime import datetime
 from time import time
 
-from google.appengine.ext import db
 from django.utils.hashcompat import md5_constructor
-from django.utils import simplejson
+import json as simplejson
 from django.conf import settings
-
+from google.appengine.ext import db
+from georemindme import model_plus
 from properties import PickleProperty
 from geouser.models import User
 
@@ -58,7 +58,7 @@ class _Session_Dict(UserDict.DictMixin):
         return True
    
 
-class _Session_Data(_Session_Dict, db.Model):
+class _Session_Data(_Session_Dict, model_plus.Model):
     session_data = PickleProperty()
     expires = db.DateTimeProperty()
     created = db.DateTimeProperty(auto_now_add=True)
@@ -92,7 +92,7 @@ class _Session_Data(_Session_Dict, db.Model):
         
 
     @classmethod        
-    def new_session(cls, lang=None, user=None, remember=False, is_from_facebook=False):
+    def new_session(cls, lang='es', user=None, remember=False, is_from_facebook=False):
         '''
             Crea una nueva sesion, generando un ID unico
         '''
@@ -117,10 +117,10 @@ class _Session_Data(_Session_Dict, db.Model):
         session = _Session_Data(key_name=_new_session_id())
         t = time() + settings.SESSION_COOKIE_AGE
         session.expires = datetime.fromtimestamp(t)
-        if lang:
+        if lang is not None:
             session['LANGUAGE_CODE'] = lang
-        if user:
-            session['user'] = user
+        if user is not None:
+            session._user = user
         session.remember = remember
         session.is_from_facebook = is_from_facebook
         session.put()
@@ -140,17 +140,6 @@ class _Session_Data(_Session_Dict, db.Model):
         self.expires = datetime.fromtimestamp(t)
         self.encode()
         super(_Session_Data, self).put()
-        import memcache
-        session = {
-                   'session': self,
-                   'user': self._user
-                   }
-        memcache.set("%ssession%s" % (memcache.version,
-                                     session['session'].id),
-                                     session,
-                                     time = session['session'].get_expiry_age()
-                        )
-
 
     @classmethod
     def restore_session(cls, session_id):
@@ -162,31 +151,8 @@ class _Session_Data(_Session_Dict, db.Model):
                 :type session_id: :class:`string`
                 :returns: :class:`_Session_Data` o None
         '''
-        try:
-            import memcache
-            session = memcache.get("%ssession%s" % (memcache.version,
-                                                   session_id))
-            if session is None:
-                session = _Session_Data.get_by_key_name(session_id)
-                if session is not None:
-                    session = {
-                               'session': session,
-                               'user': session._user
-                               }
-                    memcache.set("%ssession%s" % (memcache.version,
-                                                     session['session'].id),
-                                                 session,
-                                                 time = session['session'].get_expiry_age()
-                            )
-            if session is not None:
-                if session['session'].is_valid():
-                    session['session']._user = session['user']
-                    session['session'].decode()
-                    return session['session']
-        except:
-            pass
-        return None
-    
+        return _Session_Data.get_by_key_name(session_id)
+        
     def get_expiry_age(self):
         expires = self.expires - datetime.now()
         return expires.days * 86400 + expires.seconds
@@ -206,8 +172,15 @@ class _Session_Data(_Session_Dict, db.Model):
         else:
             self._decoded[key] = value
             
-    def delete(self):
-        import memcache
-        session = memcache.delete("%ssession%s" % (memcache.version,
-                                               self.id))
+    def __contains__(self, key):
+        if key.lower()=='user':
+            if self._user is None:
+                return False
+            else:
+                return True
+        try:
+            self.__getitem__(key)
+        except KeyError:
+            return False
+        return True
         

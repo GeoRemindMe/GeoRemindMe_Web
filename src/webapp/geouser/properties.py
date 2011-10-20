@@ -6,6 +6,7 @@
     :synopsis: Propiedades propias para el datastore
 """
 
+import json as simplejson
 from google.appengine.ext import db
 from django.utils.translation import gettext_lazy as _
 
@@ -106,12 +107,10 @@ class JSONProperty(db.Property):
         if value is None:
             return {}
         if isinstance(value, unicode) or isinstance(value, str):
-            from django.utils import simplejson
             return simplejson.loads(value)
         return value
     
     def _deflate(self, value):
-        from django.utils import simplejson
         return simplejson.dumps(value)
     data_type = datastore_types.Text
         

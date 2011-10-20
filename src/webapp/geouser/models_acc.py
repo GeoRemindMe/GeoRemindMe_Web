@@ -12,12 +12,13 @@ from google.appengine.ext import db
 from django.conf import settings
 
 from georemindme.models_utils import HookedModel, Visibility
+from georemindme import model_plus
 from georemindme.decorators import classproperty
 from models import User
 
 
 TIME_CHOICES = ('never', 'instant', 'daily', 'weekly', 'monthly')
-class UserSettings(HookedModel):
+class UserSettings(model_plus.Model):
     """Configuracion del usuario (privacidad, etc.)"""
     
     notification_invitation = db.BooleanProperty(indexed=False, default=True)
@@ -38,15 +39,7 @@ class UserSettings(HookedModel):
     
     language = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
-    
-    _scgoogleplaces = None
 
-    
-    @property
-    def searchconfig_google(self):
-        if self._scgoogleplaces is None:
-            self._scgoogleplaces = SearchConfigGooglePlaces.all().ancestor(self.key()).get()
-        return self._scgoogleplaces
 
     @classproperty
     def objects(self):
@@ -116,14 +109,10 @@ class UserSettings(HookedModel):
             comment = Comment.objects.get_by_key(commentkey)
             if comment is not None:
                 _Report_Suggestion_commented.insert_or_update(parent.key(), comment.instance.key(), comment.created)
-
-    def _post_put(self, **kwargs):
-        import memcache
-        memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)
         
 
 AVATAR_CHOICES = ('none', 'gravatar', 'facebook', 'twitter')
-class UserProfile(HookedModel):
+class UserProfile(model_plus.Model, HookedModel):
     """Datos para el perfil del usuario"""
     username = db.TextProperty()
     avatar = db.URLProperty(required=False)
@@ -148,32 +137,13 @@ class UserProfile(HookedModel):
         q = UserSocialLinks.all().ancestor(self.key())
         return q.run()
 
-#    def _update_gravatar(self):
-#        parent = self.parent()
-#        if parent is not None and parent.email is not None:
-#            email = parent.email
-#            default = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
-#            size = 50
-#            # construct the url
-#            gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
-#            gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
-#            self.avatar = gravatar_url
-#    
-#        
-#    def _update_facebook(self):
-#        parent = self.parent()
-#        if parent.facebook_user is not None:
-#            self.avatar = "https://graph.facebook.com/%s/picture/" % parent.facebook_user.uid
-#        else:
-#            self.avatar = "http://georemindme.appspot.com/static/facebookApp/img/no_avatar.png"
-
     def _post_put(self, **kwargs):
         import memcache
         memcache.delete('%s%s_avatarcachebase64' % (memcache.version, self.username))
         memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)    
     
 
-class UserSocialLinks(HookedModel):
+class UserSocialLinks(model_plus.Model, HookedModel):
     """Enlaces a los perfiles de redes sociales del usuario"""
     facebook = db.TextProperty(indexed=False)
     twitter = db.TextProperty(indexed=False)
@@ -192,13 +162,13 @@ class UserSocialLinks(HookedModel):
             self.twitter = 'http://www.twitter.com/%s' % tw.username
 
 
-class UserFollowingIndex(db.Model):
+class UserFollowingIndex(model_plus.Model):
     """Listas de gente que sigue el usuario"""
     following = db.ListProperty(db.Key)
     created = db.DateTimeProperty(auto_now_add=True)
     
 
-class UserCounter(db.Model):
+class UserCounter(model_plus.Model):
     """Contadores para evitar usar count().
         Podriamos actualizarlos en tiempo real o con algun proceso de background?
     """ 
@@ -248,7 +218,87 @@ class UserCounter(db.Model):
         return db.run_in_transaction(self._change_counter, 'notifications', value)
     
     
-class UserTimelineBase(db.polymodel.PolyModel, HookedModel):
+class UserTimelineBase(db.polymodel.PolyModel, model_plus.Model, HookedModel):
+    #        0: _('Welcome to GeoRemindMe you can share your public profile: \
+#                  <a href="http://www.georemindme.com/user/%(username)s/">\
+#                  http://www.georemindme.com/user/%(username)s/</a>') %{
+#                'username':self.user.username,
+#            },
+#        1: _('Now, you can log with your Google account'),
+#        2: _('Now, you can log from Facebook and from <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a>'),
+#        3: _('Now, you can log with your Twitter account'),
+#        
+#            #User messages
+#            100: _('You are now following <a href="%(profile_url)s">%(username)s</a>') % {
+#                'profile_url':self.user.get_absolute_url(),
+#                'username':self.instance
+#            },
+#            101: _('<a href="%(profile_url)s">%(username)s</a> is now following you')  % {
+#                'profile_url':self.user.get_absolute_url(),
+#                'username':self.instance
+#            },
+#            102: _('You are no longer following <a href="%(profile_url)s">%(username)s</a> anymore') % {
+#                'profile_url':self.user.get_absolute_url(),
+#                'username':self.instance
+#            },
+#            110: _('You invited %s to:') % self.instance,
+#            111: _('%s invited you to %s') % (self.instance, self.instance),
+#            112: _('%s accepted your invitation to %s') % (self.user, self.instance),
+#            113: _('%s rejected your invitation to %s') % (self.user, self.instance),
+#            120: _('<a href="%(profile_url)s">%(username)s</a> ha hecho un comentario en la sugerencia: <br><a href="/fb/suggestion/%(suggestion_id)s/">%(suggestion)s</a>') % {
+#                'profile_url':self.user.get_absolute_url(),
+#                'username':self.user,
+#                'suggestion':self.instance,
+#                'suggestion_id':self.instance,
+#            },
+#            125: _('likes a comment: %s') % self.instance,
+#            150: _('New user list created: %s') % self.instance,
+#            151: _('User list modified: %s') % self.instance,
+#            152: _('User list removed: %s') % self.instance,
+#            
+#            #Alerts
+#            200: _('New alert: %s') % self.instance,
+#            201: _('Alert modified: %s') % self.instance,
+#            202: _('Alert deleted: %s') % self.instance,
+#            203: _('Alert done: %s') % self.instance,
+#            
+#            #Alerts lists
+#            250: _('New alert list created: %s') % self.instance,
+#            251: _('Alert list modified: %s') % self.instance,
+#            252: _('Alert list removed: %s') % self.instance,
+#            
+#            #Suggestions
+#            300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
+#                'url':self.user.get_absolute_url(), 
+#                'username':self.user.username, 
+#                'message':self.instance
+#            },
+#            301: _('Suggestion modified: %s') % self.instance,
+#            302: _('Suggestion removed: %s') % self.instance,
+#            303: _('You are following: %s') % self.instance,
+#            304: _('You stopped following: %s') % self.instance,
+#            305: _('likes a suggestions: %s') % self.instance,
+#            320: _('New alert: %s') % self.instance,
+#            321: _('Alert modified: %s') % self.instance,
+#            322: _('Alert deleted: %s') % self.instance,
+#            323: _('Alert done: %s') % self.instance,
+#            
+#            #Suggestions list
+#            350: _('New suggestions list created: %s') % self.instance,
+#            351: _('Suggestions list modified: %s') % self.instance,
+#            352: _('Suggestion list removed: %s') % self.instance,
+#            353: _('You are following: %s') % self.instance,
+#            354: _('You are not following %s anymore') % self.instance,
+#            
+#            #Places
+#            400: _('New private place: %s') % self.instance,
+#            401: _('Private place modified: %s') % self.instance,
+#            402: _('Private place deleted: %s') % self.instance,
+#            450: _('New public place: %s') % self.instance,
+#            451: _('Public place modified: %s') % self.instance,
+#            452: _('Public place deleted: %s') % self.instance,
+#        }
+
     user = db.ReferenceProperty(User)
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty(auto_now=True)
@@ -273,90 +323,6 @@ class UserTimelineSystem(UserTimelineBase):
     msg = db.TextProperty(required=False)
     instance = db.ReferenceProperty(None)
     visible = db.BooleanProperty(default=True)
-    
-#    @property
-#    def msg(self):
-#        _msg_ids = {
-#                0: _('Welcome to GeoRemindMe you can share your public profile: \
-#                          <a href="http://www.georemindme.com/user/%(username)s/">\
-#                          http://www.georemindme.com/user/%(username)s/</a>') %{
-#                        'username':self.user.username,
-#                    },
-#                1: _('Now, you can log with your Google account'),
-#                2: _('Now, you can log from Facebook and from <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a>'),
-#                3: _('Now, you can log with your Twitter account'),
-#                
-#                    #User messages
-#                    100: _('You are now following <a href="%(profile_url)s">%(username)s</a>') % {
-#                        'profile_url':self.user.get_absolute_url(),
-#                        'username':self.instance
-#                    },
-#                    101: _('<a href="%(profile_url)s">%(username)s</a> is now following you')  % {
-#                        'profile_url':self.user.get_absolute_url(),
-#                        'username':self.instance
-#                    },
-#                    102: _('You are no longer following <a href="%(profile_url)s">%(username)s</a> anymore') % {
-#                        'profile_url':self.user.get_absolute_url(),
-#                        'username':self.instance
-#                    },
-#                    110: _('You invited %s to:') % self.instance,
-#                    111: _('%s invited you to %s') % (self.instance, self.instance),
-#                    112: _('%s accepted your invitation to %s') % (self.user, self.instance),
-#                    113: _('%s rejected your invitation to %s') % (self.user, self.instance),
-#                    120: _('<a href="%(profile_url)s">%(username)s</a> ha hecho un comentario en la sugerencia: <br><a href="/fb/suggestion/%(suggestion_id)s/">%(suggestion)s</a>') % {
-#                        'profile_url':self.user.get_absolute_url(),
-#                        'username':self.user,
-#                        'suggestion':self.instance,
-#                        'suggestion_id':self.instance,
-#                    },
-#                    125: _('likes a comment: %s') % self.instance,
-#                    150: _('New user list created: %s') % self.instance,
-#                    151: _('User list modified: %s') % self.instance,
-#                    152: _('User list removed: %s') % self.instance,
-#                    
-#                    #Alerts
-#                    200: _('New alert: %s') % self.instance,
-#                    201: _('Alert modified: %s') % self.instance,
-#                    202: _('Alert deleted: %s') % self.instance,
-#                    203: _('Alert done: %s') % self.instance,
-#                    
-#                    #Alerts lists
-#                    250: _('New alert list created: %s') % self.instance,
-#                    251: _('Alert list modified: %s') % self.instance,
-#                    252: _('Alert list removed: %s') % self.instance,
-#                    
-#                    #Suggestions
-#                    300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
-#                        'url':self.user.get_absolute_url(), 
-#                        'username':self.user.username, 
-#                        'message':self.instance
-#                    },
-#                    301: _('Suggestion modified: %s') % self.instance,
-#                    302: _('Suggestion removed: %s') % self.instance,
-#                    303: _('You are following: %s') % self.instance,
-#                    304: _('You stopped following: %s') % self.instance,
-#                    305: _('likes a suggestions: %s') % self.instance,
-#                    320: _('New alert: %s') % self.instance,
-#                    321: _('Alert modified: %s') % self.instance,
-#                    322: _('Alert deleted: %s') % self.instance,
-#                    323: _('Alert done: %s') % self.instance,
-#                    
-#                    #Suggestions list
-#                    350: _('New suggestions list created: %s') % self.instance,
-#                    351: _('Suggestions list modified: %s') % self.instance,
-#                    352: _('Suggestion list removed: %s') % self.instance,
-#                    353: _('You are following: %s') % self.instance,
-#                    354: _('You are not following %s anymore') % self.instance,
-#                    
-#                    #Places
-#                    400: _('New private place: %s') % self.instance,
-#                    401: _('Private place modified: %s') % self.instance,
-#                    402: _('Private place deleted: %s') % self.instance,
-#                    450: _('New public place: %s') % self.instance,
-#                    451: _('Public place modified: %s') % self.instance,
-#                    452: _('Public place deleted: %s') % self.instance,
-#                }
-#        return _msg_ids[self.msg_id]
 
 
 #Equivale al Muro o a los del Perfil
@@ -364,101 +330,7 @@ class UserTimeline(UserTimelineBase, Visibility):
     msg = db.TextProperty(required=False)
     msg_id = db.IntegerProperty(required=False, default=-1)
     instance = db.ReferenceProperty(None)
-    _new = False
-    
-#    @property
-#    def msg(self):
-#        if self.msg_id != -1:
-#            _msg_ids = {
-#                    0: _('Welcome to GeoRemindMe you can share your public profile: \
-#                          <a href="http://www.georemindme.com/user/%(username)s/">\
-#                          http://www.georemindme.com/user/%(username)s/</a>') %{
-#                        'username':self.user.username,
-#                    },
-#                    1: _('Now, you can log with your Google account'),
-#                    2: _('Now, you can log from Facebook and from <a href="http://www.georemindme.com" target="_blank">www.georemindme.com</a>'),
-#                    3: _('Now, you can log with your Twitter account'),
-#                    
-#                    #User messages
-#                    # self.instance --> User
-#                    100: _('You are now following <a href="%(profile_url)s">%(username)s</a>') % {
-#                        'profile_url':self.user.get_absolute_url(),
-#                        'username':self.instance
-#                    },
-#                    101: _('<a href="%(profile_url)s">%(username)s</a> is now following you')  % {
-#                        'profile_url':self.user.get_absolute_url(),
-#                        'username':self.instance
-#                    },
-#                    102: _('You are no longer following <a href="%(profile_url)s">%(username)s</a> anymore') % {
-#                        'profile_url':self.user.get_absolute_url(),
-#                        'username':self.instance
-#                    },
-#                    110: _('You invited %s to:') % self.instance,
-#                    111: _('%s invited you to %s') % (self.instance, self.instance),
-#                    112: _('%s accepted your invitation to %s') % (self.instance, self.instance),
-#                    113: _('%s rejected your invitation to %s') % (self.instance, self.instance),
-#                    
-#                    # self.instance --> Comment
-#                    120: _('<a href="%(profile_url)s">%(username)s</a> ha hecho un comentario en la sugerencia de: <br><a href="/fb/suggestion/%(suggestion_id)s/">%(suggestion)s</a>') % {
-#                        'profile_url':self.user.get_absolute_url(),
-#                        'username':self.user.username,
-#                        'owner':self.instance.instance.user,
-#                        'owner_url':self.instance.instance.user.get_absolute_url(),
-#                        'suggestion':self.instance,
-#                        'suggestion_id':self.instance.id,
-#                    },
-#                    # self.instance --> Comment
-#                    125: _('likes a comment: %s') % self.instance,
-#                    150: _('New user list created: %s') % self.instance,
-#                    151: _('User list modified: %s') % self.instance,
-#                    152: _('User list removed: %s') % self.instance,
-#                    
-#                    #Alerts
-#                    200: _('New alert: %s') % self.instance,
-#                    201: _('Alert modified: %s') % self.instance,
-#                    202: _('Alert deleted: %s') % self.instance,
-#                    203: _('Alert done: %s') % self.instance,
-#                    
-#                    #Alerts lists
-#                    250: _('New alert list created: %s') % self.instance,
-#                    251: _('Alert list modified: %s') % self.instance,
-#                    252: _('Alert list removed: %s') % self.instance,
-#                    
-#                    #Suggestions
-#                    300: _('<a href="/fb%(url)s">%(username)s</a> sugiere:<br> %(message)s') % {
-#                        'url':self.user.get_absolute_url(), 
-#                        'username':self.user.username, 
-#                        'message':self.instance
-#                    },
-#                    301: _('Suggestion modified: %s') % self.instance,
-#                    302: _('Suggestion removed: %s') % self.instance,
-#                    303: _('You are following: %s') % self.instance,
-#                    304: _('You stopped following: %s') % self.instance,
-#                    305: _('likes a suggestions: %s') % self.instance,
-#                    320: _('New alert: %s') % self.instance,
-#                    321: _('Alert modified: %s') % self.instance,
-#                    322: _('Alert deleted: %s') % self.instance,
-#                    323: _('Alert done: %s') % self.instance,
-#                    
-#                    #Suggestions list
-#                    350: _('New suggestions list created: %s') % self.instance,
-#                    351: _('Suggestions list modified: %s') % self.instance,
-#                    352: _('Suggestion list removed: %s') % self.instance,
-#                    353: _('You are following: %s') % self.instance,
-#                    354: _('You are not following %s anymore') % self.instance,
-#                    
-#                    #Places
-#                    400: _('New private place: %s') % self.instance,
-#                    401: _('Private place modified: %s') % self.instance,
-#                    402: _('Private place deleted: %s') % self.instance,
-#                    450: _('New public place: %s') % self.instance,
-#                    451: _('Public place modified: %s') % self.instance,
-#                    452: _('Public place deleted: %s') % self.instance,
-#                    }
-#            return _msg_ids[self.msg_id]
-#        else:
-#            return self._msg
-    
+    _new = False 
     
     @classproperty
     def objects(self):
@@ -483,13 +355,6 @@ class UserTimeline(UserTimelineBase, Visibility):
                 index = UserTimelineFollowersIndex.all().ancestor(self.key()).order('-created').get()
                 if index is None or len(index.followers) > 80:  # o no existen indices o hemos alcanzado el maximo
                     index = UserTimelineFollowersIndex(parent=self)
-#                from geovote.models import Comment, Vote
-#                if isinstance(self.instance, Comment) or isinstance(self.instance, Vote):
-#                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.instance.user.id])
-#                if isinstance(self.instance, User):
-#                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.id])    
-#                else:
-#                    index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers if follower['id'] != self.instance.user.id])
                 index.followers.extend([db.Key.from_path(User.kind(), follower['id']) for follower in followers])
                 indexes_to_save.append(index)
                 followers = self.user.get_followers(page=page, query_id=query_id)[1]
@@ -549,19 +414,14 @@ class UserTimelineSuggest(UserTimelineSystem):
             notification.put()
             
 
-class UserTimelineFollowersIndex(db.Model):
+class UserTimelineFollowersIndex(model_plus.Model):
     followers = db.ListProperty(db.Key)
     created = db.DateTimeProperty(auto_now_add=True) 
 
 
-class SearchConfig(db.polymodel.PolyModel):
+class SearchConfig(db.polymodel.PolyModel, model_plus.Model):
     region_code = db.TextProperty(default='ES')
     location = db.GeoPtProperty(default='37.175071,-3.598534')
     radius = db.IntegerProperty(default=2000)
-    
-    
-class SearchConfigGooglePlaces(SearchConfig):
-    type = db.TextProperty(choices = ('all', 'geocode', 'establishment'), default='establishment')
 
-    
 from helpers_acc import *

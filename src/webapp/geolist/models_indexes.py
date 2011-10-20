@@ -49,5 +49,5 @@ class ListCounter(db.Model):
         return self._votes
     
     def to_json(self):
-        from django.utils import simplejson
+        import json as simplejson
         return simplejson.dumps(self.to_dict())

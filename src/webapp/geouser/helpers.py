@@ -6,13 +6,14 @@
     :synopsis: Helpers de models
 """
 
+from models import User
+from google.appengine.ext import db
 
 class UserHelper(object):
     """Do the queries needed to get a object
         Use ->  User.objects.method()
     """
     def get_by_key(self, key):
-        from models import User
         try:
             return User.get(key)
         except:
@@ -23,19 +24,15 @@ class UserHelper(object):
             return None
         username = username.lower()
         if keys_only:
-            from google.appengine.ext import db
-            return db.GqlQuery('SELECT __key__ FROM User WHERE username = :1', username).get()
-        from models import User
-        return User.gql('WHERE username = :1', username).get()
+            return User.all(keys_only=True).filter('username = ', username).get()
+        return User.all().filter('username = ', username).get()
     
     def get_by_id(self, userid, keys_only=False):
         try:
             userid = long(userid)
         except:
             return None
-        from models import User
         if keys_only:
-            from google.appengine.ext import db
             return db.Key.from_path(User.kind(), userid)
         return User.get_by_id(userid)
     
@@ -47,8 +44,7 @@ class UserHelper(object):
             return None
         email = email.lower()
         if keys_only:
-            from google.appengine.ext import db
-            return db.GqlQuery('SELECT __key__ FROM User WHERE email = :1', email).get()
+            return User.all(keys_only=True).filter('email =', email).get()
         return self._get().filter('email =', email).get()       
     
     def get_by_email_not_confirm(self, email, keys_only=False):
@@ -59,8 +55,7 @@ class UserHelper(object):
             return None
         email = email.lower()
         if keys_only:
-            from google.appengine.ext import db
-            return db.GqlQuery('SELECT __key__ FROM User WHERE email = :1 AND has=\'confirmed:F\'', email).get()
+            return User.all(keys_only=True).filter('email =', email).filter('has =', 'confirmed:F').get()
         return self._get().filter('email =', email).filter('has =', 'confirmed:F').get()
         
     def get_followers(self, userid = None, username=None, page=1, query_id=None):
@@ -78,17 +73,16 @@ class UserHelper(object):
             
             :raises: AttributeError
         """
-        from google.appengine.ext import db
+        
         if username is not None:
             userkey = self.get_by_username(username, keys_only=True)
         elif userid is not None:
-            from models import User
             userkey = db.Key.from_path(User.kind(), userid)
         else:
             raise AttributeError()
         from georemindme.paging import PagedQuery
         from models_acc import UserFollowingIndex
-        followers = UserFollowingIndex.gql('WHERE following = :1 ORDER BY created DESC', userkey)
+        followers = UserFollowingIndex.all().filter('following =', userkey).order('-created')
         p = PagedQuery(followers, id = query_id)
         from georemindme.funcs import fetch_parents
         users = fetch_parents(p.fetch_page(page))
@@ -113,11 +107,9 @@ class UserHelper(object):
             
             :raises: AttributeError
         """
-        from google.appengine.ext import db
         if username is not None:
             userkey = self.get_by_username(username, keys_only=True)
         elif userid is not None:
-            from models import User
             userkey = db.Key.from_path(User.kind(), userid)
         else: 
             raise AttributeError()
@@ -142,5 +134,4 @@ class UserHelper(object):
         return top_users
 
     def _get(self, string=None):
-        from models import User
         return User.all().filter('has =', 'active:T')

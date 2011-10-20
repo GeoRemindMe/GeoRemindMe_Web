@@ -1,7 +1,7 @@
 # coding=utf-8
 
 
-from django.utils import simplejson
+import json as simplejson
 from django.conf import settings
 from libs.oauth2 import Client, Consumer, Token
 
@@ -166,7 +166,6 @@ class TwitterFriendsRPC(object):
     def handle_results(self):
         try:
             result = self.rpc.get_result()
-            from django.utils import simplejson
             if int(result.status_code) != 200:
                 return {}
             friends_result = simplejson.loads(result.content)

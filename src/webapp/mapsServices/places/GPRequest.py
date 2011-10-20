@@ -4,7 +4,7 @@ from libs.httplib2 import Http
 from xml.etree import ElementTree
 
 
-from django.utils import simplejson
+import json as simplejson
 
 from google.appengine.api.memcache import Client
 

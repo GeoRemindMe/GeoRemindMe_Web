@@ -4,7 +4,7 @@ from datetime import datetime
 import time
 
 from django.utils.translation import gettext_lazy as _
-from django.utils import simplejson
+import json as simplejson
 from django.conf import settings
 from google.appengine.ext import db, search
 from google.appengine.ext.db import polymodel

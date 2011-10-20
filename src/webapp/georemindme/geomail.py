@@ -14,7 +14,7 @@ from django.conf import settings
 
 class GeoMail(mail.EmailMessage):
     def __init__(self, *args, **kwargs):
-        self.sender = 'noreply@georemind.me'
+        self.sender = settings.EMAIL_SENDER
         super(self.__class__, self).__init__(*args,**kwargs)
         
     def push(self):

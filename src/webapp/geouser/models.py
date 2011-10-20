@@ -18,7 +18,7 @@ from georemindme.models_utils import HookedModel
 from georemindme.decorators import classproperty
 from properties import PasswordProperty, UsernameProperty
 from georemindme.funcs import prefetch_refprops, fetch_parents, fetch_parentsKeys
-
+from georemindme import model_plus
 
 TIMELINE_PAGE_SIZE = 10
 
@@ -41,7 +41,7 @@ class AnonymousUser(object):
         return "iamanonymousyeah"
 
 
-class User(polymodel.PolyModel, HookedModel):
+class User(polymodel.PolyModel, model_plus.Model, HookedModel):
     email = db.EmailProperty()
     username = UsernameProperty()
     password = PasswordProperty(required=True, indexed=False)
@@ -94,31 +94,22 @@ class User(polymodel.PolyModel, HookedModel):
     @property
     def profile(self):
         if self._profile is None:
-            import memcache
             from models_acc import UserProfile
-            self._profile = memcache.deserialize_instances(memcache.get('%sprofile_%s' % (memcache.version, self.id)))
-            if self._profile is None:
-                from models_acc import UserProfile
-                self._profile = UserProfile.all().ancestor(self.key()).get()
-                memcache.set('%s%s' % (memcache.version, self._profile.key().name()), memcache.serialize_instances(self._profile), 300)
+            self._profile = UserProfile.get_by_key_name('profile_%s' % self.id, parent=self.key())
         return self._profile
 
     @property
     def settings(self):
         if self._settings is None:
-            import memcache
             from models_acc import UserSettings
-            self._settings = memcache.deserialize_instances(memcache.get('%ssettings_%s' % (memcache.version, self.id)))
-            if self._settings is None:
-                self._settings = UserSettings.all().ancestor(self.key()).get()
-                memcache.set('%s%s' % (memcache.version, self._settings.key().name()), memcache.serialize_instances(self._settings), 300)
+            self._settings = UserSettings.get_by_key_name('settings_%s' % self.id, parent=self.key())
         return self._settings
 
     @property
     def counters(self):
-        if self._counters is None:
+        if self._counters is None:            
             from models_acc import UserCounter
-            self._counters = UserCounter.all().ancestor(self.key()).get()
+            self._counters = UserCounter.get_by_key_name('counters_%s' % self.id, parent=self.key())
         return self._counters
 
     def counters_async(self):
@@ -479,10 +470,9 @@ class User(polymodel.PolyModel, HookedModel):
         if not trans:
             user.delete()
         else:
-            from models_acc import UserSocialLinks, SearchConfigGooglePlaces
+            from models_acc import UserSocialLinks
             sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
-            scgoogleplaces = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
-            save = db.put_async([sociallinks, scgoogleplaces])
+            save = db.put_async(sociallinks)
             from signals import user_new
             from watchers import new_user_registered
             user_new.send(sender=user, status=trans)

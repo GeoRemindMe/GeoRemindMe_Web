@@ -33,7 +33,7 @@ This module is experimental and subject to backwards incompatible changes.
 
 
 try:
-  import simplejson
+  import json as simplejson
 except ImportError:
   try:
     # Try to import from django, should work on App Engine

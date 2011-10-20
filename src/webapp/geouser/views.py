@@ -234,7 +234,7 @@ def dashboard(request, template='generic/dashboard.html'):
         handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
     chronology = request.user.get_activity_timeline()
     # FIXME: CHAPUZA, LA PLANTILLA ESPERA RECIBIR EL QUERY_ID EN JSON :)
-    from django.utils import simplejson
+    import json as simplejson
     chronology[0] = simplejson.dumps(chronology[0])
     if friends is None:
         # usuarios con mas sugerencias

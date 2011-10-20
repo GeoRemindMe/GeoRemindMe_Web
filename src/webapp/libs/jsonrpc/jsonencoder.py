@@ -2,7 +2,7 @@
 
 import datetime
 import time
-from django.utils import simplejson
+import json as simplejson
 
 
 class JSONEncoder(simplejson.JSONEncoder):

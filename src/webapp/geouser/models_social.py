@@ -13,9 +13,10 @@ from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
 from models import User
+from georemindme import model_plus
 
 
-class SocialUser(polymodel.PolyModel):    
+class SocialUser(polymodel.PolyModel, model_plus.Model):    
     uid = db.StringProperty(required=False)
     email = db.EmailProperty(required=False)
     realname = db.TextProperty(indexed=False)
@@ -43,7 +44,6 @@ class GoogleUserHelper():
         """Search and returns a User object with that email"""
         if uid is None:
             raise db.BadValueError("Wrong id")
-        #ugoogle = GoogleUser.all().filter('uid =', uid).get()
         ugoogle = GoogleUser.get_by_key_name('gu%s' % uid)
         return ugoogle
     

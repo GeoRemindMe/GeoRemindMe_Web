@@ -20,14 +20,14 @@ handlers:
   static_dir: static
   secure: always
 
-- url: /ajax/.*
-  script: main.app
-  secure: optional
-
 - url: /api/.*
   script: service.app
   secure: always
   
+- url: /ajax/.*
+  script: main.app
+  secure: optional
+
 - url: /suggestion/.*
   script: main.app
   secure: never
@@ -36,10 +36,41 @@ handlers:
   script: main.app
   secure: never
   
+- url: /_ereporter.*
+  script: google.appengine.ext.ereporter.report_generator.application
+  login: admin
+  
+- url: /remote_api
+  script: google.appengine.ext.remote_api.handler.application
+  login: admin
+  secure: always
+  
+- url: /console.*
+  script: google.appengine.ext.admin.application
+  secure: always
+  login: admin
+
+- url: /test/.*
+  script: main.app
+  secure: always
+  login: admin
+  
+- url: /_ah/stats/.*
+  script: google.appengine.appstats.application
+  secure: always
+  login: admin
+  
+- url: /_ah/queue/deferred
+  script: google.appengine.ext.deferred.handler.application
+  login: admin
+  
 - url: /.*
   script: main.app
   secure: always
   
+skip_files:
+- ^(.*/)?app\.yaml
+
 
 builtins:
 #- appstats: on
@@ -52,3 +83,6 @@ inbound_services:
 libraries:
 - name: django
   version: "1.2" 
+  
+- name: webapp2
+  version: "latest"

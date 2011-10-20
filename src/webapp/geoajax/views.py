@@ -2,7 +2,7 @@
 
 
 from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden, HttpResponseNotFound
-from django.utils import simplejson
+import json as simplejson
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 
@@ -642,7 +642,7 @@ def get_near_suggestions(request):
                 request.user.last_address = result['results'][0]['formatted_address']
         except Exception, e:
             import logging
-            logging.error('ERROR OBTENIENDO DIRECCION: %s' % e)
+            logging.error('ERROR OBTENIENDO DIRECCION %s: %s' % (e, result))
         request.user.put()
     if location is None and request.user.is_authenticated():
         location = request.user.last_point

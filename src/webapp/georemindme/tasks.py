@@ -3,9 +3,8 @@
 import os
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
 
-from google.appengine.api.taskqueue import Task
+from google.appengine.api import taskqueue
 from google.appengine.ext import db
 from google.appengine.api import mail
 
@@ -37,14 +36,15 @@ class EmailHandler(TaskHandler):
     Clase encargada de gestionar la cola de envio de correos
     '''
     def add(self, email):
-        task = Task(url='/tasks/email/', params = { 'sender': email.sender,
+        taskqueue.add(url='/tasks/email/', 
+                      params = { 'sender': email.sender,
                                                    'to': email.to,
                                                    'subject': email.subject,
                                                    'body' : email.body,
                                                    'html': email.html,
                                                    },
-                                        method = 'POST')
-        task.add(queue_name='email')
+                      method = 'POST',
+                      queue_name="email")
 
 
 @csrf_exempt
@@ -58,15 +58,19 @@ def email_worker(request):
 #===============================================================================
 class NotificationHandler(TaskHandler):
     def timeline_followers_notify(self, timeline):
-        task = Task(url='/tasks/notify/timeline/', params = { 'timeline': timeline.key() }, method = 'POST')
-        task.add(queue_name='timelineFollowers')
+        taskqueue.add(url='/tasks/notify/timeline/',
+                      params = { 'timeline': timeline.key() },
+                      method = 'POST',
+                      queue_name='timelineFollowers')
         
     def list_followers_notify(self, list):
         '''
         Notifica a los seguidores de la lista que esta se modifico
         '''
-        task = Task(url='/tasks/notify/list/', params = {'list': list.key()}, method = 'POST')
-        task.add(queue_name='listFollowers')
+        taskqueue.add(url='/tasks/notify/list/',
+                      params = {'list': list.key()},
+                      method = 'POST',
+                      queue_name='listFollowers')
     
 @csrf_exempt
 @admin_required
