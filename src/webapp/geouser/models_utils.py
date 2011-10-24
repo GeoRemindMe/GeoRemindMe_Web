@@ -15,7 +15,7 @@ from django.conf import settings
 
 class _Notification(db.Model):
     from models_acc import UserTimelineBase
-    owner = db.ReferenceProperty(User, required=True)
+    owner = db.ReferenceProperty(User, required=False)
     timeline = db.ReferenceProperty(UserTimelineBase, required=True)
     _created = db.DateTimeProperty(auto_now_add=True)
     

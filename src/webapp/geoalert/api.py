@@ -69,15 +69,13 @@ def send_suggestion_to_list(querier, list_id, event_id):
     
     
 def change_suggestion_to_list(querier, timeline_id, status):
+    """
+        Aceptar o rechazar añadir una sugerencia a una lista
+    """
     if not status in (0,1,2):
         return False  
     from google.appengine.api import datastore
-    from geouser.models_utils import _Notification
     from google.appengine.ext import db
-    q = datastore.Query('_Notification', {'owner =': querier.key(), 'timeline =': db.Key.from_path('UserTimelineBase', timeline_id)}, keys_only=True)
-    notification = q.Get(1)
-    if len(notification) == 0:
-        return None
     timeline = datastore.Get(db.Key.from_path('UserTimelineBase', timeline_id))
     if timeline is None:
         return None
@@ -97,6 +95,9 @@ def change_suggestion_to_list(querier, timeline_id, status):
 
 
 def get_list_from_suggs(s, querier):
+    """
+        Obtiene las listas de una sugerencia y usuario
+    """
     from google.appengine.api import datastore
-    q = datastore.Query('List', {'user =': querier.key()})
+    q = datastore.Query('List', {'user =': querier.key(), 'list =': s.key()})
     q.Order(('created', datastore.Query.DESCENDING))

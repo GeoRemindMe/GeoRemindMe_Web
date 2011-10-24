@@ -48,7 +48,7 @@ def do_comment(querier, instance_id, kind, msg):
     return comment
 
 
-def get_comments(querier, instance_id, kind, query_id=None, page=1, async=False):
+def get_comments(querier, instance=None, query_id=None, page=1, async=False):
     """
     Obtiene los comentarios de cualquier evento visible
     
@@ -59,27 +59,17 @@ def get_comments(querier, instance_id, kind, query_id=None, page=1, async=False)
         :param page: pagina a buscar
         :type page: :class:`integer`
     """
-    if not kind in ['Event', 'List']:
-        return None
-    try:
-        instance_id = int(instance_id)
-    except:
-        return None
-    from geoalert.models import Event
-    from geolist.models import List
-    from geovote.models import Comment
-    obj = eval(kind).get_by_id(instance_id)
-    if obj is None:
-        return None
-    if obj.__class__.user.get_value_for_datastore(obj) != querier.key():
-        if hasattr(obj, '_vis'):
-            if obj._is_private():
+    if instance is None:
+		return None
+    if instance.__class__.user.get_value_for_datastore(instance) != querier.key():
+        if hasattr(instance, '_vis'):
+            if instance._is_private():
                 return None
-            elif obj._is_shared() and not obj.user_invited(querier):
+            elif instance._is_shared() and not instance.user_invited(querier):
                 return None
         else:
             return None
-    return _get_comments(obj, query_id=query_id, page=page, querier=querier, async=async)
+    return _get_comments(instance, query_id=query_id, page=page, querier=querier, async=async)
 
 
 def _get_comments(instance, query_id=None, page=1, querier=None, async=False):

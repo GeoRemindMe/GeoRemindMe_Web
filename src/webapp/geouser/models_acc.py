@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
 from django.conf import settings
 
-from georemindme.models_utils import HookedModel, Visibility
+from georemindme.models_utils import Visibility
 from georemindme import model_plus
 from georemindme.decorators import classproperty
 from models import User
@@ -48,6 +48,14 @@ class UserSettings(model_plus.Model):
     @property
     def user_id(self):
         return int(self.key().name().split('settings_')[1])
+    
+    @property
+    def searchconfig_google(self):
+        class ob(object):
+            region_code = 'ES'
+            location = '37.175071,-3.598534'
+            radius = 2000
+        return ob()
 
     def notify_follower(self, userkey):
         """
@@ -112,7 +120,7 @@ class UserSettings(model_plus.Model):
         
 
 AVATAR_CHOICES = ('none', 'gravatar', 'facebook', 'twitter')
-class UserProfile(model_plus.Model, HookedModel):
+class UserProfile(model_plus.Model):
     """Datos para el perfil del usuario"""
     username = db.TextProperty()
     avatar = db.URLProperty(required=False)
@@ -143,7 +151,7 @@ class UserProfile(model_plus.Model, HookedModel):
         memcache.set('%s%s' % (memcache.version, self.key().name()), memcache.serialize_instances(self), 300)    
     
 
-class UserSocialLinks(model_plus.Model, HookedModel):
+class UserSocialLinks(model_plus.Model):
     """Enlaces a los perfiles de redes sociales del usuario"""
     facebook = db.TextProperty(indexed=False)
     twitter = db.TextProperty(indexed=False)
@@ -193,7 +201,7 @@ class UserCounter(model_plus.Model):
         if value < 0:
             value = 0
         setattr(obj, prop, value)
-        db.put_async(obj)
+        obj.put()
         return value
     
     def set_suggested(self, value=1):
@@ -218,7 +226,7 @@ class UserCounter(model_plus.Model):
         return db.run_in_transaction(self._change_counter, 'notifications', value)
     
     
-class UserTimelineBase(db.polymodel.PolyModel, model_plus.Model, HookedModel):
+class UserTimelineBase(db.polymodel.PolyModel, model_plus.Model):
     #        0: _('Welcome to GeoRemindMe you can share your public profile: \
 #                  <a href="http://www.georemindme.com/user/%(username)s/">\
 #                  http://www.georemindme.com/user/%(username)s/</a>') %{
@@ -299,9 +307,9 @@ class UserTimelineBase(db.polymodel.PolyModel, model_plus.Model, HookedModel):
 #            452: _('Public place deleted: %s') % self.instance,
 #        }
 
-    user = db.ReferenceProperty(User)
+    user = db.ReferenceProperty(User, required=False)
     created = db.DateTimeProperty(auto_now_add=True)
-    modified = db.DateTimeProperty(auto_now=True)
+    modified = db.DateTimeProperty()
     
     @property
     def id(self):
@@ -323,6 +331,8 @@ class UserTimelineSystem(UserTimelineBase):
     msg = db.TextProperty(required=False)
     instance = db.ReferenceProperty(None)
     visible = db.BooleanProperty(default=True)
+    
+    
 
 
 #Equivale al Muro o a los del Perfil
@@ -409,7 +419,7 @@ class UserTimelineSuggest(UserTimelineSystem):
             self.msg_id = 360  
             super(self.__class__, self).put()
             from models_utils import _Notification
-            notification = _Notification(owner=self.list.user, 
+            notification = _Notification(parent=self.list.user, 
                                          timeline=self.key())
             notification.put()
             

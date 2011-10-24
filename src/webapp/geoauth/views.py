@@ -236,11 +236,14 @@ def facebook_access_request(request, next=None, close=None):
             callback_url = OAUTH['facebook']['callback_url']+'close/'
         else:
             callback_url = OAUTH['facebook']['callback_url']
-        content = get_access_token(code, 
+        try:
+            content = get_access_token(code, 
                                    callback_url,
                                    OAUTH['facebook']['app_key'],
                                    OAUTH['facebook']['app_secret'], 
                                    )
+        except:
+            return facebook_authenticate_request(request, cls=close)
 #        url = OAUTH['facebook']['access_token_url']+'?redirect_uri=%s' % OAUTH['facebook']['callback_url']
 #        body = {
 #                'client_id': OAUTH['facebook']['app_key'],
@@ -274,6 +277,7 @@ def facebook_access_request(request, next=None, close=None):
 def revocate_perms(request, provider):
     from models import OAUTH_Access
     token = OAUTH_Access.get_token_user(provider, request.user)
+    rpc = None
     if token is not None:
         import memcache
         memclient = memcache.mem.Client()
@@ -283,14 +287,13 @@ def revocate_perms(request, provider):
                                       '%sfbclienttoken_%s' % (memcache.version, 
                                                               token.token_key
                                                           ),
-                                      '%ssession%s' % (memcache.version,
-                                                       request.session.session_id
-                                                       ),
                                                     ]
                                            )
-        socialUser = getattr(request.user, '%s_user' % token.provider)
-        if socialUser is not None:
-            socialUser.delete()
         token.delete()
+    socialUser = getattr(request.user, '%s_user' % provider)
+    if socialUser is not None:
+        from google.appengine.ext import db
+        db.delete(socialUser)
+    if rpc is not None:
         rpc.get_result()
     return HttpResponseRedirect(reverse('geouser.views.close_window'))

@@ -1,10 +1,11 @@
 # coding=utf-8
 
 from django.utils.translation import gettext_lazy as _
-from google.appengine.ext import db, search
+from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 from django.conf import settings
 
+from georemindme import model_plus
 from georemindme.decorators import classproperty
 from georemindme.models_utils import Visibility
 from geouser.models import User
@@ -18,7 +19,7 @@ def _get_city(components):
             return i['short_name']
         
         
-class Business(db.Model):
+class Business(model_plus.Model):
     '''Nombres genericos para un place (farmacia, supermercado, ...)'''
     name = db.StringProperty()
     
@@ -48,7 +49,7 @@ class Business(db.Model):
     
 
 
-class POI(polymodel.PolyModel, search.SearchableModel):
+class POI(polymodel.PolyModel, model_plus.Model):
     ''' Puntos de interes '''
     name = db.StringProperty()
     created = db.DateTimeProperty(auto_now_add=True)
@@ -56,16 +57,6 @@ class POI(polymodel.PolyModel, search.SearchableModel):
     user = db.ReferenceProperty(User, required=False)  # el usuario que creo el POI
     address = db.StringProperty()
     location = db.GeoPtProperty()
-    
-    
-    @classmethod
-    def SearchableProperties(cls):
-        '''
-        Por defecto, SearchableModel indexa todos las propiedades de texto
-        del modelo, asi que aqui indicamos las que realmente necesitamos
-        '''
-        return [ ['address'], ['business'], ['point'], ['name', 'address', 'business', 'point']]
-    
     
     @property
     def id(self):
@@ -370,26 +361,6 @@ class Place(POI):
                           google_places_id=google_places_id, user=user)
             place.put()
         return place
-    
-#    @classmethod
-#    def insert_or_update_foursquare(cls, user, foursquare_id):
-#        place = cls.objects.get_by_foursquare_id(foursquare_id)
-#        from mapsServices.places.FSRequest import FSRequest
-#        search = FSRequest().retrieve_reference(foursquare_id)
-#        if place is not None:
-#            place.update(name=search['name'], 
-#                         address=search['location'].get('address', ''), 
-#                         city=search['location'].get('city', ''), 
-#                         location=db.GeoPt(search['location'].get('lat', 0), search['location'].get('lng', 0))
-#                         )    
-#        else:    
-#            place = Place(name=search['name'], 
-#                         address=search['location'].get('address', ''), 
-#                         city=search['location'].get('city', ''), 
-#                         location=db.GeoPt(search['location'].get('lat', 0), search['location'].get('lng', 0))
-#                         )
-#            place.put()
-#        return place
     
     def update(self, name, address, city, location, google_places_reference, google_places_id):
         self.name = name

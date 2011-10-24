@@ -78,8 +78,7 @@ class UserTimelineHelper(object):
         timelines = prefetch_refprops(timelines, UserTimeline.user, UserTimeline.instance)
         instances = _load_ref_instances(timelines)
         if querier is None:
-            from models_acc import UserTimelineSystem
-            return [query_id, [{'id': timeline.id, 'created': timeline.created, 
+                return [query_id, [{'id': timeline.id, 'created': timeline.created, 
                         'modified': timeline.modified,
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
@@ -89,7 +88,7 @@ class UserTimelineHelper(object):
                         'has_voted':  Vote.objects.user_has_voted(db.Key.from_path(User.kind(), userid), timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
                         'comments': Comment.objects.get_by_instance(timeline.instance),
-                        'is_private': isinstance(timeline, UserTimelineSystem),
+                        'is_private': False
                         } 
                        for timeline in timelines]]
         elif querier.is_authenticated() and querier.are_friends(db.Key.from_path(User.kind(), userid)):
@@ -129,19 +128,22 @@ def _load_ref_instances(timelines):
     Para luego construir el diccionario a devolver:
         'instance': instances.get(UserTimeline.instance.get_value_for_datastore(timeline), timeline.instance),
         'list': instances.get(UserTimelineSuggest.list.get_value_for_datastore(timeline), timeline.list) 
-                    if isinstance(timeline, UserTimelineSuggest) else None,
+                    if isinstance(timeline, UserTimelifrom geovote.models import Vote, CommentneSuggest) else None,
     """
-    from georemindme.funcs import prefetch_refprops
+    from georemindme import model_plus
     from models_acc import UserTimelineSuggest, UserTimeline
     from geovote.models import Comment, Vote
+    from geolist.models import List, ListSuggestion
+    from geoalert.models import Event, Suggestion
     # cargo todas las referencias en instance
+    timelines = model_plus.prefetch(timelines, UserTimeline.instance)
     instances = [t.instance for t in timelines if not isinstance(t.instance, User)]
-    instances.extend(prefetch_refprops([t for t in timelines if isinstance(t, UserTimelineSuggest)], UserTimelineSuggest.list))
-    instances.extend(prefetch_refprops([i for i in instances if isinstance(i, Comment) or isinstance(i, Vote)], 
+    instances.extend(model_plus.prefetch([t for t in timelines if isinstance(t, UserTimelineSuggest)], [UserTimelineSuggest.list]))
+    instances.extend(model_plus.prefetch([i for i in instances if isinstance(i, Comment) or isinstance(i, Vote)], 
                                        Comment.instance)
                      )
     instances.extend([i.instance for i in instances if isinstance(i, Comment) or isinstance(i, Vote)])
-    instances.extend(prefetch_refprops(instances, UserTimeline.user, 
+    instances.extend(model_plus.prefetch(instances, UserTimeline.user, 
                                        ))
     instances = filter(None, instances)
     # devuelvo en un diccionario para luego crear el diccionario resultante

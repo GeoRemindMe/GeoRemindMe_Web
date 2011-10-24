@@ -2,8 +2,10 @@
 
 import time
 
-import json as simplejson
-
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 from models import _Session_Data, _Session_Dict
 
 

@@ -8,6 +8,7 @@
 
 
 from google.appengine.ext import db
+from google.appengine.api import memcache
 from django.utils.translation import gettext_lazy as _
 
 
@@ -49,14 +50,14 @@ class ShardedCounter(db.Model):
             Returns the value of the counter, is counters is not in memcache, 
             counts all the sharded counters
         ''' 
-        from google.appengine.api import memcache
-        total = memcache.get(str(instance))
+        memclient = memcache.Client()
+        total = memclient.get(str(instance))
         if total is None:
             total = 0
             counters = cls.all().filter('instance_key =', instance)
             for counter in counters:
                 total += counter.count
-            memcache.add(str(instance), str(total), 60)
+            memclient.add(str(instance), str(total), 60)
         return int(total)
     
     @classmethod
@@ -64,7 +65,7 @@ class ShardedCounter(db.Model):
         '''
             Increment the counter of given key
         '''
-        from google.appengine.api import memcache
+        memclient = memcache.Client()
         def increase():
             import random
             index = random.randint(0, SHARDS-1)#select a random shard to increases
@@ -77,9 +78,9 @@ class ShardedCounter(db.Model):
         
         db.run_in_transaction(increase)
         if count > 0:
-            memcache.incr(str(instance), initial_value=0)
+            memclient.incr(str(instance), initial_value=0)
         else:
-            memcache.decr(str(instance), initial_value=0)
+            memclient.decr(str(instance), initial_value=0)
     
 
 VISIBILITY_CHOICES = (
@@ -152,98 +153,3 @@ class Visibility(db.Model):
         else:
             from exceptions import ForbiddenAccess
             raise ForbiddenAccess
-
-
-#  from http://blog.notdot.net/2010/04/Pre--and-post--put-hooks-for-Datastore-models
-class HookedModel(db.Model):
-    def _pre_put(self):
-        pass
-    
-    def put(self, **kwargs):
-        self.put_async().get_result()
-        return self._post_put_sync(**kwargs)
-        
-    def _post_put(self):
-        pass
-    
-    def _post_put_sync(self, **kwargs):
-        pass
-    
-    def _pre_delete(self):
-        pass
-    
-    def delete(self):
-        return self.delete_async().get_result()
-    
-    def _post_delete(self):
-        pass
-    
-    def put_async(self,**kwargs):
-        return db.put_async(self)
-    
-    def delete_async(self):
-        return db.delete_async(self)
-
-
-old_async_put = db.put_async
-def hokked_put_async(models, **kwargs):
-    if type(models) != type(list()):
-        models = [models]
-    for model in models:
-        if isinstance(model, HookedModel):
-            model._pre_put()
-    async = old_async_put(models, **kwargs)
-    get_result = async.get_result
-    def get_result_with_callback():
-        for model in models:
-            if isinstance(model, HookedModel):
-                model._post_put()
-        return get_result()
-    async.get_result = get_result_with_callback
-    return async
-db.put_async = hokked_put_async
-
-
-old_async_delete = db.delete_async
-def hokked_delete_async(models, **kwargs):
-    if type(models) != type(list()):
-        models = [models]
-    for model in models:
-        if isinstance(model, HookedModel):
-            model._pre_delete()
-    async = old_async_delete(models, **kwargs)
-    get_result = async.get_result
-    def get_result_with_callback():
-        for model in models:
-            if isinstance(model, HookedModel):
-                model._post_delete()
-        return get_result()
-    async.get_result = get_result_with_callback
-    return async
-db.delete_async = hokked_delete_async
-
-
-old_put = db.put
-def hokked_put(models, **kwargs):
-    if type(models) != type(list()):
-        models = [models]
-    for model in models:
-        if isinstance(model, HookedModel):
-            model._pre_put()
-        old_put(models, **kwargs)
-        if isinstance(model, HookedModel):
-            model._post_put_sync(**kwargs)
-db.put = hokked_put
-
-
-old_delete = db.delete
-def hokked_delete(models, **kwargs):
-    if type(models) != type(list()):
-        models = [models]
-    for model in models:
-        if isinstance(model, HookedModel):
-            model._pre_delete()
-        old_delete(model, **kwargs)
-        if isinstance(model, HookedModel):
-            model._post_delete()
-db.delete = hokked_delete

@@ -4,7 +4,10 @@ from libs.httplib2 import Http
 from xml.etree import ElementTree
 
 
-import json as simplejson
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 
 from google.appengine.api.memcache import Client
 

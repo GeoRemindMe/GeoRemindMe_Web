@@ -33,14 +33,10 @@ This module is experimental and subject to backwards incompatible changes.
 
 
 try:
-  import json as simplejson
-except ImportError:
-  try:
+    import json as simplejson
+except ImportError:  
     # Try to import from django, should work on App Engine
     from django.utils import simplejson 
-  except ImportError:
-    # Should work for Python2.6 and higher.
-    import json as simplejson
 
 
 def _convert_to_jsonc(x):

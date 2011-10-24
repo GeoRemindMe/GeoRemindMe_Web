@@ -6,6 +6,7 @@ from models import Event, Alert, AlertSuggestion, Suggestion
 from exceptions import ForbiddenAccess
 from geouser.models import User
 from georemindme.paging import PagedQuery
+from georemindme import model_plus
 import memcache
 
 
@@ -173,8 +174,7 @@ class EventHelper(object):
                 event_to_response.append(e)
             elif e._is_shared() and e.user_invited(querier):
                 event_to_response.append(e)
-        from georemindme.funcs import prefetch_refprops
-        prefetch_refprops(event_to_response, self._klass.user)
+        model_plus.prefetch(event_to_response, self._klass.user)
         return event_to_response
 
 

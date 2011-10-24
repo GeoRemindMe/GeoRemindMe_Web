@@ -234,7 +234,10 @@ def dashboard(request, template='generic/dashboard.html'):
         handlers_rpcs, list_rpc=request.user.get_friends_to_follow(rpc=True)
     chronology = request.user.get_activity_timeline()
     # FIXME: CHAPUZA, LA PLANTILLA ESPERA RECIBIR EL QUERY_ID EN JSON :)
-    import json as simplejson
+    try:
+        import json as simplejson
+    except:
+        from django.utils import simplejson
     chronology[0] = simplejson.dumps(chronology[0])
     if friends is None:
         # usuarios con mas sugerencias
@@ -682,27 +685,38 @@ def update(request):
     return HttpResponse('Updating users...')
 
 
-def __update_users():
-    from django.conf import settings
-    from models import User
-#    from models_acc import UserSocialLinks
-#    generico = User.objects.get_by_username('georemindme')
-    users = User.all()
-    for user in users:
-#        profile = user.profile
-#        settings = user.settings
-#        counters = user.counters
-#        from models_acc import SearchConfigGooglePlaces
-#        from google.appengine.ext import db
-#        sociallinks = profile.sociallinks
-#        if sociallinks is None:
-#            sociallinks = UserSocialLinks(parent=user.profile, key_name='sociallinks_%s' % user.id)
-#        sc = SearchConfigGooglePlaces.all().ancestor(settings).get()
-#        if sc is None:
-#            sc = SearchConfigGooglePlaces(parent=user.settings, key_name='searchgoogle_%d' % user.id)
-        #db.put([profile, settings, sc, counters, sociallinks])
-        user.put()
-#        user.add_following(followid=generico.id)
-#        generico.add_following(followid=user.id)
+def __update_users(key = None):
+    from geouser.models_acc import UserTimelineSystem
+    from geouser.models_utils import _Notification
+    from geoalert.models import *
+    from geolist.models import *
+    from geovote.models import *
+    import logging
 
+    if key is None:
+        q = UserTimelineSystem.all()
+    else:
+        q = UserTimelineSystem.all().with_cursor(key)
+    ts = q.fetch(100)
 
+    for t in ts:
+        try:
+            if t.user is None:
+                continue
+            if t.instance is None:
+                a = UserTimelineSystem(parent=t.user.key(), created=t.created, modified=t.modified, msg_id=t.msg_id, visible=t.visible)
+            else:
+                a = UserTimelineSystem(parent=t.user.key(), created=t.created, modified=t.modified, msg_id=t.msg_id, instance=t.instance, visible=t.visible)
+            ns = _Notification.all().filter('timeline =', t.key()).fetch(100)
+            a.put()
+            for n in ns:
+                try:
+                    b = _Notification(parent=n.owner.key(), timeline=a, created=n.created)
+                    b.put()
+                except Exception, e:
+                    logging.info('error con notification %s : %s' % (t.key(), e.message))
+        except Exception, e:
+            logging.info('error con timeline %s : %s' % (t.key(), e.message))
+    if len(ts) >= 100:
+        from google.appengine.ext.deferred import defer
+        defer(__update_users, key=q.cursor())

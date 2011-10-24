@@ -2,8 +2,10 @@
 
 import datetime
 import time
-import json as simplejson
-
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 
 class JSONEncoder(simplejson.JSONEncoder):
     def default(self, obj):

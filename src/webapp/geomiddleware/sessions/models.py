@@ -4,7 +4,10 @@ from datetime import datetime
 from time import time
 
 from django.utils.hashcompat import md5_constructor
-import json as simplejson
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 from django.conf import settings
 from google.appengine.ext import db
 from georemindme import model_plus
@@ -58,7 +61,7 @@ class _Session_Dict(UserDict.DictMixin):
         return True
    
 
-class _Session_Data(_Session_Dict, model_plus.Model):
+class _Session_Data(model_plus.Model, _Session_Dict):
     session_data = PickleProperty()
     expires = db.DateTimeProperty()
     created = db.DateTimeProperty(auto_now_add=True)
@@ -139,7 +142,7 @@ class _Session_Data(_Session_Dict, model_plus.Model):
         t = time() + settings.SESSION_COOKIE_AGE
         self.expires = datetime.fromtimestamp(t)
         self.encode()
-        super(_Session_Data, self).put()
+        super(model_plus.Model, self).put()
 
     @classmethod
     def restore_session(cls, session_id):

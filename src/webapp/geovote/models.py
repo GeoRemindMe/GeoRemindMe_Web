@@ -11,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
 
 from georemindme.models_utils import Visibility
+from georemindme import model_plus
 from geouser.models import User
 
 
@@ -117,8 +118,7 @@ class CommentHelper(object):
         comments_objects = []
         for comment in comments_async:
             comments_objects.append(comment)
-        from georemindme.funcs import prefetch_refprops
-        comments_objects = prefetch_refprops(comments_objects, Comment.user)            
+        comments_objects = model_plus.prefetch(comments_objects, Comment.user)            
         return [query_id, [{'id': comment.id,
                                     'created': comment.created,
                                     'modified': comment.modified, 
@@ -195,7 +195,7 @@ class CommentHelper(object):
         return top
         
 
-class Comment(Visibility):
+class Comment(model_plus.Model, Visibility):
     """ Se puede comentar cualquier objeto del modelo """
     user = db.ReferenceProperty(User, collection_name='comments')
     instance = db.ReferenceProperty(None)
@@ -285,11 +285,11 @@ class VoteHelper(object):
         if user is None:
             return None
         if isinstance(user, db.Key):
-            vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND user = :user', ins=instance_key, user=user).get()
+            vote = Vote.all(keys_only=True).filter('instance = ', instance_key).filter('user =', user).get()
         else:
             if not user.is_authenticated():
                 return False
-            vote = db.GqlQuery('SELECT __key__ FROM Vote WHERE instance = :ins AND user = :user', ins=instance_key, user=user.key()).get()
+            vote = Vote.all(keys_only=True).filter('instance = ', instance_key).filter('user =', user).get()
         if vote is not None:
             return True
         return False
@@ -308,7 +308,7 @@ class VoteHelper(object):
         from google.appengine.api import datastore
         vote = datastore.Query('Vote', {'instance =': instance_key, 'user =': user.key()})
         vote = vote.Get(1)
-        return vote[0] if len(vote) > 0 else None
+        return vote[0] if any(vote) else None
     
     def get_vote_counter(self, instance_key):
         """
@@ -322,7 +322,7 @@ class VoteHelper(object):
         return VoteCounter.get_count(instance_key)
         
 
-class Vote(db.Model):
+class Vote(model_plus.Model):
     """ Se podria votar cualquier objeto """
     user = db.ReferenceProperty(User, collection_name='votes')
     instance = db.ReferenceProperty(None)

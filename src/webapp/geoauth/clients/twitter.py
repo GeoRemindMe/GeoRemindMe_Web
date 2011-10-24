@@ -1,7 +1,10 @@
 # coding=utf-8
 
 
-import json as simplejson
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 from django.conf import settings
 from libs.oauth2 import Client, Consumer, Token
 

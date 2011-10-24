@@ -18,7 +18,7 @@ def new_comment(sender, **kwargs):
     from geolist.models import ListSuggestion
     from geouser.models_acc import UserTimeline, UserTimelineSystem
     sender.instance.put(from_comment=True)
-    timeline = UserTimelineSystem(user = sender.user, instance = sender, msg_id=120, visible=False)
+    timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=120, visible=False)
     from google.appengine.ext import db
     p = db.put_async([timeline])
     if hasattr(sender.instance, '_vis'):
@@ -35,7 +35,7 @@ def new_comment(sender, **kwargs):
     if sender.instance.user is not None:
         if sender.user.key() != sender.instance.user.key():
             from geouser.models_utils import _Notification
-            notification = _Notification(owner=sender.instance.user, timeline=timeline)
+            notification = _Notification(parent=sender.instance.user.key(), timeline=timeline)
             notification.put()
 comment_new.connect(new_comment)
 
@@ -65,7 +65,7 @@ def new_vote(sender, **kwargs):
     if sender.instance.user is not None:
         if sender.user.key() != sender.instance.user.key():
             from geouser.models_utils import _Notification
-            notification = _Notification(owner=sender.instance.user, timeline=timelinePublic)
+            notification = _Notification(parent=sender.instance.user.key(), timeline=timelinePublic)
             notification.put()
 vote_new.connect(new_vote)
 

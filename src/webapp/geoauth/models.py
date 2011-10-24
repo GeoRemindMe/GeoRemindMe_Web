@@ -14,8 +14,9 @@ from google.appengine.ext import db
 
 from geouser.models import User
 from exceptions import OAUTHException
+from georemindme import model_plus
 
-class OAUTH_Client(db.Model):
+class OAUTH_Client(model_plus.Model):
     """Applications using our data"""
     # oauth_key is the Model's key_name field
     client_secret = db.TextProperty()
@@ -48,7 +49,7 @@ class OAUTH_Client(db.Model):
         return self.key().name().split('oclient_')[:-1]
     
     
-class OAUTH_Token(db.Model):
+class OAUTH_Token(model_plus.Model):
     """Save the token used by another applications trying to get the authorization for a user""" 
     #token_key is the Model's key_name field
     token_secret = db.TextProperty()
@@ -86,7 +87,7 @@ class OAUTH_Token(db.Model):
     def get_token(cls, key_name):
         return OAUTH_Token.get_by_key_name('otoken_%s' % key_name)  
         
-class OAUTH_Access(db.Model):
+class OAUTH_Access(model_plus.Model):
     token_secret = db.TextProperty(required=False)
     created = db.DateTimeProperty(auto_now=True, indexed=False)
     provider = db.StringProperty(required=True)

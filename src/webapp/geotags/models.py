@@ -9,6 +9,7 @@
 
 from django.utils.translation import gettext_lazy as _
 from google.appengine.ext import db
+from georemindme import model_plus
 
 
 SEPARATOR = ','
@@ -17,10 +18,10 @@ class TagHelper(object):
         return Tag.get_by_key_name('tag_%s' % name.lower().strip())
     
     def order_by_frequency(self):
-        list = Tag.gql('WHERE count > 0 ORDER BY count DESC')
+        list = Tag.all().order('-count')
 
 
-class Tag(db.Model):
+class Tag(model_plus.Model):
     """Tag, el nombre se guarda tambien en el key_name, de la forma tag_name"""
     name = db.StringProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
@@ -69,7 +70,7 @@ class Tag(db.Model):
         return self.name
 
 
-class Taggable(db.Model):
+class Taggable(model_plus.Model):
     """
         Para acceder a los atributos de aqui en una clase hijo de esta,
         hay que poner __Tagabble antes del atributo.
@@ -100,14 +101,21 @@ class Taggable(db.Model):
             tags = unicode(tags)
         if type(tags) is UnicodeType:
             tags = tags.split(SEPARATOR)
-        if type(tags) is ListType:
+        if tags is None or tags == '':
+            for t in self._tags_list:
+                Tag.desc_count(t)
+            self._tags_list = []
+        elif type(tags) is ListType:
             tags = [t.strip().lower() for t in tags]
+            for t in self._tags_list:
+                Tag.desc_count(t)
+            self._tags_list = []
             for tag in tags:  # recorremos toda la lista de tags y añadirmos los que sean nuevos
                 tagInstance = Tag.get_or_insert(name=tag)
                 if tagInstance is not None and not tagInstance.key() in self._tags_list:
                     self._tags_list.append(tagInstance.key())
                     Tag.inc_count(tagInstance.key())
-            if commit:
-                self.put()
+        if commit:
+            self.put()
         else:
             raise AttributeError

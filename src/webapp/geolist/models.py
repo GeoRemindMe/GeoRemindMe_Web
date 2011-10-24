@@ -1,17 +1,22 @@
 # coding=utf-8
 
-import json as simplejson
 from google.appengine.ext import db
 from django.conf import settings
 
+from georemindme import model_plus
 from geouser.models import User
-from georemindme.models_utils import Visibility, HookedModel
+from georemindme.models_utils import Visibility
 from geotags.models import Taggable
 from georemindme.decorators import classproperty
 from models_indexes import ListCounter
+from signals import list_new, list_modified
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 
 
-class List(db.polymodel.PolyModel, HookedModel):
+class List(db.polymodel.PolyModel, model_plus.Model):
     '''
         NO USAR ESTA LISTA, USAR LOS MODELOS ESPECIFICOS :D
     '''
@@ -48,7 +53,7 @@ class List(db.polymodel.PolyModel, HookedModel):
     @property
     def counters(self):
         if self._counters is None:
-            self._counters = ListCounter.all().ancestor(self).get()
+            self._counters = ListCounter.get_by_id(1, parent=self)
         return self._counters
 
     @classproperty
@@ -60,6 +65,18 @@ class List(db.polymodel.PolyModel, HookedModel):
         if not self.is_saved():
             self._get_short_url()
             self._new = True
+            
+    def put(self, from_comment=False):
+        if self.is_saved():
+            super(List, self).put()
+            if from_comment:
+                return self
+            from watchers import modified_list
+            list_modified.send(sender=self)
+        else:
+            super(List, self).put()
+            from watchers import new_list
+            list_new.send(sender=self)
 
     def _post_put_sync(self, **kwargs):
         if self._new:
@@ -124,7 +141,7 @@ class List(db.polymodel.PolyModel, HookedModel):
             self._short_url = response['packUrl']
         except Exception, e:
             import logging
-            logging.error('ERROR EN VAVAG: %s' % e)
+            logging.error('ERROR EN VAVAG: %s' % e.message)
             self._short_url = None
 
 
@@ -169,7 +186,7 @@ class ListSuggestion(List, Visibility, Taggable):
             timelines = []
             for list in ListFollowersIndex.all().ancestor(self.key()):
                 for key in list.users:
-                    timelines.append(UserTimelineSystem(user=key, msg_id=351, instance=self))
+                    timelines.append(UserTimelineSystem(parent=key, msg_id=351, instance=self))
             db.put(timelines)
             return True
 
@@ -312,7 +329,7 @@ class ListSuggestion(List, Visibility, Taggable):
     def has_follower(self, user):
         if not user.is_authenticated():
             return False
-        if ListFollowersIndex.all().ancestor(self.key()).filter('keys =', user.key()).count() != 0:
+        if ListFollowersIndex.all(keys_only=True).ancestor(self.key()).filter('keys =', user.key()).get() is not None:
             return True
         return False
 

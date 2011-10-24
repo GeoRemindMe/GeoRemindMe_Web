@@ -3,14 +3,17 @@
 from django.utils.translation import gettext_lazy as _
 
 from google.appengine.ext import db
+from georemindme import model_plus
 
 from georemindme.models_indexes import Invitation
     
-class SuggestionFollowersIndex(db.Model):
+
+class SuggestionFollowersIndex(model_plus.Model):
     keys = db.ListProperty(db.Key)
     count = db.IntegerProperty(default = 0)
     
-class SuggestionCounter(db.Model):
+
+class SuggestionCounter(model_plus.Model):
     """Contadores para evitar usar count().
         Podriamos actualizarlos en tiempo real o con algun proceso de background?
     """ 
@@ -52,5 +55,8 @@ class SuggestionCounter(db.Model):
         return self._votes
             
     def to_json(self):
-        import json as simplejson
+        try:
+            import json as simplejson
+        except:
+            from django.utils import simplejson
         return simplejson.dumps(self.to_dict())

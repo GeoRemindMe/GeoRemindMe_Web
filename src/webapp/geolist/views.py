@@ -450,7 +450,7 @@ def view_list(request, id, template='generic/view_list.html'):
                                 context_instance=RequestContext(request)
                               )
     from geovote.api import get_comments
-    query_id, comments_async = get_comments(request.user, list.id, 'List', async=True)
+    query_id, comments_async = get_comments(request.user, instance=list, async=True)
     has_voted = Vote.objects.user_has_voted(request.user, list.key())
     vote_counter = Vote.objects.get_vote_counter(list.key())
     #comments = get_comments_list(request.user, list.id)

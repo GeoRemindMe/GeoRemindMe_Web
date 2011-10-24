@@ -33,5 +33,5 @@ urlpatterns = patterns('geouser.views',
     url(r'^user/(?P<username>[^/]*)/followers/$', 'followers_panel', {}, 'followers_panel'),
     url(r'^user/(?P<username>[^/]*)/followings/$', 'followings_panel', {}, 'followings_panel'),
     url(r'^(?i)ext/close_window/$', 'close_window', {}, 'close_window'),
-    #(r'^update/$', 'update')
+    (r'^update/$', 'update')
 )

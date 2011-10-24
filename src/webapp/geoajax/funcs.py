@@ -1,6 +1,9 @@
 # coding=utf-8
 
-import json as simplejson
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 from geoalert.models_poi import *
 
 

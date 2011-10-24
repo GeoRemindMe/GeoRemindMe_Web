@@ -23,7 +23,7 @@ def new_user_registered(sender, **kwargs):
         raise RegistrationException()
     sender.send_confirm_code()
     from models_acc import UserTimelineSystem
-    timeline = UserTimelineSystem(user = sender, msg_id=0)
+    timeline = UserTimelineSystem(parent = sender, msg_id=0)
     logging.info('Registrado nuevo usuario %s email: %s' % (sender.id, sender.email))
     timeline.put()
 user_new.connect(new_user_registered)
@@ -37,13 +37,13 @@ def new_social_user_registered(sender, **kwargs):
     from models_acc import UserTimelineSystem
     from models_social import GoogleUser, FacebookUser, TwitterUser
     if isinstance(sender, GoogleUser):
-        timeline = UserTimelineSystem(user = sender.user, msg_id=1)
+        timeline = UserTimelineSystem(parent = sender.user, msg_id=1)
         logging.info('Usuario con email %s ahora tiene cuenta de Google: %s' % (sender.user.email, sender.uid))
     elif isinstance(sender, FacebookUser):
-        timeline = UserTimelineSystem(user = sender.user, msg_id=2)
+        timeline = UserTimelineSystem(parent = sender.user, msg_id=2)
         logging.info('Usuario con email %s ahora tiene cuenta de Facebook: %s' % (sender.user.email, sender.uid))
     elif isinstance(sender, TwitterUser):
-        timeline = UserTimelineSystem(user = sender.user, msg_id=3)
+        timeline = UserTimelineSystem(parent = sender.user, msg_id=3)
         logging.info('Usuario con email %s ahora tiene cuenta de Twitter: %s' % (sender.user.email, sender.uid))
     else:
         return
@@ -67,7 +67,7 @@ def new_follower(sender, **kwargs):
     from google.appengine.ext.deferred import defer
     defer(UserTimeline.add_timelines_to_follower, kwargs['following'], sender.key())
     settings = UserSettings.objects.get_by_id(kwargs['following'].id())
-    timeline = UserTimelineSystem(user = sender, instance = kwargs['following'], msg_id=100, visible=False)
+    timeline = UserTimelineSystem(parent = sender, instance = kwargs['following'], msg_id=100, visible=False)
     put = db.put_async([timeline])
     if settings.show_followings:
         timelinePublic = UserTimeline(user = sender, instance = kwargs['following'], msg_id=100)
@@ -77,7 +77,7 @@ def new_follower(sender, **kwargs):
     put.get_result()
     if sender.key() != kwargs['following']:
         from geouser.models_utils import _Notification
-        notification = _Notification(owner=kwargs['following'], timeline=timeline)
+        notification = _Notification(parent=kwargs['following'], timeline=timeline)
         notification.put()
 user_follower_new.connect(new_follower)   
 

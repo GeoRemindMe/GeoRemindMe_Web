@@ -4,8 +4,10 @@
 from libs.httplib2 import Http
 from google.appengine.ext import db
 import memcache
-import json as simplejson
-
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 
 class MapsAPIError(Exception):
     def __init__(self, type, message=''):

@@ -2,7 +2,10 @@
 
 
 from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden, HttpResponseNotFound
-import json as simplejson
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 
@@ -163,8 +166,9 @@ def save_suggestion(request):
         eventid = request.POST.get('eventid', None)
         sug = geoalert.save_suggestion(request, form, id=eventid)
         if isinstance(sug, HttpResponse):
-            return sug
+			return sug
         return HttpResponse(simplejson.dumps(dict(id=sug.id)), mimetype="application/json")
+    raise
     return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
 @ajax_request
@@ -824,10 +828,10 @@ def get_perms(request):
              'twitter': False,
              'google': False,
              }
-    from geouser.models_social import SocialUser
-    facebook = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='facebook', user=request.user.key()).get()
-    twitter = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='twitter', user=request.user.key()).get()
-    google = db.GqlQuery("SELECT __key__ FROM OAUTH_Access WHERE provider = :provider AND user = :user", provider='google', user=request.user.key()).get()
+    from geoauth.models import OAUTH_Access
+    facebook = OAUTH_Access.all(keys_only=True).filter('provider =', 'facebook').filter('user =', request.user.key()).get()
+    twitter = OAUTH_Access.all(keys_only=True).filter('provider =', 'twitter').filter('user =', request.user.key()).get()
+    google = OAUTH_Access.all(keys_only=True).filter('provider =', 'google').filter('user =', request.user.key()).get()
     
     if facebook is not None:
         perms['facebook'] = True

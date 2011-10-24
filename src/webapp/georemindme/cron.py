@@ -108,7 +108,7 @@ def report_notify(request, time):
             report.delete()
     # correos de resumen de sugerencia
     from geouser.mails import send_notification_suggestion_summary
-    users = UserSettings().all().filter('time_notification_suggestions_follower =', time).run()
+    users = UserSettings().all().filter('time_notification_suggestion_follower =', time).run()
     for user in users:
         user = user.parent()
         reports = _Report_Suggestion_changed.all().filter('user =', user).run()

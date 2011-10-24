@@ -44,7 +44,10 @@ import logging
 from django.conf import settings
 import libs.httplib2 as httplib2
 # Find a JSON parser
-import json
+try:
+    import json 
+except:
+    from django.utils import simplejson as json
 _parse_json = json.loads
 
 

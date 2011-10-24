@@ -65,7 +65,10 @@ import time
 import logging
 import cgi
 import re
-import json as simplejson
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 
 import main
 

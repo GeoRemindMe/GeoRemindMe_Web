@@ -241,7 +241,7 @@ def send_notification_suggestion_comment(to, comment, language='en'):
         %(msg)s\n
         \n
         Si quieres responderle tan solo tienes que acceder acceder a la siguiente dirección:\n
-        %s(suggestion_link)s\n
+        %(suggestion_link)s\n
         \n
         Y una vez identificado podrás responder.
         \n
@@ -266,7 +266,7 @@ def send_notification_suggestion_comment(to, comment, language='en'):
         </p>
         <p>
         Si quieres responderle tan solo tienes que acceder acceder a la siguiente dirección:<br>
-        %s(suggestion_link)s
+        %(suggestion_link)s
         </p>
         <p>
         Y una vez identificado podrás responder.

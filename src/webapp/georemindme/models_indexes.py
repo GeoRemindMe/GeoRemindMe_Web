@@ -144,9 +144,9 @@ class Invitation(db.Model):
         if not self.is_saved():
             super(Invitation, self).put()
             from geouser.models_acc import UserTimelineSystem
-            timeline = UserTimelineSystem(user=self.sender, msg_id=110, instance=self)
+            timeline = UserTimelineSystem(parent=self.sender, msg_id=110, instance=self)
             from geouser.models_utils import _Notification
-            notification = _Notification(owner=self.to, timeline=timeline)
+            notification = _Notification(parent=self.to, timeline=timeline)
             put = db.put_async([timeline, notification])            
             if self.to.settings.notification_invitation:
                 from geomail import send_notification_invitation
@@ -165,5 +165,8 @@ class Invitation(db.Model):
         
     def to_json(self):
         from libs.jsonrpc.jsonencoder import JSONEncoder
-        import json as simplejson
+        try:
+            import json as simplejson
+        except:
+            from django.utils import simplejson
         return simplejson.dumps(self.to_dict(), cls=JSONEncoder)       

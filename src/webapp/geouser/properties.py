@@ -6,7 +6,10 @@
     :synopsis: Propiedades propias para el datastore
 """
 
-import json as simplejson
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 from google.appengine.ext import db
 from django.utils.translation import gettext_lazy as _
 

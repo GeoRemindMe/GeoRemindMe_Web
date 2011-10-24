@@ -2,13 +2,12 @@
 
 
 from django import forms
-from django.utils.translation import ugettext as _
-from django.forms.extras.widgets import SelectDateWidget
+from django.utils.translation import gettext_lazy as _
 
 from google.appengine.ext.db import GeoPt, NotSavedError
 
 from models import Alert
-from models_poi import *
+from models_poi import Place, PrivatePlace
 from geouser.models import User
 from widgets import LocationWidget
 
@@ -98,7 +97,6 @@ class RemindForm(forms.Form):
         return False    
 
 from georemindme.models_utils import VISIBILITY_CHOICES
-
 class SuggestionForm(forms.Form):
     name = forms.CharField(required=True)
     poi_id = forms.IntegerField(required=False)
@@ -208,7 +206,11 @@ class SuggestionForm(forms.Form):
                      to_facebook = self.cleaned_data['to_facebook'],
                      to_twitter = self.cleaned_data['to_twitter'],
                      )
-        except:
+        except Exception, e:
+            import logging
+            logging.error('EXCEPTION: editando sugerencia: %s' % e.message)
+            import traceback
+            logging.error(traceback.format_exc())
             return None
         if suggestion is not None:
             list_id = list_id

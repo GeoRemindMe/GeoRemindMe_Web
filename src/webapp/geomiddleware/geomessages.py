@@ -21,7 +21,10 @@ along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
 # http://www.cupcakewithsprinkles.com/django-messaging-for-ajax-calls-using-jquery/
 #===============================================================================
 
-import json as simplejson
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 from django.contrib import messages
 
 class AJAXMessage(object):

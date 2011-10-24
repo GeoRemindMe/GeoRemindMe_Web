@@ -4,17 +4,20 @@ from datetime import datetime
 import time
 
 from django.utils.translation import gettext_lazy as _
-import json as simplejson
+try:
+    import json as simplejson
+except:
+    from django.utils import simplejson
 from django.conf import settings
-from google.appengine.ext import db, search
+from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 from google.appengine.ext.db import BadValueError
 
+from georemindme import model_plus
 from georemindme.models_utils import Visibility
 from georemindme.decorators import classproperty
 from geouser.models import User
 from geotags.models import Taggable
-from geouser.models_acc import UserTimelineSystem
 from models_poi import *
 from models_indexes import *
 from exceptions import ForbiddenAccess
@@ -22,7 +25,7 @@ from signals import *
 from watchers import *
 
 
-class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
+class Event(polymodel.PolyModel, Taggable):
     """Informacion comun para las alertas y recomendaciones"""
     
 
@@ -30,15 +33,6 @@ class Event(polymodel.PolyModel, search.SearchableModel, Taggable):
     #I now alert only have 2 boolean by now, but is better to learn these things.  
     #see tip #6 and #7 -> http://googleappengine.blogspot.com/2009/06/10-things-you-probably-didnt-know-about.html
     has = None
-    
-    
-    @classmethod
-    def SearchableProperties(cls):
-        '''
-        Por defecto, SearchableModel indexa todos las propiedades de texto
-        del modelo, asi que aqui indicamos las que realmente necesitamos
-        '''
-        return [[], 'name', 'description']
     
     @classproperty
     def objects(self):
@@ -221,10 +215,7 @@ class Alert(Event):
             
     def delete(self):
         alert_deleted.send(sender=self)
-        d = _Deleted_Alert(deleted_id=self.id, user=self.user)
-        put = db.put_async([d])
         super(Alert, self).delete()
-        put.get_result()
         
     def to_dict(self):
             return {'id': self.id,
@@ -254,7 +245,7 @@ class Alert(Event):
         return self.name
 
 
-class Suggestion(Event, Visibility, Taggable):
+class Suggestion(Event, Visibility):
     '''
         Recomendaciones de los usuarios que otros pueden
         convertir en Alert
@@ -344,9 +335,8 @@ class Suggestion(Event, Visibility, Taggable):
                 sugg._vis = vis
             if sugg.is_active() != active:
                 sugg.toggle_active()
-            if tags != '':
-                sugg._tags_setter(tags, commit=commit)
-            elif commit:
+            sugg._tags_setter(tags, commit=commit)
+            if commit:
                 sugg.put()
         else:
             if poi is None:
@@ -524,7 +514,7 @@ class Suggestion(Event, Visibility, Taggable):
     def has_follower(self, user):
         if not user.is_authenticated():
             return False
-        if db.GqlQuery('SELECT __key__ FROM SuggestionFollowersIndex WHERE ancestor IS :1 AND keys = :2', self.key(), user.key()).get() is not None:
+        if SuggestionFollowersIndex.all(keys_only=True).ancestor(self.key()).filter('keys = ', self.key()).get() is not None:
             return True
         return False   
     
@@ -764,42 +754,5 @@ class AlertSuggestion(Event):
 
     def __unicode__(self):
         return self.suggestion.name
-
-
-class _Deleted_AlertHelper(object):
-    def get_by_id_user(self, id, user):
-        '''
-        Obtiene el evento con ese id comprobando que
-        pertenece al usuario
-        
-            :raises: :class:`geoalert.exceptions.ForbiddenAccess`
-        '''
-        if not isinstance(user, User):
-            raise TypeError()
-        event = _Deleted_Alert.get_by_id(int(id))
-        if event.user.key() == user.key():
-            return event
-        return None
-    
-    def get_by_last_sync(self, user, last_sync):
-        '''
-        Obtiene los ultimos eventos a partir
-        de una fecha de ultima sincronizacion
-        '''
-        if not isinstance(user, User):
-            raise TypeError()
-        return _Deleted_Alert.all().filter('user =', user).filter('created >', last_sync).order('-created')
-
-
-class _Deleted_Alert(db.Model):
-    deleted_id = db.IntegerProperty()
-    user = db.ReferenceProperty(User)
-    created = db.DateTimeProperty(auto_now_add=True)
-    objects = _Deleted_AlertHelper()
-    
-    @property
-    def id(self):
-        return int(self.deleted_id)
-
 
 from helpers import *

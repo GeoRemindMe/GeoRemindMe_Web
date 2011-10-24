@@ -8,6 +8,7 @@
 
 from models import User
 from google.appengine.ext import db
+from georemindme import model_plus
 
 class UserHelper(object):
     """Do the queries needed to get a object
@@ -127,9 +128,8 @@ class UserHelper(object):
         
     def get_top_users(self, limit=5):
         from geouser.models_acc import UserCounter
-        from georemindme.funcs import fetch_parentsKeys
         top_users = UserCounter.all(keys_only=True).order('-suggested').fetch(limit)
-        top_users = fetch_parentsKeys(top_users)
+        top_users = model_plus.fetch_parentsKeys(top_users)
         top_users = filter(None, top_users)
         return top_users
 

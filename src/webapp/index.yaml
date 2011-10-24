@@ -170,6 +170,19 @@ indexes:
   - name: visible
   - name: modified
     direction: desc
+    
+- kind: UserTimelineBase
+  ancestor: yes
+  properties:
+  - name: class
+  - name: visible
+  - name: modified
+    direction: desc
+    
+- kind: UserTimelineBase
+  properties:
+  - name: class
+  - name: user
 
 - kind: UserTimelineFollowers
   properties:
@@ -218,12 +231,6 @@ indexes:
   - name: modified
     direction: desc
 
-- kind: _Deleted_Alert
-  properties:
-  - name: user
-  - name: created
-    direction: desc
-
 - kind: _Notification
   properties:
   - name: owner
@@ -234,9 +241,9 @@ indexes:
   - name: owner
   - name: _created
     direction: desc
-
+    
 - kind: _Notification
+  ancestor: yes
   properties:
-  - name: user
   - name: _created
     direction: desc

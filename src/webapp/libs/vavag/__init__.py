@@ -114,7 +114,10 @@ class VavagRequest(Http):
         response, content = self.request(url, method=method, body=body, headers=self.headers)
         if response['status'] != 200:
             raise VavagException(status=response['status'], msg='ERROR IN REQUEST')
-        import json as simplejson
+        try:
+            import json as simplejson
+        except:
+            from django.utils import simplejson        
         json = simplejson.loads(content)
         if json['status'] == 200:
             return json['results']

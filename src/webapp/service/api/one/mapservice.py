@@ -67,7 +67,10 @@ class MapService(remote.Service):
 #                  ]
         if response['status'] != 200:
             raise ApplicationError("Error in request")
-        import json as simplejson
+        try:
+            import json as simplejson
+        except:
+            from django.utils import simplejson
         json = simplejson.loads(content)
         results = [Site(name=r['nombre'], 
                        lat=r['lat'], 

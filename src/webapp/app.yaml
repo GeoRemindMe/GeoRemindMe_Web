@@ -1,8 +1,8 @@
-application: georemindme-hrd
+application: georemindme
 version: live
-runtime: python27
+runtime: python
 api_version: 1
-threadsafe: true
+
 default_expiration: "1h"
 
 
@@ -20,69 +20,58 @@ handlers:
   static_dir: static
   secure: always
 
-- url: /api/.*
-  script: service.app
-  secure: always
-  
 - url: /ajax/.*
-  script: main.app
+  script: main.py
   secure: optional
 
+- url: /api/.*
+  script: mainservice.py
+  secure: always
+
+- url: /_ereporter.*
+  script: $PYTHON_LIB/google/appengine/ext/ereporter/report_generator.py
+  login: admin
+  
 - url: /suggestion/.*
-  script: main.app
+  script: main.py
   secure: never
   
 - url: /place/.*
-  script: main.app
+  script: main.py
   secure: never
+
+- url: /admin.*
+  script: appengine_admin/main.py
+  secure: always
   
-- url: /_ereporter.*
-  script: google.appengine.ext.ereporter.report_generator.application
+- url: /test.*
+  script: gaeunit/gaeunit.py
+  login: admin
+  
+- url: /console.*
+  script: $PYTHON_LIB/google/appengine/ext/admin
+  login: admin
+  
+- url: /appengine_admin_media
+  static_dir: appengine_admin/media
+  secure: always
+
+- url: /_ah/queue/deferred
+  script: maindeferred.py
   login: admin
   
 - url: /remote_api
-  script: google.appengine.ext.remote_api.handler.application
-  login: admin
-  secure: always
-  
-- url: /console.*
-  script: google.appengine.ext.admin.application
-  secure: always
-  login: admin
-
-- url: /test/.*
-  script: main.app
-  secure: always
-  login: admin
-  
-- url: /_ah/stats/.*
-  script: google.appengine.appstats.application
-  secure: always
-  login: admin
-  
-- url: /_ah/queue/deferred
-  script: google.appengine.ext.deferred.handler.application
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
   login: admin
   
 - url: /.*
-  script: main.app
+  script: main.py
   secure: always
   
-skip_files:
-- ^(.*/)?app\.yaml
-
 
 builtins:
-#- appstats: on
+- appstats: on
 #- remote_api: on
-#- deferred: on
 
 inbound_services:
 - warmup
-
-libraries:
-- name: django
-  version: "1.2" 
-  
-- name: webapp2
-  version: "latest"

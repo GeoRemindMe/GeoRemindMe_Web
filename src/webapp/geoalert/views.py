@@ -6,15 +6,19 @@
     :synopsis: Views for GeoAlert
 """
 
+from google.appengine.ext import db
+
 from django.http import Http404, HttpResponseServerError, HttpResponseNotFound, HttpResponseBadRequest
 from django.shortcuts import render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 
-from models import *
+from models import Event, Alert, Suggestion
+from models_poi import Place
+from georemindme import model_plus
+from geouser.models import User
 from geouser.decorators import login_required, username_required
 from cron import *
-import memcache
 
 
 #===============================================================================
@@ -48,8 +52,8 @@ def suggestion_profile(request, slug, template='generic/suggestionprofile.html')
             
     from geovote.api import get_comments
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
-    query_id, comments_async = get_comments(request.user, suggestion.id, 'Event', async=True)
-    suggestion = single_prefetch_refprops(suggestion, Suggestion.user, Suggestion.poi)
+    query_id, comments_async = get_comments(request.user, suggestion, async=True)
+    suggestion.prefetch(Suggestion.user, Suggestion.poi)
     has_voted = Vote.objects.user_has_voted(request.user, suggestion.key())
     vote_counter = Vote.objects.get_vote_counter(suggestion.key())
     user_follower = suggestion.has_follower(request.user)
@@ -59,7 +63,7 @@ def suggestion_profile(request, slug, template='generic/suggestionprofile.html')
     in_lists = [l.to_dict(resolve=False) for l in in_lists]
     # listas del usuario
     lists = [l for l in lists if not suggestion.key() in l.keys]
-    lists = prefetch_refprops(lists, ListSuggestion.user)
+    lists = model_plus.prefetch(lists, ListSuggestion.user)
     lists = [l.to_dict(resolve=False) for l in lists]
     # construir un diccionario con todas las keys resueltas y usuarios
     if not request.user.is_authenticated():
@@ -252,8 +256,7 @@ def view_place(request, slug, template='generic/view_place.html'):
                                     'vote_counter': Vote.objects.get_vote_counter(suggestion.key())
                                    }
                                   )
-        from georemindme.funcs import prefetch_refprops
-        suggestions = prefetch_refprops([s['instance'] for s in suggestions_loaded], Suggestion.user, Suggestion.poi)
+        suggestions = model_plus.prefetch([s['instance'] for s in suggestions_loaded], Suggestion.user, Suggestion.poi)
         return suggestions_loaded
     if not request.user.is_authenticated():
             pos = template.rfind('.html')
@@ -319,8 +322,8 @@ def user_suggestions(request, template='generic/suggestions.html'):
         sug = db.model_from_protobuf(s.ToPb())
         setattr(sug, 'lists', [])
         suggestions.append(sug)
-    from georemindme.funcs import prefetch_refprops, prefetch_refList
-    suggestions = prefetch_refprops(suggestions, Suggestion.user, Suggestion.poi)
+    from georemindme.funcs import prefetch_refList
+    suggestions = model_plus.prefetch(suggestions, Suggestion.user, Suggestion.poi)
     # combinar listas
     lists = [l for l in lists]
     lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=True))
@@ -372,6 +375,8 @@ def save_suggestion(request, form, id=None):
     """
     sug = form.save(user = request.user, id=id, list_id=request.POST.get('list_id', ''))
     if sug is None:
+        import logging
+        logging.error('no se encontro la sugerencia %s' % id)
         return HttpResponseBadRequest()
     return sug
 

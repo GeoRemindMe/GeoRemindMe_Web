@@ -4,6 +4,7 @@ from geouser.models import User, AnonymousUser
 from models import *
 from models_indexes import ListFollowersIndex
 from georemindme.funcs import prefetch_refprops
+from georemindme import model_plus
 
 class ListHelper(object):
     _klass = List
@@ -100,15 +101,14 @@ class ListHelper(object):
             return indexes.run()
         c = indexes.Count()
         indexes = q.Get(c)
-        from georemindme.funcs import fetch_parentsKeys
-        lists = fetch_parentsKeys(indexes)
+        lists = model_plus.fetch_parentsKeys(indexes)
         return [list.to_dict(resolve=resolve) for list in lists if list.active]
     
     def load_list_user_following_by_async(self, lists_async, resolve=False):
-        from georemindme.funcs import fetch_parentsKeys
-        lists = fetch_parentsKeys(lists_async)
-        return filter(lambda x: x.active, lists)
-        # return [list.to_dict(resolve=resolve) for list in lists if list.active]
+        lists = model_plus.fetch_parentsKeys(lists_async)
+        if lists is not None and any(lists):
+            return [list.to_dict(resolve=resolve) for list in lists if list.active]
+        return []
 
     def get_shared_list(self, user):
         '''

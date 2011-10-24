@@ -14,11 +14,11 @@ from google.appengine.api import urlfetch
 from google.appengine.api import datastore
 from google.appengine.datastore import datastore_query
 
-from georemindme.models_utils import HookedModel
 from georemindme.decorators import classproperty
 from properties import PasswordProperty, UsernameProperty
-from georemindme.funcs import prefetch_refprops, fetch_parents, fetch_parentsKeys
+from georemindme.funcs import prefetch_refprops, fetch_parents
 from georemindme import model_plus
+
 
 TIMELINE_PAGE_SIZE = 10
 
@@ -41,7 +41,7 @@ class AnonymousUser(object):
         return "iamanonymousyeah"
 
 
-class User(polymodel.PolyModel, model_plus.Model, HookedModel):
+class User(polymodel.PolyModel, model_plus.Model):
     email = db.EmailProperty()
     username = UsernameProperty()
     password = PasswordProperty(required=True, indexed=False)
@@ -140,7 +140,7 @@ class User(polymodel.PolyModel, model_plus.Model, HookedModel):
         from geolist.models import List
         # definir las consultas
         query_chrono = UserTimelineFollowersIndex.all().filter('followers =', self.key()).order('-created')
-        query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
+        query_activity = UserTimelineSystem.all().ancestor(self.key()).filter('visible =', True).order('-modified')
         # recuperar cursores
         if query_id is not None and len(query_id)>=2:
             cursor_chronology = query_id[0]
@@ -178,8 +178,6 @@ class User(polymodel.PolyModel, model_plus.Model, HookedModel):
                 break
         # generar timeline
         timeline_chrono = fetch_parents(timeline_chrono)
-        timeline = prefetch_refprops(timeline, UserTimeline.user)
-        timeline_chrono = prefetch_refprops(timeline_chrono, UserTimeline.instance, UserTimeline.user)
         timeline.extend(timeline_chrono)
         from helpers_acc import _load_ref_instances
         instances = _load_ref_instances(timeline)
@@ -208,7 +206,7 @@ class User(polymodel.PolyModel, model_plus.Model, HookedModel):
         return chronology
 
     def get_notifications_timeline(self, query_id=None):
-        from models_acc import UserTimeline, UserTimelineSuggest
+        from models_acc import UserTimelineBase, UserTimeline, UserTimelineSuggest
         def prefetch_timeline(entities):
             # from http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
             """
@@ -216,24 +214,32 @@ class User(polymodel.PolyModel, model_plus.Model, HookedModel):
                 de una sola vez
             """
             ref_keys = [x['timeline'] for x in entities]
-            from geovote.models import Vote, Comment
-            from geolist.models import List, ListSuggestion
-            from geoalert.models import Suggestion
-            timelines = db.get(set(ref_keys))
-            timelines = prefetch_refprops(timelines, UserTimeline.user, UserTimeline.instance)
+            timelines = model_plus.get(set(ref_keys))
+            timelines = filter(None, timelines)
             from helpers_acc import _load_ref_instances
             return timelines, _load_ref_instances(timelines)
         from models_utils import _Notification
         if query_id is None:
-            query = datastore.Query(kind='_Notification', filters={'owner =': self.key()})
+            query = datastore.Query(kind='_Notification')
         if query_id is not None:
-            query = datastore.Query(kind='_Notification', filters={'owner =': self.key()}, cursor=datastore.datastore_query.Cursor.from_websafe_string(query_id))
+            query = datastore.Query(kind='_Notification', cursor=datastore.datastore_query.Cursor.from_websafe_string(query_id))
+        query.Ancestor(self.key())
         query.Order(('_created', datastore.Query.DESCENDING))
         timelines = query.Get(TIMELINE_PAGE_SIZE)
+        if not any(timelines):
+            return []
         timelines, instances = prefetch_timeline(timelines)
         from operator import attrgetter
         timelines = sorted(timelines, key=attrgetter('modified'), reverse=True)
-        return [query.GetCursor().to_websafe_string(), [{'id': timeline.id, 'created': timeline.created,
+        import logging
+        for t in timelines:
+            a = instances.get(UserTimeline.instance.get_value_for_datastore(t), None)
+            if a is None:
+                logging.info('INSTANCE: %s' % t.instance.__class__)
+        return [query.GetCursor().to_websafe_string(), 
+                        [{
+                        'id': timeline.id, 
+                        'created': timeline.created,
                         'modified': timeline.modified,
                         'msg': timeline.msg, 
                         'username':timeline.user.username,
@@ -690,11 +696,11 @@ class User(polymodel.PolyModel, model_plus.Model, HookedModel):
     def has_follower(self, user=None, userkey=None):
         from models_acc import UserFollowingIndex
         if userkey is not None:
-            if UserFollowingIndex.all().ancestor(userkey).filter('following =', self.key()).count() != 0:
+            if UserFollowingIndex.all(keys_only=True).ancestor(userkey).filter('following =', self.key()).get() is not None:
                 return True
         elif not user.is_authenticated():
             return False
-        elif UserFollowingIndex.all().ancestor(user.key()).filter('following =', self.key()).count() != 0:
+        elif UserFollowingIndex.all(keys_only=True).ancestor(user.key()).filter('following =', self.key()).get() is not None:
             return True
         return False
 

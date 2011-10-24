@@ -1,12 +1,16 @@
+#codign=utf-8
+
 from google.appengine.ext import db
 from georemindme.models_indexes import Invitation
+from georemindme import model_plus
 
-class ListFollowersIndex(db.Model):
+class ListFollowersIndex(model_plus.Model):
     keys = db.ListProperty(db.Key)
     count = db.IntegerProperty(default=0)
     _kind = db.TextProperty()
     
-class ListCounter(db.Model):
+
+class ListCounter(model_plus.Model):
     """Contadores para evitar usar count().
         Podriamos actualizarlos en tiempo real o con algun proceso de background?
     """ 
@@ -49,5 +53,8 @@ class ListCounter(db.Model):
         return self._votes
     
     def to_json(self):
-        import json as simplejson
+        try:
+            import json as simplejson
+        except:
+            from django.utils import simplejson
         return simplejson.dumps(self.to_dict())
