@@ -195,7 +195,7 @@ class CommentHelper(object):
         return top
         
 
-class Comment(model_plus.Model, Visibility):
+class Comment(Visibility):
     """ Se puede comentar cualquier objeto del modelo """
     user = db.ReferenceProperty(User, collection_name='comments')
     instance = db.ReferenceProperty(None)

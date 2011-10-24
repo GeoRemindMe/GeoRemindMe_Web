@@ -53,7 +53,7 @@ class List(db.polymodel.PolyModel, model_plus.Model):
     @property
     def counters(self):
         if self._counters is None:
-            self._counters = ListCounter.get_by_id(1, parent=self)
+            self._counters = ListCounter.all().ancestor(self).get()
         return self._counters
 
     @classproperty
@@ -108,7 +108,7 @@ class List(db.polymodel.PolyModel, model_plus.Model):
             if resolve:
                 if instances is not None:
                     dict['instances'] = [instances[k] for k in self.keys]
-                    dict['user'] = instances[ListSuggestion.user.get_value_for_datastore(self)]
+                    dict['user'] = instances.get(ListSuggestion.user.get_value_for_datastore(self), self.user)
                 else:
                     dict['instances'] = db.get(self.keys)
             else:
@@ -186,7 +186,7 @@ class ListSuggestion(List, Visibility, Taggable):
             timelines = []
             for list in ListFollowersIndex.all().ancestor(self.key()):
                 for key in list.users:
-                    timelines.append(UserTimelineSystem(parent=key, msg_id=351, instance=self))
+                    timelines.append(UserTimelineSystem(parent=key, user=key, msg_id=351, instance=self))
             db.put(timelines)
             return True
 

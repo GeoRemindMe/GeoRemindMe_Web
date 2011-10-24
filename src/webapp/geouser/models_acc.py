@@ -14,6 +14,7 @@ from django.conf import settings
 from georemindme.models_utils import Visibility
 from georemindme import model_plus
 from georemindme.decorators import classproperty
+
 from models import User
 
 
@@ -307,7 +308,7 @@ class UserTimelineBase(db.polymodel.PolyModel, model_plus.Model):
 #            452: _('Public place deleted: %s') % self.instance,
 #        }
 
-    user = db.ReferenceProperty(User, required=False)
+    user = db.ReferenceProperty(User)
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty()
     
@@ -331,8 +332,7 @@ class UserTimelineSystem(UserTimelineBase):
     msg = db.TextProperty(required=False)
     instance = db.ReferenceProperty(None)
     visible = db.BooleanProperty(default=True)
-    
-    
+
 
 
 #Equivale al Muro o a los del Perfil
@@ -390,26 +390,26 @@ class UserTimeline(UserTimelineBase, Visibility):
     def insert(self, msg, user, instance=None):
         if msg == '' or not isinstance(msg, basestring):
             raise AttributeError()
-        timeline = UserTimeline(_msg=msg, user=user, instance=instance)
+        timeline = UserTimeline(parent=user, _msg=msg, user=user, instance=instance)
         timeline.put()
         return timeline
     
     def put(self):
         if self.is_saved(): # si ya estaba guardada, no hay que volver a notificar
             super(self.__class__, self).put()
-        else:  
+        else:
             super(self.__class__, self).put()
             from signals import user_timeline_new
             from watchers import new_timeline
             user_timeline_new.send(sender=self)
             
-
+from geolist.models import ListSuggestion
 class UserTimelineSuggest(UserTimelineSystem):
     """
         Almacena una peticion de un usuario para añadir una
         sugerencia a la lista de otro usuario
     """
-    list = db.ReferenceProperty(None)
+    list_id = db.ReferenceProperty(ListSuggestion)
     status = db.IntegerProperty(default=0)
     
     def put(self):
@@ -419,7 +419,8 @@ class UserTimelineSuggest(UserTimelineSystem):
             self.msg_id = 360  
             super(self.__class__, self).put()
             from models_utils import _Notification
-            notification = _Notification(parent=self.list.user, 
+            notification = _Notification(parent=self.list.user,
+                                         owner=self.list.user,
                                          timeline=self.key())
             notification.put()
             
@@ -435,3 +436,4 @@ class SearchConfig(db.polymodel.PolyModel, model_plus.Model):
     radius = db.IntegerProperty(default=2000)
 
 from helpers_acc import *
+

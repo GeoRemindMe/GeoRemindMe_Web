@@ -83,7 +83,7 @@ class UserTimelineHelper(object):
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
                         'instance': instances.get(UserTimeline.instance.get_value_for_datastore(timeline), timeline.instance),
-                        'list': instances.get(UserTimelineSuggest.list.get_value_for_datastore(timeline), timeline.list) 
+                        'list': instances.get(UserTimelineSuggest.list_id.get_value_for_datastore(timeline), timeline.list_id) 
                                     if isinstance(timeline, UserTimelineSuggest) else None,
                         'has_voted':  Vote.objects.user_has_voted(db.Key.from_path(User.kind(), userid), timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
@@ -97,7 +97,7 @@ class UserTimelineHelper(object):
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
                         'instance': instances.get(UserTimeline.instance.get_value_for_datastore(timeline), timeline.instance),
-                        'list': instances.get(UserTimelineSuggest.list.get_value_for_datastore(timeline), timeline.list) 
+                        'list': instances.get(UserTimelineSuggest.list_id.get_value_for_datastore(timeline), timeline.list_id) 
                                     if isinstance(timeline, UserTimelineSuggest) else None,
                         'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
@@ -111,7 +111,7 @@ class UserTimelineHelper(object):
                         'msg': timeline.msg, 'username':timeline.user.username, 
                         'msg_id': timeline.msg_id,
                         'instance': instances.get(UserTimeline.instance.get_value_for_datastore(timeline), timeline.instance),
-                        'list': instances.get(UserTimelineSuggest.list.get_value_for_datastore(timeline), timeline.list) 
+                        'list': instances.get(UserTimelineSuggest.list_id.get_value_for_datastore(timeline), timeline.list_id) 
                                     if isinstance(timeline, UserTimelineSuggest) else None,
                         'has_voted':  Vote.objects.user_has_voted(querier, timeline.instance.key()) if timeline.instance is not None and querier.is_authenticated()else None,
                         'vote_counter': Vote.objects.get_vote_counter(timeline.instance.key()) if timeline.instance is not None else None,
@@ -136,9 +136,8 @@ def _load_ref_instances(timelines):
     from geolist.models import List, ListSuggestion
     from geoalert.models import Event, Suggestion
     # cargo todas las referencias en instance
-    timelines = model_plus.prefetch(timelines, UserTimeline.instance)
+    
     instances = [t.instance for t in timelines if not isinstance(t.instance, User)]
-    instances.extend(model_plus.prefetch([t for t in timelines if isinstance(t, UserTimelineSuggest)], [UserTimelineSuggest.list]))
     instances.extend(model_plus.prefetch([i for i in instances if isinstance(i, Comment) or isinstance(i, Vote)], 
                                        Comment.instance)
                      )

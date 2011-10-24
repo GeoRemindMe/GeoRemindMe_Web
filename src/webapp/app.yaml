@@ -1,5 +1,5 @@
 application: georemindme
-version: live
+version: 1
 runtime: python
 api_version: 1
 

@@ -10,9 +10,10 @@
 from google.appengine.ext import db
 from google.appengine.api import memcache
 from django.utils.translation import gettext_lazy as _
+import model_plus
 
 
-class _Do_later_ft(db.Model):
+class _Do_later_ft(model_plus.Model):
     instance_key = db.ReferenceProperty(None)
     created = db.DateTimeProperty(auto_now_add=True)
     last_try = db.DateTimeProperty(auto_now=True)
@@ -88,7 +89,7 @@ VISIBILITY_CHOICES = (
           ('private', _('Privada')),
           ('shared', _('Compartida')),
                       )
-class Visibility(db.Model):
+class Visibility(model_plus.Model):
     """Metodos comunes heredados por todas las Clases que necesiten visibilidad"""
     _vis = db.StringProperty(required = True, choices = ('public', 'private', 'shared'), default = 'public')
     

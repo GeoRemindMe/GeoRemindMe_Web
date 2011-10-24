@@ -45,7 +45,7 @@
                 
                 <div class="msg">
                     <a href="{% url2 in_facebook public_profile obj.instance.instance.user.username %}" class="dark-link link">
-                        <img src="{% embedded_avatar obj.instance.instance.user.username %}" title="{{obj.instance.instance.user.username}}">
+                       <img src="{% embedded_avatar obj.instance.instance.user.username %}" title="{{obj.instance.instance.user.username}}">
                     </a>
                     <a href="{% url2 in_facebook view_suggestion obj.instance.instance.slug %}" class="hoverlink">{{obj.instance.instance}}</a>
                 </div>

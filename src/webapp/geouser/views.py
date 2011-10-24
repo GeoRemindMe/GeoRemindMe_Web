@@ -686,37 +686,4 @@ def update(request):
 
 
 def __update_users(key = None):
-    from geouser.models_acc import UserTimelineSystem
-    from geouser.models_utils import _Notification
-    from geoalert.models import *
-    from geolist.models import *
-    from geovote.models import *
-    import logging
-
-    if key is None:
-        q = UserTimelineSystem.all()
-    else:
-        q = UserTimelineSystem.all().with_cursor(key)
-    ts = q.fetch(100)
-
-    for t in ts:
-        try:
-            if t.user is None:
-                continue
-            if t.instance is None:
-                a = UserTimelineSystem(parent=t.user.key(), created=t.created, modified=t.modified, msg_id=t.msg_id, visible=t.visible)
-            else:
-                a = UserTimelineSystem(parent=t.user.key(), created=t.created, modified=t.modified, msg_id=t.msg_id, instance=t.instance, visible=t.visible)
-            ns = _Notification.all().filter('timeline =', t.key()).fetch(100)
-            a.put()
-            for n in ns:
-                try:
-                    b = _Notification(parent=n.owner.key(), timeline=a, created=n.created)
-                    b.put()
-                except Exception, e:
-                    logging.info('error con notification %s : %s' % (t.key(), e.message))
-        except Exception, e:
-            logging.info('error con timeline %s : %s' % (t.key(), e.message))
-    if len(ts) >= 100:
-        from google.appengine.ext.deferred import defer
-        defer(__update_users, key=q.cursor())
+    pass

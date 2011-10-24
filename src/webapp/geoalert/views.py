@@ -311,7 +311,7 @@ def view_place(request, slug, template='generic/view_place.html'):
 #===============================================================================
 @login_required
 def user_suggestions(request, template='generic/suggestions.html'):
-    from geolist.models import ListSuggestion
+    from geolist.models import ListSuggestion, List
     counters = request.user.counters_async()
     lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
     lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
@@ -326,9 +326,9 @@ def user_suggestions(request, template='generic/suggestions.html'):
     suggestions = model_plus.prefetch(suggestions, Suggestion.user, Suggestion.poi)
     # combinar listas
     lists = [l for l in lists]
-    lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=True))
-    # construir un diccionario con todas las keys resueltas y usuarios
-    instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
+    lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, to_dict=False, resolve=False))
+    # construir un diccionario con todas las keys resueltas y usuarios    
+    instances = prefetch_refList(lists)
     lists = [l.to_dict(resolve=True, instances=instances) for l in lists]
     # añadimos las listas
     [s.lists.append(l) for l in lists for s in suggestions if s.id in l['keys']]

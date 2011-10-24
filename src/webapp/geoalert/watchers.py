@@ -16,9 +16,9 @@ def new_alert(sender, **kwargs):
     '''
     from models import Alert, AlertSuggestion
     if isinstance(sender, Alert):
-        timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=200)
+        timeline = UserTimelineSystem(parent=sender.user, user = sender.user, instance = sender, msg_id=200)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=320, visible=False)
+        timeline = UserTimelineSystem(parent=sender.user, user = sender.user, instance = sender, msg_id=320, visible=False)
     else:
         return
     timeline.put()
@@ -32,9 +32,9 @@ def modified_alert(sender, **kwargs):
     '''
     from models import Alert, AlertSuggestion
     if isinstance(sender, Alert):
-        timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=201)
+        timeline = UserTimelineSystem(parent=sender.user, user = sender.user, instance = sender, msg_id=201)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=321, visible=False)
+        timeline = UserTimelineSystem(parent=sender.user, user = sender.user, instance = sender, msg_id=321, visible=False)
     else:
         return
     timeline.put()
@@ -47,9 +47,9 @@ def deleted_alert(sender, **kwargs):
     '''
     from models import Alert, AlertSuggestion
     if isinstance(sender, Alert):
-        timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=202)
+        timeline = UserTimelineSystem(parent = sender.user, user = sender.user, instance = sender, msg_id=202)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=322, visible=False)
+        timeline = UserTimelineSystem(parent = sender.user, user = sender.user, instance = sender, msg_id=322, visible=False)
     else:
         return
     timeline.put()
@@ -60,9 +60,9 @@ alert_deleted.connect(deleted_alert)
 def done_alert(sender, **kwargs):
     from models import Alert, AlertSuggestion
     if isinstance(sender, Alert):
-        timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=203)
+        timeline = UserTimelineSystem(parent = sender.user, user = sender.user, instance = sender, msg_id=203)
     elif isinstance(sender, AlertSuggestion):
-        timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=323, visible=False)
+        timeline = UserTimelineSystem(parent = sender.user, user = sender.user, instance = sender, msg_id=323, visible=False)
     else:
         return
     timeline.put()
@@ -70,8 +70,8 @@ alert_done.connect(done_alert)
 
 
 def new_suggestion(sender, **kwargs):
-    timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=300)
-    timelinePublic = UserTimeline(parent = sender.user, instance = sender, msg_id=300, _vis=sender._get_visibility())
+    timeline = UserTimelineSystem(parent = sender.user, user = sender.user, instance = sender, msg_id=300)
+    timelinePublic = UserTimeline(parent = sender.user, user = sender.user, instance = sender, msg_id=300, _vis=sender._get_visibility())
     p = db.put_async([timeline])
     sender.user.counters.set_suggested()
     if sender._is_public():
@@ -115,7 +115,7 @@ suggestion_deleted.connect(deleted_suggestion)
 
 
 def new_following_suggestion(sender, **kwargs):
-    timeline = UserTimelineSystem(parent = kwargs['user'], instance = sender, msg_id=303, visible=False)
+    timeline = UserTimelineSystem(parent = kwargs['user'], user = kwargs['user'], instance = sender, msg_id=303, visible=False)
     p = timeline.put_async()
     sender.counters.set_followers(+1)
     p.get_result()
@@ -124,14 +124,14 @@ def new_following_suggestion(sender, **kwargs):
     if sender.user is not None:
         if kwargs['user'].key() != sender.user.key():
             from geouser.models_utils import _Notification
-            notification = _Notification(parent=sender.user, timeline=timeline)
+            notification = _Notification(parent=sender.user, owner=sender.user, timeline=timeline)
             notification.put()
 suggestion_following_new.connect(new_following_suggestion)
 
 
 def deleted_following_suggestion(sender, **kwargs):
     from models import AlertSuggestion
-    timeline = UserTimelineSystem(parent = kwargs['user'], instance = sender, msg_id=304, visible=False)
+    timeline = UserTimelineSystem(parent = kwargs['user'], user = kwargs['user'], instance = sender, msg_id=304, visible=False)
     p = timeline.put_async()
     alertsuggestion = AlertSuggestion.objects.get_by_sugid_user(sender.id, kwargs['user'])
     if alertsuggestion is not None:
@@ -142,19 +142,19 @@ suggestion_following_deleted.connect(deleted_following_suggestion)
 
 
 def new_privateplace(sender, **kwargs):
-    timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=400)
+    timeline = UserTimelineSystem(parent = sender.user, user = sender.user, instance = sender, msg_id=400)
     timeline.put()
 #privateplace_new.connect(new_privateplace)
 
 
 def modified_privateplace(sender, **kwargs):    
-    timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=401)
+    timeline = UserTimelineSystem(parent = sender.user, user = sender.user, instance = sender, msg_id=401)
     timeline.put()
 #privateplace_modified.connect(modified_privateplace)
 
 
 def deleted_privateplace(sender, **kwargs):
-    timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=402)
+    timeline = UserTimelineSystem(parent = sender.user, user = sender.user, instance = sender, msg_id=402)
     timeline.put()
 #privateplace_deleted.connect(deleted_privateplace)
 
@@ -184,6 +184,6 @@ place_modified.connect(modified_place)
 
 
 def deleted_place(sender, **kwargs):
-    timeline = UserTimelineSystem(parent = sender.user, instance = sender, msg_id=452)
+    timeline = UserTimelineSystem(parent = sender.user, user = sender.user, instance = sender, msg_id=452)
     timeline.put()
 #place_deleted.connect(deleted_place)

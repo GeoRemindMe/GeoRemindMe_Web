@@ -104,10 +104,12 @@ class ListHelper(object):
         lists = model_plus.fetch_parentsKeys(indexes)
         return [list.to_dict(resolve=resolve) for list in lists if list.active]
     
-    def load_list_user_following_by_async(self, lists_async, resolve=False):
+    def load_list_user_following_by_async(self, lists_async, to_dict = True, resolve=False):
         lists = model_plus.fetch_parentsKeys(lists_async)
         if lists is not None and any(lists):
-            return [list.to_dict(resolve=resolve) for list in lists if list.active]
+            if to_dict:
+                return [list.to_dict(resolve=resolve) for list in lists if list.active]
+            return lists
         return []
 
     def get_shared_list(self, user):

@@ -140,7 +140,7 @@ class User(polymodel.PolyModel, model_plus.Model):
         from geolist.models import List
         # definir las consultas
         query_chrono = UserTimelineFollowersIndex.all().filter('followers =', self.key()).order('-created')
-        query_activity = UserTimelineSystem.all().ancestor(self.key()).filter('visible =', True).order('-modified')
+        query_activity = UserTimelineSystem.all().filter('user =', self.key()).filter('visible =', True).order('-modified')
         # recuperar cursores
         if query_id is not None and len(query_id)>=2:
             cursor_chronology = query_id[0]
@@ -178,31 +178,33 @@ class User(polymodel.PolyModel, model_plus.Model):
                 break
         # generar timeline
         timeline_chrono = fetch_parents(timeline_chrono)
+        timeline = prefetch_refprops(timeline, UserTimeline.user)
+        timeline_chrono = prefetch_refprops(timeline_chrono, UserTimeline.instance, UserTimeline.user)
         timeline.extend(timeline_chrono)
         from helpers_acc import _load_ref_instances
         instances = _load_ref_instances(timeline)
         timeline = [{
-                    'id': int(activity_timeline.id), 
+                    'id': int(activity_timeline.id),
                     'created': activity_timeline.created,
                     'modified': activity_timeline.modified,
-                    'msg': activity_timeline.msg, 
+                    'msg': activity_timeline.msg,
                     'username': activity_timeline.user.username,
                     'msg_id': activity_timeline.msg_id,
                     'instance': instances.get(UserTimeline.instance.get_value_for_datastore(activity_timeline), activity_timeline.instance),
-                    'has_voted':  Vote.objects.user_has_voted(self, activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
+                    'has_voted': Vote.objects.user_has_voted(self, activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
                     'vote_counter': Vote.objects.get_vote_counter(activity_timeline.instance.key()) if activity_timeline.instance is not None else None,
                     'comments': Comment.objects.get_by_instance(activity_timeline.instance, querier=self),
-                    'list': instances.get(UserTimelineSuggest.list.get_value_for_datastore(activity_timeline), activity_timeline.list) 
+                    'list': instances.get(UserTimelineSuggest.list_id.get_value_for_datastore(activity_timeline), activity_timeline.list_id)
                                     if isinstance(activity_timeline, UserTimelineSuggest) else None,
                     'status': activity_timeline.status if hasattr(activity_timeline, 'status') else None,
                     'is_private': True,
                     'user_follower': instances.get(UserTimeline.instance.get_value_for_datastore(activity_timeline), activity_timeline.instance).has_follower(self)
-                        if hasattr(instances.get(UserTimeline.instance.get_value_for_datastore(activity_timeline), activity_timeline.instance), 'has_follower') 
+                        if hasattr(instances.get(UserTimeline.instance.get_value_for_datastore(activity_timeline), activity_timeline.instance), 'has_follower')
                         else None,
                     } for activity_timeline in timeline]
         from operator import itemgetter
         timeline_sorted = sorted(timeline, key=itemgetter('modified'), reverse=True)
-        chronology = [[query_chrono.cursor(), query_activity.cursor()], timeline_sorted] 
+        chronology = [[query_chrono.cursor(), query_activity.cursor()], timeline_sorted]
         return chronology
 
     def get_notifications_timeline(self, query_id=None):
@@ -213,17 +215,22 @@ class User(polymodel.PolyModel, model_plus.Model):
                 Carga todos los timelines apuntados por _Notifications
                 de una sola vez
             """
+            from models_acc import UserTimelineSuggest, UserTimeline
+            from geovote.models import Comment, Vote
+            from geolist.models import List, ListSuggestion
+            from geoalert.models import Event, Suggestion
             ref_keys = [x['timeline'] for x in entities]
             timelines = model_plus.get(set(ref_keys))
             timelines = filter(None, timelines)
+            timelines = model_plus.prefetch(timelines, UserTimeline.instance, UserTimeline.user)
             from helpers_acc import _load_ref_instances
             return timelines, _load_ref_instances(timelines)
         from models_utils import _Notification
         if query_id is None:
-            query = datastore.Query(kind='_Notification')
+            query = datastore.Query(kind='_Notification', filters={'owner =': self.key()})
         if query_id is not None:
-            query = datastore.Query(kind='_Notification', cursor=datastore.datastore_query.Cursor.from_websafe_string(query_id))
-        query.Ancestor(self.key())
+            query = datastore.Query(kind='_Notification', filters={'owner =': self.key()}, cursor=datastore.datastore_query.Cursor.from_websafe_string(query_id))
+        #query.Ancestor(self.key())
         query.Order(('_created', datastore.Query.DESCENDING))
         timelines = query.Get(TIMELINE_PAGE_SIZE)
         if not any(timelines):
@@ -245,7 +252,7 @@ class User(polymodel.PolyModel, model_plus.Model):
                         'username':timeline.user.username,
                         'msg_id': timeline.msg_id,
                         'instance': instances.get(UserTimeline.instance.get_value_for_datastore(timeline), timeline.instance),
-                        'list': instances.get(UserTimelineSuggest.list.get_value_for_datastore(timeline), timeline.list) 
+                        'list': instances.get(UserTimelineSuggest.list_id.get_value_for_datastore(timeline), timeline.list_id) 
                                     if isinstance(timeline, UserTimelineSuggest) else None,
                         'status': timeline.status if hasattr(timeline, 'status') else None,
                         'is_private': False,

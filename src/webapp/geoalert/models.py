@@ -188,7 +188,7 @@ class Alert(Event):
             alert.put()
             return alert
         else:
-            alert = Alert(name = name, description = description, date_starts = date_starts,
+            alert = Alert(parent=user, name = name, description = description, date_starts = date_starts,
                           date_ends = date_ends, poi = poi, user = user)
             if done:
                 alert.toggle_done()
@@ -341,7 +341,7 @@ class Suggestion(Event, Visibility):
         else:
             if poi is None:
                 raise TypeError()
-            sugg = Suggestion(name = name, description = description, date_starts = date_starts,
+            sugg = Suggestion(parent=user, name = name, description = description, date_starts = date_starts,
                           date_ends = date_ends, hour_starts = hour_starts, hour_ends = hour_ends, 
                           poi = poi, user = user, _vis=vis)
             if not active:
@@ -426,9 +426,9 @@ class Suggestion(Event, Visibility):
             index.keys.remove(user_key)
             index.count -= 1
             db.put_async([index])
-        index = db.GqlQuery('SELECT __key__ FROM SuggestionFollowersIndex WHERE ancestor IS :1 AND keys = :2', self.key(), user.key()).get()
-        suggestion_following_deleted.send(sender=self, user=user)
+        index = SuggestionFollowersIndex.all(keys_only=True).ancestor(self.key()).filter(user.key()).get()
         if index is not None:
+            suggestion_following_deleted.send(sender=self, user=user)
             db.run_in_transaction(_tx, index, user.key())      
             return True
         return False
@@ -478,38 +478,38 @@ class Suggestion(Event, Visibility):
             self._short_url = None
             
     def delete(self):
-        from geolist.models import List
-        added = db.GqlQuery("SELECT __key__ FROM Event WHERE suggestion = :1", self.key()).get()
-        added_list = db.GqlQuery("SELECT __key__ FROM List WHERE keys = :1", self.key()).get()
-        if added is None and added_list is None:
-            # nadie la añadió
-            suggestion_deleted.send(sender=self, user=self.user)
-            return super(Suggestion, self).delete()
-        generico = User.objects.get_by_username(settings.GENERICO, keys_only=True)
-        if generico == Suggestion.user.get_value_for_datastore(self):
-            from geolist.models import ListSuggestion
-            from geouser.models_acc import UserTimelineBase
-            # es del usuario georemindme, la borramos
-            alerts = AlertSuggestion.all().filter('suggestion =', self.key()).run()
-            lists = ListSuggestion.all().filter('keys =', self.key()).run()
-            timelines = UserTimelineBase.all().filter('instance =', self.key()).run()
-            import itertools
-            to_save = []
-            for l in lists:
-                l.keys.remove(self.key())
-                to_save.append(l)
-            p = db.put_async(to_save)
-            it = itertools.chain(alerts, timelines)
-            db.delete(db.delete([i for i in it]))
-            suggestion_deleted.send(sender=self, user=generico)
-            p.get_result()
-            return super(Suggestion, self).delete()
-        # otro usuario, se la asignamos a georemindme
-        viejo = self.user
-        self.user = generico
-        self.put()
-        self.user.counters.set_suggested()
-        suggestion_deleted.send(sender=self, user=viejo)
+        if self.is_saved():
+            from geolist.models import List
+            added_list = List.all(key_only=True).filter('keys =', self.key()).get()
+            if added_list is None:
+                # nadie la añadió
+                suggestion_deleted.send(sender=self, user=self.user)
+                return super(Suggestion, self).delete()
+            generico = User.objects.get_by_username(settings.GENERICO, keys_only=True)
+            if generico == Suggestion.user.get_value_for_datastore(self):
+                from geolist.models import ListSuggestion
+                from geouser.models_acc import UserTimelineBase
+                # es del usuario georemindme, la borramos
+                alerts = AlertSuggestion.all().filter('suggestion =', self.key()).run()
+                lists = ListSuggestion.all().filter('keys =', self.key()).run()
+                timelines = UserTimelineBase.all().filter('instance =', self.key()).run()
+                import itertools
+                to_save = []
+                for l in lists:
+                    l.keys.remove(self.key())
+                    to_save.append(l)
+                p = db.put_async(to_save)
+                it = itertools.chain(alerts, timelines)
+                db.delete(db.delete([i for i in it]))
+                suggestion_deleted.send(sender=self, user=generico)
+                p.get_result()
+                return super(Suggestion, self).delete()
+            # otro usuario, se la asignamos a georemindme
+            viejo = self.user
+            self.user = generico
+            self.put()
+            self.user.counters.set_suggested()
+            suggestion_deleted.send(sender=self, user=viejo)
     
     def has_follower(self, user):
         if not user.is_authenticated():
@@ -708,7 +708,7 @@ class AlertSuggestion(Event):
             alert.put()
             return alert
         else:
-            alert = AlertSuggestion(suggestion = suggestion, user = user)
+            alert = AlertSuggestion(parent=user, suggestion = suggestion, user = user)
             if done:
                 alert.toggle_done()
             if not active:

@@ -144,9 +144,9 @@ class Invitation(db.Model):
         if not self.is_saved():
             super(Invitation, self).put()
             from geouser.models_acc import UserTimelineSystem
-            timeline = UserTimelineSystem(parent=self.sender, msg_id=110, instance=self)
+            timeline = UserTimelineSystem(parent=self.sender, user=self.sender, msg_id=110, instance=self)
             from geouser.models_utils import _Notification
-            notification = _Notification(parent=self.to, timeline=timeline)
+            notification = _Notification(parent=self.to, owner=self.to, timeline=timeline)
             put = db.put_async([timeline, notification])            
             if self.to.settings.notification_invitation:
                 from geomail import send_notification_invitation
