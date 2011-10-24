@@ -586,10 +586,10 @@ class Suggestion(Event, Visibility, Taggable):
             except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
                 import logging
                 logging.error('ERROR FUSIONTABLES new suggestion %s: %s' % (self.id, e))
-                later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key())
-                later.put()
-                from google.appengine.ext import deferred
-                raise deferred.PermanentTaskFailure(e)
+#                later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key())
+#                later.put()
+#                from google.appengine.ext import deferred
+#                raise deferred.PermanentTaskFailure(e)
             
     def update_ft(self):
         if self._is_public():
@@ -630,10 +630,10 @@ class Suggestion(Event, Visibility, Taggable):
             except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
                 import logging
                 logging.error('ERROR FUSIONTABLES update suggestion %s: %s' % (self.id, e))
-                later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key(), update=True)
-                later.put()
-                from google.appengine.ext import deferred
-                raise deferred.PermanentTaskFailure(e)
+#                later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key(), update=True)
+#                later.put()
+#                from google.appengine.ext import deferred
+#                raise deferred.PermanentTaskFailure(e)
             
     
     def __str__(self):

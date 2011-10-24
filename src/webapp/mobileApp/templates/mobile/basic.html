@@ -1,0 +1,147 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html> 
+	<head> 
+	<title></title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc1/jquery.mobile-1.0rc1.min.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.0rc1/jquery.mobile-1.0rc1.min.js"></script>
+    <script type="text/javascript" src="/static/common/js/raw/jquery.cookies.2.2.0.min.js"></script>        
+    <script type="text/javascript" src="/static/webapp/js/jquery.tmpl.js"></script>        
+
+	<!-- <li data-role="list-divider" role="heading">Lunes, 5 de septiembre de 2011<span class="ui-li-count">2</span></li> -->
+	<script id="suggestion-tmpl" type="text/x-jquery-tmpl">
+		<li data-theme="c">                   
+			<!-- <p class="ui-li-aside"><strong>10:05</strong> h.</p> -->
+			<img src="/user/${username}/picture/" alt="${ username }" style="width:50px;height:auto;">
+			<h3>${ username }</h3>                       
+			<p><strong>${ name }</strong></p>                       
+			<p>${ address }</p>
+		</li>
+	</script>
+	
+	<style>
+	.center-wrapper{
+		text-align: center;
+		margin: 0 auto;
+		}
+	
+		.ui-li {
+		padding: 0 !important;
+		}
+	
+	.ui-li-has-thumb{
+		padding-left: 60px !important;
+		}
+	
+	.ui-li-desc {
+			white-space:normal !important;
+			}
+	</style>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	updateNearest();
+	$('#lupa').click(updateNearest);
+});
+
+function updateNearest() {
+	loadHTML5Location();
+}
+
+function loadSuggestions(lat,lng){
+	//Recupera las sugerencias para una lat,lng (por defecto la última guardada)
+	//y las pinta al terminar
+	var data={
+		radius: 5000,
+		csrfmiddlewaretoken:function(){ return $.cookies.get("csrftoken");}
+	}
+	if(lat && lng){
+		data['location']=lat+","+lng;
+	}
+	
+	$('#throbber').show();
+	
+	$.ajax({
+		type: "POST",
+		url: "/ajax/get/near/suggestions/",
+		data: data,
+		dataType:'json',
+		success: function(data){
+			//console.log(data);
+			if(data.length){
+				$('#close-suggestions').empty();
+				$('#suggestion-tmpl').tmpl(data).appendTo('#close-suggestions');
+				$('#close-suggestions').listview('refresh');
+			}
+		},
+		complete: function() { $('#throbber').hide(); }
+	});
+}
+
+function loadHTML5Location(){
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var latitud=position.coords.latitude;
+			var longitud=position.coords.longitude;
+			
+			//Guardamos la latitud y longitud detectadas
+			$.cookies.set('lat',latitud);
+			$.cookies.set('lng',longitud);
+			loadSuggestions(latitud,longitud);
+			/*
+			//Recuperamos las sugerencias y las metemos en la caja
+			loadSuggestions(latitud,longitud);
+			
+			//Ponemos de donde están cerca
+			$('#my_location').reversegeocode({
+				lat: latitud,
+				lng: longitud,
+				callback:function(address){
+					$.cookies.set('address',address);    
+				}
+			});
+			
+			$('#close-suggestions-box').show();
+			*/
+			
+		}, function(e){
+			tmp=e;
+			//console.log("No se ha compartido localización");
+		});
+	}
+}
+</script>
+
+
+
+</head> 
+
+<body> 
+	<div data-role="page" id="dashboard"> 
+		<div data-role="header">
+			<a href="#" data-role="none" data-icon="search" data-iconpos="notext" title="Click to update"></a>
+			<img src="/static/mobileApp/throbber.gif" id="throbber" style="position:absolute;left:10px;top:.4em;"/>
+			<h1>{%trans "Sugerencias cerca de ti" %}</h1>
+			<a href="#" data-role="button" data-icon="search" data-iconpos="notext" title="Click to update" id="lupa"></a>
+		</div>
+
+		<ul data-role="listview" data-inset="true" id="close-suggestions">               
+		</ul>
+	
+		<div data-role="footer" class="center-wrapper">
+			<div data-role="controlgroup" data-type="horizontal">
+				<a href="index.html" data-role="button">{% if request.user.is_authenticated %}{% trans "Perfil" %}{%else%}Login{%endif%}</a>
+				{% if request.user.is_authenticated %}<a href="index.html" data-role="button">{% trans "Mochila" %}</a>{%endif%}
+			</div>
+		</div>
+	</div>
+</body>
+</html>

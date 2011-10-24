@@ -13,12 +13,12 @@ from models import Suggestion
 def cron_suggestions(request=None, cursor=None):
     q = Suggestion.all().filter('_vis =', 'public')
     if cursor is None:
-        suggs = q.fetch(50)
+        suggs = q.fetch(10)
     else:
-        suggs = q.with_cursor(cursor).fetch(50)
-    if len(suggs) >= 50:
+        suggs = q.with_cursor(cursor).fetch(10)
+    if len(suggs) >= 10:
         try:
-            defer(cron_suggestions, request, cursor=q.cursor(), _queue="fusiontables")
+            defer(cron_suggestions, cursor=q.cursor(), _queue="fusiontables")
         except PermanentTaskFailure, e:
             import logging
             logging.error('ERROR FUSIONTABLES update relevance: %s' % e)

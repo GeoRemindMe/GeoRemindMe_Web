@@ -1,9 +1,9 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 # coding=utf-8
 
 import os,sys,fileinput,re,urllib
 
-ROOT_DIR = "GeoRemindMe_Web"
+ROOT_DIR = "georemindme"
 CWD = os.getcwd()
 
 def main():
@@ -55,7 +55,7 @@ def make_doc():
 def compress():
     os.chdir( "src/utilities" )
     print "-> Comprimiendo estáticos..."
-    if os.system("python2.6 file_combine_compress.py"):
+    if os.system("python2 file_combine_compress.py"):
         print "-> Error comprimiendo estáticos"
         return False
     find_root()
@@ -76,7 +76,7 @@ def unit():
 def lang():
     os.chdir( "src/webapp" )
     print "-> Compilando ficheros de idiomas..."
-    if os.system("python2.6 manage.py compilemessages"):
+    if os.system("python2 manage.py compilemessages"):
         print "-> Error compilando idiomas"
         return False
     find_root()
@@ -85,7 +85,7 @@ def lang():
 
 def upload():
     os.chdir( "src/webapp" )
-    if os.system("python2.6 %s --version=%s update ." % (os.path.join(sys.argv[1],"appcfg.py"),sys.argv[2], ) ):
+    if os.system("python2 %s --version=%s update ." % (os.path.join(sys.argv[1],"appcfg.py"),sys.argv[2], ) ):
         print "-> Error subiendo la aplicación. Compruebe que ha puesto bien la ruta del SDK de AppEngine"
         return False
     find_root()

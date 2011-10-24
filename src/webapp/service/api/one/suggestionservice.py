@@ -18,23 +18,21 @@ from geovote.models import Vote, Comment
 from google.appengine.ext import db
 from georemindme.funcs import prefetch_refprops, prefetch_refList, single_prefetch_refprops
 
+
 class GetSuggestionsRequest(messages.Message):
     query_id = messages.IntegerField(1)
     page = messages.IntegerField(2, default=1)
+    
+    
+class GetSuggestionsNearestRequest(messages.Message):
+    lat = messages.IntegerField(1)
+    lon = messages.IntegerField(2)
+    radius = messages.IntegerField(3, default=5000)
     
 
 class GetSuggestionRequest(messages.Message):
     id = messages.IntegerField(1, required=True)
     
-
-#class GetSyncSuggestion(messages.Message):
-#    last_sync = messages.IntegerField(1)
-#    suggestions = messages.MessageField(Suggestion, 2, repeated=True)
-#
-#
-#class AddSyncSuggestion(messages.Message):
-#    suggestions = messages.MessageField(Suggestion, 2, repeated=True)
-  
 
 class SuggestionService(remote.Service):
     """
@@ -79,8 +77,8 @@ class SuggestionService(remote.Service):
                            google_places_reference = a.poi.google_places_reference,
                            modified = int(mktime(a.modified.utctimetuple())),
                            created = int(mktime(a.created.utctimetuple())),
-                           username = a.username,
-                           lists = [List(id=l['id'], name=l['name']) for l in lists if s.id in l['keys']],
+                           username = a.user.username,
+                           lists = [List(id=l['id'], name=l['name']) for l in lists if a.id in l['keys']],
                            id = a.id,
                          )
             response.append(t)
@@ -112,7 +110,7 @@ class SuggestionService(remote.Service):
 #        lists = [l for l in lists if not suggestion.key() in l.keys]
 #        lists = prefetch_refprops(lists, ListSuggestion.user)
 #        lists = [l.to_dict(resolve=False) for l in lists]
-        comments = Comment.objects.load_comments_from_async(query_id, comments_async, user)
+        comments = Comment.objects.load_comments_from_async(query_id, comments_async, user)[1]
         return Suggestion(id = suggestion.id,
                           name=suggestion.name,
                           description=suggestion.description,
@@ -122,7 +120,7 @@ class SuggestionService(remote.Service):
                           google_places_reference = suggestion.poi.google_places_reference,
                           modified = int(mktime(suggestion.modified.utctimetuple())),
                           created = int(mktime(suggestion.created.utctimetuple())),
-                          username = suggestion.username,
+                          username = suggestion.user.username,
                           lists = [List(id=l['id'], name=l['name']) for l in in_lists],
                           comments = [Comment(id=c['id']) for c in comments],
                           has_voted=has_voted,
@@ -132,59 +130,26 @@ class SuggestionService(remote.Service):
                           top_comments= top_comments,
                          )
         
-    @remote.method(GetSuggestionRequest, Suggestion)
+    @remote.method(GetSuggestionsNearestRequest, Suggestions)
     def get_nearest(self, request):
-#    @remote.method(GetSyncSuggestion, Suggestions)
-#    def sync_suggestions(self, request):
-#        if len(request.suggestions) > 20:
-#            from protorpc.remote import ApplicationError
-#            raise ApplicationError("Too many suggestions")
-#        from os import environ
-#        user= environ['user']
-#        from datetime import datetime
-#        from time import mktime
-#        if request.last_sync is None:
-#            request.last_sync = int(mktime(user.created.utctimetuple()))
-#        from geoalert.models import Suggestion as SuggestionModel
-#        from geoalert.models_poi import Place as PlaceModel
-#        from google.appengine.ext import db
-#        clients_ids = []
-#        suggestions_to_save = []
-#        for a in request.suggestions:
-#            id = a.get('id', None)
-#            if id is not None:  # la alerta ya estaba sincronizada, la actualizamos
-#                old = SuggestionModel.objects.get_by_id_user(id, request.user)
-#                if not old:  # no existe en la BD, fue borrada.
-#                    continue
-#            poi = PlaceModel.get_or_insert(location = a.poi_id,
-#                                      google_places_reference=a.places_reference,
-#                                      user = request.user)
-#            s = SuggestionModel.update_or_insert(
-#                         id = id,
-#                         name = a.get('name', u''),
-#                         description = a.get('description', u''),
-#                         user = user,
-#                         poi = poi,
-#                         commit = False
-#                         )
-#            suggestions_to_save.append(s) # juntamos para hacer un solo put
-#            clients_ids.append(a.client_id) # la alerta no estaba sincronizada
-#        db.put(suggestions_to_save)
-#        suggestions = SuggestionModel.objects.get_by_last_sync(user,
-#                                                     datetime.fromtimestamp(request.last_sync)
-#                                                     )
-#        response = [Suggestion(
-#                           name = a.name,
-#                           description = a.description,
-#                           poi_lat = a.poi.location.lat,
-#                           poi_lon = a.poi.location.lon,
-#                           poi_id = a.poi.id,
-#                           places_reference = a.poi.google_places_reference,
-#                           modified = int(mktime(a.modified.utctimetuple())),
-#                           created = int(mktime(a.created.utctimetuple())),
-#                           id = a.id,
-#                         ) for a in suggestions]
-#        for a, b in zip(response, clients_ids):
-#            if b is not None:
-#                response.client_id = b
-#        return Suggestions(suggestions=response)
+        user = User.objects.get_by_id(int(environ['user']))
+        suggestions = SuggestionModel.objects.get_nearest(db.GeoPt(request.lat, request.lon),
+                                                          radius=request.radius,
+                                                          querier=user
+                                                          )
+        response = []
+        for a in suggestions:
+            t = Suggestion(
+                           name = a.name,
+                           description = a.description,
+                           poi_lat = a.poi.location.lat,
+                           poi_lon = a.poi.location.lon,
+                           poi_id = a.poi.id,
+                           google_places_reference = a.poi.google_places_reference,
+                           modified = int(mktime(a.modified.utctimetuple())),
+                           created = int(mktime(a.created.utctimetuple())),
+                           username = a.user.username,
+                           id = a.id,
+                         )
+        response.append(t)
+        return Suggestions(query_id='', suggestions=response)
