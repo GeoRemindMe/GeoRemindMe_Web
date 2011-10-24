@@ -1,0 +1,82 @@
+application: georemindme-hrd
+version: live
+runtime: python27
+api_version: 1
+threadsafe: false
+default_expiration: "1h"
+
+
+handlers:
+  
+- url: /robots.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+
+- url: /favicon.ico
+  static_files: static/webapp/img/favicon.png
+  upload: static/webapp/img/favicon.png
+
+- url: /static
+  static_dir: static
+  secure: always
+
+- url: /api/.*
+  script: main27.app_api
+  secure: always
+  
+- url: /ajax/.*
+  script: main27.app
+  secure: optional
+
+- url: /suggestion/.*
+  script: main27.app
+  secure: never
+  
+- url: /place/.*
+  script: main27.app
+  secure: never
+  
+- url: /_ereporter.*
+  script: google.appengine.ext.ereporter.report_generator.application
+  login: admin
+  
+- url: /remote_api.*
+  script: google.appengine.ext.remote_api.handler.application
+  login: admin
+  secure: always
+  
+- url: /console.*
+  script: google.appengine.ext.admin.application
+  secure: always
+  login: admin
+
+- url: /test/.*
+  script: main27.app
+  secure: always
+  login: admin
+  
+#- url: /_ah/stats.*
+#  script: google.appengine.ext.appstats.ui.application
+#  secure: always
+#  login: admin
+  
+- url: /_ah/queue/deferred.*
+  script: main27.app_deferred
+  
+- url: /.*
+  script: main27.app
+  secure: always
+  
+skip_files:
+- ^(.*/)?app\.yaml
+
+
+inbound_services:
+- warmup
+
+libraries:
+- name: django
+  version: "1.2" 
+  
+- name: webapp2
+  version: "latest"

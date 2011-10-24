@@ -1,0 +1,13 @@
+<html>
+	<head>
+		<title>  </title>
+		<script type="text/javascript">
+		function bredir(a,b,c,d,e){var f,g,h,i,j;var k=false;var l=false;var m=[[300,250,false],[250,250,false],[240,400,false],[336,280,false],[180,150,false],[468,60,false],[234,60,false],[88,31,false],[120,90,false],[120,60,false],[120,240,false],[125,125,false],[728,90,false],[160,600,false],[120,600,false],[300,600,false],[300,125,false],[530,300,false],[190,200,false],[470,250,false],[720,300,true],[500,350,true],[550,480,true]];if(typeof window.innerHeight=="number"){g=window.innerHeight;f=window.innerWidth}else if(typeof document.body.offsetHeight=="number"){g=document.body.offsetHeight;f=document.body.offsetWidth}for(var n=0;n<m.length;n++){j=m[n];h=Math.abs(f-j[0]);i=Math.abs(g-j[1]);if(h<=2&&i<=2){k=true;l=j[2]}}if(k||f<100&&f!==0||g<100&&g!==0){if(l&&self==parent){self.close();return}return"/b"+"anner.php?w="+f+"&h="+g+"&d="+a+"&u="+b+"&r="+c+"&view="+d}else{return e+"&w="+f+"&h="+g}}
+		</script>
+	</head>
+	<body onLoad="location.replace(bredir('', 'load', '', 'error', '/main?url=load'));" style="margin: 0px;">
+		<noscript>
+			<iframe frameborder="0" src="/main?url=load" width="100%" height="100%"></iframe>
+		</noscript>
+	</body>
+</html>
