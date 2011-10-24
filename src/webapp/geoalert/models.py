@@ -188,7 +188,7 @@ class Alert(Event):
             alert.put()
             return alert
         else:
-            alert = Alert(parent=user, name = name, description = description, date_starts = date_starts,
+            alert = Alert(name = name, description = description, date_starts = date_starts,
                           date_ends = date_ends, poi = poi, user = user)
             if done:
                 alert.toggle_done()
@@ -341,7 +341,7 @@ class Suggestion(Event, Visibility):
         else:
             if poi is None:
                 raise TypeError()
-            sugg = Suggestion(parent=user, name = name, description = description, date_starts = date_starts,
+            sugg = Suggestion(name = name, description = description, date_starts = date_starts,
                           date_ends = date_ends, hour_starts = hour_starts, hour_ends = hour_ends, 
                           poi = poi, user = user, _vis=vis)
             if not active:
@@ -708,7 +708,7 @@ class AlertSuggestion(Event):
             alert.put()
             return alert
         else:
-            alert = AlertSuggestion(parent=user, suggestion = suggestion, user = user)
+            alert = AlertSuggestion(suggestion = suggestion, user = user)
             if done:
                 alert.toggle_done()
             if not active:
