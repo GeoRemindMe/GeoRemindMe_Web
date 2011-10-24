@@ -226,7 +226,7 @@ class Comment(Visibility):
         
         if msg is None or msg == '':
             raise TypeError('msg is empty')
-        comment = Comment(user=user, instance=instance, msg=msg, _vis=instance._vis if hasattr(instance, '_vis') else 'private')
+        comment = Comment(parent=instance, user=user, instance=instance, msg=msg, _vis=instance._vis if hasattr(instance, '_vis') else 'private')
         comment.put()
         if getattr(instance, 'counter', None) is not None:
             instance.counter.set_comments()
@@ -359,7 +359,7 @@ class Vote(model_plus.Model):
                 vote.delete()
                 return True
             return False
-        vote = Vote(user=user, instance=instance, count=1)
+        vote = Vote(parent=instance, user=user, instance=instance, count=1)
         vote.put()
         vote_new.send(sender=vote)
         return True

@@ -181,6 +181,7 @@ class User(polymodel.PolyModel, model_plus.Model):
         timeline = prefetch_refprops(timeline, UserTimeline.user)
         timeline_chrono = prefetch_refprops(timeline_chrono, UserTimeline.instance, UserTimeline.user)
         timeline.extend(timeline_chrono)
+        #seguimos cargando por lotes todas las referencias
         from helpers_acc import _load_ref_instances
         instances = _load_ref_instances(timeline)
         timeline = [{
@@ -222,6 +223,7 @@ class User(polymodel.PolyModel, model_plus.Model):
             ref_keys = [x['timeline'] for x in entities]
             timelines = model_plus.get(set(ref_keys))
             timelines = filter(None, timelines)
+            # precargar las referencias
             timelines = model_plus.prefetch(timelines, UserTimeline.instance, UserTimeline.user)
             from helpers_acc import _load_ref_instances
             return timelines, _load_ref_instances(timelines)
