@@ -42,12 +42,18 @@ ereporter.register_logger()
 def log_exception(sender, **kwds):
     logging.exception('Exception in request:')
     import traceback
-    
+    from django.views.debug import ExceptionReporter
+    from django.http import Http404
+    tb = traceback.format_exc()
+    typ, val, trace = sys.exc_info()
+    if typ == Http404:
+        return
+    er = ExceptionReporter(kwds['request'], *sys.exc_info()) # proceso la excepcion como una pagina html
     from georemindme.geomail import GeoMail
     mail = GeoMail(to='javier@georemindme.com',
                    subject='[ERROR][GEOREMINDME]',
                    body=traceback.format_exc(),
-                   html=traceback.format_exc(),
+                   html=er.get_traceback_html(),
                    )
     mail.push()
     
