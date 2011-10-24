@@ -1,38 +1,24 @@
 # coding=utf-8
 
 from geouser.decorators import login_forced
+from georemindme import model_plus
 
+from models import Event, Suggestion
 
 @login_forced
-def get_suggestions_dict(querier, list_id=None):
-    from google.appengine.api import datastore
-    q = datastore.Query('Event', {'user =': querier.key()})
-    q.Order(('created', datastore.Query.DESCENDING))
-    count = q.Count()
-    suggs = q.Get(count)
-    # separo por tipos
-    suggs_following = []
-    suggs_cleaned = []
-    for s in suggs:
-        if 'AlertSuggestion' in s['class']:
-            suggs_following.append(s)
-        else:
-            suggs_cleaned.append(s)
-    # resolver referencias de AlertSuggestion
-    ref_keys = [x['suggestion'] for x in suggs_following]
-    suggs_following_resolved = datastore.Get(ref_keys)
-    #combinar ambas listas
-    suggs_cleaned.extend(suggs_following_resolved)
-    if list_id is not None:
-        from google.appengine.ext import db
-        list_key = db.Key.from_path('List', int(list_id))
-        list = db.get(list_key)
-        if list is not None and len(list.keys):
-            suggs_cleaned = [s for s in suggs_cleaned if not s.key() in list.keys]
-        from geouser.models_acc import UserTimelineSuggest
-        keys_suggested = [UserTimelineSuggest.instance.get_value_for_datastore(timeline) for timeline in list.usertimelinesuggest_set]
-        suggs_cleaned = [s for s in suggs_cleaned if not s.key() in keys_suggested]
-    return suggs_cleaned
+def get_suggestions_dict(querier):
+    from models_indexes import SuggestionFollowersIndex
+    
+    indexes = SuggestionFollowersIndex.all(keys_only=True).filter('keys =', querier.key()).order('-created').run()
+    suggs = model_plus.fetch_parentsKeys([s for s in indexes])
+    if suggs is not None or any(suggs):
+        suggestions = []
+        for s in suggs: # convertir entidades
+            setattr(s, 'lists', [])
+            suggestions.append(s)
+        suggestions = model_plus.prefetch(suggestions, Suggestion.user, Suggestion.poi) 
+        return suggestions
+    return []
 
 
 def send_suggestion_to_list(querier, list_id, event_id):
@@ -43,7 +29,6 @@ def send_suggestion_to_list(querier, list_id, event_id):
     from google.appengine.ext import db
     from geouser.models_acc import UserTimelineSuggest
     from geolist.models import List
-    from models import Event
     if list_id is None or event_id is None:
         return None
     keys = [db.Key.from_path('List', int(list_id)), db.Key.from_path('Event', int(event_id))] # construir claves

@@ -314,22 +314,10 @@ def user_suggestions(request, template='generic/suggestions.html'):
     from geolist.models import ListSuggestion, List
     counters = request.user.counters_async()
     lists_following = ListSuggestion.objects.get_list_user_following(request.user, async=True)
-    lists = ListSuggestion.objects.get_by_user(user=request.user, querier=request.user, all=True)
     from api import get_suggestions_dict
-    suggestions_entity = get_suggestions_dict(request.user)
-    suggestions = []
-    for s in suggestions_entity: # convertir entidades
-        sug = db.model_from_protobuf(s.ToPb())
-        setattr(sug, 'lists', [])
-        suggestions.append(sug)
-    from georemindme.funcs import prefetch_refList
-    suggestions = model_plus.prefetch(suggestions, Suggestion.user, Suggestion.poi)
-    # combinar listas
-    lists = [l for l in lists]
-    lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, to_dict=False, resolve=False))
-    # construir un diccionario con todas las keys resueltas y usuarios    
-    instances = prefetch_refList(lists)
-    lists = [l.to_dict(resolve=True, instances=instances) for l in lists]
+    suggestions = get_suggestions_dict(request.user)
+    # construir un diccionario con todas las keys resueltas y usuarios
+    lists = ListSuggestion.objects.load_list_user_following_by_async(lists_following, to_dict=True, resolve=True)
     # añadimos las listas
     [s.lists.append(l) for l in lists for s in suggestions if s.id in l['keys']]
     return  render_to_response(template, {

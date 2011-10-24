@@ -49,8 +49,6 @@ class InvitationHelper(object):
             
             :returns: :class:`georemindme.model_indexes.Invitation` o None
         """
-        if getattr(instance, 'user', None) == user:
-            return True
         invitation = Invitation.all().filter('instance =', instance).filter('to =', user).get()
         return invitation
     

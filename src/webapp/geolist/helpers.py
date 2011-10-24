@@ -94,18 +94,22 @@ class ListHelper(object):
         if not user.is_authenticated():
             return []
         from google.appengine.api import datastore
-        q = datastore.Query('ListFollowersIndex', {'keys =': user.key()}, keys_only=True)
+        
         if async:
-            from google.appengine.ext import db
-            indexes = db.GqlQuery('SELECT __key__ FROM ListFollowersIndex WHERE keys = :1', user.key())
+            indexes = ListFollowersIndex.all(keys_only=True).filter('keys =', user.key())
             return indexes.run()
-        c = indexes.Count()
-        indexes = q.Get(c)
+        q = datastore.Query('ListFollowersIndex', {'keys =': user.key()}, keys_only=True)
+        run = q.Run()
+        indexes = [a for a in run]
         lists = model_plus.fetch_parentsKeys(indexes)
         return [list.to_dict(resolve=resolve) for list in lists if list.active]
     
     def load_list_user_following_by_async(self, lists_async, to_dict = True, resolve=False):
         lists = model_plus.fetch_parentsKeys(lists_async)
+        from georemindme.funcs import prefetch_refList
+        if resolve and to_dict: 
+                instances = prefetch_refList(lists)
+                return [list.to_dict(resolve=resolve, instances=instances) for list in lists if list.active]
         if lists is not None and any(lists):
             if to_dict:
                 return [list.to_dict(resolve=resolve) for list in lists if list.active]

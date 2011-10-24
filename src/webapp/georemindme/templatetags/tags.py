@@ -28,10 +28,14 @@ class RenderTimelineNode(template.Node):
         self.item = template.Variable(item)
         
     def render(self, context):
-        item = self.item.resolve(context)
-        t = template.loader.get_template('timeline/%s.html' % item['msg_id'])
-        context['obj'] = item
-        return t.render(context)
+        try:
+            item = self.item.resolve(context)
+            t = template.loader.get_template('timeline/%s.html' % item['msg_id'])
+            context['obj'] = item
+            return t.render(context)
+        except Exception, e:
+            import logging
+            logging.error('ERROR EN TIMELINE %s: %s' % (item['msg_id'], e.message))
 
 
 @register.filter 

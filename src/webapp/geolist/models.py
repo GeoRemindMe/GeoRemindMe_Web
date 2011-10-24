@@ -232,6 +232,8 @@ class ListSuggestion(List, Visibility, Taggable):
         if tags is not None:
             list._tags_setter(tags, commit=False)
         list.put()
+        followers = ListFollowersIndex(parent=list.key(), keys=[list.user.key()])
+        followers.put()
         return list
 
     def update(self, name=None, description=None, instances=[], instances_del=[], tags=None, vis='public'):
@@ -276,6 +278,8 @@ class ListSuggestion(List, Visibility, Taggable):
             :type user_key: :class:`db.Key`
             :returns: True si se borro el usuario. False si hubo algun error o no existia
         """
+        if self.__class.user.get_value_for_datastore(self) == user.key():
+            return False
         def _tx(index_key, user_key):
             index = db.get(index_key)
             index.keys.remove(user_key)
@@ -299,6 +303,8 @@ class ListSuggestion(List, Visibility, Taggable):
 
             :returns: True si se añadio, False en caso contrario
         """
+        if self.__class.user.get_value_for_datastore(self) == user.key():
+            return False
         def _tx(list_key, user_key):
             # TODO : cambiar a contador con sharding
             from models_indexes import ListFollowersIndex

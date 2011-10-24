@@ -56,13 +56,8 @@ class SuggestionService(remote.Service):
         user = User.objects.get_by_id(int(environ['user']))
         lists_following = ListSuggestion.objects.get_list_user_following(user, async=True)
         lists = ListSuggestion.objects.get_by_user(user=user, querier=user, all=True)
-        suggestions_entity = get_suggestions_dict(user) 
-        suggestions = []
-        for s in suggestions_entity: # convertir entidades
-            sug = db.model_from_protobuf(s.ToPb())
-            setattr(sug, 'lists', [])
-            suggestions.append(sug)
-        suggestions = prefetch_refprops(suggestions, SuggestionModel.user, SuggestionModel.poi)
+        from geoalert.api import get_suggestions_dict
+        suggestions = get_suggestions_dict(request.user)
         # combinar listas
         lists = [l for l in lists]
         lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=True))

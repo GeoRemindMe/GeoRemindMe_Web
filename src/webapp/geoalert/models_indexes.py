@@ -11,6 +11,7 @@ from georemindme.models_indexes import Invitation
 class SuggestionFollowersIndex(model_plus.Model):
     keys = db.ListProperty(db.Key)
     count = db.IntegerProperty(default = 0)
+    created = db.DateTimeProperty(auto_now_add=True)
     
 
 class SuggestionCounter(model_plus.Model):

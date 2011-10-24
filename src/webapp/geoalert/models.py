@@ -350,6 +350,8 @@ class Suggestion(Event, Visibility):
                 sugg._tags_setter(tags, commit=commit)
             if commit:
                 sugg.put()
+                followers = SuggestionFollowersIndex(parent=sugg.key(), keys=[sugg.user.key()])
+                followers.put()
                 if to_facebook:
                     from facebookApp.watchers import new_suggestion
                     new_suggestion(sugg)
@@ -378,7 +380,7 @@ class Suggestion(Event, Visibility):
             
             :returns: :class:`geoalert.models.AlertSuggestion`    
         '''
-        if self.user.key() == user.key():
+        if self.__class.user.get_value_for_datastore(self) == user.key():
             return False
         def _tx(sug_key, user_key):
             sug = db.get(sug_key)
@@ -390,7 +392,7 @@ class Suggestion(Event, Visibility):
             index.count += 1
             index.put()
             return True
-        index = db.GqlQuery('SELECT __key__ FROM SuggestionFollowersIndex WHERE ancestor IS :1 AND keys = :2', self.key(), user.key()).get()
+        index = SuggestionFollowersIndex.all(keys_only=True).ancestor(self.key()).filter('keys =', user.key()).get()
         if index is not None: # ya es seguidor
             a = AlertSuggestion.objects.get_by_sugid_user(self.id, user)
             if a is None: # ¿por algun motivo no la tiene en la mochila?
@@ -420,6 +422,8 @@ class Suggestion(Event, Visibility):
             :param user: Usuario que quiere borrarse a una sugerencia
             :type user: :class:`geouser.models.User`   
         '''
+        if self.__class.user.get_value_for_datastore(self) == user.key():
+            return False
         def _tx(index_key, user_key):
             index = db.get_async(index_key)
             index = index.get_result()

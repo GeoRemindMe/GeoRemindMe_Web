@@ -126,11 +126,13 @@ def prefetch_refpropsEntity(entities, *props):
     return ref_entities
 
 
-def prefetch_refList(lists, users=[]):
+def prefetch_refList(lists):
     if len(lists) == 0:
         return []
+    from geouser.models import User
+    from geoalert.models import Suggestion
     instances_keys = [k for l in lists for k in l.keys]
-    instances_keys.extend(users)
+    instances_keys.extend([lists[0].__class__.user.get_value_for_datastore(l) for l in lists])
     instances_keys = filter(None, instances_keys)
     instances = dict((x.key(), x) for x in db.get(set(instances_keys)))
     return instances

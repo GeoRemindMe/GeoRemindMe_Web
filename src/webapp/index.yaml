@@ -92,6 +92,11 @@ indexes:
   - name: user
   - name: created
     direction: desc
+    
+- kind: Event
+  properties:
+  - name: class
+  - name: created
 
 - kind: Event, AlertSuggestion
   properties:
@@ -128,6 +133,12 @@ indexes:
   ancestor: yes
   properties:
   - name: count
+  
+- kind: SuggestionFollowersIndex
+  properties:
+  - name: keys
+  - name: created
+    direction: desc
 
 - kind: UserFollowingIndex
   properties:
