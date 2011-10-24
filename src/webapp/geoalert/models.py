@@ -637,7 +637,7 @@ class Suggestion(Event, Visibility):
             from geovote.models import Vote
             votes = Vote.objects.get_vote_counter(self.key())
             from datetime import datetime
-            time = abs(datetime.now() - self.modified)
+            time = datetime.now() - self.modified
             try:
                 self._relevance = (self.counters.followers*8 + votes*2) * 15/(time.days+1)
             except:

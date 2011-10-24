@@ -18,9 +18,16 @@ from geovote.models import Vote, Comment
 from google.appengine.ext import db
 from georemindme.funcs import prefetch_refprops, prefetch_refList, single_prefetch_refprops
 
+
 class GetSuggestionsRequest(messages.Message):
     query_id = messages.IntegerField(1)
     page = messages.IntegerField(2, default=1)
+    
+    
+class GetSuggestionsNearestRequest(messages.Message):
+    lat = messages.IntegerField(1)
+    lon = messages.IntegerField(2)
+    radius = messages.IntegerField(3, default=5000)
     
 
 class GetSuggestionRequest(messages.Message):
@@ -31,15 +38,6 @@ class GetSuggestionsNearestRequest(messages.Message):
     lon = messages.IntegerField(2)
     radius = messages.IntegerField(3, default=5000)
     
-
-#class GetSyncSuggestion(messages.Message):
-#    last_sync = messages.IntegerField(1)
-#    suggestions = messages.MessageField(Suggestion, 2, repeated=True)
-#
-#
-#class AddSyncSuggestion(messages.Message):
-#    suggestions = messages.MessageField(Suggestion, 2, repeated=True)
-  
 
 class SuggestionService(remote.Service):
     """
@@ -84,8 +82,8 @@ class SuggestionService(remote.Service):
                            google_places_reference = a.poi.google_places_reference,
                            modified = int(mktime(a.modified.utctimetuple())),
                            created = int(mktime(a.created.utctimetuple())),
-                           username = a.username,
-                           lists = [List(id=l['id'], name=l['name']) for l in lists if s.id in l['keys']],
+                           username = a.user.username,
+                           lists = [List(id=l['id'], name=l['name']) for l in lists if a.id in l['keys']],
                            id = a.id,
                          )
             response.append(t)
@@ -117,7 +115,7 @@ class SuggestionService(remote.Service):
 #        lists = [l for l in lists if not suggestion.key() in l.keys]
 #        lists = prefetch_refprops(lists, ListSuggestion.user)
 #        lists = [l.to_dict(resolve=False) for l in lists]
-        comments = Comment.objects.load_comments_from_async(query_id, comments_async, user)
+        comments = Comment.objects.load_comments_from_async(query_id, comments_async, user)[1]
         return Suggestion(id = suggestion.id,
                           name=suggestion.name,
                           description=suggestion.description,
@@ -127,7 +125,7 @@ class SuggestionService(remote.Service):
                           google_places_reference = suggestion.poi.google_places_reference,
                           modified = int(mktime(suggestion.modified.utctimetuple())),
                           created = int(mktime(suggestion.created.utctimetuple())),
-                          username = suggestion.username,
+                          username = suggestion.user.username,
                           lists = [List(id=l['id'], name=l['name']) for l in in_lists],
                           comments = [Comment(id=c['id']) for c in comments],
                          )

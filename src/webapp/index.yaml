@@ -247,3 +247,10 @@ indexes:
   properties:
   - name: _created
     direction: desc
+
+- kind: __google_ExceptionRecord
+  properties:
+  - name: date
+  - name: major_version
+  - name: minor_version
+    direction: desc

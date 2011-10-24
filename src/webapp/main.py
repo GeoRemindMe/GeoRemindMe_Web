@@ -31,7 +31,10 @@ from django.core.signals import got_request_exception
 from django.db import _rollback_on_exception
 from google.appengine.ext import ereporter
 ereporter.register_logger()
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 
 ### elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
 #for k in [k for k in sys.modules if k.startswith('django')]:

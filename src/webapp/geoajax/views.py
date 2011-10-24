@@ -171,6 +171,7 @@ def save_suggestion(request):
     raise
     return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
+
 @ajax_request
 def add_suggestion_invitation(request):
     """
@@ -186,6 +187,7 @@ def add_suggestion_invitation(request):
         return invitation
     return HttpResponse(simplejson.dumps(invitation), mimetype="application/json")
 
+
 @ajax_request
 def add_suggestion_follower(request):
     eventid = request.POST.get('eventid')
@@ -193,6 +195,7 @@ def add_suggestion_follower(request):
     if isinstance(result, HttpResponse):
         return result
     return HttpResponse(simplejson.dumps(result), mimetype="application/json")
+
 
 @ajax_request
 def delete_suggestion_follower(request):
@@ -517,6 +520,7 @@ def add_list_follower(request):
     return HttpResponse(simplejson.dumps(added), mimetype="application/json")
 
 
+@ajax_request
 def delete_list_follower(request):
     list_id = request.POST.get('list_id')
     result = geolist.del_list_follower(request, list_id)

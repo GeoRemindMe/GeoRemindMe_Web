@@ -1,0 +1,66 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>Actividad</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc1/jquery.mobile-1.0rc1.min.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.0rc1/jquery.mobile-1.0rc1.min.js"></script>
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 61b1c7eec6532ae9f08a75b35fdd458199afede3
+</head> 
+
+<body> 
+	<div data-role="page" id="dashboard"> 
+		<div data-role="header" data-theme="a" data-position="inline">
+			<h1>GeoRemindMe!</h1>
+			<a href="index.html" data-icon="home" class="ui-btn-right">Perfil</a>
+			<div data-role="navbar" data-theme="a">
+					<ul>
+						<li><a href="#dashboard" data-theme="a">Actividad</a></li>
+						<li><a href="#mochila" data-theme="a">Mochila</a></li>
+					</ul>
+				</div><!-- /navbar -->
+		</div><!-- /header -->
+
+		<div data-role="content">	
+			<ul data-role="listview" data-theme="g">
+				{% for obj in chronology.1 %}
+                    <li><a href="#"><img src="" alt="">{{obj.user}}</a></li>
+                {% endfor %}
+			</ul>
+			<br>
+			<a href="#" data-role="button" data-theme="a">Cargar Mas</a>
+		</div><!-- /content -->
+	</div>
+	
+	<div data-role="page" id="mochila"> 
+		<div data-role="header" data-theme="b" data-position="inline">
+			<h1>GeoRemindMe!</h1>
+			<a href="index.html" data-icon="home" class="ui-btn-right">Perfil</a>
+			<div data-role="navbar" data-theme="a">
+					<ul>
+						<li><a href="#dashboard" data-theme="a">Actividad</a></li>
+						<li><a href="#mochila" data-theme="a">Mochila</a></li>
+					</ul>
+				</div><!-- /navbar -->
+		</div><!-- /header -->
+
+		<div data-role="content">	
+			<ul data-role="listview" data-theme="g">
+				<li  data-role="list-divider">Sugerencias</li>
+				<li><a href="#">Audi</a></li>
+				<li><a href="#">BMW</a></li>
+				<li  data-role="list-divider">Listas</li>
+				<li><a href="#">Audi</a></li>
+				<li><a href="#">BMW</a></li>
+			</ul>
+		</div><!-- /content -->
+	</div>
+</body>
+</html>

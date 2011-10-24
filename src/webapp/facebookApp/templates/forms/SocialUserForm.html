@@ -14,8 +14,8 @@
         
         function validUsername(){
             username=$('#id_user_set_username-username').val();
-            if(username.length<6){
-                $('#username-error').text('Por favor utilice un nombre de usuario con más de 6 caracteres').fadeIn('slow');
+            if(username.length<4){
+                $('#username-error').text('Por favor utilice un nombre de usuario con más de 4 caracteres').fadeIn('slow');
                 return false;
             }
             else{

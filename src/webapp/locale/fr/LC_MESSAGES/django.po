@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-11 15:01+0200\n"
+"POT-Creation-Date: 2011-10-24 09:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,53 +24,57 @@ msgid ""
 "opciones disponibles."
 msgstr ""
 
-#: facebookApp/templates/register.html:154
+#: facebookApp/watchers.py:55
+msgid "Detalles de la lista, comentarios, etc."
+msgstr ""
+
+#: facebookApp/templates/register.html:163
 msgid ""
 "GeoRemindMe te permite gestionar, valorar y compartir sugerencias "
 "<strong>usando la potencia de tus redes sociales favoritas</strong>."
 msgstr ""
 
-#: facebookApp/templates/register.html:165
+#: facebookApp/templates/register.html:174
 msgid ""
 ", nos alegra verte por aquí!.<p>Ahora puedes utilizar la aplicación de "
 "GeoRemindMe! en Facebook para:</p>"
 msgstr ""
 
-#: facebookApp/templates/register.html:168
+#: facebookApp/templates/register.html:177
 msgid "utiliza GeoRemindMe para:"
 msgstr ""
 
-#: facebookApp/templates/register.html:175
+#: facebookApp/templates/register.html:184
 msgid ""
 "<strong>Pedir a tus contactos</strong> de Facebook, Twitter, etc. "
 "<strong>sugerencias y listas de sugerencias</strong> para tus viajes, "
 "descubrir nuevos restaurantes, etc..."
 msgstr ""
 
-#: facebookApp/templates/register.html:176
+#: facebookApp/templates/register.html:185
 msgid ""
 "Consultar <strong>sugerencias personalizadas</strong> en base a tus gustos y "
 "a tu localización"
 msgstr ""
 
-#: facebookApp/templates/register.html:177
+#: facebookApp/templates/register.html:186
 msgid ""
 "<strong>Sigue </strong> a otras personas con gustos similares a los tuyos"
 msgstr ""
 
-#: facebookApp/templates/register.html:178
+#: facebookApp/templates/register.html:187
 msgid ""
 "<strong>Descarga o imprime</strong> listas de sugerencias y sobre rutas "
 "turísticas"
 msgstr ""
 
-#: facebookApp/templates/register.html:179
+#: facebookApp/templates/register.html:188
 msgid ""
 "<strong>Guarda, comenta y valora</strong> las sugerencias de tus contactos"
 msgstr ""
 
 #: facebookApp/templates/forms/SettingsForm.html:10
-#: georemindme/templates/generic/base_generic.html:298
+#: georemindme/templates/generic/base_generic.html:292
 #: georemindme/templates/generic/notifications.html:9
 #: georemindme/templates/generic/settings.html:36
 msgid "Notificaciones"
@@ -97,7 +101,7 @@ msgid "Persona guarda una sugerencia tuya"
 msgstr ""
 
 #: facebookApp/templates/forms/SettingsForm.html:37
-#: georemindme/templates/generic/settings.html:107
+#: georemindme/templates/generic/settings.html:109
 msgid "Privacidad"
 msgstr ""
 
@@ -106,13 +110,14 @@ msgid "Perfil público"
 msgstr ""
 
 #: facebookApp/templates/forms/SettingsForm.html:47
+#: georemindme/templates/generic/settings.html:121
 msgid ""
 "Por defecto todas las sugerencias y listas de sugerencias serán mostradas "
 "públicamente, aunque siempre existe la posibilidad de cambiarles "
 "individualmente la visibilidad."
 msgstr ""
 
-#: facebookApp/templates/forms/SettingsForm.html:62
+#: facebookApp/templates/forms/SettingsForm.html:60
 #: georemindme/templates/generic/edit_profile.html:71
 #: georemindme/templates/generic/suggestionprofile.html:168
 #: georemindme/templates/generic/suggestionprofile_anonymous.html:165
@@ -121,27 +126,29 @@ msgstr ""
 #: georemindme/templates/generic/view_list.html:167
 #: georemindme/templates/generic/view_list_anonymous.html:113
 #: georemindme/templates/generic/view_list_anonymous.html:165
-#: georemindme/templates/timeline/300.html:58
+#: georemindme/templates/timeline/300.html:59
 #: georemindme/templates/timeline/350.html:40
 msgid "Guardar"
 msgstr ""
 
-#: facebookApp/templates/forms/SettingsForm.html:62
-#: facebookApp/templates/forms/SocialUserForm.html:169
-#: georemindme/templates/generic/user_pass.html:18
-#: georemindme/templates/generic/user_pass.html:32
+#: facebookApp/templates/forms/SettingsForm.html:60
+#: facebookApp/templates/forms/SocialUserForm.html:168
+#: georemindme/templates/generic/user_pass.html:17
+#: georemindme/templates/generic/user_pass.html:29
+#: mainApp/templates/mainApp/user_pass.html:17
+#: mainApp/templates/mainApp/user_pass.html:29
 msgid "Por favor rellena todos los campos"
 msgstr ""
 
 #: facebookApp/templates/forms/SocialUserForm.html:121 georemindme/forms.py:16
 #: georemindme/templates/generic/edit_profile.html:58
-#: mainApp/templates/mainApp/login.html:175
+#: mainApp/templates/mainApp/login.html:177
 msgid "Email"
 msgstr ""
 
 #: facebookApp/templates/forms/SocialUserForm.html:131
 #: georemindme/templates/generic/edit_profile.html:51
-#: mainApp/templates/mainApp/login.html:172
+#: mainApp/templates/mainApp/login.html:174
 msgid "Nombre de usuario"
 msgstr ""
 
@@ -150,9 +157,9 @@ msgid "(Solo letras, números y _ )"
 msgstr ""
 
 #: facebookApp/templates/forms/SocialUserForm.html:140
-#: georemindme/templates/generic/base_generic.html:374
-#: mainApp/templates/mainApp/login.html:67
-#: mainApp/templates/mainApp/login.html:178
+#: georemindme/templates/generic/base_generic.html:368
+#: mainApp/templates/mainApp/login.html:69
+#: mainApp/templates/mainApp/login.html:180
 msgid "Contraseña"
 msgstr ""
 
@@ -162,12 +169,6 @@ msgstr ""
 
 #: facebookApp/templates/forms/SocialUserForm.html:168
 msgid "Listo"
-msgstr ""
-
-#: facebookApp/templates/forms/SocialUserForm.html:169
-#: georemindme/templates/generic/create_social_profile.html:199
-#: georemindme/templates/generic/create_social_profile.html:240
-msgid "Terminar"
 msgstr ""
 
 #: facebookApp/templates/forms/SuggestionForm.html:16
@@ -285,8 +286,10 @@ msgid "Enviar sugerencia a mi cuenta de Twitter"
 msgstr ""
 
 #: facebookApp/templates/forms/SuggestionForm.html:179
-#: georemindme/templates/generic/user_pass.html:18
-#: georemindme/templates/generic/user_pass.html:32
+#: georemindme/templates/generic/user_pass.html:17
+#: georemindme/templates/generic/user_pass.html:29
+#: mainApp/templates/mainApp/user_pass.html:17
+#: mainApp/templates/mainApp/user_pass.html:29
 msgid "Enviar"
 msgstr ""
 
@@ -509,6 +512,160 @@ msgstr ""
 msgid "Volver al inicio"
 msgstr ""
 
+#: georemindme/templates/generic/add_contacts.html:5
+#: georemindme/templates/generic/create_social_profile.html:5
+msgid "GeoRemindMe! - Registro"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:48
+msgid ""
+"Hemos encontrado \"+new_contacts+\" personas que podrías conocer en "
+"GeoRemindMe!"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:50
+msgid ""
+"Aún no hemos encontrado a ninguna persona que puedas conocer en "
+"GeoRemindMe!, pero te avisaremos en cuanto alguien que conozcas se registre."
+"\""
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:99
+msgid "Buscando personas a las que podrías conocer de \"+social_network"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:126
+#: georemindme/templates/generic/create_social_profile.html:139
+msgid "¡Genial ya estás dentro!"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:130
+#: georemindme/templates/generic/create_social_profile.html:152
+msgid ""
+"Paso 2 de 2: Siguiento a personas de tu interés recibirás más y mejores "
+"sugerencias"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:134
+#: georemindme/templates/generic/create_social_profile.html:156
+msgid "Usuarios de GeoRemindMe! a los que podrías conocer:"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:139
+#: georemindme/templates/generic/create_social_profile.html:161
+msgid "Buscar ahora entre mis contactos de:"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:142
+#: georemindme/templates/generic/create_social_profile.html:164
+msgid "Buscar ahora  entre las personas que sigo"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:142
+#: georemindme/templates/generic/add_contacts.html:144
+#: georemindme/templates/generic/base_generic.html:360
+#: georemindme/templates/generic/create_social_profile.html:164
+#: georemindme/templates/generic/create_social_profile.html:166
+#: georemindme/templates/generic/edit_profile.html:42
+#: georemindme/templates/generic/settings.html:85
+#: georemindme/templates/generic/suggestions.html:213
+#: georemindme/templates/generic/suggestions.html:328
+#: georemindme/templates/generic/suggestions.html:430 geouser/forms.py:260
+#: mainApp/templates/mainApp/login.html:61
+#: mainApp/templates/mainApp/login.html:161
+msgid "Twitter"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:147
+#: georemindme/templates/generic/create_social_profile.html:169
+msgid "Buscar ahora entre mis amigos"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:147
+#: georemindme/templates/generic/add_contacts.html:149
+#: georemindme/templates/generic/base_generic.html:361
+#: georemindme/templates/generic/create_social_profile.html:169
+#: georemindme/templates/generic/create_social_profile.html:171
+#: georemindme/templates/generic/edit_profile.html:39
+#: georemindme/templates/generic/settings.html:73 geouser/forms.py:259
+#: mainApp/templates/mainApp/login.html:62
+#: mainApp/templates/mainApp/login.html:162
+msgid "Facebook"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:152
+#: georemindme/templates/generic/create_social_profile.html:174
+msgid "Buscar ahora entre mis contactos"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:152
+#: georemindme/templates/generic/add_contacts.html:154
+#: georemindme/templates/generic/base_generic.html:362
+#: georemindme/templates/generic/create_social_profile.html:174
+#: georemindme/templates/generic/create_social_profile.html:176
+#: georemindme/templates/generic/settings.html:95
+#: mainApp/templates/mainApp/login.html:63
+#: mainApp/templates/mainApp/login.html:163
+msgid "Google"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:161
+#: georemindme/templates/generic/create_social_profile.html:183
+msgid "[Ver más]"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:163
+msgid ""
+"\n"
+"                        En ningún momento enviaremos ningún correo "
+"electrónico a tus contactos sin tu permiso. <span id=\"show-more-text"
+"\"><br>\n"
+"                        Al igual que tú también hemos pasado por otras "
+"páginas sin ningún permiso que envían correos a nuestros contactos; pero "
+"nosotros no somos así, somos buena gente ;D. \n"
+"                \n"
+"                        <br><strong>Tan solo queremos ofrecerte una "
+"herramienta con todas las comodidades.</strong><br>\n"
+"                \n"
+"                        Un saludo y gracias por confiar en <a href=\"http://"
+"georemindme.com/team\" target=\"_blank\">nuestro equipo</a>.\n"
+"                    "
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:176
+#: georemindme/templates/generic/add_contacts.html:216
+#: georemindme/templates/generic/create_social_profile.html:197
+#: georemindme/templates/generic/create_social_profile.html:238
+msgid "Terminar"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:180
+#: georemindme/templates/generic/create_social_profile.html:201
+msgid "Usuarios más activos:"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:190
+#: georemindme/templates/generic/add_contacts.html:226
+#: georemindme/templates/generic/create_social_profile.html:211
+#: georemindme/templates/generic/create_social_profile.html:248
+#: georemindme/templates/generic/followers.html:39
+#: georemindme/templates/generic/followers_anonymous.html:39
+#: georemindme/templates/generic/profile.html:49
+#: georemindme/templates/generic/profile_anonymous.html:49
+#: mainApp/templates/mainApp/suggested_suggestions.html:34
+msgid "Seguir"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:192
+#: georemindme/templates/generic/create_social_profile.html:213
+msgid "Ver sugerencias"
+msgstr ""
+
+#: georemindme/templates/generic/add_contacts.html:195
+#: georemindme/templates/generic/create_social_profile.html:216
+msgid "Ver perfil completo"
+msgstr ""
+
 #: georemindme/templates/generic/add_suggestion.html:38
 msgid "¡Genial! ya puedes empezar a disfrutar de todas las ventajas"
 msgstr ""
@@ -534,7 +691,7 @@ msgid "Puedes desactivarlo haciendo clic sobre el icono correspondiente."
 msgstr ""
 
 #: georemindme/templates/generic/add_suggestion.html:135
-msgid "Puedes <strong>cambiar la visilibilidad</strong> de tu sugerencia."
+msgid "Puedes <strong>cambiar la visibilidad</strong> de tu sugerencia."
 msgstr ""
 
 #: georemindme/templates/generic/add_suggestion.html:137
@@ -547,173 +704,127 @@ msgstr ""
 msgid "- Si la marcas como privada solo podrás verla tú"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:22
-msgid ""
-"GeoRemindMe! - Aplicación social para gestionar sugerencias geolocalizadas"
-msgstr ""
-
 #: georemindme/templates/generic/base_generic.html:23
-#: georemindme/templates/generic/view_list.html:6
-#: georemindme/templates/generic/view_list_anonymous.html:6
-msgid ""
-"Nuestra misión es ofrecer una herramienta para la gestión de sugerencias "
-"personalizadas en base a tu localización y a tu gustos."
+msgid "GeoRemindMe! un mundo entero de sugerencias por descubrir"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:24
-msgid ""
-"sugerencias, recomendaciones, viajes, geolocalización, móvil, android, ios, "
-"iphone, alertas, aplicación"
-msgstr ""
-
-#: georemindme/templates/generic/base_generic.html:294
+#: georemindme/templates/generic/base_generic.html:288
 msgid "Añadir sugerencia"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:296
-#: georemindme/templates/generic/chronology_anonymous.html:84
-#: georemindme/templates/generic/dashboard.html:26
+#: georemindme/templates/generic/base_generic.html:290
+#: georemindme/templates/generic/chronology_anonymous.html:82
+#: georemindme/templates/generic/dashboard.html:30
+#: georemindme/templates/generic/dashboard_mainApp.html:30
 msgid "Actividad"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:297
+#: georemindme/templates/generic/base_generic.html:291
 #: georemindme/templates/generic/suggestions.html:50
 msgid "Tu mochila"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:331
+#: georemindme/templates/generic/base_generic.html:325
 msgid "Mi perfil"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:332
+#: georemindme/templates/generic/base_generic.html:326
 msgid "Configuración"
 msgstr ""
 
+#: georemindme/templates/generic/base_generic.html:327
 #: georemindme/templates/generic/base_generic.html:333
-#: georemindme/templates/generic/base_generic.html:339
 msgid "Desconectar"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:362
+#: georemindme/templates/generic/base_generic.html:356
 msgid "Créate una cuenta"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:364
-#: mainApp/templates/mainApp/login.html:57
+#: georemindme/templates/generic/base_generic.html:358
+#: mainApp/templates/mainApp/login.html:59
 msgid "Identifícate usando:"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:366
-#: mainApp/templates/mainApp/login.html:59
+#: georemindme/templates/generic/base_generic.html:360
+#: mainApp/templates/mainApp/login.html:61
 msgid "Usa tu sesión de Twitter para identificarte"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:366
-#: georemindme/templates/generic/create_social_profile.html:164
-#: georemindme/templates/generic/create_social_profile.html:166
-#: georemindme/templates/generic/edit_profile.html:42
-#: georemindme/templates/generic/settings.html:83
-#: georemindme/templates/generic/suggestions.html:213
-#: georemindme/templates/generic/suggestions.html:328
-#: georemindme/templates/generic/suggestions.html:430 geouser/forms.py:260
-#: mainApp/templates/mainApp/login.html:59
-#: mainApp/templates/mainApp/login.html:159
-msgid "Twitter"
-msgstr ""
-
-#: georemindme/templates/generic/base_generic.html:367
-#: mainApp/templates/mainApp/login.html:60
+#: georemindme/templates/generic/base_generic.html:361
+#: mainApp/templates/mainApp/login.html:62
 msgid "Usa tu sesión de Facebook para identificarte"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:367
-#: georemindme/templates/generic/create_social_profile.html:169
-#: georemindme/templates/generic/create_social_profile.html:171
-#: georemindme/templates/generic/edit_profile.html:39
-#: georemindme/templates/generic/settings.html:71 geouser/forms.py:259
-#: mainApp/templates/mainApp/login.html:60
-#: mainApp/templates/mainApp/login.html:160
-msgid "Facebook"
-msgstr ""
-
-#: georemindme/templates/generic/base_generic.html:368
-#: mainApp/templates/mainApp/login.html:61
+#: georemindme/templates/generic/base_generic.html:362
+#: mainApp/templates/mainApp/login.html:63
 msgid "Usa tu sesión de Google para identificarte"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:368
-#: georemindme/templates/generic/create_social_profile.html:174
-#: georemindme/templates/generic/create_social_profile.html:176
-#: georemindme/templates/generic/settings.html:93
-#: mainApp/templates/mainApp/login.html:61
-#: mainApp/templates/mainApp/login.html:161
-msgid "Google"
-msgstr ""
-
-#: georemindme/templates/generic/base_generic.html:369
-#: mainApp/templates/mainApp/login.html:62
+#: georemindme/templates/generic/base_generic.html:363
+#: mainApp/templates/mainApp/login.html:64
 msgid "Identifícate usando tus datos de GeoRemindMe"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:369
-#: mainApp/templates/mainApp/login.html:62
+#: georemindme/templates/generic/base_generic.html:363
+#: mainApp/templates/mainApp/login.html:64
 msgid "GeoRemindMe"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:373
-#: mainApp/templates/mainApp/login.html:66
+#: georemindme/templates/generic/base_generic.html:367
+#: mainApp/templates/mainApp/login.html:68
 msgid "Usuario o email"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:375
-#: mainApp/templates/mainApp/login.html:68
+#: georemindme/templates/generic/base_generic.html:369
+#: mainApp/templates/mainApp/login.html:70
 msgid "Entrar"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:377
-#: mainApp/templates/mainApp/login.html:70
+#: georemindme/templates/generic/base_generic.html:371
+#: mainApp/templates/mainApp/login.html:72
 msgid "Recordarme"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:378
-#: mainApp/templates/mainApp/login.html:71
+#: georemindme/templates/generic/base_generic.html:372
+#: mainApp/templates/mainApp/login.html:73
 msgid "Recuperar contraseña"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:379
+#: georemindme/templates/generic/base_generic.html:373
 #: georemindme/templates/generic/suggestionprofile.html:156
 #: georemindme/templates/generic/suggestionprofile_anonymous.html:153
 #: georemindme/templates/generic/suggestions.html:82
 #: georemindme/templates/generic/suggestions.html:184
-#: mainApp/templates/mainApp/login.html:72
+#: mainApp/templates/mainApp/login.html:74
 msgid "Cancelar"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:501
-#: mainApp/templates/mainApp/login.html:213
+#: georemindme/templates/generic/base_generic.html:495
+#: mainApp/templates/mainApp/login.html:215
 msgid "Empleo"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:501
-#: mainApp/templates/mainApp/login.html:213
+#: georemindme/templates/generic/base_generic.html:495
+#: mainApp/templates/mainApp/login.html:215
 msgid "Prensa"
 msgstr ""
 
-#: georemindme/templates/generic/base_generic.html:501
-#: mainApp/templates/mainApp/login.html:213
+#: georemindme/templates/generic/base_generic.html:495
+#: mainApp/templates/mainApp/login.html:215
 #: mainApp/templates/mainApp/suggested_suggestions.html:254
 msgid "Mapa del sitio"
 msgstr ""
 
-#: georemindme/templates/generic/chronology.html:43
-#: georemindme/templates/generic/chronology_anonymous.html:115
+#: georemindme/templates/generic/chronology.html:47
+#: georemindme/templates/generic/chronology_anonymous.html:113
 #: georemindme/templates/generic/suggestionprofile.html:302
 #: georemindme/templates/generic/suggestionprofile_anonymous.html:299
 msgid "Cargar más"
 msgstr ""
 
-#: georemindme/templates/generic/chronology.html:62
-#: georemindme/templates/generic/chronology_anonymous.html:131
+#: georemindme/templates/generic/chronology.html:63
+#: georemindme/templates/generic/chronology_anonymous.html:129
 #: georemindme/templates/generic/suggestionprofile.html:216
 #: georemindme/templates/generic/suggestionprofile.html:270
 #: georemindme/templates/generic/suggestionprofile.html:311
@@ -725,75 +836,50 @@ msgstr ""
 #: georemindme/templates/timeline/120.html:21
 #: georemindme/templates/timeline/121.html:18
 #: georemindme/templates/timeline/300.html:20
-#: georemindme/templates/timeline/300.html:79
+#: georemindme/templates/timeline/300.html:82
 #: georemindme/templates/timeline/350.html:21
 #: georemindme/templates/timeline/350.html:64
 #: mainApp/templates/mainApp/suggested_suggestions.html:21
 msgid "Borrar"
 msgstr ""
 
-#: georemindme/templates/generic/chronology_anonymous.html:97
+#: georemindme/templates/generic/chronology_anonymous.html:95
 msgid "Ver:"
 msgstr ""
 
-#: georemindme/templates/generic/chronology_anonymous.html:98
+#: georemindme/templates/generic/chronology_anonymous.html:96
 msgid "Todo"
 msgstr ""
 
-#: georemindme/templates/generic/chronology_anonymous.html:103
+#: georemindme/templates/generic/chronology_anonymous.html:101
 #: georemindme/templates/generic/followers.html:46
 #: georemindme/templates/generic/followers_anonymous.html:46
-#: georemindme/templates/generic/followings.html:37
-#: georemindme/templates/generic/followings_anonymous.html:37
+#: georemindme/templates/generic/followings.html:32
+#: georemindme/templates/generic/followings_anonymous.html:32
 #: georemindme/templates/generic/suggestions.html:398
 msgid "Sugerencias"
 msgstr ""
 
-#: georemindme/templates/generic/chronology_anonymous.html:104
+#: georemindme/templates/generic/chronology_anonymous.html:102
 msgid "Listas"
 msgstr ""
 
-#: georemindme/templates/generic/chronology_anonymous.html:105
+#: georemindme/templates/generic/chronology_anonymous.html:103
 msgid "Valoraciones"
 msgstr ""
 
-#: georemindme/templates/generic/chronology_anonymous.html:106
+#: georemindme/templates/generic/chronology_anonymous.html:104
 #: georemindme/templates/generic/view_list.html:221
 #: georemindme/templates/generic/view_list_anonymous.html:219
 msgid "Comentarios"
 msgstr ""
 
-#: georemindme/templates/generic/chronology_anonymous.html:133
+#: georemindme/templates/generic/chronology_anonymous.html:131
 #: georemindme/templates/generic/suggestionprofile.html:315
 #: georemindme/templates/generic/suggestionprofile_anonymous.html:312
 #: georemindme/templates/generic/view_list.html:272
 #: georemindme/templates/generic/view_list_anonymous.html:270
 msgid "Hace 0 minutos"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:5
-msgid "GeoRemindMe! - Registro"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:48
-msgid ""
-"Hemos encontrado \"+new_contacts+\" personas que podrías conocer en "
-"GeoRemindMe!"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:50
-msgid ""
-"Aún no hemos encontrado a ninguna persona que puedas conocer en "
-"GeoRemindMe!, pero te avisaremos en cuanto alguien que conozcas se registre."
-"\""
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:110
-msgid "Buscando personas a las que podrías conocer de \"+social_network"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:139
-msgid "¡Genial ya estás dentro!"
 msgstr ""
 
 #: georemindme/templates/generic/create_social_profile.html:142
@@ -806,156 +892,101 @@ msgid ""
 "público ."
 msgstr ""
 
-#: georemindme/templates/generic/create_social_profile.html:152
-msgid ""
-"Paso 2 de 2: Siguiento a personas de tu interés recibirás más y mejores "
-"sugerencias"
+#: georemindme/templates/generic/create_social_profile.html:196
+#: georemindme/templates/generic/create_social_profile.html:237
+msgid "Volver al "
 msgstr ""
 
-#: georemindme/templates/generic/create_social_profile.html:156
-msgid "Usuarios de GeoRemindMe! a los que podrías conocer:"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:161
-msgid "Buscar ahora entre mis contactos de:"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:164
-msgid "Buscar ahora  entre las personas que sigo"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:169
-msgid "Buscar ahora entre mis amigos"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:174
-msgid "Buscar ahora entre mis contactos"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:183
-msgid "[Ver más]"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:185
-msgid ""
-"\n"
-"                        En ningún momento enviaremos ningún correo "
-"electrónico a tus contactos sin tu permiso. <span id=\"show-more-text"
-"\"><br>\n"
-"                        Al igual que tú también hemos pasado por otras "
-"páginas sin ningún permiso que envían correos a nuestros contactos; pero "
-"nosotros no somos así, somos buena gente ;D. \n"
-"                \n"
-"                        <br><strong>Tan solo queremos ofrecerte una "
-"herramienta con todas las comodidades.</strong><br>\n"
-"                \n"
-"                        Un saludo y gracias por confiar en <a href=\"http://"
-"georemindme.com/team\" target=\"_blank\">nuestro equipo</a>.\n"
-"                    "
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:198
-#: georemindme/templates/generic/create_social_profile.html:239
-msgid "Volver al \"Paso 1\""
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:203
-msgid "Usuarios más activos:"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:213
-#: georemindme/templates/generic/create_social_profile.html:250
-#: georemindme/templates/generic/followers.html:39
-#: georemindme/templates/generic/followers_anonymous.html:39
-#: georemindme/templates/generic/profile.html:49
-#: georemindme/templates/generic/profile_anonymous.html:49
-#: mainApp/templates/mainApp/suggested_suggestions.html:34
-msgid "Seguir"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:215
-msgid "Ver sugerencias"
-msgstr ""
-
-#: georemindme/templates/generic/create_social_profile.html:218
-msgid "Ver perfil completo"
-msgstr ""
-
-#: georemindme/templates/generic/dashboard.html:31
+#: georemindme/templates/generic/dashboard.html:35
+#: georemindme/templates/generic/dashboard_mainApp.html:35
 msgid "Ayuda: Actividad en tu red"
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:32
+#: georemindme/templates/generic/dashboard.html:36
+#: georemindme/templates/generic/dashboard_mainApp.html:36
 msgid ""
 "Desde aquí podrás consultar las últimas acciones de las personas de tu red:"
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:34
+#: georemindme/templates/generic/dashboard.html:38
+#: georemindme/templates/generic/dashboard_mainApp.html:38
 msgid "Nuevas sugerencias y listas de sugerencias"
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:35
+#: georemindme/templates/generic/dashboard.html:39
+#: georemindme/templates/generic/dashboard_mainApp.html:39
 msgid "Comentarios en sugerencias"
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:36
+#: georemindme/templates/generic/dashboard.html:40
+#: georemindme/templates/generic/dashboard_mainApp.html:40
 msgid "Valoraciones de comentarios y sugerencias"
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:37
+#: georemindme/templates/generic/dashboard.html:41
+#: georemindme/templates/generic/dashboard_mainApp.html:41
 msgid "Las personas a las que empiezan a seguir."
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:38
+#: georemindme/templates/generic/dashboard.html:42
+#: georemindme/templates/generic/dashboard_mainApp.html:42
 msgid "etc."
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:40
-#: georemindme/templates/generic/suggestions.html:493
+#: georemindme/templates/generic/dashboard.html:44
+#: georemindme/templates/generic/dashboard_mainApp.html:44
 msgid ""
-"Además podrás comentar, valorar y guardar en tu mochila aquellas sugerencias "
-"y listas de sugerencias que te hayan gustado."
+"Además podrás comentar, valorar y guardar en tu baúl aquellas sugerencias y "
+"listas de sugerencias que te hayan gustado."
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:41
+#: georemindme/templates/generic/dashboard.html:45
+#: georemindme/templates/generic/dashboard_mainApp.html:45
 #: georemindme/templates/generic/suggestions.html:494
 msgid "Si tienes alguna duda o sugerencia puedes hacerla aquí:"
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:47
+#: georemindme/templates/generic/dashboard.html:51
+#: georemindme/templates/generic/dashboard_mainApp.html:51
 msgid "Crea y comparte tus sugerencias aquí."
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:50
+#: georemindme/templates/generic/dashboard.html:54
+#: georemindme/templates/generic/dashboard_mainApp.html:54
 msgid "Estas son las secciones principales:"
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:52
+#: georemindme/templates/generic/dashboard.html:56
+#: georemindme/templates/generic/dashboard_mainApp.html:56
 msgid ""
 "Actividad</strong>: ahora mismo te encuentras aquí, donde recibirás las "
 "últimas novedades (sugerencias, listas, etc.) de las personas a las que "
 "sigues."
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:53
+#: georemindme/templates/generic/dashboard.html:57
+#: georemindme/templates/generic/dashboard_mainApp.html:57
 msgid ""
 "Tú mochila</strong>: en la mochila podrás consultar y gestionar tus "
 "sugerencias favoritas."
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:54
+#: georemindme/templates/generic/dashboard.html:58
+#: georemindme/templates/generic/dashboard_mainApp.html:58
 msgid ""
 "Notificaciones</strong>: aquí te avisaremos cuando alguien empiece a seguir, "
 "comente una de tu sugerencias, etc."
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:59
+#: georemindme/templates/generic/dashboard.html:63
+#: georemindme/templates/generic/dashboard_mainApp.html:63
 msgid ""
 "Linea de tiempo</strong>: aquí irás recibiendo las novedades de tus "
 "contactos."
 msgstr ""
 
-#: georemindme/templates/generic/dashboard.html:61
+#: georemindme/templates/generic/dashboard.html:65
+#: georemindme/templates/generic/dashboard_mainApp.html:65
 msgid ""
 "Haciendo clic en cada una de las pestañas podrás filtrar los mensajes por "
 "tipo."
@@ -999,7 +1030,7 @@ msgid "Nueva contraseña"
 msgstr ""
 
 #: georemindme/templates/generic/edit_profile.html:83
-#: mainApp/templates/mainApp/login.html:179
+#: mainApp/templates/mainApp/login.html:181
 msgid "Repite la contraseña"
 msgstr ""
 
@@ -1012,8 +1043,6 @@ msgstr ""
 
 #: georemindme/templates/generic/followers.html:6
 #: georemindme/templates/generic/followers_anonymous.html:6
-#: georemindme/templates/generic/followings.html:6
-#: georemindme/templates/generic/followings_anonymous.html:6
 #, python-format
 msgid ""
 " \n"
@@ -1035,10 +1064,10 @@ msgstr ""
 #: georemindme/templates/generic/followers.html:28
 #: georemindme/templates/generic/followers_anonymous.html:24
 #: georemindme/templates/generic/followers_anonymous.html:28
-#: georemindme/templates/generic/followings.html:24
-#: georemindme/templates/generic/followings.html:28
-#: georemindme/templates/generic/followings_anonymous.html:24
-#: georemindme/templates/generic/followings_anonymous.html:28
+#: georemindme/templates/generic/followings.html:19
+#: georemindme/templates/generic/followings.html:23
+#: georemindme/templates/generic/followings_anonymous.html:19
+#: georemindme/templates/generic/followings_anonymous.html:23
 #: georemindme/templates/timeline/305.html:20
 #: georemindme/templates/timeline/305.html:34
 #: georemindme/templates/timeline/355.html:20
@@ -1048,7 +1077,7 @@ msgstr ""
 
 #: georemindme/templates/generic/followers.html:25
 #: georemindme/templates/generic/followers_anonymous.html:25
-#: georemindme/templates/generic/followings_anonymous.html:25
+#: georemindme/templates/generic/followings_anonymous.html:20
 msgid "Avatar"
 msgstr ""
 
@@ -1056,10 +1085,10 @@ msgstr ""
 #: georemindme/templates/generic/followers.html:49
 #: georemindme/templates/generic/followers_anonymous.html:35
 #: georemindme/templates/generic/followers_anonymous.html:49
-#: georemindme/templates/generic/followings.html:32
-#: georemindme/templates/generic/followings.html:40
-#: georemindme/templates/generic/followings_anonymous.html:32
-#: georemindme/templates/generic/followings_anonymous.html:40
+#: georemindme/templates/generic/followings.html:27
+#: georemindme/templates/generic/followings.html:35
+#: georemindme/templates/generic/followings_anonymous.html:27
+#: georemindme/templates/generic/followings_anonymous.html:35
 #: georemindme/templates/generic/profile.html:45
 #: georemindme/templates/generic/profile_anonymous.html:44
 msgid "Siguiendo"
@@ -1067,56 +1096,67 @@ msgstr ""
 
 #: georemindme/templates/generic/followers.html:46
 #: georemindme/templates/generic/followers_anonymous.html:46
-#: georemindme/templates/generic/followings.html:37
-#: georemindme/templates/generic/followings_anonymous.html:37
+#: georemindme/templates/generic/followings.html:32
+#: georemindme/templates/generic/followings_anonymous.html:32
 msgid "Sugerencias hechas"
 msgstr ""
 
 #: georemindme/templates/generic/followers.html:47
 #: georemindme/templates/generic/followers_anonymous.html:47
-#: georemindme/templates/generic/followings.html:38
-#: georemindme/templates/generic/followings_anonymous.html:38
 #, python-format
 msgid " Personas que siguen a %(username)s "
 msgstr ""
 
 #: georemindme/templates/generic/followers.html:47
 #: georemindme/templates/generic/followers_anonymous.html:47
-#: georemindme/templates/generic/followings.html:38
-#: georemindme/templates/generic/followings_anonymous.html:38
+#: georemindme/templates/generic/followings.html:33
+#: georemindme/templates/generic/followings_anonymous.html:33
 msgid "Seguidores"
 msgstr ""
 
 #: georemindme/templates/generic/followers.html:48
 #: georemindme/templates/generic/followers_anonymous.html:48
-#: georemindme/templates/generic/followings.html:39
-#: georemindme/templates/generic/followings_anonymous.html:39
+#: georemindme/templates/generic/followings.html:34
+#: georemindme/templates/generic/followings_anonymous.html:34
 msgid "Recomendaciones suyas que te han gustado"
 msgstr ""
 
 #: georemindme/templates/generic/followers.html:48
 #: georemindme/templates/generic/followers_anonymous.html:48
-#: georemindme/templates/generic/followings.html:39
-#: georemindme/templates/generic/followings_anonymous.html:39
+#: georemindme/templates/generic/followings.html:34
+#: georemindme/templates/generic/followings_anonymous.html:34
 msgid "Impactos"
 msgstr ""
 
 #: georemindme/templates/generic/followers.html:49
 #: georemindme/templates/generic/followers_anonymous.html:49
-#: georemindme/templates/generic/followings.html:40
-#: georemindme/templates/generic/followings_anonymous.html:40
 #, python-format
 msgid " Personas a las que sigue %(username)s "
 msgstr ""
 
-#: georemindme/templates/generic/followings.html:14
-#: georemindme/templates/generic/followings_anonymous.html:14
+#: georemindme/templates/generic/followings.html:5
+#: georemindme/templates/generic/followings_anonymous.html:5
+msgid "Personas a las que sigue {{request.user.username}}"
+msgstr ""
+
+#: georemindme/templates/generic/followings.html:9
+#: georemindme/templates/generic/followings_anonymous.html:9
 msgid "Sigues a {{followings|length}} personas"
 msgstr ""
 
-#: georemindme/templates/generic/followings.html:16
-#: georemindme/templates/generic/followings_anonymous.html:16
+#: georemindme/templates/generic/followings.html:11
+#: georemindme/templates/generic/followings_anonymous.html:11
 msgid "{{username_page}} sigue a {{followings|length}} personas"
+msgstr ""
+
+#: georemindme/templates/generic/followings.html:33
+#: georemindme/templates/generic/followings_anonymous.html:33
+msgid "Personas que le siguen"
+msgstr ""
+
+#: georemindme/templates/generic/followings.html:35
+#: georemindme/templates/generic/followings_anonymous.html:35
+msgid "Personas a las que sigue"
 msgstr ""
 
 #: georemindme/templates/generic/profile.html:6
@@ -1178,7 +1218,7 @@ msgid "Buscador"
 msgstr ""
 
 #: georemindme/templates/generic/settings.html:37
-#: mainApp/templates/mainApp/login.html:47
+#: mainApp/templates/mainApp/login.html:49
 msgid "Ayuda"
 msgstr ""
 
@@ -1186,42 +1226,54 @@ msgstr ""
 msgid "Control de cuentas"
 msgstr ""
 
-#: georemindme/templates/generic/settings.html:67
+#: georemindme/templates/generic/settings.html:62
+msgid ""
+" \n"
+"                    No queremos ser <em>otra red social más</em>; sino una "
+"herramienta de enlace entre tus redes actuales para gestionar tus "
+"recomendaciones.<br>\n"
+"                    Por ello, para ofrecerte una mejor experiencia puedes "
+"autorizarnos para que puedas utilizar la potencia de tus redes desde "
+"GeoRemindMe! \n"
+"                "
+msgstr ""
+
+#: georemindme/templates/generic/settings.html:69
 msgid "Red"
 msgstr ""
 
-#: georemindme/templates/generic/settings.html:68
+#: georemindme/templates/generic/settings.html:70
 msgid "Estado"
 msgstr ""
 
-#: georemindme/templates/generic/settings.html:74
-#: georemindme/templates/generic/settings.html:86
-#: georemindme/templates/generic/settings.html:96
+#: georemindme/templates/generic/settings.html:76
+#: georemindme/templates/generic/settings.html:88
+#: georemindme/templates/generic/settings.html:98
 msgid "Autorizar"
 msgstr ""
 
-#: georemindme/templates/generic/settings.html:78
-#: georemindme/templates/generic/settings.html:98
+#: georemindme/templates/generic/settings.html:80
+#: georemindme/templates/generic/settings.html:100
 msgid "Revocar"
 msgstr ""
 
-#: georemindme/templates/generic/settings.html:88
+#: georemindme/templates/generic/settings.html:90
 msgid "Revocar permisos"
 msgstr ""
 
-#: georemindme/templates/generic/settings.html:112 geouser/forms.py:421
+#: georemindme/templates/generic/settings.html:114 geouser/forms.py:421
 msgid "Visibilidad del perfil"
 msgstr ""
 
-#: georemindme/templates/generic/settings.html:114
+#: georemindme/templates/generic/settings.html:116
 msgid "Público"
 msgstr ""
 
-#: georemindme/templates/generic/settings.html:116
+#: georemindme/templates/generic/settings.html:118
 msgid "Privado"
 msgstr ""
 
-#: georemindme/templates/generic/settings.html:148
+#: georemindme/templates/generic/settings.html:147
 msgid "Desinstalar la aplicación"
 msgstr ""
 
@@ -1310,7 +1362,7 @@ msgstr ""
 #: georemindme/templates/generic/view_list.html:167
 #: georemindme/templates/generic/view_list_anonymous.html:114
 #: georemindme/templates/generic/view_list_anonymous.html:165
-#: georemindme/templates/timeline/300.html:58
+#: georemindme/templates/timeline/300.html:60
 #: georemindme/templates/timeline/350.html:41
 msgid "Guardada"
 msgstr ""
@@ -1337,7 +1389,7 @@ msgstr ""
 #: georemindme/templates/timeline/120.html:62
 #: georemindme/templates/timeline/121.html:63
 #: georemindme/templates/timeline/300.html:54
-#: georemindme/templates/timeline/300.html:103
+#: georemindme/templates/timeline/300.html:106
 #: georemindme/templates/timeline/350.html:88
 msgid "Me gusta"
 msgstr ""
@@ -1364,7 +1416,7 @@ msgstr ""
 #: georemindme/templates/timeline/120.html:55
 #: georemindme/templates/timeline/121.html:59
 #: georemindme/templates/timeline/300.html:50
-#: georemindme/templates/timeline/300.html:96
+#: georemindme/templates/timeline/300.html:99
 #: georemindme/templates/timeline/350.html:81
 msgid "Ya no me gusta"
 msgstr ""
@@ -1608,33 +1660,27 @@ msgid ""
 "con otros usuarios, valorarla y comentarla."
 msgstr ""
 
+#: georemindme/templates/generic/suggestions.html:493
+msgid ""
+"Además podrás comentar, valorar y guardar en tu mochila aquellas sugerencias "
+"y listas de sugerencias que te hayan gustado."
+msgstr ""
+
 #: georemindme/templates/generic/suggestions.html:501
 msgid ""
 "En estas pestañas encontraras agrupadas tus sugerencias y la listas junto "
 "con aquellas que hayas guardado."
 msgstr ""
 
-#: georemindme/templates/generic/user_pass.html:10
-msgid "Recordar contraseña"
-msgstr ""
-
-#: georemindme/templates/generic/user_pass.html:14
+#: georemindme/templates/generic/user_pass.html:13
+#: mainApp/templates/mainApp/user_pass.html:13
 msgid ""
 "Una última cosa, ya solo queda que nos indiques cual quieres que sea tu "
 "nueva contraseña:"
 msgstr ""
 
-#: georemindme/templates/generic/user_pass.html:23
-msgid ""
-"\n"
-"                Por motivos de seguridad no enviamos tu antigua contraseña, "
-"en su lugar te permitimos <strong>establecer una nueva</strong>.<br>\n"
-"                Por favor indícanos la dirección de email con la que te "
-"registrates para que te enviemos un enlace desde el que poder hacerlo.\n"
-"            "
-msgstr ""
-
-#: georemindme/templates/generic/user_pass.html:30
+#: georemindme/templates/generic/user_pass.html:27
+#: mainApp/templates/mainApp/user_pass.html:27
 msgid "Email:"
 msgstr ""
 
@@ -1642,6 +1688,13 @@ msgstr ""
 #: georemindme/templates/generic/view_list_anonymous.html:5
 #, python-format
 msgid "Lista \"%(list)s\" de sugerencias creada por %(autor)s"
+msgstr ""
+
+#: georemindme/templates/generic/view_list.html:6
+#: georemindme/templates/generic/view_list_anonymous.html:6
+msgid ""
+"Nuestra misión es ofrecer una herramienta para la gestión de sugerencias "
+"personalizadas en base a tu localización y a tu gustos."
 msgstr ""
 
 #: georemindme/templates/generic/view_list.html:62
@@ -1841,9 +1894,10 @@ msgid "Te ha gustado el comentario "
 msgstr ""
 
 #: georemindme/templates/timeline/125.html:34
+#, python-format
 msgid ""
-"A <a href=\"{{user_profile}}\" class=\"dark-link\">{{obj.instance.user."
-"username}}</a> le gusta el comentario:"
+"A <a href=\"%(user_profile)s\" class=\"dark-link\">%(username)s</a> le gusta "
+"el comentario: "
 msgstr ""
 
 #: georemindme/templates/timeline/125.html:47
@@ -1858,17 +1912,24 @@ msgstr ""
 msgid "has creado la sugerencia:"
 msgstr ""
 
-#: georemindme/templates/timeline/300.html:69
-#: georemindme/templates/timeline/350.html:54
-msgid "Ver los {{obj.comments.1|length}} comentarios"
+#: georemindme/templates/timeline/300.html:72
+#, python-format
+msgid "'Ver los %(counter)s comentarios "
 msgstr ""
 
-#: georemindme/templates/timeline/300.html:118
+#: georemindme/templates/timeline/300.html:121
 #: georemindme/templates/timeline/350.html:102
 msgid "Escribe un comentario"
 msgstr ""
 
-#: georemindme/templates/timeline/303.html:34
+#: georemindme/templates/timeline/303.html:22
+msgid ""
+"Has guardado en <a href=\"{{suggestion_url}}\">tu mochila</a> la sugerencia "
+"de <a href=\"{{profile_url}}\" class=\"dark-link\">{{obj.instance.user."
+"username}}</a>:"
+msgstr ""
+
+#: georemindme/templates/timeline/303.html:35
 #, python-format
 msgid ""
 "\n"
@@ -1900,6 +1961,10 @@ msgstr ""
 #: georemindme/templates/timeline/350.html:24
 #, python-format
 msgid " ha creado una lista con %(counter)s sugerencias: "
+msgstr ""
+
+#: georemindme/templates/timeline/350.html:54
+msgid "Ver los {{obj.comments.1|length}} comentarios"
 msgstr ""
 
 #: georemindme/templates/timeline/350.html:100
@@ -2088,7 +2153,7 @@ msgid ""
 "puedes acceder.<br/>Te hemos reenviado el correo para que puedas activarla."
 msgstr ""
 
-#: geouser/funcs.py:83
+#: geouser/funcs.py:82
 msgid "El email o la contraseña que has introducido es incorrecta \n"
 msgstr ""
 
@@ -2488,12 +2553,12 @@ msgid ""
 "        "
 msgstr ""
 
-#: geouser/models.py:724
+#: geouser/models.py:727
 #, python-format
 msgid "La cuenta de correo \"%s\" está en uso"
 msgstr ""
 
-#: geouser/models.py:730
+#: geouser/models.py:733
 #, python-format
 msgid "Nombre de usuario \"%s\" está en uso"
 msgstr ""
@@ -2503,40 +2568,44 @@ msgid "Contraseña incorrecta"
 msgstr ""
 
 #: geouser/properties.py:84 geouser/properties.py:86 geouser/properties.py:89
-#: geouser/views.py:537
+#: geouser/views.py:555
 msgid "Usuario inválido"
 msgstr ""
 
-#: geouser/views.py:467 geouser/views.py:474
+#: geouser/views.py:483 geouser/views.py:490
 #, python-format
 msgid "La cuenta de %s ya esta confirmada, por favor, conectate."
 msgstr ""
 
-#: geouser/views.py:470
+#: geouser/views.py:486
 msgid "Codigo de confirmacion incorrecto"
 msgstr ""
 
-#: geouser/views.py:476
+#: geouser/views.py:492
 #, python-format
 msgid "Usuario erroneo %s."
 msgstr ""
 
-#: geouser/views.py:494
+#: geouser/views.py:510
 msgid "El correo no existe"
 msgstr ""
 
-#: geouser/views.py:498
+#: geouser/views.py:514
 #, python-format
 msgid ""
 "Se ha enviado un correo de confirmación a %s. Por favor revisa tu correo"
 msgstr ""
 
-#: geouser/views.py:526
+#: geouser/views.py:542
 msgid "Contraseña cambiada, por favor identifíquese."
 msgstr ""
 
-#: geouser/views.py:530
+#: geouser/views.py:546
 msgid "Establece tu nueva contraseña."
+msgstr ""
+
+#: geouser/views.py:553
+msgid "Contraseña invalida"
 msgstr ""
 
 #: mainApp/templates/mainApp/confirmation.html:6
@@ -2547,112 +2616,112 @@ msgstr ""
 msgid "GeoRemindMe!"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:48
+#: mainApp/templates/mainApp/login.html:50
 #: mainApp/templates/mainApp/suggested_suggestions.html:254
 msgid "Blog"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:50
+#: mainApp/templates/mainApp/login.html:52
 msgid "Móvil"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:52
+#: mainApp/templates/mainApp/login.html:54
 msgid "Comunidad"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:87
+#: mainApp/templates/mainApp/login.html:89
 msgid ""
 "GeoRemindMe! es una herramienta especializada en enviar y recibir "
 "sugerencias personalizadas en base a tu localización y a tus gustos."
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:90
+#: mainApp/templates/mainApp/login.html:92
 msgid "<strong>Encuentra</strong> cosas interesantes que hacer"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:91
+#: mainApp/templates/mainApp/login.html:93
 msgid "<strong>Descubre</strong> y explora nuevo lugares"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:92
+#: mainApp/templates/mainApp/login.html:94
 msgid "<strong>No olvides nada</strong> de lo que querías hacer"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:98
+#: mainApp/templates/mainApp/login.html:100
 msgid "GeoRemindme te permite"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:102
+#: mainApp/templates/mainApp/login.html:104
 msgid ""
 "<strong>Consulta</strong> sugerencias personalizadas en base a tus gustos y "
 "a tu localización"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:103
+#: mainApp/templates/mainApp/login.html:105
 msgid ""
 "<strong>Sigue</strong> a otras personas con gustaos similares a los tuyos"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:104
+#: mainApp/templates/mainApp/login.html:106
 msgid ""
 "<strong>Descarga o imprime</strong> listas de sugerencias como: rutas "
 "turísticas, los mejores restaurantes, ocio, etc"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:105
+#: mainApp/templates/mainApp/login.html:107
 msgid ""
 "<strong>Guarda, comentar y valora</strong> las sugerencias que más te "
 "interesen"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:106
+#: mainApp/templates/mainApp/login.html:108
 msgid ""
 "Y en el furuto... queremos ofrecerte <strong>promociones y descuentos</"
 "strong> para disfrutar donde te encuentres"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:107
+#: mainApp/templates/mainApp/login.html:109
 msgid ""
 "Y <strong>pedir sugerencias</strong> a tus contactos de Facebook, Twitter</"
 "strong>"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:154
+#: mainApp/templates/mainApp/login.html:156
 msgid "¿Eres nuevo?"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:156
+#: mainApp/templates/mainApp/login.html:158
 msgid "Selecciona la cuenta</u> con la que quieres crear tu perfil:"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:163
-#: mainApp/templates/mainApp/login.html:186
+#: mainApp/templates/mainApp/login.html:165
+#: mainApp/templates/mainApp/login.html:188
 msgid "Continuar"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:168
+#: mainApp/templates/mainApp/login.html:170
 msgid "O crea una nueva cuenta desde cero y conéctala."
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:180
+#: mainApp/templates/mainApp/login.html:182
 msgid "Las contraseñas no coinciden"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:182
+#: mainApp/templates/mainApp/login.html:184
 msgid "Marca esta casilla si estás de acuerdo"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:183
+#: mainApp/templates/mainApp/login.html:185
 msgid ""
 "He leido y acepto las <a href=\"/tos\" class=\"hoverlink\">Condiciones de uso"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:213
+#: mainApp/templates/mainApp/login.html:215
 #: mainApp/templates/mainApp/suggested_suggestions.html:254
 msgid "@GeoRemindMe"
 msgstr ""
 
-#: mainApp/templates/mainApp/login.html:213
+#: mainApp/templates/mainApp/login.html:215
 #: mainApp/templates/mainApp/suggested_suggestions.html:254
 msgid "Fans"
 msgstr ""
@@ -2666,6 +2735,7 @@ msgid "Personas sugeridas:"
 msgstr ""
 
 #: mainApp/templates/mainApp/suggested_suggestions.html:50
+#: mobileApp/templates/mobile/basic.html:132
 msgid "Sugerencias cerca de ti"
 msgstr ""
 
@@ -2683,4 +2753,14 @@ msgstr ""
 
 #: mainApp/templates/mainApp/suggested_suggestions.html:254
 msgid "Feedback"
+msgstr ""
+
+#: mobileApp/templates/mobile/basic.html:141
+#: mobileApp/templates/mobile/view_place_anonymous.html:70
+msgid "Perfil"
+msgstr ""
+
+#: mobileApp/templates/mobile/basic.html:142
+#: mobileApp/templates/mobile/view_place_anonymous.html:71
+msgid "Mochila"
 msgstr ""

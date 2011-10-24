@@ -484,6 +484,7 @@ def share_on_facebook(request, id, msg):
         new_list(sender=list, msg=msg)
     return True
 
+
 @login_required
 def share_on_twitter(request, id, msg):
     list = List.objects.get_by_id_querier(id, request.user)

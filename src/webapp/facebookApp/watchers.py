@@ -57,23 +57,22 @@ def new_list(sender, **kwargs):
             "picture": 'https://georemindme.appspot.com/user/georemindme/picture/',
             }
     if sender.description is not None:                
-            params["description"]= sender.description
+            params["description"]= "This is a longer description of the attachment"
     params = dict([k, v.encode('utf-8')] for k, v in params.items())
     if sender._is_public():
         params["privacy"]={'value':'EVERYONE'}
     else:
         params["privacy"]={'value':'CUSTOM','friends':'SELF'}
-    
     if isinstance(sender, ListSuggestion):
         if 'msg' in kwargs:
             post_id = fb_client.consumer.put_wall_post(kwargs['msg'], params)
         else:
-            post_id = fb_client.consumer.put_wall_post(_(u"He creado una lista de sugerencias "), params)
+            post_id = fb_client.consumer.put_wall_post("He creado una lista de sugerencias ", params)
     elif isinstance(sender, ListRequested):
         if 'msg' in kwargs:
             post_id = fb_client.consumer.put_wall_post(kwargs['msg'], params)
         else:        
-            post_id = fb_client.consumer.put_wall_post(_(u"Necesito sugerencias, ¿me podéis ayudar?"), params)
+            post_id = fb_client.consumer.put_wall_post("Necesito sugerencias, ¿me podéis ayudar?", params)
     else:
         return
     from models import _FacebookPost

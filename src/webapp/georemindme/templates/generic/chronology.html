@@ -14,24 +14,24 @@
 {% block embed_js %}{%endblock%}
 
 {% block title %}Dashboard{% endblock %}
-
+{% block goBack %}{%endblock%}
 {% block body %}
     <div {% block id %} {%endblock%} class="clear">
         
         {% block pre_chronology %} {%endblock%}
         {% if chronology.1|length %}    
+    
+            
+            
+    
             
             <ul id="tabMenu" class="clear">
                 <li class="clear-box">Ver:</li>
-                <li id="no-filter" class="active">Todo 
-<!--
-                <span id="all-counter"></span>
--->
-                </li>
-                <li id="filter-suggestions">Sugerencias <span id="suggestions-counter"></span></li>
-                <li id="filter-lists">Listas <span id="lists-counter"></span></li>
-                <li id="filter-likes">Valoraciones <span id="likes-counter"></span></li>
-                <li id="filter-comments">Comentarios <span id="comments-counter"></span></li>
+                <li id="no-filter" class="active">{% trans "Todo" %}<!--<span id="all-counter"></span>--></li>
+                <li id="filter-suggestions">{% trans "Sugerencias" %} <span id="suggestions-counter"></span></li>
+                <li id="filter-lists">{% trans "Listas" %} <span id="lists-counter"></span></li>
+                <li id="filter-likes">{% trans "Valoraciones" %} <span id="likes-counter"></span></li>
+                <li id="filter-comments">{% trans "Comentarios" %} <span id="comments-counter"></span></li>
                 
             </ul>
             <ul id="chronology" value="{{chronology.0}}" {% if profile.username%}username="{{profile.username}}"{%endif%} page="1" {% if notifications %} notifications="{{notifications}}" {% endif %}>
@@ -42,10 +42,7 @@
             {% if chronology.1|length > 9%}
                 <div class="load-more btn">{%trans "Cargar más" %}</div>
             {% endif %}    
-            <!-- Objeto oculto 
-            Chronology.1|length={{chronology.1|length}}
-            Chronology.1={{chronology.1}}
-            Fin de objeto oculto -->
+            
             
         {% endif %}    
     

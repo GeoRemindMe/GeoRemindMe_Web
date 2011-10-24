@@ -4,12 +4,16 @@
 
 {% block embed_js %}
     <script type="text/javascript">
+        
+        
         $(document).ready(function(){
             
+            
             $('.help-icon img').click(function(){
-showHelp('#add-suggestion-btn','#addSuggestion-toolbox','up');
+				showHelp('#add-suggestion-btn','#addSuggestion-toolbox','up');
                 showHelp('.lavaLamp','#menu-toolbox','up');
                 showHelp('#tabMenu','#timeline-toolbox','up');
+                
             })
             
             //Show user help: si es la primera vez que entra
@@ -22,7 +26,7 @@ showHelp('#add-suggestion-btn','#addSuggestion-toolbox','up');
 
 
 
-{% block pre_chronology %}
+{% block pre_chronology %} 
     <h1>{%trans "Actividad" %}</h1>
     <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-activity"></div>
     
@@ -44,20 +48,21 @@ showHelp('#add-suggestion-btn','#addSuggestion-toolbox','up');
     </div>
     
     <div id="addSuggestion-toolbox" style="display:none">
-<p>{%trans "Crea y comparte tus sugerencias aquí." %}</p>
-</div>
+		<p>{%trans "Crea y comparte tus sugerencias aquí." %}</p>
+	</div>
     <div id="menu-toolbox" style="display:none">
-<p>{%trans "Estas son las secciones principales:" %}</p>
+		<p>{%trans "Estas son las secciones principales:" %}</p>
         <ul>
             <li><strong>{%trans "Actividad</strong>: ahora mismo te encuentras aquí, donde recibirás las últimas novedades (sugerencias, listas, etc.) de las personas a las que sigues." %}</li>
             <li><strong>{%trans "Tú mochila</strong>: en la mochila podrás consultar y gestionar tus sugerencias favoritas." %}</li>
             <li><strong>{%trans "Notificaciones</strong>: aquí te avisaremos cuando alguien empiece a seguir, comente una de tu sugerencias, etc." %}</li>
         </ul>
-</div>
+	</div>
     <div id="timeline-toolbox" style="display:none">
-<p>
+		<p>
             <strong>{%trans "Linea de tiempo</strong>: aquí irás recibiendo las novedades de tus contactos." %}
         </p>
         <p>{%trans "Haciendo clic en cada una de las pestañas podrás filtrar los mensajes por tipo." %}</p>
-</div>
+	</div>
 {%endblock%}
+

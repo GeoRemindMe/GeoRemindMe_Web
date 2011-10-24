@@ -394,6 +394,8 @@ class User(polymodel.PolyModel, model_plus.Model):
             if self.confirm_code is None or self.confirm_code == '':
                 from georemindme.funcs import make_random_string
                 self.confirm_code = make_random_string(length=24)
+            from georemindme.funcs import make_random_string
+            self.confirm_code = make_random_string(length=24)
             if commit:
                 self.put()
             from geouser.mails import send_confirm_mail
