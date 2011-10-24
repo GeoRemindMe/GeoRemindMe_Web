@@ -29,10 +29,12 @@
         <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/jquery-ui/jquery-ui-1.8.16.custom.css">
         {% if request.META.REMOTE_ADDR = "127.0.0.1" %}
             <link type="text/css" rel="stylesheet" href="/static/facebookApp/css/main.css">
+            <script type="text/javascript" src="{% url jsi18n %}"></script>    
             <script type="text/javascript" src="https://connect.facebook.net/en_US/all.js"></script>
             <script type="text/javascript" src="/static/common/js/common_facebookApp.js"></script>    
         {% else %}
             <link type="text/css" rel="stylesheet" href="/static/common/css/fb_style.min.css">
+            <script type="text/javascript" src="{% url jsi18n %}"></script>    
             <script type="text/javascript" src="https://connect.facebook.net/en_US/all.js"></script>
             <script type="text/javascript" src="/static/common/js/common_facebookApp.min.js"></script>    
         {% endif %}
@@ -63,10 +65,12 @@
             <link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
             <link type="text/css" rel="stylesheet" href="/static/common/css/browser_error.css">
             <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+            <script type="text/javascript" src="{% url jsi18n %}"></script>    
             <script type="text/javascript" src="/static/common/js/common_webapp.js"></script>    
         {% else %}
             <link type="text/css" rel="stylesheet" href="/static/common/css/style.min.css">
             <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+            <script type="text/javascript" src="{% url jsi18n %}"></script>    
             <script type="text/javascript" src="/static/common/js/common_webapp.min.js"></script>    
         {% endif %}
         
@@ -101,11 +105,13 @@
             <link type="text/css" rel="stylesheet" href="/static/webapp/style/main.css">
             <link type="text/css" rel="stylesheet" href="/static/common/css/browser_error.css">
             <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+            <script type="text/javascript" src="{% url jsi18n %}"></script>    
             <script type="text/javascript" src="/static/common/js/common_webapp.js"></script>    
             <script type="text/javascript" src="/static/common/js/login.js"></script>    
         {% else %}
             <link type="text/css" rel="stylesheet" href="/static/common/css/style.min.css">
             <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>    
+            <script type="text/javascript" src="{% url jsi18n %}"></script>    
             <script type="text/javascript" src="/static/common/js/common_webapp.min.js"></script>    
             <script type="text/javascript" src="/static/common/js/login.min.js"></script>    
         {% endif %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-17 13:06+0200\n"
+"POT-Creation-Date: 2011-10-24 09:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,18 +18,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: static/common/js/add_suggestion.js:456
-#: static/common/js/raw/add_suggestion.js:446
-#: static/facebookApp/js/suggestion.js:226
+#: static/common/js/raw/add_suggestion.js:456
 msgid ""
-"Ha habido un error al añadir la sugerencia, estamos trabajando para "
+"Ha habido un error al aÃ±adir la sugerencia, estamos trabajando para "
 "solucionarlo."
 msgstr ""
 
 #: static/common/js/add_suggestion.js:460
-#: static/common/js/raw/add_suggestion.js:450
-#: static/facebookApp/js/suggestion.js:229
-#: static/facebookApp/js/suggestion.js:600
-msgid "La sugerencia ha sido añadida con éxito"
+#: static/common/js/raw/add_suggestion.js:460
+msgid "La sugerencia ha sido aÃ±adida con Ã©xito"
 msgstr ""
 
 #: static/common/js/bag.js:549 static/common/js/bag.min.js:1
@@ -143,31 +140,31 @@ msgid "Privada"
 msgstr ""
 
 #: static/common/js/chronology.js:7 static/common/js/chronology.min.js:1
-#: static/common/js/common_webapp.js:2408 static/facebookApp/js/social.js:7
+#: static/common/js/common_webapp.js:2426 static/facebookApp/js/social.js:7
 msgid "Seguir"
 msgstr ""
 
 #: static/common/js/chronology.js:10 static/common/js/chronology.min.js:1
-#: static/common/js/common_webapp.js:2411 static/facebookApp/js/social.js:10
+#: static/common/js/common_webapp.js:2429 static/facebookApp/js/social.js:10
 msgid "Siguiendo"
 msgstr ""
 
 #: static/common/js/chronology.js:33 static/common/js/chronology.min.js:1
-#: static/common/js/common_webapp.js:2434 static/facebookApp/js/social.js:33
+#: static/common/js/common_webapp.js:2452 static/facebookApp/js/social.js:33
 msgid "Enviado..."
 msgstr ""
 
-#: static/common/js/chronology.js:315 static/common/js/chronology.min.js:1
-#: static/common/js/common_facebookApp.js:2633
-#: static/common/js/common_webapp.js:2716
-#: static/facebookApp/js/chronology.js:256
+#: static/common/js/chronology.js:312 static/common/js/chronology.min.js:1
+#: static/common/js/common_facebookApp.js:2648
+#: static/common/js/common_webapp.js:2731
+#: static/facebookApp/js/chronology.js:253
 msgid "La propuesta ha sido aceptada"
 msgstr ""
 
-#: static/common/js/chronology.js:317 static/common/js/chronology.min.js:1
-#: static/common/js/common_facebookApp.js:2635
-#: static/common/js/common_webapp.js:2718
-#: static/facebookApp/js/chronology.js:258
+#: static/common/js/chronology.js:314 static/common/js/chronology.min.js:1
+#: static/common/js/common_facebookApp.js:2650
+#: static/common/js/common_webapp.js:2733
+#: static/facebookApp/js/chronology.js:255
 msgid "La propuesta ha sido rechazada"
 msgstr ""
 
@@ -215,6 +212,17 @@ msgstr ""
 
 #: static/facebookApp/js/suggestion.js:176
 msgid "Geocoder failed due to: "
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:226
+msgid ""
+"Ha habido un error al añadir la sugerencia, estamos trabajando para "
+"solucionarlo."
+msgstr ""
+
+#: static/facebookApp/js/suggestion.js:229
+#: static/facebookApp/js/suggestion.js:600
+msgid "La sugerencia ha sido añadida con éxito"
 msgstr ""
 
 #: static/facebookApp/js/suggestion.js:244

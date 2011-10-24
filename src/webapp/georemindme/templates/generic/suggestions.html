@@ -50,8 +50,8 @@
         <h1>{%trans "Tu mochila" %}</h1>
         <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-activity"></div>
         <ul id="tabMenu">
-            <li id="your_suggestions" class="active">Sugerencias (<span id="suggestions-tab-counter">{{suggestions.1|length}}</span>)</li>
-            <li id="suggestions_lists">Listas (<span id="lists-tab-counter">{{lists|length}}</span>)</li>
+            <li id="your_suggestions" class="active">{%trans "Sugerencias" %} (<span id="suggestions-tab-counter">{{suggestions.1|length}}</span>)</li>
+            <li id="suggestions_lists">{%trans "Listas" %} (<span id="lists-tab-counter">{{lists|length}}</span>)</li>
         </ul>
         <div id="content">
                 <!-- YOUR SUGGESTIONS -->
@@ -218,7 +218,7 @@
                                         </dd>
                                         
                                         <dt>{%trans "Visibilidad:" %}</dt>
-                                        <dd {% if k.user.username == user.username%}class="editable_visibility"{%endif%} value="{{k|private:'_get_visibility'}}">{% if k|private:"_get_visibility" = "public" %}Pública{%else%}Privada{%endif%}</dd>
+                                        <dd {% if k.user.username == user.username%}class="editable_visibility"{%endif%} value="{{k|private:'_get_visibility'}}">{% if k|private:"_get_visibility" = "public" %}{%trans "Pública" %}{%else%}{%trans "Privada" %}{%endif%}</dd>
                                         
                                     </dl>
                                     

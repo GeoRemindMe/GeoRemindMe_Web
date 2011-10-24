@@ -59,8 +59,10 @@
             </div>
             
             <p>
-                {%trans "No queremos ser <em>otra red social más</em>; sino una herramienta de enlace entre tus redes actuales para gestionar tus recomendaciones.<br>
-                Por ello, para ofrecerte una mejor experiencia puedes autorizarnos para que puedas utilizar la potencia de tus redes desde GeoRemindMe!" %}
+                {% blocktrans %} 
+                    No queremos ser <em>otra red social más</em>; sino una herramienta de enlace entre tus redes actuales para gestionar tus recomendaciones.<br>
+                    Por ello, para ofrecerte una mejor experiencia puedes autorizarnos para que puedas utilizar la potencia de tus redes desde GeoRemindMe! 
+                {% endblocktrans %} 
             </p>
             <table>
                 <tr id="head">
@@ -133,7 +135,7 @@
                     {%if LANGUAGE_CODE == code %}{{name}}{% endif %} 
 
                 {% endfor %}
-                <a href="{% url2 in_facebook edit_settings %}" class="btn" id="edit-settings-btn">Editar</a> 
+                <a href="{% url2 in_facebook edit_settings %}" class="btn" id="edit-settings-btn">{%trans "Editar" %}</a> 
             </p>
         </div>
         
