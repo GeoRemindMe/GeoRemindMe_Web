@@ -68,7 +68,7 @@ class SuggestionService(remote.Service):
                            modified = int(mktime(a.modified.utctimetuple())),
                            created = int(mktime(a.created.utctimetuple())),
                            username = a.user.username,
-                           lists = [List(id=l['id'], name=l['name']) for l in lists if a.id in l['keys']],
+                           lists = [List(id=l.id, name=l.name) for l in lists if a.id in l.keys],
                            id = a.id,
                          )
             response.append(t)
@@ -125,16 +125,15 @@ class SuggestionService(remote.Service):
         response = []
         for a in suggestions:
             t = Suggestion(
-                           name = a.name,
-                           description = a.description,
-                           poi_lat = a.poi.location.lat,
-                           poi_lon = a.poi.location.lon,
-                           poi_id = a.poi.id,
-                           google_places_reference = a.poi.google_places_reference,
-                           modified = int(mktime(a.modified.utctimetuple())),
-                           created = int(mktime(a.created.utctimetuple())),
-                           username = a.user.username,
-                           id = a.id,
+                           name = a['name'],
+                           description = a['description'],
+                           poi_lat = a['poi']['lat'],
+                           poi_lon = a['poi']['lon'],
+                           poi_id = a['poi']['id'],
+                           modified = int(mktime(a['modified'].utctimetuple())),
+                           created = int(mktime(a['created'].utctimetuple())),
+                           username = a['username'],
+                           id = a['id'],
                          )
         response.append(t)
         return Suggestions(query_id='', suggestions=response)
