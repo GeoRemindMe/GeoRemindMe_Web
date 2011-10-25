@@ -32,8 +32,4 @@ cron:
   url: /suggestions/cron/
   schedule: every day 2:00
   target: version-live
-  
-- description: Hourly exception report
-  url: /_ereporter?sender=javier@georemindme.com
-  schedule: every 12 hours
  

@@ -25,18 +25,13 @@ class GetSuggestionsRequest(messages.Message):
     
     
 class GetSuggestionsNearestRequest(messages.Message):
-    lat = messages.IntegerField(1)
-    lon = messages.IntegerField(2)
+    lat = messages.FloatField(1)
+    lon = messages.FloatField(2)
     radius = messages.IntegerField(3, default=5000)
     
 
 class GetSuggestionRequest(messages.Message):
     id = messages.IntegerField(1, required=True)
-    
-class GetSuggestionsNearestRequest(messages.Message):
-    lat = messages.IntegerField(1)
-    lon = messages.IntegerField(2)
-    radius = messages.IntegerField(3, default=5000)
     
 
 class SuggestionService(remote.Service):
@@ -57,13 +52,8 @@ class SuggestionService(remote.Service):
         lists_following = ListSuggestion.objects.get_list_user_following(user, async=True)
         lists = ListSuggestion.objects.get_by_user(user=user, querier=user, all=True)
         from geoalert.api import get_suggestions_dict
-        suggestions = get_suggestions_dict(request.user)
-        # combinar listas
-        lists = [l for l in lists]
-        lists.extend(ListSuggestion.objects.load_list_user_following_by_async(lists_following, resolve=True))
-        # construir un diccionario con todas las keys resueltas y usuarios
-        #instances = prefetch_refList(lists, users=[ListSuggestion.user.get_value_for_datastore(l) for l in lists])
-        lists = [l.to_dict(resolve=False) for l in lists]
+        suggestions = get_suggestions_dict(user)
+        lists = ListSuggestion.objects.load_list_user_following_by_async(lists_following, to_dict=False, resolve=False)
         # añadimos las listas
         #[s.lists.append(l) for l in lists for s in suggestions if s.id in l['keys']]
         response = []

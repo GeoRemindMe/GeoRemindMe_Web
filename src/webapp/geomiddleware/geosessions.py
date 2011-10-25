@@ -77,5 +77,5 @@ class geosession(object):
                                         secure=settings.SESSION_COOKIE_SECURE,
                                         #httponly=settings.COOKIE_SESSION_HTTPONLY or None
                                          )
-                        request.session.put()
+                    request.session.put()
         return response

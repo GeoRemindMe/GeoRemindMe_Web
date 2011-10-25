@@ -54,7 +54,7 @@ def log_exception(sender, **kwds):
     mail = GeoMail(to='javier@georemindme.com',
                    subject='[ERROR][GEOREMINDME]',
                    body=traceback.format_exc(),
-                   html=er.get_traceback_html(),
+                   html=traceback.format_exc(),
                    )
     mail.push()
     
