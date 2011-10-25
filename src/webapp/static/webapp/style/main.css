@@ -2104,3 +2104,10 @@ div#content {
     width: 905px;
     min-height: 0;
 }
+
+#announcement{
+    background-color: #FCF0BD;
+    font-size: 0.9em;
+    padding: 8px 0;
+    text-align: center;
+}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-24 10:12+0200\n"
+"POT-Creation-Date: 2011-10-25 10:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -175,31 +175,37 @@ msgstr ""
 
 #: static/common/js/view_place.js:44 static/common/js/view_place.min.js:1
 #: static/common/js/view_suggestion.js:44
+#: static/common/js/view_suggestion.min.js:1
 #: static/common/js/raw/load_panoramio.js:44
 msgid "los derechos de las fotos pertenecen a los autores"
 msgstr ""
 
 #: static/common/js/view_suggestion.js:50
+#: static/common/js/view_suggestion.min.js:1
 #: static/common/js/raw/view_suggestion.js:3
 msgid "Más información"
 msgstr ""
 
 #: static/common/js/view_suggestion.js:52
+#: static/common/js/view_suggestion.min.js:1
 #: static/common/js/raw/view_suggestion.js:5
 msgid "[Ocultar]"
 msgstr ""
 
 #: static/common/js/view_suggestion.js:84
+#: static/common/js/view_suggestion.min.js:1
 #: static/common/js/raw/view_suggestion.js:37
 msgid "Las sugerencia han sido añadida a la lista"
 msgstr ""
 
 #: static/common/js/view_suggestion.js:114
+#: static/common/js/view_suggestion.min.js:1
 #: static/common/js/raw/view_suggestion.js:67
 msgid "Las sugerencia ha sido eliminada de la lista"
 msgstr ""
 
 #: static/common/js/view_suggestion.js:178
+#: static/common/js/view_suggestion.min.js:1
 #: static/common/js/raw/view_suggestion.js:131
 msgid "sugerencias"
 msgstr ""
@@ -287,5 +293,9 @@ msgid "Las contraseñas no coinciden"
 msgstr ""
 
 #: static/webapp/js/base.js:167
-msgid "Las contraseñas tienen que tener 6 o más caracteres"
+msgid "Las contraseñas tienen que tener 4 o más caracteres"
+msgstr ""
+
+#: static/webapp/js/base.js:182
+msgid "Las contraseñas tienen que tener 15 o menos caracteres"
 msgstr ""

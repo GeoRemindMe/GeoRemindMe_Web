@@ -48,11 +48,13 @@
 		</div>
 		<div class="section">	
 			<div class="header">
-                <h2>Idioma</h2>
+                <h2>{% trans "Idioma" %}</h2>
                 <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help"  id="help-accounts-control"></div>
             </div>
-           Idioma de la interfaz:
-           {{settings_form.language}}
+           <p>
+                {% trans "Idioma de la interfaz" %}:
+                {{settings_form.language}}
+           </p>
         </div>
 
     

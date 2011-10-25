@@ -123,14 +123,13 @@
         
         <div class="section">	
             <div class="header">
-                <h2>Idioma</h2>
-                <div class="help-icon"><img src="/static/common/img/transparent.gif" alt="Help" id="help-language"></div>
+                <h2>{% trans "Idioma" %}</h2>
             </div>
             
             {% get_available_languages as LANGUAGES %}
             {% get_current_language as LANGUAGE_CODE %}
             <p>
-                <strong>Idioma de la interfaz:</strong>
+                <strong>{% trans "Idioma de la interfaz"%}:</strong>
                 {% for code, name in LANGUAGES %}
                     {%if LANGUAGE_CODE == code %}{{name}}{% endif %} 
 
