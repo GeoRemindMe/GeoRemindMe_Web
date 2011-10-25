@@ -22,7 +22,7 @@ handlers:
 
 - url: /ajax/.*
   script: main.py
-  secure: optional
+  secure: always
 
 - url: /api/.*
   script: mainservice.py
@@ -44,14 +44,6 @@ handlers:
   script: $PYTHON_LIB/google/appengine/ext/ereporter/report_generator.py
   login: admin
   
-- url: /suggestion/.*
-  script: main.py
-  secure: never
-  
-- url: /place/.*
-  script: main.py
-  secure: never
-
 - url: /admin.*
   script: appengine_admin/main.py
   secure: always
@@ -77,8 +69,8 @@ handlers:
   secure: always
   
 
-builtins:
-- appstats: on
+#builtins:
+#- appstats: on
 #- remote_api: on
 
 inbound_services:

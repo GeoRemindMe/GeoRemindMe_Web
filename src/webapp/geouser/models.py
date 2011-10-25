@@ -720,7 +720,7 @@ class User(polymodel.PolyModel, model_plus.Model):
         return UserTimeline.insert(msg=msg, user=self, instance=instance)
 
     def delete_async(self):
-        children = db.query_descendants(self).fetch(10)
+        children = db.query_descendants(self).fetch(100)
         for c in children:
             c.delete()
         return db.delete_async(self)
