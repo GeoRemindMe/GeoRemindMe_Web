@@ -76,6 +76,7 @@ from xml.sax.saxutils import unescape
 from google.appengine.ext import webapp
 from google.appengine.api import apiproxy_stub_map  
 from google.appengine.api import datastore_file_stub
+from geouser.decorators import admin_required
 
 _LOCAL_TEST_DIR = 'test'  # location of files
 _WEB_TEST_DIR = '/test'   # how you want to refer to tests on your web server
@@ -90,7 +91,7 @@ _LOCAL_DJANGO_TEST_DIR = 'gaeunit/test'
 ##################################################
 ## Django support
 ##################################################
-
+@admin_required
 def django_test_runner(request):
     unknown_args = [arg for (arg, v) in request.REQUEST.items()
                     if arg not in ("format", "package", "name")]
@@ -138,7 +139,7 @@ def _render_plain(package_name, test_name):
     else:
         from django.http import HttpResponseServerError
         return HttpResponseServerError(error)
-
+@admin_required
 def django_json_test_runner(request):
     from django.http import HttpResponse
     response = HttpResponse()
