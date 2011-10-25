@@ -414,7 +414,10 @@ class SuggestionHelper(EventHelper):
                      'description': sug.description,
                      'poi': {'lat': sug.poi.location.lat,
                              'lon': sug.poi.location.lon,
+                             'id': sug.poi.id,
                              },
+                     'created': sug.created,
+                     'modified': sug.modified,
                      } 
                     for sug in sugs]
             if querier is not None and querier.is_authenticated():
