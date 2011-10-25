@@ -53,7 +53,7 @@ class List(db.polymodel.PolyModel, model_plus.Model):
     @property
     def counters(self):
         if self._counters is None:
-            self._counters = ListCounter.all().ancestor(self).get()
+            self._counters = ListCounter.all().ancestor(self.key()).get()
         return self._counters
 
     @classproperty
@@ -89,6 +89,12 @@ class List(db.polymodel.PolyModel, model_plus.Model):
                 list_deleted.send(sender=self)
             else:
                 list_modified.send(sender=self)
+                
+    def delete(self):
+        children = db.query_descendants(self).fetch(100)
+        for c in children:
+            c.delete()
+        return db.delete_async(self)
 
     def to_dict(self, resolve=False, instances=None):
             dict = {'id': self.id,
@@ -303,7 +309,7 @@ class ListSuggestion(List, Visibility, Taggable):
 
             :returns: True si se añadio, False en caso contrario
         """
-        if self.__class.user.get_value_for_datastore(self) == user.key():
+        if self.__class__.user.get_value_for_datastore(self) == user.key():
             return False
         def _tx(list_key, user_key):
             # TODO : cambiar a contador con sharding
@@ -439,18 +445,6 @@ class ListRequested(ListSuggestion):
         if tags is not None:
             self._tags_setter(tags, commit=False)
         self.put(querier=querier)
-
-    def _post_put_sync(self, querier, **kwargs):
-        if self._new:
-            counter = ListCounter(parent=self)
-            counter.put()
-            list_new.send(sender=self)
-            self._new = False
-        else:
-            if not self.active:
-                list_deleted.send(sender=self)
-            else:
-                list_modified.send(sender=self, querier=querier)
 
 
 class ListAlert(List):

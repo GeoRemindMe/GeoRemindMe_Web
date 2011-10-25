@@ -380,7 +380,7 @@ class Suggestion(Event, Visibility):
             
             :returns: :class:`geoalert.models.AlertSuggestion`    
         '''
-        if self.__class.user.get_value_for_datastore(self) == user.key():
+        if self.__class__.user.get_value_for_datastore(self) == user.key():
             return False
         def _tx(sug_key, user_key):
             sug = db.get(sug_key)
