@@ -23,6 +23,9 @@ class GeoMail(mail.EmailMessage):
         """
         from tasks import EmailHandler
         EmailHandler().add(self)
+        
+    def _force_push(self):
+        self.send()
 
 
 def send_contact_email(org,msg,to=settings.CONTACT_EMAIL, language='en'):
