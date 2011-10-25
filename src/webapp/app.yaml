@@ -56,10 +56,6 @@ handlers:
   script: appengine_admin/main.py
   secure: always
   
-- url: /test.*
-  script: gaeunit/gaeunit.py
-  login: admin
-  
 - url: /console.*
   script: $PYTHON_LIB/google/appengine/ext/admin
   login: admin
