@@ -163,15 +163,15 @@ function checkPasswords(event){
 		return false;
 	}
 	else{
-		if($('#userRegisterPass1').val().length<6){
-			//If the are equals but they are not longer than 6 caracters
+		if($('#userRegisterPass1').val().length<4){
+			//If the are equals but they are not longer than 4 caracters
 			
 			if (event.type!='keyup')
 			{
 				$('#msgRegisterPass')
 					.removeClass('msgOK')
 					.addClass('msgNoOK')
-					.html(gettext('Las contraseñas tienen que tener 6 o más caracteres'))
+					.html(gettext('Las contraseñas tienen que tener 4 o más caracteres'))
 					.show();
 			}
 			
