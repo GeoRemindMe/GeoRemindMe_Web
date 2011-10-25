@@ -18,6 +18,10 @@
                 $('#username-error').text('Por favor utilice un nombre de usuario con más de 4 caracteres').fadeIn('slow');
                 return false;
             }
+            else if(username.length>15){
+                $('#username-error').text('Por favor utilice un nombre de usuario con 15 o menos caracteres').fadeIn('slow');
+                return false;
+            }
             else{
                 $('#username-error').fadeOut('slow');
                 return true;

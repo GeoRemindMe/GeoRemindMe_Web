@@ -177,7 +177,23 @@ function checkPasswords(event){
 			
 			renderStartBtn();
 			return false;
-		}else{
+		}
+        else if($('#userRegisterPass1').val().length>15){
+			//If the are equals but they are longer than 15 caracters
+			
+			if (event.type!='keyup')
+			{
+				$('#msgRegisterPass')
+					.removeClass('msgOK')
+					.addClass('msgNoOK')
+					.html(gettext('Las contraseñas tienen que tener 15 o menos caracteres'))
+					.show();
+			}
+			
+			renderStartBtn();
+			return false;
+		}
+        else{
 			$('#msgRegisterPass').html('');
 			$('#msgRegisterPass').hide();
 			passOK = true;
