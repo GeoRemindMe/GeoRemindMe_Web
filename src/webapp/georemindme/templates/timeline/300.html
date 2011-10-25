@@ -67,7 +67,7 @@
     <div class="comment-box clear" value="{{obj.instance.id}}">
 
         {% if obj.comments.1|length and obj.comments.1|length > 2 %}
-            <div class="show-all-comments">{% blocktrans with obj.comments.1|length as counter %}'Ver los {{counter}} comentarios {% endblocktrans %}</div>
+            <div class="show-all-comments">{% blocktrans with obj.comments.1|length as counter %}Ver los {{counter}} comentarios {% endblocktrans %}</div>
         {% endif %}
         <ul id="commentList-{{obj.instance.id}}">
             {% if obj.comments.1 %}
