@@ -190,7 +190,7 @@ class TwitterFriendsRPC(object):
                                                    }
                     except Exception, e:
                         import logging
-                        logging.exception('No se encontro un usuario de twitter buscado por: %s - %s' % (self.user.id, e.message))
+                        logging.exception('No se encontro un usuario de twitter buscado por: %s - %s' % (user_to_follow.user.id, e.message))
         except Exception, e:
             import logging
             logging.exception('Handling Exception getting twitter friends: %s - %s' % (self.user.id, e.message))
