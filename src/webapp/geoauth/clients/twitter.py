@@ -14,6 +14,7 @@ from geouser.models import User
 from geouser.models_social import TwitterUser
 from georemindme.funcs import make_random_string
 
+
 class TwitterAPIError(Exception):
     def __init__(self, type, message):
         Exception.__init__(self, message)
@@ -144,8 +145,13 @@ class TwitterClient(Client):
                 'status': msg.encode('utf-8'),
                 }
         if poi is not None:
-            body['lat'] = poi.lat
-            body['lon'] = poi.lon
+            from geoalert.models_poi import POI
+            if isinstance(poi, POI):
+                body['lat'] = poi.location.lat
+                body['lon'] = poi.location.lon
+            else:
+                body['lat'] = poi.lat
+                body['lon'] = poi.lon
         body['wrap_links'] = 'true' if wrap_links else 'false'
         from urllib import urlencode
         response, content = self.request(self.url_statuses_update, method='POST', body=urlencode(body))

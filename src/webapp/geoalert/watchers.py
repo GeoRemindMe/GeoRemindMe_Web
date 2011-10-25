@@ -82,7 +82,17 @@ def new_suggestion(sender, **kwargs):
             from georemindme.models_utils import _Do_later_ft
             later = _Do_later_ft(instance_key=sender.key())
             later.put()
-            raise
+        from libs.oauth2 import Token
+        from geoauth.clients.twitter import TwitterClient
+        try:
+            tc = TwitterClient(token=Token(key=settings.OAUTH['twitter']['geosuggest_key'], secret=settings.OAUTH['twitter']['geosuggest_secret'] ))
+            msg = "%(name)s %(url)s #grm" % {
+                                            'name': sender.name[:105], 
+                                            'url': sender.short_url,
+                                            }
+            tc.send_tweet(msg, sender.poi.location)
+        except Exception, e:
+            logging.error('ERROR AUTOCOMPARTIENDO TWITTER sugerencia %s: %s' % (sender.id, e.message))
     timelinePublic.put()
     p.get_result()
 suggestion_new.connect(new_suggestion)

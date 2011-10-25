@@ -3,7 +3,7 @@
 
 import os,sys,fileinput,re,urllib
 
-ROOT_DIR = "GeoRemindMe_Web"
+ROOT_DIR = "georemindme"
 CWD = os.getcwd()
 
 def main():
