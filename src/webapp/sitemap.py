@@ -71,15 +71,14 @@ def _get_all_suggs(cursor = None):
         Obtiene las urls de las sugerencias
     """
     keys = []
+    q = Suggestion.all().filter('_vis =', 'public')
     if cursor is None:
-        suggs = Suggestion.all().filter('_vis =', 'public').fetch(500)
-        keys.extend(suggs)
-    else:
-        suggs = Suggestion.all().filter('_vis =', 'public').with_cursor(cursor).fetch(500)
-    while len(suggs) == 500:
-        keys.extend(suggs)
-        q = Suggestion.all().filter('_vis =', 'public').filter('__key__ >', suggs[-1].key())
         suggs = q.fetch(500)
+    else:
+        suggs = q.with_cursor(cursor).fetch(500)
+    keys.extend(suggs)
+    while len(suggs) == 500:
+        suggs = q.with_cursor(q.cursor).fetch(500)
         keys.extend(suggs)
     return [x.get_absolute_url() for x in keys]
 
@@ -89,13 +88,14 @@ def _get_all_places(cursor = None):
         Obtiene las urls de las sugerencias
     """
     keys = []
+    q = Place.all()
     if cursor is None:
-        places = Place.all().fetch(500)
-        keys.extend(places)
-    while len(places) == 500:
-        keys.extend(places)
-        q = Place.all().filter('__key__ >', places[-1].key())
         places = q.fetch(500)
+    else:
+        places = q.with_cursor(cursor).fetch(500)
+    keys.extend(places)
+    while len(places) == 500:
+        places = q.with_cursor(q.cursor()).fetch(500)
         keys.extend(places)
     return [x.get_absolute_url() for x in keys]
 
@@ -105,13 +105,14 @@ def _get_all_users(cursor = None):
         Obtiene las urls de las sugerencias
     """
     keys = []
+    q = User.all().filter('username !=', None)
     if cursor is None:
-        users = User.all().filter('username !=', None).fetch(500)
-        keys.extend(users)
-    while len(users) == 500:
-        keys.extend(users)
-        q = User.all().filter('username !=', None).filter('__key__ >', users[-1].key())
         users = q.fetch(500)
+    else:
+        users = q.with_cursor(cursor).fetch(500)
+    keys.extend(users)
+    while len(users) == 500:
+        users = q.with_cursor(q.cursor()).fetch(500)
         keys.extend(users)
     return [x.get_absolute_url() for x in keys]
 

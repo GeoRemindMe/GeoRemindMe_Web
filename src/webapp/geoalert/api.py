@@ -11,7 +11,7 @@ def get_suggestions_dict(querier):
     
     indexes = SuggestionFollowersIndex.all(keys_only=True).filter('keys =', querier.key()).order('-created').run()
     suggs = model_plus.fetch_parentsKeys([s for s in indexes])
-    if suggs is not None or any(suggs):
+    if isinstance(suggs, list) and any(suggs):
         suggestions = []
         for s in suggs: # convertir entidades
             setattr(s, 'lists', [])
