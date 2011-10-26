@@ -5,37 +5,10 @@ class OAuthware(object):
         self.wrapped_app = app
         
     def __call__(self, environ, start_response):
-        import os
-        import libs.oauth2 as oauth2
         import logging
         logging.warning(environ)
-        if 'LoginService' in environ['PATH_INFO']:
-            return self.wrapped_app(environ, start_response)
-        if 'HTTP_X_GEOREMINDME_SESSION' in environ:
-            session_id = environ['HTTP_X_GEOREMINDME_SESSION']
-            from geomiddleware.sessions.store import SessionStore
-            session = SessionStore.load(session_id=session_id, from_cookie=False, from_rpc=True)
-            if session is not None:
-                os.environ['user'] = str(session['user'].id)
-                session.put()
-                return self.wrapped_app(environ, start_response)
-        elif 'HTTP_AUTHORIZATION' in environ:
-            try:
-                headers = {'Authorization': environ['HTTP_AUTHORIZATION']}
-                oauth_request = oauth2.Request.from_request(http_method=environ['REQUEST_METHOD'],
-                                            http_url=environ['PATH_INFO'], 
-                                            headers=headers,
-                                            )
-            except:
-                start_response(400, [('content-type', 'text/plain')])
-                return ('Invalid OAUTH Request') 
-            if oauth_request is not None:
-                from geoauth.models import OAUTH_Token
-                token = OAUTH_Token.get_token(oauth_request.parameters['oauth_token'])
-                if token.access:
-                    os.environ['user'] = str(token.user.id)
-                    return self.wrapped_app(environ, start_response)
-        elif 'HTTP_X_CSRFTOKEN' in environ: 
+        
+        if 'HTTP_X_CSRFTOKEN' in environ: 
             import Cookie
             csrf_cookie = csrf_cookie = Cookie.SimpleCookie(environ.get("HTTP_COOKIE","")).get("csrftoken", None)
             if environ['HTTP_X_CSRFTOKEN'] != '' and csrf_cookie is not None:
@@ -48,6 +21,7 @@ class OAuthware(object):
                 csrf_cookie = _sanitize_token(csrf_cookie.value)
                 if csrf_token == csrf_cookie:
                     return self.wrapped_app(environ, start_response)
-        start_response(403, [('content-type', 'text/plain')])
-        return ('Access forbidden') 
-        
+                else:
+                    start_response(403, [('content-type', 'text/plain')])
+                    return ('Access forbidden') 
+        return self.wrapped_app(environ, start_response)

@@ -668,6 +668,21 @@ def get_avatar(request, username):
     return HttpResponseRedirect(gravatar_url)
 
 
+def image_avatar(request, username):
+    from georemindme.model_plus import memcache, version
+    encoded_image = memcache.get('%s%s_avatarcachebase64' % (version, username))
+    if encoded_image is None:
+        import base64
+        location = get_avatar(request, username)
+        from google.appengine.api import urlfetch
+        result = urlfetch.fetch(location['Location'])
+        decoded_image = result.content
+        encoded_image = "data:image;base64,%s" % base64.b64encode(result.content)
+        memcache.set('%s%s_avatarcachebase64' % (version, username), encoded_image, 1123)
+    else:
+        decoded_image=base64.b64decode(encoded_image)
+    return HttpResponse(decoded_image, mimetype="image/xyz")
+
 def close_window(request):
     return render_to_response('generic/close_window.html', {}, context_instance=RequestContext(request))
 

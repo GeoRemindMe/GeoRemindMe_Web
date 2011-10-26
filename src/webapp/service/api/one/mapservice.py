@@ -5,7 +5,9 @@ from protorpc import remote
 from protorpc import messages
 from protorpc.remote import ApplicationError
 
+
 from messages import Sites, Site, Place, Suggestions, Suggestion
+from mainservice import MainService
 
 class GetSiteReverseRequest(messages.Message):
     name = messages.StringField(1)
@@ -30,7 +32,7 @@ class GetPlaceRequest(messages.Message):
     google_places_reference = messages.StringField(2)
     
 
-class MapService(remote.Service):
+class MapService(MainService):
     """
         Define el servicio para obtener timelines de usuarios
     """
@@ -109,7 +111,7 @@ class MapService(remote.Service):
         def load_suggestions_async(suggestions):
             suggestions_loaded = [s for s in suggestions]
             from georemindme.funcs import prefetch_refprops
-            suggestions = prefetch_refprops([s for s in suggestions_loaded], SuggestionModel.user, SuggestionModel.poi)
+            suggestions = prefetch_refprops(suggestions_loaded, SuggestionModel.user, SuggestionModel.poi)
             suggestions_loaded = []
             for a in suggestions:
                 t = Suggestion(

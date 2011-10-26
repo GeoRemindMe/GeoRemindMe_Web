@@ -8,6 +8,7 @@
 
 from django.conf import settings
 from django.utils.translation import ugettext as _
+from django.core.exceptions import ValidationError
 
 
 def get_next(request):
@@ -60,7 +61,7 @@ def login_func(request, email = None, password = None, remember_me = False, user
     try:
         validate_email(email.decode('utf8'))
         user = User.objects.get_by_email(email)
-    except:
+    except ValidationError:
         user = User.objects.get_by_username(email)
     if user:
         if user.check_password(password):

@@ -127,7 +127,7 @@ def prefetch_refpropsEntity(entities, *props):
 
 
 def prefetch_refList(lists):
-    if len(lists) == 0:
+    if lists is None or len(lists) == 0:
         return []
     from geouser.models import User
     from geoalert.models import Suggestion

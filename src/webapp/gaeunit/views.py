@@ -70,8 +70,6 @@ try:
 except:
     from django.utils import simplejson
 
-import main
-
 from xml.sax.saxutils import unescape
 from google.appengine.ext import webapp
 from google.appengine.api import apiproxy_stub_map  
