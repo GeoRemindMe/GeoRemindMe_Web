@@ -6,12 +6,13 @@ from protorpc import messages
     
 class LoginResponse(messages.Message):
     """
-            Respuesta correcta a una peticion de login,
+    Respuesta correcta a una peticion de login,
         se iniciara una sesion nueva.
         
-            Devuelve: 
-                session: :class:`String` identificador unico de una sesion
-                expires: :class:'integer' tiempo (en segundos) que dura la sesion
+        :param session: Identificador de la sesion
+        :type session: :class:`String`
+        :param expires: Tiempo (en segundos) que dura la sesion
+        :type expires: :class:`Integer`
     """
     session = messages.StringField(1)
     expires = messages.IntegerField(2)
@@ -19,19 +20,26 @@ class LoginResponse(messages.Message):
 
 class Timeline(messages.Message):
     """
-            Estructura que contiene la informacion devuelta
+    Estructura que contiene la informacion devuelta
         de un solo timeline
         
-            msg: :class:`string` mensaje (opcional)
-            msg_id: :class:`integer` numero de tipo de mensaje
-            instance_id: :class:`integer` identificador del objeto al
-                que se refiere el timeline
-            instance_name: :class:`string' nombre del objeto al
-                que se refiere el timeline
-            url: :class:`string` url del objeto (opcional)
-            user: :class:'string' nombre del usuario dueño del timeline
-            created :class:`integer` tiempo en segundos desde que se creo
+            :param msg: mensaje del timeline (OPCIONAL)
+            :type msg: :class:`string`
+            :param msg_id: identificador del tipo de mensaje
+            :type msg_id: :class:Ìnteger`
+            :param instance_id: identificador del objeto al que
+                se refiere el timeline (OPCIONAL)
+            :type instance_id: :class:`Integer`
+            :param instance_name: nombre del objeto al que se 
+                refiere el timeline (OPCIONAL)
+            :type instance_name: :class:`String`
+            :param url: url del objeto (OPCIONAL)
+            :type url: :class:`String`
+            :param user: nombre del usuario dueño del timeline
+            :type user: :class:`string`
+            :param created: tiempo en segundos en el que se creo 
                 el timeline
+            :type created: :class:`Integer`
     """
     msg = messages.StringField(1)
     msg_id = messages.IntegerField(2)
@@ -44,10 +52,12 @@ class Timeline(messages.Message):
 
 class Timelines(messages.Message):
     """
-        Contendra todos los timelines que se esten devolviendo en la consulta
+    Contendra todos los timelines que se esten devolviendo en la consulta
         
-            timelines: :class:`Timeline` lista con los timelines
-            query_id: :class:`string` identificador para continuar con la consulta
+        :param timelines: lista con todos los timelines devueltos
+        :type timelines: :class:`Timeline`
+        :param query_id: Identificador para continuar con la consulta
+        :type query_id: :class:`String`
     """
     timelines = messages.MessageField(Timeline, 1, repeated=True)
     query_id = messages.StringField(2)
@@ -55,10 +65,12 @@ class Timelines(messages.Message):
 
 class List(messages.Message):
     """
-        Informacion sobre una lista
+    Informacion sobre una lista
         
-            id: :class:`integer` identificador de la lista
-            name: :class:`string` nombre de la lista
+        :param id: Identificador de la lista
+        :type id: :class:`Integer`
+        :param name: Nombre de la lista
+        :type name: :class:`String`
     """
     id = messages.IntegerField(1)
     name = messages.StringField(2)
@@ -66,13 +78,16 @@ class List(messages.Message):
 
 class Comment(messages.Message):
     """
-        Contiene un comentario
+    Contiene un comentario
         
-            id: :class:`integer` identificador del comentario
-            username: :class:`string` nombre del usuario
-            message: :class:`string` mensaje 
-            created: :class:`integer` tiempo en segundos desde que se creo
-                el comentario
+        :param id: Identificador del comentario
+        :type id: :class:`Integer` identificador del comentario
+        :param username: nombre del usuario que escribio el comentario
+        :type username: :class:`String`
+        :param message: mensaje escrito
+        :type message: :class:`String`
+        :param created: tiempo en segundos desde que se creo el comentario
+        :type created: :class:`Integer`
     """
     id = messages.IntegerField(1)
     username = messages.StringField(2)

@@ -5,9 +5,6 @@ class OAuthware(object):
         self.wrapped_app = app
         
     def __call__(self, environ, start_response):
-        import logging
-        logging.warning(environ)
-        
         if 'HTTP_X_CSRFTOKEN' in environ: 
             import Cookie
             csrf_cookie = csrf_cookie = Cookie.SimpleCookie(environ.get("HTTP_COOKIE","")).get("csrftoken", None)

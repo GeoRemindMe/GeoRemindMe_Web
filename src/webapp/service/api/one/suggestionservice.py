@@ -9,7 +9,7 @@ from messages import Suggestion, Suggestions, List
 from time import mktime
 from os import environ
 
-
+from mainservice import MainService
 from geoalert.api import get_suggestions_dict
 from geoalert.models import Suggestion as SuggestionModel
 from geouser.models import User
@@ -20,21 +20,47 @@ from georemindme.funcs import prefetch_refprops, prefetch_refList, single_prefet
 
 
 class GetSuggestionsRequest(messages.Message):
-    query_id = messages.IntegerField(1)
+    """
+    Obtiene la mochila completa del usuario.
+            
+        :param query_id: (NO USABLE) identificador para continuar una peticion anterior, 
+            si no existe, se devuelve la mochila con las sugerencias mas nuevas
+        :type query_id: :class`String`
+        :param page: (NO USABLE) pagina a obtener de la mochila 
+        :type limit: :class:`Integer`
+    """
+    query_id = messages.StringField(1)
     page = messages.IntegerField(2, default=1)
     
     
 class GetSuggestionsNearestRequest(messages.Message):
-    lat = messages.FloatField(1)
-    lon = messages.FloatField(2)
+    """
+    Obtiene las sugerencias mas cercanas al usuario
+    
+        :param lat: latitud en la que se encuentra el usuario
+        :type lat: :class:`Float`
+        :param lon: longitud en la que se encuentra el usuario
+        :type lon: :class:`Float`
+        :param radius: radio de distancia maxima en la que buscar
+            (en metros, 5000 por defecto, opcional)
+        :type radius: :class:`Integer`
+    """
+    lat = messages.FloatField(1, required=True)
+    lon = messages.FloatField(2, required=True)
     radius = messages.IntegerField(3, default=5000)
     
 
 class GetSuggestionRequest(messages.Message):
+    """
+    Obtiene la sugerencia especificada por el ID
+    
+        :param id: Identificador de la sugerencia
+        :type id: :class:`Integer`
+    """
     id = messages.IntegerField(1, required=True)
     
 
-class SuggestionService(remote.Service):
+class SuggestionService(MainService):
     """
         Define el servicio para obtener timelines de usuarios
     """
@@ -43,16 +69,17 @@ class SuggestionService(remote.Service):
     @remote.method(GetSuggestionsRequest, Suggestions)
     def get_suggestions(self, request):
         """
-            Obtiene la mochila del usuario con la sesion iniciada
+        Obtiene la mochila del usuario con la sesion iniciada
            
-               Recibe: :class:`GetSuggestionsRequest
-               Devuelve: :class:`Suggestions`
+            :param request: Parametros pasados a la peticion
+            :type request: :class:`GetSuggestionsRequest`
+            :returns: :class:`Suggestions`
         """
-        user = User.objects.get_by_id(int(environ['user']))
-        lists_following = ListSuggestion.objects.get_list_user_following(user, async=True)
-        lists = ListSuggestion.objects.get_by_user(user=user, querier=user, all=True)
+        self._login_required()
+        
+        lists_following = ListSuggestion.objects.get_list_user_following(self.user, async=True)
         from geoalert.api import get_suggestions_dict
-        suggestions = get_suggestions_dict(user)
+        suggestions = get_suggestions_dict(self.user)
         lists = ListSuggestion.objects.load_list_user_following_by_async(lists_following, to_dict=False, resolve=False)
         # añadimos las listas
         #[s.lists.append(l) for l in lists for s in suggestions if s.id in l['keys']]
@@ -68,7 +95,7 @@ class SuggestionService(remote.Service):
                            modified = int(mktime(a.modified.utctimetuple())),
                            created = int(mktime(a.created.utctimetuple())),
                            username = a.user.username,
-                           lists = [List(id=l.id, name=l.name) for l in lists if a.id in l.keys],
+                           lists = [List(id=l.id, name=l.name) for l in lists if a.key() in l.keys],
                            id = a.id,
                          )
             response.append(t)
@@ -78,29 +105,27 @@ class SuggestionService(remote.Service):
     @remote.method(GetSuggestionRequest, Suggestion)
     def get_suggestion(self, request):
         """
-            Devuelve la informacion sobre una sugerencia
+        Obtiene la informacion de la sugerencia solicitada
            
-               Recibe: :class:`GetSuggestionRequest
-               Devuelve: :class:`Suggestion`
+            :param request: Parametros pasados a la peticion
+            :type request: :class:`GetSuggestionRequest`
+            :returns: :class:`Suggestion`
+            :raises: :class:`ApplicationError`
         """
-        user = User.objects.get_by_id(int(environ['user']))
+        self._login_required()
+        
         from geovote.api import get_comments
-        suggestion = SuggestionModel.objects.get_by_id_querier(request.id, querier=user)
-        lists = ListSuggestion.objects.get_by_user(user=user, querier=user, all=True)
-        query_id, comments_async = get_comments(user, suggestion.id, 'Event', async=True)
+        suggestion = SuggestionModel.objects.get_by_id_querier(request.id, querier=self.user)
+        query_id, comments_async = get_comments(self.user, suggestion.id, 'Event', async=True)
         suggestion = single_prefetch_refprops(suggestion, SuggestionModel.user, SuggestionModel.poi)
-        has_voted = Vote.objects.user_has_voted(user, suggestion.key())
+        has_voted = Vote.objects.user_has_voted(self.user, suggestion.key())
         vote_counter = Vote.objects.get_vote_counter(suggestion.key())
-        user_follower = suggestion.has_follower(user)
-        top_comments = Comment.objects.get_top_voted(suggestion, user)
-        in_lists = ListSuggestion.objects.get_by_suggestion(suggestion, user)
-        # construir un diccionario con todas las keys resueltas y usuarios
+        user_follower = suggestion.has_follower(self.user)
+        top_comments = Comment.objects.get_top_voted(suggestion, self.user)
+        in_lists = ListSuggestion.objects.get_by_suggestion(suggestion, self.user)
         in_lists = [l.to_dict(resolve=False) for l in in_lists]
-        # listas del usuario
-#        lists = [l for l in lists if not suggestion.key() in l.keys]
-#        lists = prefetch_refprops(lists, ListSuggestion.user)
-#        lists = [l.to_dict(resolve=False) for l in lists]
-        comments = Comment.objects.load_comments_from_async(query_id, comments_async, user)[1]
+        comments = Comment.objects.load_comments_from_async(query_id, comments_async, self.user)[1]
+        # TODO: ENVIAR LOS COMENTARIOS AL MOVIL
         return Suggestion(id = suggestion.id,
                           name=suggestion.name,
                           description=suggestion.description,
@@ -113,14 +138,26 @@ class SuggestionService(remote.Service):
                           username = suggestion.user.username,
                           lists = [List(id=l['id'], name=l['name']) for l in in_lists],
                           comments = [Comment(id=c['id']) for c in comments],
+                          has_voted=has_voted,
+                          vote_counter=vote_counter,
+                          user_follower=user_follower,
                          )
         
     @remote.method(GetSuggestionsNearestRequest, Suggestions)
     def get_nearest(self, request):
-        user = User.objects.get_by_id(int(environ['user']))
+        """
+        Obtiene una lista con sugerencias cercanas
+           
+            :param request: Parametros pasados a la peticion
+            :type request: :class:`GetSuggestionsNearestRequest`
+            :returns: :class:`Suggestions`
+            :raises: :class:`ApplicationError`
+        """
+        self._login_required()
+        
         suggestions = SuggestionModel.objects.get_nearest(db.GeoPt(request.lat, request.lon),
                                                           radius=request.radius,
-                                                          querier=user
+                                                          querier=self.user
                                                           )
         response = []
         for a in suggestions:

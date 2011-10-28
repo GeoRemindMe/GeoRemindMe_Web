@@ -100,20 +100,18 @@ def _get_all_places(cursor = None):
     return [x.get_absolute_url() for x in keys]
 
 
-def _get_all_users(cursor = None):
+def _get_all_users(offset = 0):
     """
         Obtiene las urls de las sugerencias
     """
     keys = []
     q = User.all().filter('username !=', None)
-    if cursor is None:
-        users = q.fetch(500)
-    else:
-        users = q.with_cursor(cursor).fetch(500)
+    users = q.fetch(offset=offset, limit=500)
     keys.extend(users)
-    while len(users) == 500:
-        users = q.with_cursor(q.cursor()).fetch(500)
+    if len(users) >= 500:
+        users = q.fetch(offset=500, limit=500)
         keys.extend(users)
+        offset += 500
     return [x.get_absolute_url() for x in keys]
 
 
@@ -142,7 +140,7 @@ def build_sitemap(request):
     try:
         now = datetime.datetime.now().replace(second=0, microsecond=0)
         eta = now.replace(second=0, microsecond=0) + datetime.timedelta(seconds=65)
-        _regenerate_sitemap()
+        #_regenerate_sitemap()
         deferred.defer(
                        _regenerate_sitemap)
 #                       _queue='sitemap-%s' % (now.strftime('%Y%m%d%H%M')))

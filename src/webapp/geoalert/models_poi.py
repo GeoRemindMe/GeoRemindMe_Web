@@ -436,7 +436,7 @@ class Place(POI):
                                                          '%s,%s' % (self.location.lat, self.location.lon),
                                                          self.modified.isoformat(),
                                                         ],
-                                                        int(r)
+                                                        r
                                                        )
                                )
                 delete = _Do_later_ft().get_by_key_name('_do_later_%s' % self.id)
@@ -447,8 +447,7 @@ class Place(POI):
             logging.error('ERROR FUSIONTABLES update place %s: %s' % (self.id, e))
             later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key(), update=True)
             later.put()
-            from google.appengine.ext import deferred
-            raise deferred.PermanentTaskFailure(e)
+            raise
 
             
     def to_dict(self):

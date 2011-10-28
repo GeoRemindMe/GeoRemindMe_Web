@@ -17,16 +17,16 @@ class GetSiteReverseRequest(messages.Message):
 
 class GetPlaceRequest(messages.Message):
     """
-            Parametros de entrada para realizar una peticion de informacion de
+    Parametros de entrada para realizar una peticion de informacion de
         un sitio.
-            
-            Parametros:
-                id : :class:`Integer` codigo ID que identifica al lugar
-                google_places_reference: :class:`string` codigo que identifica 
-                    el lugar en google places
-            
-            Ambos parametros son opcionales, pero al menos debes indicar uno, 
+    Ambos parametros son opcionales, pero al menos debes indicar uno, 
         teniendo id, preferencia sobre google_places_reference
+            
+            :param id: codigo ID que identifica al lugar
+            :type id: :class:`Integer`
+            :param google_places_reference: codigo que identifica el lugar
+                en google places
+            :type google_places_reference: :class:`String`
     """
     id = messages.IntegerField(1)
     google_places_reference = messages.StringField(2)
@@ -85,16 +85,13 @@ class MapService(MainService):
     @remote.method(GetPlaceRequest, Place)
     def get_place(self, request):
         """
-                Devuelve la informacion sobre un determinado sitio, incluyendo
+        Devuelve la informacion sobre un determinado sitio, incluyendo
             la lista de sugerencias.
             
-                Recibe :class:`GetPlaceRequest` con el lugar a buscar.
-                
-                Devuelve: :class:`Place` con la informacion del sitio y las sugerencias
-                    existentes.
-                    
-                Excepciones: :class:`ApplicationError` si no existe o faltan parametros
-                    para identificar el sitio.
+            :param request: Parametros pasados a la peticion
+            :type request: :class:`GetPlaceRequest`
+            :returns: :class:`Place`
+            :raises: :class:`ApplicationError`
         """
         from geouser.models import User
         from geoalert.models_poi import Place as PlaceModel

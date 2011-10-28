@@ -1,22 +1,50 @@
-# coding=utf-8
+# coding:utf-8
+"""
+This file is part of GeoRemindMe.
+
+GeoRemindMe is free software: you can redistribute it and/or modify
+it under the terms of the Affero General Public License (AGPL) as published 
+by Affero, as published by the Free Software Foundation, either version 3 
+of the License, or (at your option) any later version.
+
+GeoRemindMe is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+
+You should have received a copy of the GNU Affero General Public License
+along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+
+"""
+.. module:: api/timelineservice
+    :platform: google-appengine (GAE)
+    :synopsis: Funciones para obtener timelines del usuario (actividad, notificaciones, etc.)
+.. moduleauthor:: Javier Cordero <javier@georemindme.com>
+"""
 
 from protorpc import message_types
 from protorpc import remote
 from protorpc import messages
 
 from messages import Timelines, Timeline
+from mainservice import MainService
 
 class GetActivityRequest(messages.Message):
+    """
+    Datos recibidos para poder procesar la peticion del timeline
+        
+        :param limit: (NO USABLE) limite de timeline a obtener (por defecto 10) 
+        :type limit: :class:`Integer`
+        :param query_id: identificador para continuar una peticion anterior, 
+            si no existe, se devuelve el timeline mas nuevo
+        :type query_id: :class`String`
+    """
     limit = messages.IntegerField(1, default=10)
     query_id = messages.StringField(2, default=None)
-
-    class Order(messages.Enum):
-        MODIFIED = 1
-        TEXT = 2
-    order = messages.EnumField(Order, 3, default=Order.MODIFIED)
   
 
-class TimelineService(remote.Service):
+class TimelineService(MainService):
     """
         Define el servicio para obtener timelines de usuarios
     """
@@ -24,13 +52,17 @@ class TimelineService(remote.Service):
     #decorador para indicar los metodos del servicio
     @remote.method(GetActivityRequest, Timelines)
     def get_activity(self, request):
-        from os import environ
-        from geouser.models import User
-        user = User.objects.get_by_id(int(environ['user']))
-        if user is None:
-            from protorpc.remote import ApplicationError
-            raise ApplicationError("Unknow user")
-        activity = user.get_activity_timeline(request.query_id)
+        """
+        Obtiene el timeline de actividad completo del usuario.
+            
+            :param request: datos necesarios para realizar la peticion
+            :type request: :class:`GetActivityRequest`
+            :returns: :class:`Timelines`
+            :raises: :class:`ApplicationError`
+        """ 
+        self._login_required()
+        
+        activity = self.user.get_activity_timeline(request.query_id)
         timelines = []
         from time import mktime
         from geovote.models import Comment, Vote

@@ -615,7 +615,7 @@ class Suggestion(Event, Visibility):
                                                              self.modified.isoformat(),
                                                              str(self._calc_relevance()),
                                                             ],
-                                                            int(r)
+                                                            r
                                                            )
                                    )
                     delete = _Do_later_ft().get_by_key_name('_do_later_%s' % self.id)

@@ -42,6 +42,7 @@ class LoginService(MainService):
                                      user=user, 
                                      from_rpc=True, 
                                      is_from_facebook=False)
+                session.put()
                 return LoginResponse(session=session.session_id, expires = session.get_expiry_age())
             else:
                 raise ApplicationError("Invalid email/password")
