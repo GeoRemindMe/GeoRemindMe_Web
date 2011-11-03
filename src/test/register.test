@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8080/" />
+<title>prueba</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">prueba</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=p.register-text-aux</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=registerEmail</td>
+	<td>noreply@georemind.me</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=userRegisterPass1</td>
+	<td>testgrm1980</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=userRegisterPass2</td>
+	<td>tesgrm1980</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=termsCheckbox</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#registerFormForm &gt; input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=userRegisterPass2</td>
+	<td>testgrm1980</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#registerFormForm &gt; input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_user_set_username-username</td>
+	<td>testgrm€</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=startBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_user_set_username-username</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=startBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Probar las mejores pizzas napolitanas de Granada, hasta de un metro.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//ul[@id='suggested-contacts']/li[4]/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>¿Conoceis la desconocida Aragón? Si vais visitad Huesca capital.No os lo imagináis.Esta pequeña ciudad no tiene nada que envidiar a Vitoria.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=#step-two &gt; span.btn.finish-register &gt; a.black-link</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=showing-help</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=filter-suggestions</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=filter-lists</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=filter-likes</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=filter-comments</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=add-suggestion-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=place</td>
+	<td>el arenal</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=place</td>
+	<td>El Arenal, grana</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=place</td>
+	<td>El Arenal, grana</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=//div[@class=&quot;pac-item&quot;][1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>El Arenal<br />S/N C/ Virgen del Monte Granada</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_name</td>
+	<td>buenas tapas!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=submit-button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=//div[@id=&quot;user-menu&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=//div[@id=&quot;user-menu&quot;]/ul/li[3]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=p.register-text-aux</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=registerEmail</td>
+	<td>test@georemind.me</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=userRegisterPass1</td>
+	<td>test2grm1980</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=userRegisterPass2</td>
+	<td>test2grm1980</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=termsCheckbox</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=#registerFormForm &gt; input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=id_user_set_username-username</td>
+	<td>test2</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=startBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Finish</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>buenas tapas!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=buenas tapas!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Follow</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.remember</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=vault-icon</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=showing-help</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>buenas tapas!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.suggestionName</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.suggestionName_editable</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>El Arenal</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log Out</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
