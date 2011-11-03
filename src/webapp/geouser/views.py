@@ -59,7 +59,7 @@ def login(request):
             from funcs import login_func
             error, redirect = login_func(request, f.cleaned_data['email'], f.cleaned_data['password'], f.cleaned_data['remember_me'])
         else:
-            error = _("El email/contraseña que has introducido es incorrecto.<br/>Por favor asegúrate que no tienes las mayúsculas actividas e inténtalo de nuevo.")
+            error = _(u"El email/contraseña que has introducido es incorrecto.<br/>Por favor asegúrate que no tienes las mayúsculas actividas e inténtalo de nuevo.")
         return error, redirect
     return render_to_response('mainApp/login.html', {'login': True, 'next': request.path}, context_instance=RequestContext(request))
 
