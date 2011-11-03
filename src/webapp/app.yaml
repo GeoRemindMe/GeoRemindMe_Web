@@ -48,10 +48,6 @@ handlers:
   script: appengine_admin/main.py
   secure: always
   
-- url: /console.*
-  script: $PYTHON_LIB/google/appengine/ext/admin
-  login: admin
-  
 - url: /appengine_admin_media
   static_dir: appengine_admin/media
   secure: always

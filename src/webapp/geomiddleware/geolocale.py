@@ -7,12 +7,12 @@ class geolocale(object):
         """
             process the request to load the language from user
         """
-        app_host = 'georemindme.appspot.com'
-        dom_host = 'georemindme.com'
-        if dom_host in request.get_host():
-            if request.is_secure():
-                return HttpResponsePermanentRedirect('https://%s%s' % (app_host,request.path))
-            return HttpResponsePermanentRedirect('http://%s%s' % (app_host,request.path))
+#        app_host = 'georemindme.appspot.com'
+#        dom_host = 'georemindme.com'
+#        if dom_host in request.get_host():
+#            if request.is_secure():
+#                return HttpResponsePermanentRedirect('https://%s%s' % (app_host,request.path))
+#            return HttpResponsePermanentRedirect('http://%s%s' % (app_host,request.path))
         
         language = self._get_language_from_request(request)
         from django.utils import translation

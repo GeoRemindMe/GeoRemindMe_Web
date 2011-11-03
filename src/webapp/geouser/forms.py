@@ -434,4 +434,5 @@ class UserSettingsForm(forms.Form):
             user.settings.language = self.cleaned_data['language']
             user.settings.put()
         except:
+            raise
             return False

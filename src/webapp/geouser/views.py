@@ -399,6 +399,7 @@ def edit_settings(request, template="generic/edit_settings.html"):
         if f.is_valid():
             f.save(request.user)
             request.session['LANGUAGE_CODE'] = request.user.settings.language
+            request.session.put()
             if 'facebookApp' in template:
                 return HttpResponseRedirect(reverse('facebookApp.views.profile_settings'))
             else:

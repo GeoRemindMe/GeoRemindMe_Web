@@ -104,7 +104,7 @@ class List(db.polymodel.PolyModel, model_plus.Model):
                     'created': self.created if self.created is not None else 0,
                     'tags': self.tags if hasattr(self, 'tags') else None,
                     'count': self.count,
-                    'counters': self.counters.to_dict(),
+                    'counters': self.counters.to_dict() if self.counters is not None else None,
                     'keys': [i.id() for i in self.keys],
                     'visibility': self._get_visibility(),
                     'get_absolute_url': self.get_absolute_url(),

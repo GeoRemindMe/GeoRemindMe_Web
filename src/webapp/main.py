@@ -29,8 +29,6 @@ import django.core.handlers.wsgi
 import django.dispatch
 from django.core.signals import got_request_exception
 from django.db import _rollback_on_exception
-from google.appengine.ext import ereporter
-ereporter.register_logger()
 
 
 ### elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
