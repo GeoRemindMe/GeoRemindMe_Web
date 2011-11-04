@@ -1,4 +1,27 @@
-# coding=utf-8
+# coding:utf-8
+"""
+This file is part of GeoRemindMe.
+
+GeoRemindMe is free software: you can redistribute it and/or modify
+it under the terms of the Affero General Public License (AGPL) as published 
+by Affero, as published by the Free Software Foundation, either version 3 
+of the License, or (at your option) any later version.
+
+GeoRemindMe is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+
+You should have received a copy of the GNU Affero General Public License
+along with GeoRemindMe.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+
+"""
+.. module:: api/messages
+    :platform: google-appengine (GAE)
+    :synopsis: Mensajes de respuesta que envia la API
+.. moduleauthor:: Javier Cordero <javier@georemindme.com>
+"""
 
 
 from protorpc import messages
@@ -55,7 +78,7 @@ class Timelines(messages.Message):
     Contendra todos los timelines que se esten devolviendo en la consulta
         
         :param timelines: lista con todos los timelines devueltos
-        :type timelines: :class:`Timeline`
+        :type timelines: :class:`messages.Timeline`
         :param query_id: Identificador para continuar con la consulta
         :type query_id: :class:`String`
     """
@@ -99,24 +122,39 @@ class Suggestion(messages.Message):
     """
         Contiene una sugerencia
         
-            name: :class:`string` nombre de la sugerencia
-            description: :class:`string`
-            poi_lat: :class:`float`
-            poi_lon: :class:`float`
-            poi_id: :class:`integer`
-            google_places_reference: :class:`string`
-            created: :class:`integer` tiempo en segundos desde que se creo
-                la sugerencia
-            modified: :class:`integer` tiempo en segundos desde que se modifico
-                por ultima vez la sugerencia
-            username: :class:`string`
-            id: :class:`integer`
-            lists: :class:`List` contiene las listas a las que pertenece la sugerencia
-            comments: :class:'Comment` contiene todos los comentarios de la sugerencia
-            has_voted: :class:boolean` True si el usuario ha votado
-            vote_counter: :class:`integer`
-            user_follower: :class:`boolean` True si el usuario ya sigue la sugerencia
-            top_comments: :class:`Comment` lista con los comentarios mas votados 
+            :param name:  nombre de la sugerencia
+            :type name: :class:`String`
+            :param description: descripcion de la sugerencia 
+            :type description: :class:`String`
+            :param poi_lat: latitud del punto donde esta la sugerencia
+            :type poi_lat: :class:`Float`
+            :param poi_lon: longitud del punto donde esta la sugerencia
+            :type poi_lon: :class:`Float`
+            :param poi_id: identificador del punto donde esta la sugerencia
+            :type poi_id: :class:`Integer`
+            :param google_places_reference: identificador del lugar en google places
+            :type google_places_reference: :class:`String`
+            :param created: tiempo en segundos desde que se creo la sugerencia
+            :type created: :class:`Integer`
+            :param modified: tiempo en segundos desde que se modifico por ultima
+                vez la sugerencia
+            :type modified: :class:`Integer`
+            :param username: nombre del usuario que creo la sugerencia
+            :type username: :class:`String`
+            :param id: identificador unico de la sugerencia
+            :type id: :class:`Integer`
+            :param lists: contiene las listas a las que pertenece la sugerencia
+            :type lists: :class:`messages.List`
+            :param comments: contiene todos los comentarios de la sugerencia
+            :type comments: :class:`messages.Comment`
+            :param has_voted: True si el usuario ha votado
+            :type has_voted: :class:`Boolean`
+            :param vote_counter: contador de votos recibidos por la sugerencia
+            :type vote_counter: :class:`Integer`
+            :param user_follower: True si el usuario ya sigue la sugerencia
+            :type user_follower: :class:`Boolean`
+            :param top_comments: Commentarios mas votados
+            :type top_comments: :class:`messages.Comment` 
     """
     name = messages.StringField(1, required=True)
     description = messages.StringField(2)
@@ -140,8 +178,10 @@ class Suggestions(messages.Message):
     """
         Contendra una lista de sugerencias que se esten devolviendo en la consulta
         
-            suggestions: :class:`Timeline` lista con los timelines
-            query_id: :class:`string` identificador para continuar con la consulta
+            :param suggestions: Lista de sugerencias
+            :type suggestions: :class:`messages.Suggestions`
+            :param query_id: Identificador para continuar con la consulta
+            :type query_id: :class:`String`
     """
     query_id = messages.StringField(1)
     suggestions = messages.MessageField(Suggestion, 2, repeated=True)

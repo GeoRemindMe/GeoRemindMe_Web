@@ -484,7 +484,7 @@ class Suggestion(Event, Visibility):
     def delete(self):
         if self.is_saved():
             from geolist.models import List
-            added_list = List.all(key_only=True).filter('keys =', self.key()).get()
+            added_list = List.all(keys_only=True).filter('keys =', self.key()).get()
             if added_list is None:
                 # nadie la añadió
                 suggestion_deleted.send(sender=self, user=self.user)
