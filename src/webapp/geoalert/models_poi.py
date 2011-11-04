@@ -445,9 +445,6 @@ class Place(POI):
         except Exception, e:  # Si falla, se guarda para intentar añadir mas tarde
             import logging
             logging.error('ERROR FUSIONTABLES update place %s: %s' % (self.id, e))
-            later = _Do_later_ft.get_or_insert('_do_later_%s' % self.id, instance_key=self.key(), update=True)
-            later.put()
-            raise
 
             
     def to_dict(self):

@@ -77,7 +77,7 @@ __all__ = ['put', 'get', 'delete',
            'Model',]
 
 
-DEBUG=True
+DEBUG=False
 """DEBUG The debug status.
 """
 

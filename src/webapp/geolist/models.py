@@ -54,6 +54,9 @@ class List(db.polymodel.PolyModel, model_plus.Model):
     def counters(self):
         if self._counters is None:
             self._counters = ListCounter.all().ancestor(self.key()).get()
+            if self._counters is None:
+                self._counters = ListCounter(parent=self)
+                self._counters.put()
         return self._counters
 
     @classproperty
@@ -71,25 +74,19 @@ class List(db.polymodel.PolyModel, model_plus.Model):
             super(List, self).put()
             if from_comment:
                 return self
-            from watchers import modified_list
-            list_modified.send(sender=self)
-        else:
-            super(List, self).put()
-            from watchers import new_list
-            list_new.send(sender=self)
-
-    def _post_put_sync(self, **kwargs):
-        if self._new:
-            counter = ListCounter(parent=self)
-            counter.put()
-            list_new.send(sender=self)
-            self._new = False
-        else:
+            from watchers import modified_list, deleted_list
             if not self.active:
                 list_deleted.send(sender=self)
             else:
                 list_modified.send(sender=self)
-                
+        else:
+            super(List, self).put()
+            counter = ListCounter(parent=self)
+            a = db.put_async(counter)
+            from watchers import new_list
+            list_new.send(sender=self)
+            a.get_result()
+
     def delete(self):
         children = db.query_descendants(self).fetch(100)
         for c in children:

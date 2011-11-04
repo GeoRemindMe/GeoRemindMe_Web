@@ -91,7 +91,7 @@ class Comment(messages.Message):
     """
     id = messages.IntegerField(1)
     username = messages.StringField(2)
-    message = messages.StringField(3)
+    msg = messages.StringField(3)
     created = messages.IntegerField(4)
     
     

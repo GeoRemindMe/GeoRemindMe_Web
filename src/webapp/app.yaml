@@ -20,17 +20,9 @@ handlers:
   static_dir: static
   secure: always
 
-- url: /ajax/.*
-  script: main.py
-  secure: always
-
 - url: /api/.*
   script: mainservice.py
   secure: always
-
-- url: /_ereporter.*
-  script: $PYTHON_LIB/google/appengine/ext/ereporter/report_generator.py
-  login: admin
   
 - url: /suggestion/.*
   script: main.py
@@ -69,5 +61,5 @@ handlers:
 #- appstats: on
 #- remote_api: on
 
-inbound_services:
-- warmup
+#inbound_services:
+#- warmup

@@ -34,6 +34,15 @@ from mainservice import MainService
 
 
 class LoginRequest(messages.Message):
+    """
+    Parametros de entrada para realizar una peticion de identificacion
+        de un usuario.
+            
+            :param email: email (o nombre de usuario) a identificar
+            :type email: :class:`String`
+            :param password: contraseña del usuario
+            :type password: :class:`String`
+    """
     email = messages.StringField(1, required=True)
     password = messages.StringField(2, required=True)
     
@@ -45,6 +54,14 @@ class LoginService(MainService):
     #decorador para indicar los metodos del servicio
     @remote.method(LoginRequest, LoginResponse)
     def login(self, request):
+        """
+        Identifica al usuario, devolviendo un ID de sesion.
+            
+            :param request: Parametros pasados a la peticion
+            :type request: :class:`LoginRequest`
+            :returns: :class:`LoginResponse`
+            :raises: :class:`ApplicationError`
+        """
         email = unicode(request.email)
         password = unicode(request.password)
         from geouser.models import User
@@ -73,5 +90,8 @@ class LoginService(MainService):
             raise ApplicationError("Invalid email/password")    
             
         raise ApplicationError("Unknow error")
+    
+    def initialize_request_state(self, state):
+        return
 
         

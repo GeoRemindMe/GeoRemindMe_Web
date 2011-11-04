@@ -19,9 +19,7 @@ along with GeoRemindMe. If not, see <http://www.gnu.org/licenses/>.
 
 import os, logging, sys
 #carga la aplicacion
-from google.appengine.ext.webapp import util
-from google.appengine.ext.webapp import template
-from google.appengine.ext import deferred
+
 
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
@@ -29,6 +27,9 @@ from google.appengine.dist import use_library
 use_library('django', '1.2')
 from django.conf import settings
 _ = settings.TEMPLATE_DIRS
+from google.appengine.ext.webapp import util
+from google.appengine.ext.webapp import template
+from google.appengine.ext import deferred
 
 
 application_deferred = deferred.application

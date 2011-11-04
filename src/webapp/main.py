@@ -30,32 +30,15 @@ import django.dispatch
 from django.core.signals import got_request_exception
 from django.db import _rollback_on_exception
 
-
 ### elimina cualquier modulo de django cargado (evita conflictos con versiones anteriores)
 #for k in [k for k in sys.modules if k.startswith('django')]:
 # del sys.modules[k]
 #sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 
-def log_exception(sender, **kwds):
-    import traceback
-    from django.views.debug import ExceptionReporter
-    from django.http import Http404
-    tb = traceback.format_exc()
-    typ, val, trace = sys.exc_info()
-    if typ == Http404:
-        return
+def log_exception(*args, **kwds):
     logging.exception('Exception in request:')
-    er = ExceptionReporter(kwds['request'], *sys.exc_info()) # proceso la excepcion como una pagina html
-    logging.exception(er.get_traceback_html())
-    from georemindme.geomail import GeoMail
-    mail = GeoMail(to='javier@georemindme.com',
-                   subject='[ERROR][GEOREMINDME]',
-                   body=traceback.format_exc(),
-                   html=traceback.format_exc(),
-                   )
-    mail.push()
-    
+
 # Log errors.
 django.dispatch.Signal.connect(
                                got_request_exception,
