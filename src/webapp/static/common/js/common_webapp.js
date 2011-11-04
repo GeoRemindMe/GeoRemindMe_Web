@@ -2053,6 +2053,13 @@ function closeHelp(){
 	$('#showing-help').remove();
 }
 
+// ensuring ajax https
+$(document).ajaxSend(function(event, xhr, settings) {
+    if ( document.location.hostname != "localhost" && document.location.hostname != "127.0.0.1" && document.location.protocol.slice(0,5) != "https" && settings.url.slice(0,6)=="/ajax/" ) {
+        settings.url = "https://georemindme.appspot.com" + settings.url;
+    }
+});
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {

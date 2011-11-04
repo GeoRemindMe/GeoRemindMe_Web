@@ -9,7 +9,7 @@ except:
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 
-from decorators import ajax_request
+from decorators import ajax_request,allow_crossdomain
 from geouser.models import User
 import geouser.api as geouser
 from geouser.funcs import login_func
@@ -28,6 +28,7 @@ def str2bool(v):
 
 
 @ajax_request
+@allow_crossdomain
 def exists(request):
     """
         Comprueba que un email esta en uso
@@ -62,6 +63,7 @@ def register(request):
 
 
 @ajax_request
+@allow_crossdomain
 def contact(request):
     from georemindme.geomail import send_contact_email
     send_contact_email(request.POST.get('userEmail',''),request.POST.get('msg',''))
@@ -70,6 +72,7 @@ def contact(request):
 
 
 @ajax_request
+@allow_crossdomain
 def keepuptodate(request):
     
     from georemindme.geomail import send_keepuptodate
@@ -86,6 +89,7 @@ def keepuptodate(request):
 
 @ajax_request
 @never_cache
+@allow_crossdomain
 def login(request):
     """
         Inicia sesion con un usuario
@@ -103,6 +107,7 @@ def login(request):
 # FUNCIONES AJAX PARA OBTENER, MODIFICAR, BORRAR ALERTAS
 #===============================================================================
 @ajax_request
+@allow_crossdomain
 def add_reminder(request):
     """
         Añade o edita una alerta
@@ -123,6 +128,7 @@ def add_reminder(request):
         return HttpResponseBadRequest(simplejson.dumps(form.errors), mimetype="application/json")
 
 @ajax_request
+@allow_crossdomain
 def get_reminder(request):
     """
         Obtiene los eventos
@@ -141,6 +147,7 @@ def get_reminder(request):
     return HttpResponse(getAlertsJSON(alerts), mimetype="application/json")
 
 @ajax_request
+@allow_crossdomain
 def delete_reminder(request):
     """
         Borra un evento
@@ -155,6 +162,7 @@ def delete_reminder(request):
 # FUNCIONES AJAX PARA OBTENER, MODIFICAR, BORRAR SUGERE
 #===============================================================================
 @ajax_request
+@allow_crossdomain
 def save_suggestion(request):
     """
         Añade o edita una sugerencia
@@ -173,6 +181,7 @@ def save_suggestion(request):
 
 
 @ajax_request
+@allow_crossdomain
 def add_suggestion_invitation(request):
     """
         Envia una invitacion a un usuario
@@ -189,6 +198,7 @@ def add_suggestion_invitation(request):
 
 
 @ajax_request
+@allow_crossdomain
 def add_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.add_suggestion_follower(request, eventid)
@@ -198,6 +208,7 @@ def add_suggestion_follower(request):
 
 
 @ajax_request
+@allow_crossdomain
 def delete_suggestion_follower(request):
     eventid = request.POST.get('eventid')
     result = geoalert.del_suggestion_follower(request, eventid)
@@ -207,6 +218,7 @@ def delete_suggestion_follower(request):
 
 
 @ajax_request
+@allow_crossdomain
 def get_suggestion(request):
     """
         Obtiene los eventos
@@ -229,6 +241,7 @@ def get_suggestion(request):
 
 
 @ajax_request
+@allow_crossdomain
 def get_suggestion_following(request):
     query_id = request.POST.get('query_id', None)
     page = int(request.POST.get('page', 1))
@@ -238,6 +251,7 @@ def get_suggestion_following(request):
 
 
 @ajax_request
+@allow_crossdomain
 def delete_suggestion(request):
     """
         Borra un evento
@@ -256,6 +270,7 @@ def delete_suggestion(request):
 # FUNCIONES AJAX PARA OBTENER FOLLOWERS Y FOLLOWINGS
 #===============================================================================
 @ajax_request
+@allow_crossdomain
 def get_followers(request):
     """
         Devuelve la lista de followers de un usuario
@@ -275,6 +290,7 @@ def get_followers(request):
     return HttpResponse(simplejson.dumps(followers), mimetype="application/json")  # los None se parsean como null
 
 @ajax_request
+@allow_crossdomain
 def get_followings(request):
     """
         Devuelve la lista de followings de un usuario
@@ -295,6 +311,7 @@ def get_followings(request):
 
 
 @ajax_request
+@allow_crossdomain
 def add_following(request):
     """
         Añade a la lista de de followings de un usuario
@@ -316,6 +333,7 @@ def add_following(request):
 
     
 @ajax_request
+@allow_crossdomain
 def delete_following(request):
     """
         Borra de la lista de de followings de un usuario
@@ -335,6 +353,7 @@ def delete_following(request):
 
 
 @ajax_request
+@allow_crossdomain
 def block_contacts(request):
     """
         Bloquea a un usuario para no recibirlo en la lista
@@ -360,6 +379,7 @@ def block_contacts(request):
 
 
 @ajax_request
+@allow_crossdomain
 def get_contacts(request):
     if not request.user.is_authenticated():
         return HttpResponseForbidden()
@@ -373,6 +393,7 @@ def get_contacts(request):
 # FUNCIONES PARA TIMELINEs
 #===============================================================================
 @ajax_request
+@allow_crossdomain
 def get_profile_timeline(request):
     """
         Devuelve la lista de timeline de un usuario.
@@ -396,6 +417,7 @@ def get_profile_timeline(request):
 
 
 @ajax_request
+@allow_crossdomain
 def get_activity_timeline(request):
     """
         Devuelve la lista de timeline de los followings del usuario logueado.
@@ -414,6 +436,7 @@ def get_activity_timeline(request):
 
 
 @ajax_request
+@allow_crossdomain
 def get_notifications_timeline(request):
     """
         Devuelve la lista de timeline de los followings del usuario logueado.
@@ -434,6 +457,7 @@ def get_notifications_timeline(request):
 # FUNCIONES PARA LISTAS
 #===============================================================================
 @ajax_request
+@allow_crossdomain
 def delete_list(request):
     """
     Borra una lista de sugerencias
@@ -446,6 +470,7 @@ def delete_list(request):
 
 
 @ajax_request
+@allow_crossdomain
 def get_list_suggestion(request):
     """
     Devuelve todas las listas de sugerencias
@@ -466,6 +491,7 @@ def get_list_suggestion(request):
 
 
 @ajax_request
+@allow_crossdomain
 def add_list_suggestion(request):
     """
     Cra una lista de sugerencias o modifica una
@@ -500,6 +526,7 @@ def add_list_suggestion(request):
 
 
 @ajax_request
+@allow_crossdomain
 def add_suggestion_list_invitation(request):
     """
         Envia una invitacion a un usuario
@@ -514,6 +541,7 @@ def add_suggestion_list_invitation(request):
 
 
 @ajax_request
+@allow_crossdomain
 def add_list_follower(request):
     list_id = request.POST.get('list_id')
     added = geolist.add_list_follower(request, list_id)
@@ -521,6 +549,7 @@ def add_list_follower(request):
 
 
 @ajax_request
+@allow_crossdomain
 def delete_list_follower(request):
     list_id = request.POST.get('list_id')
     result = geolist.del_list_follower(request, list_id)
@@ -530,6 +559,7 @@ def delete_list_follower(request):
 # COMENTARIOS Y VOTOS
 #===============================================================================
 @ajax_request
+@allow_crossdomain
 def delete_comment(request):
     """
     Borra un comentario
@@ -541,6 +571,7 @@ def delete_comment(request):
     return HttpResponse(simplejson.dumps(comment), mimetype="application/json")
 
 @ajax_request
+@allow_crossdomain
 def do_comment(request, kind):
     """
     Realiza un comentario a un evento (alerta, sugerencia, etc.)
@@ -557,6 +588,7 @@ def do_comment(request, kind):
     
 
 @ajax_request
+@allow_crossdomain
 def get_comments(request, kind):
     """
     Obtiene todas los comentarios visibles de un evento
@@ -576,6 +608,7 @@ def get_comments(request, kind):
 
 
 @ajax_request
+@allow_crossdomain
 def do_vote(request, **kwargs):
     """
     Vota una sugerencia
@@ -596,6 +629,7 @@ def do_vote(request, **kwargs):
     
 
 @ajax_request
+@allow_crossdomain
 def mod_searchconfig_google(request):
     from google.appengine.ext.db import GeoPt
     sconfig = request.user.settings.searchconfig_google
@@ -608,6 +642,7 @@ def mod_searchconfig_google(request):
 
 
 @ajax_request
+@allow_crossdomain
 def get_near_places(request):
     """
     Obtiene places cercanos a una localizacion dada
@@ -626,6 +661,7 @@ def get_near_places(request):
                         mimetype='application/json')
     
 @ajax_request
+@allow_crossdomain
 def get_near_suggestions(request):
     """
     Obtiene places cercanos a una localizacion dada
@@ -667,6 +703,7 @@ def get_near_suggestions(request):
 
 
 @ajax_request
+@allow_crossdomain
 def get_nearest_suggestions(request):
     """
     Obtiene places cercanos a una localizacion dada
@@ -693,6 +730,7 @@ def get_nearest_suggestions(request):
     
     
 @ajax_request
+@allow_crossdomain
 def search_tag_suggestion(request):
     tag = request.POST.get('tag', None)
     query_id = request.POST.get('query_id', None)
@@ -709,6 +747,7 @@ def search_tag_suggestion(request):
         return response
     
 @ajax_request
+@allow_crossdomain
 def add_suggestion_tags(request):
     tags = request.POST.get('tags', None)
     event_id = request.POST.get('event_id', None)
@@ -724,6 +763,7 @@ def add_suggestion_tags(request):
     
 
 @ajax_request
+@allow_crossdomain
 def get_short_url(request):
     url = request.POST.get('url', None)
     from libs.vavag import VavagRequest, VavagException
@@ -741,6 +781,7 @@ def get_short_url(request):
 
 
 @ajax_request
+@allow_crossdomain
 def share_on_facebook(request):
     response = None
     event_id = request.POST.get('event_id', None)
@@ -757,6 +798,7 @@ def share_on_facebook(request):
 
 
 @ajax_request
+@allow_crossdomain
 def share_on_twitter(request):
     response = None
     event_id = request.POST.get('event_id', None)
@@ -773,6 +815,7 @@ def share_on_twitter(request):
 
 
 @ajax_request
+@allow_crossdomain
 def suggested_list_suggestion(request):
     """
         si se envia timeline_id por POST, se modificara ese timeline (se aceptara o rechazara la sugerencia)
@@ -809,6 +852,7 @@ def suggested_list_suggestion(request):
     
     
 @ajax_request
+@allow_crossdomain
 def get_suggestions(request):
     from geoalert import api
     list_id = request.POST.get('list_id', None)
