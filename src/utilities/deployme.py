@@ -33,11 +33,10 @@ def main():
 # finds root repo dir
 def find_root():
     cwd = os.path.basename(os.getcwd())
-    while cwd <> ROOT_DIR:
+    while not os.path.exists(os.path.join(os.getcwd(),".git")):
         os.chdir( os.pardir )
         cwd = os.path.basename(os.getcwd())
-        
-        if cwd == '/':
+        if cwd in ('/','',):
             raise Exception("Path not found")
         
 
