@@ -41,15 +41,47 @@ class UserProfile(models.Model):
     show_followers = models.BooleanField(default=True, 
                                          verbose_name=_(u"Mostrar a quien sigues")
                                          )
-    
     avatar = models.URLField(blank=True)
     sync_avatar_with = models.IntegerField
     sync_avatar_with = models.PositiveSmallIntegerField(choices = AVATAR_CHOICES,
                                                         default=1,
                                                         verbose_name=_(u'Sincronizar tu avatar con')
                                         )
+    counter_suggested = models.PositiveIntegerField(default=0,
+                                              verbose_name=_(u"Contador de sugerencias creadas")
+                                              )
+    counter_followers = models.PositiveIntegerField(default=0,
+                                              verbose_name=_(u"Contador de seguidores")
+                                              )
+    counter_followings = models.PositiveIntegerField(default=0,
+                                              verbose_name=_(u"Contador de seguidos")
+                                              )
+    counter_notifications = models.PositiveIntegerField(default=0,
+                                              verbose_name=_(u"Contador de notificaciones pendientes")
+                                              )
+    counter_supported = models.PositiveIntegerField(default=0,
+                                              verbose_name=_(u"Contador de sugererencias votadas")
+                                              )
     
     def get_absolute_url(self):
         return ('profiles_profile_detail', (), { 'username': self.user.username })
     get_absolute_url = models.permalink(get_absolute_url)
     
+
+class UserFollowingUser(models.Model):
+    follower = models.ForeignKey(User, 
+                                 blank=False,
+                                 verbose_name=_(u"Seguidor"),
+                                 related_name='followees'
+                                 )
+    followee = models.ForeignKey(User, 
+                                 blank=False,
+                                 verbose_name=_(u"Seguido"),
+                                 related_name='followers'
+                                 )
+    created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        get_latest_by = "created"
+        ordering = ['-created']
+        unique_together = (("follower", "followee"),)
