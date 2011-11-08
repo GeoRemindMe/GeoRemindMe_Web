@@ -11,9 +11,11 @@ js_info_dict = {
 
 urlpatterns = patterns('',
    url(r'^jsi18n/$', 'django.views.i18n.javascript_catalog', js_info_dict, 'jsi18n'),
-   url(r'accounts/', include('userena.urls')),
+   url(r'^accounts/', include('userena.urls')),
+   url(r'^messages/', include('userena.contrib.umessages.urls')),
    url(r'^social/', include('socialregistration.urls',namespace = 'socialregistration')),
    url(r'', include('profiles.urls')), # perfiles
    url(r'', include('mainApp.urls')),
    url(r'^admin/', include(admin.site.urls)),
+   url(r'^admin_tools/', include('admin_tools.urls')),
 )

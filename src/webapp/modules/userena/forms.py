@@ -24,7 +24,8 @@ class SignupForm(forms.Form):
 
     """
     username = forms.RegexField(regex=USERNAME_RE,
-                                max_length=30,
+                                max_length=15,
+                                min_length=4,
                                 widget=forms.TextInput(attrs=attrs_dict),
                                 label=_("Username"),
                                 error_messages={'invalid': _('Username must contain only letters, numbers, dots and underscores.')})

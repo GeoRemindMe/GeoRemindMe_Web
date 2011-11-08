@@ -17,7 +17,7 @@ urlpatterns = patterns('',
        name='profiles_dashboard'),
     # Editar perfil
     url(r'^user/(?P<username>[\.\w]+)/edit/$',
-       userena_views.profile_edit,
+       profiles_views.profile_edit,
        name='userena_profile_edit'),
     # Ver perfil
     url(r'^user/(?P<username>[\.\w]+)/$',
