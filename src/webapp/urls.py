@@ -1,19 +1,19 @@
 from django.conf.urls.defaults import patterns, include, url
 
 # Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from django.contrib import admin
+admin.autodiscover()
+
+js_info_dict = {
+    'packages': ('webapp',),
+}
+
 
 urlpatterns = patterns('',
-   (r'^user/', include('profiles.urls')),
-   (r'^accounts/', include('allauth.urls')),
-    # Examples:
-    # url(r'^$', 'georemindme.views.home', name='home'),
-    # url(r'^georemindme/', include('georemindme.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+   url(r'^jsi18n/$', 'django.views.i18n.javascript_catalog', js_info_dict, 'jsi18n'),
+   url(r'accounts/', include('userena.urls')),
+   url(r'^social/', include('socialregistration.urls',namespace = 'socialregistration')),
+   url(r'', include('profiles.urls')), # perfiles
+   url(r'', include('mainApp.urls')),
+   url(r'^admin/', include(admin.site.urls)),
 )
