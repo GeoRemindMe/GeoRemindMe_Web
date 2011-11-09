@@ -9,18 +9,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext_lazy as _
 from modules.timezones.fields import TimeZoneField
 
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules([], ["^modules.timezones.fields.TimeZoneField"])
+#from south.modelsinspector import add_introspection_rules
+#add_introspection_rules([], ["^modules.timezones.fields.TimeZoneField"])
 
 class UserProfile(UserenaLanguageBaseProfile):
-    TIME_CHOICES = (
-           (0, _(u'Nunca')),
-           (1, _(u'Inmediato')),
-           (2, _(u'Diario')),
-           (3, _(u'Semanal')),
-           (4, _(u'Mensual')),
-    )
-    
     AVATAR_CHOICES = (
                 (0, _(u'No utilizar')),
                 (1, _(u'Gravatar')),
@@ -54,6 +46,12 @@ class UserProfile(UserenaLanguageBaseProfile):
                                                     default=0,
                                                     )
     
+    class Meta:
+        verbose_name = _('Perfil de usuario')
+        verbose_name_plural = _('Perfiles de usuario')
+    
     def get_absolute_url(self):
         return ('profiles_profile_detail', (), { 'username': self.user.username })
     get_absolute_url = models.permalink(get_absolute_url)
+
+
