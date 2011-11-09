@@ -7,8 +7,6 @@ from django.template import RequestContext
 from django.utils.translation import ugettext as _
 
 def home(request, login=False):
-    from profiles.models import UserProfile
-    UserProfile.create(user=request.user)
     if request.user.is_authenticated():
             return HttpResponseRedirect(request.user.get_absolute_url())
     return render_to_response("mainApp/home.html", 

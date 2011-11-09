@@ -122,7 +122,7 @@ class TimelineManager(models.Manager):
                     visible = visible,
                     **kwargs)
         # el usuario sigue a sus propios timelines
-        TimelineFollower.create(timeline=timeline, user=user)
+        TimelineFollower.objects.create(timeline=timeline, follower=user)
         timeline_added.send(timeline)
         
     
