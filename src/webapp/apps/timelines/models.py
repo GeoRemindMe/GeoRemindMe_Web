@@ -290,7 +290,7 @@ class TimelineFollower(models.Model):
     
     follower_c_type = models.ForeignKey(ContentType,
                                         verbose_name = _("Tipo de objeto seguidor"),
-                                        related_name = "followings")
+                                        related_name = "timelinefollowings")
     follower_id = models.PositiveIntegerField(_("Identificador del seguidor"))
     follower = generic.GenericForeignKey('follower_c_type', 'follower_id',) # clave generica para cualquier modelo
     
@@ -300,7 +300,7 @@ class TimelineFollower(models.Model):
     class Meta:
         get_latest_by = "created"
         ordering = ['-created']
-        unique_together = (("timeline", "follower"),)
+        unique_together = (("timeline", "follower_c_type", "follower_id"),)
         verbose_name = _('Notificacion de Timeline')
         verbose_name_plural = _('Notificaciones de Timelines')
         
