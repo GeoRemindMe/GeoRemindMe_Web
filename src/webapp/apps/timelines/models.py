@@ -121,6 +121,8 @@ class TimelineManager(models.Manager):
                     instance = instance,
                     visible = visible,
                     **kwargs)
+        # el usuario sigue a sus propios timelines
+        TimelineFollower.create(timeline=timeline, user=user)
         timeline_added.send(timeline)
         
     

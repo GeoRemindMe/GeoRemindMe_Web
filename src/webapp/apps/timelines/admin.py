@@ -1,8 +1,8 @@
 # coding=utf-8
 
 from django.contrib import admin
-from models import Timeline, TimelineFollowers
+from models import Timeline, TimelineFollower
 
 
 admin.site.register(Timeline)
-admin.site.register(TimelineFollowers)
+admin.site.register(TimelineFollower)
